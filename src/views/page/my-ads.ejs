@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet My Ads</title>
+</head>
+<style>
+    .blockRed{
+        background-color: red;
+        border-radius: 2px;
+        width: 26px;
+        height: 16px;
+        padding: 0px, 5px;
+        margin-top: 6px;
+    }
+
+    .blockGreen{
+        background-color: green;
+        border-radius: 2px;
+        width: 26px;
+        height: 16px;
+        padding: 0px, 5px;
+        margin-top: 6px;
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+</style>
+<body class="mainTheme">
+
+     
+  <main>
+    <%- include('../partials/navi-simple.ejs') %>
+    <% if (user) { %>
+
+         
+    <div class="container-fluid d-flex justify-content-start p-1 themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+        <span class="ms-5 p-0" style="font-weight: 400;">My Ads</span>
+    </div>
+    <div class="row m-0 d-flex justify-content-center" style="width: 100%;">
+     
+        
+                <div class="col-lg-10  my-4 p-0" >
+
+                  <% if (newBox.length !== 0) {%> 
+                    <div class="mainTable" style="overflow-x: auto; width: 100%;">  
+                        <table class="table m-0 tableStyle">
+                        
+                        <tr>
+                            <th>Image</th><th>Title</th><th>Department</th><th>Price</th> <th>Active</th>
+                        </tr>
+
+                        <% if (newBox) { %>
+                            <% newBox.forEach( (ele)=>{ %>
+                                <tr>
+
+                                    <td><a href="/product/<%= ele.department %>/<%= ele._id %>"><img src="<%= ele.images[0].url %>" class="rounded-1" style="width: 50px; height: 50px; object-fit: cover; background-position: center;"> </a></td>    
+                                                                                        
+                                    <td><a href="/product/<%= ele.department %>/<%= ele._id %>"><%= ele.title %></a></td><td><%= ele.department %></td><td>$ <%= ele.price%></td>
+                               
+                                    <% if (ele.paused == true ) { %>
+                                        <td> <div class="blockRed"> </div> </td>
+                                    <% } else { %>
+                                        <td> <div class="blockGreen"> </div> </td>
+                                    <% } %>
+                    
+                                </tr>
+                            <% }); %>
+                        <% }; %>    
+
+
+                        </table>
+                    </div>
+                    <div class="paginate d-flex justify-content-end align-items-center  mt-2">
+                        <nav aria-label="...">
+                          <ul class="pagination  m-0" >
+                            <% if (paginate) { %>
+
+                              <% if ( paginate.pagina == 1 ) { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                              </li>
+                              <% } else { %>
+                                <li class="page-item">
+                                  <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                </li>  
+                              <% }; %>  
+
+                              <% if ( paginate.pagina == 1 ) { %>
+                              <li class="page-item prev disabled">
+                                <a class="page-link" href="?paginate=prev"> Prev</a>
+                              </li>
+                              <% } else { %>
+                              <li class="page-item prev">
+                                <a class="page-link" href="?paginate=prev"> Prev </a>
+                              </li>  
+                              <% }; %>
+                              <li class="page-item active">
+                                <span class="page-link pagina"><%= paginate.pagina %></span>
+                              </li>
+                              <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                              <li class="page-item next disabled">
+                                <a class="page-link" href="?paginate=next"> Next</i></a>
+                              </li>
+                              <% } else { %>
+                              <li class="page-item next">
+                                <a class="page-link" href="?paginate=next"> Next</i> </a>
+                              </li>  
+                              <% }; %>
+
+                              <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                              </li>
+                              <% } else { %>
+                              <li class="page-item">
+                                <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                              </li>  
+                              <% }; %>  
+
+                            <% }; %>
+                          </ul>
+                        </nav>
+                    </div>    
+
+                  <% } else { %>
+                    <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                        <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                            <div class="containerMessage m-2">
+                                <span style="font-size: 18px;">¡No tienes anuncios aún!<i class="bi bi-emoji-frown ms-3"></i></span>
+                            </div>
+                        </div>
+                    </div>        
+                  <% } %>  
+
+                </div> 
+
+ 
+    </div>
+
+    <% } else { %>
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/noLogin.ejs') %>
+        
+          </div>    
+    <% }; %>
+     
+    </main>
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+</body>
+</html>
+

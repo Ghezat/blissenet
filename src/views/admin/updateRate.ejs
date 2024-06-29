@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Buy Direct</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+               
+        <% if (updateCurrency) { %>
+            <%- include('../alertAdmin/updateCurrency.ejs') %>
+        <% }; %>
+     
+      
+       <div class="containerWindow">
+            <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class=" me-5 p-0" style="color:gray; font-weight: 500;" > Update Rate</span>
+            </div>
+            <div class="containerNewDay">
+                <div class="row m-0 p-0">
+                
+                    <div class="col-lg-12 p-0">
+                        <div class="containerGeneralNewDay p-0">
+                            <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                <div class="card-header">
+                                    <ul class="nav nav-tabs">
+    
+                                        <li class="nav-item">
+                                          <a class="nav-link UpdateCurrency active" style="cursor: pointer;">Update Currency</a>
+                                        </li>
+                                        <li class="nav-item">
+                                          <a class="nav-link HistoryCurrency" style="cursor: pointer;">History Currency</a>
+                                        </li> 
+                                   
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+    
+                                    <div class="containerMain" style="height: auto;">
+    
+                                        <div class="contentUpdateCurrency">
+    
+                                            <div class="row d-flex justify-content-center align-items-center my-4 p-2">
+                
+                                                <div class="col-lg-6 border border-secondary rounded-2 my-1 p-0 d-flex justify-content-center align-items-center flex-column">
+                                               
+                                                    <p id="idDate" class="m-0 " style="font-size: 40px;"><!-- aqui va corriendo la hora actual --></p>
+                                                    <p id="idTime" class="m-0 " style="font-size: 130px;"><!-- aqui va corriendo la hora actual --></p>
+                                                    <p class="border border-dark m-0 px-4 bg-dark text-light rounded-2 d-flex justify-content-center" style="width: 100%; font-size: 44px; font-weight: bold;"><span>1 USD = </span><span id="idPrice" class="ms-1"><!-- aqui el precio del dolar --></span></p>
+                                                
+                                                </div>
+                                                
+                                            </div>
+    
+                                        </div>
+                                    
+                                        <div class="contentHistoryCurrency closed">
+                                            
+                                            <div class="row border d-flex justify-content-between align-items-start my-2 py-0">
+
+                                                <div class="col-xxl-4 col-xl-4 col-lg-4 my-0 p-0">
+
+                                                    <div class="contentInfo">
+                                                        <div class="card" style="border-radius: 0;">
+                                                            <div class="card-header">
+                                                                Info
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p>La información que esta viendo es suministrada por ExchangeRate-API
+                                                                  ofrece la cotización actualizada del banco central del pais.                       
+                                                                </p>
+                                                                <p>El formato presentado es el ISO 4217 es un estándar internacional
+                                                                   publicado por la ISO con el objetivo de definir códigos de tres letras para todas las divisas del mundo.
+                                                                </p>
+                                                                <p>El proveedor del servicio de cambios de monedas
+                                                                 es <span class="bg-warning px-1">https://app.exchangerate-api.com</span></p> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xxl-8 col-xl-8 col-lg-8 my-0 p-0 d-flex align-items-start justify-content-start">
+
+                                                    <table class="table table-striped">
+                                                        <tr>
+                                                            <th>Currency</th><th>Date</th><th>Price</th>
+                                                        </tr>
+
+                                                        <% if (currentCurrency) { %>
+
+                                                            <% currentCurrency.forEach((ele)=>{ %>
+                                                                <tr>
+                                                                    <td><%= ele.currency %></td><td><%= ele.currentDay %></td><td><%= ele.currentPrice %></td>
+                                                                </tr>
+                                                            <% }); %>
+                                                            
+                                                        <% }; %>    
+                                                        
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            
+       </div>
+                       
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <script>
+        //este script manipula las pestañas
+        const UpdateCurrency = document.querySelector('.UpdateCurrency');
+        const HistoryCurrency = document.querySelector('.HistoryCurrency');
+        const contentUpdateCurrency = document.querySelector('.contentUpdateCurrency');
+        const contentHistoryCurrency = document.querySelector('.contentHistoryCurrency');
+
+
+        UpdateCurrency.addEventListener('click', ()=>{
+
+            UpdateCurrency.classList.add('active');
+            HistoryCurrency.classList.remove('active');
+
+            contentUpdateCurrency.classList.remove('closed');
+            contentHistoryCurrency.classList.add('closed');
+
+        });
+
+        HistoryCurrency.addEventListener('click', ()=>{
+
+            UpdateCurrency.classList.remove('active');
+            HistoryCurrency.classList.add('active');
+
+            contentUpdateCurrency.classList.add('closed');
+            contentHistoryCurrency.classList.remove('closed');
+        })
+
+    </script>
+
+    <script>
+
+        const idDate = document.getElementById('idDate');//esto es el p que arroja fecha.
+        const idTime = document.getElementById('idTime');//esto es el p que arroja la hora.
+        const idPrice = document.getElementById('idPrice');//esto es el p que arroja el precio del USD vs VES. 
+       
+        const time = new Date();
+        //console.log(time.getDay());
+        const Dia = time.getDay();
+        const Fecha = time.getDate();
+        const Mes = time.getMonth() +1;
+        const Anio = time.getFullYear();
+
+        const Hora = time.getHours();
+        const Minutos = time.getMinutes();
+        const Segundos = time.getSeconds();
+        //console.log("Esto es horas", Hora);
+        //console.log("Esto es minutos", Minutos);
+        //console.log("Esto es segundos", Segundos);
+
+
+        let mesLetra;
+
+        if (Mes === 1){
+         mesLetra = 'Enero';  
+        } else if (Mes === 2){
+         mesLetra = 'Febrero'; 
+        } else if (Mes === 3){
+         mesLetra = 'Marzo';
+        } else if (Mes === 4){
+         mesLetra = 'Abril';
+        } else if (Mes === 5){
+         mesLetra = 'Mayo';
+        } else if (Mes === 6){
+         mesLetra = 'Junio';
+        } else if (Mes === 7){
+         mesLetra = 'Julio';
+        } else if (Mes === 8){
+         mesLetra = 'Agosto';
+        } else if (Mes === 9){
+         mesLetra = 'Septiembre'; 
+        } else if (Mes === 10){
+         mesLetra = 'Octubre';
+        } else if (Mes === 11){
+         mesLetra = 'Noviembre';
+        } else if (Mes === 12){
+         mesLetra = 'Diciembre';
+        } 
+
+        if ( Dia === 0 ){
+            idDate.innerHTML = `Domingo ${Fecha} de ${mesLetra} de ${Anio}`
+        } else if ( Dia === 1){
+            idDate.innerHTML = `Lunes ${Fecha} de ${mesLetra} de ${Anio}`
+        } else if ( Dia === 2){
+            idDate.innerHTML = `Martes ${Fecha} de ${mesLetra} de ${Anio}`
+        } else if ( Dia === 3){
+            idDate.innerHTML = `Miercoles ${Fecha} de ${mesLetra} de ${Anio}`
+        } else if ( Dia === 4){
+            idDate.innerHTML = `Jueves ${Fecha} de ${mesLetra} de ${Anio}`
+        } else if ( Dia === 5){
+            idDate.innerHTML = `Viernes ${Fecha} de ${mesLetra} de ${Anio}`
+        } else if ( Dia === 6){
+            idDate.innerHTML = `Sabado ${Fecha} de ${mesLetra} de ${Anio}`
+        }
+
+
+        //Esta funcion evalua la hora cada segundo y cuando se marque las 9:00:00
+        //se ejecuta la funcion --> ExchangeRate() 
+        function reloj(){
+
+            const time = new Date();
+            const Hora = time.getHours();
+            const Minutos = time.getMinutes();
+            const Segundos = time.getSeconds();
+            //console.log( `${Hora}:${Minutos}:${Segundos}` );
+
+            if (Minutos >= 10 && Segundos <= 9){
+                idTime.innerHTML = `${Hora}:${Minutos}:0${Segundos}`
+            } else if (Minutos >= 10 && Segundos >= 10){
+                idTime.innerHTML = `${Hora}:${Minutos}:${Segundos}`
+            } else if (Minutos <= 9 && Segundos <= 9){
+                idTime.innerHTML = `${Hora}:0${Minutos}:0${Segundos}`
+            } else if (Minutos <= 9 && Segundos >= 10){
+                idTime.innerHTML = `${Hora}:0${Minutos}:${Segundos}`
+            }
+            
+        };
+
+        setInterval(() => {
+            reloj()
+        }, 1000 );
+
+
+       // :::::::::::::::::::: Update precio del USD vs VES ::::::::::::::::::::::::::::::::::
+       //Este script hace una solicitud a la pagina ExchangeRate-API
+       //Este es nuestro Dashboard https://app.exchangerate-api.com/dashboard
+
+        function ExchangeRate(){
+
+            fetch('https://v6.exchangerate-api.com/v6/5d6099f94257a7dbcd3ac16e/latest/USD', {
+
+            method: "GET",
+            headers: {"content-type" : "application/json"}
+
+            })
+                .then(resp => resp.json() )
+                .then( jsonExchange => { 
+                    console.log("Esto es jsonExchange",jsonExchange)
+                    const rates = jsonExchange.conversion_rates;
+                    const ratesVES = rates.VES;
+                    console.log("Esto es rates ----->",rates);
+                    console.log("Esto es ratesVES ----->", ratesVES);
+            
+                    let data = {
+
+                        currentDay : `${Fecha}-${Mes}-${Anio}`,
+                        currentPrice : ratesVES,
+        
+                    }
+
+                    console.log("Esto es la data para actualizar en /admin/update-rate",data)
+
+                //aqui en esta ruta es donde se actualiza el precio en la DB.
+                fetch('/admin/update-rate', {
+
+                    method: "post",
+                    body: JSON.stringify(data),
+                    headers: {"content-type" : "application/json"}
+
+                })
+                    .then(response =>response.json() )
+                    .then( jsonx => {console.log("esto es la actualizacion recibida del backend ", jsonx)
+                    console.log("Esto es response" ,jsonx.data)
+                    
+                    location.reload();
+
+                    })
+                    
+                    .catch( err => console.log(err));
+            
+            })
+                .catch( e => console.log(e))
+
+        };       
+       
+        
+    </script>
+
+    <script>
+    //esta ruta envia una data y consulta a la base de datos el ultimo registro actualizado para 
+    //luego presentarlo en pantalla si no encuentra el precio actualizado el backend devolvera undefind 
+    //al recibir esta respuesta el fronted enviara al backend una peticionpara actualizar datos.
+
+
+    let data = {
+
+    currentDay : `${Fecha}-${Mes}-${Anio}`
+
+    }
+    
+    console.log("Esto es data",data)
+
+    fetch('/admin/update-rate-show', {
+
+    method: "post",
+    body: JSON.stringify(data),
+    headers: {"content-type" : "application/json"}
+
+    })
+        .then(response =>response.json() )
+        .then( jsonx => {console.log("esto es la data recibida del backend ", jsonx)
+
+        const info = jsonx.info
+        console.log('esto es info ---->', info);
+        let currentPrice; 
+
+        if (jsonx.searchCurrentCurrency){
+            currentPrice = jsonx.searchCurrentCurrency[0].currentPrice;
+            console.log("Esto es currentPrice --->", currentPrice)
+        }
+        
+
+        if (info === "Update"){
+            idPrice.innerText = currentPrice; 
+        } else {
+            ExchangeRate()
+        }
+ 
+    })
+        .catch( err => console.log(err)); 
+
+
+    </script>
+
+   
+
+
+</body>
+</html>
+

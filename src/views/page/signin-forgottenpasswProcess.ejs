@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Signin-forgottenpassw</title>
+</head>
+<body class="mainTheme">
+    <main>
+
+    <%- include('../partials/navi-simple.ejs') %>   
+    
+    <% if (tokenForgottenPasswSuccess) { %>
+        <%- include('../alert/tokenForgottenPasswSuccess.ejs') %>
+    <% }; %>
+    
+
+    <% if (signIn.length !==0 ) { %>
+    <div class="container-fluid border border-dark" style="background-size: cover; background-image: url('<%= signIn[0].url %>'); height: 100%;" >
+    <% } else { %>
+    <div class="container-fluid">    
+    <% }; %>    
+
+        <div class="row d-flex justify-content-end mx-3 mt-5">
+            <div class="col-lg-4 col-md-5 col-sm-10 col-12">
+                <div class="card formTransp mt-4 rounded-2 shadow">
+                    <div class="card-header d-flex justify-content-between">
+                        <span>Reset Password</span> <i class="bi bi-3-square me-1"></i>
+                    </div>
+                    <div class="card-body">
+
+                        <form action="/myaccount/signin-forgottenpasswProcess" method="POST" id="forgotten">
+
+                            <% if (email) { %>
+                            <% const mail = email.email  %>    
+                            <div class="form-group my-2">
+                                <input type="email" name="email" class="form-control" value="<%= mail %>" readonly>
+                            </div>
+                            <% }; %>
+                                
+                            <div class="form-group my-2">
+                                <input type="text" name="passw" class="form-control" placeholder="Su Contraseña" maxlength="20" style="letter-spacing: 3px;" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="confirmPassw" class="form-control" placeholder="Confirme Contraseña" maxlength="20" style="letter-spacing: 3px;" required>
+                            </div>
+
+                            <div class="form-group my-3">  
+                                <button class="form-control btn btn-primary" type="submit"> Asignar Nueva Contraseña</button>
+                            </div>
+
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class=" mx-1"><small> Crea una Contraseña facíl de recordar pero fuerte para descifrar. Utiliza mayúsculas, minúsculas y al menos un caracter especial.  </small> </label>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <%- include('../partials/scripts.ejs')%>
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+    </main>
+</body>
+</html>
+
+

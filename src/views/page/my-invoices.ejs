@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Facturas</title>
+</head>
+<style>
+ 
+  .open{
+    display: block;
+  }
+
+  .closed{
+    display: none !important;
+  }
+
+  .textLight{
+      /* trabaja en conjunto con themaTextLight */
+      color: white;
+  }
+
+  @media screen and (min-width: 290px) and (max-width: 499px ){
+
+    .containerPayRegister{
+      display: flex;
+      flex-direction: column;
+    }
+
+    .containerSoon, .registerDetails{
+      width: 100% !important;
+    }
+
+
+  }
+ 
+  
+</style>
+<body class="mainTheme">
+
+     
+  <main style="height: auto;">
+    <%- include('../partials/navi-simple.ejs') %>
+    <% if (user) { %>
+    
+    <div class="container-fluid d-flex justify-content-between p-1 themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+      <div class="containerNav"><p class="m-0 ps-5">Facturas</p></div>
+      <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-secondary active" id="btnPay">Pagar</button>
+        <button type="button" class="btn btn-secondary" id="btnPaid">Pagado</button>
+        <button type="button" class="btn btn-secondary" id="btnInvoices">Documentos</button>
+      </div>
+    </div>
+    
+    <div class="contentPay" style="height: auto;">
+        <div class="row m-0 border-bottom d-flex justify-content-center" style="width: 100%; height: 40%; overflow: auto;">
+        
+            
+              <div class="col-lg-11 my-4 p-0">
+
+                      <% if (boxInvoices.length !== 0) {%> 
+                      <div class="mainTable" style="overflow-x: auto; width: 100%;">
+                      
+                          <table class="table m-0 tableBox">
+                            
+                            <tr>
+                                <th>Id</th><th>Title</th><th>Department</th><th>Price</th><th>Commission</th><th>Action</th>
+                            </tr>
+
+                            <% if (boxInvoices) { %>
+                                <% boxInvoices.forEach( (ele)=>{ %>
+                                    <tr>
+                                        <td><%= ele._id %></td><td><%= ele.title %></td><td><%= ele.department %></td><td>$ <%= ele.price %></td><td style="background-color: rgba(160, 158, 158, 0.1);">$ <%= ele.commission %></td>
+                                        <% if (ele.userDeclare === false) { %>
+                                        <td><button class="btn btn-success btn-sm btnInvoice"> <input type="hidden" value="<%= ele._id %>">Pay <i class="bi bi-stack ms-1"></i></button></td>
+                                        <% } else { %>
+                                        <td><button class="btn btn-primary btn-sm btnInvoiceReg"> Reg. <i class="bi bi-stack ms-1"></i></button></td>
+                                        <% }; %>    
+                                    </tr>
+                                <% }); %>
+                            <% }; %>    
+
+
+                          </table>
+                      </div>  
+
+                      <% } else { %>
+                        <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                            <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                                <div class="containerMessage m-2">
+                                    <span style="font-size: 18px;">¡No tienes facturas pendientes!<i class="bi bi-emoji-frown ms-3"></i></span>
+                                </div>
+                            </div>
+                        </div>        
+                      <% } %>  
+
+              </div> 
+
+    
+        </div>
+        <div class="row m-0 d-flex justify-content-center" style="width: 100%; background-color: rgba(160, 158, 158, 0.1); height: auto;">
+          
+          <div class="col-lg-11  my-4 p-0">
+              <div class="containerNails">
+                <ul class="nav nav-tabs">
+
+
+                  <li class="nav-item cancel">
+                    <button class="nav-link active payRegister">Registrar Pago</button>
+                  </li>
+                  <li class="nav-item">
+                      <button class="nav-link  payDate">Datos de Pago</button>
+                  </li>
+                  
+              
+                </ul> 
+              </div>
+
+              <div class="containerPayRegister my-1 p-2 d-flex justify-content-between border" >
+                <div class="containerSoon border p-2" style="width: 45%;">
+                  
+                  <form action="/my-invoices/paycomission" method="post">
+                    
+                    <div class="input-group my-1">
+                      <span class="input-group-text" id="inputGroup-sizing-default" style="width: 30%;">Id Oper. :</span>
+                      <input type="text" name="idOper" class="form-control" id="idOperInvoice" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly>
+                      <input type="hidden" name="department" id="department">
+                    </div>
+                    
+                    <div class="input-group my-1">
+                        <span class="input-group-text" id="inputGroup-sizing-default" style="width: 30%;">Banco :</span>
+                        <select name="banco" id="" class="form-control selectBank" style="width: 70%;" disabled>
+                          <option value="_">Select it</option>
+                        <% if (searchBank) { %>
+                            <% searchBank.forEach((ele, i)=>{ %>
+
+                            <option value="<%= ele.bankname %>"><%= ele.bankname %></option>
+                          
+                            <% }); %>
+                        <% }; %>
+
+                        </select>
+                    </div>
+                    
+                    <div class="input-group my-1 d-flex"> 
+                        <span class="input-group-text" id="inputGroup-sizing-default" style="width: 30%;">Monto :</span>
+                        <div class="contentMontUSD form-control p-0" style="position: relative;">
+                            <input type="number" name="monto" class="form-control pe-5" id="montoInvoice"  step="0.001" readonly style="text-align: right; height: 100%; border-radius: 0px ; border: none;">
+                            <span style="position: absolute; top: 8px; right: 4px; font-size: 13px;">(USD)</span>
+                        </div>
+                        <div class="contentMontVES form-control p-0" style="position: relative;">
+                            <input type="number" name="montoPay" class="form-control pe-5" id="montoInvoicePay"  step="0.001" readonly style="position: relative; text-align: right; font-weight: bold; background-color: rgb(168, 207, 168, 0.5); height: 100%; border-radius: 0px ; border: none;">
+                            <span style="position: absolute; top: 8px; right: 4px; font-size: 13px;">(VES)</span>
+                        </div>  
+                    </div>
+                    <div class="input-group my-1">
+                        <span class="input-group-text" id="inputGroup-sizing-default" style="width: 30%;">Refer :</span>
+                        <input type="text" name="refer" class="form-control inpRefer" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required disabled>
+                    </div>
+                    <div class="form-goup my-2">
+                         <input type="submit" class="btn btn-success form-control btnRegisterPay" value="Sent" disabled> 
+                    </div>
+
+                  </form>
+                </div>
+                <div class="registerDetails border" style="width: 50%;  background-color: rgba(245, 245, 245, 0.1);">
+                  
+                 
+                    <div class="containerDetails1 p-3 themaTextLight">
+                        <p style="text-align: justify;">Para registrar pagos active esta sección haciendo click al botón <span class="bg-success text-light rounded-1 p-1 mx-2"> Pay <i class="bi bi-stack ms-1"></i></span> de la venta concretada que desea pagar.</p>
+                        <p style="text-align: justify;">Elija el banco donde hará el pago y posteriormente coloque la "referencia o número de confirmación" Esta información se la provee la entidad bancaria.</p>
+                        <p style="text-align: justify;">Si se equivoca y envia la referencia equivocada o errada, no se preocupe nuestros administradores resetearan dicho registro y pronto volverá a registrar nuevamente su pago.</p>
+                    </div>
+                      
+                    <div class="containerDetails2 closed p-3 themaTextLight">
+                        <p style="text-align: justify;">Usted ya ha registrado su pago, verá un marcador que dice  <span class="bg-primary text-light rounded-1 p-1 mx-2"> Reg. <i class="bi bi-stack ms-1"></i></span> en la factura.</p>
+                        <p style="text-align: justify;">En un promedio de 24 horas nuestros administradores procesarán la operación de pago.</p>
+                        <p style="text-align: justify;">Si se equivoca y envia la referencia equivocada o errada, no se preocupe nuestros administradores resetearan dicho registro y pronto volverá a registrar nuevamente su pago.</p>
+                    </div>
+
+
+                </div>
+              </div>
+
+              <div class="containerPayDate my-1 closed">
+                <div class="accordion accordion-flush" id="accordionExample">
+                  <% if (searchBank) { %>
+                  
+                    <% searchBank.forEach((ele, i)=>{ %>
+                          
+                            <div class="accordion-item">
+                              <h2 class="accordion-header accordion-flush" id="heading<%= i %>">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= i %>" aria-expanded="true" aria-controls="collapse<%= i %>">
+                                  <span><%= ele.bankname %></span>
+                                </button>
+                              </h2>
+                              <div id="collapse<%= i %>" class="accordion-collapse collapse" aria-labelledby="heading<%= i %>" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                  <div class="containerSoon p-2" style="background-color: rgb(128, 128, 128, 0.4);">
+                                    <span class=""><span class="bg-secondary text-light me-2 rounded-1 px-1">Transferencia Bancaria : </span><i class="bi bi-card-text mx-2"></i><%= ele.accountnumber %></span><span><i class="bi bi-person-vcard mx-2"></i> <%= ele.rif %> </span> <span><i class="bi bi-house-check mx-2"></i><%= ele.accountowner %></span> <br>
+                                    <span class=""><span class="bg-secondary text-light me-2 rounded-1 px-1">Pago Movil : </span><i class="bi bi-phone mx-2"></i><%= ele.phonenumber %></span> <span><i class="bi bi-person-vcard mx-2"></i> <%= ele.rif %> </span>
+                                </div>
+                                </div>
+                              </div>
+                            </div>
+
+                    <% }); %>
+                  <% }; %>
+                </div>  
+              </div>
+             
+          </div>
+          
+        </div>
+    </div>
+    <div class="contentPaid closed my-4 px-5">
+        <div class="row d-flex justify-content-center mt-0 pb-4" style="width: 100%; height: 150vh; overflow-y: auto;">
+          
+          <div class="col-lg-11 mt-0 mb-4 p-0">
+
+            <% if (boxInvoicesPaid.length !== 0) {%> 
+            <div class="mainTable" style="overflow-x: auto; width: 100%;">    
+                <table class="table m-0 tableBox">
+                  
+                  <tr>
+                      <th>Id</th><th>Title</th><th>Department</th><th>Price</th><th>Comm-USD</th><th>Comm-VES</th><th>Action</th>
+                  </tr>
+
+                  <% if (boxInvoicesPaid) { %>
+                      <% boxInvoicesPaid.forEach( (ele)=>{ %>
+                          <tr>
+
+                              <td><%= ele._id %></td><td><%= ele.title %></td><td><%= ele.department %></td><td>$ <%= ele.price %></td><td>$ <%= ele.commission %> </td><td style="background-color: rgba(160, 158, 158, 0.1);"> Bs. <%= ele.montoPay%></td>
+                              <td class="d-flex justify-content-center bg-success">Paid <i class="bi bi-stack ms-1"></i></td>
+                            
+                          </tr>
+                      <% }); %>
+                  <% }; %>    
+
+
+                </table>
+            </div>    
+            <% } else { %>
+              <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                  <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                      <div class="containerMessage m-2">
+                          <span style="font-size: 18px;">¡No tienes facturas pagas aún!<i class="bi bi-emoji-frown ms-3"></i></span>
+                      </div>
+                  </div>
+              </div>        
+            <% } %>  
+
+          </div> 
+
+
+        </div>
+    </div>
+    <div class="contentInvoices closed mb-4 px-5" style="height: 50%;">
+     
+      <div class="row m-0 d-flex justify-content-center my-4 p-0" style="width: 100%;"> 
+          <ul class="nav nav-tabs col-lg-11 mt-2">
+
+          <li class="nav-item">
+            <a class="nav-link active" id="facturas" href="#">Facturas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="recibos" href="#">Recibos</a>
+          </li>
+      
+          </ul>
+
+          <div class="boxInvoices col-lg-11 mt-2">
+
+            <% if (boxDocumentInvoice.length !== 0) { %> 
+            <div class="mainTable" style="overflow-x: auto; width: 100%;">    
+                <table class="table m-0 tableBox">
+                  
+                  <tr>
+                    <th>Id</th><th>Fact.</th><th>Title</th><th>Department</th><th>Costo</th><th>Imp.</th><th>Total</th><th>Descargar</th>
+                  </tr>
+
+                
+                  <% boxDocumentInvoice.forEach( (ele)=>{ %>
+                        <tr>
+
+                            <td><%= ele.orderID %></td><td><%= ele.numberInvoice %></td> <td><%= ele.title %></td><td><%= ele.typeService %></td><td><%= ele.taxFree %></td><td><%= ele.taxesAmount %> </td><td style="background-color: rgba(160, 158, 158, 0.1);"> Bs. <%= ele.totalAmount %></td>
+                            <td class="d-flex justify-content-center">
+                              <a href="/my-invoices/invoicePDF/<%= ele._id %>">  <span class="alert alert-danger p-1 m-0"><i class="bi bi-filetype-pdf"></i></span></a> 
+                            </td>
+                          
+                        </tr>
+                  <% }); %>
+              
+                    
+                </table>
+            </div>    
+            <% } else { %>
+              <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                  <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                      <div class="containerMessage m-2">
+                          <span style="font-size: 18px;">¡No tienes facturas pagas aún!<i class="bi bi-emoji-frown ms-3"></i></span>
+                      </div>
+                  </div>
+              </div>        
+            <% } %>  
+
+          </div>
+
+          <div class="boxReceipts closed col-lg-11 mt-2">
+
+            <% if (boxDocumentReceipt.length !== 0) { %> 
+            <div class="mainTable" style="overflow-x: auto; width: 100%;">    
+                <table class="table m-0 tableBox">
+                  
+                  <tr>
+                    <th>Id</th><th>Rec.</th><th>Title</th><th>Department</th><th>Costo</th><th>Imp.</th><th>Total</th><th>Descargar</th>
+                  </tr>
+
+                
+                  <% boxDocumentReceipt.forEach( (ele)=>{ %>
+                        <tr>
+
+                            <td><%= ele.orderID %></td><td><%= ele.numberReceipt %></td> <td><%= ele.title %></td><td><%= ele.typeService %></td><td><%= ele.amount %></td><td><%= ele.taxesAmount %> </td><td style="background-color: rgba(160, 158, 158, 0.1);"> Bs. <%= ele.totalAmount %></td>
+                            <td class="d-flex justify-content-center">
+                              <a href="/my-invoices/receiptPDF/<%= ele._id %>"> <span class="alert alert-danger p-1 m-0"><i class="bi bi-filetype-pdf"></i></span>  </a> 
+                            </td>
+                          
+                        </tr>
+                  <% }); %>
+              
+                    
+                </table>
+            </div>    
+            <% } else { %>
+              <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                  <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                      <div class="containerMessage m-2">
+                          <span style="font-size: 18px;">¡No hay recibos aqui!<i class="bi bi-emoji-frown ms-3"></i></span>
+                      </div>
+                  </div>
+              </div>        
+            <% } %>  
+
+          </div>
+
+      </div>
+    </div>  
+
+    <% } else { %>
+      <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+        <%- include('../partials/noLogin.ejs') %>
+    
+      </div>   
+    <% }; %> 
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+</body>
+</html>
+
+<script>
+  
+  const btnInvoiceReg = document.querySelector('.btnInvoiceReg');
+  const containerDetails1 = document.querySelector('.containerDetails1');
+  const containerDetails2 = document.querySelector('.containerDetails2');
+  
+  if (btnInvoiceReg) {
+
+    btnInvoiceReg.addEventListener('click', ()=>{
+      containerDetails1.classList.add('closed');
+      containerDetails2.classList.remove('closed');
+    });
+    
+  };
+
+
+</script>
+
+<script>
+
+  const btnInvoice = document.querySelectorAll('.btnInvoice');
+  const idOperInvoice = document.getElementById('idOperInvoice');
+  const department = document.getElementById('department'); 
+  const montoInvoice = document.getElementById('montoInvoice');
+  const montoInvoicePay = document.getElementById('montoInvoicePay');
+  const selectBank = document.querySelector('.selectBank'); //por default esta disabled
+  const inpRefer = document.querySelector('.inpRefer'); //por default esta disabled
+  const btnRegisterPay = document.querySelector('.btnRegisterPay'); 
+
+  for (let i = 0; i < btnInvoice.length; i++) {
+    const element = btnInvoice[i];
+
+    element.addEventListener('click', ()=>{
+      const idInvoice = element.childNodes[1].value;
+      console.log("Aqui el idInvoice --->", idInvoice);
+
+      containerDetails2.classList.add('closed');
+      containerDetails1.classList.remove('closed');
+
+      const dato = { idInvoice : idInvoice };
+
+      fetch('/my-invoices', {
+
+      method: "post",
+      body: JSON.stringify(dato),
+      headers: { "content-type": "application/json" }
+
+      })
+      .then(response => response.json())
+      .then(jsonx => {
+        console.log("esto es jsonx", jsonx);
+        idOperInvoice.value = jsonx[0]._id;
+        department.value = jsonx[0].department;
+        const montoUSD = jsonx[0].commission;
+        montoInvoice.value = montoUSD;
+        const currentPrice = jsonx[1];//esto es el precio de la moneda frente al dolar americano
+        montoInvoicePay.value = (currentPrice * montoUSD).toFixed(2);
+        selectBank.removeAttribute('disabled');//aqui activo el selector del banco.
+        inpRefer.removeAttribute('disabled');//aqui activo el input refer.
+
+      })
+      .catch(err => console.log(err));
+
+    });
+    
+  }
+
+  //este es el script que activa o desactiva el input de referencia 
+  //por la opcion de pago a elegida.
+  selectBank.addEventListener('change', ()=>{
+    //console.log(selectBank.value);
+    const typeBank = selectBank.value;
+    if (typeBank == 'Gratis'){
+      inpRefer.setAttribute('disabled', '');
+      inpRefer.value = '000000';
+      btnRegisterPay.removeAttribute('disabled');
+    } else if (typeBank == '_') {
+      inpRefer.setAttribute('disabled', '');
+      btnRegisterPay.setAttribute('disabled', '');
+    } else {
+      inpRefer.removeAttribute('disabled');
+      inpRefer.value = '';
+      btnRegisterPay.removeAttribute('disabled');
+    }
+
+  })
+
+</script>
+
+<script>
+
+const payDate = document.querySelector('.payDate');
+const payRegister = document.querySelector('.payRegister');
+const containerPayDate = document.querySelector('.containerPayDate');
+const containerPayRegister = document.querySelector('.containerPayRegister');
+
+payDate.addEventListener( 'click', ()=>{
+  payDate.classList.add('active');
+  payRegister.classList.remove('active');
+  containerPayDate.classList.remove('closed');
+  containerPayRegister.classList.add('closed');
+
+})
+
+payRegister.addEventListener( 'click', ()=>{
+  payRegister.classList.add('active');
+  payDate.classList.remove('active');
+  containerPayRegister.classList.remove('closed');
+  containerPayDate.classList.add('closed');
+ 
+})
+
+</script>
+
+<script>
+
+ const btnPay = document.getElementById('btnPay');
+ const btnPaid = document.getElementById('btnPaid');
+ const btnInvoices = document.getElementById('btnInvoices');
+ const contentPay = document.querySelector('.contentPay')
+ const contentPaid = document.querySelector('.contentPaid')
+ const contentInvoices = document.querySelector('.contentInvoices')
+
+ btnPay.addEventListener('click', ()=>{
+  contentPay.classList.remove('closed');
+  contentPaid.classList.add('closed');
+  contentInvoices.classList.add('closed');
+
+  btnPay.classList.add('active');
+  btnPaid.classList.remove('active');
+  btnInvoices.classList.remove('active');
+  
+ })
+
+ btnPaid.addEventListener('click', ()=>{
+  contentPaid.classList.remove('closed');
+  contentPay.classList.add('closed')
+  contentInvoices.classList.add('closed');
+
+  btnPaid.classList.add('active');
+  btnPay.classList.remove('active');
+  btnInvoices.classList.remove('active');
+ })
+
+ btnInvoices.addEventListener('click', ()=>{
+  contentPaid.classList.add('closed');
+  contentPay.classList.add('closed')
+  contentInvoices.classList.remove('closed');
+
+  btnPaid.classList.remove('active');
+  btnPay.classList.remove('active');
+  btnInvoices.classList.add('active');
+ })
+
+</script>
+
+<script>
+  //controladora de pestañas de la seccion de Invoices
+  const facturas = document.getElementById('facturas');
+  const recibos = document.getElementById('recibos');
+  const boxInvoices = document.querySelector('.boxInvoices');
+  const boxReceipts = document.querySelector('.boxReceipts');
+
+  facturas.addEventListener('click', ()=>{
+    facturas.classList.add('active');
+    recibos.classList.remove('active');
+
+    boxInvoices.classList.remove('closed');
+    boxReceipts.classList.add('closed');
+
+  });
+
+  recibos.addEventListener('click', ()=>{
+    facturas.classList.remove('active');
+    recibos.classList.add('active');
+
+    boxInvoices.classList.add('closed');
+    boxReceipts.classList.remove('closed');
+
+  });
+
+
+  
+
+</script>

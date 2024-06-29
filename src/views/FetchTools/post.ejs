@@ -1,0 +1,20 @@
+<script>
+  //ajax con method post
+
+    const datos = {
+      user : user,
+      userOfStore : userTienda
+    };
+
+fetch('/account/myfavorite-stores', {
+
+  method: "post",
+  body: JSON.stringify(datos),
+  headers: {"content-type" : "application/json"}
+
+})
+  .then(response =>response.json() )
+  .then( jsonx => console.log(jsonx))
+  .catch( err => console.log(err));
+  
+</script>

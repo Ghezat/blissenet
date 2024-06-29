@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Inbox</title>
+</head>
+<style>
+    .blockRed{
+        background-color: red;
+        border-radius: 2px;
+        width: 26px;
+        height: 16px;
+        padding: 0px, 5px;
+        margin-top: 6px;
+    }
+
+    .blockGreen{
+        background-color: green;
+        border-radius: 2px;
+        width: 26px;
+        height: 16px;
+        padding: 0px, 5px;
+        margin-top: 6px;
+    }
+
+    .open{
+    display: block;
+    }
+
+    .closed{
+        display: none;
+   
+    }
+
+    .blackBody{
+        /* esta es la clase que utiliza bodyTheme */
+        background-color: #272b2f;
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+</style>
+<body class="mainTheme">
+
+     
+  <main style="height: auto;">
+    <%- include('../partials/navi-simple.ejs') %>
+    <% if (user) { %>
+  
+        <div class="container-fluid d-flex justify-content-between p-1" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+            <div class="containerNav themaTextLight"><p class="m-0 ps-5">Mensajeria</p></div>
+            <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary active" id="btnInbox">Entrantes</button>
+                <button type="button" class="btn btn-secondary" id="btnOutbox">Salientes</button>
+            </div>
+        </div>
+   
+        <div class="contentInbox">
+            <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+
+                <div class="col-lg-10 my-4 p-0">
+
+                      <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(56, 61, 66, 0.2);">
+                         <div class="containerMessage d-flex flex-column p-2 themaTextLight">
+                            <div class="containerMain d-flex flex-column">
+                                    <!-- mensajes que llegan al messenger -->
+                                     <% if (searchMessageInbox.length !== 0 ) { %>
+                                        <% searchMessageInbox.forEach((ele)=>{ %>
+    
+                                              <% if (ele.typeNote === "notes") { %>
+                                                <div class="bodyTheme">
+
+                                                    <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
+                                                    <div class="containerImgTitle d-flex justify-content-between">
+  
+                                                        <div class="contentImgTitle d-flex flex-column">
+                                                            <div class="contentImgTitle d-flex">
+                                                                <div> <img src="/img/iconAdmin.gif" style="width: 50px;" class="me-4 rounded-1"></div> 
+                                                                <div class="d-flex align-items-end"> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p class="m-0" style="font-size: 18px;"><%= ele.titleArticle %></p> </a> </div>
+                                                            </div>
+
+                                                            <div>  <p style="font-size: 18px;"><%= ele.question %> <span> <small> <code>(admin-report)</code></small> </span></p> </div>
+                                                        </div>
+                                                        <div class="contentView">
+                                                            <% if (ele.answer === 'waiting'){  %>
+                                                                <a href="/myaccount/messenger/view/<%= ele._id %>"><button class="btn btn-success btn-sm">Visto</button></a>
+                                                            <% }; %>    
+                                                        </div>
+                                            
+                                                    </div>
+                                                    
+
+                                                    <hr class="m-1">     
+                                                </div>
+
+                                              <% } else if (ele.typeNote === "spread") {  %>  
+                                                <div class="bodyTheme">
+
+                                                    <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
+                                                    <div class="containerImgTitle d-flex justify-content-between">
+  
+                                                        <div class="contentImgTitle d-flex flex-column">
+                                                            <div class="contentImgTitle d-flex">
+                                                                <% if (ele.objeAvatar.avatar ==="") { %>
+                                                                    <div> <img src="https://www.gravatar.com/avatar/<%= ele.objeAvatar.avatarDefault %>?d=identicon" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                                <% } else { %>
+                                                                    <div> <img src="<%= ele.objeAvatar.avatar %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                                <% }; %>        
+                                                                 
+                                                                <div class="d-flex align-items-end"> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p class="m-0" style="font-size: 18px;"><%= ele.titleArticle %></p> </a> </div>
+                                                            </div>
+
+                                                            <div>  <p style="font-size: 18px;"><%= ele.question %></p> </div>
+                                                        </div>
+                                                        <div class="contentView">
+                                                            <% if (ele.answer === 'waiting'){  %>
+                                                                <a href="/myaccount/messenger/view/<%= ele._id %>"><button class="btn btn-success btn-sm">Visto</button></a>
+                                                            <% }; %>    
+                                                        </div>
+                                            
+                                                    </div>
+                                                    
+
+                                                    <hr class="m-1">     
+                                                </div>
+                                                
+                                              <% } else { %>
+                                                <div class="bodyTheme">
+                                                    <form action="/myaccount/messenger/response" method="post">
+
+                                                    <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
+                                                    <div class="containerImgTitle d-flex">
+        
+                                                        <div><img src="<%= ele.urlImageArticle %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                        <div> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p style="font-size: 18px;" ><%= ele.titleArticle %></p> </a> </div>
+                
+                                                    </div>
+                                                    <div class="question">
+                                                        <p class="rounded-2 ps-1"><%= ele.question %> <span> <small>(<%= ele.username %>) </small> </span></p> 
+                                                    </div>
+                                                    <div class="containerInputSubmit form-group d-flex justify-content-between mb-2">
+                                                        <input type="hidden" name="idMesagge" value="<%= ele._id%>">
+                                                        <input type="text" name="answer" class="form-control" style="width: 79%;" required> 
+                                                        <input type="submit" class="form-control btn btn-success" style="width: 20%;">
+                                                    </div>
+                                                    
+
+                                                    </form>
+                                                    <hr class="m-1">     
+                                                </div>  
+                                              <% }; %>
+                                            
+                                        <% }); %>
+                                      
+                                     <% } else {  %>
+                                      <div class="containerMessage m-2 ">
+                                          <span style="font-size: 18px;">¡No hay mensajes aqui!<i class="bi bi-emoji-frown ms-3"></i></span>
+                                      </div>
+                                     <% }; %> 
+  
+                            </div>
+                         </div>
+                      </div>
+
+                </div> 
+  
+            </div>
+        </div>
+
+        <div class="contentOutbox closed">
+            <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+
+                <div class="col-lg-10 my-4 p-0">
+
+                    <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(56, 61, 66, 0.2);">
+                        <div class="containerMessage d-flex flex-column p-2 themaTextLight">
+                            <div class="containerMain d-flex flex-column">
+
+                                <!-- mensajes que llegan al outBox -->
+                                <% if (searchMessageSend.length !== 0) {  %>
+                                    <% searchMessageSend.forEach((ele)=>{ %>
+
+                                        <div class="containerMessage">
+                                            <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>
+                                            <div class="containerImgTitle d-flex justify-content-between">
+  
+                                                <div class="contentImgTitle d-flex">
+                                                    <div><img src="<%= ele.urlImageArticle %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                    <div> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p style="font-size: 18px;"><%= ele.titleArticle %></p> </a> </div>
+                                                </div>
+                                                <div class="contentView">
+                                                    <% if (ele.answer !== 'waiting'){  %>
+                                                        <a href="/myaccount/messenger/view/<%= ele._id %>"><button class="btn btn-success btn-sm">Visto</button></a>
+                                                    <% }; %>    
+                                                </div>
+                                    
+                                            </div>
+                                            <div class="contentQuestion">
+                                                <p class="m-0"><%= ele.question %></p>
+                                            </div>
+                                            <% if (ele.answer !== 'waiting'){ %>
+                                            <div class="contentAnswer ms-2 rounded-1 p-1 d-flex">
+                                                <i class="bi bi-arrow-return-right me-2"></i> <p class="mb-0"><%= ele.answer %> <span> <small>(<%= ele.ownerStore %>)</small> </span></p>
+                                            </div>
+                                            <% } else { %>
+                                            <div class="contentAnswer ms-2 rounded-1 p-1 d-flex">
+                                                <i class="bi bi-arrow-return-right me-2"></i> <p class="mb-0"><i>¡...En espera de respuesta!</i></p>
+                                            </div>
+                                            <% } %>    
+                                            <hr class="m-1">
+
+                                        </div>
+                                   
+                                    <% }); %>    
+                                
+                                <% } else { %>
+                                    <span>Outbox limpio...</span>
+                                <% } %>    
+                            
+                            </div>
+                        
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+
+    <% } else { %>
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/noLogin.ejs') %>
+        
+          </div>    
+    <% }; %>     
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+  <script>
+    let btnInbox = document.getElementById('btnInbox');
+    let btnOutbox = document.getElementById('btnOutbox');
+    let contentInbox = document.querySelector('.contentInbox');
+    let contentOutbox = document.querySelector('.contentOutbox');
+                                                  
+    btnInbox.addEventListener('click', ()=>{
+      contentOutbox.classList.add('closed')
+      contentInbox.classList.remove('closed')
+
+      btnInbox.classList.add('active');
+      btnOutbox.classList.remove('active');
+    });
+
+    btnOutbox.addEventListener('click', ()=>{
+      contentOutbox.classList.remove('closed')
+      contentInbox.classList.add('closed')
+
+      btnInbox.classList.remove('active');
+      btnOutbox.classList.add('active');
+    });
+
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Report</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+ 
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+        <% if (userAdmin) { %>  
+
+            <div class="container-fluid d-flex justify-content-between align-items-center p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                
+                <div class="container" style="width: 70%;">
+                   
+                    <form action="/admin/process/reports" method="post" class="d-flex">
+
+                        <input type="date" name="dateForm" class="form-control me-1" style="width: 310px;">
+                        <input class="form-control me-2" type="search" name="searcher"  placeholder="Buscar por: Depart, CodeReport, Anunciante & Admin" aria-label="Search">
+                        <select name="selectSearcher"  class="form-control border border-success" style="width: 300px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                            <option value="Date">Date </option>
+                            <option value="Departs">Departs </option>
+                            <option value="CodeReport">CodeReport </option>
+                            <option value="Anunciante">Anunciante  </option>
+                            <option value="Admin">Admin </option>
+                        </select>
+                        <button class="btn btn-outline-success" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Search</button>
+                       
+                    </form>    
+                   
+                </div>
+                
+                <div>
+                    <span class=" me-5 p-0" style="color:gray; font-weight: 500;"> Report  </span>
+                </div>
+
+            </div>
+
+            <div class="row mx-0 p-2" style="height: 120%;">
+                
+                <div class="col-lg-12 my-1" style="height: max-content;">
+               
+                    <ul class="nav nav-tabs">
+                        
+                        <li class="nav-item">
+                            <button class="nav-link paymentsToProcess active">Reportes a Procesar</button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="nav-link searchToProcessNoPay">Reportes Procesados</button>
+                        </li>
+                      
+                    </ul> 
+
+                                        
+                </div>
+
+                <div class="contentReportToProcessBody" style="height: 100%; overflow-y: auto;">                
+                    <div class="col-12" style="height: 33%; overflow-y: auto;">
+                        <% if (searchToProcess.length !==0) { %>
+
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Date</th><th>CodeReport</th><th>Title_Id</th><th>Title</th><th>Anunciante</th><th>Review</th><th>Action</th>
+                                </tr>
+                            <% searchToProcess.forEach((ele, i)=>{ %>
+
+                            <tr>
+                                
+                                    <td><%= ele.dateOpen %></td><td><%= ele.codeReport %></td><td><%= ele.id_title %></td>
+                                    <td><%= ele.title %></td><td><%= ele.anunciante %></td><td> <a href="/product/<%= ele.depart %>/<%= ele.id_title %>" target="_blank"> View</a></td>
+                                        <input type="hidden" value="<%= ele._id %>" name="id" class="id">
+                                        <input type="hidden" value="<%= ele.id_title %>" name="title_id" class="title_id"> 
+                                    <td><button class="btn btn-success btn-sm btnTakeReport">Take</button></td>     
+                                    <!-- /admin/process/taking/reports takeReport-->
+                            </tr>
+                            <% }); %>
+
+                        <% } else { %>
+                                <div class="alert alert-light border">
+                                    <strong>¡ No hay reportes por los momentos !</strong>
+                                </div>
+                        <% }; %>    
+                        </table>
+                    </div>
+                    <div class="col-12 d-flex" style="height: 57%; overflow-y: auto;">
+                        <div class="col-5">
+                            <div class="card" style="height: 100%; border-radius: 0;">
+                               
+                                <div class="card-body">
+                                    <div class="input-group my-1">
+                                        <span class="input-group-text"> Report </span>
+                                        <input type="text" class="form-control" id="CodeReport" readonly>
+                                        <span class="input-group-text"> Action </span>
+                                        <select name="actionsOfReport" class="form-control actionReport" disabled>
+                                            <option value="selet">Seleccionar</option>
+                                            <option value="deleteAll">Eliminar Anuncio</option>
+                                            <option value="deleteMedia">Eliminar Medias</option>
+                                            <option value="rejectDenunt">Rechazar Denuncia </option>
+                                        </select>
+                                       
+                                    </div>
+
+                                    <div class="input-group my-1">
+                                        <span class="input-group-text"> Title </span>
+                                        <input type="text" class="form-control" id="Title" readonly>
+                                    </div>
+                                    <div class="input-group my-1">
+                                        <span class="input-group-text"> Depart </span>
+                                        <input type="text" class="form-control" id="Depart" readonly>
+                                    </div>
+                                    <div class="input-group my-1">
+                                        <span class="input-group-text"> Denunciation </span>
+                                        <textarea  cols="30" rows="2" class="form-control" id="Denunciation" readonly></textarea>
+                                    </div>
+                                    <div class="my-3 alert alert-info mb-2">
+                                        <ul class="px-3 my-2">
+                                            <li><strong>Eliminar Anuncios</strong>, Elimina todo el conjunto incluso su factura si tiene.</li>
+                                            <li><strong>Eliminar Medias</strong>, Elimina recursos Media (Video, Imagenes).</li>
+                                        </ul>
+                                        
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="card" style="height: 100%; border-radius: 0;">
+                                <div class="card-body" style="overflow-y: auto;">
+                                    <div class="contentInvoiceMedias d-flex align-items-start flex-wrap">
+                                        <!-- Datos dinamicos -->
+                                        
+                                    </div>
+
+                                    <hr>
+                                    <textarea id="notificationSend" cols="30" rows="2" class="form-control" readonly></textarea>
+                                    <div class="messageOptional d-flex align-items-start flex-wrap">
+                                        <!-- Datos dinamicos opcionales -->
+                                    </div>
+                                    <hr>
+
+                                    <div class="form-group mt-4">
+                                        <button class="btn btn-primary form-control" id="btnProcess" disabled>Process</button>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>    
+                
+                <div class="col-12 searchToProcessNoPayBody closed" style="height: 100%; overflow-y: auto;">
+                    <% if (searchProcessCount) { %>
+                        <div class="alert alert-info my-2">
+                            <strong><i class="bi bi-search me-2"></i> Result : <span class="bg-info px-2 py-1 rounded-2 ms-1"><%= searchProcessCount %></span>   </strong>
+                        </div>
+                    <% } %>
+
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Date</th><th>CodeReport</th><th>Title_Id</th><th>Title</th><th>Anunciante</th><th>admin</th><th>action</th>
+                        </tr>
+
+                        <% if ( searchProcess ) { %>
+                            <%  searchProcess.forEach((ele, i)=>{ %>
+                        <tr>
+
+                            <td><%= ele.dateOpen %></td><td><%= ele.codeReport %></td><td><%= ele.id_title %></td>
+                            <td><%= ele.title %></td><td><%= ele.anunciante %></td><td><%= ele.admin %></td>
+                            <% if (ele.action === "deleteAll") { %>
+                            <td class="table-danger"><%= ele.action %></td>
+                            <% } else if (ele.action === "deleteMedia") { %>
+                                <td class="table-warning"><%= ele.action %></td>
+                            <% } else if (ele.action === "rejectDenunt") { %>
+                                <td class="table-light"><%= ele.action %></td>
+                            <% }; %>          
+                     
+                        </tr>        
+                            <% }); %>
+                        <% }; %>  
+                        
+                    </table>
+
+
+                </div>
+
+                
+            </div> 
+            
+        <% } else { %>
+
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+        
+                
+                <%- include('../partials/adminNoLogin.ejs') %>
+            
+            </div>
+    
+        <% }; %>    
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+</body>
+</html>
+
+<script>
+
+let paymentsToProcess = document.querySelector('.paymentsToProcess');
+let searchToProcessNoPay = document.querySelector('.searchToProcessNoPay');
+
+let contentReportToProcessBody = document.querySelector('.contentReportToProcessBody');
+let searchToProcessNoPayBody = document.querySelector('.searchToProcessNoPayBody');
+
+
+
+paymentsToProcess.addEventListener('click', ()=>{
+    
+    paymentsToProcess.classList.add('active');
+    searchToProcessNoPay.classList.remove('active');
+ 
+    searchToProcessNoPayBody.classList.add('closed');
+    contentReportToProcessBody.classList.remove('closed')
+    
+});
+
+
+searchToProcessNoPay.addEventListener('click', ()=>{
+       
+   paymentsToProcess.classList.remove('active');
+   searchToProcessNoPay.classList.add('active');
+  
+   searchToProcessNoPayBody.classList.remove('closed');
+   contentReportToProcessBody.classList.add('closed')
+   
+});
+
+</script>
+
+<script>
+    
+    let id = document.querySelectorAll('.id');
+    let title_id = document.querySelectorAll('.title_id');
+    let btnTakeReport = document.querySelectorAll('.btnTakeReport');
+    let actionReport = document.querySelector('.actionReport');
+    let codeReport;
+    let depart, IdAnunciante, Anunciante, _Title, IdTitle, Id;
+    
+    
+        for (let n = 0; n < btnTakeReport.length; n++) {
+            const btnTake = btnTakeReport[n];
+            const _id = id[n].value;
+      
+            const titleId = title_id[n].value;
+            
+            
+            btnTake.addEventListener('click', ()=>{
+              
+                console.log("id", id)
+                console.log("title_id", title_id);
+    
+
+                const datos = {
+                    id : _id,
+                    title_id : titleId,
+                   
+                };
+
+                fetch('/admin/process/taking/reports', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>{
+                    console.log("------***------");
+                     console.log("See this ", jsonx)
+                     _Title = jsonx.title;
+                     let denunciation = jsonx.denuncia;
+
+
+                     codeReport = jsonx.codeReport;
+                     depart = jsonx.depart;
+                     Anunciante = jsonx.anunciante;
+                     IdAnunciante = jsonx.id_anunciante;
+                     IdTitle = jsonx.id_title;
+                     Id = jsonx._id;
+
+                     let CodeReport = document.getElementById('CodeReport')
+                     let Title = document.getElementById('Title');
+                     let Depart = document.getElementById('Depart');
+                     let Denunciation = document.getElementById('Denunciation');
+                    
+                     CodeReport.value = codeReport;
+                     Title.value = _Title;
+                     Depart.value = depart;
+                     Denunciation.value = denunciation;
+
+                     actionReport.removeAttribute('disabled');
+                    
+                    })
+                .catch( err => console.log(err));
+
+
+            })
+        }
+        
+
+
+</script>
+
+<script>
+      
+        
+        let contentInvoiceMedias = document.querySelector('.contentInvoiceMedias');
+        let notificationSend = document.getElementById('notificationSend');
+        let messageOptional = document.querySelector('.messageOptional');
+        const noteDeleteAll = 'Su Anuncio ha sido eliminado, por no cumplir con las exigencias mínimas establecidas.';
+        const noteDeleteMedia = 'Uno o varios recursos de Media (Video, Imagenes) de uno de tus anuncios se han eliminado, por no cumplir con las exigencias mínimas establecidas.';
+         
+
+        let CheckMedia, action;
+       
+
+        actionReport.addEventListener('change', ()=>{
+            
+            action = actionReport.value;
+            console.log("action", action);
+
+            const datos = {
+                action : action,
+                codeReport : codeReport,
+               
+                };
+
+            fetch('/admin/search/taking/reports', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                console.log("jsonx -->", jsonx )
+                
+                const action = jsonx.action;
+                const publi = jsonx.publi;
+                const invoice = jsonx.invoice;
+
+                //console.log("Esto es publi :", publi);
+                //console.log("Esto es invoice :", invoice);
+                let idOrder, commission;
+
+                contentInvoiceMedias.innerHTML = ""; //limpiamos contenedor
+                messageOptional.innerHTML = ""; 
+                //console.log("Esto es action :", action);
+
+                if (action === 'deleteAll' ){
+                   
+                    btnProcess.removeAttribute('disabled');
+                    notificationSend.classList.remove('close');
+
+                    if (invoice !== undefined){
+                        if (invoice.length !== 0){
+                            idOrder =  invoice[0]._id;
+                            commission = invoice[0].commission;
+
+                            console.log("Aqui mostramos la factura si posee para que el admin vea que sera eliminada")
+                            contentInvoiceMedias.innerHTML = `
+                                                        <div class="alert alert-info" style="width: 100%">
+                                                            <strong><span class="bg-info rounded-2 p-2 me-2">Invoice</span>   Id Order: (${idOrder}) Amount: $${commission}</strong>
+                                                        </div>
+                                                        `
+
+                            notificationSend.innerText = 'Su Anuncio ha sido eliminado, por no cumplir con las exigencias minimas establecidas.';                            
+                        } else {
+
+                            console.log("Aqui No hay factura, se envio un alert de No Existe Factura")
+                            contentInvoiceMedias.innerHTML = `
+                                                        <div class="alert alert-info"  style="width: 100%">
+                                                            <strong><span class="bg-info rounded-2 p-2 me-2">Invoice</span> Este Anuncio No tiene Factura disponible.</strong>
+                                                        </div>
+                                                        `
+                            notificationSend.innerText = noteDeleteAll;                            
+                        }
+                    }    
+
+
+                } else if (action === 'deleteMedia') {
+                    btnProcess.setAttribute('disabled', '');
+                    notificationSend.classList.remove('close');
+
+                    if (publi !== undefined){
+                       
+                        images =  publi.images;
+                        video = publi.video;
+                       
+                        console.log("Aqui mostramos todos los medias que pueden ser eliminados")
+
+                        video.forEach((ele)=> {
+                            
+                            contentInvoiceMedias.innerHTML += `
+                                                        <div style="position: relative";>
+                                                            <video src="${ele.url}" class="border border-primary my-0 me-1" style="width: 110px; max-height: 110px;" controls></video>
+                                                            <div class="form-check" style="position: absolute; top: 3px; left: 5px">
+                                                                <input class="form-check-input CheckMedia" type="checkbox" name="${ele.public_id}" value="video">
+                                                            </div>
+                                                        </div>    
+                                                            `
+
+                        });
+
+                        images.forEach((ele)=> {
+                            
+                            contentInvoiceMedias.innerHTML += `
+                                                        <div style="position: relative";>
+                                                            <img src="${ele.url}" alt="" class="border border-danger my-0 me-1" style="width: 110px; max-height: 110px; position: relative">
+                                                            <div class="form-check" style="position: absolute; top: 3px; left: 5px">
+                                                                <input class="form-check-input CheckMedia" type="checkbox" name="${ele.public_id}" value="image">
+                                                            </div>
+                                                        </div>
+                                                        `
+
+                        });
+
+                        notificationSend.innerText = noteDeleteMedia; 
+                        CheckMedia = document.querySelectorAll('.CheckMedia');
+
+                        console.log("estoy aqui")
+                        let countCheck = 0;
+                        //console.log("Esto es el for CheckMedia", CheckMedia)
+                        for (let n = 0; n < CheckMedia.length; n++) {
+                            const element = CheckMedia[n];
+                            element.addEventListener('change', ()=>{
+                                console.log("checkbox :", element.checked)
+                                if (element.checked === true){
+                                    countCheck ++
+                                    //console.log("countCheck", countCheck)
+                                    if (countCheck > 0 && countCheck < CheckMedia.length - 1){
+                                        btnProcess.removeAttribute('disabled');
+                                    } else {
+                                        btnProcess.setAttribute('disabled', '');
+                                    }
+                                } else {
+                                    countCheck --
+                                    //console.log("countCheck", countCheck)
+                                    if (countCheck > 0 && countCheck < CheckMedia.length - 1){
+                                        btnProcess.removeAttribute('disabled');
+                                    } else {
+                                        btnProcess.setAttribute('disabled', '');
+                                    }
+                                }
+                            })
+                       
+                        }
+
+                        
+                    }                                        
+                } else if (action === 'rejectDenunt'){
+                                       
+                    btnProcess.removeAttribute('disabled');
+                    notificationSend.classList.add('close');
+                    //console.log("Aqui mostramos todos los medias disponibles en la publicacion")
+
+                    if (publi !== undefined){
+                       
+                       images =  publi.images;
+                       video = publi.video;
+                      
+                       //console.log("Aqui mostramos todos los recursos medias ")
+
+                       video.forEach((ele)=> {
+                           
+                           contentInvoiceMedias.innerHTML += `
+                                                           <video src="${ele.url}" class="border border-primary my-0 me-1" style="width: 110px; max-height: 110px;" controls></video>
+                                                           `
+                       });
+
+                       images.forEach((ele)=> {
+                           
+                           contentInvoiceMedias.innerHTML += `
+                                                           <img src="${ele.url}" alt="" class="border border-danger my-0 me-1" style="width: 110px; max-height: 110px; position: relative">
+                                                          `
+                       });
+
+                       messageOptional.innerHTML = `
+                                                    <div class="alert alert-success" style="width: 100%">
+                                                            <strong> Este reporte será rechazado por no tener ningun problema. </strong>
+                                                    </div> 
+                                                    `    
+
+                       
+                   } 
+                                                        
+                }
+            })
+            .catch( err => console.log(err));
+        })
+</script>
+
+<script>
+    //const CheckMedia = document.querySelectorAll('.CheckMedia');
+    const btnProcess = document.getElementById('btnProcess');
+    let boxMedia = [];
+    let Data;
+    
+
+    btnProcess.addEventListener('click', ()=>{
+        
+        console.log("CheckMedia", CheckMedia);
+        console.log("action", action)
+
+        if (action === 'deleteAll'){
+            
+            Data = { "IdReport" : Id, "action" : action, "IdAnunciante" : IdAnunciante, "anunciante" : Anunciante, Title: _Title, "IdTitle" : IdTitle, "Depart" : depart, note : noteDeleteAll };
+            
+        } else if (action === 'deleteMedia') {
+
+            CheckMedia.forEach((ele)=>{
+                if (ele.checked){
+                    console.log(ele.value)//image or video
+                    console.log(ele.name)//public_id
+                    let type = ele.value;
+                    let publiId = ele.name;
+                    const objMedia = {type : type, publicId : publiId };
+                    boxMedia.push(objMedia);
+                }
+            });
+            Data = { "IdReport": Id ,"action" : action, "IdAnunciante" : IdAnunciante, "anunciante" : Anunciante, Title: _Title, "IdTitle" : IdTitle, "boxMedia" : boxMedia, "Depart" : depart, note : noteDeleteMedia };
+            
+        } else if (action === 'rejectDenunt'){
+           
+            Data = { "IdReport" : Id, "action" : action, "anunciante" : Anunciante, "IdTitle" : IdTitle, "Depart" : depart };
+        }
+       
+        
+
+
+        console.log("Data", Data)
+        //al enviar el objeto como respuesta dle servidor estas variables se limpian. 
+        boxMedia = [];
+        action = "";
+
+        const datos = {
+            data : Data,
+        };
+
+              //admin/processing/taking/reports
+        fetch('/admin/processing/taking/reports', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonResp => { 
+            console.log(jsonResp)
+            /* aqui trabajaremos con la respuesta */
+            location.reload()
+        
+        })
+        .catch( err => console.log(err)); 
+        
+    })
+
+</script>
+

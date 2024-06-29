@@ -1,0 +1,46 @@
+
+  <% if (currentBanner.length !== 0) { %>
+      <div class="containerCurrentBanner">
+
+               
+          <div id="carouselCurrentBanner" class="carousel carousel-fade slide" data-bs-ride="carousel">
+              <div class="carousel-indicators">
+                  <% currentBanner.forEach((ele, i)=>{ %>
+
+                      <% if (i === 0) { %>
+                          <button type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide-to="<%= i %>" class="active" aria-current="true" aria-label="Slide <%= i + 1 %>"></button>
+                      <% } else { %>
+                          <button type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide-to="<%= i %>" aria-label="Slide <%= i + 1 %>"></button>
+                      <% }; %> 
+                                                                  
+                  <% }); %>
+              </div>
+              <div class="carousel-inner">
+                  <% currentBanner.forEach((ele, i)=>{ %>
+                      
+
+                          <% if (i === 0) { %>
+                          <div class="carousel-item active" style="position: relative;"> <img src="<%= ele.url %>" class="d-block w-100" alt="..."> </div>
+                        
+                          <% } else { %>    
+                          <div class="carousel-item" style="position: relative;"> <img src="<%= ele.url %>" class="d-block w-100" alt="..."> </div>
+                        
+                          <% }; %>
+                          
+                      
+                  <% }); %>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+              </button>   
+          </div>                                                        
+              
+      </div>
+  <% }; %> 
+
+

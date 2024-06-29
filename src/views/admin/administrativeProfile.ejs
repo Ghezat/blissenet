@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Administrative Profile</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+
+        <% if (createAdminProfile) { %>
+            <%- include('../alertAdmin/createAdminProfile.ejs') %>
+        <% }; %>
+        
+        <% if (editAdminProfile) { %>
+            <%- include('../alertAdmin/editAdminProfile.ejs') %>
+        <% }; %>
+     
+      
+       <div class="containerAddBanks">
+            <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Administrative Profile</span>
+            </div>
+       </div>
+       <div class="row  mx-0">
+        <div class="col-lg-4">
+            <div class="containControl p-2 mt-2 border">
+                <% if (searchAdminProfile.length === 0){ %>
+                <!-- formulario de crear -->
+                <div class="card create">
+                    <div class="card-header">
+                        Add Administrative Profile
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/new-administrativeProfile" method="post" id="formCreate">
+                            <div class="form-group my-2">
+                                <input type="text" name="company" placeholder="Intro name of your company" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="companyID" placeholder="Intro your company ID, Example: J-0001256203" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <textarea name="companyObject" cols=" " rows="2" placeholder="Intro the purpose or object of your company" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="franchiseOwner" placeholder="Enter the name of the owner of the Franchise" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="manager" placeholder="Enter the name of the operations manager" class="form-control" require>
+                            </div>
+                          
+                            <div class="form-group my-2 d-flex">
+                                <input type="text" name="country" placeholder="Enter the Country" class="form-control" style="border-top-right-radius: 0; border-bottom-right-radius: 0; width: 45%;" required>
+
+                                <select name="coState" class="form-control" style="border-top-left-radius: 0; border-bottom-left-radius: 0; width: 55%;" required>
+                                    <option value="" selected>Select a State</option>
+                                    <option value="Amazonas">Amazonas</option>
+                                    <option value="Anzoátegui">Anzoátegui</option>
+                                    <option value="Apure">Apure</option>
+                                    <option value="Aragua">Aragua</option>
+                                    <option value="Barinas">Barinas</option>
+                                    <option value="Bolívar">Bolívar</option>
+                                    <option value="Carabobo">Carabobo</option>
+                                    <option value="Cojedes">Cojedes</option>
+                                    <option value="Delta Amacuro">Delta Amacuro</option>
+                                    <option value="Dependencias Federales">Dependencias Federales</option>
+                                    <option value="Distrito Federal">Distrito Federal</option>
+                                    <option value="Falcón">Falcón</option>
+                                    <option value="Guárico">Guárico</option>
+                                    <option value="Lara">Lara</option>
+                                    <option value="Mérida">Mérida</option>
+                                    <option value="Miranda">Miranda</option>
+                                    <option value="Monagas">Monagas</option>
+                                    <option value="Nueva Esparta">Nueva Esparta</option>
+                                    <option value="Portuguesa">Portuguesa</option>
+                                    <option value="Sucre">Sucre</option>
+                                    <option value="Táchira">Táchira</option>
+                                    <option value="Trujillo">Trujillo</option>
+                                    <option value="Vargas">Vargas</option>
+                                    <option value="Yaracuy">Yaracuy</option>
+                                    <option value="Zulia">Zulia</option>
+                                </select>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="coAddress" placeholder="Enter the office address" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2 d-flex">
+                                <input type="text" name="phone1" placeholder="Enter the first phone" class="form-control" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" required>
+                                <input type="text" name="phone2" placeholder="Enter the second phone" class="form-control" style="border-top-left-radius: 0; border-bottom-left-radius: 0;" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="email" placeholder="Enter the operations management email" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <span class="alert alert-secondary m-0 py-1 px-1 form-control">Datos de Facturación.</span>
+                            </div> 
+                            <div class="form-group my-2">
+                                <input type="text" name="nameTaxInstitute" placeholder="Tax Institute" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="taxesCode" placeholder="Tax code" class="form-control">
+                            </div>
+
+                            <div class="input-group my-2 ">
+                                <input type="text" name="taxesName" placeholder="Tax name (IVA)" class="form-control" required>
+                                <input type="number" name="taxesPercent" placeholder="Tax percentage %" class="form-control" required>
+                                <span class="input-group-text"><i class="bi bi-percent"></i></span>
+                            </div>
+                            
+                            <div class="form-group my-3">
+                                <button type="submit" class="btn btn-primary form-control" id="btnCreate"> Crear Profile </button>
+                                <button type="button" class="btn btn-primary form-control invisibleBtn"  id="btnCreateLoading" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Uploading...
+                                </button>
+                            </div>
+                         
+                        </form>
+                    </div>
+                </div>
+                <% } else { %>
+
+                <!-- formulario de edit -->
+                <div class="card edit">
+                    <div class="card-header">
+                        Edit Administrative Profile
+                    </div>
+                <% if (searchAdminProfile.length !== 0 ) { %>
+                    <% searchAdminProfile.forEach((ele)=>{  %>    
+                    <div class="card-body">
+                     
+                        <form action="/admin/edit-administrativeProfile" method="post" id="formEdit">
+                                                       
+                            <input type="hidden" name="idAdminProfile" value="<%= ele._id %>">
+                            <div class="form-group my-2">
+                                <input type="text" name="company" value="<%= ele.company %>"  placeholder="Intro name of your company" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="companyID" value="<%= ele.companyID %>" placeholder="Intro your company ID, Example: J-0001256203" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <textarea name="companyObject" cols=" " rows="2" placeholder="Intro the purpose or object of your company" class="form-control"><%= ele.companyObject %></textarea>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="franchiseOwner" value="<%= ele.franchiseOwner %>" placeholder="Enter the name of the owner of the Franchise" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="manager" value="<%= ele.manager %>"  placeholder="Enter the name of the operations manager" class="form-control" require>
+                            </div>
+                          
+                            <div class="form-group my-2 d-flex">
+                                <input type="text" name="country" value="<%= ele.country %>" placeholder="Enter the Country" class="form-control" required style="border-top-right-radius: 0; border-bottom-right-radius: 0; width: 45%;">
+
+                                <select name="coState"  class="form-control" required style="border-top-left-radius: 0; border-bottom-left-radius: 0; width: 55%;">
+                                    <option value="<%= ele.state %>" selected><%= ele.coState %></option>
+                                    <option value="Amazonas">Amazonas</option>
+                                    <option value="Anzoátegui">Anzoátegui</option>
+                                    <option value="Apure">Apure</option>
+                                    <option value="Aragua">Aragua</option>
+                                    <option value="Barinas">Barinas</option>
+                                    <option value="Bolívar">Bolívar</option>
+                                    <option value="Carabobo">Carabobo</option>
+                                    <option value="Cojedes">Cojedes</option>
+                                    <option value="Delta Amacuro">Delta Amacuro</option>
+                                    <option value="Dependencias Federales">Dependencias Federales</option>
+                                    <option value="Distrito Federal">Distrito Federal</option>
+                                    <option value="Falcón">Falcón</option>
+                                    <option value="Guárico">Guárico</option>
+                                    <option value="Lara">Lara</option>
+                                    <option value="Mérida">Mérida</option>
+                                    <option value="Miranda">Miranda</option>
+                                    <option value="Monagas">Monagas</option>
+                                    <option value="Nueva Esparta">Nueva Esparta</option>
+                                    <option value="Portuguesa">Portuguesa</option>
+                                    <option value="Sucre">Sucre</option>
+                                    <option value="Táchira">Táchira</option>
+                                    <option value="Trujillo">Trujillo</option>
+                                    <option value="Vargas">Vargas</option>
+                                    <option value="Yaracuy">Yaracuy</option>
+                                    <option value="Zulia">Zulia</option>
+                                </select>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="coAddress" value="<%= ele.coAddress %>"  placeholder="Enter the office address" class="form-control" required>
+                            </div>
+                            <div class="form-group my-2 d-flex">
+                                <input type="text" name="phone1" value="<%= ele.phone1 %>" placeholder="Enter the first phone" class="form-control" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                                <input type="text" name="phone2" value="<%= ele.phone2 %>" placeholder="Enter the second phone" class="form-control" required style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="email" value="<%= ele.email %>" placeholder="Enter the operations management email" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <span class="alert alert-secondary m-0 py-1 px-1 form-control">Datos de Facturación.</span>
+                            </div>    
+                          
+                            <div class="input-group my-2">
+                                <input type="text" name="nameTaxInstitute" value="<%= ele.nameTaxInstitute %>" placeholder="Tax Institute" class="form-control" required>
+                                <input type="text" name="taxesCode" value="<%= ele.taxesCode %>" placeholder="Tax code" class="form-control">
+                            </div>
+                            <div class="input-group my-2">
+                                <input type="text" name="taxesName" value="<%= ele.taxesName %>" placeholder="Tax name" class="form-control" required>
+                                <input type="number" name="taxesPercent" value="<%= ele.taxesPercent %>" placeholder="Tax percentage" class="form-control" required>
+                                <span class="input-group-text"><i class="bi bi-percent"></i></span>
+                            </div>
+                            
+                            <div class="form-group my-3">
+                                <input type="submit" class="btn btn-secondary form-control" value="Edit Admin Profile" id="btnEdit">
+                                <button class="btn btn-secondary form-control invisibleBtnEdit" type="button" id="btnEditLoading" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Updating...
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <% }); %>
+                <% } %>
+                </div>
+
+                <% }; %>
+
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="containShowAccount p-2 mt-2 border">
+                <div class="card">
+                    <div class="card-header">
+                        Administrative Profile
+                    </div>
+                    <div class="card-body">
+                        <div class="containerMainAccount">
+                            <% if (searchAdminProfile.length !== 0) { %>
+                                <% searchAdminProfile.forEach((ele)=>{ %>
+                                    <div class="containAccount p-3 my-2 rounded-3 border d-flex shadow-sm alert alert-danger" >
+                                        <p class="mb-0">La información aqui presentada es solo para ser usada con fines administrativos y solo podrá ser editada por el <strong>Gerente de Operaciones</strong>.</p>
+                                    </div>
+                                    <div class="containAccount p-3 my-3 rounded-3 border d-flex shadow" style="background-color: rgb(247, 247, 247);">
+                                        
+                                        <div class="containData">
+                                            <p class="mb-0 fw-bold">Company : <span class="ms-2 fw-normal"><%= ele.company %></span></p>
+                                            <p class="mb-0 fw-bold">Company ID : <span class="ms-2 fw-normal"><%= ele.companyID %></span></p>  
+                                            <p class="mb-0 fw-bold">companyObject : <span class="ms-2 fw-normal"><%= ele.companyObject %></span></p> 
+                                            <p class="mb-0 fw-bold">Franchise Owner: <span class="ms-2 fw-normal"><%= ele.franchiseOwner %></span></p> 
+                                            <p class="mb-0 fw-bold">Manager : <span class="ms-2 fw-normal"><%= ele.manager %></span></p>
+                                            <p class="mb-0 fw-bold">Country : <span class="ms-2 fw-normal"><%= ele.country %></span></p>
+                                            <p class="mb-0 fw-bold">State : <span class="ms-2 fw-normal"><%= ele.coState %></span></p>
+                                            <p class="mb-0 fw-bold">Address : <span class="ms-2 fw-normal"><%= ele.coAddress %></span></p>
+                                            <p class="mb-0 fw-bold">Phone1 : <span class="ms-2 fw-normal"><%= ele.phone1 %></span></p>
+                                            <p class="mb-0 fw-bold">Phone1 : <span class="ms-2 fw-normal"><%= ele.phone1 %></span></p>
+                                            <p class="mb-0 fw-bold">Manager Email : <span class="ms-2 fw-normal"><%= ele.email %></span></p>
+                                            <p class="mb-0 fw-bold">Name Tax Institute : <span class="ms-2 fw-normal"><%= ele.nameTaxInstitute %></span></p>
+                                            <p class="mb-0 fw-bold">Taxes Code : <span class="ms-2 fw-normal"><%= ele.taxesCode %></span></p>
+                                            <p class="mb-0 fw-bold">Taxes Name : <span class="ms-2 fw-normal"><%= ele.taxesName %></span></p>
+                                            <p class="mb-0 fw-bold">Taxes Percent : <span class="ms-2 fw-normal"><%= ele.taxesPercent %></span></p>
+                                        </div>
+
+                                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="containAccount p-2 m-2 rounded-3 d-flex">
+                                        
+                                    <div class="shadow d-flex justify-align-center justify-content-center p-2 m-0 bg-body rounded border" style="width: 100%;">
+                                  
+                                            <img src="/img/admiracion.png" style="width : 60px">
+                                            <span class="m-2"> ¡Sin perfil creado! Procure llenar estos datos antes de inicar operaciones con la plataforma. Todos los campos son requeridos. </span>
+
+                                    </div>
+
+                                </div>
+                                
+
+                                
+                            <% } %>    
+                        </div>        
+                    </div>
+                </div>
+            </div>
+        </div>
+       </div>
+                       
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
+    <script>//con este script logro proteger y dar el spinnier en el boton de carga.
+
+        const btnCreate = document.getElementById('btnCreate');
+        const btnCreateLoading = document.getElementById('btnCreateLoading');
+        const formCreate = document.getElementById('formCreate')
+        
+        formCreate.addEventListener('submit', (e) => {
+            if (e) {
+                //console.log("existe un evento en desarrollo")
+                btnCreate.classList.add('invisibleBtn')
+                btnCreateLoading.classList.remove('invisibleBtn')
+            } else {
+                //console.log("no hay ningun evento")
+                btnCreate.classList.remove('invisibleBtn')
+            }
+
+        })
+
+    </script>
+    <script> //aqui creo el spinner en el edit
+            const btnEdit = document.getElementById('btnEdit');
+            const btnEditLoading = document.getElementById('btnEditLoading');
+
+            const formEdit = document.getElementById('formEdit')
+            formEdit.addEventListener('submit', (e) => {
+                if (e) {
+                    //console.log("existe un evento en desarrollo")
+                    btnEdit.classList.add('invisibleBtnEdit')
+                    btnEditLoading.classList.remove('invisibleBtnEdit')
+                } else {
+                    //console.log("no hay ningun evento")
+                    btnEdit.classList.remove('invisibleBtnEdit')
+                }
+
+            })
+    </script>
+    
+
+
+</body>
+</html>
+
+
+
+

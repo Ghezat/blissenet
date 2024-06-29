@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - invoiceReceipt</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+          
+        <% if (userAdmin) { %>
+       <div class="containerSignup">
+            <div class="container-fluid d-flex justify-content-between align-items-center p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                
+                <div class="container" style="width: 70%;">
+                   
+                    <form action="/admin/search/invoiceReceipt" method="post" class="d-flex">
+
+                        <input type="date" name="dateFirst" class="form-control me-1" style="width: 310px;">
+                        <input type="date" name="dateLast" class="form-control me-2" style="width: 310px;">
+                        <input class="form-control me-2" type="search" name="searcher"  placeholder="Buscar por: Invoice, Order ID & Doc. ID" aria-label="Search">
+                        <select name="selectSearcher"  class="form-control border border-success" style="width: 300px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                            <option value="Dates">Dates </option>
+                            <option value="Invoice">Invoice/Receipt </option>
+                            <option value="OrderID">Order ID</option>
+                            <option value="ID">Doc. ID</option>
+                        </select>
+                        <button class="btn btn-outline-success" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Search</button>
+                       
+                    
+                    </form>
+                   
+                
+                </div>
+                
+                <span class=" ms-2 me-5 p-0" style="color:gray; font-weight: 500;" > Invoice & Receipt </span>
+            </div>
+
+
+            <div class="row d-flex justify-content-center mx-0 p-2">
+                
+                <div class="col-lg-12 my-1">
+               
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <button class="nav-link active Invoice">Invoice</button>
+                           
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link Receipt">Receipt</button>
+                           
+                        </li>
+                     
+                    </ul> 
+                    
+                </div>
+
+                <div class="col-12 InvoiceTable table-responsive" id="table-report-invoice">
+
+                    <div class="contentTitleRepor d-flex justify-content-between">
+                        <p style="font-size: 16px;" class="m-0 p-0 px-2" style="color: black; border-radius: 0;">Reporte Contable de Facturación :
+                            <% if (objectSearchMessage) { %>
+                                <span class="ms-1 fw-bold"><%= objectSearchMessage.searcherMessage %> </span>
+                                <span class="ms-1 fw-bold">by <%= objectSearchMessage.typeSearchMessage %> </span>
+                            <% } else { %>
+                                <span class="ms-1 fw-bold"> View General</span>
+                            <% }; %>    
+                        </p>
+                        <button class="btn btn-danger mx-1 px-2 py-1 shadow" id="btn-inv-pdf"> Report <i class="bi bi-file-pdf" style="font-size: 18px;"></i> </button>
+                    </div>
+                     
+                    <table class="table table-striped table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th><th>Invoice</th><th>Order ID</th><th>Name</th><th>Doc. ID</th><th>Amount</th><th>Tax</th><th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>  
+                        <% if (searchDocumentInvoice) { %>
+                            <% searchDocumentInvoice.forEach((ele, i)=>{ %>
+                                    
+                            <tr>
+                               
+                                <td><%= ele.date %></td><td><%= ele.numberInvoice %></td><td><%= ele.orderID %></td><td><%= ele.receptorName %></td><td><%= ele.receptorID %></td>
+                                <td><%= ele.taxFree %></td><td><%= ele.taxesAmount%></td><td class="table-success"><%= ele.totalAmount %></td>
+                                        
+                            
+                            </tr>
+                        
+                            <% }); %>
+                        <% }; %>
+                        </tbody>    
+                        <% if (totalSumInv) { %>
+                             
+                        <tfoot>
+                            <tr class="table-warning">
+                                <td>Totalization</td><td></td><td></td><td></td><td></td> <td><%= totalSumInv.totalBase%> </td> <td> <%= totalSumInv.totalImp%> </td> <td> <%= totalSumInv.totalAmount%> </td>
+                            </tr>
+                        </tfoot>
+                        <% }; %>
+                           
+                    </table>
+
+                </div>
+
+                <div class="col-12 ReceiptTable table-responsive closed" id="table-report-receipt">
+
+                    <div class="contentTitleRepor d-flex justify-content-between">
+                        <p style="font-size: 16px;" class="m-0 p-0 px-2">Reporte Contable de Recibos :
+                            <% if (objectSearchMessage) { %>
+                                <span class="ms-1 fw-bold"><%= objectSearchMessage.searcherMessage %> </span>
+                                <span class="ms-1 fw-bold">by <%= objectSearchMessage.typeSearchMessage %> </span>
+                            <% } else { %>
+                                <span class="ms-1 fw-bold"> View General</span>
+                            <% }; %>    
+                        </p>
+                        <button class="btn btn-danger mx-1 px-2 py-1 shadow" id="btn-rec-pdf"> Report <i class="bi bi-file-pdf" style="font-size: 18px;"></i> </button>
+                    </div> 
+
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th><th>Receipt</th><th>Order ID</th><th>Name</th><th>Doc. ID</th><th>Amount</th><th>Tax</th><th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>    
+
+                        <% if (searchDocumentReceipt) { %>
+                            <% searchDocumentReceipt.forEach((ele, i)=>{ %>
+                            <tr>
+                            
+                                <td><%= ele.date %></td><td><%= ele.numberReceipt %></td><td><%= ele.orderID %></td><td><%= ele.receptorName %></td><td><%= ele.receptorID %></td>
+                                <td><%= ele.amount %></td><td><%= ele.taxFree %></td><td class="table-success"><%= ele.totalAmount %></td>
+                                            
+                            </tr>
+                            <% }); %>
+                        <% }; %>
+                        </tbody>
+
+                        <% if (totalSumRec) { %>
+                             
+                            <tfoot>
+                                <tr class="table-warning">
+                                    <td>Totalization</td><td></td><td></td><td></td><td></td> <td><%= totalSumRec.totalBase%> </td> <td> <%= totalSumRec.totalImp%> </td> <td> <%= totalSumRec.totalAmount%> </td>
+                                </tr>
+                            </tfoot>
+                            <% }; %>   
+                    </table>
+                    
+                </div>
+               
+                
+            </div>
+       </div>
+           
+       <% } else { %>
+
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/adminNoLogin.ejs') %>
+        
+        </div>
+
+       <% }; %>
+       
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <!-- https://cdnjs.com/libraries/html2canvas :::: de esta pagina saque la CDN de html2canvas -->
+    <!-- https://cdnjs.com/libraries/pdfmake :::: de esta pagina saque la CDN de pdfmake -->
+
+    <!-- :::::: visitar la pagina para actualizar la CDN  ::::: -->
+
+
+</body>
+</html>
+
+<script>
+
+let InvoiceTable = document.querySelector('.InvoiceTable');
+let ReceiptTable = document.querySelector('.ReceiptTable');
+let Invoice = document.querySelector('.Invoice');
+let Receipt = document.querySelector('.Receipt');
+
+
+Invoice.addEventListener('click', ()=>{
+    Invoice.classList.add('active');
+    Receipt.classList.remove('active');
+
+    InvoiceTable.classList.remove('closed');
+    ReceiptTable.classList.add('closed');
+    
+});
+
+
+Receipt.addEventListener('click', ()=>{
+    
+    Receipt.classList.add('active');
+    Invoice.classList.remove('active');
+
+    ReceiptTable.classList.remove('closed');
+    InvoiceTable.classList.add('closed');
+    
+});
+
+
+
+</script>
+
+
+<script>
+
+
+const btnReportInv = document.getElementById('btn-inv-pdf');
+const btnReportRec = document.getElementById('btn-rec-pdf');
+const tableReportInvoice = document.getElementById('table-report-invoice');
+const tableReportReceipt = document.getElementById('table-report-receipt');
+let epoch = new Date().getTime();
+
+let dia = new Date().getDay();
+let mes = new Date().getMonth() + 1;
+let anio = new Date().getFullYear();
+let hora = new Date().getHours();
+let minu = new Date().getMinutes();
+
+if (minu <= 9){
+    minu = `0${minu}`
+}
+
+const fullDate = `${dia}-${mes}-${anio} ${hora}:${minu}`;
+
+// :::::: pdfmake ::::::
+
+btnReportInv.addEventListener("click", () => {
+  //  console.log(tableReport);
+  html2canvas(tableReportInvoice,{ignoreElements: (elemento)=> elemento.id === "btn-inv-pdf"}  ) // Llamar a html2canvas y pasarle el elemento
+    .then(canvas => {
+      // Cuando se resuelva la promesa traerá el canvas
+      // Crear un elemento <a>
+      //let enlace = document.createElement('a');
+      //enlace.download = `Politania-Report ${epoch}.png`;
+      // Convertir la imagen a Base64
+      //enlace.href = canvas.toDataURL();
+      //imagen Base64 en variable image
+      let image = canvas.toDataURL();
+      console.log("Esto es image : ",image)
+
+      fetch("/admin/profileAdmin", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log("Esto es companyData : " ,jsonx)
+            let company = jsonx[0].company;
+            let companyID = jsonx[0].companyID;
+            let coAddress = jsonx[0].coAddress;
+            let coState = jsonx[0].coState;
+            let country = jsonx[0].country;
+            
+            const companyD = `${company} ${companyID}`;
+            const companyAddress = `${coAddress} ${coState} ${country}`;
+        
+            var docDefinition = { 
+                content: [ 
+                    { text: "Politania Webcommer", lineHeight: 1, margin: [5, 0] },
+                    { text: fullDate, style: 'dates' },
+                    { text: companyD, style: 'companyStyle'},
+                    { text: companyAddress, style: 'companyStyle', lineHeight: 2},
+                    { image : image, width: 500 }
+                ],
+                styles: {
+                    dates: {
+                        fontSize: 7,
+                        alignment: 'right',
+                        italics: true,
+                        margin: [20, 0]
+                    },
+                    companyStyle: {
+                        fontSize: 7,
+                        margin: [5, 0]
+                    }
+                }    
+
+            };
+      
+        pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+
+        })
+        .catch( err => console.log(err));
+
+    });
+});
+
+btnReportRec.addEventListener("click", ()=> {
+  //  console.log(tableReport);
+  html2canvas(tableReportReceipt, { ignoreElements : (element) => element.id === "btn-rec-pdf"}) // Llamar a html2canvas y pasarle el elemento
+    .then(canvas => {
+      // Cuando se resuelva la promesa traerá el canvas
+      let image = canvas.toDataURL();
+      console.log("Esto es image : ",image);  
+
+      fetch("/admin/profileAdmin", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log("Esto es companyData : " ,jsonx)
+            let company = jsonx[0].company;
+            let companyID = jsonx[0].companyID;
+            let coAddress = jsonx[0].coAddress;
+            let coState = jsonx[0].coState;
+            let country = jsonx[0].country;
+            
+            const companyD = `${company} ${companyID}`;
+            const companyAddress = `${coAddress} ${coState} ${country}`;
+        
+            var docDefinition = { 
+                content: [ 
+                    { text: "Politania Webcommer", lineHeight: 1, margin: [5, 0] },
+                    { text: fullDate, style: 'dates' },
+                    { text: companyD, style: 'companyStyle'},
+                    { text: companyAddress, style: 'companyStyle', lineHeight: 2},
+                    { image : image, width: 500 }
+                ],
+                styles: {
+                    dates: {
+                        fontSize: 7,
+                        alignment: 'right',
+                        italics: true,
+                        margin: [20, 0]
+                    },
+                    companyStyle: {
+                        fontSize: 7,
+                        margin: [5, 0]
+                    }
+                }    
+
+            };
+      
+        pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+
+        })
+        .catch( err => console.log(err));
+
+    });    
+
+});
+   
+
+</script>
+

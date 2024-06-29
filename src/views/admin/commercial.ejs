@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Commercial Data</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+
+    .leyend{
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+                   
+      
+       <div class="containerWindow">
+            <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class=" me-5 p-0" style="color:gray; font-weight: 500;"> Commercial Data</span>
+            </div>
+            <div class="containerNewDay">
+                <div class="row m-0 p-0">
+                
+                    <div class="col-lg-12 p-0">
+                        <div class="containerGeneralNewDay p-0">
+                            <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                               
+                                <div class="card-body">
+    
+                                    <div class="containerMain" style="height: auto;">
+    
+                                        <div class="contentOne" id="contentOne">
+    
+                                            <div class="row border d-flex justify-content-between align-items-start my-2 p-2">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    
+                                                    <p style="font-size: 18px;">Cantidad de publicaciones por departamentos.</p>
+                                                    <div class="form-group d-flex">
+
+                                                        
+                                                        <span class="form-control"> Crea su rango de fecha :</span>
+                                                        <input type="date" class="form-control"  id="dateFirst" value="date">
+                                                        <input type="date" class="form-control"  id="dateLast" value="date">
+                                                        <input type="button" class="btn btn-success" value="Submit" id="submitDate">
+                                                    
+
+                                                    </div>
+
+                                                    <div class="contentInfoAds d-flex justify-content-between my-2">
+                                                        <div class="form-group border rounded-2 p-2 shadow-sm" style="width: 39%; color: rgb(70, 70, 70);">
+                                                            
+                                                            
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/arte.png" alt="" style="width: 25px;"> Artes: <span class="artes ms-2 font-size: 13px"> </span><span class="artPor ms-3"> </span> </p>
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/aeronautico.png" alt="" style="width: 25px;"> Aeroplanos: <span class="aeroplanos ms-2"> </span><span class="aerPor ms-3"> </span> </p>
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/articulos.png" alt="" style="width: 25px;"> Items: <span class="items ms-2"> </span><span class="itePor ms-3"> </span> </p>
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/automotriz.png" alt="" style="width: 25px;"> Automotriz: <span class="automotriz ms-2"> </span><span class="autPor ms-3"> </span> </p>
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/nautico.png" alt="" style="width: 25px;"> Nauticos: <span class="nauticos ms-2"> </span><span class="nauPor ms-3"> </span> </p>
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/bienesRaices.png" alt="" style="width: 25px;"> Realstate: <span class="realstate ms-2"> </span><span class="reaPor ms-3"> </span> </p>
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/servicio.png" alt="" style="width: 25px;"> Servicios: <span class="servicios ms-2"> </span><span class="serPor ms-3"> </span> </p>
+                                                            <p class="mb-1 ms-2" style="font-size: 18px;"> <img src="/img/subasta.png" alt="" style="width: 25px;"> Subastas: <span class="subastas ms-2"> </span><span class="subPor ms-3"> </span> </p>
+    
+                                                           
+                                                        </div>
+                                                        <div class="form-group border shadow-sm rounded-2 p-2 d-flex flex-column justify-content-center align-items-center" style="width: 60%;">
+                                                           <p class="mb-1" style="font-size: 28px; color: rgb(90, 90, 90);"> Total Publicaciones : <span class="total ms-2"> </span></p>
+                                                           <p style="font-size: 32px; color: rgb(90, 90, 90);">100%</p>
+                                                        </div>
+                                                    </div>
+
+                                                                              
+                                                </div>
+                                            </div>
+                                                
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            
+       </div>
+                       
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+  
+
+
+<script>
+    //este script solicita data para presentar cada vez que se abre esta pagina.
+
+    const artes = document.querySelector('.artes');
+    const aeroplanos = document.querySelector('.aeroplanos');
+    const automotriz = document.querySelector('.automotriz');
+    const items = document.querySelector('.items');
+    const nauticos = document.querySelector('.nauticos');
+    const realstate = document.querySelector('.realstate');
+    const servicios = document.querySelector('.servicios');
+    const subastas = document.querySelector('.subastas');
+    const total = document.querySelector('.total');
+
+    //seccion span donde marca el porcentaje que representa
+    const artPor = document.querySelector('.artPor');
+    const aerPor = document.querySelector('.aerPor');
+    const itePor = document.querySelector('.itePor');
+    const autPor = document.querySelector('.autPor');
+    const nauPor = document.querySelector('.nauPor');
+    const reaPor = document.querySelector('.reaPor');
+    const serPor = document.querySelector('.serPor');
+    const subPor = document.querySelector('.subPor');
+
+    fetch("/admin/commercial-data", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonData => {
+            console.log("Esto es jsonData :",jsonData)
+            const boxAds = jsonData.boxAds
+            const sumBoxAds = jsonData.sumBoxAds
+
+            console.log(boxAds);
+            console.log(sumBoxAds);
+
+            let art = boxAds[0].Artes;
+            let aer = boxAds[1].Aeroplanos;
+            let ite = boxAds[2].Items;
+            let aut = boxAds[3].Automotriz;
+            let nau = boxAds[4].Nauticos;
+            let rea = boxAds[5].Realstate;
+            let ser = boxAds[6].Servicios;
+            let sub = boxAds[7].Subastas;
+
+            artes.textContent = art;
+            aeroplanos.textContent = aer;
+            items.textContent = ite;
+            automotriz.textContent = aut;
+            nauticos.textContent = nau;
+            realstate.textContent = rea;
+            servicios.textContent = ser;
+            subastas.textContent = sub;
+
+            total.textContent = sumBoxAds; //este es el total de publicaciones
+
+            artPor.innerText = ((art * 100)/ sumBoxAds).toFixed(1) + "%" ;
+            aerPor.innerText = ((aer * 100)/ sumBoxAds).toFixed(1) + "%";
+            itePor.innerText = ((ite * 100)/ sumBoxAds).toFixed(1) + "%";
+            autPor.innerText = ((aut * 100)/ sumBoxAds).toFixed(1) + "%";
+            nauPor.innerText = ((nau * 100)/ sumBoxAds).toFixed(1) + "%";
+            reaPor.innerText = ((rea * 100)/ sumBoxAds).toFixed(1) + "%";
+            serPor.innerText = ((ser * 100)/ sumBoxAds).toFixed(1) + "%";
+            subPor.innerText = ((sub * 100)/ sumBoxAds).toFixed(1) + "%";
+            
+            
+            
+                    
+        })
+        .catch( err => console.log(err));
+</script>
+
+<script>
+
+    const dateFirst = document.getElementById('dateFirst') 
+    const dateLast = document.getElementById('dateLast') 
+    const submitDate = document.getElementById('submitDate')
+
+
+submitDate.addEventListener('click', ()=>{
+
+    const datos = {
+    dateFirst : dateFirst.value,
+    dateLast : dateLast.value
+    };
+
+    console.log(datos);
+
+    if (datos.dateFirst.length !== 0 && datos.dateLast.length !== 0){
+
+        fetch('/admin/commercial-data', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log("Esto es jsonx :", jsonx)
+            const jsonX = jsonx.boxAds;
+
+            let sum = 0;
+            let art = jsonX[0].Artes;
+            let aer = jsonX[1].Aeroplanos;
+            let ite = jsonX[2].Items;
+            let aut = jsonX[3].Automotriz;
+            let nau = jsonX[4].Nauticos;
+            let rea = jsonX[5].Realstate;
+            let ser = jsonX[6].Servicios;
+            let sub = jsonX[7].Subastas;
+
+            sum = (art + aer + ite + aut + nau + rea + ser + sub);
+    
+            artes.textContent = art;
+            aeroplanos.textContent = aer;
+            items.textContent = ite;
+            automotriz.textContent = aut;
+            nauticos.textContent = nau;
+            realstate.textContent = rea;
+            servicios.textContent = ser;
+            subastas.textContent = sub;
+
+            total.textContent = sum; //este es el total de publicaciones
+    
+            if (art !== 0){
+                artPor.innerText = ((art * 100)/ sum).toFixed(1) + "%";
+            } else {
+                artPor.innerText = 0 + "%";
+            }
+            
+            if (aer !== 0){
+                aerPor.innerText = ((aer * 100)/ sum).toFixed(1) + "%";
+            } else {
+                aerPor.innerText = 0 + "%";
+            }
+            
+            if (ite !== 0){
+                itePor.innerText = ((ite * 100)/ sum).toFixed(1) + "%";
+            } else {
+                itePor.innerText = 0 + "%";
+            }
+            
+            if (aut !== 0){
+                autPor.innerText = ((aut * 100)/ sum).toFixed(1) + "%";
+            } else {
+                autPor.innerText = 0 + "%";
+            }
+            
+            if (nau !== 0){
+                nauPor.innerText = ((nau * 100)/ sum).toFixed(1) + "%";
+            } else {
+                nauPor.innerText = 0 + "%";
+            }
+            
+            if (rea !== 0){
+                reaPor.innerText = ((rea * 100)/ sum).toFixed(1) + "%";
+            } else {
+                reaPo.innerText = 0 + "%";
+            }
+
+           
+            serPor.innerText = ((ser * 100)/ sum).toFixed(1) + "%";
+            subPor.innerText = ((sub * 100)/ sum).toFixed(1) + "%";
+            
+
+        })
+        .catch( err => console.log(err));
+
+    }
+  
+});
+      
+</script>
+   
+
+</body>
+</html>
+

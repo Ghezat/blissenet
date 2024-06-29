@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Invoice Marketing</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .close{
+        display: none;
+    }
+
+</style>
+<body>
+    <main>
+    <%- include('../partials/navi-admin.ejs') %>
+         
+
+    <% if (userAdmin) { %>
+        
+        <% if (invoiceMarketingError) { %>
+            <%- include('../alertAdmin/invoiceMarketingError.ejs') %>
+        <% }; %>
+    
+        <% if (invoiceMarketingSuccess) { %>
+            <%- include('../alertAdmin/invoiceMarketingSuccess.ejs') %>
+        <% }; %>
+
+        <% if (adminError) { %>
+            <%- include('../alertAdmin/adminError.ejs') %>
+        <% } %>
+         
+        <div class="containerPlace">
+                <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                    <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Invoice Marketing</span>
+                </div>
+        </div>
+
+        
+        <div class="containerBanners">
+                <div class="row m-0 p-0">
+                    <div class="col-lg-4 p-0">
+                        <div class="containerAddBanner p-0">
+                            <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                            
+                                <div class="card-body my-2">
+                                    <form action="/admin/create-invoice-marketing" method="POST" id="formCreate">
+        
+                                                    <div class="card-header">+ Create to Invoice</div>
+                                                    <% if (userAdmin) { %>
+    
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Type Service</span>
+                                                        <select class="form-control" name="descrip" id="selectType">
+                                                            <option value="banner" selected>Banner</option>
+                                                            <option value="news_Day">NewsDay</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Type Customer</span>
+                                                        <select class="form-control" name="typeCustomer" id="selectCustomer">
+                                                            <option value="select">Selet it</option>
+                                                            <option value="customer">Customer</option>
+                                                            <option value="no_customer">No Customer</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Customer Username </span>
+                                                        <input class="form-control customerUsername" type="text" name="customerUsername" placeholder="Intro customer username" readonly required>
+                                                        <button type="button" class="input-group-text btn btn-secondary btnSearch" disabled><i class="bi bi-search"></i></button>
+                                                    </div> 
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Customer Names </span>
+                                                        <input class="form-control customerName" type="text" name="customerNames" placeholder="Intro customer name" readonly required>
+                                                    </div>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Customer Nº. Document</span>
+                                                        <input class="form-control customerDocument" type="text" name="customerDocument" placeholder="Intro customer docment" readonly required>
+                                                    </div>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Customer address</span>
+                                                        <textarea class="form-control customerAdress" name="customerAdress"  placeholder="Intro customer address" cols="30" rows="1"  readonly required></textarea>
+                                                    </div>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Days</span>
+                                                        <input class="form-control timeInDays" type="number" name="timeDays" placeholder="Intro time in days" readonly required>
+                                                        <span class="input-group-text">USD</span>
+                                                        <input class="form-control price" type="number" name="price" readonly>
+                                                    </div>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Monto Base</span>
+                                                        <input class="form-control priceVES" type="number" name="priceVES" readonly>
+                                                        <span class="input-group-text">Imp.</span>
+                                                        <input class="form-control impVES" type="number" readonly>
+                                                    </div>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Monto a Pagar VES</span>
+                                                        <input class="form-control totalVES fw-bold"  type="number" readonly>
+                                                    </div> 
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">End Public</span>
+                                                        <input class="form-control endPublic" type="date" name="endPublic" readonly required>
+                                                    </div>
+                                                <% if (banks){ %>
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Bank</span>
+                                                        <select class="form-control" name="bank" id="banks" required>
+                                                            <option value="select">Selet it</option>
+                                                                <% banks.forEach((ele)=>{ %>
+                                                                    <option value="<%= ele.bankname %>"><%= ele.bankname %></option>
+                                                                <% }) %>   
+                                                        </select>
+                                                        <span class="input-group-text">Nº.</span>
+                                                        <input class="form-control nAccount" type="text" name="nAccount" readonly required>
+                                                    </div>
+                                              
+                                                <% }; %> 
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text">Refer</span>
+                                                        <input class="form-control refer" type="text" name="refer" readonly required>
+                                                    </div>
+
+                                                    <% }; %>               
+                
+                                                    <div class="form-group my-2">
+                                                        <button type="submit" class="btn btn-primary form-control my-3" id="btnCreate"> Create Invoice </button>
+                                                        <button class="btn btn-primary form-control invisibleBtn my-3" type="button" id="btnCreateLoading" disabled>
+                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                            Uploading...
+                                                        </button>
+                                                    </div>
+        
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 p-0">
+                        <div class="containerGeneralBanner p-0">
+                            <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                <div class="card-header">
+                                    <ul class="nav nav-tabs">
+
+                                        <li class="nav-item">
+                                            <a class="nav-link currentBanner active" style="cursor: pointer;">Current Invoice</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link bannerDelete " style="cursor: pointer;">History Invoice</a>
+                                        </li>
+                                
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="containerMain" style="height: auto;">
+
+                                        
+                                        <div class="containerCurrentBanner">
+
+                                        <% if (invoiceMarketingLast) { %>    
+
+                                            <% invoiceMarketingLast.forEach((ele)=>{ %>
+                                            <div class="alert alert-success">
+                                                <p class="my-1">Factura : <span><%= ele.numberInvoice %></span> <span class="ms-3 me-2">de fecha : <%= ele.date %> </span> </p>
+                                                <p class="my-1">A nombre : <span><%= ele.receptorName %></span> </p>
+                                                <p class="my-1">Documento : <span><%= ele.receptorID %></span> </p>
+                                                <p class="my-1">Dirección : <span><%= ele.receptorAddress %></span> </p>
+                                                <hr>
+                                                <p class="my-1">Descrip : <span><%= ele.title %></span>  <span class="ms-5">. . . . . . . . . . . . . <strong>Bs. <%= ele.taxFree %></strong> </span> </p>
+                                                <p class="my-1">Tiempo : <span><%= ele.timeDays %></span> <span class="ms-3 me-2">Fecha de salida : <%= ele.endPublic %> </span> </p>
+                                                <p class="my-1">Banco : <span><%= ele.bank %></span> <span class="ms-3 me-2">Nº. Cuenta: <%= ele.accountnumber %></span> </p>
+                                                <p class="my-1">Referencia : <span><%= ele.refer %></span> </p>
+                                                <p class="my-1"><strong class="mx-5">IVA </strong> <span> <strong><%= ele.taxesPercent %>%</strong> </span>  <span class="ms-5">. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . <strong>Bs. <%= ele.taxesAmount %></strong> </span> </p>
+                                                <p class="my-1"><strong class="mx-5">Total Pago  </strong> <span class="ms-5">. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . <strong>Bs. <%= ele.totalAmount %></strong> </span> </p>
+                                            </div>
+                                            <% }); %>    
+                                            
+                                        <% }; %> 
+
+                                        </div>
+                                        
+                                        <div class="containerBannerDelete close">
+                                            
+                                        <% if (invoiceMarketing) { %>
+
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fact</th><th>Fecha</th><th>Nombre</th><th>Documento</th> <th>Servicio</th> <th>Dias</th><th>F. salida</th> <th>Pagado</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <% invoiceMarketing.forEach((ele)=>{ %>
+
+                                                        <% if (ele.invoiceUsedMarketing === false ) { %>
+                                                            <tr class="table-success">
+                                                                <td><%= ele.numberInvoice %> </td><td><%= ele.date %></td><td><%= ele.receptorName %></td><td><%= ele.receptorID %></td><td><%= ele.service %></td><td><%= ele.timeDays %></td><td><%= ele.endPublic %></td> <td><%= ele.totalAmount %></td>
+                                                            </tr>
+                                                        <% } else { %>
+                                                            <tr class="table-warning">
+                                                                <td><%= ele.numberInvoice %> </td><td><%= ele.date %></td><td><%= ele.receptorName %></td><td><%= ele.receptorID %></td><td><%= ele.service %></td><td><%= ele.timeDays %></td><td><%= ele.endPublic %></td> <td><%= ele.totalAmount %></td>
+                                                            </tr>
+                                                        <% } %>    
+
+
+                                                    <% }) %>
+                                                </tbody>
+
+                                            </table>
+
+                                        <% }; %>    
+                                
+                                        </div>
+
+                                
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+        </div>
+       
+    <% } else { %>
+
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+
+            <%- include('../partials/adminNoLogin.ejs') %>
+        
+        </div>
+       
+    <% }; %>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+<script>  
+
+        let Rate; //esto es l atza del dolar actualizado.
+        window.addEventListener('load', ()=>{
+        
+                fetch("/admin/search-rate-marketing", {
+                        method: "GET",
+                        headers: { "Content-Type" : "applications/json"}
+                    })
+                    .then(response => response.json() )
+                    .then(rate => {
+                        
+                        Rate = rate.lastRate; 
+                        console.log( Rate );
+                    
+                    })
+                    .catch( err => console.log(err));
+        })
+        
+</script>    
+
+<script>
+
+    let formCreate = document.getElementById('formCreate');
+    let seletType = document.getElementById('selectType'); //banner or newsDay
+    let seletCustomer = document.getElementById('selectCustomer'); //customer or no_customer, select
+    let customerUsername = document.querySelector('.customerUsername');
+    let btnSearch = document.querySelector('.btnSearch');
+    let customerName = document.querySelector('.customerName');
+    let customerDocument = document.querySelector('.customerDocument');
+    let customerAdress = document.querySelector('.customerAdress');
+    let timeInDays = document.querySelector('.timeInDays');
+    let price = document.querySelector('.price');
+    let priceVES = document.querySelector('.priceVES');
+    let impVES = document.querySelector('.impVES');
+    let totalVES = document.querySelector('.totalVES');
+    let endPublic = document.querySelector('.endPublic');
+    let bank = document.querySelector('.bank');
+    let nAccount = document.querySelector('.nAccount'); 
+    let refer = document.querySelector('.refer');
+
+    const btnCreate = document.getElementById('btnCreate');
+    const btnCreateLoading = document.getElementById('btnCreateLoading');
+
+    
+
+    seletCustomer.addEventListener('change', ()=>{
+
+
+        const Customer = seletCustomer.value;
+        console.log(Customer)
+
+        if (Customer === 'customer'){          
+            customerUsername.removeAttribute('readonly');
+            timeInDays.removeAttribute('readonly');
+            endPublic.removeAttribute('readonly');
+            btnSearch.removeAttribute('disabled');
+            refer.removeAttribute('readonly');
+           
+            customerName.setAttribute('readonly', '');
+            customerDocument.setAttribute('readonly', '');
+            customerAdress.setAttribute('readonly', '');
+                    
+            customerName.value = "";
+            customerDocument.value = "";
+            customerAdress.value = "";
+            refer.value = "";
+           
+
+        } else if (Customer === 'no_customer') {
+            customerUsername.setAttribute('readonly', '');
+            customerUsername.value = "";
+            timeInDays.removeAttribute('readonly');
+            endPublic.removeAttribute('readonly');
+            btnSearch.setAttribute('disabled', '');
+
+            customerName.removeAttribute('readonly');
+            customerDocument.removeAttribute('readonly');
+            customerAdress.removeAttribute('readonly');
+            refer.removeAttribute('readonly');
+
+            customerName.value = "";
+            customerDocument.value = "";
+            customerAdress.value = "";
+            refer.value = "";
+
+        } else {
+            btnSearch.setAttribute('disabled', '');
+            customerUsername.setAttribute('readonly', '');
+            customerName.setAttribute('readonly', '');
+            customerDocument.setAttribute('readonly', '');
+            customerAdress.setAttribute('readonly', '');
+            refer.setAttribute('readonly', '');
+
+        }
+
+    })
+
+    btnSearch.addEventListener('click', ()=>{
+        let Username = customerUsername.value;
+
+        console.log(Username);
+        console.log(Username.length);
+
+        if (Username.length > 2 ){
+            console.log("Username", Username)
+
+            const dato = {
+                user : Username
+            };
+
+            console.log("Esto es dato", dato);
+  
+            fetch('/admin/search-username-marketing', {
+
+                method: "post",
+                body: JSON.stringify(dato),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>
+                    {
+                        //console.log("Esto es jsonx", jsonx);
+                        const names = jsonx[0].names;
+                        const citie = jsonx[0].cities;
+                        const address = jsonx[0].address;
+                        const identification = jsonx[0].identification;
+                        console.log("names", names);
+                        console.log("citie", citie);
+                        console.log("address", address);
+                        console.log("identification", identification);
+                       
+                        customerName.value = names;
+                        customerDocument.value = identification;
+                        customerAdress.value = `${citie} ${address}`;
+
+                
+                    })
+                .catch( err => console.log(err));
+
+
+        } else {
+
+            console.log("Debe meter un username para su busqueda")
+        
+        }
+
+    });
+
+    timeInDays.addEventListener('change', ()=>{
+        const dias = timeInDays.value;
+        const IMP_Country = 0.16;
+  
+        type = seletType.value;
+        if (type === 'banner'){
+            let priceBanner = (dias * 7);
+            let base = parseFloat((priceBanner * Rate).toFixed(2));
+            let imp = parseFloat((base * IMP_Country).toFixed(2));
+            let total = (base + imp).toFixed(2);
+            
+            price.value = priceBanner;
+            priceVES.value = base;
+            impVES.value = imp;
+            totalVES.value = total;
+
+        } else {
+            let priceNewsDay = (dias * 8);
+            let base = parseFloat((priceNewsDay * Rate).toFixed(2));
+            let imp = parseFloat((base * IMP_Country).toFixed(2));
+            let total = (base + imp).toFixed(2);
+
+            price.value = priceNewsDay;
+            priceVES.value = base;
+            impVES.value = imp;
+            totalVES.value = total;
+        }
+    })
+   
+       
+    
+    btnCreate.addEventListener('click', ()=>{       
+
+        const CustomerNames = customerName.value;
+        const Days = timeInDays.value;
+        const EPublic = endPublic.value;
+        const Refer = refer.value;
+        console.log("Refer    ->",Refer);
+
+
+        if (seletCustomer !== "select" && CustomerNames !=="" && Days !== "" && EPublic !==""  && Refer !=="" ){
+            //console.log("hay informacion en el inpFile debo hacer el efecto")
+            btnCreate.classList.add('invisibleBtn');
+            btnCreateLoading.classList.remove('invisibleBtn');
+        } else {
+            //console.log("no hay nada y me quedo quieto")
+            btnCreateLoading.classList.add('invisibleBtn');
+            btnCreate.classList.remove('invisibleBtn');
+        } 
+
+    });    
+
+</script>
+
+<script> 
+
+  
+    const bannerDelete = document.querySelector('.bannerDelete');
+    const currentBanner = document.querySelector('.currentBanner');
+
+    const containerBannerDelete = document.querySelector('.containerBannerDelete');
+    const containerCurrentBanner = document.querySelector('.containerCurrentBanner');
+    //const containerShowBanner = esta declarado arriba
+        
+
+    currentBanner.addEventListener('click', ()=>{
+        containerCurrentBanner.classList.remove('close');
+        containerBannerDelete.classList.add('close');
+ 
+
+        currentBanner.classList.add('active');
+        bannerDelete.classList.remove('active');
+    });
+
+    bannerDelete.addEventListener('click', ()=>{
+
+        containerCurrentBanner.classList.add('close');
+        containerBannerDelete.classList.remove('close');
+
+        currentBanner.classList.remove('active');
+        bannerDelete.classList.add('active')
+    });
+
+
+</script>
+
+  
+<script>
+    let banks = document.getElementById('banks');
+    banks.addEventListener('change', ()=>{
+        const bank = banks.value;
+
+        const dato = {
+            bank : bank,
+        };
+
+        fetch('/admin/invoice-marketing-Bank', {
+
+        method: "post",
+        body: JSON.stringify(dato),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            
+            console.log("bank", jsonx)
+            const accountNumber = jsonx[0].accountnumber;
+            nAccount.value = accountNumber;
+        
+        })
+        
+        .catch( err => console.log(err));
+            })
+
+    
+</script>
+
+</body>
+</html>
+

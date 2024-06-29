@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet  View-Store</title>
+</head>
+<style>
+
+  .textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+  }
+
+  .SectionPublish{
+    width: 100%;
+  }
+
+  .searchMain{
+    border: none;
+
+  }
+  .searchMain:focus {
+    outline:none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    
+  }
+
+  .contentSearchMain{
+    margin: 0px 0px;
+  }
+
+    .departList{
+      background-color: #fff4f4;
+      padding: 0px 8px;
+      color: rgb(54, 52, 49);
+      border-radius: 12px;
+    }
+
+
+    .carousel .carousel-control-prev {
+      position: absolute;
+      left: 20px;
+      left: 1%;
+      z-index: 1;
+      width: 20px;
+    }
+
+    .carousel .carousel-control-next {
+      position: absolute;
+      width: 20px;
+      right: 1%;
+      z-index: 1;
+      width: 20px;
+      
+    }
+
+    .cardPublished{
+      width: 220px;
+      transition: 0.3s ease border;
+    }
+
+    .cardPublished:hover{
+      outline: 2px solid lightskyblue;
+    }
+
+    .contentTopBar {
+        .linkHeart{
+          position: absolute; top: 3px; right: 3px;
+          cursor: pointer;
+          width: 35px; height: 35px;
+          opacity: 0;
+          background-color: white;
+          transition: 1.2s all ease;
+          }
+    }
+
+    .contentTopBar:hover {
+      .linkHeart{
+       opacity: 1;
+       }
+    }
+
+  /* estilos de card rotativas */
+  .cardStore{
+        width: 250px;
+        height: 170px;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: 1s;
+    }
+
+    .flipped{
+        transform: rotateY(180deg);
+    }
+
+    .front, .back{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+    }
+
+    .front{
+        background-color: lightblue;
+
+    }
+
+    .back{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: darkblue;
+        color: aliceblue;
+        height: 100%;
+        transform: rotateY(180deg);
+    }
+
+    .rotar{
+        cursor: pointer;
+    }
+
+    .Geolo{
+      display: none;
+    }
+  
+</style>
+<body class="mainTheme">
+     
+
+  <main>
+
+  <!-- navegador con buscador homologo a navi-simple -->   
+    <nav class="navbar navbar-expand-lg py-3" id="navHead">
+      <div class="container-fluid mx-4 navSon" style="width: 100%;">
+
+        
+        <a class="navbar-brand" href="/" id="logoBlissenet"> </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+        aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        
+
+        <div class="collapse navbar-collapse" id="navbarScroll" style="width: 90%;">
+
+          <div class="contentBar d-flex flex-column" style="width: 100%;">
+
+            <div class="contentUp d-flex  flex-wrap justify-content-between p-0" style="width: 100%;">
+                
+                
+                    <!-- themes & session -->
+                <div class="contentThemesSesion me-3 d-flex align-items-center">
+                  <!-- themes -->
+                  <div class="dropdown mx-4 themes">
+
+                      <a class="text-decoration-none text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                        <li style="cursor: pointer;"><a class="dropdown-item controlHead"></a></li>
+                        <li> <hr></li>
+                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlBrick"><img src="/img/iconoBrick.png" class="me-1" style="width: 20px;">   Brick</a><span class="checkBrick"></span></li>
+                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSummer" href="#"> <img src="/img/iconoSummer.png" class="me-1"  style="width: 20px;">Summer</a><span class="checkSummer"></span></li>
+                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlLemon" href="#"> <img src="/img/iconoLemon.png" class="me-1"  style="width: 20px;"> Lemon</a><span class="checkLemon"></span></li>
+                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSky" href="#"> <img src="/img/iconoSky.png" class="me-1"  style="width: 20px;"> Sky</a><span class="checkSky"></span></li>
+                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlOctopus" href="#"> <img src="/img/iconoOctopus.png" class="me-1"  style="width: 20px;"> Octopus</a><span class="checkOctopus"></span></li>
+                        <li> <hr></li>
+                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item ico-colors"><img src="/img/iconoColorIcons.png" class="me-1"  style="width: 20px;"> Color icons</a><span class="checkColor"></span> </li>
+                        
+                      </ul>
+
+                  </div>
+
+                  <!-- session -->
+                  <div class="dropdown mx-4 login">
+                    
+                      <a class="text-decoration-none text-secondary" href="#" id="navbarScrollingDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Session
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+                        <% if (user) { %>
+                          <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login </a></li>
+                          <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"> </i> Register</a></li>
+                          <li>
+                            <hr class="dropdown-divider">
+                          </li>
+                        <% } else { %>
+                          <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login</a></li>
+                          <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"></i> Register</a></li>
+                          <li>
+                            <hr class="dropdown-divider">
+                          </li>
+                        <% }; %>
+        
+                        <% if (user) { %>
+                          <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                        <% } else { %>
+                          <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                        <% }; %>
+        
+                      </ul>
+            
+                  </div>
+                </div>
+                  
+                <!-- actions -->
+
+                <div class="content d-flex">
+                  <!-- username -->
+                  <div class="contentUsername me-2">
+                    <ul class="navbar-nav m-0 usernameMain">
+                      <li class="nav-item dropdown">
+
+                        <% if (user) { %>
+                            <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                              <p class="m-0 p-0" style="max-width: 140px; white-space: noWrap; text-overflow: ellipsis; overflow: hidden;" > 
+                                <i class="bi bi-person"></i> <%= user.username %>
+                              </p>
+                            </a>
+                          <% } else { %>
+                            <a class="nav-link disabled d-flex" href="#">
+                              <i class="bi bi-person me-1"></i> username
+                            </a>
+                          <% }; %>
+                          <% if (user) { %>
+                              
+                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                              <li><a class="dropdown-item" href="/myaccount/messenger">Mensajeria</a></li>
+                              <% if (searchProfile.length !==0 ) { %>
+                              <li><a class="dropdown-item" href="/account/<%= user.username %>">Mi Tienda</a></li>
+                              <% }; %>
+                              <li><a class="dropdown-item" href="/buysell-list/">Sala de Negocios</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" href="/myfavorites">Favoritos</a></li>
+                              <% if (searchProfile.length !==0 ) { %>
+                                <li><a class="dropdown-item" href="/mytickets">Mis Tickets</a></li>
+                                <li><a class="dropdown-item" href="/follow">Siguiendo </a></li>
+                                <li><a class="dropdown-item" href="/followme">Siguiendome </a></li>
+                              <% }; %>
+                              <li><hr class="dropdown-divider"></li>
+                              <% if (searchProfile.length !==0 ) { %>
+                              <li><a class="dropdown-item" href="/myaccount/manage">Gerencia</a></li>
+                              <% }; %>
+                              <li><a class="dropdown-item" href="/myaccount/profile">Perfil</a></li>
+                            </ul>
+                          <% }; %> 
+                      </li>
+                    </ul>
+                  </div>  
+
+                  <!-- publications -->
+                  <ul class="navbar-nav my-lg-0 me-2">
+                    <li class="nav-item dropdown">
+                      <% if (user) { %>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          Publicaciones
+                        </a>
+                      <% } else { %>
+                        <a class="nav-link dropdown-toggle invisible" href="#" id="navbarScrollingDropdown" role="button"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          Publicaciones
+                        </a>
+                      <% }; %>
+                          
+                      <% if (user) { %>
+                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                          <li><a class="dropdown-item" href="/department/create">Herramienta ADS</a></li>
+                        <% if (searchProfile.length !==0 ) { %>
+                          <li><a class="dropdown-item" href="/department/raffle">Herramienta Raffle</a></li>  
+                          <li><a class="dropdown-item" href="/my-ads">Mis Anuncios</a></li>
+                          <li><a class="dropdown-item" href="/my-invoices">Facturas</a></li>
+                        <% }; %>
+                          <li><a class="dropdown-item" href="/history">Historial</a></li>
+                        <% if (searchProfile.length !==0 ) { %>
+                          <li><a class="dropdown-item" href="/record">Record</a></li>  
+                        <% }; %>  
+                      </ul>
+                      <% }; %>
+
+                    </li>
+                  </ul>
+
+                  <!-- bell messages -->
+                  <div class="contentAlerts d-flex">
+
+                    <% if (user) { %>
+            
+                      <% if (countMessages) { %>
+                        <a class="nav-link text-secondary" title="Alert of inbox"  href="/myaccount/messenger">
+                      
+                        <i class="bi bi-bell position-relative">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <%= countMessages %>
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                        </i>  
+            
+                        </a>
+                      <% }; %> 
+                    
+            
+                      <% if (countNegotiationsBuySell) { %>    
+                        <a class="nav-link text-secondary" title="Alert of negotiation"  href="/buysell-list">
+                        <i class="bi bi-briefcase position-relative">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                        <%= countNegotiationsBuySell %>
+                        <!-- <span class="visually-hidden">unread messages</span> -->
+                        </span>
+                        </i>
+                          
+                        </a>  
+                      <% }; %>
+            
+                    <% }; %>  
+                  </div>
+                </div>
+
+            </div>
+        
+            <div class="contentDown d-flex justify-content-center" style="height: auto;">
+
+                
+                <!-- searcher -->
+                <div class="contentSearchMain" style="width: 100%; height: 100%;">
+                  <form action="/view-store" method="post" class="d-flex justify-content-center flex-wrap formSearch">
+
+                    
+                      <div class="contentSelectPlaces d-flex me-3" style="width: auto; height: 100%;">
+                          <div class="contentStates input-group flex-nowrap" style="width: 100%;">
+                            <span class="input-group-text" id="btnStates"><i class="bi bi-geo me-1"></i></span>
+                            <select class="form-control Geolo" name="states" id="estados" style="border-top-right-radius:0 ; border-bottom-right-radius:0;">
+                            <% if (cacheState) { %>
+                              <option value="<%= cacheState %>"><%= cacheState %></option>
+                              <option value="Todos">Todos</option>
+                            <% } else { %>
+                              <option value="Todos">Todos</option>
+                            <% } %>  
+                                
+                                <!-- option dinamicos -->
+                            </select>
+
+                            <span class="input-group-text" id="btnCities" style="border-top-left-radius: 0; border-top-right-radius: 3px; border-bottom-left-radius: 0; border-bottom-right-radius: 3px;"><i class="bi bi-geo-alt me-1"></i></span>
+                            <select class="form-control Geolo" name="cities" id="ciudades" style="border-top-left-radius:0 ; border-bottom-left-radius:0 ;">
+                            <% if (cacheCities) { %> 
+                              <option value="<%= cacheCities %>"><%= cacheCities %></option>   
+                              <option value="Todos">Todos</option>
+                            <% } else { %>
+                              <option value="Todos">Todos</option>  
+                            <% }; %>   
+                                <!-- option dinamicos -->
+                            </select>
+                          </div>
+                      </div>  
+
+                      <div class="contentSearch d-flex" style="width: 40%; height: 100%;">
+                                        
+                        <div class="input-group">
+                          <% if (cacheSearch) { %>
+                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="<%= cacheSearch %>">
+                          <% } else if (cacheHashtag) { %>
+                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="#<%= cacheHashtag %>">
+                          <% } else { %>
+                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId"  placeholder="Buscando Tienda...?">
+                          <% }; %>  
+
+                          <button class="btnSearcherClass btnEFECT" type="submit" id="btnSearcher"><i class="bi bi-search" id="iconLupa" style="color: #f39a9a;"></i></button></button>
+                        </div>
+
+                      </div><!-- border: none; height: 100%; width: 70px; border-left: 1px solid rgb(196, 196, 196, 0.5); -->
+                    
+
+                  </form>
+
+                </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="row rowWidth SectionPublish">
+      <div class="col-lg-3 col-md-3 col-sm-12 bg-light p-0 p-1 OptionsBar bg-dark frame">
+        
+        <div class="card mx-0 border border-info cardResultSearch"  style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; ">
+          <div class="card-header d-flex justify-content-between"><span>Colección de Tiendas</span> <img src="/img/ico-storeW.png" alt="" class=" mx-2 rounded-pill" style="width: 35px;"></div>
+          <div class="card-body">
+
+            <div class="contentGeolocation border-bottom border-secondary mb-3">
+              
+              <% if (cacheState) { %>
+                <p><i class="bi bi-geo me-1"></i> Estado : <span id="searcherSpan"> <%= cacheState %> </span> </p>
+              <% } else { %>
+                <p><i class="bi bi-geo me-1"></i> Estado : Todos </p>
+              <% }; %>
+
+              <% if (cacheCities) { %>
+                <p><i class="bi bi-geo-alt me-1"></i> Ciudad : <span  id="searcherSpan"> <%= cacheCities %> </span> </p>
+              <% } else { %>
+                <p><i class="bi bi-geo-alt me-1"></i> Ciudad : Todos </p>
+              <% }; %>
+
+            </div>
+              
+            <% if (cacheSearch) { %>
+              <p><i class="bi bi-search me-1"></i> Buscando : <span  id="searcherSpan"> <%= cacheSearch %> </span> </p>
+            <% } else if (cacheHashtag) { %>
+              <p><i class="bi bi-search me-1"></i> Buscando : <span  id="searcherSpan">#<%= cacheHashtag %> </span> </p>
+            <% } else { %>
+              <p><i class="bi bi-search me-1"></i> Buscando :  ¡Iniciando búsqueda!</p>
+            <% }; %>  
+
+            <% if (countSearch !== 0 ) { %>
+                <% if (countSearch) { %> <p> <i class="bi bi-funnel me-1"></i> Cuentas encontradas : <span class="ms-2"><%= countSearch %></span> </p>  <% }; %>
+            <% } else { %>
+
+                <span>¡No se ha encontrado nada!</span>
+                <div class="containerImageSinResultados d-flex justify-content-center">
+                    <img src="/img/sinResultados.png" style="width: 150px;">
+                </div>
+                
+            <% }; %>  
+
+                  <hr>
+                <% if (Hashtag == "false"){ %>
+
+                  <% if (stateGroup) { %>
+                    <% stateGroup.forEach((ele)=>{ %>
+                      <a href="/view-store/<%= Searcher %>/<%= ele._id %>">
+                        <span>
+                          <%= ele._id %> (<%= ele.repetido %>)
+                        </span></a> 
+                        <br>
+                      
+                    <% }); %>
+                  <% } %>
+
+                <% } else { %>
+                  
+                  <% if (stateGroup) { %>
+                    <% stateGroup.forEach((ele)=>{ %>
+                      <a href="/view-store/hashtag/<%= Searcher %>/<%= ele._id %>">
+                        <span>
+                          <%= ele._id %> (<%= ele.repetido %>)
+                        </span></a> 
+                        <br>
+                      
+                    <% }); %>
+                  <% } %>
+
+                <% }; %>  
+
+                  <% if (cardArticleStore.length==0 ) {%>
+                      <span>No se ha encontrado nada</span>
+
+                      <div class="containerImageSinResultados d-flex justify-content-center">
+                          <img src="/img/sinResultados.png" style="width: 200px;">
+                      </div>
+                  <% }; %>
+
+          </div>
+        </div>
+        <div class="AlertInfo border border-info p-2 my-1">
+          <div class="d-flex flex-column alert alert-secondary m-1 p-1">
+            <div class="contentUp d-flex justify-content-between">
+                <div class="contentSinbolo me-2">
+                    <span class="bg-dark text-light rounded-2 py-0 px-2" style="font-size: 40px">#</span>
+                </div>
+                <div class="contentInfo">
+                    <p>Utiliza el # para busquedas de tiendas por <strong>palabra clave</strong>. </p>
+                </div>
+            </div>
+            <div class="contentDown">
+            
+                <ul>
+                  <li>#zapatos</li>
+                  <li>#abogados</li>
+                  <li>#monopatin electrico</li>
+                </ul>
+
+          
+            </div>  
+
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-9 col-md-9 col-sm-12 p-0">
+
+        <div class="barrHorizontIcon p-0 m-0 d-flex flex-wrap border-bottom border-dark" style="width: 100%;">
+            <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto;">
+              <a href="/view-raffles" class="text-decoration-none mx-4 p-0 raffle" style="width: 40px; height: 40px;"></a>
+              <a href="/view-artes" class="text-decoration-none mx-4 p-0 arteGallery" style="width: 40px; height: 40px;"></a>
+              <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 aeronautica" style="width: 40px; height: 40px;"> </a>
+              <a href="/view-items" class="text-decoration-none mx-4 p-0 articulo" style="width: 40px; height: 40px;"></a>
+              <a href="/view-automotive" class="text-decoration-none mx-4 p-0 automotriz" style="width: 40px; height: 40px;"></a> 
+              <a href="/view-realstate" class="text-decoration-none mx-4 p-0 bienesraices" style="width: 40px; height: 40px;"></a>
+              <a href="/view-nautical" class="text-decoration-none mx-4 p-0 nautico" style="width: 40px; height: 40px;"></a>
+              <a href="/view-services" class="text-decoration-none mx-4 p-0 servicio" style="width: 40px; height: 40px;"></a>
+              <a href="/view-auction" class="text-decoration-none mx-4 p-0 subasta" style="width: 40px; height: 40px;"></a>
+            </ul>
+        </div>
+        
+        <div class="viewCollection" style= "height: 100%;">
+              <div class="containAlert" style="position: sticky; z-index: 100; top: 0px;" > <!-- bloque dinamico --> </div>
+            
+              <% if (cardArticleStore.docs.length !==0 ) {%>
+                <div class="contentAll d-flex flex-wrap justify-content-start p-3">
+                    <% cardArticleStore.docs.forEach( (ele, i)=>{ %>
+
+                        <div class="card cardStore m-2 p-0 shadow cardPublished">
+                          
+                              <div class="card-body front p-0">
+
+                                      <div class="upp d-flex flex-column justify-content-center align-items-start" style="width: 100%; height: 100%;">
+                                          
+                                          <div class="contentTopBar d-flex justify-content-center align-items-center" style="position: relative; width: 100%; height: 51%; background-color: <%= ele.bGColorWorkspace %>;">
+                                                <% if (user) { %>
+                                                <div class="linkHeart d-flex justify-content-center align-items-center rounded-pill border"><input type="hidden" value="<%= user._id %>"> <input type="hidden" value="<%= ele.indexed %>"><i class="bi bi-bookmark-check Heart"></i></div>
+                                                <% }; %>
+                                                
+                                                <% if (ele.avatarPerfil[0].url.length === 0 ) {%>
+                                                    <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" class="rotar" style="width: 55px; border-radius: 50%;">  
+                                                <% } else {%>
+                                                    <img src="<%= ele.avatarPerfil[0].url %>" alt="" class="rotar" style="width: 55px; border-radius: 50%;">
+                                                <% }; %>    
+                                          </div>
+                                                  
+                                          <div class="contentWorkSpace py-0 px-2" style="width: 100%; height: 49%; background-color: <%= ele.bGColorTopbar %>;">
+                                            <a href="/account/<%= ele.username %>" class="text-decoration-none text-dark d-flex flex-column align-items-start">        
+                                                  <p class="mx-0 my-0 mt-1" style="color:<%= ele.bGColorText %>;"><i class="bi bi-person-workspace me-1"></i><%= ele.username %></p>
+                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo me-1"></i><%= ele.states %></p>
+                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt me-1"></i><%= ele.cities %></p>
+                                            </a>  
+                                          </div>
+                                          
+                                      </div>
+              
+                              </div>
+                              <div class="card-body p-0 back">
+
+                                      <div class="down" style="width: 100%; height: 100%;">
+                                        <div class="contentWorkSpace p-2" style="height: 100%; background-color: whitesmoke;">
+                                          <p class="m-0" style="color: black"><i class="bi bi-chat-right-dots me-2"></i><%= ele.profileMessage %></p>
+                                        </div>
+                                      </div>
+
+                              </div>
+                                
+                        </div>
+                      
+                    <% }); %>
+                </div>           
+              <% } else { %>
+                  <div class="containerImageSinResultados d-flex justify-content-center p-5">
+                      <img src="/img/sinResultados.png" style="width: 200px;">
+                  </div>
+              <% }; %>
+
+              <div class="contentPagination border-bottom border-secondary" style="height: 100%;">
+
+                <% if (cardArticleStore) { %>
+                
+                    <% if ( cardArticleStore.page == 1 && cardArticleStore.totalPages !== 1 ) {  %>
+                                            
+                    <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                    
+                        <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleStore.prevPage %>">Prev</a></li>
+                        <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleStore.page %>"><%= cardArticleStore.page %></a></li>
+                        <li class="page-item "><a class="page-link" href="?page=<%= cardArticleStore.nextPage %>">Next</a></li>
+                        <li class="page-item "><a class="page-link" href="?page=<%= cardArticleStore.totalPages %>"> <%= cardArticleStore.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                  
+                      </ul>
+                    </nav>
+
+                    <% } else if ( cardArticleStore.page == 1 && cardArticleStore.totalPages == 1 ) {  %>
+
+                      <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                      
+                            <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                            <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleStore.prevPage %>">Prev</a></li>
+                            <li class="page-item active"><a class="page-link disabled href="?page=<%= cardArticleStore.page %>"><%= cardArticleStore.page %></a></li>
+                            <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleStore.nextPage %>">Next</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleStore.totalPages %>"><%= cardArticleStore.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                    
+                        </ul>
+                      </nav>
+
+                    <% } else if ( cardArticleStore.page !== cardArticleStore.totalPages && cardArticleStore.page !== 1 ) {  %>
+
+                      <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                            <li class="page-item"><a class="page-link" href="?page=1"><i class="bi bi-arrow-bar-left"></i>1</a></li>
+                            <li class="page-item"><a class="page-link" href="?page=<%= cardArticleStore.prevPage %>">Prev</a></li>
+                            <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleStore.page %>"><%= cardArticleStore.page %></a></li>
+                            <li class="page-item"><a class="page-link" href="?page=<%= cardArticleStore.nextPage %>">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="?page=<%= cardArticleStore.totalPages %>"> <%= cardArticleStore.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                        </ul>
+                      </nav>  
+
+
+                    <% } else if ( cardArticleStore.page == cardArticleStore.totalPages ) {  %> 
+
+                      <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                            <li class="page-item"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i>1</a></li>
+                            <li class="page-item"><a class="page-link" href="?page=<%= cardArticleStore.prevPage %>">Prev</a></li>
+                            <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleStore.page %>"><%= cardArticleStore.page %></a></li>
+                            <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleStore.nextPage %>">Next</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleStore.totalPages %>"> <%= cardArticleStore.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                        </ul>
+                      </nav>
+
+                    <% }; %>   
+
+                <% }; %>
+
+              </div>   
+
+        </div>
+      </div>
+    </div>
+      
+      <%- include('../partials/footer.ejs') %> 
+      
+    </main>
+  
+    
+      <%- include('../partials/scripts.ejs') %>
+
+      <!--  este script controla el estado de los themas. -->
+      <%- include('../partials/scriptsThemes.ejs') %>
+    
+
+    <% if ( user !== undefined ) { %>
+    <script>
+
+        const linkHeart = document.querySelectorAll('.linkHeart')
+        const Heart = document.querySelectorAll('.Heart');//esto es el icono que esta dentro del div
+        const containAlert = document.querySelector('.containAlert');
+        let btnClose;
+
+        for (let i = 0; i < linkHeart.length; i++) {
+        const starData = linkHeart[i];
+        const heartIcon = Heart[i];
+
+        starData.addEventListener('click', ()=>{
+         
+          efecto()
+          setInterval( normalHeart, 2000)
+          
+          console.log(starData.childNodes)
+       
+          const user = starData.childNodes[0].value; //usuario que esta logeado
+          const userTienda = starData.childNodes[2].value; //usuario dueño de la tienda
+          console.log("user :",user);
+          console.log("idStore :",userTienda);
+        
+          const datos = {
+              user : user,
+              userOfStore : userTienda
+          };
+
+          fetch('/account/myfavorite-stores', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+          })
+            .then(response =>response.json() )
+            .then( jsonx => {
+              console.log(jsonx)
+              const type = jsonx.type;
+              const message = jsonx.message; //{type: 'Ok', message: 'Cuenta seguida'} 
+              // hay tres valores en Type = "Save", "Following", "Error"
+              if (type === "Save"){
+                closeAlert();
+              
+                containAlert.innerHTML = `<div class="container auctionsMessages my-2 d-flex justify-content-center">
+                                            <div class="alert alert-success alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.8">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
+                                                <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                          </div>`
+                btnClose = document.querySelector('.btn-close');
+
+              } else if (type === "Following") {
+                closeAlert();
+                btnClose = document.querySelector('.btn-close');
+                containAlert.innerHTML = `<div class="container auctionsMessages my-2 d-flex justify-content-center">
+                                            <div class="alert alert-info alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.8">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
+                                                <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                          </div>`
+                btnClose = document.querySelector('.btn-close');
+              } else {
+                btnClose = document.querySelector('.btn-close');
+                containAlert.innerHTML = `<div class="container-fluid auctionsMessages my-2 d-flex justify-content-center">
+                                            <div class="alert alert-danger alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.8">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
+                                                <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                          </div>`
+                btnClose = document.querySelector('.btn-close');
+
+              }
+            
+            })
+            .catch( err => console.log(err));
+
+            
+            function closeAlert(){
+              
+              setTimeout(()=>{
+                  btnClose.click();
+              }, 3000);
+
+            }
+
+
+              //efectos
+              function efecto(){
+              heartIcon.classList.remove('bi-bookmark-check');
+              heartIcon.classList.add('bi-bookmark-check-fill')
+              }//<i class="bi bi-bookmark-check"></i>
+            
+              function normalHeart(){
+              heartIcon.classList.add('bi-bookmark-check');
+              heartIcon.classList.remove('bi-bookmark-check-fill')
+              }
+
+        });
+
+        
+      }
+
+    </script>
+    <% } %>
+
+
+ 
+<script>
+    //script para rotar las card
+
+    let rotar = document.querySelectorAll('.rotar');
+    let card = document.querySelectorAll('.cardStore');
+
+    for (let i = 0; i < rotar.length; i++) {
+        const rot = rotar[i];
+
+        rot.addEventListener('click', ()=>{
+
+         card[i].classList.add('flipped')
+
+        })
+        
+    }
+
+    for (let i = 0; i < card.length; i++) {
+        const tarjeta = card[i];
+                                      
+            tarjeta.addEventListener('mousedown', ()=>{
+            card[i].classList.remove('flipped')
+        }) 
+    }
+
+    
+</script>
+<script>
+  //carga de opciones del selector de estados y ciudades
+  const estados = document.getElementById('estados');
+  const ciudades = document.getElementById('ciudades');
+
+  window.addEventListener('load', ()=>{
+
+      if (estados && ciudades){
+        
+          fetch("/country", {
+              method: "GET",
+              headers: { "Content-Type" : "applications/json"}
+          })
+          .then(response =>response.json() )
+          .then( ve => { 
+              console.log(ve)
+              for (let i = 0; i < ve.length; i++) {
+                  const element = ve[i].estado;
+                  //console.log("estados", element);
+                  estados.innerHTML += `<option value="${element}">${element}</option>`
+              }
+              estados.addEventListener('change', ()=>{
+                  console.log(estados.value);
+                  const edo = estados.value;
+
+                  for (let n = 0; n < ve.length; n++) {
+                      const ele = ve[n].estado;
+                      if (edo == ele){
+                          console.log(ve[n].ciudades)
+                          const cities = ve[n].ciudades;
+                          const capital = ve[n].capital;
+
+                          if (cities !== undefined){
+
+                              ciudades.innerHTML = ""; //aqui limpio todo por si hay algun arreglo
+                              ciudades.innerHTML = `<option value="Todos">Todos</option>`
+                              for (let c = 0; c < cities.length; c++) {
+                                  const city = cities[c];
+                                  ciudades.innerHTML += `<option value="${city}">${city}</option>`
+                              }
+
+                          } else {
+                              
+                              ciudades.innerHTML = ""; //aqui limpio todo por si hay algun arreglo
+                              ciudades.innerHTML += `<option value="${capital}">${capital}</option>`
+                              
+                          }
+
+                      
+                      }
+                      
+                  }
+
+              })
+              
+          })
+          .catch( err => console.log(err));
+
+      }
+      
+  });    
+
+
+</script>
+<script>
+  const btnStates = document.getElementById('btnStates');
+  const btnCities = document.getElementById('btnCities');
+
+  btnStates.addEventListener('click', ()=>{
+    estados.classList.toggle('Geolo');
+  });
+
+  btnCities.addEventListener('click', ()=>{
+    ciudades.classList.toggle('Geolo');
+  });
+
+</script>
+</body>
+</html>
+

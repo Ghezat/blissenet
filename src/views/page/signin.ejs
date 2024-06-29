@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Signin</title>
+</head>
+<body class="mainTheme">
+
+    <main>
+
+    <%- include('../partials/navi-simple.ejs') %>
+
+    <% if (userError) { %>
+        <%- include('../alert/userError.ejs') %>
+    <% }; %>
+
+    <% if (passwError) { %>
+        <%- include('../alert/passwError.ejs') %>
+    <% }; %>
+
+    <% if (registered) { %>
+        <%- include('../alert/registered.ejs') %>
+    <% }; %>
+
+    <% if (donePasswSuccess) { %>
+        <%- include('../alert/donePasswSuccess.ejs') %>
+    <% }; %>
+        
+
+    <% if (signIn.length !==0 ) { %>
+    <div class="container-fluid border border-dark" style="background-size: cover; background-image: url('<%= signIn[0].url %>'); height: 100%;" >
+    <% } else { %>
+    <div class="container-fluid">    
+    <% }; %>    
+
+        <div class="row d-flex justify-content-end mx-3 mt-5">
+            <div class="col-lg-4 col-md-5 col-sm-10 col-12">
+                <div class="card formTransp mt-4 rounded-2 shadow">
+                    <div class="card-header">
+                        <i class="bi bi-door-open mx-1"></i> Login
+                    </div>
+                    <div class="card-body p-4 border-top border-dark">
+                        <form action="/myaccount/signin" method="POST" id="signin">
+                            <div class="form-group my-2">
+                                <input type="email" name="email" placeholder="Enter your email" class="form-control"
+                                  id="client_user" autocomplete="off" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="password" name="password" placeholder="Enter your password" class="form-control"
+                                 id="client_passw" autocomplete="off" style="letter-spacing: 3px;" maxlength="20" required>
+                            </div>
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class="mx-1"> <small>¡Upp olvidade mi Password! <a href="/myaccount/signin-forgottenpassw" class="text-dark ms-2 fw-bold"> Clic here</a> </small></label>
+                            </div>
+                            <div class="form-group my-3">                                      
+                                <button class="g-recaptcha form-control btn btn-dark" 
+                                data-sitekey="6LccKFYlAAAAAKiLwTw_Xz2l7_Qm_6PTe7_RyEG0" 
+                                data-callback='onSubmitSignin' 
+                                data-action='submit'>
+                                Login
+                                </button>
+                            </div>    
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class=" mx-1"><small> No tengo una cuenta. <a href="/myaccount/signup" class="text-danger ms-2 fw-bold">¡Registarme!</a> </small> </label>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <%- include('../partials/scripts.ejs')%>
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+    </main>
+</body>
+</html>
+
+<script>
+    window.addEventListener('load', ()=>{
+        const clientUser = document.getElementById('client_user');
+        const clientPassw = document.getElementById('client_passw');
+
+        clientUser.value= "";
+        clientPassw.value= "";
+    })
+</script>

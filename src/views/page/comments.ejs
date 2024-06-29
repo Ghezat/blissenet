@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Comments</title>
+</head>
+<style>
+ 
+    .containtScoreTrust{
+        margin: 6px 0px;
+        background-color: #e9ecef;
+        color: black;
+    }
+  
+
+</style>
+<body  style="height: auto; background-color: #e9ecef; height: 100%;">
+
+     
+  <main class="mainTheme">
+    <%- include('../partials/navi-simple.ejs') %>
+    
+
+    <div class="container-fluid d-flex justify-content-between p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+          
+        <div class="containerNav"><p class="m-0 ps-5">Comentarios</p></div>
+        <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-secondary active" id="btnSell">Ventas</button>
+          <button type="button" class="btn btn-secondary" id="btnRaffle">Sorteos</button>
+        </div>
+       
+    </div>
+   
+    <div class="mainComment" style="background-color: #e9ecef; height: 100%;">
+        <div class="contentComments">
+          <div class="row border border-light m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+              <div class="col-lg-10  my-4 p-0">
+
+                        <div class="containerMain d-flex justify-content-between mb-2 rounded-1" style="background-color: white;">
+                        <% if (storeSearch) { %>
+                            <div class="containtUserDetails d-flex">
+
+                                <% if (fullDate) { %>
+                           
+                                    <% storeSearch.forEach((ele)=> { %>
+                                    <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
+    
+                                        <% if (ele.avatarPerfil[0].url.length === 0 ) {%>
+                                            <td> <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 40px;"></td>   
+                                        <% } else {%>
+                                            <td><img src="<%= ele.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 40px;"></td>
+                                        <% }; %>
+    
+                                    </div>
+                                    <div class="containerDetails d-flex flex-column">
+    
+                                        <p class="mb-0" style="font-size: 18px;"><%= ele.username %> <span class="ms-1" style="font-size: 16px;">(<%= ele.states %>)</span></p>
+                                        <input type="hidden" id="username" value="<%= ele.username %>"> <!-- esta linea es para poder tomar el username y poder enviarlo via ajax -->
+                                        <p class="mb-0" style="font-size: 16px;"><%= fullDate %> </p>
+    
+                                    </div>
+                                    <% }); %>
+    
+                                <% }; %>    
+
+                            </div>
+                        <% }; %>
+                            <div class="containtScoreTrust rounded-1 d-flex align-items-center me-3 px-2 shadow-sm">
+                                
+                                <p class="mb-0 d-flex align-items-center" style="height: 100%; margin-right: 20px; font-size: 18px;"> <span class="data rounded-1" id="rating"></span> <span id="sellerCount">  </span> </p>
+                                                    
+                                <p class="mb-0 d-flex align-items-center" style="height: 100%; font-size: 18px;"> <span class="data rounded-1" id="porcentTrust"></span>  </p> 
+                                 
+                            </div>
+                        </div>
+
+
+                        <div class="ContainerSell rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                        <% if (searchSell.length !==0){ %>
+
+                            <div class="containerFlx d-flex flex-column">
+                                  <% searchSell.forEach((ele)=>{ %>
+
+                                    <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
+                                      <div class="containerData" style="width: 60%;">
+
+                                        <img src="<%= ele.image[0].url %>" style="width: 50px;">
+                                        <span><i><%= ele.title %></i></span>
+                                        <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
+                                        <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
+                                         
+                                        
+                                      </div>
+                                      <div class="containerRatingComment d-flex" style="width: 38%;">
+                                          <div class="containerRating d-flex align-items-center justify-content-center p-3">
+                                          
+                                            <% if (ele.ratingBuy === 'Positivo' ) { %>
+                                              <span class="text-info rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>+</b></span>
+                                            <% }; %>
+                                            <% if (ele.ratingBuy === 'Negativo' ) { %>
+                                              <span class="text-danger rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>-</b></span>
+                                            <% }; %>
+                                            <% if (ele.ratingBuy === 'Neutral' ) { %>
+                                              <span class="text-warning rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 14px; width: 26px; height: 33px;"> <b>N</b></span>
+                                            <% }; %>
+
+                                          </div>
+                                          <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: #e9ecef; border: 1px solid rgb(128, 128, 128, 0.5);">
+                                            <p style="text-align: justify; line-height: 18px; font-style: italic;">
+                                              <%= ele.CommentSeller %>
+                                            </p>
+                                          </div>
+                                          
+                                      </div>
+                                    </div>
+                                    <hr class="my-1">
+                                    
+                                  <% }); %>
+                            </div>
+                          
+                          <% } else { %>
+                              <p class="mb-0">¡No hay nada por aqui!</p>
+                          <% }; %> 
+                        </div>
+
+                        <div class="ContainerRaffle close rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                            
+                            <% if (raffleHistory.length !== 0){ %>
+                              <div class="containerFlex d-flex flex-column">
+                                  <% raffleHistory.forEach((ele)=>{ %>
+                
+                                    <div class="row my-2 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+                                      <div class="contentElement d-flex justify-content-between flex-wrap">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl6 p-1"  style="background-color: rgba(219, 223, 228, 0.7); height: 140px;">
+                                            <div class="leftPart d-flex border border-secondary" style="width: auto; height: 100%;">
+                                              <% if (ele.category === "Gratis") { %> <!-- solo para identificar que fue un sorteo con categoria "Gratis" -->
+                                              <div class="imageTrust d-flex flex-column me-2 px-0  align-items-center alert-info" style="position: relative;">
+                                                  <img src="<%= ele.image[0].url %>" alt="" class="mb-1" style="width: 55px; max-height: 60px;">
+                                                  <% let ratePositivo = 0; let rateNegativo = 0; %>
+                                                  <% let totalRate = 0 %>
+                                                  <% ele.PrizesObject.forEach((i)=>{ %>
+                                                    <% if  (i.rate === 'positivo') { %>
+                                                      <% ratePositivo = ratePositivo + 1 %>
+                                                    <% } else { %>
+                                                      <% rateNegativo = rateNegativo + 1 %>
+                                                    <% }; %>
+                                                    <% totalRate = ratePositivo + rateNegativo %>
+                                                  <% }); %>
+                                                  <% let result = ((ratePositivo * 100) / totalRate).toFixed(0) %>
+                                                  <span class="my-1" style="font-size: 20px;"><%= result %>%</span>
+                                                  <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313; position: absolute; bottom: 10px;">
+                                                    <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
+                                                  </span>
+                                              </div>
+                                              <% } else { %> <!-- solo para identificar que fue un sorteo con categoria "Pago" -->
+                                              <div class="imageTrust d-flex flex-column me-2 px-0  align-items-center alert-danger" style="position: relative;">
+                                                  <img src="<%= ele.image[0].url %>" alt="" class="mb-1" style="width: 55px; max-height: 60px;">
+                                                  <% let ratePositivo = 0; let rateNegativo = 0; %>
+                                                  <% let totalRate = 0 %>
+                                                  <% ele.PrizesObject.forEach((i)=>{ %>
+                                                    <% if  (i.rate === 'positivo') { %>
+                                                      <% ratePositivo = ratePositivo + 1 %>
+                                                    <% } else if (i.rate === 'negativo') { %>
+                                                      <% rateNegativo = rateNegativo + 1 %>
+                                                    <% }; %>
+                                                    <% totalRate = ratePositivo + rateNegativo %>
+                                                  <% }); %>
+                                                  <% let result = ((ratePositivo * 100) / totalRate).toFixed(0) %>
+                                                  <span class="my-1" style="font-size: 20px;"><%= result %>%</span>
+                                                  <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313; position: absolute; bottom: 10px;">
+                                                    <i class="bi bi-ticket-fill" style="color: brown;"></i>
+                                                  </span>
+                                              </div>
+                                              <% }; %>  
+                                              <div class="details" style="overflow-y: auto;">
+                                                  <p class="my-1">ID:  <%= ele.title_id %></p>
+                                                  <p class="mb-1">Title: <%= ele.title %></p>
+                                                  <p class="mb-1">Date: <%= ele.dateStart %></p>
+                                                  <p class="mb-1"><span class="me-2">Ticket: <%= ele.numTickets %></span> <span>
+                                                    Rates : 
+                                                    <% ele.PrizesObject.forEach((i)=>{ %>
+                                                      <% if  (i.rate === 'positivo') { %>
+                                                          <span class="m-1"><i class="bi bi-plus-square"></i></span>
+                                                      <% } else if (i.rate === 'negativo') { %>
+                                                          <span class="m-1"><i class="bi bi-dash-square"></i></span>
+                                                      <% }; %>   
+                                                    <% }) %>
+                
+                                                  </span></p>
+                
+                                                  
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6 p-1"  style="background-color: rgba(219, 223, 228, 0.7); height: 140px; overflow-y: auto;">     
+                                            <div class="rightPart d-flex border border-secondary" style="width: auto; height: 100%;">
+                
+                                                <div class="contetListObjetPrizes d-flex flex-column" style="overflow-y: auto;">
+                
+                                                  <% ele.PrizesObject.forEach((n)=>{ %>
+                                                      <div class="listData d-flex d-flex align-items-center justify-content-start p-1">
+                                                        <p class="mb-0 me-3"><span class="px-2 "><i class="bi bi-person me-1"></i> <%= n.winUser %> </span> </p>
+                                                        <p class="mb-0 me-3"><span class="px-2 "><i class="bi bi-ticket-perforated me-1"></i> <%= n.winTicket %> </span> </p>
+                                                        <p class="mb-0 me-3"><span class="px-2 "><i class="bi bi-gift me-1"></i> <%= n.Prize %> </span> </p>
+                                                        <% if (n.rate  === 'positivo' ){ %>
+                                                        <p class="mb-0 me-2"><span class="px-2 "><i class="bi bi-plus-square me-1"></i>  </span> </p>
+                                                        <% } else if (n.rate  === 'negativo') { %>
+                                                          <p class="mb-0 me-2"><span class="px-2 "><i class="bi bi-dash-square me-1"></i>  </span> </p>
+                                                        <% } else { %> 
+                                                          <p class="mb-0 me-2"><span class="px-2 "> N/R </span> </p>
+                                                        <% }; %>   
+                                                      </div>
+                                                      <hr class="p-0 m-0">
+                                                  <% }); %>    
+                                                </div>
+                
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                      
+                                  <% }); %>    
+                              </div>
+                
+                            <% } else { %>
+                              <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+                                
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 col-xxl-10  my-4 p-0">
+                                          <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.7);">
+                                            <p class="mb-0">¡No hay nada por aqui!</p>
+                                          </div>
+                                </div>
+                
+                              </div>              
+                            <% }; %>
+
+                        </div>
+
+              </div> 
+          </div>
+        </div>
+
+      
+    </div>
+
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+<!--  Nota: la infomacion usada viene de la routas History
+ routes.get('/comments/:username', async(req, res)=>{ -->
+
+    <script>
+        
+        const porcentTrust = document.getElementById('porcentTrust');
+        const ratingSeller = document.getElementById('rating');
+        const sellCount = document.getElementById('sellerCount');
+        const Username = document.getElementById('username');
+                 
+        let dato = {
+                    store : Username.value
+                }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+            fetch('/record-trust', {
+                 method : "POST",
+                 body : JSON.stringify(dato),
+                 headers : { "content-type" : "application/json"}
+            })
+                .then(response => response.json())
+                .then(json =>{
+                    console.log("Esto es json ---->", json)
+
+                    const raffleData = json[0];
+                    const sellerBuySell = json[1].count;
+                    const TrustSeller = json[2];
+
+
+                    let countRafflePositivo = raffleData.countRafflePositivo;
+                    let sellerCount = sellerBuySell + countRafflePositivo;
+                    console.log("sellerCount ->", sellerCount);
+
+                    let sellerPositivo = TrustSeller.positive + raffleData.countRafflePositivo;  
+                    let sellerNegativo = TrustSeller.negative + raffleData.countRaffleNegativo;
+
+                    const totalOperationSeller = (sellerPositivo + sellerNegativo);
+                    const tasaTrustSell = ((sellerPositivo * 100) / totalOperationSeller).toFixed(0);
+                    
+                    if (sellerPositivo == 0 ){
+                        porcentTrust.innerText = 'no data';
+                    } else {
+                        porcentTrust.innerText = tasaTrustSell + '%';
+                    } 
+
+                    sellCount.innerHTML = `<small>(${sellerCount})</small>`;
+                   
+                    //:::::: Esto es la condicional de nivel de Vendedor ::::::
+                    if ( sellerCount <= 9 ){ // de 0 a 9
+                    console.log("Estas en el nivel Carbon como comprador");
+                    ratingSeller.innerText = "Carbón";
+            
+                    } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
+                    console.log("Estas en el nivel Hierro como comprador");
+                    ratingSeller.innerText = "Hierro";
+
+                    } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
+                    console.log("Estas en el nivel Bronce como comprador");
+                    ratingSeller.innerText = "Bronce";
+
+                    } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
+                    console.log("Estas en el nivel Plata como comprador");
+                    ratingSeller.innerText = "Plata";
+
+                    } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
+                    console.log("Estas en el nivel Oro como comprador");
+                    ratingSeller.innerText = "Oro";
+
+                    } else if ( sellerCount >= 200 ){
+                    console.log("Estas en el nivel Diamante como comprador");
+                    ratingSeller.innerText = "Diamante";
+                    }
+                    //:::::: Fin de condicional ::::::
+
+
+                 })
+                .catch(err => console.error(err));
+
+        
+
+    </script>
+
+    <script>
+      const btnSell = document.getElementById('btnSell');
+      const btnRaffle = document.getElementById('btnRaffle');
+      const ContainerSell = document.querySelector('.ContainerSell');
+      const ContainerRaffle = document.querySelector('.ContainerRaffle');
+
+      btnSell.addEventListener('click', ()=>{
+
+        btnSell.classList.add('active');
+        btnRaffle.classList.remove('active');
+
+        ContainerSell.classList.remove('close');
+        ContainerRaffle.classList.add('close');
+
+      });
+
+      
+      btnRaffle.addEventListener('click', ()=>{
+
+        btnSell.classList.remove('active');
+        btnRaffle.classList.add('active');
+
+        ContainerSell.classList.add('close');
+        ContainerRaffle.classList.remove('close');
+
+      });
+
+    </script>
+
+</body>
+</html>
+

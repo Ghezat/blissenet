@@ -1,0 +1,197 @@
+
+<nav class="navbar navbar-expand-lg py-3" id="navHead">
+  <div class="container-fluid mx-4 navSon" style="width: 100%;">
+
+    <a class="navbar-brand" href="/" id="logoBlissenet">  </a>
+    <button class="navbar-toggler" id="navbar-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+    aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>   
+
+    <div class="collapse navbar-collapse" id="navbarScroll" style="width: 100%;">
+
+      <div class="contentControl d-flex justify-content-between flex-wrap" style="width: 100%;">
+
+        <div class="contentThemesSesion me-5 d-flex">
+
+          <!-- themes -->
+          <div class="dropdown mx-4 themes d-flex align-items-center">
+
+              <a class="text-decoration-none text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                <li style="cursor: pointer;"><a class="dropdown-item controlHead"></a></li>
+                <li> <hr></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlBrick"><img src="/img/iconoBrick.png" class="me-1" style="width: 20px;">   Brick</a><span class="checkBrick"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSummer" href="#"> <img src="/img/iconoSummer.png" class="me-1"  style="width: 20px;">Summer</a><span class="checkSummer"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlLemon" href="#"> <img src="/img/iconoLemon.png" class="me-1"  style="width: 20px;"> Lemon</a><span class="checkLemon"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSky" href="#"> <img src="/img/iconoSky.png" class="me-1"  style="width: 20px;"> Sky</a><span class="checkSky"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlOctopus" href="#"> <img src="/img/iconoOctopus.png" class="me-1"  style="width: 20px;"> Octopus</a><span class="checkOctopus"></span></li>
+                <li> <hr></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item ico-colors"><img src="/img/iconoColorIcons.png" class="me-1"  style="width: 20px;"> Color icons</a><span class="checkColor"></span> </li>
+          
+              </ul>
+
+          </div>
+
+          <!-- session -->
+          <div class="dropdown mx-4 login d-flex align-items-center">
+          
+            <a class="text-decoration-none text-secondary" href="#" id="navbarScrollingDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Session
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+                <% if (user) { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login </a></li>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"> </i> Register</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                <% } else { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login</a></li>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"></i> Register</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                <% }; %>
+
+                <% if (user) { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                <% } else { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                <% }; %>
+
+            </ul>
+   
+          </div>
+
+        </div>
+
+        <!-- actions -->
+
+        <div class="content d-flex">
+          <!-- username -->
+          <div class="contentUsername me-2">
+            <ul class="navbar-nav m-0 usernameMain">
+              <li class="nav-item dropdown">
+
+                <% if (user) { %>
+                    <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                      <p class="m-0 p-0" style="max-width: 140px; white-space: noWrap; text-overflow: ellipsis; overflow: hidden;" > 
+                        <i class="bi bi-person"></i> <%= user.username %>
+                      </p>
+                    </a>
+                  <% } else { %>
+                    <a class="nav-link disabled d-flex" href="#">
+                      <i class="bi bi-person me-1"></i> username
+                    </a>
+                  <% }; %>
+                  <% if (user) { %>
+                       
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                      <li><a class="dropdown-item" href="/myaccount/messenger">Mensajeria</a></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                      <li><a class="dropdown-item" href="/account/<%= user.username %>">Mi Tienda</a></li>
+                      <% }; %>
+                      <li><a class="dropdown-item" href="/buysell-list/">Sala de Negocios</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/myfavorites">Favoritos</a></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                        <li><a class="dropdown-item" href="/mytickets">Mis Tickets</a></li>
+                        <li><a class="dropdown-item" href="/follow">Siguiendo </a></li>
+                        <li><a class="dropdown-item" href="/followme">Siguiendome </a></li>
+                      <% }; %>
+                      <li><hr class="dropdown-divider"></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                      <li><a class="dropdown-item" href="/myaccount/manage">Gerencia</a></li>
+                      <% }; %>
+                      <li><a class="dropdown-item" href="/myaccount/profile">Perfil</a></li>
+                    </ul>
+                  <% }; %> 
+              </li>
+            </ul>
+          </div>  
+
+          <!-- publications -->
+          <ul class="navbar-nav my-lg-0 me-2">
+            <li class="nav-item dropdown">
+              <% if (user) { %>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Publicaciones
+                </a>
+              <% } else { %>
+                <a class="nav-link dropdown-toggle invisible" href="#" id="navbarScrollingDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Publicaciones
+                </a>
+              <% }; %>
+                  
+              <% if (user) { %>
+                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                  <li><a class="dropdown-item" href="/department/create">Herramienta ADS</a></li>
+                <% if (searchProfile.length !==0 ) { %>
+                  <li><a class="dropdown-item" href="/department/raffle">Herramienta Raffle</a></li>  
+                  <li><a class="dropdown-item" href="/my-ads">Mis Anuncios</a></li>
+                  <li><a class="dropdown-item" href="/my-invoices">Facturas</a></li>
+                <% }; %>
+                  <li><a class="dropdown-item" href="/history">Historial</a></li>
+                <% if (searchProfile.length !==0 ) { %>
+                  <li><a class="dropdown-item" href="/record">Record</a></li>  
+                <% }; %>  
+              </ul>
+              <% }; %>
+
+            </li>
+          </ul>
+
+          <!-- bell messages -->
+          <div class="contentAlerts d-flex">
+
+            <% if (user) { %>
+    
+              <% if (countMessages) { %>
+                <a class="nav-link text-secondary" title="Alert of inbox"  href="/myaccount/messenger">
+              
+                <i class="bi bi-bell position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= countMessages %>
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+                </i>  
+    
+                </a>
+              <% }; %> 
+            
+    
+              <% if (countNegotiationsBuySell) { %>    
+                <a class="nav-link text-secondary" title="Alert of negotiation"  href="/buysell-list">
+                <i class="bi bi-briefcase position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                <%= countNegotiationsBuySell %>
+                <!-- <span class="visually-hidden">unread messages</span> -->
+                </span>
+                </i>
+                  
+                </a>  
+              <% }; %>
+    
+            <% }; %>  
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+
+<!-- :::::::::::::: Nota :::::::::::: -->
+
+<!-- Este partials es usado en todas las vistas que no tenga el buscador, pero comparte todos los elementos
+del navegador con buscador. de hecho comparte los mismos estilos de css en la carpeta public. -->
+

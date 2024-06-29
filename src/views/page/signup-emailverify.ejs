@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Signup</title>
+</head>
+<body class="mainTheme">
+    <main>
+    <%- include('../partials/navi-simple.ejs') %>
+          
+    <% if (mailSent) { %>
+        <%- include('../alert/mailSent.ejs') %>
+    <% }; %>
+
+    <% if (signUp.length !==0) { %>
+    <div class="container-fluid border border-dark" style="background-size: cover; background-image: url('<%= signUp[0].url %>'); height: 100%;" >
+    <% } else { %>
+    <div class="container-fluid">    
+    <% }; %> 
+
+        <div class="row d-flex justify-content-end mx-3 mt-5">
+            <div class="col-lg-4 col-md-5 col-sm-10 col-12">
+                <div class="card formTransp mt-4 rounded-2 shadow">
+                    <div class="card-header d-flex justify-content-between">
+                        <span><i class="bi bi-journal-check mx-1"></i> Register</span>
+                        <span><i class="bi bi-2-square me-1"></i></span>
+                    </div>
+                    <div class="card-body p-4 border-top border-dark">
+        
+                        <!-- validData { username: 'Orbigpzo', email: 'scorpinosred@gmail.com' } -->
+                        <% if (validData){ %>
+                            <% let username = validData.username %> <% let email = validData.email %>
+
+                            <form action="/myaccount/signup-emailverify" method="POST" id="signup">
+                                
+                                <div class="form-group my-2">
+                                    <input type="text" name="username" class="form-control user" value="<%= username %>" readonly>
+                                </div>
+                                <div class="form-group my-2">
+                                    <input type="email" name="email" class="form-control email"  value="<%= email %>" readonly>
+                                </div>
+                                <div class="input-group my-2">
+                                    <span class="input-group-text"> Token :</span>
+                                    <input type="text" name="token" class="form-control" style="letter-spacing: 10px; font-weight: bold; font-size: 18px;" maxlength="6" required>
+                                </div>
+                                <div class="form-group my-3">  
+                                    <button class="form-control btn btn-primary" type="submit"> Validar Correo</button>
+                                </div>
+
+                                <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                    <label for="" class=" mx-1"><small> Vaya a su correo y consiga el Token requerido aqui. </small> </label>
+                                </div>
+
+                                <div class="d-flex justify-content-center my-2 p-1 text-light">
+                                    <label for="" class="mx-1 timeless"> <small> Timer </small> </label>
+                                </div>
+                                
+                                
+                            </form>
+
+                        <% } else { %>
+                                <div class="alert alert-info">
+                                    <span> Debe pasar por Register 1 para inciar su Registro </span>
+                                </div>
+                        <% }; %>    
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <%- include('../partials/scripts.ejs')%>
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+    </main>
+</body>
+</html>
+
+
+<script>
+    const timeless = document.querySelector('.timeless');
+    const user = document.querySelector('.user');
+    const email = document.querySelector('.email');
+
+    window.addEventListener('load', ()=>{
+        
+        let userV = user.value;
+        let emailV = email.value;
+
+        let startT = 90;
+        let interval = setInterval(timer, 1000);
+
+        function timer(){
+            
+            let timesless = startT --;
+            //console.log(typeof timesless);
+            //console.log("timesless", timesless);
+            let timer = timesless > 0;  // tru or false;
+            console.log("timer", timer);
+
+            if (timer === true ){
+                timeless.innerHTML = `<i class="bi bi-hourglass-split me-2"></i>
+                                      <span> ${timesless} seg. </span>`;
+            } else {
+                timeless.innerText = `Tiempo agotado. Registro eliminado`;
+                clearInterval(interval);
+                //ahora enviamos un fetch al backend para eliminar el registro antes realizado
+
+                const datos = {
+                    user : userV,
+                    email : emailV
+                };
+
+                console.log("Estos datos viajaran al backend para eliminar este user")
+                console.log("datos", datos);
+                
+                fetch('/myaccount/signup-delete', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => 
+                    {
+                        console.log("Llegando : ",jsonx)
+                        const type = jsonx.type;
+                        const resp = jsonx.resp;
+
+                        if (type == "delete"){
+                            //esta direccion aqui abajo debemos cambiarla por la direccion real cuando este en el servidor
+                            //('https://blissenet.com/myaccount/signup', '_self'); ---- el _self es para que abra en la misma ventana o se coporte como una actualizacion de ventana.
+                            window.open('http://localhost:1263/myaccount/signup','_self');
+                        }
+                        // resp: "Registro Eliminado",  type: "delete"
+
+
+                    })
+                .catch( err => console.log(err));
+                
+            }
+
+            
+        }
+
+    })
+</script>
+
+
+

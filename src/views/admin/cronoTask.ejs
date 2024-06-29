@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Crono Task</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+
+    <%- include('../partials/navi-admin.ejs') %>
+     
+      
+    <% if (userAdmin) { %> 
+        <!-- finishMechanicErrorAuction, finishMechanicSuccessAuction, finishMechanicSuccessRaffle, finishMechanicErrorRaffle -->
+
+       <div class="containerAddBanks mb-2">
+            <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Crono-Task</span>
+            </div>
+       </div>
+
+       <div class="row mx-0 d-flex justify-content-center" style="height: 100vh;">
+            <div class="col-11">
+                <div class="p-2 mt-2 border" style="background-color: rgba(243, 243, 243, 0.8);">
+                    <table class="table" style="width: 100%;">
+                     <thead>
+                        <tr>
+                            <th><i class="bi bi-stopwatch"></i> Task</th> <th>Time Task</th> <th>Update</th><th>Mechanic</th>
+                        </tr>
+                     </thead>
+                     <% if (searchCrono.length !==0) { %>
+                        <tbody>
+                            <tr>
+                                <td>Crono-UpdateRate  </td> <td>03:00 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div></td> <td><%= searchCrono[0].croneUpdateRate %></td><td> <button class="btn btn-success btn-sm" id="btnUpdateRate"> Ejecutar</button> </td> 
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteUsers </td> <td>03:10 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div></td> <td><%= searchCrono[0].croneDeleteUsers %></td><td> <button class="btn btn-success btn-sm" id="btnDeleteUsers"> Ejecutar</button> </td>
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteAdms  </td> <td>03:20 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td><%= searchCrono[0].croneDeleteAdmin %></td><td> <button class="btn btn-success btn-sm" id="btnDeleteAdmin"> Ejecutar</button> </td>
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteADS   </td> <td>03:30 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div></td> <td><%= searchCrono[0].croneDeleteADS %></td><td> <button class="btn btn-success btn-sm" id="btnDeleteADS"> Ejecutar</button> </td> 
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteUpload </td> <td>03:40 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td> <%= searchCrono[0].croneDeleteUpload %></td><td> <button class="btn btn-success btn-sm" id="btnDeleteUpload"> Ejecutar</button> </td> 
+                            </tr>
+                         </tbody>
+                     <% } else { %>
+                        <tbody>
+                            <tr>
+                                <td>Crono-UpdateRate  </td> <td>03:00 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div></td> <td>No update</td><td> <button class="btn btn-success btn-sm" id="btnUpdateRate"> Ejecutar</button> </td> 
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteUsers </td> <td>03:10 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div></td> <td>No update</td><td> <button class="btn btn-success btn-sm" id="btnDeleteUsers"> Ejecutar</button> </td>
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteAdms  </td> <td>03:20 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td>No update</td><td> <button class="btn btn-success btn-sm" id="btnDeleteAdmin"> Ejecutar</button> </td>
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteADS   </td> <td>03:30 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div></td> <td>No update</td><td> <button class="btn btn-success btn-sm" id="btnDeleteADS"> Ejecutar</button> </td> 
+                            </tr>
+                            <tr>
+                                <td>Crono-DeleteUpload </td> <td>03:40 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td>No update</td><td> <button class="btn btn-success btn-sm" id="btnDeleteUpload"> Ejecutar</button> </td> 
+                            </tr>
+                            </tbody>
+                     <% } %>   
+                    </table>                
+                </div>
+            </div>
+
+            <div class="col-11 mt-2 crono-alert">
+                <!-- alert dinamico -->            
+            </div>
+
+            <div class="col-11">
+
+                <div class="containBlank p-2 mt-2 border" style="height: 50%; background-color: rgba(243, 243, 243, 0.8);" >
+                    <div class="card">
+                        <div class="card-header">
+                            Crono-Task Info
+                        </div>
+                        <div class="card-body">
+                            <div class="containerMain">
+                                                                   
+                                <div class="containAccount p-3 my-2 rounded-3  alert alert-secondary" >
+                                    <p> <strong>Crono-UpdateRate:</strong> Proceso que actualiza la tasa del Dolar vs el Bolivar. </p>
+                                    <p> <strong>Crono-DeleteUsers:</strong> Proceso que elimina todos los usuarios que no pudieron validar su cuenta em correo. </p>
+                                    <p> <strong>Crono-DeleteAdms:</strong> Proceso que elimina todos los admins que no pudieron verificar su cuenta. </p>
+                                    <p> <strong>Crono-DeleteADS:</strong> Proceso que elimina los anuncios (Aeroplano, Automotriz, Nautico, Realstate, Servicios) que han pasado un año publicado. </p>
+                                    <p> <strong>Crono-DeleteUpload:</strong> Proceso que elimina los archivos de imagenes "Que el servidor no ha podido eliminar por diversas razones" de la carpeta upload del servidor. </p>
+                                </div>
+                                
+                            </div>        
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+       </div>
+
+    <% } else { %>
+        
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/adminNoLogin.ejs') %>
+        
+        </div>
+
+    <% }; %>     
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    
+</body>
+</html>
+
+<script>
+    
+    const btnUpdateRate = document.getElementById('btnUpdateRate');
+    const btnDeleteUsers = document.getElementById('btnDeleteUsers');
+    const btnDeleteAdmin = document.getElementById('btnDeleteAdmin');
+    const btnDeleteADS = document.getElementById('btnDeleteADS');
+    const btnDeleteUpload = document.getElementById('btnDeleteUpload');
+
+    const cronoAlert = document.querySelector('.crono-alert');
+
+    // /admin/cronoTask/croneDeleteADS, /admin/cronoTask/croneDeleteAdmin, /admin/cronoTask/croneDeleteUsers, /admin/cronoTask/croneUpdateRate
+    btnUpdateRate.addEventListener('click', ()=>{
+        
+        fetch("/admin/cronoTask/croneUpdateRate", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => 
+            {
+                console.log("jsonx", jsonx);
+                const type = jsonx.type;
+                const msg = jsonx.msg;
+
+                console.log(`type: ${type}`);
+                console.log(`msg: ${msg}`);
+
+                if (type == "Ok"){
+                    cronoAlert.innerHTML += `<div class="alert alert-success alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                } else {
+                    cronoAlert.innerHTML += `<div class="alert alert-danger alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-x-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                }
+         
+            }) 
+        .catch( err => console.log(err));
+    });
+
+    btnDeleteUsers.addEventListener('click', ()=>{
+        
+        fetch("/admin/cronoTask/croneDeleteUsers", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx =>
+            {
+                const type = jsonx.type;
+                const msg = jsonx.msg;
+
+                console.log(`type: ${type}`);
+                console.log(`msg: ${msg}`);
+
+                if (type == "Ok"){
+                    cronoAlert.innerHTML += `<div class="alert alert-success alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                } else {
+                    cronoAlert.innerHTML += `<div class="alert alert-danger alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-x-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                }
+            
+            
+            })
+        .catch( err => console.log(err));
+    });
+
+    btnDeleteAdmin.addEventListener('click', ()=>{
+        
+        fetch("/admin/cronoTask/croneDeleteAdmin", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => 
+            {
+                const type = jsonx.type;
+                const msg = jsonx.msg;
+
+                console.log(`type: ${type}`);
+                console.log(`msg: ${msg}`);
+
+                if (type == "Ok"){
+                    cronoAlert.innerHTML += `<div class="alert alert-success alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                } else {
+                    cronoAlert.innerHTML += `<div class="alert alert-danger alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-x-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                }
+            
+            })
+        .catch( err => console.log(err));
+    });
+
+    btnDeleteADS.addEventListener('click', ()=>{
+        
+        fetch("/admin/cronoTask/croneDeleteADS", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => 
+            {
+                const type = jsonx.type;
+                const msg = jsonx.msg;
+
+                console.log(`type: ${type}`);
+                console.log(`msg: ${msg}`);
+
+                if (type == "Ok"){
+                    cronoAlert.innerHTML += `<div class="alert alert-success alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                } else {
+                    cronoAlert.innerHTML += `<div class="alert alert-danger alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-x-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                }
+            
+            })
+        .catch( err => console.log(err));
+    });
+
+    btnDeleteUpload.addEventListener('click', ()=>{
+        
+        fetch("/admin/cronoTask/croneDeleteUpload", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => 
+            {
+                const type = jsonx.type;
+                const msg = jsonx.msg;
+
+                console.log(`type: ${type}`);
+                console.log(`msg: ${msg}`);
+
+                if (type == "Ok"){
+                    cronoAlert.innerHTML += `<div class="alert alert-success alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                } else {
+                    cronoAlert.innerHTML += `<div class="alert alert-danger alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-x-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                }
+            
+            })
+        .catch( err => console.log(err));
+    });
+
+
+</script>
+
+
+
+

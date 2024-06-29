@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head.ejs') %>
+    <title>Blissenet Home</title>
+</head>
+<style>
+
+  .textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+  }
+
+  .departGroup {
+    background-color: rgb(197, 103, 103);
+    border: 1px ridge brown;
+    list-style: none;
+    margin: 0;
+  }
+
+  .departList {
+    background-color: rgb(243, 205, 205);
+    padding: 0px 8px;
+    color: rgb(54, 52, 49);
+    border-radius: 12px;
+  }
+ 
+
+
+
+.gallery-masonry{
+    background-color: #333;
+    background-color: white;
+}
+
+/* ///// footerCSS \\\\\ */
+.close{
+    display: none;
+    
+}
+
+.mainMail{
+    cursor: pointer;
+    border: 1px solid black
+}
+
+.mainMail:hover{
+    cursor: pointer;
+    color: blueviolet;
+    border: 1px solid blueviolet;
+}
+
+.itemOption{
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.itemOption:hover{
+    .linkOptions{
+        text-decoration: underline blueviolet;
+        color: blueviolet;
+        text-decoration: none;
+        
+    }
+}
+
+.linkOptions{
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+
+  color: blueviolet;
+}
+/* end footer */
+
+
+@media screen and (min-width: 1025px) and (max-width: 1900px){
+
+
+    .imgStore{
+        width: 60px;
+        height: 60px;
+        transition: 0.3s;
+        margin: 1px;
+    }
+    .imgStore:hover{
+        outline : 2px solid lightseagreen;
+    }
+
+
+    .imgGalley{
+        max-width: 120px;
+    }
+
+    .gallery, .galleryMoreView{
+        columns: 10 120px;
+        column-gap: 1px;
+    }
+
+
+
+}
+
+@media screen and (min-width: 451px) and (max-width: 1024px){
+
+    .imgStore{
+        width: 50px;
+        height: 50px;
+        transition: 0.3s;
+        margin: 1px;
+    }
+    .imgStore:hover{
+        outline : 2px solid lightseagreen;
+    }
+
+    .imgGalley{
+        max-width: 100px;
+    }
+
+    .gallery, .galleryMoreView, .Top30Stores{
+        margin: 5px;
+        /* border: 2px solid rgb(240, 236, 8); */
+        columns: 10 100px;
+        column-gap: 1px;
+    }
+
+    .content-item{
+      flex-direction: column;
+   
+    } 
+
+    .imgNews{
+      width: 100%;
+    }
+
+}
+
+@media screen and (min-width: 220px) and (max-width: 450px){
+    .imgStore{
+        width: 50px;
+        height: 50px;
+        transition: 0.3s;
+        margin: 1px;
+    }
+    .imgStore:hover{
+        outline : 2px solid lightseagreen;
+    }
+    
+    .content-item{
+      flex-direction: column;
+    }    
+   
+    .imgNews{
+      width: 100%;
+    }
+
+    .imgGalley{
+        max-width: 65px;
+    }
+
+    .gallery, .galleryMoreView, .Top30Stores{
+        /* border: 2px solid rgb(4, 0, 255); */
+        columns: 10 65px;
+        column-gap: 1px;
+    }
+
+}
+
+
+</style>
+
+<body class="mainTheme">
+
+
+  <main>
+
+    <%- include('../partials/navi-simple.ejs') %>
+
+      <% if (success) { %>
+        <%- include('../alert/success.ejs') %>
+      <% }; %>
+
+        <div class="row mx-0">
+            <div class="col-lg-12 p-0" style="background-color: #e9ecef";>
+
+                <div class="barrHorizontIcon  p-0 m-0 d-flex justify-content-center flex-wrap border-bottom border-dark" style="width: 100%;">
+                  <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto; width: 90%;">
+                    <a href="/view-store" class="text-decoration-none mx-4 p-0 d-flex align-items-center"><img src="/img/CarsStoreTransp.png" alt="" class="rounded-3 storeIcon" style="width: 140px;"></a>
+                    <a href="/view-raffles" class="text-decoration-none mx-4 p-0 raffle" style="width: 40px; height: 40px;"> </a>
+                    <a href="/view-artes" class="text-decoration-none mx-4 p-0 arteGallery" style="width: 40px; height: 40px;"></a>
+                    <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 aeronautica" style="width: 40px; height: 40px;"> </a>
+                    <a href="/view-items" class="text-decoration-none mx-4 p-0 articulo" style="width: 40px; height: 40px;"></a>
+                    <a href="/view-automotive" class="text-decoration-none mx-4 p-0 automotriz" style="width: 40px; height: 40px;"></a> 
+                    <a href="/view-realstate" class="text-decoration-none mx-4 p-0 bienesraices" style="width: 40px; height: 40px;"></a>
+                    <a href="/view-nautical" class="text-decoration-none mx-4 p-0 nautico" style="width: 40px; height: 40px;"></a>
+                    <a href="/view-services" class="text-decoration-none mx-4 p-0 servicio" style="width: 40px; height: 40px;"></a>
+                    <a href="/view-auction" class="text-decoration-none mx-4 p-0 subasta" style="width: 40px; height: 40px;"></a>
+                  </ul>
+                </div>
+
+            </div>
+            <div class="container-fluid p-0">
+              <div class="row rowWidth m-0">
+                <div class="col-12 p-0">
+                  
+                    <%- include('../partials/bannerFront.ejs') %>
+                  
+                </div>
+                
+
+
+                <div class="col-12 contentCurrentShowNewsDay my-5" style="height: auto">
+
+                  <% if (currentNewsDay) { %>
+                      <div id="carouselExampleIndicators" class="carousel carousel-fade slide" data-bs-ride="carousel" style="height: auto;"> <!-- 210px -->
+                          <div class="carousel-indicators">
+                            <% currentNewsDay.forEach((ele, i)=>{  %>
+                                
+                                <% if (i === 0 ) { %>
+                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= i %>" class="active" aria-current="true" aria-label="Slide <%= i + 1 %>" style="background-color: black;"></button>
+                                <% } else { %>
+                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= i %>" aria-label="Slide <%= i + 1 %>" style="background-color: black;"></button>
+                                <% }; %>    
+
+                            <% }); %>                                                
+                          </div>
+
+                          <div class="carousel-inner">
+                          <% currentNewsDay.forEach((ele, i)=>{  %>
+
+                              <% if (i === 0 ) { %>
+                                  <div class="carousel-item active">
+
+                                      <div class="content-item d-flex">
+                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..."></div>
+                                          <div class="contenDetails d-flex flex-column">
+                                              <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
+                                              <p><%= ele.newDayDetails %></p>
+                                              <div class="contenAuthorDate d-flex justify-content-end my-0">
+                                                  <span class="me-1 fst-italic"><%= ele.adminName %></span>
+                                                  <span>(<%= ele.simplifiedDate %>)</span>
+                                              </div>
+                                          </div>
+                                      </div>
+                                    
+                                  </div>
+                              <% } else { %>
+                                  <div class="carousel-item">
+                                      <div class="content-item d-flex">
+                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..."></div>
+                                          <div class="contenDetails d-flex flex-column">
+                                              <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
+                                              <p><%= ele.newDayDetails %></p>
+                                              <div class="contenAuthorDate d-flex justify-content-end my-0">
+                                                  <span class="me-1 fst-italic"><%= ele.adminName %></span>
+                                                  <span>(<%= ele.simplifiedDate %>)</span>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              <% }; %>    
+
+                          <% }); %>
+                          </div>
+
+                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                          </button>
+                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                          </button>
+                      </div>
+                  <% }; %>
+
+                </div>
+
+                <div class="row contentMosacicoPorcentMarket m-0 py-5 d-flex justify-content-around" style="background-color: whitesmoke;">
+                    
+                    <div class="border border-light boxTopStore col-lg-6 col-md-12 col-sm-12" style="position: relative">                 
+                      <div class="textTitle">
+                        <span class="text-secondary mt-1" style="font-size: 26px;">Top 50 Stores + visitadas</span>
+                      </div>
+                      <div class="Top50Stores d-flex flex-wrap">
+  
+                      </div>
+                    </div>      
+                    
+                    <div class="border border-light boxPercentMarket col-lg-5 col-md-12 col-sm-12 border border-danger">
+                     
+                      <div class="textTitle">
+                        <span class="text-secondary mt-1" style="font-size: 26px;">Indice de Mercado Dominante.</span>
+                      </div>
+                      <div>
+                        <canvas id="myChart"></canvas>
+                      </div>
+
+                    </div>
+
+                </div>
+                <div class="gallery-masonry p-2" id="newADS">
+                  <div class="textTitle">
+                      <span class="text-secondary" style="font-size: 26px;">últimas Publicaciones</span>
+                  </div>
+                  <div class="gallery">
+
+                  </div>
+                </div>
+
+                <div class="gallery-masonry p-2" id="moreViewADS">
+                  <div class="textTitle">
+                      <span class="text-secondary" style="font-size: 26px;">Publicaciones más vistas</span>
+                  </div>
+                  <div class="galleryMoreView">
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+        </div>    
+        <%- include('../partials/footer.ejs') %>
+
+          
+
+  </main>
+  
+  
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simple.ejs') %>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+  <script>
+
+   //aqui colocaremos el script del Top 50 Store
+   const Top50Stores = document.querySelector('.Top50Stores');
+
+   fetch("/mosaico-store-view", { 
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( top50Store => {
+            console.log('top50Store', top50Store);
+          if (top50Store.length !==0){
+              for (let i = 0; i < top50Store.length; i++) {
+                  const ele = top50Store[i];
+                
+                  if (ele.avatarPerfil[0].url.length === 0 ){
+                  
+                    Top50Stores.innerHTML += ` <div class="boxNewAds"> <a href= "/account/${ele.username}"> <img src= "https://www.gravatar.com/avatar/${ele.mailhash}?d=identicon" class="imgStore"> </a> </div> `
+                  } else {
+                  
+                    Top50Stores.innerHTML += ` <div class="boxNewAds"> <a href= "/account/${ele.username}"> <img src= "${ele.avatarPerfil[0].url}" class="imgStore"> </a> </div> `                                                                   
+          
+                  }
+              
+              }
+          } else{
+
+            Top50Stores.innerHTML = `
+                          <div class="alert alert-secondary">
+                              <span style="font-size: 18px color: gray"> NO hay Datos. Base de Datos En limpio </span>  
+                          </div>
+                          `
+
+          }
+        })
+        .catch( err => console.log(err));
+
+  </script>
+
+  <script>
+
+    const ctx = document.getElementById('myChart');
+    const contentBarArts = document.querySelector('.contentBarArts');
+    const contentBarAero = document.querySelector('.contentBarAero');
+    const contentBarItem = document.querySelector('.contentBarItem');
+    const contentBarAuto = document.querySelector('.contentBarAuto');
+    const contentBarReal = document.querySelector('.contentBarReal');
+    const contentBarNaut = document.querySelector('.contentBarNaut');
+    const contentBarServ = document.querySelector('.contentBarServ');
+    const contentBarSuba = document.querySelector('.contentBarSuba');
+           
+    fetch('/percent', {
+
+    method: "GET",
+    headers: {"content-type" : "application/json"}
+
+    })
+      .then(respPercent =>respPercent.json() )
+      .then( jsonP => {
+        console.log("esto es percent --->", jsonP)
+  
+            const arte = jsonP[0].arte;
+            const aero = jsonP[1].aeronautico;
+            const item = jsonP[2].items;
+            const auto = jsonP[3].automotriz;
+            const real = jsonP[4].realstate;
+            const naut = jsonP[5].nautico;
+            const serv = jsonP[6].servicio;
+            const suba = jsonP[7].subasta;
+
+            const sum = (arte + aero + item + auto + real + naut + serv + suba);
+
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ['Artes', 'Aeron', 'Items', 'Autom', 'Reals', 'Nauti', 'Servi', 'Subas'],
+                datasets: [{
+                  label: 'Dominan Market',
+                  data: [arte, aero, item, auto, real, naut, serv, suba],
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                },
+                /* responsive: true, */
+                plugins : {legend: { position: 'bottom'}, title: { display: true }}
+              }
+            });
+   
+
+      })
+      .catch(err => console.log(err))
+  
+  </script>
+
+ 
+
+ <script>
+  const contentGallery = document.querySelector('.gallery');
+  const moreViewADS = document.getElementById('moreViewADS');
+  const newADS = document.getElementById('newADS'); 
+
+  fetch('/mosaico', {
+
+    method: "GET",
+    headers: {"content-type" : "application/json"}
+
+    })
+      .then(response =>response.json() )
+      .then( gallery => {
+              //gallery es un array
+
+              if (gallery. length !== 0){
+                const boxGallery = gallery.sort((a, b)=>
+                  { return new Date(b.createdAt) - new Date(a.createdAt)});
+                  /* a.updatedAt.localeCompare(b.updatedAt) */
+                
+                //console.log("boxGallery : ",boxGallery)
+                for (let i = 0; i < boxGallery.length; i++) {
+                  const ele = boxGallery[i];
+                                                              
+                  contentGallery.innerHTML += ` <div class="boxNewAds"> <a href= "/product/${ele.department}/${ele._id}"> <img src= "${ele.images[0].url}" class="imgGalley"> </a> </div> `
+                }
+              } else {
+
+                newADS.innerHTML = "" 
+
+              }  
+              
+            })
+      .catch(err => console.log(err))     
+
+
+ </script>
+
+ <script>
+
+  const galleryMoreView = document.querySelector('.galleryMoreView');
+
+  fetch('/mosaico-more-view', {
+    method: "GET",
+    headers: {"content-type" : "application/json"}
+
+    })
+      .then(response =>response.json())
+      .then( moreView =>{
+         //console.log("moreView :", moreView)
+         
+        if (moreView.length !==0){ 
+            for (let i = 0; i < moreView.length; i++) {
+                    const ele = moreView[i];
+                                                                
+                    galleryMoreView.innerHTML += ` <div class="boxNewAds"> <a href= "/product/${ele.department}/${ele._id}"> <img src= "${ele.images[0].url}" class="imgGalley"> </a> </div> `
+            }
+
+        } else {
+            moreViewADS.innerHTML = "";
+        }    
+
+          
+      })
+      .catch(err => console.log(err))
+
+  
+ </script>
+
+
+<!-- <style>
+
+@media screen and (min-width: 510px) and (max-width: 900px ){
+
+.content-item{
+  flex-direction: column;
+   
+} 
+
+.imgNews{
+  width: 100%;
+}
+
+
+}
+      
+  @media screen and (min-width: 180px) and (max-width: 510px ){
+
+    .content-item{
+      flex-direction: column;
+    }    
+   
+    .imgNews{
+      width: 100%;
+    }
+
+  } 
+  
+</style> -->
+
+<script>
+  //contola el js del footer
+  const mainMail = document.querySelector('.mainMail');
+  const emaiHidden = document.getElementById('emaiHidden'); 
+  const spnEmail = document.querySelector('.spnEmail');
+  
+  
+  const msgSaveMail = document.querySelector('.msgSaveMail');//contendor oculto importante que dice que se ha guardaddo en portapales
+  
+  mainMail.addEventListener('click', copiar);
+
+  function copiar(){
+             
+      let email = spnEmail.textContent;
+      navigator.clipboard.writeText(email)
+          .then(() => {
+               //efecto de poner y quitar el alert
+              msgSaveMail.classList.remove('close');
+              setTimeout(hideMsg, 3000);
+          })
+          .catch(err =>{
+              msgSaveMail.innerHTML += `<div class="alert-danger py-1 px-2 "> 
+                                          <span>No guardado</span>  
+                                        </div>` 
+          })
+
+      function hideMsg(){
+          msgSaveMail.classList.add('close');
+      }
+      
+  }
+</script>
+
+<!-- 
+<script>
+  window.addEventListener('load', ()=>{
+
+    let vueltas = 10;
+    let newToken, newTN;
+
+    for (let i = 0; i < vueltas; i++) {
+
+    createNewToken()
+
+    function createNewToken(){
+        let ran = Math.random();
+        let random = Math.ceil(ran * 1000000);
+        newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 5;
+        //console.log("random ->", random);
+        //console.log("newTN ->", newTN);
+    }    
+
+    while(newTN.length < 6){
+        createNewToken()
+    } 
+
+    newToken = `${newTN}`;
+
+    console.log("newToken", newToken);
+      
+    }
+
+  })
+</script> 
+
+ -->
+</body>
+
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Banks</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+      
+       <div class="containerAddBanks">
+            <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Account Banks</span>
+            </div>
+       </div>
+       <div class="row mx-0">
+        <div class="col-lg-4">
+            <div class="containAddAccount p-2 mt-2 border">
+                <!-- formulario de crear -->
+                <div class="card create">
+                    <div class="card-header">
+                        Add Bank Account
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/new-accountsbank" method="post" id="formCreate">
+                            <div class="form-group my-2">
+                                <input type="text" name="bankname" id="bankname" placeholder="Intro the name of the bank" class="form-control" required>
+                            </div>
+
+                            <div class="form-group my-2">
+                                <input type="text" name="accountnumber" placeholder="Intro the account number" class="form-control" required>
+                            </div>
+
+                            <div class="form-group my-2">
+                                <input type="text" name="phonenumber" placeholder="Intro phone number" class="form-control">
+                            </div>
+                          
+                            <div class="form-group my-3">
+                                <button type="submit" class="btn btn-success form-control" id="btnCreate"> Crear Account </button>
+                                <button type="button" class="btn btn-success form-control invisibleBtn"  id="btnCreateLoading" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Uploading...
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- formulario de edit -->
+                <div class="card edit closed">
+                    <div class="card-header">
+                       Edit Bank Account
+                    </div>
+                    <div class="card-body">
+                        <form action="/admin/edit-accountsbank" method="post" id="formEdit">
+                            <input type="hidden" name="idAccount" id="idAccount">
+                            <div class="form-group my-2">
+                                <input type="text" name="banknameEdit" id="banknameEdit" placeholder="Intro the name of the bank" class="form-control">
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="accountownerEdit" placeholder="Intro the name of the account owner" class="form-control" id="accountownerEdit" readonly>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="rifEdit" placeholder="Intro Rif" class="form-control" id="rifEdit" readonly>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="accountnumberEdit" placeholder="Intro the account number" class="form-control" id="accountnumberEdit">
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" name="phonenumberEdit" placeholder="Intro phone number" class="form-control" id="phonenumberEdit">
+                            </div>
+                         
+                            <div class="form-group my-3">
+                                <input type="submit" class="btn btn-secondary form-control" value="Edit Account" id="btnEdit">
+                                <button class="btn btn-secondary form-control invisibleBtnEdit" type="button" id="btnEditLoading" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Updating...
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="containInfo p-2 mt-2 border">
+                <div class="alert alert-info">
+                    <p> <b>Importante</b>, Si deseas proveer a sus clientes de una opcion gratuita debe crear una cuenta de banco con el nombre <b>Gratis</b> el resto de los datos coloque 6 ceros (000000) </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="containShowAccount p-2 mt-2 border">
+                <div class="card">
+                    <div class="card-header">
+                        List of Banks Account
+                    </div>
+                    <div class="card-body">
+                        <div class="containerMainAccount">
+                            <% if (searchAccounts) { %>
+                                    <div class="containAccount p-3 my-2 rounded-3 border d-flex shadow-sm alert alert-danger" >
+                                        <p class="mb-0">La información aqui presentada es solo para ser usada con fines administrativos y solo podrá ser editada por el <strong>Gerente de Operaciones</strong>.</p>
+                                    </div>
+                                <% searchAccounts.forEach((ele)=>{ %>
+
+                                    <div class="containAccount p-2 my-3 rounded-3 border  d-flex alert alert-secondary" >
+                                        
+                                        <div class="containData" style="width: 75%;">
+                                            <span class="me-2"> Banco : <%= ele.bankname %></span>
+                                            <span class="me-2"> A nombre : <%= ele.accountowner %></span><br>  
+                                            <span class="me-2"> Cuenta :<%= ele.accountnumber %></span> 
+                                            <span class="me-2"> Rif : <%= ele.rif %></span>
+                                            <span class="me-2"> Telf. : <%= ele.phonenumber %></span>  <br>
+                                        </div>
+
+                                        <div class="containerController p-2  d-flex justify-content-end border border-secondary rounded-1" style="width: 25%;">
+                                            <button class="btn btn-secondary ms-3 btnEditing" style="height: 40px;"><input type="hidden" value="<%= ele._id %>"><i class="bi bi-pencil-square"></i></button>
+                                            <a href="/admin/delete-accountbank/<%= ele._id %>"><button class="btn btn-danger ms-3" style="height: 40px;"><i class="bi bi-x-square"></i></button></a>
+                                            <% if ( ele.lock === false) { %>    
+                                                <a href="/admin/lock-accountbank/<%= ele._id %>"><button class="btn btn-success ms-3" style="height: 40px;"><i class="bi bi-unlock"></i></button></a>
+                                            <% } else { %>
+                                                <a href="/admin/lock-accountbank/<%= ele._id %>"><button class="btn btn-danger ms-3" style="height: 40px;"><i class="bi bi-lock"></i></button></a>
+                                            <% }; %> 
+                                        </div>
+
+                                    </div>
+
+                                <% }); %>
+                            <% }; %>
+                        </div>        
+                    </div>
+                </div>
+            </div>
+        </div>
+       </div>
+                       
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <script>
+
+        //aqui los input seleccionados
+        const create = document.querySelector('.create');
+        const edit = document.querySelector('.edit');
+        const btnEditing = document.querySelectorAll('.btnEditing');
+    
+        const idAccount = document.getElementById('idAccount'); 
+        const banknameEdit = document.getElementById('banknameEdit');
+        const accountownerEdit = document.getElementById('accountownerEdit');
+        const accountnumberEdit = document.getElementById('accountnumberEdit');
+        const phonenumberEdit = document.getElementById('phonenumberEdit');
+        const rifEdit = document.getElementById('rifEdit');
+    
+        
+        for (let i = 0; i < btnEditing.length; i++) {
+            const element = btnEditing[i];
+            element.addEventListener('click', ()=>{
+                create.classList.add('closed');
+                edit.classList.remove('closed');
+    
+                const idAccountReq = element.childNodes[0].value;
+    
+                const datos = {
+                    idAccountReq: idAccountReq
+                }
+    
+                fetch('/admin/requestAccountBank', {
+    
+                  method: "post",
+                  body: JSON.stringify(datos),
+                  headers: { "content-type": "application/json" }
+    
+                })
+                  .then(response => response.json())
+                  .then(jsonx => {
+                    console.log("esto es jsonx", jsonx);
+                    idAccount.value = jsonx._id //esto se guardara en un input hidden linea 72
+                    banknameEdit.value = jsonx.bankname;
+                    accountownerEdit.value = jsonx.accountowner;
+                    accountnumberEdit.value = jsonx.accountnumber;
+                    phonenumberEdit.value = jsonx.phonenumber;
+                    rifEdit.value = jsonx.rif
+                  })
+                  .catch(err => console.log(err));
+            })
+            
+        }
+    
+    </script>
+    
+    <script>//aqui creo el spinnier de create
+
+        const btnCreate = document.getElementById('btnCreate');
+        const btnCreateLoading = document.getElementById('btnCreateLoading');
+        const formCreate = document.getElementById('formCreate')
+        
+        formCreate.addEventListener('submit', (e) => {
+            if (e) {
+                //console.log("existe un evento en desarrollo")
+                btnCreate.classList.add('invisibleBtn')
+                btnCreateLoading.classList.remove('invisibleBtn')
+            } else {
+                //console.log("no hay ningun evento")
+                btnCreate.classList.remove('invisibleBtn')
+            }
+
+        })
+
+    </script>
+    <script> //aqui creo el spinner en el edit
+           
+            const btnEdit = document.getElementById('btnEdit');
+            const btnEditLoading = document.getElementById('btnEditLoading');
+            const formEdit = document.getElementById('formEdit');
+
+            formEdit.addEventListener('submit', (e) => {
+                if (e) {
+                    //console.log("existe un evento en desarrollo")
+                    btnEdit.classList.add('invisibleBtnEdit')
+                    btnEditLoading.classList.remove('invisibleBtnEdit')
+                } else {
+                    //console.log("no hay ningun evento")
+                    btnEdit.classList.remove('invisibleBtnEdit')
+                }
+
+            })
+    </script>
+
+</body>
+</html>
+
+
+
+

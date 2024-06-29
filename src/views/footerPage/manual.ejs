@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Manual</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        width: 100wh;
+    }
+
+    .theme{
+        cursor: pointer;
+    }
+
+    .close{
+        display: none;
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+
+
+</style>
+<body class="mainTheme">
+    <main>
+        
+        
+        <%- include('../partials/navi-simple.ejs') %>
+        <div class="row p-0 themaTextLight" style="max-width: 100%; position: relative;">
+
+            <div class="col-5 col-sm-4 col-md-3 col-lg-3 p-2 mt-5 fatherIndice" style="position: fixed; top: 50px; height: 500px;">
+
+                <div class="indice my-2 mx-2 ps-2" style="overflow-y: auto; height: 100%;">
+                    <h5 class="mb-3"><i class="bi bi-journal-text me-1"></i>Manual de Usuario</h5>
+                    <h6 class="ms-2 theme" id="session"><i id="sessionI" class="bi bi-plus"></i><b>Session</b></h6>
+                    <ul class="close ul-session">
+                        <li><a href="#registro" class="text-secondary">Registro</a></li>
+                        <li><a href="#login" class="text-secondary">Login</a></li>
+                        <li><a href="#deslogear" class="text-secondary">Deslogear</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="messenger"><i id="messengerI" class="bi bi-plus"></i><b>Mensajeria</b></h6>
+                    <ul class="close ul-messenger">
+                        <li><a href="#Messenger" class="text-secondary">Mensajería</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="buy&Sell"><i id="buySellI" class="bi bi-plus"></i><b>Sala de Negocios</b></h6>
+                    <ul class="close ul-buySell">
+                        <li><a href="#Buy&Sell" class="text-secondary">Compras y Ventas</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="profile"><i id="profileI" class="bi bi-plus"></i><b>Perfil</b></h6>
+                    <ul class="close ul-profile">
+                        <li><a href="#crearPerfil" class="text-secondary">Crear</a></li>
+                        <li><a href="#editarPerfil" class="text-secondary">Editar</a></li>
+                        <li><a href="#nuevoAvatar" class="text-secondary">Nuevo Avatar</a></li>
+                        <li><a href="#nuevoBanner" class="text-secondary">Nuevo Banner</a></li>
+                        <li><a href="#pintarTienda" class="text-secondary">Pintar Tienda</a></li>
+                        <li><a href="#buscador" class="text-secondary">Buscador</a></li>
+                        <li><a href="#palabrasClave" class="text-secondary">Palabras Clave</a></li>
+                        <li><a href="#cambiarContraseña" class="text-secondary">Nueva Contraseña</a></li>
+                        
+                    </ul>
+                    <h6 class="ms-2 theme" id="olvidoContraseña"><i id="olvidoContraseñaI" class="bi bi-plus"></i><b>Olvide my Contraseña</b></h6>
+                    <ul class="close ul-olvidoContraseña">
+                        <li><a href="#olvideContraseña" class="text-secondary">Restaurar Contraseña</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="publicaciones"><i id="publicacionesI" class="bi bi-plus"></i><b>Publicaciones</b></h6>
+                    <ul class="close ul-publicaciones">
+                        <li><a href="#crearAnuncio" class="text-secondary">Crear Anuncio</a></li>
+                        <li><a href="#agregarVideo" class="text-secondary">Agregar Video</a></li>
+                        <li><a href="#agregarFoto" class="text-secondary">Agregar Foto</a></li>
+                        <li><a href="#eliminarFoto" class="text-secondary">Eliminar Foto</a></li>
+                        <li><a href="#agregarAudio" class="text-secondary">Agregar Audio</a></li>
+                        <li><a href="#eliminarAudio" class="text-secondary">Eliminar Audio</a></li>
+                        <li><a href="#editarAnuncio" class="text-secondary">Editar Anuncio</a></li>
+                        <li><a href="#eliminarAnuncio" class="text-secondary">Eliminar Anuncio</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="misAnuncios"><i id="misAnunciosI" class="bi bi-plus"></i><b>Mis Anuncios</b></h6>
+                    <ul class="close ul-myAds">
+                        <li><a href="#myAds" class="text-secondary">Mis Anuncios</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="manage"><i id="manageI" class="bi bi-plus"></i><b>Gerencia</b></h6>
+                    <ul class="close ul-manage">
+                        <li><a href="#administracion" class="text-secondary">Administración</a></li>
+                        <li><a href="#analisis" class="text-secondary">Análisis</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="miTienda"><i id="miTiendaI" class="bi bi-plus"></i><b>Mi Tienda</b></h6>
+                    <ul class="close ul-miTienda">
+                        <li><a href="#mitienda" class="text-secondary">Mi Tienda</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="favorites"><i id="favoriteI" class="bi bi-plus"></i><b>Favoritos</b></h6>
+                    <ul class="close ul-favorite">
+                        <li><a href="#favorite" class="text-secondary">Artículos Favoritos</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="favoriteStores"><i id="favoriteStoreI" class="bi bi-plus"></i><b>Siguiendo</b></h6>
+                    <ul class="close ul-favoriteStore">
+                        <li><a href="#favoriteStore" class="text-secondary">Siguiendo</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="followMe"><i id="followMeI" class="bi bi-plus"></i><b>Siguiendome </b></h6>
+                    <ul class="close ul-followMe">
+                        <li><a href="#followMe" class="text-secondary">Siguiendome</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="invoices"><i id="invoicesI" class="bi bi-plus"></i><b>Facturas</b></h6>
+                    <ul class="close ul-invoices">
+                        <li><a href="#invoice" class="text-secondary">Facturas</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="history"><i id="historyI" class="bi bi-plus"></i><b>Historial</b></h6>
+                    <ul class="close ul-history">
+                        <li><a href="#History" class="text-secondary">Historial</a></li>
+                    </ul>
+                    <h6 class="ms-2 theme" id="record"><i id="recordI" class="bi bi-plus"></i><b>Record</b></h6>
+                    <ul class="close ul-record">
+                        <li><a href="#Record" class="text-secondary">Niveles</a></li>
+                    </ul>
+                </div>  
+            
+            </div>
+
+            <div class="col-7 col-sm-8 col-md-9 col-lg-9 p-2 mt-4 fatherManual" style="position: absolute; right: 0;">
+              
+                <div class="manual my-2 mx-2">
+                    <div class="ThemeSession">
+                        <h4>Sessiones - (Session)</h4>
+                        <p>Acceder a Session a travéz del menú superior</p>
+                        <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">Session > Opciones</span></p>
+                        <div id="registro" class="registro mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Registro - (Signup)</h4>
+                            <p>Es el primer paso para poder crear una cuenta en <b>Blissenet.com</b> a continuación los pasos.<p>
+                            <p class="mb-0"><b>Registro (Register)</b></p>
+                                <p>Acceda al menú superior "Session" y de click a Register. El primer dato es su <b>Correo</b> por tal preste mucha atención al ingresarlo, ya que esto te permitirá cambiar su contraseña en un futuro que requieras hacerlo. El segundo dato a introducir es su <b>Usuario o Nickname</b> esto es unico. Busca tener un nombre que te diferencia de entre los demás, puedes usar letras y números por ejemplo <code>pabloHoney90</code> usando palabras acronimas con formato camel case acompañado de algun número. Tambien podrías usar un espacio como <code>Paton Warrior</code>. El siguiente campo es donde colocarás tu <b>Contraseña</b> que debe ser mínimo 6 carácteres.
+                                </p>        
+                                <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                    <i class="bi bi-exclamation-triangle-fill me-2" style="color: rgb(252, 32, 32);"></i><b>Importante</b> por favor no cometas el error de colocar tu número de cedula "identificación" o fechas de nacimiento. En vez de esto, usa carácteres especiales y alguna palabra que pueda relacionar, algo que no olvides y refuerzalo con algún número como por ejemplo <code>*.honey#371263.*</code> de esta forma tu cuenta será dificil de hackear.
+                                </div>
+                            
+                        </div>
+    
+                        <div id="login" class="login mb-4 pb-3" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Login - (Signin)</h4>
+                            <p>Logear es entrar a la plataforma con tu firma como usuario registrado</p>
+                            <p class="mb-0"><b>Logearnos (Login)</b></p>
+                                <p>Acceda al menú superior Session y eleja la opcion <code>Login</code>, en pocos segundos verá un formulario. <b>El primer dato es su Correo</b> con que ha registrado su cuenta, <b>el segundo su contraseña</b>, debe saber que es "case sensity" eso sgnifica que tomará en cuenta minusculas y mayusculas. Si su correo y su contraseñas son exactas te dará la Bienvenida con un alerta en la parte superior y veras arriba en el menu superior su nombre de <b><i>Usuario</i></b>. ya estas logeado Felicidades. </p>
+                        </div>
+    
+                        <div id="deslogear" class="deslogear mb-4 pb-3" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Deslogear - (Logout)</h4>
+                            <p>Deslogear es <b>cerrar la session como usuario</b>, de esta forma, nadie podrá entrar en ella y tomar su lugar dentro de esta Plataforma digital. Importante si no estamos en un equipo familiar (nuestra casa).</p>
+                            <p class="mb-0"> <b>Deslogear (Logout)</b></p>
+                                <p>Acceda en el menú superior Session y elega la opción <code>Logout</code>, en pocos segundos verá que ya su <b>Username o Nickname</b> desaparece del menú superior. 
+                                </p>
+                        </div>
+                        
+                    </div>
+                    <div class="ThemeMessenger">
+                        <div id="Messenger" class="messenger mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Mensajeria - (Messenger)</h4>
+                            <p>Acceder a Messenger a travéz del Menú superior o dando click a la campana remarcada con el alerta roja.</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Mensajeria </span></p>
+                            <p>Sección donde llegan sus mensajes. Estos mensajes pueden ser preguntas que le hagan sobre sus articulos y servicios publicados <i>(Inbox)</i> y respuestas de preguntas que usted haya realizado <i>(Outbox)</i>. <p>
+                            <p class="mb-0"><b>Inbox - (Bandeja de Entrada)</b></p>
+                            <p>Aqui tendrá una lista organizada de todas las preguntas que le hagan sus potenciales cientes. Uno de los secretos mas importantes de la atención al público es la respuesta oportuna sin demora y responder de forma amable y cortez. </p>
+                            <p class="mb-0"><b>Outbox - (Bandeja de Salida)</b></p>
+                            <p>Aqui tendrá una lista organizada de todas las respuestas a las preguntas que usted haya realizado. Sea preciso en sus preguntas y pida toda la información que usted crea pertinente de una manera que pueda determinar si realmente es el articulo o servicio que usted necesita.  </p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(54, 194, 124); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color: rgb(54, 194, 124);"></i> Sabrá que tiene un mensaje de su Bandeja de salida o entrante porque estará una alarma de mensajería <i class="bi bi-bell"></i> en el menú superior en color rojo  con un número, este número es la suma entre mensajes entrantes y salientes. 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ThemeBuy&Sell">
+                        <div id="Buy&Sell" class="buy&Sell mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Sala de Negocios - (Business Room)</h4>
+                            <p>Acceder a Sala de Negocios a travéz del Menú superior opcion "Tu Usuario" o dando click al maletin remarcada con el alerta verde.</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Sala de Negocios </span></p>
+                            <p>Esto es la sala de negociación. Es el paso final para cerrar su negocio tanto sea como comprar o vender. Aquí es donde ambas partes definen los ultimos términos para finalmente califarse. <p>
+                            <p class="mb-0"><b>Compras - (Tus Compras activas en sala de negocios)</b></p>
+                            <p>Aqui estará todas las Compras que aún estan activas y que deben ser cerradas en el tiempo justo. </p>
+                            <p class="mb-0"><b>Ventas - (Tus Ventas activas en sala de negocios)</b></p>
+                            <p>Aqui estará todas las Ventas que aún estan activas y que deben ser cerradas en el tiempo justo.</p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color: rgb(252, 32, 32);"></i> Sabrá que tiene una Negociación en la Sala de Compra Y venta porque estará un alerta <i class="bi bi-briefcase"></i> verde con un número, este número es la suma entre Compras y Ventas. <b>En cuanto vea esta alerta verde, vaya de inmediato y no demore en atender a su cliente o al vendedor. </b>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ThemeProfile">
+
+                        <div id="crearPerfil" class="crearPerfil mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4 >Perfil - (Profile)</h4>
+                            <p>Acceder a Perfil a travéz del menú superior opción "Tu Usuario".</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Perfíl</span></p>
+                            <p>Es el paso necesario si su intención es promocionar, vender producto(s) o servicio(s). <b>No se puede vender y crear un anuncio si no se posee una cuenta con un perfil.</b><p>
+                                <p class="mb-0"><b>Crear Perfil (Create Profile)</b></p>
+
+                                <p>Ya estando logeado en <b>Blissenet.com</b> proceda a ir al menú superior opción "Tu Usuario", en breve verás que se desplega un submenú con las opciones. Escoja la opción Perfil, a continuación estaras en el apartado donde podrás crearlo. Importante debes llenar todos los campos que allí se te solicitán.</p>
+                                <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                    <i class="bi bi-exclamation-triangle-fill me-2" style="color: rgb(252, 32, 32);"></i> Los campos <b>Nombres, Documento, Fecha de Nacimiento y Género</b> <span style="color: rgb(252, 32, 32);"><b>"No son editables"</b>. </span> Significa que si creas el perfil con estos datos erroneos no podrás luego editarlos, teniendo que solicitar una corrección de datos a la administración.
+                                </div>
+                                <p class="ms-2"><b>1. Nombres:</b> Introduce tus nombres y apellidos, ejemplo: Juan Pablo Perez Contreras <i class="bi bi-exclamation-triangle-fill mx-2" style="color: rgb(252, 32, 32);"></i> <b>No editable.</b></p>
+                                <p class="ms-2"><b>2. Documento:</b> Introduce tu Número de identificación, ejemplo: 12321457 (No hace falta colocar puntos)<i class="bi bi-exclamation-triangle-fill mx-2" style="color: rgb(252, 32, 32);"></i> <b>No editable.</b></p>
+                                <p class="ms-2"><b>3. Fecha Nacimiento:</b> Introduce tu fecha de nacimiento<i class="bi bi-exclamation-triangle-fill mx-2" style="color: rgb(252, 32, 32);"></i><b> No editable.</b></p>
+                                <p class="ms-2"><b>4. Género:</b> Introduce tu sexo <i class="bi bi-exclamation-triangle-fill mx-2" style="color: rgb(252, 32, 32);"></i> <b>No editable.</b></p>
+                                <p class="ms-2"><b>5. Dirrección:</b> Introduce la dirección donde vives y si es una cuenta de empresa la dirección fiscal.</p>
+                                <p class="ms-2"><b>6. Teléfonos :</b> Introduce al menos un número de telefono.</p>
+                                <p class="ms-2"><b>7. Mensaje de tienda:</b> Introduce un mensaje alusivo de lo que ofrecerás en esta cuenta, puede ser de venta o servicio, ejemplo: Bienvenidos a mi cuenta en Blissenet.com aqui podrás encontrar todo tipo de papelerias e insumos de oficinas. Tenemos envios gratis a todo el interior de la ciudad. </p>
+                                <p class="ms-2"><b>8. Cuentas de Redes Sociales:</b> Introduce al menos una cuenta, si no posees luego tendrás tiempo para llenarlo. Esto es importante para darle seguridad a sus potenciales clientes.</p>
+                        </div>
+                        <div id="editarPerfil"class="editarPerfil mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4 >Editar Perfil</h4>
+                            <p>Ya ha creado su cuenta y quiere agregar algún dato Editable. Pues es momento de ejecutar esta acción. Vaya al mismo lugar donde ha creado su perfil. Estando ya logeado, en el menú superior opción "Tu Usuario" de un click, en breve aparecerá un submenú y busque la opción <b>Perfil</b>. <p>
+                            <p class="mb-0"><b>Editando el Perfil</b></p>
+                            <p>Los campos editables estarán activos para cualquier modificación futura. Solo sobreescriba los nuevos datos y presione el botón gris <b>Update</b>. Su perfil estará editado. </p>
+                        </div>
+                        <div class="nuevoAvatar mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4 id="nuevoAvatar">Nuevo Avatar</h4>
+                            <p>El Avatar de su cuenta por "defecto" es una especie de dibujo astracto que es unico proporcionado por el sistema para diferenciarle. <b>Es posible actualizar y colocar un Avatar personalizado. Aumentando gradualmente la importancia de su cuenta o tienda</b>.  Esto ayuda mucho a atraer nuevos y potenciales clientes.<p>
+                            <p class="mb-0"><b>Avatar</b></p>
+                            <p>Esto lo cambiamos en el mismo apartado de "Perfil" donde creamos o editamos nuestro perfil, el procedimiento es buscar el avatar este se encuentra debajo del Banner y al lado izquierdo de nuestro username, solo daremos un click y esperamos la ventana para colocar el archivo de tipo imagen, esperamos un par de segundo y en breve veras tu nuevo Avatar activo. "Felicidades lo has conseguido".</p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color: rgb(252, 32, 32);"></i> El archivo debe ser tipo imagen con extensión <b> jpg, jpeg, gif, png </b> y la resolución debe ser <b>1x1</b> para que esta no se deforme. El tamaño deberá ser de entre <b>100px y 400px</b>. 
+                            </div>
+                        </div>
+                        <div class="nuevoBanner mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4 id="nuevoBanner">Nuevo Banner</h4>
+                            <p>Por defecto cuando creas el perfil, el sistema te otorga un Banner por "defecto". Este es el mismo para todos. De tal manera es casi imperativo la necesidad de cambiarlo y colocar un Banner apropiado para realzar su tienda y diferenciarse de entre los demás, hacer esto ayuda a nuestra identidad dentro de este markeplace,<b> si su intensión es vender o dar algún servicio</b>. <p>
+                            <p class="mb-0"><b>Banner</b></p>
+                            <p>Al igual que el Avatar el Banner también lo cambiamos en el apartado <b>Perfil</b> colocaremos el cursor sobre el Banner y verás como aparece en la esquina inferior derecha un icono, le damos click allí y esperamos que abra la ventana de archivo del sistema, agregamos el Banner y aceptamos, en unos segundos depues de cargar el archivo el sistema refrescará automáticamente dejando ver el nuevo Banner actualizado, Felicidades lo has hecho de nuevo. </p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color: rgb(252, 32, 32);"></i> El archivo debe ser tipo imagen con extensión <b>png, jpg, jepg</b> y la resolución debe ser proporsional al ancho por su altura. se recomienda que el <b>ancho sea mínimo de 1320px a 1660px</b>, y su <b>altura mínima seria el 20% y como máximo al 30% en base al ancho establecido. En cuanto a su peso No debe exceder los 2.5 MB</b>. 
+                            </div>
+                            <p><b>¿Como saber cuanto debe medir de altura su Banner? </b>Esto se consigue multiplicando el ancho por 0.20 y si desea que sea más grande lo multiplica por 0.30. Ejemplo el Banner tiene de ancho de 1330px la altura la sacariamos así <b>1330 x 0.20 = 266px</b> La resolución seria : <b>1330px(Ancho) x 266px(Alto) "Medida Estandar"</b>  o <b>1330 x 0.30 = 399px</b> La resolució seria : <b>1330px(Ancho) x 399px(Alto) "Medida Gigante"</b>. Estas medidas ya han sido estudiadas y sería la recomendación para uso fluido de los usarios finales que visitarán su cuenta o tienda, estas medidas no son exactas pero te muestran una sugerencia profesional de como debe ser su Banner.</p>
+                            <p>Si no sabes como crear un Banner busca ayuda a alguien que sepa de diseño gráfico y le das las medidas aquí pautadas.</p>
+                        </div>
+                        <div id="pintarTienda" class="pintarTienda mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Pintar Tienda</h4>
+                            <p>Así como el sistema le suministra un Avatar y un Banner por "defecto", esto también ocurre con la pintura de su Tienda. Hay tres objetos que puede pintar en su Tienda. El texto que en ella coloque se conoce como <b>Text</b>, la parte superior que contendrá el Mensaje, Usuario y Avatar se llama <b>Topbar</b> y la sección donde se colocan sus anuncios publicados se denomina <b>Workspace</b>. <p>
+                            <p class="mb-0"><b>Agregando colores a gusto</b></p>
+                            <p>Esto se realiza en el mismo apartado de <b>Perfil</b> debajo del Avatar y Username localice un cuadrante donde podrá ver los tres elementos que pintar, <b>Text, Topbar y Workspace</b>.</p>
+                            <p></p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color: rgb(252, 32, 32);"></i>Si el color de <i>Text</i> es igual al del <i>Topbar</i>, no podrás ver las letras por la igualdad de colores. Utiliza un color que haga un constraste suficiente para que sus letras se vean claramente sin pasar a ser muy fuertes. Busca la mejor combinación y crea algo que te diferencia entre los demás y asi reafirmar tu perfil comercial. 
+                            </div>
+                            <p> Definir el nuevo color solo basta con dar un click donde dice <b>Custom</b> de cada elemento. Decide el color. Cuando hayas configurado los colores, confirma esto dando click en el boton gris que dice "Aceptar" y en breve veras que la página se actualiza con tus nuevos colores elegidos.</p>
+                            <p>Debajo de este cuadrante hay un en enlace que dice <span style="text-decoration: underline;"><i>Mirar mi sitio...</i></span> este enlace te lleva directo a su tienda y veras los cambios en el sitio, podrás manipular esto hasta que encuentres la combinación que más te agrade.</p>
+                        </div>
+                        <div id="buscador" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Buscador</h4>
+                            <p>Al crear nuestro perfil por defecto esta opción esta desactivada, para que el sistema lo habilite, la cuenta debe tener mínimo <b>11 anuncios publicados</b>. <p>
+                            <p class="mb-0"><b>Agregar un motor de Busqueda a nuestra Tienda</b></p>
+                            <p>Ya su Tienda ha crecido, cuenta con más de 11 anuncios. Para agregar este elemento a su Tienda solo bastaría con dar un click en el suiche que se encuentra debajo del botón gris "Aceptar". conseguiras las palaras <b>Do you need a Search ?</b> "Necesitas un Buscador?" con esta opción contarás con un poderoso Motor de Busqueda en su tienda. ¿Magnifico no?.</p>
+                           
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(54, 194, 124); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(54, 194, 124)"></i> Esta opción incrementa la buena experincia en sus usuaros y clientes potenciales ya que pueden buscar algún titulo de sus anuncios. ¡Muy recomendado! 
+                            </div>
+                        </div>
+                        <div id="palabrasClave" class=" mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Palabras Clave</h4>
+                            <p>Es una forma poderosa de incrementar las ventas en su tienda, ya que los clientes potenciales se dirigen a las Tiendas a buscar algún producto y servicio, no tienen nombres de Tiendas en <i>cambio tienen en mente un articulo o un servicio</i>. Por ejemplo, si una persona esta buscando un monopatin eléctrico y no tiene una tienda quien puede proveerselo, este solo hará uso del comodín <b>#</b> y escribirá <b>monopatin eléctrico</b>, la busqueda le traerá todas las Tiendas que tenga esta palabra asociada a su Tienda, la persona irá a su Tienda y podrá ver el <i>"monopatin eléctrico"</i> que usted tiene disponible para su venta. <p>
+                            <p class="mb-0"><b>Agregar una Palabra Clave</b></p>
+                            <p>Debajo de la sección donde configuramos el color de nuestra Tienda existe otra identificada como <b>Palabras Clave</b> allí existe un input para que puedas escribir la <i>Palabra Clave</i> que quieres asociar a su Tienda. Ejemplo: <b>zapatos caballero</b> o puede servir algo mas específico <b>zapatos nike</b>. Puedes hacer un estudio de mercado y descubrir cuales serian las Palabras Clave más habituales para la busqueda de lo que usted esta vendiendo y de esta manera ejecutar acciones más precisas. Añada una Palabra Clave y de click en update. "Felicidades lo ha logrado de nuevo".</p>
+                           
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> <b>Importante cuando vaya a crear su Palabra Clave. No cometa el error de colocar el caracter #</b>, solo debe colocar la Palabra, darle añadir y por ultimo Update. Aprovecha al máximo estas palábras ya que tienes <b>solo 6 disponibles</b>. Utiliza bien estos recursos para llevar tu tienda al siguiente nivel.   
+                            </div>
+                        </div>
+                        <div id="cambiarContraseña" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Nueva Contraseña</h4>
+                            <p>En ocaciones es necesario hacer cambio de Password. Esta plataforma te permite hacerlo de una forma segura y muy facil, solo debes ir a la sección <b>Nueva Contraseña</b> que encontrarás en el apartado de <b>Perfil</b>, lo encontrarás debajo de <b>Palabras Clave</b>. Solo debes contar con acceso a tu correo asociado a tu cuenta en <b>Blissenet.com</b>.<p>
+                            <p class="mb-0"><b>Cambiar Contraseña</b></p>
+                            <p>Te recibirá el mensaje que lo invita a conocer las instrucciones para su uso.  Al darle click al botón indicado el sistema le enviará un <i>token de seguridad</i>, que no es más que una serie de números que usted recuperará en su correo, copie este número y vuelva a la plataforma <b>Blissenet.com</b> entre a <b>Perfil</b> y use el token en el input <b>Token</b> y posteriormente introduzca su nueva contraseña. Sí el token suministrado es correcto y su nueva contraseña tiene la cantidad de carácteres mínimos requeridos que son 6, habrá cambiado con exito su contraseña. </p>
+                            <p>Si llegara a arrepentirse y no quiere cambiar su contraseña incluso habiendole dando click al botón <b>Enviar Token</b> no pasaría nada. solo deje sin efecto, salga de su sesión y vuelva a logearse con su contraseña habitual.</p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i>Utilizar una clave Fuerte, aumenta la seguiridad de que alguien pueda a entrar en su cuenta y usurpar su lugar. <b> Es recomendable cambiar sus contraseña cada 6 meses</b>.   
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="ThemeOlvideContraseña">
+                        <div id="olvideContraseña" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Olvide my Contraseña</h4>
+                            <p class="mb-0"><b>Restaurar Contraseña</b></p>
+                            <p>No puedes acceder a <b>Blissenet.com</b> porque no recuerdas tu <i>Contraseña</i>. Lo que vas hacer. Es ingresar al Login <b>(Singin)</b> y debajo del input donde ingresas tu Contraseña hay un link que dice <b><i>Olvide mi Contraseña</i></b> un click allí y el sistema entenderá que debe restaurar su password por lo que resetea y le asigna un <b>Password Provisional (Token)</b> que le llegará a su correo. Este Token será su Contraseña Provisional, usela. Y, luego con su sesión ya reestablecida puedes ir a <b>Perfil</b> y Cambiar su Contraseña.<p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> Al darle click a <b><i>Olvide mi Contraseña</i></b> debe saber que si No tiene acceso a su correo. No podrá entrar a <b>Blissenet.com</b> porque no tendrá el <b>Token</b> de acceso por lo que debe ponerse en contacto con un administrador para resolver la situación. Tome todas las Precausiones posible para que esto no ocurra.   
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ThemeCrearAnuncio">
+                        <div id="crearAnuncio" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Herramienta ADS (ADS Tool)</h4>
+                            <p>Acceder a la Herramienta ADS a travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">Publicaciones > Herramienta ADS</span></p>
+                            <p class="mb-0"><b>Crear y Publicar</b></p>
+                            <p>Con su sesión abierta vamos al menú <b>Publicaciones</b> y damos click a la opción <b>Herramienta ADS</b> elegirá entre ocho (8) departamentos, puede poner sobre el icono el cursor y debajo una leyenda mostrará cual es el indicado para crear su anuncio.<p>
+                            <p>Estando en el Departamento correcto, tendrá cuatro (4) opciones <b>Crear, Editar, Eliminar y Difundir</b> Por supuesto la opción será Crear, aquí veremos una serie de input donde poder llenar todos los datos. Importante lograr un buen Titulo que resuma el bien o el servicio a ofertar. Utilice estos recursos lo mejor que pueda, si se equivoca no hay problema, podrá usted editar cuantas veces requiera para correguir su Anuncio.</p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> <b>Importante su anuncio debe estar en el departamento correcto. </b>  El mal uso de este sistema puede ocacionar en penalización temporal de su cuenta. Por ejemplo no puede publicar un auto en el <i>Departamento de items</i>, o crear un anuncio de una lancha en el <i>Departamento automotríz</i>.   
+                            </div>
+                            <p>Al crear un anuncio éste es publicado de inmediato, así que podrá verlo y de esta forma revisarlo en su forma natural de vista, vealo tal cual los demás usuario lo verán, esto le dará una mejor perspectiva para lograr un buen anuncio y de esta manera esperar un buen resultado. Editelo y llegue a obtener el mejor Anuncio posible.</p>
+                            <p>En el apartado donde usted crea su anuncio verá un selector al lado de un botón azúl que dice <b>Select</b> de un click donde dice <i>Select it</i> y verá que cargarán su(s) anuncio(s) elija el titulo de su anuncio, luego de al botón azul, en breve tendrá una previzualización de su anuncio ya creado. Esto es para que pueda verificar el escrito y poder agregar o eliminar fotos, si quiere ir a la publicación en su vista natutal vaya al enlace abajo que dice <b><i>Mirar publicación</i></b>.</p>
+                        </div>
+                        <div id="agregarVideo" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Agregar Video</h4>
+                            <p class="mb-0"><b>Agregando un Video</b></p>
+                            <p>Para poder agregar un Video, debemos tener la <i>Previsualización del Anuncio</i>, esto se logra yendo al selector que dice <b>Select it</b> buscamos el titulo del anuncio y damos click al botón contiguo de color azúl que dice <b>Select</b>. Esto cargará la vizualización y tendrémos el <i>Control de Medias</i> Estos controles permiten agregar archivos de tipo <b>Video</b> y de tipo <b>Imagen</b>.<p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(54, 194, 124); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(54, 194, 124)"></i>El máximo peso de un archivo de <b>Video</b> debe ser de <b>20 MB</b>.   
+                            </div>
+                            <p><b>El control de Medias</b> esta organizado en dos secciones <i>Video</i> e <i>Imagen</i>  observa que la primera opción es la subida de Video verás un icono de subida de archivo asi <span class="px-1 border border-secondary"><i class="bi bi-arrow-bar-up"></i></span>. Un click y en segundos podrás subir el archivo de tipo Video. </p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> <b>Importante</b> esta acción de carga llevará su tiempo, no salga de esta página hasta que el sistema haya subido todo su archivo.   
+                            </div>
+                        </div>
+                        <div id="agregarFoto" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Agregar Foto</h4>
+                            <p class="mb-0"><b>Agregando una Imagen</b></p>
+                            <p>Para agregar una imagen, debe tener la <i>Previsualización del anuncio</i>, esto se logra yendo al selector que dice <b>Select it</b> buscamos el titulo del anuncio y damos click al botón contiguo de color azúl que dice <b>Select</b>. Esto cargará la vizualización y tendrémos el <i>Control de Medias</i> Estos controles permiten agregar archivos de tipo <b>Video</b> e <b>Imagen</b>.<p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(54, 194, 124); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(54, 194, 124)"></i>El máximo peso de un archivo de <b>Imagen</b> debe ser de <b>2.0 MB</b>. De lo contrario no subirá el archivo. Si su imagen pesa mas que el peso aceptado, puede reducir su resolución con ayuda de alguna pagina en linea que baje el peso de archivos de tipo Imagenes (jpg, jpeg, gif, png) o de un editor de imagen.   
+                            </div>
+                            <p><b>El control de Medias</b> esta organizado en dos secciones <i>Video</i> e <i>Imagen</i>  observa que hay unos iconos que señalan derecha e izquierda. Eso en el caso de las imagenes es para <b>poder agregar adelante o hacia atrás en la cola de carga de imagenes</b>.</p>
+                            <p>por ejemplo si le damos a este icono <span class="px-1 border border-secondary"><i class="bi bi-arrow-bar-right"></i></span> se agragará la imagen al final y si usamos el icono <span class="px-1 border border-secondary"><i class="bi bi-arrow-bar-left"></i></span> esta se agregara al inicio de la cola de imagenes. </p>
+                        </div>
+                        <div id="eliminarFoto" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Eliminar Foto</h4>
+                            <p class="mb-0"><b>Eliminando una Imagen</b></p>
+                            <p>Para eliminar una imagen, debemos tener la <i>Previsualización del anuncio</i>, posarnos con el cursor del mouse sobre la imagen a eliminar y se mostrará un icono <span class="px-1 border border-secondary"><i class="bi bi-trash3-fill"></i></span> en la esquina superior izquierda, a continuación damos en el icono de eliminar y en breve su imagen será eliminada de su publicación.<p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(54, 194, 124); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(54, 194, 124)"></i>Siempre quedará una imagen, <b>No es posible Eliminar todas</b>.   
+                            </div>
+                        </div>
+                        <div id="agregarAudio" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Agregar Audio</h4>
+                            <p class="mb-0"><b>Agregando Audio</b></p>
+                            <p>Debajo del <i>Control de Medios</i> veremos la sección de carga de <b>Audio</b>, sepa que esta opción solo existe en el Departamento de Subastas <b>(Auctions)</b>. <p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(54, 194, 124); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(54, 194, 124)"></i>Este Recurso solo existe en el departamento de Subastas <b>(Auctions)</b>, el máximo peso de un archivo de Audio debe ser de 6.0 MB.   
+                            </div>
+                        </div>
+                        <div id="eliminarAudio" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Eliminar Audio</h4>
+                            <p class="mb-0"><b>Eliminando Audio</b></p>
+                            <p>Ya cargado un audio el sistema le mostrará el Display de Audio para su reproducción, si colocas el cursor sobre este objeto reporductor podrás ver en su lateral derecho un icono de eliminación <span class="px-1 border border-secondary"><i class="bi bi-trash3-fill"></i></span>. Un click y en segundos habras eliminado el Audio.<p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i>Eliminar un archivo puede llevar varios segundos, por favor no salga de esta pagina hasta que la acción se haya completado.   
+                            </div>
+                        </div>
+                        <div id="editarAnuncio" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Editar Anuncio</h4>
+                            <p class="mb-0"><b>Editando Anuncio</b></p>
+                            <p>la segunda opción debajo de Crear es <b>Editar</b> aquí elija el titulo del anuncio, de click y en segundos verá que carga todos los datos de este anuncio. Podrá editar "cambiar texto" hasta correguir y lograr un anuncio que exprese todo lo necesario para captar la mayor cantidad de potenciales clientes.<p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> Tenga cuidado con su ortografia, coloque todos los beneficios y tambien los contra del Bien o Servicio. Lograr la esencia de trasparencia y seguidad a sus clientes le brindará mayor oportunidades de ventas. <b>Nadie quiere comprar a una persona que no sabe lo que vende, o peor aún. Un vendedor poco confiable</b>.   
+                            </div>
+                        </div>
+                        <div id="editarAnuncio" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Eliminar Anuncio</h4>
+                            <p class="mb-0"><b>Eliminando Anuncio</b></p>
+                            <p>La tercera opción que tenemos es <b>Eliminar</b>, elija el titulo del anuncio, de click al boton rojo Eliminar y en segundos su anuncio estará eliminado de la lista de publicaciones.<p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> <b>Importante</b>. Sepa que eliminar un anuncio no borrará su factura de pago.   
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ThemeMyAds">
+                        <div id="myAds" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Mis Anuncios - (My Ads)</h4>
+                            <p>Acceder a Mis Anuncios a travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">Publicaciones > Mis Anuncios</span></p>
+                            <p>Lista de todos sus anuncios Activos y Pausados</p>
+                        </div>
+                    </div>
+                    <div class="ThemeManage">
+                        <div id="administracion" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Gerencia - (Manager)</h4>
+                            <p>Acceder a Manage a travéz del Menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Gerencia</span></p>
+                            <h5><b>Administración de Anuncios </b></h5>
+                            <p>Es posible definir dos cosas en este apartado. <b>Disponible para su oferta y Vizualizado en Tienda</b>.</p>
+                            <p><b>Disponible para su Oferta</b>, esta será Pausado o Activado, siendo <span class="px-2 py-1 mx-1 bg-primary rounded-2 text-light">Activado</span> Anuncio disponible y <span class="px-2 py-1 mx-1 bg-secondary rounded-2 text-light">Pausado</span> Anuncio no disponible para su oferta o compra. </p>
+                            <p><b>Vizualizado en Tienda</b> que tendrá como valor <span class="px-2 py-1 mx-1 bg-primary rounded-2 text-light">visible</span> que estará a la vista cuando alguien visíte su tienda o <span class="px-2 py-1 mx-1 bg-secondary rounded-2 text-light">Invisible</span> No visible en Tienda.</p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(54, 194, 124); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(54, 194, 124)"></i>Ambas opciones son independientes, puede tener un articulo  <b>Pausado</b> pero visible en tienda, esto puede traducirse en que usted vende este articulo pero no cuenta en el momento con su disponibilidad está agotado. O en otro caso puede ser que usted vende insumos medicos y en algún momento requiere vender un auto y no quiere que este articulo aparezca en su Tienda, entonces lo coloca <b>Activo</b> pero <b>Invisible</b> en su tienda. De tal manera que el vehiculo aparece en las listas de ventas de autos sin aparecer en su Tienda. 
+                            </div>
+                        </div>
+                        <div id="analisis" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Análisis </h4>
+                            <p class="mb-0"><b>Panel de Análisis de Tienda.</b>
+                            <p>En este apartado tendrás toda la información del estado actual de su Tienda. <b>Todo lo necesario para poder gerenciar y administrar con información precisa. para la toma de deciciones administrativas a su Tienda</b>.<p>
+                            <hr>
+                            <ul>
+                                <li>Visitas a mi Tienda <b>(Cantidad de visitas recibidas hasta el momento)</b>.</li>
+                                <li>Tienda guardada como Favorito <b>(Cantidad de personas que han guardado nuestra Tienda en su Favorite Stores )</b>.</li>
+                                <li>Valoración de mi Tienda <b>(Esto es una Valoración estandar que no debe tomarse con mucha seriedad, esta métrica es el resultado de la cantidad de visitas versus la catidad de Favoritos)</b>.</li>
+                                <li>Todos mis Anuncios <b>(Todos Activos y Pausados)</b>.</li>
+                                <li>Anuncios Activos <b>(Panel Administración)</b>.</li>
+                                <li>Anuncios Pausados <b>(Panel Administración)</b>.</li>
+                                <li>Valoración como Vendedor y Comprador <b>(Nivel de Clasificación y Fiabilidad)</b>.</li>
+                                <li>Fascinómetro <b>(Dona que muestra las métricas de anuncios por ser agregados como Favoritos)</b>.</li>
+                                <li>Vistómetro <b>(Dona que muestra las métricas por cantidad de vistas a cada uno de nuestros anuncios)</b>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ThemeMyStore">
+                        <div id="mitienda" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Mi Tienda - (My Store)</h4>
+                            <p>Podrá ver su Tienda a traves del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Mi Tienda</span></p>
+                            <p class="mb-0"><b>Visualizar y Administrar Detalles precisos en Anuncios</b>.</p>
+                            <p>Vista de nuestra Tienda tal cual lo verán los demás visitantes y desde su Tienda es posible ejecutar algunos cambios que pueden ser de gran utilidad para atraer potenciales clientes.</p>
+                            <p>Coloque el cursor sobre el anuncio o publicación y verá aparecer un icono <span class="px-1 border border-secondary"> <i class="bi bi-three-dots-vertical"></i></span> en la esquina superior izquierda de la tarjeta, de un click allí y se deplegará unas opciones disponibles. Eliga una opción y espere que se actualice. Puede usar las tres opciones si así lo desea.</p>
+                            <p><b>Opciones Disponibles:</b></p>
+                            <ul>
+                                <li>Oferta <b>(Asigna un color amarillento, destacandola de entre los demás)</b>.</li>
+                                <li>Mejor Producto <b>(Asigna un stiker diferenciador)</b>.</li>
+                                <li>único Disponible <b>(Asigna un stiker diferenciador)</b>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ThemeFavorite">
+                        <div id="favorite" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Favoritos - (Favorites)</h4>
+                            <p>Acceder a Articulos Favoritos a travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Favoritos</span></p>
+                            <p>Aquí contarás con una lista organizada de todos los articulos y servicios agrupados para acceder en un futuro de forma rapida, si es que ya no existe, asi que no demores en volver y adquirirlo.</p>
+                            <p class="mb-0">Visualiza sus anuncios favoritos cuando quieras de forma inmediata. Podrás eliminar cuando desees alguno de estos articulos y servicios cuando así lo desees.</p>
+                        </div>
+                    </div>
+                    <div class="ThemeFavoriteStore">
+                        <div id="favoriteStore" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Siguiendo - (Following) </h4>
+                            <p>Acceder a Tiendas Favoritas a las que sigo travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Favoritos</span></p>
+                            <p>Tendrás una lista organizada de todas las Tiendas o Cuentas Favoritas para acceder en un futuro de forma rápida.</p>
+                            <p>Estas tiendas favoritos las estamos seguiendo, Esto significa que si ellos <b>"Difunden un anuncio"</b> este llegará a nuestra mensajeria en forma de link para que podamos verla.  podrás eliminar de esta lista y dejar de seguir una Tienda cuando ya no le interese.</p>
+                            <p><b>¿Como seguir o agregar una Tienda?</b></p>
+                            <p>En el sitio o Tienda arriba en su banner coloca el cursor y veráz en la ezquina inferior derecha un icono al darle click este se remarca. Ya lo has puesto como Favorito. La otro forma es en la sección Stores, aquí es donde puedes ver todas las tiendas juntas que se localiza en el Home y se encuentra al lado de los departamentos de mercados y servicios, con poner el cursor sobre la tarjeta tambien aparecerá un icono que te permite agregarlo como Tienda Favorita y poder seguirla.</p>
+                        </div>
+                    </div>
+                    <div class="ThemeFollowMe">
+                        <div id="followMe" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Siguiendome - (FollowMe) </h4>
+                            <p>Acceder a Tiendas que me estan siguiendo a travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">username > Siguiendome</span></p>
+                            <p>Tendrás una lista organizada de todas las Tiendas o Cuentas que te siguen, de tal manera que podrás saber cuantos seguidores tienes y quienes son. </p>
+                            <p>Estas tiendas nos estan siguiendo, Esto significa que si <b>"Difundimos un anuncio"</b> este llegará a su mensajeria en forma de link para que pueda verla de forma expedita.</p>
+                            <p><b>¿Como lograr te sigan?</b></p>
+                            <p>Para lograr que te sigan debes lograr una serie procedimientos, primeramente tener una tenda agradable con algunos productos que sean de interes para un publico determinado, poseer un avatar que te identifique y un mensaje claro que puede ser un eslogan pegajoso. Preocupate por dar buena atención, se lo mas educado y tolerante posible esfuerzate por dar una información de calidad. Crea Sorteos Gratis y luego haz una Paga pero con valor cero, y especifica que aprobaras el tickets cuando corrobores te esta siguiendo. Estos son algunas de las recomendaciones basicas. Tambien puedes acer campañas en redes y traerlas a Blissenet.com y hacer que te sigan. </p>
+                        </div>
+                    </div>
+                    <div class="ThemeInvoice">
+                        <div id="invoice" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Facturas - (Invoices) </h4>
+                            <p>Acceder a Facturas a travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">Publicaciones > Facturas</span></p>
+                            <p>Aquí tendrás las Facturas pendientes por pagar en orden de llegada siendo las de arriba las más nuevas. Solo puedes tener un máximo de dos (2) Facturas, al pasar a tres (3) Facturas pendientes sin pagar. Su cuenta entra en la lista de morosos o impagos y No podrá hacer uso de la Herramienta ADS/ Herramienta Raffle <b>Crear, Editar, Eliminar ni Difundir ningún Anuncio</b>. </p>
+                            <p>Procediminto para pagar una Factura. Darle click al botón verde que dice <span class="bg-success rounded-1 px-2 py-1 mx-1">Pay <i class="bi bi-stack"></i></span> y mirar al contenedor de abajo que cargará los datos y el costo a pagar en la moneda en curso, al realizar el pago en los Bancos disponibles, con su <b>Número de Confirmación</b> colocará en el campo <b>Refer</b> dicho Número y dará al Botón verde <b>Sent</b>. </p>
+                            <p>Debe esperar un promedio de 12 horas para que este sea procesado por el equipo adminsitrativo, si todo esta en orden, su Factura estará cancelada y la podrá ver en la sección de pagado <b>Pay</b>.</p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> <b>Importante solo puedes pagar una Factura a la Vez</b>. Cada Número de Confirmación será un pago de una unica (1) Factura.</b> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ThemeHistory">
+                        <div id="History" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Historial - (History) </h4>
+                            <p>Acceder a nuestro Historial a travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">Publicaciones > Historial</span></p>
+                            <p>En este apartado tendrá todos los comentarios dejados por sus clientes. Al cerrar una negociación se califican comprador y vendedor. En esta calificación cada parte deja un comentario de la transacción realizada.</p>
+                            <p>Esta organizado por <span class="bg-secondary px-2 py-1 rounded-1 text-light">Compras|Ventas|Sorteos</span> y <span class="bg-secondary px-2 py-1 rounded-1 text-light">Contact</span> </p>
+                            <p>La sección <b>Buy/Sell</b> estará todas las negociaciones de los Departamentos <b>Arte, Item y Auction</b> y en la sección <b>Contact</b> las negociaciones de tipo contactos. Departamentos <b>Automotríz, Aeronautico, Nautico, Realstate y Servicios</b>. </p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> <b>Importante mantener un Historial Limpio</b>. Estos comentarios son público y podrán ser vistos en cualquier momento por los usuarios.</b> 
+                            </div>
+                            <h5>Historial de Terceros - (History) </h5>
+                            <p>Acceder al Historial de otras Tiendas o Cuentas es tan sencillo como ir a cualquier anuncio y dar click en <b>Comentarios de sus clientes Aquí</b>.</p>
+                        </div>               
+                    </div>
+                    <div class="ThemeRecord">
+                        <div id="Record" class="mb-4 pb-4" style="border-bottom: 3px solid rgba(202, 202, 202, 0.5);">
+                            <h4>Niveles - (Record) </h4>
+                            <p>Acceder a nuestro Record a travéz del menú superior</p>
+                            <p><span class="p-1 rounded-1" style="background-color: rgba(197, 197, 197, 0.5);">Publications > Record</span></p>
+                            <p>En este apartado tendrás tu Clasificación de Score y tu Nivel Trust.</p>
+                            <p><b>• Score</b> - Es tu clasificación como vendedor y comprador en cuanto a dinámica y capacidad de ejecutar compra/venta.</p>
+                            <p><b>• Trust</b> - Es la confianza que ofreces al realizar tus operaciones de compra/venta.</p>
+                            <div class="note ms-2 p-3 shadow mb-4" style="border-left: 5px solid rgb(252, 32, 32); border-top: 1px solid grey; border-right: 1px solid grey; border-bottom: 1px solid gray; border-radius: 5px;">
+                                <i class="bi bi-exclamation-triangle-fill me-2" style="color:  rgb(252, 32, 32)"></i> <b>Importante mantener un Score alto en Score y 100% en Trust</b>. Pues estos datos es lo que te definirán como un vendedor o copmrpador serio y honesto. <b>Vital para una Tienda importante en Internet</b>.</b> 
+                            </div>
+                            <h5>Score y Trust de Terceros - (Record) </h5>
+                            <p>Acceder al Record de otras Tiendas o Cuentas es tan facíl como ir a la Tienda del usuario al que visitamos y mirar en el marco derecho en la sección <b>Workspace</b> allí estará un modulo alargado con las dos informaciones.</b>.</p>
+                        </div>               
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <%- include('../partials/scripts.ejs') %>
+
+    <!--  este script controla el estado de los themas. -->
+   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+</body>
+
+<script>
+
+  const session = document.getElementById('session');
+  const messenger = document.getElementById('messenger');
+  const buySell = document.getElementById('buy&Sell');
+  const profile = document.getElementById('profile');
+  const olvidoContraseña = document.getElementById('olvidoContraseña');
+  const publicaciones = document.getElementById('publicaciones');
+  const misAnuncios = document.getElementById('misAnuncios');
+  const manage = document.getElementById('manage');
+  const miTienda = document.getElementById('miTienda');
+  const favorite = document.getElementById('favorites');
+  const favoriteStore = document.getElementById('favoriteStores');
+  const followMe = document.getElementById('followMe');
+  const invoices = document.getElementById('invoices');
+  const history = document.getElementById('history');
+  const record = document.getElementById('record');
+
+  const ulsession = document.querySelector('.ul-session');
+  const ulmessenger = document.querySelector('.ul-messenger');
+  const ulbuySell = document.querySelector('.ul-buySell'); 
+  const ulprofile = document.querySelector('.ul-profile');
+  const ulolvidoContraseña = document.querySelector('.ul-olvidoContraseña');
+  const ulpublicaciones = document.querySelector('.ul-publicaciones');
+  const ulmyAds = document.querySelector('.ul-myAds');
+  const ulmanage = document.querySelector('.ul-manage');
+  const ulmiTienda = document.querySelector('.ul-miTienda');
+  const ulfavorite = document.querySelector('.ul-favorite');
+  const ulfavoriteStore = document.querySelector('.ul-favoriteStore');
+  const ulfollowMe = document.querySelector('.ul-followMe');
+  const ulinvoices = document.querySelector('.ul-invoices');
+  const ulhistory = document.querySelector('.ul-history');
+  const ulrecord = document.querySelector('.ul-record');
+
+  const sessionI = document.getElementById('sessionI');
+  const messengerI = document.getElementById('messengerI');
+  const buySellI = document.getElementById('buySellI');
+  const profileI = document.getElementById('profileI');
+  const olvidoContraseñaI = document.getElementById('olvidoContraseñaI');
+  const publicacionesI = document.getElementById('publicacionesI');
+  const misAnunciosI = document.getElementById('misAnunciosI');
+  const manageI = document.getElementById('manageI');
+  const miTiendaI = document.getElementById('miTiendaI');
+  const favoriteI = document.getElementById('favoriteI');
+  const favoriteStoreI = document.getElementById('favoriteStoreI');
+  const followMeI = document.getElementById('followMeI');
+  const invoicesI = document.getElementById('invoicesI');
+  const historyI = document.getElementById('historyI');
+  const recordI = document.getElementById('recordI');
+
+session.addEventListener('click', ()=>{
+    ulsession.classList.toggle('close');
+    const estado = ulsession.classList.contains('close');//true or false
+    if (estado == false){
+        sessionI.classList.remove('bi-plus');
+        sessionI.classList.add('bi-dash');
+    }else {
+        sessionI.classList.add('bi-plus');
+        sessionI.classList.remove('bi-dash');
+    }
+});
+
+messenger.addEventListener('click', ()=>{
+    ulmessenger.classList.toggle('close');
+    const estado = ulmessenger.classList.contains('close');//true or false
+    if (estado == false){
+        messengerI.classList.remove('bi-plus');
+        messengerI.classList.add('bi-dash');
+    }else {
+        messengerI.classList.add('bi-plus');
+        messengerI.classList.remove('bi-dash');
+    }
+});
+
+buySell.addEventListener('click', ()=>{
+    ulbuySell.classList.toggle('close');
+    const estado = ulbuySell.classList.contains('close');//true or false
+    if (estado == false){
+        buySellI.classList.remove('bi-plus');
+        buySellI.classList.add('bi-dash');
+    }else {
+        buySellI.classList.add('bi-plus');
+        buySellI.classList.remove('bi-dash');
+    }
+});
+
+profile.addEventListener('click', ()=>{
+    ulprofile.classList.toggle('close');
+    const estado = ulprofile.classList.contains('close');//true or false
+    if (estado == false){
+        messengerI.classList.remove('bi-plus');
+        messengerI.classList.add('bi-dash');
+    }else {
+        messengerI.classList.add('bi-plus');
+        messengerI.classList.remove('bi-dash');
+    }
+});
+
+olvidoContraseña.addEventListener('click', ()=>{
+    ulolvidoContraseña.classList.toggle('close');
+    const estado = ulolvidoContraseña.classList.contains('close');//true or false
+    if (estado == false){
+        olvidoContraseñaI.classList.remove('bi-plus');
+        olvidoContraseñaI.classList.add('bi-dash');
+    }else {
+        olvidoContraseñaI.classList.add('bi-plus');
+        olvidoContraseñaI.classList.remove('bi-dash');
+    }
+});
+
+publicaciones.addEventListener('click', ()=>{
+    ulpublicaciones.classList.toggle('close');
+    const estado = ulpublicaciones.classList.contains('close');//true or false
+    if (estado == false){
+        publicacionesI.classList.remove('bi-plus');
+        publicacionesI.classList.add('bi-dash');
+    }else {
+        publicacionesI.classList.add('bi-plus');
+        publicacionesI.classList.remove('bi-dash');
+    }
+});
+
+misAnuncios.addEventListener('click', ()=>{
+    ulmyAds.classList.toggle('close');
+    const estado = ulmyAds.classList.contains('close');//true or false
+    if (estado == false){
+        misAnunciosI.classList.remove('bi-plus');
+        misAnunciosI.classList.add('bi-dash');
+    }else {
+        misAnunciosI.classList.add('bi-plus');
+        misAnunciosI.classList.remove('bi-dash');
+    }
+});
+
+manage.addEventListener('click', ()=>{
+    ulmanage.classList.toggle('close');
+    const estado = ulmanage.classList.contains('close');//true or false
+    if (estado == false){
+        manageI.classList.remove('bi-plus');
+        manageI.classList.add('bi-dash');
+    }else {
+        manageI.classList.add('bi-plus');
+        manageI.classList.remove('bi-dash');
+    }
+});
+
+miTienda.addEventListener('click', ()=>{
+    ulmiTienda.classList.toggle('close');
+    const estado = ulmiTienda.classList.contains('close');//true or false
+    if (estado == false){
+        miTiendaI.classList.remove('bi-plus');
+        miTiendaI.classList.add('bi-dash');
+    }else {
+        miTiendaI.classList.add('bi-plus');
+        miTiendaI.classList.remove('bi-dash');
+    }
+});
+
+favorite.addEventListener('click', ()=>{
+    ulfavorite.classList.toggle('close');
+    const estado = ulfavorite.classList.contains('close');//true or false
+    if (estado == false){
+        favoriteI.classList.remove('bi-plus');
+        favoriteI.classList.add('bi-dash');
+    }else {
+        favoriteI.classList.add('bi-plus');
+        favoriteI.classList.remove('bi-dash');
+    }
+});
+
+favoriteStore.addEventListener('click', ()=>{
+    ulfavoriteStore.classList.toggle('close');
+    const estado = ulfavoriteStore.classList.contains('close');//true or false
+    if (estado == false){
+        favoriteStoreI.classList.remove('bi-plus');
+        favoriteStoreI.classList.add('bi-dash');
+    }else {
+        favoriteStoreI.classList.add('bi-plus');
+        favoriteStoreI.classList.remove('bi-dash');
+    }
+});
+
+followMe.addEventListener('click', ()=>{
+    ulfollowMe.classList.toggle('close');
+    const estado = ulfollowMe.classList.contains('close');//true or false
+    if (estado == false){
+        followMeI.classList.remove('bi-plus');
+        followMeI.classList.add('bi-dash');
+    }else {
+        followMeI.classList.add('bi-plus');
+        followMeI.classList.remove('bi-dash');
+    }
+});
+
+
+
+invoices.addEventListener('click', ()=>{
+    ulinvoices.classList.toggle('close');
+    const estado = ulinvoices.classList.contains('close');//true or false
+    if (estado == false){
+        invoicesI.classList.remove('bi-plus');
+        invoicesI.classList.add('bi-dash');
+    }else {
+        invoicesI.classList.add('bi-plus');
+        invoicesI.classList.remove('bi-dash');
+    }
+});
+
+history.addEventListener('click', ()=>{
+    ulhistory.classList.toggle('close');
+    const estado = ulhistory.classList.contains('close');//true or false
+    if (estado == false){
+        historyI.classList.remove('bi-plus');
+        historyI.classList.add('bi-dash');
+    }else {
+        historyI.classList.add('bi-plus');
+        historyI.classList.remove('bi-dash');
+    }
+});
+
+record.addEventListener('click', ()=>{
+    ulrecord.classList.toggle('close');
+    const estado = ulrecord.classList.contains('close');//true or false
+    if (estado == false){
+        recordI.classList.remove('bi-plus');
+        recordI.classList.add('bi-dash');
+    }else {
+        recordI.classList.add('bi-plus');
+        recordI.classList.remove('bi-dash');
+    }
+});
+
+</script>
+
+<script>
+    //este escript hace que la columna de la izquierda se mueva hacia abajo cuando el navegador deja de estar contraido. Mirar en resolucion de smarphone.
+    const navbarCollapse = document.getElementById('navbar-collapse'); //el boton que ejecuta el collapsed del navegador
+    const fatherIndice = document.querySelector('.fatherIndice');
+
+    navbarCollapse.addEventListener('click', ()=>{
+       let contraido = navbarCollapse.classList.contains('collapsed');
+       //console.log(contraido);
+       if (contraido == false){
+        fatherIndice.style.top = '100px';
+       } else {
+        fatherIndice.style.top = '50px';
+       }
+
+    })
+    
+</script>    
+
+</html>

@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Account</title>
+</head>
+<style>
+
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body{
+    scroll-behavior: smooth;
+    max-width: 100vw;
+    height: auto;
+  }
+
+  main{
+    width: 100%;
+    height: auto;
+  }
+
+ 
+  .containerBanner:hover{
+  
+     .starData{
+      opacity: 1;
+     }
+     .containerStar{
+      opacity: 1;
+     }
+
+  }
+ 
+  .starData{
+    opacity: 0;
+    transition: 1s all ease;
+  }
+
+  .containerStar{
+    opacity: 0;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    transition: 1s all ease;
+  }
+
+  .imgPerfil {
+    width: 70px;
+    border-radius: 4px;
+  }
+
+  .nailUpp{
+    /* background-color: rgb(240, 240, 240, 0.3); */
+    transition: 1.5s ease all;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+ 
+  .nailUpp:hover{
+   /*  background-color: rgb(240, 240, 240, 0.5); */
+    cursor: pointer;
+  }
+ 
+  .departGroup {
+    background-color: rgb(197, 103, 103);
+    border: 1px ridge #a52a2a;
+    list-style: none;
+    margin: 0;
+  }
+
+  .departList {
+    background-color: rgb(243, 205, 205);
+    padding: 0px 8px;
+    color: rgb(54, 52, 49);
+    border-radius: 12px;
+  }
+
+  .textDecorativeNo {
+    text-decoration: none;
+  }
+
+  .contentAdmin {
+    display: flex;
+    justify-content: center;
+  }
+
+  .contentAnalisys {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .open {
+    display: block;
+  }
+
+  .closed {
+    display: none;
+    border: 2px dotted violet;
+  }
+
+  .containerIconSetting{
+    background-color: rgb(255, 255, 255, 0);
+    transition: 1s ease background-color;
+  }
+
+  .containerIconSetting:hover{
+    background-color: rgb(255, 255, 255, 0.4);
+  }
+
+
+    .carousel .carousel-control-prev {
+      position: absolute;
+      left: 20px;
+      left: 1%;
+      z-index: 1;
+      width: 20px;
+    }
+
+    .carousel .carousel-control-next {
+      position: absolute;
+      width: 20px;
+      right: 1%;
+      z-index: 1;
+      width: 20px;
+      
+    }
+
+    .cardPublished{
+      width: 220px;
+
+      .setting{
+      opacity: 0;
+      transition: 0.5s ease all;
+      }
+    }
+
+    .imgFront{
+      width: 220px; height: auto;
+      transition: .5s ease width;
+    }
+
+    .cardPublished:hover{
+      outline: 2px solid lightskyblue;
+
+      .setting{
+      cursor: pointer;
+      background-color: white;
+      opacity: 1;
+      }
+
+      .imgFront{
+        width: 230px;
+      }
+    }
+
+    .contentClean{
+      transition: 0.5s ease background-color;
+    }
+
+    .contentClean:hover{
+      background-color: rgba(165, 42, 42, 0.8);
+    }
+    
+   /*  Media queries */
+   @media screen and (min-width: 500px) and (max-width: 700px ){
+
+    .TopbarMain{
+      flex-direction: column;
+    }
+
+    .containerAvatarUser{
+      width: auto !important;
+    }
+
+    .containerDetailsMessajesRRSS{
+      width: 100% !important;
+      
+    }
+
+    .MessagerStore{
+      text-align: justify;
+    }
+
+    .container{
+      width: 100% !important;
+      padding: 0;
+    }
+
+    footer{
+      display: flex;
+      flex-direction: column;
+      padding: 15px 0 15px 0;
+    }
+
+    .contentUser{
+      width: 100% !important;
+      margin-bottom: 20px !important;
+    }
+
+    .contentPlatform{
+      width: 100% !important;
+    }
+
+
+
+   }
+    
+
+   @media screen and (min-width: 290px) and (max-width: 499px ){
+
+    .TopbarMain{
+      flex-direction: column;
+    }
+
+    .containerAvatarUser{
+      width: auto !important;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .containerAvatar{
+      margin: 0 !important;
+    }
+
+    .containerDetailsMessajesRRSS{
+      width: 100% !important;
+    }
+
+    .MessagerStore{
+      text-align: left !important;
+    }
+
+    .container{
+      width: 100% !important;
+      padding: 0;
+    }
+
+    footer{
+      display: flex;
+      flex-direction: column;
+      padding: 15px 0 15px 0;
+    }
+
+    .contentUser{
+      width: 100% !important;
+      margin-bottom: 20px !important;
+    }
+
+    .contentPlatform{
+      width: 100% !important;
+      border: none !important;
+    }
+
+
+  }
+
+</style>
+
+<body>
+
+  <main class="mainTheme">
+
+    <%- include('../partials/navi-simple.ejs') %>
+
+
+
+      <% if (storeProfile.length !==0) { %>
+        <div class="container-fluid p-0 m-0">
+          <div class="row rowWidth mx-0">
+
+              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+
+                <div class="containAlert" style="position: sticky; top: 0px; z-index: 200;"> <!-- bloque dinamico --> </div>
+                <div class="containerBanner" style="position: relative; z-index: 130">
+                    <% if (user) { %>
+                        <% if (searchBanner) { %>
+                          <img src="<%= searchBanner[0].url %>" style="width: 100%;">
+                        
+                          <% if (searchProfile.length !== 0) { %>
+                        
+                            <% if (storeProfile.length !==0) { %>
+                            <div class="containerStar d-flex justify-content-center align-items-center" style="position: absolute; right: 30px; bottom: 15px; border-radius: 50%; width: 40px; height: 40px;">
+                              <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
+                              <i class="bi bi-bookmark-check starData"  style="width: auto;">
+                                <input type="hidden" id="iDLogeado" value="<%= user._id %>">
+                                <input type="hidden" id="iDStore" value="<%= storeProfile[0].indexed %>">
+                              </i>
+                              <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
+                              <!-- el objetivo es saber quien es el que esta logeado y que tienda quiere como favorito -->
+                            </div>
+                            <% }; %>
+                    
+                          <% }; %>
+
+                        <% } %>
+                    <% } else { %> 
+                        <% if (searchBanner) { %>
+
+                          <img src="<%= searchBanner[0].url %>" style="width: 100%;">
+              
+                        <% }; %>
+
+                          <!-- este bloque de codigo es para que no de error cuando no exista usuario, aqui existira pero invisible a los usarios -->
+                          <div class="containerMainStar d-flex justify-content-center align-items-end me-3 pb-4 invisible" style="width: 10%; height: 100%;  position: absolute; right: 0px; top: 0px;">
+                            <% if (storeProfile.length !==0) { %>
+                            <div class="containerStar d-flex justify-content-center align-items-center" style="border-radius: 50%; width: 40px; height: 40px;">
+                              <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
+                              <i class="bi bi-star-fill starData" style="width: auto;">
+                                
+                                <input type="hidden" value="<%= storeProfile[0].indexed %>">
+
+                              </i>
+                              <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
+                            </div>
+                            <% }; %>
+                          </div>
+
+
+                    <% }; %> <!-- fin del user --> 
+                </div>
+
+              </div>
+            <% storeProfile.forEach( (ele)=> { %> <!-- este es el foreach de colores -->
+              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                <!-- bloque Topbar -->
+                <div class="TopbarMain p-1 d-flex justify-content-between px-4 shadow "
+                  style="background-color: <%= ele.bGColorTopbar%> ; color: <%= ele.bGColorText %>; position: relative; z-index: 110;">
+                  
+                    <div class="containerAvatarUser d-flex" style="width: 30%;">
+                        <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
+
+                          <% if (ele.avatarPerfil[0].url.length === 0 ) {%>
+                            <td> <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 70px;"></td>   
+                            <% } else {%>
+                            <td><img src="<%= ele.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px;"></td>
+                          <% }; %>
+
+            <% }); %>   <!-- este es el fin del foreach de colores -->
+                        </div>
+                        <div class="containerDetails d-flex flex-column">
+                        <% if (Account) { %> 
+                            <% Account.forEach((ele)=>{ %>
+                                  <span class="mx-1 store" style="font-size: 20px;">
+                                      <%= ele.username %> <input type="hidden" value="<%= ele.username %>">
+                                  </span>
+                                  <span class="mx-1" style="font-size: 16px;">@<%= ele.username %></span>
+                                <% if (boxPublisher) { %>
+                                    <span class="mx-1" style="font-size: 16px;">Anuncios: <%= boxPublisher.length %> </span>
+                                <% }; %>
+                            <% }) %>
+                        <% }; %>
+                        </div>
+                    </div>
+                    
+                    <div class="containerDetailsMessajesRRSS" style="width: 60%;" >
+                      <% if (storeProfile) { %>
+                        <% storeProfile.forEach((ele)=>{ %>
+                          <div class="containerMessager">
+
+                            <p class="MessagerStore mb-0" style="font-size: 18px; text-align: right;">
+                              <i>
+                                <%= ele.profileMessage %>
+                              </i>
+                            </p>
+                      
+                          </div>
+                          <div class="containerMainRRSS" style="position: relative; height: 30px;">
+                           
+                            <div class="containerRRSS d-flex justify-content-end " style="position: absolute; right: 10px; width: 35%">
+                              
+                             
+                          
+                              <div class="facebook mx-2">
+                                  <% if (ele.facebook) { %>
+                                    <a href="https://www.facebook.com/<%= ele.facebook %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-facebook"></i></a>
+                                  <% } %>
+                              </div>
+                              <div class="instagram mx-2">
+                                <% if (ele.instagram) { %>
+                                  <a href="https://www.instagram.com/<%= ele.instagram %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-instagram"></i></a>
+                                <% } %>
+                              </div>
+                              <div class="youtube mx-2">
+                                <% if (ele.youtube) { %>
+                                  <a href="https://www.youtube.com/<%= ele.youtube %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-youtube"></i></a>
+                                <% } %>
+                              </div>
+                              <div class="tiktok mx-2">
+                                <% if (ele.tiktok) { %>
+                                  <a href="https://www.tiktok.com/<%= ele.tiktok %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-tiktok"></i></a>
+                                <% } %>
+                              </div>
+
+                                                      
+
+                            </div>
+                          </div>
+                        <% }); %>
+                      <% }; %>
+                    </div> 
+
+                </div> <!-- aqui cierra el bloque Topbar--> 
+                <% storeProfile.forEach((eleStore)=>{ %>
+                <!-- bloque Workspace -->
+                <div class="WorkspaceMain d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= eleStore.bGColorWorkspace %>; position: relative;">
+
+                      <a name="workSpace"></a>
+
+                      <!-- Este bloque es para acceder a un buscador dentro de la misma tienda, será una opcion del profile -->
+                      <% if (eleStore.searchFilter === 'on' ){%>
+                      <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>; z-index : 100">
+
+                          <div class="container-fluid">
+                              <div class="container" style="width: 50%;">
+                                <form action="/account/search" method="post" class="d-flex">
+                                  <input type="hidden" name="store" value="<%= eleStore.username %>">
+                                  <input class="form-control me-2" type="text" name="search" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search">
+                                  <button class="btn" type="submit" style="color:<%= eleStore.bGColorText %>; border : 1px solid <%= eleStore.bGColorText %>">Search</button>
+                                </form>
+                              </div>
+                          </div>
+                      
+                      </div>
+                      <% }; %>
+
+                      <a href="#workSpace" class="anclaWorspace text-dark">
+                        <div class="nailUpp px-3 mb-2" style="background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>;">
+                          <i class="bi bi-chevron-down Heading"></i>
+                        </div>  
+                      </a>
+
+                     <div class="containerScoreTrustMain" style="position: fixed; right: 0; top: 120px; z-index : 1">
+                        <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column shadow" 
+                         style="background-color: #fcfcfc; width: 70px; height: 300px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                          <div class="containerScore border-bottom d-flex flex-column justify-content-center align-items-center p-1" style="height: 40%; width: 100%;">
+                            <p class="level m-0" style="font-size: 13px;"></p>
+                            <div class="imgLevel"></div>
+                            <p class="scoreLevel m-0"></p>
+                          </div>
+                          <div class="containerTrust border-top d-flex flex-column justify-content-center align-items-center" style="height: 40%; width: 100%;">
+                            <p class="m-0">Trust</p>
+                            <i class="bi bi-shield-check my-2" style="font-size: 1.4rem;"></i>
+                            <p class="trustLevel m-0"></p>
+                          </div>
+
+                          <% if (user) { %>
+                            <% if (user.username === Account[0].username ) { %>
+                              
+                              <% if (raffle_Id) { %>
+
+                                <% if ( raffle_Id !== undefined ) { %>
+                                  <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: #8DB600; height: 20%; width: 100%;">
+                                    <a href="/raffleModule-admin/<%= raffle_Id %>" style="color: black"><i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i></a>
+                                  </div>
+                                <% }; %>
+                                  
+                              <% } else { %>
+                                <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
+                                  <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
+                                </div>
+                              <% }; %> 
+
+                            <% } else { %>  
+                              <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
+                                <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
+                              </div>
+                            <% }; %>
+                            
+                          <% } else { %>
+                            <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
+                              <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
+                            </div>
+                          <% }; %> 
+
+                          <% if (user) { %>
+                            
+                                <% if (user.username == Account[0].username) { %> <!-- el usuario logeado es el mismo dueño de la tienda -->
+
+                                  <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
+                                    <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                                  </div> 
+
+                                <% } else { %>
+
+                                      <% if (boxPublisher.length !==0) { %>  <!-- tiene al menos un articulo -->
+                                        <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  #9dc90e; height: 20%; width: 100%; border-bottom-left-radius: 5px;" data-bs-toggle="modal" data-bs-target="#staticRate">
+                                          <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                                        </div>
+                                      <% } else { %>
+                                        <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
+                                          <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                                        </div> 
+                                      <% }; %>
+
+                                <% }; %>  
+                                
+                          <% } else { %>
+                            
+                            <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
+                              <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                            </div> 
+
+                          <% }; %>  
+
+                         
+                        </div>
+                     </div>
+
+                    <!-- Modal de Calicacion de Tienda -->
+                    <div class="modal fade" id="staticRate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticComprarLabel" aria-hidden="true">
+                      <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                              <h5 class="modal-title" id="staticComprarLabel">Calificar esta Tienda</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p> Puedes calificar esta tienda cada vez que quieras. ¡Dejale tu puntuacion! </p>
+
+                                <div class="contentToolStart d-flex border">
+                                  <div class="contentClean">
+                                    <i class="bi bi-eraser mx-2" style="font-size: 1.4rem; cursor: pointer;"></i></i>
+                                  </div>
+                                  <div class="containRateStar d-flex justify-content-center border" style="width: 100%;">
+                                    <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                    <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                    <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                    <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                    <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i> 
+                                  </div> 
+                                </div>
+
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnSendStar">Enviar Calificación</button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                                              
+                    <div class="Workspace" style="width: 96%;">
+
+                          <% if (newBox.length !==0) {%>
+                            <div class="containerCard d-flex flex-wrap justify-content-start p-3" style="width: 100%;">
+
+                              <% newBox.forEach( (ele, i)=>{ %>
+
+                                <div class="card m-2 p-0 shadow cardPublished">
+
+                                  <div class="card-body d-flex flex-column p-0">
+
+                                      <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
+                                        <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
+
+                                          <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
+                                            data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
+
+                                            <!-- esto es el icono para acceder a las herramientas de offer, bestProduct & onlyOneAvailable -->
+                                            <% if (user) { %>
+
+                                                <% if (user.username === eleStore.username) { %>
+                                                      
+                                                  <% if (ele.department !== 'raffle' ){ %>
+                                                      <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
+                                                        <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                              
+                                                        <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2">
+                                                          <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
+                                                          <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                          <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
+                                                        </ul>
+                                                      </div>
+                                                  <% }; %>
+                                                      
+                                                <% }; %>
+                              
+                                            <% }; %>  
+                                            
+                                            <div class="carousel-inner" style="width: 100%; height: 220px;  z-index: 1;">
+                                              <div class="carousel-item active">
+                                                <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
+                                              </div>
+                                              <% for (let x=1; x < ele.images.length; x++) { %>
+                                                <% const element=ele.images[x] %>
+                                                  <div class="carousel-item">
+                                                    <img src="<%= element.url %>" class="d-block w-100"
+                                                      style="  width: 100%; height: 100%; object-fit: cover;">
+                                                  </div>
+
+                                              <% }; %>
+                                            </div>
+
+                                            <button class="carousel-control-prev" type="button"
+                                              data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
+                                              <span class="carousel-control-prev-icon"></span>
+                                              <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button"
+                                              data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
+                                              <span class="carousel-control-next-icon"></span>
+                                              <span class="visually-hidden">Next</span>
+                                            </button>
+                                          </div>
+                              
+                                      </div>
+
+                                      <hr class="m-0">
+
+                                      <!-- esta parte va a cambiar cuando sea oferta -->
+                                      <% if (ele.department !== 'raffle') { %>
+                                        <% if (ele.offer === false) { %>
+                                        <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                                <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+              
+                                                    <div class="containerTitleFavorite d-flex justify-content-between">
+                                                      <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                                        style="text-decoration: none;">
+                                                        <%= ele.title %>
+                                                      </a>                                            
+                                                    
+                                                      <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                    </div>
+                
+                                                    <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                                    
+                                                    <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+              
+                                                      <div class="containerPrice d-flex justify-content-between px-2">
+                                                        <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
+                                                        </p>
+                                                        <div class="containerDosIconos d-flex">
+                                                          <div class="containerOnlyOneAvailable">
+                                                            <% if (ele.onlyOneAvailable === true) {%>
+                                                              <i class="bi bi-1-square-fill me-1"></i>
+                                                            <% }; %>  
+                                                          </div>
+                                                          <div class="containBestProduct">
+                                                            <% if (ele.bestProduct === true) {%>
+                                                              <i class="bi bi-award"></i>
+                                                            <% }; %>  
+                                                          </div>
+                                                        </div>
+                                                      </div>
+              
+                                                    </div>
+                                                  
+                
+                                                </div>
+                                        </div>
+                                        <% } else { %>
+                                        <div class="boxDetail" style="height: 120px; position: relative; background-color: #fcda57;">
+                                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                
+                                                      <div class="containerTitleFavorite d-flex justify-content-between">
+                                                        <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                                          style="text-decoration: none;">
+                                                          <%= ele.title %>
+                                                        </a>                                            
+                                                      
+                                                        <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                      </div>
+              
+                                                      <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                                          
+                                                      <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                
+                                                        <div class="containerPrice d-flex justify-content-between px-2">
+                                                          <p class="m-0 px-1 border border-dark rounded-pill">
+                                                            $ <%= ele.price %>
+                                                          </p>
+                                                          <div class="containerDosIconos d-flex">
+                                                            <div class="containerOnlyOneAvailable">
+                                                              <% if (ele.onlyOneAvailable === true) {%>
+                                                                <i class="bi bi-1-square-fill me-1"></i>
+                                                              <% }; %>  
+                                                            </div>
+                                                            <div class="containBestProduct">
+                                                              <% if (ele.bestProduct === true) {%>
+                                                                <i class="bi bi-award"></i>
+                                                              <% }; %>  
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                
+                                                      </div>
+                                                        
+                                                    </div>
+                                        </div>  
+                                        <% }; %>
+                                      <% } else { %>
+                                        <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                          <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+        
+                                              <div class="containerTitleFavorite d-flex justify-content-between">
+                                                <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                                  style="text-decoration: none;">
+                                                  <%= ele.title %>
+                                                </a>                                            
+                                              
+                                                <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                              </div>
+          
+                                              <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                                    
+                                              <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                
+                                                <div class="containerPrice d-flex justify-content-between px-2">
+                                                  <p class="m-0 px-1 border border-dark rounded-pill">
+                                                    $ <%= ele.price %>
+                                                  </p>
+                                                  <div class="containerTickets">
+                                                    <div class="containerIconCategory">
+                                                      <% if (ele.category == 'Gratis' ) {%>
+                                                      <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                        <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
+                                                      </span>
+                                                      <% } else { %>
+                                                      <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                        <i class="bi bi-ticket-fill" style="color: brown;"></i>
+                                                      </span>
+                                                      <% }; %>  
+                                                    </div>
+                                                  </div>
+                                                </div>
+        
+                                              </div>
+                                            
+                                          </div>
+                                        </div>
+                                      <% }; %>  
+
+                                  </div>
+
+                                </div>
+
+                              <% }); %>
+
+                            </div>
+
+                            <div class="paginate d-flex justify-content-end align-items-center mt-2" style="position: relative; z-index : 120 !important">
+                              <nav aria-label="...">
+                                <ul class="pagination  m-0">
+                                  <% if (paginate) { %>
+      
+                                    <% if ( paginate.pagina == 1 ) { %>
+                                    <li class="page-item disabled">
+                                      <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                    </li>
+                                    <% } else { %>
+                                      <li class="page-item">
+                                        <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                      </li>  
+                                    <% }; %>  
+      
+                                    <% if ( paginate.pagina == 1 ) { %>
+                                    <li class="page-item prev disabled">
+                                      <a class="page-link" href="?paginate=prev"> Prev</a>
+                                    </li>
+                                    <% } else { %>
+                                    <li class="page-item prev">
+                                      <a class="page-link" href="?paginate=prev"> Prev </a>
+                                    </li>  
+                                    <% }; %>
+                                    <li class="page-item active">
+                                      <span class="page-link pagina"><%= paginate.pagina %></span>
+                                    </li>
+                                    <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                                    <li class="page-item next disabled">
+                                      <a class="page-link" href="?paginate=next"> Next</i></a>
+                                    </li>
+                                    <% } else { %>
+                                    <li class="page-item next">
+                                      <a class="page-link" href="?paginate=next"> Next</i> </a>
+                                    </li>  
+                                    <% }; %>
+      
+                                    <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                                    <li class="page-item disabled">
+                                      <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                                    </li>
+                                    <% } else { %>
+                                    <li class="page-item">
+                                      <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                                    </li>  
+                                    <% }; %>  
+      
+                                  <% }; %>
+                                </ul>
+                              </nav>
+                            </div>
+                          <% } else { %>
+
+                            <div class="ContainerMessage rounded-1 p-2" style="background-color: #dbdfe4; width: 90%; margin-top: 80px; margin-bottom: 80px;">
+                                  <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                                      <div class="containerMessage m-2">
+                                          <span style="font-size: 18px;">¡Esta tienda no tiene productos ni servicios que mostrar!<i class="bi bi-emoji-frown ms-3"></i></span>
+                                      </div>
+                                  </div>
+                            </div>
+
+                          <% }; %>
+                          
+                    </div>
+
+                </div>
+                
+                <!-- cierre de storeProfile -->   
+                  
+
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+                <div class="contetAntFooter" style="height: 50px; background-color:<%= eleStore.bGColorWorkspace %>;"></div>
+                <footer class="py-4" style="height: auto; background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>;">
+                  
+                  <div class="row mx-0 contentClient d-flex justify-content-around align-items-center">
+                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImg d-flex justify-content-center align-items-center my-2">
+                        <div class="containerImg mx-2">
+                          <% if (eleStore.avatarPerfil[0].url.length === 0 ) {%>
+                            <td> <img src="https://www.gravatar.com/avatar/<%= eleStore.mailhash %>?d=identicon" class="rounded-3" style="width: 50px;"></td>   
+                            <% } else {%>
+                            <td><img src="<%= eleStore.avatarPerfil[0].url %>" alt="" class="rounded-3" style="width: 50px;"></td>
+                          <% }; %>
+                        </div>
+                        <div class="containerDetail my-2">
+                          <p class="mb-0" style="color:<%= eleStore.bGColorText %>"> <%= eleStore.username%></p>
+                          <p class="mb-0"> <span class="from"></span> </p>
+                        </div>
+
+                    </div>     
+                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserDetails d-flex justify-content-around align-items-center">
+                      <div class="containerRate d-flex flex-column mx-2">
+                        <span id="pountCalif"> <!-- Dinamic --> </span> 
+                        <span id="pountCount"> <!-- Dinamico --> </span>
+                      </div>
+
+                    </div> 
+                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImgDetails d-flex justify-content-around align-items-center">
+                        <div class="containerYears my-2 d-flex flex-column align-items-center">
+                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><small><%= eleStore.company %></small></p>
+                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><small><%= eleStore.companyRif %></small></p>
+                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><span class="yearRegister"></span> - <span class="yearCurrent"></span></p>
+                        </div>
+                    </div>    
+                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImgDetails d-flex justify-content-around align-items-center">
+                        <div class="containerYears my-2 rounded-3 d-flex flex-column align-items-center">
+                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><i class="bi bi-geo-alt me-1"></i> <small><%= eleStore.states %></small></p>
+                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><i class="bi bi-geo me-1"></i> <small><%= eleStore.cities %></small></p>
+                        </div>
+                    </div>   
+                  </div>
+                  <div class="row mx-0 contentBlisnet d-flex justify-content-center align-items-center mt-3">
+                    <div class="col-sm-12 col-md-12 col-lg-12 px-0 contentPlatform border-start border-dark d-flex justify-content-center align-items-center">
+                      <div class="containerBlisnetRedes my-2 rounded-3 d-flex flex-column align-items-center">
+  
+                        <p class="m-0"  style="color:<%= eleStore.bGColorText %>;"  id="logoBlissenet_com" </p>
+                        <div class="contentRedes d-flex">
+                          <span class="itemOption"><a href=""  style="color :<%= eleStore.bGColorText %>"><i class="bi bi-instagram  me-3"></i></a></span>
+                          <span class="itemOption"><a href=""  style="color :<%= eleStore.bGColorText %>"><i class="bi bi-facebook me-3"></i></a></span>
+                          <span class="itemOption"><a href=""  style="color :<%= eleStore.bGColorText %>"><i class="bi bi-twitter-x  me-3"></i></a></span>
+                        </div>
+                       
+                      </div>
+                    </div>
+                  </div>
+
+                 
+
+                </footer>
+              </div>
+               <% }); %>
+          </div>
+        <% }; %>
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+
+
+<script>
+    const containerStar = document.querySelector('.containerStar');
+    const starData = document.querySelector('.starData');
+    const containAlert = document.querySelector('.containAlert');
+    let btnClose;
+ 
+    containerStar.addEventListener('click', ()=>{
+        console.log("le has dado click a este boton");
+        console.log("Estos son los dato---->1 ", starData.childNodes[1].value );
+        console.log("Estos son los dato---->3 ", starData.childNodes[3].value );
+
+        efecto()
+        setInterval(normalStart, 2000)
+
+        const user = starData.childNodes[1].value; //usuario que esta logeado
+        const userTienda = starData.childNodes[3].value; //usuario dueño de la tienda
+      
+        const datos = {
+            user : user,
+            userOfStore : userTienda
+        };
+          
+
+        fetch('/account/myfavorite-stores', {
+
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: {"content-type" : "application/json"}
+
+          })
+          .then(response =>response.json() )
+          .then( jsonx =>{
+            
+
+            console.log("ver aqui ---->", jsonx)
+            const type = jsonx.type;
+            const message = jsonx.message; //{type: 'Ok', message: 'Cuenta seguida'} 
+            // hay tres valores en Type = "Save", "Following", "Error"
+            if (type === "Save"){
+              closeAlert();
+            
+              containAlert.innerHTML = `<div class="container-fluid auctionsMessages my-2 d-flex justify-content-center">
+                                          <div class="alert alert-success alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.9">
+                                              <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
+                                              <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                          </div>
+                                        </div>`
+              btnClose = document.querySelector('.btn-close');
+
+            } else if (type === "Following") {
+              closeAlert();
+              btnClose = document.querySelector('.btn-close');
+              containAlert.innerHTML = `<div class="container-fluid auctionsMessages my-2 d-flex justify-content-center">
+                                          <div class="alert alert-info alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.9">
+                                              <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
+                                              <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                          </div>
+                                        </div>`
+              btnClose = document.querySelector('.btn-close');
+            } else {
+              btnClose = document.querySelector('.btn-close');
+              containAlert.innerHTML = `<div class="container-fluid auctionsMessages my-2 d-flex justify-content-center">
+                                          <div class="alert alert-danger alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.9">
+                                              <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
+                                              <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                          </div>
+                                        </div>`
+              btnClose = document.querySelector('.btn-close');
+
+            }
+
+            
+          })
+          .catch( err => console.log(err));
+
+          
+
+          function closeAlert(){
+            
+            setTimeout(()=>{
+                btnClose.click();
+            }, 3000);
+
+          }
+
+
+          
+
+
+          function efecto() {
+            starData.classList.remove('bi-bookmark-check');
+            starData.classList.add('bi-bookmark-check-fill')
+          }
+
+          function normalStart() {
+            starData.classList.remove('bi-bookmark-check-fill');
+            starData.classList.add('bi-bookmark-check')
+          }
+    }); 
+
+
+         
+
+</script>
+
+
+<script>
+
+  const store = document.querySelector('.store');
+  const level = document.querySelector('.level');  
+  const imgLevel = document.querySelector('.imgLevel');  
+  const scoreLevel = document.querySelector('.scoreLevel');
+  const trustLevel = document.querySelector('.trustLevel');
+  const from = document.querySelector('.from');
+  const yearRegister = document.querySelector('.yearRegister');
+  const yearCurrent = document.querySelector('.yearCurrent'); 
+  
+  const Store = store.childNodes[1].value;
+  console.log("Esto es Store ----------->",Store);
+  
+  
+  let dato = {
+    store : Store
+  }
+  
+  console.log("Esto es dato ---->",dato)
+  
+  fetch("/record-trust", {
+                method: "post",
+                body: JSON.stringify(dato),
+                headers: { "content-type": "application/json" }
+          })
+          .then(response => response.json())
+          .then(json =>{ console.log("Esto es el Objeto", json)
+          
+             
+              const raffleData = json[0]; 
+              const sellerBuySell = json[1].count;
+              const sellerTrust = json[2];
+  
+              console.log("esto es raffleData----->", raffleData);
+              console.log("esto es sellerCount---->", sellerBuySell);
+              console.log("esto es sellerTrust---->", sellerTrust);
+
+              let sellerPositivo = sellerTrust.positive + raffleData.countRafflePositivo;  
+              let sellerNegativo = sellerTrust.negative + raffleData.countRaffleNegativo;
+              
+              
+              const totalOperationSeller = sellerPositivo + sellerNegativo;
+  
+              if (sellerPositivo !== 0 && totalOperationSeller !== 0 ){
+                const tasaTrustSell = ((sellerPositivo * 100) / totalOperationSeller).toFixed(0);
+                trustLevel.innerText = tasaTrustSell + '%';
+              }
+
+
+              let countRafflePositivo = raffleData.countRafflePositivo;
+              let sellerCount = sellerBuySell + countRafflePositivo;
+  
+              if ( sellerCount <= 9 ){ // de 0 a 9
+                  console.log("Estas en el nivel Carbon como comprador");
+                  level.innerText = 'Carbon'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralCarbonClean.png" class="m-0" style="width: 50px;">'
+                  scoreLevel.innerText = sellerCount;
+  
+              } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
+                  console.log("Estas en el nivel Hierro como vendedor");
+                  level.innerText = 'Hierro'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralHierroClean.png" style="width: 50px;">'
+                  scoreLevel.innerText = sellerCount;
+                              
+              } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
+                  console.log("Estas en el nivel Bronce como vendedor");
+                  level.innerText = 'Bronce'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralBronceClean.png" style="width: 50px;">'
+                  scoreLevel.innerText = sellerCount;
+                              
+              } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
+                  console.log("Estas en el nivel Plata como vendedor");
+                  level.innerText = 'Plata'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralPlataClean.png" style="width: 50px;">'
+                  scoreLevel.innerText = sellerCount;
+                              
+              } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
+                  console.log("Estas en el nivel Oro como vendedor");
+                  level.innerText = 'Oro'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralOroClean.png" style="width: 50px;">'
+                  scoreLevel.innerText = sellerCount;
+           
+              } else if ( sellerCount >= 200 ){
+                  console.log("Estas en el nivel Diamante como vendedor");
+                  level.innerText = 'Diamante'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralDiamanteClean.png" style="width: 50px;">'
+                  scoreLevel.innerText = sellerCount;
+             
+              }
+           
+
+             
+          })
+          .catch(err => console.log(err));
+
+
+          //aqui el fetch para obtener la fecha de creacion
+          fetch("/date", {
+                method: "post",
+                body: JSON.stringify(dato),
+                headers: { "content-type": "application/json" }
+          })
+          .then(resp => resp.json())
+          .then(jsonDate =>{
+            
+            console.log("Esto es jsondate --->",jsonDate)
+            const date = jsonDate;
+            console.log(date);
+            const year = date[0];
+            const month = date[1];
+            const day = date[2];
+            const yearcurrent = date[3];
+            
+            const dateArmada = `${day}-${month}-${year}`
+            from.innerText =  `${dateArmada}` ;
+            yearRegister.innerText = `${year}`;
+            yearCurrent.innerText = `${yearcurrent}`;
+           
+          })
+          .catch( e => console.log(e))
+
+
+</script>
+
+<!-- script para calificar -->
+<script>
+  const modalContent = document.querySelector('.modal-content');
+  const containRate = document.querySelector('.containRateStar');
+  const btnSendStar = document.getElementById('btnSendStar'); //este es el boton que envia al backen los datos a procesar.
+  const eraser = document.querySelector('.bi-eraser');
+  const stars = document.querySelectorAll('.starE');
+
+  const iDStore = document.getElementById('iDStore');
+  const iDLogeado = document.getElementById('iDLogeado');
+  
+  let markStar; //estrella marcada
+
+  stars.forEach((star, index)=>{
+    star.addEventListener('click', ()=>{
+      console.log(`se ha marcado la estrella -> ${index + 1}`)
+      markStar = `${index + 1}`;
+      stars.forEach((s, i)=>{
+        if (i <= index){
+          s.classList.add('bi-star-fill');
+          s.classList.remove('bi-star');
+          console.log("markStar", markStar);
+        }
+      })
+    })
+
+    modalContent.addEventListener('dblclick', ()=>{
+      stars.forEach((s)=>{
+        s.classList.remove('bi-star-fill');
+        s.classList.add('bi-star');
+        markStar = 0;
+        console.log("markStar", markStar);
+      })
+    })
+
+
+
+  })
+
+  eraser.addEventListener('click', ()=>{
+      console.log("esamos dando click al borrador")
+      stars.forEach((s)=>{
+        s.classList.remove('bi-star-fill');
+        s.classList.add('bi-star');
+        markStar = 0;
+        console.log("markStar", markStar);
+      })
+  })
+
+  btnSendStar.addEventListener('click', ()=>{
+    let store = iDStore.value; 
+    let logeado = iDLogeado.value;
+
+      const datos = {
+        store : store,
+        logeado : logeado,
+        markStar : markStar
+      };
+
+    fetch('/account/storeRate', {
+
+      method: "post",
+      body: JSON.stringify(datos),
+      headers: {"content-type" : "application/json"}
+
+    })
+      .then(response =>response.json() )
+      .then( jsonx => console.log(jsonx))
+      .catch( err => console.log(err));
+
+
+
+  })
+
+</script>
+  
+
+<!-- script para extraer calificacion de una tienda -->
+<script>
+  const pountCalif = document.getElementById('pountCalif');
+  const pountCount = document.getElementById('pountCount');
+
+ //console.log("Esto es Store ----------->",Store);
+
+  const rate = {
+    storeName : Store
+  };
+
+  //console.log("Aqui estamos enviando el username de la tienda", rate);
+
+  fetch('/account/pountRate', {
+
+    method: "post",
+    body: JSON.stringify(rate),
+    headers: {"content-type" : "application/json"}
+
+  })
+    .then(response =>response.json() )
+    .then( jsonx =>  {
+      
+        //console.log("recibiendo del backend ->", jsonx)
+        const boxRates = []; //aqui meto todas las calificaciones parseadas a numeros
+        jsonx.forEach((ele)=>{
+          const markStar = ele.markStar;
+          const markstar = parseInt(markStar);
+          boxRates.push(markstar)
+        })
+        console.log("boxRates", boxRates);
+        const ratesLength = boxRates.length;
+        //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
+        let sumRate = 0;
+        boxRates.forEach((ele)=>{
+          const stars = ele
+          //console.log("stars >", stars)
+          sumRate = sumRate + stars; 
+        })
+
+        console.log("sumRate", sumRate);
+        console.log("ratesLength", ratesLength);
+        const pount = (sumRate / ratesLength);
+        const pountRate = pount.toFixed(1); 
+        console.log("pountRate", pountRate)
+
+        if ( isNaN(pountRate)){
+          pountCalif.innerHTML = `0 <i class="bi bi-star-fill"></i>`;
+          pountCount.innerHTML = `0 Calf.`
+        } else {
+          pountCalif.innerHTML = `${pountRate} <i class="bi bi-star-fill"></i>`;
+          pountCount.innerHTML = `${ratesLength} Calf.`
+        }
+
+
+      
+      })
+    .catch( err => console.log(err));
+
+</script>
+
+
+<% if ( user !== undefined ) { %>
+  <!-- estas son las opciones que estaran cuando SI exista un usuario logeado -->
+<script>
+    //este script es para manejar la accion de los favoritos dentro de la tienda.
+    const linkHeart = document.querySelectorAll('.linkHeart')
+    for (let i = 0; i < linkHeart.length; i++) {
+      const element = linkHeart[i];
+      element.addEventListener('click', () => {
+
+        efecto()
+        setInterval(normalHeart, 2000)
+        //console.log(element.childNodes)
+        //console.log(element.childNodes[0].value)
+        //console.log(element.childNodes[1].value)
+        const depart = element.childNodes[0].value;
+        const id = element.childNodes[1].value;
+        console.log(depart)
+        console.log(id)
+
+        const datos = {
+          depart: depart,
+          id: id
+        }
+
+        fetch('/myfavorites', {
+
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: { "content-type": "application/json" }
+
+        })
+          .then(response => response.json())
+          .then(jsonx => console.log(jsonx))
+          .catch(err => console.log(err));
+
+      })
+
+
+      function efecto() {
+        element.classList.remove('bi-heart');
+        element.classList.add('bi-heart-fill')
+      }
+
+      function normalHeart() {
+        element.classList.remove('bi-heart-fill');
+        element.classList.add('bi-heart')
+      }
+
+
+    }
+
+</script>
+
+<script>
+ //este es el controlador de las ofertas
+  const offer = document.querySelectorAll('.offer');
+  const boxDetail = document.querySelectorAll('.boxDetail');
+
+  for (let i = 0; i < offer.length; i++) {
+    const element = offer[i];
+    element.addEventListener('click', () => {
+  
+      //console.log(element.childNodes)
+      console.log("depart ---->",element.childNodes[1].value);
+      console.log("id ---->",element.childNodes[3].value);
+      
+      const depart = element.childNodes[1].value;
+      const id = element.childNodes[3].value;
+      
+      const datos = {
+          depart: depart,
+          id: id
+        }
+
+        fetch('/account/offer', {
+
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: { "content-type": "application/json" }
+
+        })
+          .then(response => response.json())
+          .then(jsonx => {
+            
+            console.log("Esto es jsonx--->",jsonx)
+            const Offer = jsonx[0].offer;
+
+            if ( Offer === false ){
+              boxDetail[i].style.backgroundColor = "#fcda57";
+            } else {
+              boxDetail[i].style.backgroundColor = "#ffffff";
+            }
+
+          })
+          .catch(err => console.log(err));
+  
+  
+    });
+  
+  };
+  
+</script>
+
+<script>
+  //este es el controlador bestProduct
+   const bestProduct = document.querySelectorAll('.bestProduct');
+   const containBestProduct = document.querySelectorAll('.containBestProduct');
+ 
+   for (let e = 0; e < bestProduct.length; e++) {
+     const element = bestProduct[e];
+     element.addEventListener('click', () => {
+   
+       //console.log(element.childNodes)
+       console.log("depart ---->",element.childNodes[1].value);
+       console.log("id ---->",element.childNodes[3].value);
+       
+       const depart = element.childNodes[1].value;
+       const id = element.childNodes[3].value;
+       
+       const datos = {
+           depart: depart,
+           id: id
+         }
+ 
+         fetch('/account/best-product', {
+ 
+           method: "post",
+           body: JSON.stringify(datos),
+           headers: { "content-type": "application/json" }
+ 
+         })
+           .then(response => response.json())
+           .then(jsonx => {
+             
+             console.log("Esto es jsonx--->",jsonx)
+             const BestProduct = jsonx[0].bestProduct;
+ 
+             if ( BestProduct === false ){
+              containBestProduct[e].innerHTML = '<i class="bi bi-award"></i>';
+             } else {
+              containBestProduct[e].innerHTML = '';
+             }
+ 
+           })
+           .catch(err => console.log(err));
+   
+   
+     });
+   
+   };
+   
+</script>
+
+<script>
+  //este es el controlador del onlyOneAvailable
+   const onlyOneAvailable = document.querySelectorAll('.onlyOneAvailable');
+   const containerOnlyOneAvailable = document.querySelectorAll('.containerOnlyOneAvailable');
+ 
+
+   for (let g = 0; g < onlyOneAvailable.length; g++) {
+     const element = onlyOneAvailable[g];
+     element.addEventListener('click', () => {
+   
+       //console.log(element.childNodes)
+       console.log("depart ---->",element.childNodes[1].value);
+       console.log("id ---->",element.childNodes[3].value);
+       
+       const depart = element.childNodes[1].value;
+       const id = element.childNodes[3].value;
+       
+       const datos = {
+           depart: depart,
+           id: id
+         }
+ 
+         fetch('/account/only-one-available', {
+ 
+           method: "post",
+           body: JSON.stringify(datos),
+           headers: { "content-type": "application/json" }
+ 
+         })
+           .then(response => response.json())
+           .then(jsonx => {
+             
+             console.log("Esto es jsonx--->",jsonx)
+             const OnlyOneAvailable = jsonx[0].onlyOneAvailable;
+ 
+             if ( OnlyOneAvailable === false ){
+              containerOnlyOneAvailable[g].innerHTML = '<i class="bi bi-1-square-fill me-1"></i>';
+             } else {
+              containerOnlyOneAvailable[g].innerHTML = '';
+             }
+ 
+           })
+           .catch(err => console.log(err));
+   
+   
+     });
+   
+   };
+   
+</script>
+
+
+<% }; %>
+
+
+</body>
+
+

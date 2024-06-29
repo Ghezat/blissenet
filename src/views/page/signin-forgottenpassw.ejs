@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Signin-forgottenpassw</title>
+</head>
+<body class="mainTheme">
+    <main>
+
+    <%- include('../partials/navi-simple.ejs') %>   
+    
+
+    <% if (signIn.length !==0 ) { %>
+    <div class="container-fluid border border-dark" style="background-size: cover; background-image: url('<%= signIn[0].url %>'); height: 100%;" >
+    <% } else { %>
+    <div class="container-fluid">    
+    <% }; %>    
+
+        <div class="row d-flex justify-content-end mx-3 mt-5">
+            <div class="col-lg-4 col-md-5 col-sm-10 col-12">
+                <div class="card formTransp mt-4 rounded-2 shadow">
+                    <div class="card-header d-flex justify-content-between">
+                    <span>Reset Password</span> <i class="bi bi-1-square me-1"></i>
+                    </div>
+                    <div class="card-body">
+
+                        <form action="/myaccount/signin-forgottenpassw" method="POST" id="forgotten">
+                            <div class="form-group my-2">
+                                <input type="email" name="email" placeholder="Enter your email" class="form-control"
+                                autocomplete="off"  required>
+                            </div>
+                        
+                            <div class="form-group my-3 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class=" mx-1">Verifique que sea su email antes de dar al boton.</label>
+                            </div>
+                            
+
+                            <div class="form-group my-2">
+                                <button class="g-recaptcha form-control btn btn-dark" 
+                                    data-sitekey="6LfhgFIlAAAAAODB3P24Ea32aXgbqEHb3iVJGrJP" 
+                                    data-callback='onSubmit' 
+                                    data-action='submit'>
+                                    Send  Token
+                                </button>
+                            </div>
+
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class=" mx-1"><small> Volver a Login <a href="/myaccount/signin" class="text-danger ms-2 fw-bold">¡Click aquí!</a> </small> </label>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <%- include('../partials/scripts.ejs')%>
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+    </main>
+</body>
+</html>
+
+

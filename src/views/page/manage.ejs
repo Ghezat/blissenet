@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head.ejs') %>
+    <title>Blissenet Gerencia</title>
+</head>
+<style>
+  
+  .imgPerfil{
+    width: 55px;
+    border-radius: 4px;
+}
+
+  .departGroup {
+    background-color: rgb(197, 103, 103);
+    border: 1px ridge brown;
+    list-style: none;
+    margin: 0;
+  }
+
+  .departList {
+    background-color: rgb(243, 205, 205);
+    padding: 0px 8px;
+    color: rgb(54, 52, 49);
+    border-radius: 12px;
+  }
+
+  .textDecorativeNo {
+    text-decoration: none;
+  }
+
+ /*  .contentAdmin{
+    display: flex;
+    justify-content: center;
+  } */
+
+  .contentAnalisys{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .open{
+    display: block;
+  }
+
+  .blackBody{
+    /* esta es la clase que utiliza bodyTheme */
+    background-color: #272b2f;
+  }
+
+  .closed{
+    display: none !important;
+  }
+
+  .contentFascinometro{
+      width: 100%;
+      height:120vh;
+  }
+
+  .contentVistometro{
+      width: 100%;
+      height:120vh;
+  }
+
+  .textLight{
+      /* trabaja en conjunto con themaTextLight */
+      color: white;
+  }
+
+
+
+    @media screen and (min-width: 510px) and (max-width: 900px ){
+    .contentAdmin{
+      padding: 0px !important; 
+      width: 100%;
+  
+    }
+
+    .mainTable{
+      margin: 0;
+      width: 100%;
+    }
+
+    .contentFascinometro{
+      width: 100%;
+      height:auto;
+    }
+
+    .contentVistometro{
+      width: 100%;
+      height:auto;
+    }
+  
+  }
+        
+  @media screen and (min-width: 180px) and (max-width: 510px ){
+    .contentAdmin{
+      padding: 0px !important; 
+      width: 100%;
+  
+    }
+
+    .mainTable{
+      margin: 0;
+      width: 100%;
+    }
+
+    .contentFascinometro{
+      width: 100%;
+      height:auto;
+    }
+
+    .contentVistometro{
+      width: 100%;
+      height:auto;
+    }
+    
+  }
+
+</style>
+
+<body class="mainTheme">
+
+
+  <main>
+
+    <%- include('../partials/navi-simple.ejs') %>
+  
+    <% if (user){ %>
+
+      <% if (searchProfile.length !==0) { %>
+        <div class="container-fluid p-0" style="height: auto;">
+          <div class="row rowWidth m-0">
+              <div class="col-12 p-0">
+
+                  <div class="containerBanner d-flex">
+                    <% if (searchBanner) {  %>
+                      <img src="<%= searchBanner[0].url %>" style="width: 100%"  >
+                    <% } %>
+                  </div>
+
+                  <!-- esta data es para usarla abajo en un script para poder enviar un fecth con el nombre de la tienda. -->
+                  <input type="hidden" value="<%= searchProfile[0].username %>" id="nameStore"> 
+
+                
+              </div>
+
+              <!-- <div class="container-fluid d-flex justify-content-between p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);"> -->
+                
+              <div class="containerOptions d-flex justify-content-between p-1 themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);">
+                <div class="containerNav"><p class="m-0 ps-5">Gerencia</p></div>
+                <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
+                  <button type="button" class="btn btn-secondary active" id="btnAdmin">Admin.</button>
+                  <button type="button" class="btn btn-secondary" id="btnAnalysis">Análisis</button>
+                </div>
+              </div>
+              
+              <div class="col-12 px-5 pb-5 contentAdmin bodyTheme" style="width: 100%; height: auto;">
+                  
+                  <div class="mainTable" style="overflow-x: auto; width: 100%;">
+                      <table class="table tableBox">
+                        <thead>
+                          <tr>
+                             <th>Image</th> <th>Title</th> <th>Department</th> <th>Price</th> <th>Favorites</th> <th>Views</th> <th>Pausar/Activar</th> <th>Store</th>
+                          </tr>
+                        </thead>
+                        <tbody>  
+                         <% if (newBox) { %>
+                             <% newBox.forEach((ele)=>{ %>
+                                 <tr>  
+                                
+                                     <td><img src="<%= ele.images[0].url %>"class="border"  style="width: 45px; height: 45px; object-fit: contain;" > </td>
+                                     <td><%= ele.title %></td>
+                                     <td><%= ele.department %></td>
+                                     <td><%= ele.price %></td>
+                                     <td><span class="me-2"><i class="bi bi-heart"></i></span> <%= ele.favorite%></td>
+                                     <td><span class="me-2"><i class="bi bi-eye"></i></span><%= ele.view %></td>
+                                     <% if (ele.paused == false) { %>
+                                     <td> <a href="/myaccount/manage/<%= ele.department %>/<%= ele._id %>" class="btn btn-primary mx-2">Activado</a></td>
+                                     <% } else { %>
+                                     <td> <a href="/myaccount/manage/<%= ele.department %>/<%= ele._id %>" class="btn btn-secondary mx-2">Pausado</a></td>  
+                                     <% }; %>
+                                     <% if (ele.visibleStore === true ) { %>
+                                     <td> <a href="/myaccount/visible-store/<%= ele.department %>/<%= ele._id %>" class="btn btn-primary mx-2">Visible</a></td> 
+                                     <% } else { %>
+                                     <td> <a href="/myaccount/visible-store/<%= ele.department %>/<%= ele._id %>" class="btn btn-secondary mx-2">Invisible</a></td> 
+                                      <% }; %>
+
+                                 </tr>  
+                              <% }) %>
+                          <% }; %>    
+                        </tbody>         
+                      </table>
+                  </div>
+                  <% if (newBox.length !==0 ) { %>
+                  <div class="paginate d-flex justify-content-end align-items-center  mt-2">
+                    <nav aria-label="...">
+                      <ul class="pagination  m-0" >
+                        <% if (paginate) { %>
+
+                          <% if ( paginate.pagina == 1 ) { %>
+                          <li class="page-item disabled">
+                            <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                          </li>
+                          <% } else { %>
+                            <li class="page-item">
+                              <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                            </li>  
+                          <% }; %>  
+
+                          <% if ( paginate.pagina == 1 ) { %>
+                          <li class="page-item prev disabled">
+                            <a class="page-link" href="?paginate=prev"> Prev</a>
+                          </li>
+                          <% } else { %>
+                          <li class="page-item prev">
+                            <a class="page-link" href="?paginate=prev"> Prev </a>
+                          </li>  
+                          <% }; %>
+                          <li class="page-item active">
+                            <span class="page-link pagina"><%= paginate.pagina %></span>
+                          </li>
+                          <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                          <li class="page-item next disabled">
+                            <a class="page-link" href="?paginate=next"> Next</i></a>
+                          </li>
+                          <% } else { %>
+                          <li class="page-item next">
+                            <a class="page-link" href="?paginate=next"> Next</i> </a>
+                          </li>  
+                          <% }; %>
+
+                          <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                          <li class="page-item disabled">
+                            <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                          </li>
+                          <% } else { %>
+                          <li class="page-item">
+                            <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                          </li>  
+                          <% }; %>  
+
+                        <% }; %>
+                      </ul>
+                    </nav>
+                  </div>
+                  <% }; %>  
+              </div>
+              
+
+              <div class="col-12 contentAnalisys d-flex closed p-0 flex-wrap bodyTheme">
+                  <div class="col-lg-3 col-md-12 col-sm-12 mt-3 col-12">
+
+                      <div class="containerMetricasGenerales m-3 border rounded-2 shadow themaTextLight">
+                          <div class="containerTitle mb-2 py-2 alert-secondary">
+                            <span style="margin-left: 10px;"> Métricas Generales </span> 
+                          </div>
+                            <% searchProfile.forEach((ele)=>{ %>
+                              <div class="containerVistometro m-1" >
+                                <span style="margin-left: 8px;">Visitas a mi Tienda : <strong class="ms-1" ><%= ele.view %></strong> </span> 
+                            </div>
+                            <% }) %>
+                          
+                            <% if (followMeCount) { %>
+                              <div class="containerFascinometro m-1">
+                                <span style="margin-left: 8px;">Siguiendome : <strong class="ms-1"> <%= followMeCount %> </strong> </span>
+                              </div>
+                            <% } %>
+                            <% if (followingCount) { %>
+                              <div class="containerFascinometro m-1">
+                                <span style="margin-left: 8px;">Siguiendo : <strong class="ms-1"> <%= followingCount %> </strong> </span>
+                              </div>
+                            <% } %>
+                            
+                                               
+                            <div class="containerValorTienda m-1">
+                                <span style="margin-left: 8px; margin-top: 10px;">Valoración de Tienda: <span class="fw-bold ms-1" id="pountrate"> <!-- Dinamic --> </span> <span class="fw-bold">/ 5</span> </span>
+                                <div class="boxStar mx-2 border d-flex justify-content-center" style="margin-top: 10px;" >
+                                  <!-- Dinamic -->
+                                </div>
+                                <div class="containerMessagevalue mx-2 rounded-1">
+                                  <!-- Dinamic -->
+                                </div>
+                            </div>
+                                              
+
+                            <hr>
+                            <% if (boxPublisher) {  %>
+                              <div class="containerAnunciosActivos m-1">
+                                <span style="margin-left: 8px;">Todos mis Anuncios : <%= boxPublisher.length %></span>
+                            </div>
+                            <% }; %> 
+                        
+                            <% if (objActive) { %>
+                              <div class="containerAnunciosActivos m-1">
+                                <span style="margin-left: 8px;">Anuncios Activos : <%= objActive.active %></span>
+                            </div>
+                            <% }; %>  
+                          
+                            <% if (objActive) { %>
+                              <div class="containerAnunciosPasivos mx-1 mt-1 mb-3">
+                                <span style="margin-left: 8px;">Anuncios Pausados : <%= objActive.paused %></span>
+                              </div>
+                          <% }; %>
+                      </div>
+
+                      <div class="containerDataMain m-3 p-1 border rounded-2 shadow themaTextLight">
+                          <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                  <button class="nav-link active" id="btnSeller"> Vendedor</button>
+                            </li>
+                            <li class="nav-item">
+                              <button class="nav-link" id="btnBuyer"> Comprador</button>
+                            </li>
+                          </ul>
+
+                          <div class="containerSeller m-1 p-1">
+                            <ul style="list-style: none;" class="p-0">
+                                <div class="contList d-flex justify-content-between m-0">
+                                  <li>Positivos</li>
+                                    <div class="contvalueSign me-3 mb-1 d-flex">
+                                      <span class="me-1 trustSellPositive"></span>
+                                      <i class="bi bi-plus-circle"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="contList d-flex justify-content-between">
+                                  <li>Neutrales</li>
+                                  <div class="contvalueSign me-3 mb-1 d-flex">
+                                    <span class="me-1 trustSellNeutral"></span>
+                                    <i class="bi bi-stop-circle"></i>
+                                  </div>
+                                </div>
+                                
+                                <div class="contList d-flex justify-content-between">
+                                  <li>Negativos</li>
+                                  <div class="contvalueSign me-3 mb-1  d-flex">
+                                    <span class="me-1 trustSellNegative"></span>
+                                    <i class="bi bi-dash-circle"></i>
+                                  </div>
+                                </div>
+
+                                <hr class="divider">
+
+                                <div class="contList d-flex justify-content-between m-0">
+                                  <li>Puntos</li>
+                                    <div class="contvalueSign me-3 mb-1 d-flex">
+                                      <span class="me-1 scoreSeller">4</span>
+                                      <i class="bi bi-p-circle"></i>
+                                    </div>
+                                </div>
+
+                                <div class="contList d-flex justify-content-between m-0">
+                                  <li>Fiabilidad</li>
+                                    <div class="contvalueSign me-3 mb-1 d-flex">
+                                      <span class="me-1 porcentTrustSeller"></span>
+                                    </div>
+                                </div>
+
+                                <div class="contList d-flex justify-content-between m-0">
+                                  <li>Clasificación</li>
+                                    <div class="contvalueSign me-3 mb-1 d-flex">
+                                      <span class="me-1 px-1" style="border: 1px solid black; border-radius: 10px;"><small class="ratingSeller"> </small></span>
+                                    </div>
+                                </div>
+                                 
+                           
+                            </ul>
+                          </div>
+                          <div class="containerBuyer closed m-1 p-1">
+                            <ul style="list-style: none;" class="p-0">
+                              <div class="contList d-flex justify-content-between m-0">
+                                <li>Positivos</li>
+                                  <div class="contvalueSign me-3 mb-1 d-flex">
+                                    <span class="me-1 trustBuyPositive"></span>
+                                    <i class="bi bi-plus-circle"></i>
+                                  </div>
+                              </div>
+
+                              <div class="contList d-flex justify-content-between">
+                                <li>Neutrales</li>
+                                <div class="contvalueSign me-3 mb-1 d-flex">
+                                  <span class="me-1 trustBuyNeutral"></span>
+                                  <i class="bi bi-stop-circle"></i>
+                                </div>
+                              </div>
+                              
+                              <div class="contList d-flex justify-content-between">
+                                <li>Negativos</li>
+                                <div class="contvalueSign me-3 mb-1  d-flex">
+                                  <span class="me-1 trustBuyNegative"></span>
+                                  <i class="bi bi-dash-circle"></i>
+                                </div>
+                              </div>
+
+                              <hr class="divider">
+
+                              <div class="contList d-flex justify-content-between m-0">
+                                <li>Puntos</li>
+                                  <div class="contvalueSign me-3 mb-1 d-flex">
+                                    <span class="me-1 scoreBuyer">11</span>
+                                    <i class="bi bi-p-circle"></i>
+                                  </div>
+                              </div>
+
+                              <div class="contList d-flex justify-content-between m-0">
+                                <li>Fiabilidad</li>
+                                  <div class="contvalueSign me-3 mb-1 d-flex">
+                                    <span class="me-1 porcentTrustBuyer"></span>
+                                  </div>
+                              </div>
+
+                              <div class="contList d-flex justify-content-between m-0">
+                                <li>Clasificación</li>
+                                  <div class="contvalueSign me-3 mb-1 d-flex">
+                                    <span class="me-1 px-1" style="border: 1px solid black; border-radius: 10px;"><small class="ratingBuyer"> </small></span>
+                                  </div>
+                              </div>
+                         
+                          </ul>
+                          </div>
+                      </div>
+
+                  </div>
+                  <div class="col-lg-9 col-md-12 col-sm-12 mt-3 col-12 p-3">
+                      
+                    <div class="contentNails">
+
+                      <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="btnFascinometro"> Fascinometro</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="btnVistometro"> Vistometro</button>
+                        </li>
+                      </ul>
+
+                    </div>
+
+                    <div class="contentFascinometro shadow d-flex border">
+                      <!-- Fascinometro -->
+                        <div class="fascinometro" style="width: 65%; position: relative;">
+
+                            <div class="contentP p-2 d-flex justify-content-center align-items-center" style="position: absolute; top : 10px; width: 100%;">
+                              <p class="mb-0" style="font-size: 16; font-weight: 600; color: rgb(102, 102, 102);" >Fascinometro</p>
+                            </div>
+                     
+                            <div class="containerChart">
+                              <div class="chart py-4" style="height: auto;">
+                                <canvas class="chart-favorite"></canvas>
+                              </div>
+                            </div>
+
+                        </div>
+
+                        <div class="metric" style="width: 35%; height: 100%; overflow-y: auto;">
+                          <table class="table table-striped table-hover tableBox" style="overflow-y: auto; overflow-x: auto;">
+                            <thead class="table-danger">
+                                <tr>
+                                    <th>Title</th> <th><i class="bi bi-heart-fill"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <% if (boxPublisher) { %>
+                                <% boxPublisher.forEach((ele)=>{ %>
+
+                                <tr>
+                                    <td><%= ele.title %></td> <td><%= ele.favorite %></td>
+                                </tr>
+
+                                <% }); %>
+                              <% }; %>  
+                            </tbody>
+                          </table>
+                        </div>
+
+                    </div>
+                     
+                    <div class="contentVistometro shadow d-flex border closed">
+                      <!-- vistometro -->
+                        <div class="vistometro" style="width: 65%; position: relative;">
+
+                          <div class="contentP p-2 d-flex justify-content-center align-items-center" style="position: absolute; top : 10px; width: 100%;">
+                            <p class="mb-0" style="font-size: 16; font-weight: 600; color: rgb(102, 102, 102);" >Vistometro</p>
+                          </div>
+        
+                          <div class="containerChart">
+                              <div class="chart py-4" style="height: auto;">
+                                <canvas class="chart-view"></canvas>
+                              </div>
+                          </div>
+
+                        </div>
+
+                        <div class="metric" style="width: 35%; height: 100%; overflow-y: auto;">
+                          <table class="table table-striped table-hover tableBox" style="overflow-y: auto; overflow-x: auto;">
+                            <thead>
+                                <tr class="table-warning">
+                                    <th>Title</th> <th><i class="bi bi-eye-fill"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <% if (boxPublisher) { %>
+                                <% boxPublisher.forEach((ele)=>{ %>
+
+                                <tr>
+                                    <td><%= ele.title %></td> <td><%= ele.view %></td>
+                                </tr>
+
+                                <% }); %>
+                              <% }; %>  
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                    </div>
+                                           
+    
+                  </div>
+              </div>
+          </div>
+        </div>
+      <% } else { %>
+       
+        <div class="containerMayor d-flex m-5">
+          <div class="containerMessage  d-flex align-items-center m-4">
+             <div class="Message d-flex flex-column justify-align-center " style="background-color: whitesmoke; border-radius: 6px; padding:15px ; ">
+              <p style="color:rgb(99, 98, 98)"><b>¡No puedes acceder a este apartado ya que requiere de un perfil!</b></p>
+
+              <p style="color:rgb(99, 98, 98)" ><b>¿Como obtener un perfil?</b></p>
+              
+              <div class="containerExplain d-flex">
+                <p style="color:rgb(99, 98, 98); text-align: justify;"> En tu menú donde aparece tu username, existe una 
+                  opcion llamada “Profile”, crea tu perfil rápido y simple. Luego podrás hacer uso de toda la plataforma.</p>  
+                 
+                <img src="/img/menuProfileStep.png" style="width: 360px;">
+              </div>
+
+            </div>
+          </div>
+          <div class="containerImage ">
+            <img src="/img/sinAccessManage.png" style="width: 600px; ">
+          </div>
+        </div>
+         
+      <% }; %>
+
+    <% } else { %>
+      <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+        <%- include('../partials/noLogin.ejs') %>
+    
+      </div>   
+    <% }; %> 
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+<% if (user) { %> 
+  <% if (searchProfile.length !== 0) { %> 
+<script>
+  
+//esta direccion esta en manage.routes.js       
+ const DataFetch = fetch('/myaccount/manage/datafront')
+                    .then(response => response.json())
+                    .then((jsondata) =>
+                     {
+                      console.log(jsondata)
+                      console.log("Aqui la data", jsondata.data);
+                      const Data = jsondata.data;
+                      const labels= [];
+                      const data = [];
+                      const view = [];
+                      for (let i = 0; i < Data.length; i++) {
+                        const element = Data[i];
+
+                        const title = element.title;
+                        labels.push(title);
+                        const dataX = element.favorite;
+                        data.push(dataX);
+                        const viewX = element.view;
+                        view.push(viewX);
+                      }
+                      console.log(labels);
+                      console.log(data);
+                      console.log(view);
+                      
+
+    const chartData = {labels,data};
+
+    const myChart = document.querySelector('.chart-favorite');
+
+    new Chart(myChart, {
+      type: "doughnut",
+      data: {
+        labels: chartData.labels,
+        datasets: [{ label: "En Favoritos", data: chartData.data}]
+      },
+      options: {
+        responsive: true,
+        plugins : {legend: { position: 'bottom'}, title: { display: true }}
+      }
+    });
+    
+    const chartDataView = {labels,view};
+
+    const chartView = document.querySelector('.chart-view');
+
+    new Chart(chartView, {
+      type: "doughnut",
+      data: {
+        labels: chartDataView.labels,
+        datasets: [{ label: "En Vistas", data: chartDataView.view}]
+      },
+        options: {
+        responsive: true,
+        plugins : {legend: { position: 'bottom'}, title: { display: true }}
+      }
+    });
+
+})
+.catch(err => console.log(err)) 
+
+
+
+</script>
+
+<script>
+  //este script obtiene el record y trust del usuario logeado
+
+    const trustSellPositive = document.querySelector('.trustSellPositive');
+    const trustSellNeutral = document.querySelector('.trustSellNeutral');
+    const trustSellNegative = document.querySelector('.trustSellNegative');
+
+    const trustBuyPositive = document.querySelector('.trustBuyPositive');
+    const trustBuyNeutral = document.querySelector('.trustBuyNeutral');
+    const trustBuyNegative = document.querySelector('.trustBuyNegative');
+
+    const scoreBuyer = document.querySelector('.scoreBuyer');
+    const scoreSeller = document.querySelector('.scoreSeller');
+
+    const porcentTrustSeller = document.querySelector('.porcentTrustSeller');
+    const porcentTrustBuyer = document.querySelector('.porcentTrustBuyer');
+
+    const ratingSeller = document.querySelector('.ratingSeller');
+    const ratingBuyer = document.querySelector('.ratingBuyer');
+
+    fetch("/record-trust", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+      .then(response => response.json())
+      .then(json =>{ console.log("Esto es la obtencion de Record & Trust",json)
+
+        const ScoreBuyer = json[0];
+        const ScoreSeller = json[1];
+        const TrustBuyer = json[2];
+        const TrustSeller = json[3];
+        const raffleData = json[4];
+
+        const buyerCount = ScoreBuyer.count;
+        const sellerCount = ScoreSeller.count + raffleData.countRafflePositivo;
+        
+
+        let sellerPositivo = TrustSeller.positive + raffleData.countRafflePositivo;  
+        let sellerNegativo = TrustSeller.negative + raffleData.countRaffleNegativo;
+
+        console.log("Esto es trustSeller", TrustSeller);
+        console.log("Esto es trustBuyer", TrustBuyer);
+        trustSellPositive.innerText = sellerPositivo;
+        trustSellNeutral.innerText = TrustSeller.neutral;
+        trustSellNegative.innerText = sellerNegativo;
+
+        trustBuyPositive.innerText = TrustBuyer.positive;
+        trustBuyNeutral.innerText = TrustBuyer.neutral;
+        trustBuyNegative.innerText = TrustBuyer.negative;
+
+        scoreSeller.innerText = sellerCount;
+        scoreBuyer.innerText = buyerCount;
+
+        const totalOperationSeller = (sellerPositivo + sellerNegativo);
+        const tasaTrustSell = ((sellerPositivo * 100) / totalOperationSeller).toFixed(0);
+
+        const totalOperationBuyer = (TrustBuyer.positive + TrustBuyer.negative);
+        const tasaTrustBuy = ((TrustBuyer.positive * 100) / totalOperationBuyer).toFixed(0);
+
+
+        console.log("tasaTrustSell-------->", tasaTrustSell);
+        console.log("tasaTrustBuy-------->", tasaTrustBuy);
+
+        if ( isNaN(tasaTrustBuy) ){
+          porcentTrustBuyer.innerText = `0 %`;
+        } else {
+          porcentTrustBuyer.innerText = `${tasaTrustBuy}  %`;
+        }
+
+        if ( isNaN(tasaTrustSell) ){
+          porcentTrustSeller.innerText = `0 %`;
+        } else {
+          porcentTrustSeller.innerText = `${tasaTrustSell}  %`;
+        }
+
+        //console.log("sellerCount-------->", sellerCount); 
+        //console.log("buyerCount-------->", sellerCount); 
+        //:::::: Esto es la condicional de nivel de Vendedor ::::::
+        if ( sellerCount <= 9 ){ // de 0 a 9
+        console.log("Estas en el nivel Carbon como comprador");
+        ratingSeller.innerText = "Carbon";
+          
+        } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
+        console.log("Estas en el nivel Hierro como comprador");
+        ratingSeller.innerText = "Hierro";
+
+        } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
+        console.log("Estas en el nivel Bronce como comprador");
+        ratingSeller.innerText = "Bronce";
+
+        } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
+        console.log("Estas en el nivel Plata como comprador");
+        ratingSeller.innerText = "Plata";
+
+        } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
+        console.log("Estas en el nivel Oro como comprador");
+        ratingSeller.innerText = "Oro";
+
+        } else if ( sellerCount >= 200 ){
+        console.log("Estas en el nivel Diamante como comprador");
+        ratingSeller.innerText = "Diamante";
+        }
+
+        
+
+        //:::::: Esto es la condicional de nivel de Comprador ::::::
+        if ( buyerCount <= 9 ){ // de 0 a 9
+        console.log("Estas en el nivel Carbon como comprador");
+        ratingBuyer.innerText = "Carbon";
+          
+        } else if ( buyerCount <= 19 && buyerCount >= 10 ){ //de 10 a 19 
+        console.log("Estas en el nivel Hierro como comprador");
+        ratingBuyer.innerText = "Hierro";
+
+        } else if ( buyerCount <= 49 && buyerCount >= 20 ){ // de 20 a 49 
+        console.log("Estas en el nivel Bronce como comprador");
+        ratingBuyer.innerText = "Bronce";
+
+        } else if ( buyerCount <= 99 && buyerCount >= 50 ){ // de 50 a 99
+        console.log("Estas en el nivel Plata como comprador");
+        ratingBuyer.innerText = "Plata";
+
+        } else if ( buyerCount <= 199 && buyerCount >= 100 ){ // de 100 a 199
+        console.log("Estas en el nivel Oro como comprador");
+        ratingBuyer.innerText = "Oro";
+
+        } else if ( buyerCount >= 200 ){
+        console.log("Estas en el nivel Diamante como comprador");
+        ratingBuyer.innerText = "Diamante";
+        }
+        
+        })
+      .catch( err => console.log(err))
+
+</script>
+
+  <% }; %>
+<% }; %>
+
+  <script>
+    let btnAdmin = document.getElementById('btnAdmin');
+    let btnAnalysis = document.getElementById('btnAnalysis');
+    let contentAdmin = document.querySelector('.contentAdmin');
+    let contentAnalisys = document.querySelector('.contentAnalisys');
+                                                  
+    btnAdmin.addEventListener('click', ()=>{
+      contentAnalisys.classList.add('closed')
+      contentAdmin.classList.remove('closed')
+
+      btnAnalysis.classList.remove('active');
+      btnAdmin.classList.add('active');
+      
+    })
+
+    btnAnalysis.addEventListener('click', ()=>{
+      contentAnalisys.classList.remove('closed')
+      contentAdmin.classList.add('closed')
+
+      btnAdmin.classList.remove('active');
+      btnAnalysis.classList.add('active');
+    
+    })
+
+  </script>
+ 
+  <script>
+    //este script controla la selectividad de la pestaña que presenta al usuario sus datos como vendedor y comprador
+
+    let btnSeller = document.getElementById('btnSeller');
+    let btnBuyer = document.getElementById('btnBuyer');
+    let contSeller = document.querySelector('.containerSeller');
+    let contBuyer = document.querySelector('.containerBuyer');
+
+    btnBuyer.addEventListener('click', ()=>{
+      contSeller.classList.add('closed');
+      contBuyer.classList.remove('closed');
+      btnBuyer.classList.add('active');
+      btnSeller.classList.remove('active');
+      
+    })
+
+    btnSeller.addEventListener('click', ()=>{
+      contBuyer.classList.add('closed');
+      contSeller.classList.remove('closed');
+      btnSeller.classList.add('active');
+      btnBuyer.classList.remove('active');
+    })
+
+  </script>
+
+  <script>
+    //controlador de las pestañas de fascinometro y vistometro
+
+    let btnFascinometro = document.getElementById('btnFascinometro');
+    let btnVistometro = document.getElementById('btnVistometro');
+    let contentFascinometro = document.querySelector('.contentFascinometro');
+    let contentVistometro = document.querySelector('.contentVistometro');
+
+    btnFascinometro.addEventListener('click', ()=>{
+
+      btnFascinometro.classList.add('active');
+      btnVistometro.classList.remove('active');
+
+      contentFascinometro.classList.remove('closed');
+      contentVistometro.classList.add('closed');
+
+    });
+
+    btnVistometro.addEventListener('click', ()=>{
+
+      btnFascinometro.classList.remove('active');
+      btnVistometro.classList.add('active');
+
+      contentFascinometro.classList.add('closed');
+      contentVistometro.classList.remove('closed');
+
+    });
+
+
+  </script>
+  
+  <script>
+    const nameStore = document.getElementById('nameStore');
+    const Store = nameStore.value;
+    console.log("Store >", Store);
+
+    const pountrate = document.getElementById('pountrate');
+    const boxStar = document.querySelector('.boxStar'); //280
+    const messagevalue = document.querySelector('.containerMessagevalue'); //286
+
+    
+    // script para conocer la calificacion de esta tienda
+    
+      const rate = {
+        storeName : Store
+      };
+
+      fetch('/account/pountRate', {
+
+      method: "post",
+      body: JSON.stringify(rate),
+      headers: {"content-type" : "application/json"}
+
+      })
+      .then(response =>response.json() )
+      .then( jsonx =>  { 
+
+        //console.log("recibiendo del backend ->", jsonx)
+          const boxRates = []; //aqui meto todas las calificaciones parseadas a numeros
+          jsonx.forEach((ele)=>{
+            const markStar = ele.markStar;
+            const markstar = parseInt(markStar);
+            boxRates.push(markstar)
+          })
+          console.log("boxRates", boxRates);
+          const ratesLength = boxRates.length;
+          //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
+          let sumRate = 0;
+          boxRates.forEach((ele)=>{
+            const stars = ele
+            //console.log("stars >", stars)
+            sumRate = sumRate + stars; 
+          })
+
+          console.log("sumRate", sumRate);
+          console.log("ratesLength", ratesLength);
+          const pount = (sumRate / ratesLength);
+          let pountRate; 
+          pountRate = parseFloat( pount.toFixed(1)); 
+          console.log("pountRate", pountRate);
+          console.log("pountRate", typeof pountRate)
+
+          if ( isNaN(pountRate)){
+            pountrate.innerText = 0; // es una tienda nueva o sin calificacion alguna.
+          } else {
+            pountrate.innerText = pountRate; //eje. 4.5
+          }
+           
+          if (isNaN (pountRate)){
+            boxStar.innerHTML = ` <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-secondary">
+                                        <span> ¡Tienda Sin Valoración!</span>
+                                      </p>` 
+
+          } else if (pountRate == 0 ){
+            boxStar.innerHTML = `<i class="bi bi-star-half mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-danger">
+                                        <span> ¡Larva del Comercio.!</span>
+                                      </p>`          
+
+          } else if (pountRate > 0 && pountRate < 1){
+            boxStar.innerHTML = `<i class="bi bi-star-half mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-danger">
+                                        <span> ¡Larva del Comercio.!</span>
+                                      </p>`   
+                 
+          } else if (pountRate == 1 ){
+            boxStar.innerHTML = ` <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-danger">
+                                        <span> ¡Polilla del Comercio.!</span>
+                                      </p>`                      
+                            
+          } else if (pountRate > 1 && pountRate < 2){
+            boxStar.innerHTML = `<i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-half mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-danger">
+                                        <span> ¡Polilla del Comercio.!</span>
+                                      </p>`                      
+
+          } else if (pountRate == 2){
+            boxStar.innerHTML = ` <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-warning">
+                                        <span> ¡Iniciado del Comercio.!</span>
+                                      </p>`
+
+          } else if (pountRate > 2 && pountRate < 3){
+            boxStar.innerHTML = ` <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-half mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-warning">
+                                        <span> ¡Iniciado del Comercio.!</span>
+                                      </p>`
+                                     
+          } else if (pountRate == 3 ){
+            boxStar.innerHTML = ` <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-warning">
+                                        <span> ¡Novato del Comercio.!</span>
+                                      </p>` 
+
+          } else if (pountRate > 3 && pountRate < 4){
+            boxStar.innerHTML = ` <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-half mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-warning">
+                                        <span> ¡Novato del Comercio.!</span>
+                                      </p>`
+
+          } else if (pountRate == 4 ){
+            boxStar.innerHTML = ` <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-success">
+                                        <span> ¡Mago del comercio.!</span>
+                                      </p>`
+
+          } else if (pountRate > 4 && pountRate < 5){
+            boxStar.innerHTML = `<i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-half mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-success">
+                                        <span> ¡Mago del comercio.!</span>
+                                      </p>`
+
+          } else if (pountRate == 5){
+            boxStar.innerHTML = `<i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  <i class="bi bi-star-fill mx-3"></i>
+                                  `
+            messagevalue.innerHTML = `<p class="p-1 alert-success">
+                                        <span> ¡Supremo del comercio.!</span>
+                                      </p>`
+          } 
+
+        
+        })
+      .catch( err => console.log(err));
+    
+
+  </script>
+
+</body>
+
+
+
+</html>

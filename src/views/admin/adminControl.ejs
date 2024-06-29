@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Admin Control</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+      
+       
+            <div class="container-fluid d-flex justify-content-around align-items-center p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                
+
+                <div class="container ms-5" style="width: 40%;">
+                    <form action="/admin/adminControl/search" method="post" class="d-flex">
+                      <input class="form-control me-2" type="text" name="search" placeholder="Puedes buscar por user de Administrador" aria-label="Search">
+                      
+                      <select name="selectSearcher"  class="form-control border border-success" style="width: 300px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                        <option value="admin">Admin </option>
+                        <option value="workerNumber">Worker Number</option>
+                      </select>
+                    <button class="btn btn-outline-success" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Search</button>
+                   
+                    </form>
+                </div>
+
+                
+                <div class="d-flex align-items-center">
+
+                    <ul class="navbar-nav mx-4">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:rgb(95, 95, 95)">
+                            Options
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><button class="dropdown-item views">Views & Report</button></li>                    
+                                <li><button class="dropdown-item profile">Profile</button></li>
+                            </ul>
+                        </li>
+                    </ul> 
+
+                    <span class=" me-5 p-0" style="color:gray; font-weight: 500;"> Controlador de Administradores</span>
+               
+                </div>
+
+            </div>   
+       
+
+            <div class="row d-flex justify-content-center mx-0 p-2  bodyViews">
+                
+                <div class="col-lg-12 my-1">
+               
+                    <ul class="nav nav-tabs">
+                        
+                        <li class="nav-item">
+                            <button class="nav-link adminActive active">Administradores Activos</button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="nav-link adminBlock ">Administradores Bloqueados</button>
+                        </li>
+                      
+                        <li class="nav-item">
+                            <button class="nav-link adminCanceled">Administradores Cancelados</button>
+                        </li>
+
+                    </ul> 
+                    
+                </div>
+
+                <div class="col-12 adminActiveBody">
+                    <div class="contentTitleRepor d-flex justify-content-between">
+                        <p style="font-size: 16px;" class="m-0 p-0 px-2" style="color: black; border-radius: 0;">
+                            Reporte Personal :
+                           <span class="ms-1 fw-bold"> General View Administrators</span>
+
+                           <% if (adminsCount) { %>
+                            <span class="ms-2">Encontrados:</span>
+                            <span class="ms-1 fw-bold">(<%= adminsCount %>)</span>
+                           <% } %> 
+                           
+                        </p>
+                        <button class="btn btn-danger mx-1 px-2 py-1 shadow" id="btn-all-pdf"> Report <i class="bi bi-file-pdf" style="font-size: 18px;"></i> </button>
+                    </div>
+                    <table class="table table-striped table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th><th>Worker Number</th><th>Admin</th><th>Name</th><th>Lastname</th><th>Id</th><th>Rol</th><th>Locked</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+
+                            <% if (searchAdmins) { %>
+                                <% searchAdmins.forEach((ele)=>{ %>
+    
+                                    <tr>
+                                        <td><%= ele.dates %></td><td><%= ele.workerNumber %></td><td><%= ele.adminName %></td><td><%= ele.namesAdmin %></td><td><%= ele.lastName %></td><td><%= ele.identification %></td></td> <td><%= ele.rol %></td><td><%= ele.locked %></td>
+                                    </tr>
+    
+                                <% }); %>
+                            <% }; %> 
+
+                        </tbody>
+                        
+                    </table>
+                </div>
+
+                <div class="col-12 adminBlockBody closed">
+                    <div class="contentTitleRepor d-flex justify-content-between">
+                        <p style="font-size: 16px;" class="m-0 p-0 px-2" style="color: black; border-radius: 0;">
+                            Reporte Personal :
+                           <span class="ms-1 fw-bold"> Overview Blocked Administrators</span>
+
+                           <% if (adminsLockedCount) { %>
+                            <span class="ms-2">Encontrados:</span>
+                            <span class="ms-1 fw-bold">(<%= adminsLockedCount %>)</span>
+                           <% } %> 
+                           
+                        </p>
+                        <button class="btn btn-danger mx-1 px-2 py-1 shadow" id="btn-block-pdf"> Report <i class="bi bi-file-pdf" style="font-size: 18px;"></i> </button>
+                    </div>
+                    <table class="table table-striped">
+                        
+                        <thead>
+
+                            <tr>
+                                <th>Date</th><th>Worker Number</th><th>Admin</th><th>Name</th><th>Lastname</th> <th>Id</th> <th>Rol</th><th>Locked</th>
+                            </tr>
+    
+                        </thead>
+
+                        <tbody>
+
+                            <% if (searchAdminsLocked) { %>
+                                <% searchAdminsLocked.forEach((ele)=>{ %>
+    
+                                    <tr>
+                                        <td><%= ele.dates %></td><td><%= ele.workerNumber %></td><td><%= ele.adminName %></td><td><%= ele.namesAdmin %></td><td><%= ele.lastName %></td><td><%= ele.identification %></td><td><%= ele.rol %></td><td><%= ele.locked %></td>
+                                    </tr>
+    
+                                <% }); %>
+                            <% }; %>  
+
+                        </tbody>
+                          
+ 
+                    </table>
+                </div>
+
+                <div class="col-12 adminCanceledBody closed">
+                     <div class="contentTitleRepor d-flex justify-content-between">
+                        <p style="font-size: 16px;" class="m-0 p-0 px-2" style="color: black; border-radius: 0;">
+                            Reporte de contratos Cancelados :
+                           <span class="ms-1 fw-bold"> Overview of canceled contracts</span>
+
+                           <% if (adminsCanceledCount) { %>
+                            <span class="ms-2">Encontrados:</span>
+                            <span class="ms-1 fw-bold">(<%= adminsCanceledCount %>)</span>
+                           <% } %> 
+                           
+                        </p>
+                        <button class="btn btn-danger mx-1 px-2 py-1 shadow" id="btn-cancel-pdf"> Report <i class="bi bi-file-pdf" style="font-size: 18px;"></i> </button>
+                    </div>
+                    <table class="table table-striped">
+                        
+                        <thead>
+
+                            <tr>
+                                <th>Date</th><th>Worker Number</th><th>Admin</th><th>Name</th><th>Lastname</th> <th>Id</th> <th>Rol</th><th>Locked</th><th>Contract</th>
+                            </tr>
+    
+                        </thead>
+
+                        <tbody>
+
+                            <% if (searchAdminsCanceled) { %>
+                                <% searchAdminsCanceled.forEach((ele)=>{ %>
+    
+                                    <tr>
+                                        <td><%= ele.dates %></td><td><%= ele.workerNumber %></td><td><%= ele.adminName %></td><td><%= ele.namesAdmin %></td><td><%= ele.lastName %></td><td><%= ele.identification %></td><td><%= ele.rol %></td><td><%= ele.locked %></td><td><%= ele.contractStatus %> </td>
+                                    </tr>
+    
+                                <% }); %>
+                            <% }; %>  
+
+                        </tbody>
+                          
+ 
+                    </table>
+                </div>
+                
+            </div> 
+
+            <div class="row d-flex justify-content-between mx-0 p-2 bodyProfile closed">
+
+                <% if (searchAdmins.length === 1) { %>
+
+                <div class="col-lg-12 my-1">
+               
+                    <ul class="nav nav-tabs">
+                            
+                        <li class="nav-item">
+                            <button class="nav-link editProfile active">Edit Profile</button>
+                        </li>
+    
+                        <li class="nav-item">
+                            <button class="nav-link changePassw">Change Passw</button>
+                        </li>
+                          
+    
+                    </ul> 
+                        
+                </div> 
+                
+                <div class="editProfile-Body d-flex">
+
+                    <div class="col-lg-4  px-1">
+                        <div class="contentEdit">    
+    
+                            <input type="hidden" value="<%= searchAdmins[0]._id %>" id="admin_ID">
+                            <div class="input-group mb-2 mt-3">
+                                <label class="input-group-text" for="adminNameEdit"><i class="bi bi-person-workspace"></i></label>
+                                <input type="text" value="<%= searchAdmins[0].adminName %>" id="adminNameEdit" placeholder="User Admin" class="form-control" disabled>
+                            </div>
+                            <div class="input-group my-2">
+                                <label class="input-group-text" for="emailEdit"><i class="bi bi-envelope-at-fill"></i></label>
+                                <input type="text" value="<%= searchAdmins[0].email %>" id="emailEdit" placeholder="Email" class="form-control">
+                            </div>
+                            <div class="input-group my-2">
+                                <input type="text" value="<%= searchAdmins[0].namesAdmin %>" id="namesAdminEdit" placeholder="Name" class="form-control">
+                                <input type="text" value="<%= searchAdmins[0].lastName %>" id="lastNameEdit" placeholder="Lastname" class="form-control">
+                            </div>
+                            <div class="input-group my-2">
+                                <label class="input-group-text" for="identificationEdit">Id</label>
+                                <input type="text" value="<%= searchAdmins[0].identification %>" id="identificationEdit" placeholder="Nº Identification" class="form-control">
+                                <label class="input-group-text" for="identificationEdit">S.S</label>
+                                <input type="text" value="<%= searchAdmins[0].socialSecurity %>" id="socialSecurityEdit" placeholder="Seguro Social" class="form-control">
+                            </div>
+                            <div class="form-group my-2">
+                                <textarea name="address" rows="2" id="addressEdit" placeholder="Here address" class="form-control"><%= searchAdmins[0].address %></textarea>
+                            </div>
+    
+                            <div class="input-group my-2">
+                                <label class="input-group-text" for="marriedEdit">Married</label>
+                                <select class="form-select" id="marriedEdit">
+                                    <option selected value="<%= searchAdmins[0].married %>"><%= searchAdmins[0].married %></option>
+                                    <option value="true">true</option>
+                                    <option value="false">false</option>
+                                </select>
+                                <label class="input-group-text" for="sonsEdit">Sons</label>
+                                <input type="number" value="<%= searchAdmins[0].sons %>" id="sonsEdit" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
+    
+                            
+                            <div class="input-group my-2">
+                                <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                                <input type="text" value="<%= searchAdmins[0].phone1 %>" id="phone1Edit" placeholder="Phone 1" class="form-control">
+                                <input type="text" value="<%= searchAdmins[0].phone2 %>" id="phone2Edit" placeholder="Phone 2" class="form-control">
+                            </div>
+                           
+                            <div class="input-group my-2">
+                                <label class="input-group-text" for="rolEdit">Rol</label>
+                                <select name="rol" id="rolEdit" class="form-select">
+                                    <option value="<%= searchAdmins[0].rol %>"><%= searchAdmins[0].rol %></option>
+                                    <option value="adminAdmin">adminAdmin</option>
+                                    <option value="adminMarketing">adminMarketing</option>
+                                    <option value="adminMaster">adminMaster</option>
+                                </select>
+                                <label class="input-group-text" for="lockedEdit">Lock <i class="bi bi-lock-fill ms-2"></i></label>
+                                <select class="form-select ps-1 pe-0" id="lockedEdit">
+                                    <option selected value="<%= searchAdmins[0].locked %>"><%= searchAdmins[0].locked %></option>
+                                    <option value="true">true</option>
+                                    <option value="false">false</option>
+                                </select>
+                            </div>
+    
+                            <div class="input-group my-2">
+                                <label class="input-group-text" for="contractStatusEdit">Contract Status</label>
+                                <select name="rol" id="contractStatusEdit" class="form-select">
+                                    <option value="<%= searchAdmins[0].contractStatus %>"><%= searchAdmins[0].contractStatus %></option>
+                                    <option value="Active">Active</option>
+                                    <option value="Canceled">Canceled</option>
+                                </select>
+                                <input type="date" class="input-group-text closed" id="dateContractOffEdit" required>
+                            </div>
+    
+                            <div class="form-group my-3">
+                                <input type="button" value="Edit Admin" id="btnEdit" class="form-control btn btn-secondary">
+                            </div>
+    
+                        </div>
+                    </div>
+                    <div class="col-lg-8  ps-3" style="height: auto;">
+                        <div class="contentInfo mt-3 mb-2">
+    
+                            <div class="alert alert-warning alert-dismissible fade show  m-0" role="alert">
+                                 Aqui puedes ver y editar un perfil de un administrador
+                                <strong class="me-2">Area solo para Administradores con rol Master</strong> 
+                            </div>
+                            
+                        </div>
+                        <div class="contentDetail my-2">
+    
+                            <div class="input-group">
+                                <label class="input-group-text" style="border-bottom-left-radius: 0;"><i class="bi bi-person-workspace"></i></label>
+                                <input type="text" value="<%= searchAdmins[0].adminName %>" id="adminNameEdit" placeholder="User Admin" class="form-control" disabled>
+                                <label class="input-group-text"><i class="bi bi-envelope-at-fill"></i></label>
+                                <input type="text" value="<%= searchAdmins[0].email %>" id="emailEdit" placeholder="Email" class="form-control" disabled>
+                                <label class="input-group-text">Worker Number</i></label>
+                                <input type="text" value="<%= searchAdmins[0].workerNumber %>" class="form-control" style="border-bottom-right-radius: 0;" disabled>
+                               
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">Id</label>
+                                <input type="text" value="<%= searchAdmins[0].identification %>" class="form-control" disabled>
+                                <input type="text" value="<%= searchAdmins[0].namesAdmin %>" id="namesAdminEdit" class="form-control" disabled>
+                                <input type="text" value="<%= searchAdmins[0].lastName %>" id="lastNameEdit" class="form-control" disabled>
+                                <label class="input-group-text">S.S</label>
+                                <input type="text" value="<%= searchAdmins[0].socialSecurity %>" class="form-control" style="border-bottom-right-radius: 0;border-top-right-radius: 0;" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" style="border-top-left-radius:0" >Address</label>
+                                <input type="text" value="<%= searchAdmins[0].address %>" class="form-control" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">Married</label>
+                                <input type="text" value="<%= searchAdmins[0].married %>" class="form-control" disabled>
+                                <span class="input-group-text" id="basic-addon1">Sons</span>
+                                <input type="number" value="<%= searchAdmins[0].sons %>" class="form-control" disabled>
+                                <label class="input-group-text"><i class="bi bi-telephone-fill"></i></label>
+                                <input type="text" value="<%= searchAdmins[0].phone1 %>"  class="form-control" disabled>
+                                <input type="text" value="<%= searchAdmins[0].phone2 %>"  class="form-control" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Since</label>
+                                <input type="text" value="<%= searchAdmins[0].dates %>"  class="form-control" disabled>
+                                <label class="input-group-text">Rol</label>
+                                <input type="text" value="<%= searchAdmins[0].rol %>"  class="form-control" disabled>
+                                <label class="input-group-text">Locked <i class="bi bi-lock-fill ms-2"></i></label>
+                                <input type="text" value="<%= searchAdmins[0].locked %>"  class="form-control" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" style="border-top-left-radius: 0;" >Contract Status</label>
+                                <input type="text" value="<%= searchAdmins[0].contractStatus %>"  class="form-control" disabled>
+                                <label class="input-group-text">To</label>
+                                <input type="text" value="<%= searchAdmins[0].dateOff %>"  class="form-control" style="border-top-right-radius: 0;" disabled>
+                            </div>
+    
+    
+                        </div>
+                        <div class="contentPrinter my-2">
+    
+                            <div class="alert alert-secondary alert-dismissible fade show p-2" role="alert">
+                                <strong class="mx-2"> Crear Reporte PDF del Administrador  </strong>
+                                <button class="btn btn-danger ms-5 px-2 py-1 shadow" id="btn-admin-pdf"> Report <i class="bi bi-file-pdf" style="font-size: 18px;"></i> </button>
+                            </div>
+                      
+                        </div>
+                        <div class="contentAlert my-2 closed" id="alertAdminProfile">
+    
+                            <div class="alert alert-success alert-dismissible fade show " role="alert">
+                                <strong class="me-2"> ¡Perfil actualizado de forma exitosa!  </strong> Puede ver los cambios actualizando la vista.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                      
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="changePassw-Body d-flex closed">
+
+                    <div class="col-lg-4 px-1">
+                        <div class="contentPasswEdit m-0 ">    
+    
+                            
+                            <div class="alert alert-danger alert-dismissible fade show  mt-3 p-2" role="alert" style="border-radius: 0;">
+                               <strong class="me-2">Cambiar Password</strong> 
+                            </div>
+    
+                            <div class="contentDetails mx-2 mt-3">
+                                <input type="hidden" value="<%= searchAdmins[0]._id %>" id="userAdmin_ID">
+                                <div class="input-group my-2">
+                                    <label class="input-group-text" for="adminNameEdit"><i class="bi bi-person-workspace"></i></label>
+                                    <input type="text" value="<%= searchAdmins[0].adminName %>" id="adminNameEdit" placeholder="User Admin" class="form-control" disabled>
+                                </div>
+    
+                                <div class="input-group my-2">
+                                    <label class="input-group-text" for="emailEdit"><i class="bi bi-envelope-at-fill"></i></label>
+                                    <input type="text" value="<%= searchAdmins[0].email %>" id="emailEdit" placeholder="Email" class="form-control" disabled>
+                                </div>
+    
+                                <div class="input-group my-2">
+                                    <label class="input-group-text" for="newPassw"><i class="bi bi-key-fill"></i></label>
+                                    <input type="text" id="newPassw" placeholder="Intro new Passw" class="form-control">
+                                </div>
+    
+                                <div class="input-group my-2">
+                                    <label class="input-group-text" for="newConfirmPassw"><i class="bi bi-key-fill"></i></label>
+                                    <input type="text" id="newConfirmPassw" placeholder="Confirm Passw" class="form-control">
+                                </div>
+    
+                                <div class="input-group my-3">
+                                    <input type="button" id="btnNewPassw" value="Save New Password" class="btn btn-success form-control">
+                                </div> 
+    
+                            </div>    
+                        
+                        </div>    
+    
+                    </div>
+                    <div class="col-lg-8 ps-3">
+    
+                        <div class="contentDetailsEditPassw">
+    
+                            <div class="alert alert-warning alert-dismissible fade show mt-3 mb-0" role="alert">
+                                Aqui puedes Cambiar tu contraseña
+                               <strong class="me-2">Esto solo puede ser cambiado por el "Titular".</strong> 
+                            </div>
+
+                            <div class="contentMsg my-2">
+                                <!-- aqui iran los alertas con sus respetivos mensajes -->
+                            </div>
+                            
+    
+                        </div>
+    
+                    </div>
+
+                </div>
+                
+
+                   
+
+                <% } else { %>
+                          
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <div class="alert alert-light alert-dismissible fade show border mt-5" role="alert">
+                        Para poder editar un perfil debe seleccionar un 
+                        <strong class="me-2">"username admin" </strong> existente luego vaya a Options y seleccione Profile.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>    
+
+                <% }; %>    
+
+                
+            </div> 
+            
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <!-- https://cdnjs.com/libraries/html2canvas :::: de esta pagina saque la CDN de html2canvas -->
+    <!-- https://cdnjs.com/libraries/pdfmake :::: de esta pagina saque la CDN de pdfmake -->
+
+    <!-- :::::: visitar la pagina para actualizar la CDN  ::::: -->
+
+
+</body>
+</html>
+
+
+
+<script>
+    //es este script esta la funcion de epochX  con su variable.
+    let epoch, fullDate;
+
+    function epochX(){
+
+        epoch = new Date().getTime();
+
+        let dia = new Date().getDate();
+        let mes = new Date().getMonth() + 1;
+        let anio = new Date().getFullYear();
+        let hora = new Date().getHours();
+        let minu = new Date().getMinutes();
+
+        if (minu <= 9){
+            minu = `0${minu}`
+        }
+
+        fullDate = `${dia}-${mes}-${anio} ${hora}:${minu}`;
+
+    }
+
+</script>
+
+
+<script>
+
+let views = document.querySelector(".views");
+let profile = document.querySelector(".profile");
+let bodyViews = document.querySelector(".bodyViews");
+let bodyProfile = document.querySelector(".bodyProfile");
+
+
+views.addEventListener('click', ()=>{
+    bodyViews.classList.remove('closed');
+    bodyProfile.classList.add('closed');
+});
+
+profile.addEventListener('click', ()=>{
+    bodyViews.classList.add('closed');
+    bodyProfile.classList.remove('closed');
+});
+
+
+</script>
+
+
+<script>
+//Este script controla las (3) pestañas superiores
+
+let adminActive = document.querySelector('.adminActive');
+let adminBlock = document.querySelector('.adminBlock');
+let adminCanceled = document.querySelector('.adminCanceled');
+
+let adminActiveBody = document.querySelector('.adminActiveBody');
+let adminBlockBody = document.querySelector('.adminBlockBody');
+let adminCanceledBody = document.querySelector('.adminCanceledBody');
+
+
+adminActive.addEventListener('click', ()=>{
+    
+    adminActive.classList.add('active');
+    adminBlock.classList.remove('active');
+    adminCanceled.classList.remove('active');
+ 
+    adminActiveBody.classList.remove('closed');
+    adminBlockBody.classList.add('closed');
+    adminCanceledBody.classList.add('closed');
+    
+});
+
+
+adminBlock.addEventListener('click', ()=>{
+       
+    adminActive.classList.remove('active');
+    adminBlock.classList.add('active');
+    adminCanceled.classList.remove('active');
+  
+    adminActiveBody.classList.add('closed');
+    adminBlockBody.classList.remove('closed');
+    adminCanceledBody.classList.add('closed');
+   
+});
+
+adminCanceled.addEventListener('click', ()=>{
+
+    adminCanceled.classList.add('active');
+    adminActive.classList.remove('active');
+    adminBlock.classList.remove('active');
+
+    adminActiveBody.classList.add('closed');
+    adminBlockBody.classList.add('closed');
+    adminCanceledBody.classList.remove('closed');
+
+});
+
+</script>
+
+<script>
+    //este script controla las (2) pestañas inferiores del profile
+    
+    let editProfile = document.querySelector('.editProfile');
+    let changePassw = document.querySelector('.changePassw');
+
+    let editProfileBody = document.querySelector('.editProfile-Body');
+    let changePasswBody = document.querySelector('.changePassw-Body');
+
+    editProfile.addEventListener('click', ()=>{
+
+        editProfile.classList.add('active');
+        changePassw.classList.remove('active');
+
+        editProfileBody.classList.remove('closed');
+        changePasswBody.classList.add('closed');
+
+    });
+
+    changePassw.addEventListener('click', ()=>{
+
+        editProfile.classList.remove('active');
+        changePassw.classList.add('active');
+        
+        editProfileBody.classList.add('closed');
+        changePasswBody.classList.remove('closed');
+        
+    })
+
+
+</script>
+
+
+<script>
+//aqui vamos a actualizar datos de los admin
+
+let admin_ID = document.getElementById('admin_ID');
+let adminNameEdit = document.getElementById('adminNameEdit');
+let emailEdit = document.getElementById('emailEdit');
+let namesAdminEdit = document.getElementById('namesAdminEdit');
+let lastNameEdit = document.getElementById('lastNameEdit');
+let identificationEdit = document.getElementById('identificationEdit');
+let socialSecurityEdit = document.getElementById('socialSecurityEdit');
+let addressEdit = document.getElementById('addressEdit');
+let marriedEdit = document.getElementById('marriedEdit');
+let sonsEdit = document.getElementById('sonsEdit');
+let familyBurdenEdit = document.getElementById('familyBurdenEdit');
+let phone1Edit = document.getElementById('phone1Edit');
+let phone2Edit = document.getElementById('phone2Edit');
+let rolEdit = document.getElementById('rolEdit');
+let lockedEdit = document.getElementById('lockedEdit');
+let contractStatusEdit = document.getElementById('contractStatusEdit');
+let dateContractOffEdit = document.getElementById('dateContractOffEdit'); 
+
+let btnEdit = document.getElementById('btnEdit');
+let alertAdminProfile = document.getElementById('alertAdminProfile'); //este es el alert que se mostrara cuando la pagina reciba el json de vuelta
+
+if (btnEdit){
+
+    btnEdit.addEventListener('click', ()=>{
+
+        const datos = {
+             
+            admin_ID : admin_ID.value,
+            adminNameEdit : adminNameEdit.value,
+            emailEdit : emailEdit.value,
+            namesAdminEdit : namesAdminEdit.value,
+            lastNameEdit : lastNameEdit.value,
+            identificationEdit : identificationEdit.value,
+            socialSecurityEdit : socialSecurityEdit.value,
+            addressEdit : addressEdit.value,
+            marriedEdit : marriedEdit.value,
+            sonsEdit : sonsEdit.value,
+            phone1Edit : phone1Edit.value,
+            phone2Edit : phone2Edit.value,
+            rolEdit : rolEdit.value,
+            lockedEdit : lockedEdit.value,
+            contractStatusEdit : contractStatusEdit.value,
+            dateContractOffEdit : dateContractOffEdit.value
+
+
+        };
+
+
+        fetch('/admin/adminControl/update', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+        })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                
+                console.log(jsonx)            
+
+                alertAdminProfile.classList.remove("closed");
+            
+            })
+            .catch( err => console.log(err));
+
+    })
+
+}
+
+
+</script>
+
+<script>
+
+let contentDetail = document.querySelector('.contentDetail');
+let btnAdminReport = document.getElementById ("btn-admin-pdf");
+
+
+if (btnAdminReport){
+    
+    btnAdminReport.addEventListener('click', ()=>{
+  
+        epochX()//aqui tengo el epoch
+        console.log("Esto es epoch", epoch);
+        console.log("Esto es fullDate", fullDate);
+
+        html2canvas(contentDetail).then(canvas =>{
+        //console.log(canvas);
+
+            let image = canvas.toDataURL();
+
+            var docDefinition = { 
+                    content: [ 
+                        { text: "Blisnet.com", lineHeight: 2, margin: [5, 0] },
+                        { text: fullDate, style: 'dates' },
+                        { image : image, width: 500 }
+                    ],
+                    styles: {
+                        dates: {
+                            fontSize: 8,
+                            alignment: 'right',
+                            italics: true,
+                            margin: [20, 0]
+                        }
+           
+                    }    
+
+            };
+
+            pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+
+        })
+
+    });    
+}  
+   
+
+</script>
+
+<script>
+
+    let btnAllPdf = document.getElementById('btn-all-pdf');
+    //adminActiveBody 
+
+    if (btnAllPdf){
+
+        btnAllPdf.addEventListener('click', ()=>{
+            epochX()//aqui tengo el epoch
+            console.log("Esto es epoch", epoch);
+            console.log("Esto es fullDate", fullDate);
+
+            html2canvas(adminActiveBody, {ignoreElements: (element)=> element.id === "btn-all-pdf" }).then(canvas =>{
+                console.log(canvas);
+
+                let image = canvas.toDataURL(); //aqui paso el canvas a imagen base 64
+
+                var docDefinition = { 
+                    content: [ 
+                        { text: "Politania Webcommer", lineHeight: 2, margin: [5, 0] },
+                        { text: fullDate, style: 'dates' },
+                        { image : image, width: 500 }
+                    ],
+                    styles: {
+                        dates: {
+                            fontSize: 8,
+                            alignment: 'right',
+                            italics: true,
+                            margin: [20, 0]
+                        }
+             
+                    }    
+
+                };
+  
+                pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+            })
+
+        });
+
+    }
+
+ 
+    let btnBlockPdf = document.getElementById('btn-block-pdf');
+    //adminBlockBody
+
+    if (btnBlockPdf){
+
+        btnBlockPdf.addEventListener('click', ()=>{
+
+            epochX()//aqui tengo el epoch
+            console.log("Esto es epoch", epoch);
+            console.log("Esto es fullDate", fullDate);
+
+            html2canvas(adminBlockBody, {ignoreElements: (element)=> element.id === "btn-block-pdf" }).then(canvas =>{
+                //console.log(canvas);
+
+                let image = canvas.toDataURL(); //aqui paso el canvas a imagen base 64
+
+                var docDefinition = { 
+                    content: [ 
+                        { text: "Politania Webcommer", lineHeight: 2, margin: [5, 0] },
+                        { text: fullDate, style: 'dates' },
+                        { image : image, width: 500 }
+                    ],
+                    styles: {
+                        dates: {
+                            fontSize: 8,
+                            alignment: 'right',
+                            italics: true,
+                            margin: [20, 0]
+                        }
+             
+                    }    
+
+                };
+  
+                pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+            })
+
+        });
+
+    }
+
+
+    let btnCancelPdf = document.getElementById('btn-cancel-pdf');
+    //adminCanceledBody
+
+    if (btnCancelPdf){
+
+        btnCancelPdf.addEventListener('click', ()=>{
+
+
+            epochX()//aqui tengo el epoch
+            console.log("Esto es epoch", epoch);
+            console.log("Esto es fullDate", fullDate);
+
+            html2canvas(adminCanceledBody, {ignoreElements: (element)=> element.id === "btn-cancel-pdf" }).then(canvas =>{
+            //console.log(canvas);
+
+            let image = canvas.toDataURL(); //aqui paso el canvas a imagen base 64
+
+            var docDefinition = { 
+            content: [ 
+                { text: "Politania Webcommer", lineHeight: 2, margin: [5, 0] },
+                { text: fullDate, style: 'dates' },
+                { image : image, width: 500 }
+            ],
+            styles: {
+                dates: {
+                    fontSize: 8,
+                    alignment: 'right',
+                    italics: true,
+                    margin: [20, 0]
+                }
+ 
+            }    
+
+        };
+
+        pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+
+})
+
+});
+
+    }
+
+        
+
+</script>
+
+
+<script>
+//este script controla el aparecer y desaparecer de la fecha de culminacion de trabajo del admin.
+
+
+
+    if (contractStatusEdit){
+
+        contractStatusEdit.addEventListener('change', ()=>{
+
+                console.log(contractStatusEdit.value);
+            if (contractStatusEdit.value == "Canceled" ){
+                dateContractOffEdit.classList.remove('closed');
+            } else {
+                dateContractOffEdit.classList.add('closed');
+            }
+
+        }); 
+
+    }
+
+</script>
+
+<script>
+
+    let userAdmin_ID = document.getElementById('userAdmin_ID');
+    let newPassw = document.getElementById('newPassw');
+    let newConfirmPassw = document.getElementById('newConfirmPassw');
+    let btnNewPassw = document.getElementById('btnNewPassw');
+
+    let contentMsg = document.querySelector('.contentMsg'); //este es el contenedor donde se veran los diferentes alertas con sus mensajes.
+
+
+    btnNewPassw.addEventListener('click', ()=>{
+
+        let id = userAdmin_ID.value;
+        let newPassV = newPassw.value;
+        let confirPasswV = newConfirmPassw.value;
+        
+        datos = {
+            id : id,
+            newPass : newPassV,
+            confirPass : confirPasswV
+
+        }
+
+        console.log("datos desde el front-end ----> ", datos);
+
+
+        fetch('/admin/adminControl/change-passw', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+        })
+         .then(response =>response.json() )
+         .then( jsonx => {
+            
+            console.log(jsonx)
+            const typeMsg = jsonx.typeMsg; //typeMsg : greenSuccess, redCaracter, redValidpass
+            const msg = jsonx.msg;
+            console.log("Este es el typeMsg :", typeMsg);
+            console.log("Este es el msg :", msg);
+
+            if (typeMsg == 'redCaracter' ){
+
+                contentMsg.innerHTML = 
+                                `<div class="alert alert-danger alert-dismissible fade show my-1" role="alert">
+                                    <strong class="me-2"> ${msg} </strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+                                </div>` 
+
+            }
+
+            if (typeMsg == 'redValidpass' ){
+
+                contentMsg.innerHTML = 
+                                `<div class="alert alert-danger alert-dismissible fade show my-1" role="alert">
+                                    <strong class="me-2"> ${msg} </strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+                                </div>` 
+
+            }
+
+            if (typeMsg == 'greenSuccess' ){
+
+                contentMsg.innerHTML = 
+                                `<div class="alert alert-success alert-dismissible fade show my-1" role="alert">
+                                    <strong class="me-2"> ${msg} </strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+                                </div>`
+                                
+                                btnNewPassw.setAttribute("disabled", "");
+                                newPassw.setAttribute("disabled", "");
+                                newConfirmPassw.setAttribute("disabled", "");                
+
+            }
+
+
+        
+            })
+         .catch( err => console.log(err));
+
+    });
+
+
+
+</script>

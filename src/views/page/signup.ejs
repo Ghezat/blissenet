@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Signup</title>
+</head>
+<body class="mainTheme">
+    <main>
+    <%- include('../partials/navi-simple.ejs') %>
+          
+    <% if(mailExist) { %>    
+        <%- include('../alert/mailExist.ejs') %>
+    <% }; %>
+
+    <% if(passwNoMatch) { %>    
+        <%- include('../alert/passwNoMatch.ejs') %>
+    <% }; %>
+    
+    <% if(passMaxLength) { %>    
+        <%- include('../alert/passMaxLength.ejs') %>
+    <% }; %>
+    
+    <% if(usernameExist) { %>    
+        <%- include('../alert/usernameExist.ejs') %>
+    <% }; %>
+    
+
+    <% if (signUp.length !==0) { %>
+    <div class="container-fluid border border-dark" style="background-size: cover; background-image: url('<%= signUp[0].url %>'); height: 100%;" >
+    <% } else { %>
+    <div class="container-fluid">    
+    <% }; %>
+
+        <div class="row d-flex justify-content-end mx-3 mt-5">
+            <div class="col-lg-4 col-md-5 col-sm-10 col-12">
+                <div class="card formTransp mt-4 rounded-2 shadow">
+                    <div class="card-header d-flex justify-content-between">
+                        <span><i class="bi bi-journal-check mx-1"></i> Register</span>
+                        <span><i class="bi bi-1-square me-1"></i></span>
+                    </div>
+                    <div class="card-body p-4 border-top border-dark">
+        
+                        <form action="/myaccount/signup" method="POST" id="signup">
+                            <div class="form-group my-2">
+                                <input type="text" name="username" placeholder="Enter your username (max 18 caracteres)" class="form-control"  minlength="6" maxlength="18" autocomplete="off" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="email" name="email" placeholder="Enter your email" class="form-control" style="text-transform:lowercase;" autocomplete="off" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="password" name="password" placeholder="Enter your password" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off"  required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="password" name="confirmPassword" placeholder="confirm your password" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off" required>
+                            </div>
+                            <input type="hidden" name="token">
+                            <div class="form-group my-3">  
+                                <div class="form-group mt-3">                                      
+                                    <button class="g-recaptcha form-control btn btn-dark" 
+                                    data-sitekey="6LfVgFYlAAAAAAdKk3Ksy7jHovwp6rK90s5kmNOK" 
+                                    data-callback='onSubmitSignup' 
+                                    data-action='submit'>
+                                    Register
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class=" mx-1"><small> Tengo una cuenta. <a href="/myaccount/signin" class="text-danger ms-2 fw-bold">¡Logearme!</a> </small> </label>
+                            </div>    
+                        </form>
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <%- include('../partials/scripts.ejs')%>
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+    
+    </main>
+</body>
+</html>
+
+
+

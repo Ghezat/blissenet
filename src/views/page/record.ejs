@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Record</title>
+</head>
+<style>
+    
+    .open{
+    display: block;
+    }
+
+    .closed{
+    display: none;
+   
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+@media screen and (min-width: 290px) and (max-width: 499px){
+
+    .contentRow{
+        height: auto;
+        padding: 0;
+        
+    }
+    .mainBuyDetails{
+        display: flex;
+        flex-direction: column;
+        margin: 0px;
+        padding: 0 !important;
+        background-color: #e4e4e4;
+        border: 5px;
+    }
+
+    .containerRecordBuy, .containerRecordSeller, .containerTrustBuy, .containerTrustSeller, .trustBuy{
+        width: 100% !important;
+        margin: 20px 0px  !important;
+    }
+
+    .containerRecordBuyDetails, .containerRecordSellerDetails, .containerTrustBuyDetails, .trustBuyDetails, .cardTrust{
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+
+}    
+    
+
+</style>
+<body class="mainTheme">
+
+     
+  <main class="themaTextLight">
+    <%- include('../partials/navi-simple.ejs') %>
+    <% if (user) { %>
+
+    <div class="container-fluid d-flex justify-content-between p-1" style="background-color:  rgba(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+        <div class="containerNav"><p class="m-0 ps-5">Record</p></div>
+        <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-secondary active" id="btnScore">Score</button>
+          <button type="button" class="btn btn-secondary" id="btnTrust">Trust</button>
+        </div>
+    </div>
+ 
+       
+    <div class="containerScore mx-2 p-2">
+        <!-- esto es Score -->
+        <div class="col-lg-12 my-2">
+               
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <button class="nav-link active recordBuy">Score Buyer</button>
+                </li>
+                <li class="nav-item cancel">
+                    <button class="nav-link recordSell">Score Seller</button>
+                </li>
+            </ul> 
+            
+        </div>
+
+        <div class="containerScoreBuy">
+            <div class="row contentRow d-flex justify-content-center m-0 p-0" style="width: 100%;">
+                <div class="col-lg-12 mainBuyDetails my-4 p-0 d-flex justify-content-between">
+    
+                    <div class="containerRecordBuy" style="height: 360px; width: 50%;">
+    
+                        <div class="containerDiamante  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #f2f8fd;" >
+                                <img src="/img/MIneralDiamante.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(143,196,217,1) 47%, rgba(220,232,241,1) 63%, rgba(242,248,253,1) 99%);">
+                                <div class="contentCentralDia d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Diamante</i></span>
+                                    <span class="spanCentralDia d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelDia" style="width: 80px; height: 100%; background-color: #f2f8fd">
+                            </div>
+                        </div>
+                        <div class="containerOro  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #ffe97f;" >
+                                <img src="/img/MIneralOro.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(160,128,43,1) 47%, rgba(253,232,136,1) 99%);">
+                                <div class="contentCentralOro d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Oro</i></span>
+                                    <span class="spanCentralOro d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelOro" style="width: 80px; height: 100%; background-color: #ffe97f;">
+                            </div>
+                        </div>
+                        <div class="containerPlata  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #f1f1f1;" >
+                                <img src="/img/MIneralPlata.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(163,164,166,1) 47%, rgba(242,242,242,1) 99%);">
+                                <div class="contentCentralPla d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Plata</i></span>
+                                    <span class="spanCentralPla d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelPla" style="width: 80px; height: 100%; background-color: #f1f1f1;">
+                            </div>
+                        </div>
+                        <div class="containerBronce  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #e0b279;" >
+                                <img src="/img/MIneralBronce.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(146,111,77,1) 47%, rgba(225,179,122,1) 99%);">
+                                <div class="contentCentralBro d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Bronce</i></span>
+                                    <span class="spanCentralBro d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelBro" style="width: 80px; height: 100%; background-color: #e0b279;">
+                            </div>
+                        </div>
+                        <div class="containerHierro  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #62696f;" >
+                                <img src="/img/MIneralHierro.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(81,89,95,1) 47%, rgba(99,106,112,1) 99%);">
+                                <div class="contentCentralHie d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Hierro</i></span>
+                                    <span class="spanCentralHie d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelHie" style="width: 80px; height: 100%; background-color: #62696f;">
+                            </div>
+                        </div>
+                        <div class="containerCarbon  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #5c5c5c;">
+                                <img src="/img/MIneralCarbon.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(61,62,62,1) 47%, rgba(92,92,92,1) 99%);">
+                                <div class="contentCentralCar d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Carbon</i></span>
+                                    <span class="spanCentralCar d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelCar" style="width: 80px; height: 100%; background-color: #5c5c5c;">
+                            </div>
+                        </div>
+    
+                    </div>
+    
+                    <div class="containerRecordBuyDetails border" style="height: 360px; width: 40%;  background-color: rgb(245, 245, 245, 0.2);">
+                        <div class="containerDetails p-3">
+                            <p style="text-align: justify;">Estas en la sección <span style="font-weight: 500;">Score Comprador</span> tienes actualmente <span class="spanAcountDetailBuy"> </span> operaciones de compras. </p>
+                            <p style="text-align: justify;">Este escalafón te clasifica tomando en consideración la cantidad de operaciones como comprador. Se considera una <code>"compra"</code> cuando tu vendedor confirma que has pagado. Esta información es de dominio publico, todos los usuarios de esta plataforma podrán ver estos datos.</p>
+                            <p style="text-align: justify;">Esta clasificación muestra su capacidad y habilidad que tienes como comprador, no debe confundise con la fiabilidad.</p>
+                        </div>
+                    </div>      
+                     
+                </div>
+            </div>  
+        </div>
+
+        <div class="containerScoreSeller closed">
+            <div class="row contentRow d-flex justify-content-center m-0 p-0" style="width: 100%;">
+                <div class="col-lg-12 mainBuyDetails my-4 p-0 d-flex justify-content-between">
+    
+                    <div class="containerRecordSeller" style="height: 360px; width: 50%;">
+    
+                        <div class="containerDiamante  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #f2f8fd;" >
+                                <img src="/img/MIneralDiamante.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(143,196,217,1) 47%, rgba(220,232,241,1) 63%, rgba(242,248,253,1) 99%);">
+                                <div class="contentCentralDia d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Diamante</i></span>
+                                    <span class="spanCentralSellDia d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelSellDia" style="width: 80px; height: 100%; background-color: #f2f8fd">
+                            </div>
+                        </div>
+
+                        <div class="containerOro  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #ffe97f;" >
+                                <img src="/img/MIneralOro.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(160,128,43,1) 47%, rgba(253,232,136,1) 99%);">
+                                <div class="contentCentralOro d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Oro</i></span>
+                                    <span class="spanCentralSellOro d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelSellOro" style="width: 80px; height: 100%; background-color: #ffe97f;">
+                            </div>
+                        </div>
+                        <div class="containerPlata  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #f1f1f1;" >
+                                <img src="/img/MIneralPlata.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(163,164,166,1) 47%, rgba(242,242,242,1) 99%);">
+                                <div class="contentCentralPla d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Plata</i></span>
+                                    <span class="spanCentralSellPla d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelSellPla" style="width: 80px; height: 100%; background-color: #f1f1f1;">
+                            </div>
+                        </div>
+                        <div class="containerBronce  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #e0b279;" >
+                                <img src="/img/MIneralBronce.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(146,111,77,1) 47%, rgba(225,179,122,1) 99%);">
+                                <div class="contentCentralBro d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Bronce</i></span>
+                                    <span class="spanCentralSellBro d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelSellBro" style="width: 80px; height: 100%; background-color: #e0b279;">
+                            </div>
+                        </div>
+                        <div class="containerHierro  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #62696f;" >
+                                <img src="/img/MIneralHierro.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(81,89,95,1) 47%, rgba(99,106,112,1) 99%);">
+                                <div class="contentCentralHie d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Hierro</i></span>
+                                    <span class="spanCentralSellHie d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelSellHie" style="width: 80px; height: 100%; background-color: #62696f;">
+                            </div>
+                        </div>
+                        <div class="containerCarbon  d-flex" style="height: 60px;">
+                            <div class="boxIzq" style="width: 80px; height: 100%; background-color: #5c5c5c;">
+                                <img src="/img/MIneralCarbon.png" alt="" style="width :100%; height: 60px;" >
+                            </div>
+                            <div class="boxCentral" style="width: 100%; height: 100%; background: radial-gradient(circle, rgba(61,62,62,1) 47%, rgba(92,92,92,1) 99%);">
+                                <div class="contentCentralCar d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <span class="me-1" style= "color : white"><i>Carbon</i></span>
+                                    <span class="spanCentralSellCar d-flex justify-content-center" style= "color : white"></span>
+                                </div>
+                            </div>
+                            <div class="boxDer d-flex justify-content-center align-items-center" id="levelSellCar" style="width: 80px; height: 100%; background-color: #5c5c5c;">
+                            </div>
+                        </div>
+    
+                    </div>
+    
+                    <div class="containerRecordSellerDetails border" style="height: 360px; width: 40%; background-color: rgb(245, 245, 245, 0.2);">
+                        <div class="containerDetails p-3">
+                            <p style="text-align: justify;">Estas en la sección <span style="font-weight: 500;">Score Vendedor</span> tienes actualmente <span class="spanAcountDetailSeller"> </span> operaciones de ventas. </p>
+                            <p style="text-align: justify;">Este escalafón te clasifica tomando en consideración la cantidad de operaciones de ventas realizadas. Se considera una <code>"venta"</code> cuando has pagado la comisión de dicha venta a la plataforma. Esta información es de dominio publico, todos los usuarios de esta comunidad podrán ver estos datos.</p>
+                            <p style="text-align: justify;">Esta clasificación muestra su capacidad y habilidad que tienes como vendedor, no debe confundirse con la fiabilidad.</p>
+                        </div>
+                    </div>      
+                     
+                </div>
+            </div>  
+        </div> 
+    </div>
+
+    <div class="containerTrust closed mx-2 p-2">
+        <!-- esto es Trust -->
+
+        <div class="col-lg-12 my-2">
+               
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <button class="nav-link active trustBuy-nav">Trust Buyer</button>
+                </li>
+                <li class="nav-item cancel">
+                    <button class="nav-link trustSell-nav">Trust Seller</button>
+                </li>
+            </ul> 
+            
+        </div>
+      
+        <div class="containerTrustBuy">
+
+            <div class="row contentRow d-flex justify-content-center m-0 p-0" style="width: 100%;">
+                <div class="col-lg-12 mainBuyDetails my-4 p-0 d-flex justify-content-between" style="height: auto;">
+                    <div class="containerTrustBuy p-3 border" style="width: 50%;">
+
+                       <div class="border d-flex" style="border: none;">
+                            <div class="cardTrust p-2" style="width: 60%;">
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Positivos : </p> <span class="spnBuyPosi"></span>
+                                </div>
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Negativos : </p> <span class="spnBuyNega"></span>
+                                </div>    
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Neutrales : </p> <span class="spnBuyNeut"></span>
+                                </div>
+                                
+                                <br>
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Operaciones : </p> <span class="spnBuyOper"></span>
+                                </div>
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1 rounded-1" style="background-color: rgba(98, 105, 111, 0.3); ">
+                                    <p class="mb-0">Tasa de Confiabilidad : </p> <span class="spnBuyTasa"></span>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="card-image d-flex justify-content-center align-items-center" style="width: 40%;">
+                               <img src="/img/escudoTrust.png" alt="">
+                            </div>
+                       </div>
+
+                    </div>
+
+                    <div class="containerTrustBuyDetails border" style="width: 45%;  background-color: rgba(245, 245, 245, 0.2);">
+                        <div class="containerDetails p-3">
+                            <p style="text-align: justify;">Estas en la sección <span style="font-weight: 500;">Confianza Comprador</span> tienes actualmente <span class="spanTrustDetailBuy"> </span> operaciones realizadas </p>
+                            <p style="text-align: justify;">Este escalafón te clasifica tomando en consideración las calificaciones de tus vendedores. Esta información es de dominio publico, todos los usuarios de esta plataforma podrán ver estos datos.</p>
+                            <p style="text-align: justify;">Esta clasificación muestra el grado de confinza a la hora de ejecutar una compra.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="containerTrustSeller closed">
+            
+            <div class="row contentRow d-flex justify-content-center m-0 p-0" style="width: 100%;">
+                <div class="col-lg-12 mainBuyDetails my-4 p-0 d-flex justify-content-between" style="height: auto;">
+                    <div class="trustBuy p-3 border" style="width: 50%;">
+
+                       <div class="border d-flex" style="border: none;">
+                            <div class="cardTrust p-2" style="width: 60%;">
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Positivos : </p> <span class="spnSellPosi"></span>
+                                </div>
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Negativos : </p> <span class="spnSellNega"></span>
+                                </div>    
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Neutrales : </p> <span class="spnSellNeut"></span>
+                                </div>
+                                
+                                <br>
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1">
+                                    <p class="mb-0">Operaciones : </p> <span class="spnSellOper"></span>
+                                </div>
+                                <div class="form-group d-flex my-1 justify-content-between border-bottom px-1 rounded-1" style="background-color: rgba(98, 105, 111, 0.3);">
+                                    <p class="mb-0">Tasa de Confiabilidad : </p> <span class="spnSellTasa"></span>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="card-image d-flex justify-content-center align-items-center" style="width: 40%;">
+                                <img src="/img/escudoTrust.png" alt="">
+                            </div>
+                       </div>
+
+                    </div>
+
+                    <div class="trustBuyDetails border" style="width: 45%;  background-color: rgb(245, 245, 245, 0.2);">
+                        <div class="containerDetails p-3">
+                            <p style="text-align: justify;">Estas en la sección <span style="font-weight: 500;">Confianza Vendedor  </span> tienes actualmente <span class="spanTrustDetailSell"> </span> operaciones realizadas </p>
+                            <p style="text-align: justify;">Este escalafón te clasifica tomando en consideración las calificaciones de tus compradores. Esta información es de dominio publico, todos los usuarios de esta plataforma podrán ver estos datos.</p>
+                            <p style="text-align: justify;">Esta clasificación muestra el grado de confianza a la hora de ejecutar una venta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+
+    </div>    
+        
+    <% } else { %>
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/noLogin.ejs') %>
+        
+          </div>
+    <% }; %>         
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+</body>
+</html>
+
+<script>
+  /* Esto es el manejador de botones superiores */
+  const btnScore = document.getElementById('btnScore');
+  const btnTrust = document.getElementById('btnTrust');
+  const containerScore = document.querySelector('.containerScore');
+  const containerTrust = document.querySelector('.containerTrust');
+
+  btnScore.addEventListener('click', ()=>{
+    containerScore.classList.remove('closed');
+    containerTrust.classList.add('closed');
+
+    btnScore.classList.add('active');
+    btnTrust.classList.remove('active');
+  });
+  
+  btnTrust.addEventListener('click', ()=>{
+    containerTrust.classList.remove('closed');
+    containerScore.classList.add('closed');
+
+    btnScore.classList.remove('active');
+    btnTrust.classList.add('active');
+  });
+  
+
+</script>
+
+
+<script>
+
+ //selector de pestañas score
+ const recordBuy = document.querySelector('.recordBuy');
+ const recordSell = document.querySelector('.recordSell');
+ const containerScoreBuy = document.querySelector('.containerScoreBuy');
+ const containerScoreSeller = document.querySelector('.containerScoreSeller');
+
+ recordBuy.addEventListener('click', ()=>{
+    recordBuy.classList.add('active');
+    recordSell.classList.remove('active');
+
+    containerScoreBuy.classList.remove('closed');
+    containerScoreSeller.classList.add('closed');
+
+ })
+
+ recordSell.addEventListener('click', ()=>{
+    recordSell.classList.add('active');
+    recordBuy.classList.remove('active');
+
+    containerScoreSeller.classList.remove('closed');
+    containerScoreBuy.classList.add('closed');   
+    
+ })
+
+
+</script>
+
+<script>
+
+//selector de pestañas trust
+ const trustBuy = document.querySelector('.trustBuy-nav');
+ const trustSell = document.querySelector('.trustSell-nav');
+ const containerTrustBuy = document.querySelector('.containerTrustBuy');
+ const containerTrustSeller = document.querySelector('.containerTrustSeller');
+
+ trustBuy.addEventListener('click', ()=>{
+    trustBuy.classList.add('active');
+    trustSell.classList.remove('active');
+
+    containerTrustBuy.classList.remove('closed');
+    containerTrustSeller.classList.add('closed');
+
+ })
+
+ trustSell.addEventListener('click', ()=>{
+    trustSell.classList.add('active');
+    trustBuy.classList.remove('active');
+
+    containerTrustSeller.classList.remove('closed');
+    containerTrustBuy.classList.add('closed');   
+    
+ })
+
+</script>
+
+<% if (user) { %>
+<script>
+
+    //este es la seccion por donde viaja el avatar el ultimo cuadro
+    const levelDia = document.getElementById('levelDia');
+    const levelOro = document.getElementById('levelOro');
+    const levelPla = document.getElementById('levelPla');
+    const levelBro = document.getElementById('levelBro');
+    const levelHie = document.getElementById('levelHie');
+    const levelCar = document.getElementById('levelCar');
+
+    //este es el cuadro central donde marcara la puntuacion a la derecha del level central
+    const countDia = document.querySelector('.spanCentralDia');
+    const countOro = document.querySelector('.spanCentralOro');
+    const countPla = document.querySelector('.spanCentralPla');
+    const countBro = document.querySelector('.spanCentralBro');
+    const countHie = document.querySelector('.spanCentralHie');
+    const countCar = document.querySelector('.spanCentralCar');
+    
+    const spanAcountDetailBuy = document.querySelector('.spanAcountDetailBuy');
+
+    //aqui los objetos span de los datos de confianza
+    const spnBuyPosi = document.querySelector('.spnBuyPosi');
+    const spnBuyNega = document.querySelector('.spnBuyNega');
+    const spnBuyNeut = document.querySelector('.spnBuyNeut');
+    const spnBuyOper = document.querySelector('.spnBuyOper');
+    const spnBuyTasa = document.querySelector('.spnBuyTasa');
+
+    const spnSellPosi = document.querySelector('.spnSellPosi');
+    const spnSellNega = document.querySelector('.spnSellNega');
+    const spnSellNeut = document.querySelector('.spnSellNeut');
+    const spnSellOper = document.querySelector('.spnSellOper');
+    const spnSellTasa = document.querySelector('.spnSellTasa');
+
+    const spanTrustDetailBuy = document.querySelector('.spanTrustDetailBuy');
+    const spanTrustDetailSell = document.querySelector('.spanTrustDetailSell');
+
+
+        fetch("/record-trust", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response => response.json())
+        .then(json =>{ console.log(json)
+        
+    
+            const avatar = json[0].avatar;
+            const buyerCount = json[0].count;
+            const seller = json[1].count;
+            const buyerTrust = json[2];
+            const sellerTrust = json[3];
+            const mailhash = json[0].mailhash;  
+            const countRafflePositivo = json[4].countRafflePositivo;
+            const countRaffleNegativo = json[4].countRaffleNegativo;
+            const countOperationsRaffle = json[4].countOperationsRaffle;
+            console.log("countRafflePositivo", countRafflePositivo)
+            
+
+            const sellerCount = seller + countRafflePositivo;
+        
+            console.log("esto es avatar----->", avatar);
+            console.log("esto es buyerCount---->", buyerCount);
+            console.log("esto es sellerCount---->", sellerCount);
+            console.log("Esto es buyerTrust---->", buyerTrust);
+            console.log("Esto es sellerTrust---->", sellerTrust);
+            console.log("Esto es mailhash---->", mailhash);
+
+            //esto es la condicional de nivel de comprador
+            if ( buyerCount <= 9 ){ 
+
+                console.log("Estas en el nivel Carbon como comprador");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelCar.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelCar.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countCar.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${buyerCount})</span>`
+            } else if ( buyerCount <= 19 && buyerCount >= 10 ){ //de 10 a 19 
+                console.log("Estas en el nivel Hierro como comprador");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelHie.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelHie.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countHie.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${buyerCount})</span>`
+            } else if ( buyerCount <= 49 && buyerCount >= 20 ){ // de 20 a 49 
+                console.log("Estas en el nivel Bronce como comprador");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelBro.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelBro.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countBro.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${buyerCount})</span>`
+            } else if ( buyerCount <= 99 && buyerCount >= 50 ){ // de 50 a 99
+                console.log("Estas en el nivel Plata como comprador");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelPla.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelPla.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countPla.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${buyerCount})</span>`
+            } else if ( buyerCount <= 199 && buyerCount >= 100 ){ // de 100 a 199
+                console.log("Estas en el nivel Oro como comprador");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelOro.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelOro.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countOro.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${buyerCount})</span>`
+            } else if ( buyerCount >= 200 ){
+                console.log("Estas en el nivel Diamante como comprador");
+                 if ( avatar.trim().length !== 0 ){ 
+                    levelDia.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelDia.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countDia.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${buyerCount})</span>`
+            }
+
+            //detail de puntos como comprador
+            spanAcountDetailBuy.innerText = buyerCount; 
+
+            //variables y constantes de la seccion vendedor
+
+             //este es la seccion vendedor por donde viaja el avatar el ultimo cuadro
+            const levelSellDia = document.getElementById('levelSellDia');
+            const levelSellOro = document.getElementById('levelSellOro');
+            const levelSellPla = document.getElementById('levelSellPla');
+            const levelSellBro = document.getElementById('levelSellBro');
+            const levelSellHie = document.getElementById('levelSellHie');
+            const levelSellCar = document.getElementById('levelSellCar');
+
+            //este es el cuadro vendedor central donde marcara la puntuacion a la derecha del level central
+            const countSellDia = document.querySelector('.spanCentralSellDia');
+            const countSellOro = document.querySelector('.spanCentralSellOro');
+            const countSellPla = document.querySelector('.spanCentralSellPla');
+            const countSellBro = document.querySelector('.spanCentralSellBro');
+            const countSellHie = document.querySelector('.spanCentralSellHie');
+            const countSellCar = document.querySelector('.spanCentralSellCar');
+
+            const spanAcountDetailSeller = document.querySelector('.spanAcountDetailSeller');
+
+
+            //esto es la condicional de nivel de vendedor
+             if ( sellerCount <= 9 ){ // de 0 a 9
+                console.log("Estas en el nivel Carbon como comprador");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelSellCar.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelSellCar.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countSellCar.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${sellerCount})</span>`
+            } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
+                console.log("Estas en el nivel Hierro como vendedor");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelSellHie.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelSellHie.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countSellHie.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${sellerCount})</span>`
+            } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
+                console.log("Estas en el nivel Bronce como vendedor");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelSellBro.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelSellBro.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countSellBro.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${sellerCount})</span>`
+            } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
+                console.log("Estas en el nivel Plata como vendedor");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelSellPla.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelSellPla.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countSellPla.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${sellerCount})</span>`
+            } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
+                console.log("Estas en el nivel Oro como vendedor");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelSellOro.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelSellOro.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countSellOro.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${sellerCount})</span>`
+            } else if ( sellerCount >= 200 ){
+                console.log("Estas en el nivel Diamante como vendedor");
+                if ( avatar.trim().length !== 0 ){ 
+                    levelSellDia.innerHTML +=  `<img src="${avatar}" style="width: 50px; height: 50px; border-radius: 50%;">`
+                } else {
+                    levelSellDia.innerHTML +=  `<img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 50px; height: 50px; border-radius: 50%;">`
+                }
+                countSellDia.innerHTML +=  `<span class="d-flex justify-content-center" style = "color : white">(${sellerCount})</span>`
+            }
+
+            spanAcountDetailSeller.innerText = sellerCount
+
+            //Show data trust buyer and seller
+            spnBuyPosi.innerText = buyerTrust.positive; 
+            spnBuyNega.innerText = buyerTrust.negative;
+            spnBuyNeut.innerText = buyerTrust.neutral;
+            spnBuyOper.innerText = buyerTrust.operationsBuy;
+
+            const totalOperationBuyer = buyerTrust.positive + buyerTrust.negative;
+            const tasaTrustBuy = ((buyerTrust.positive * 100) / totalOperationBuyer).toFixed(0);
+
+            if (buyerTrust.positive == 0){
+                spnBuyTasa.innerText = 'no data';
+            } else {
+                spnBuyTasa.innerText = tasaTrustBuy + '%';
+            }
+            
+
+            spanTrustDetailBuy.innerText = buyerTrust.operationsBuy;
+
+            let sellerPositivo = sellerTrust.positive + countRafflePositivo;
+            let sellerNegativo = sellerTrust.negative + countRaffleNegativo;
+            let sellerOpetacion = sellerTrust.operationsSell + countOperationsRaffle;
+
+            spnSellPosi.innerText = sellerPositivo;
+            spnSellNega.innerText = sellerNegativo;
+            spnSellNeut.innerText = sellerTrust.neutral;
+            spnSellOper.innerText = sellerOpetacion;
+
+            const totalOperationSeller = sellerPositivo + sellerNegativo;
+            const tasaTrustSell = ((sellerPositivo * 100) / totalOperationSeller).toFixed(0);
+
+            if (sellerPositivo == 0){
+                spnSellTasa.innerText = 'no data';
+            } else {
+                spnSellTasa.innerText = tasaTrustSell + '%';
+            }
+            
+
+            spanTrustDetailSell.innerText = sellerTrust.operationsSell + countOperationsRaffle;
+
+        })
+        .catch( err => console.log(err));
+</script>
+<% }; %>

@@ -1,0 +1,188 @@
+<script>
+    //Importante las notas sobre el tableStyle y el tableBox
+    let estadoColorHead;
+    const mainTheme = document.querySelector('.mainTheme'); 
+    const controlHead = document.querySelector('.controlHead');
+    const navHead = document.getElementById('navHead');
+    const logoBlissenet = document.getElementById('logoBlissenet');
+    const logoBlissenetCom = document.getElementById('logoBlissenet_com');
+    const tableStyle = document.querySelector('.tableStyle');//se usa cuando solo hay una tabla en el html y se usa en una tabla
+    const tableBox = document.querySelectorAll('.tableBox');//se usara cuando hay mas de una table en un HTML igual su uso es en una tabla
+    const bodyTheme = document.querySelectorAll('.bodyTheme');
+    const dropdownMenuLink = document.getElementById('dropdownMenuLink');
+    const themaTextLight = document.querySelectorAll('.themaTextLight'); //esta clase para que funcione debe tener en el style del html la clase .textLight
+    const linkOptions = document.querySelectorAll('.linkOptions');
+
+  
+    hColor()
+  
+    function hColor(){
+      estadoColorsHead = localStorage.getItem("estadoHead");
+  
+      console.log("valor de estadoHead", estadoColorsHead)
+      if (estadoColorsHead === 'light'){
+        mainTheme.classList.remove('bg-dark');
+        navHead.style.backgroundColor = "#f9f9f9";
+        navHead.classList.add('navbar-light');
+        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetBlack.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `
+        if (logoBlissenetCom){
+          logoBlissenetCom.innerHTML = `<strong style="font-size: 20px"> Blissenet.com <strong>`;
+        }
+        if (tableStyle){
+          tableStyle.classList.remove('table-dark');
+        }
+        dropdownMenuLink.innerHTML = '<i class="bi bi-palette"></i>'
+        controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoSun.png" class="me-1"  style="width: 20px;"> Light</p>'
+        tableBox.forEach((ele)=>{
+          ele.classList.remove('table-dark');
+        })
+        if (bodyTheme){
+          bodyTheme.forEach((ele)=>{
+            ele.classList.remove('blackBody');
+          })
+        }
+        if (themaTextLight){
+          themaTextLight.forEach((ele)=>{
+            ele.classList.remove("textLight")
+          })
+        }
+        if (linkOptions){
+          linkOptions.forEach((ele)=>{
+            ele.style.color = "black";
+          })
+        }
+        
+      
+
+        
+      } else {
+        mainTheme.classList.add('bg-dark');
+        navHead.style.backgroundColor = "rgb(27, 27, 27)";
+        navHead.classList.add('navbar-dark');
+        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetWhite.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `
+        if (logoBlissenetCom){
+          logoBlissenetCom.innerHTML = `<strong style="font-size: 20px"> Blissenet.com <strong>`;
+        }
+        if (tableStyle){
+          tableStyle.classList.add('table-dark');
+        }
+        dropdownMenuLink.innerHTML = '<i class="bi bi-palette text-light"></i>'
+        controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;"> Dark</p>'
+        tableBox.forEach((ele, i)=>{
+          ele.classList.add('table-dark');
+        })
+        if (bodyTheme){
+          bodyTheme.forEach((ele)=>{
+            ele.classList.add('blackBody');
+          });  
+        }
+        if (themaTextLight){
+          themaTextLight.forEach((ele)=>{
+            ele.classList.add("textLight")
+          })
+        }
+        if (linkOptions){
+          linkOptions.forEach((ele)=>{
+            ele.style.color = "white";
+          })
+        }
+       
+
+          
+      }
+  
+    }
+  
+  
+    controlHead.addEventListener('click', ()=>{
+  
+  
+     estadoColorHead = localStorage.getItem("estadoHead");
+  
+     if (estadoColorHead === "light"){
+      console.log("el estado es light y debo cambiarlo a dark ");
+      mainTheme.classList.add('bg-dark');
+      navHead.style.backgroundColor = "rgb(27, 27, 27)";
+      navHead.classList.add('navbar-dark');
+      navHead.classList.remove('navbar-light');
+      logoBlissenet.innerHTML = `<img src="/img/logoBlissenetWhite.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `
+      if (logoBlissenetCom){
+        logoBlissenetCom.innerHTML = `<strong style="font-size: 20px"> Blissenet.com <strong>`;
+      }
+      if (tableStyle){
+         tableStyle.classList.add('table-dark');
+      }
+      dropdownMenuLink.innerHTML = '<i class="bi bi-palette text-light"></i>'
+      controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;"> Dark</p>'
+      tableBox.forEach((ele, i)=>{
+          ele.classList.add('table-dark');
+      })
+      if (bodyTheme){
+        bodyTheme.forEach((ele)=>{  
+          ele.classList.add('blackBody');
+        })  
+      }
+      if (themaTextLight){
+          themaTextLight.forEach((ele)=>{
+            ele.classList.add("textLight")
+          })
+      }
+      if (linkOptions){
+          linkOptions.forEach((ele)=>{
+            ele.style.color = "white";
+          })
+      }
+     
+    
+
+
+      localStorage.setItem("estadoHead", "dark" );
+      estadoTheme = localStorage.getItem('theme');
+            
+     } else {
+      console.log("el estado es dark y debo cambiarlo a light ");
+      mainTheme.classList.remove('bg-dark');
+      navHead.style.backgroundColor = "#f9f9f9";
+      navHead.classList.add('navbar-light');
+      navHead.classList.remove('navbar-dark');
+      logoBlissenet.innerHTML = `<img src="/img/logoBlissenetBlack.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `
+      if (logoBlissenetCom){
+        logoBlissenetCom.innerHTML = `<strong style="font-size: 20px"> Blissenet.com <strong>`;
+      }
+      if (tableStyle){
+          tableStyle.classList.remove('table-dark');
+      }
+      dropdownMenuLink.innerHTML = '<i class="bi bi-palette"></i>'
+      controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoSun.png" class="me-1"  style="width: 20px;"> Light</p>'
+      tableBox.forEach((ele, i)=>{
+          ele.classList.remove('table-dark');
+      })
+      if (bodyTheme){
+        bodyTheme.forEach((ele)=>{
+          ele.classList.remove('blackBody');
+        })  
+      }
+      if (themaTextLight){
+          themaTextLight.forEach((ele)=>{
+            ele.classList.remove("textLight")
+          })
+      }
+      if (linkOptions){
+          linkOptions.forEach((ele)=>{
+            ele.style.color = "black";
+          })
+      }
+      
+
+      localStorage.setItem("estadoHead", "light" )
+      estadoTheme = localStorage.getItem('theme');
+          
+     }
+  
+     console.log("el estado es", estadoColorHead);
+  
+    });
+  
+  
+   </script>
+

@@ -1,0 +1,82 @@
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="/js/index.js"></script>
+
+<script>
+    //::::::::: Limitador de vista a pantallas que sea igual o mayor a 320px :::::::::
+    //este script limita al sistema a poder verse solo en dispositivos que superen 320px de ancho.
+    const mainElement = document.querySelector('main');
+    const bodyElement = document.querySelector('body'); 
+    const openPageWidth = screen.width;
+    const openPageHeight = screen.height;
+
+    if (openPageWidth < 320){
+        mainElement.style.display = "none";
+        bodyElement.innerHTML = `<p class="mt-2" style="position: absolute; bottom: 30px; right: 20px"> <code>Resolución: (${openPageWidth})x(${openPageHeight})</code> </p>
+                                 <p class="mt-4 px-2 text-secondary"> Su dispositivo no cuenta con el ancho suficiente para ver esta pagina. <b>El ancho debe ser mínimo 320px.</b> </p>
+                                 <p class="px-2><code>Blisnet.com</code></p>
+                                `
+    } else {
+        mainElement.style.display = "block";
+        
+    }
+
+    window.addEventListener('resize', ()=>{
+        let anchoPantalla = screen.width;
+        let altoPantalla = screen.height;
+
+        //console.log("anchoPantalla :", anchoPantalla)
+        if(anchoPantalla < 320){
+            //console.log(mainElement)
+            mainElement.style.display = "none";
+      
+            bodyElement.innerHTML = `<p class="mt-2" style="position: absolute; bottom: 30px; right: 20px"> <code>Resolución: (${anchoPantalla})x(${altoPantalla})</code> </p>
+                                     <p class="mt-4 px-2 text-secondary"> Su dispositivo no cuenta con el ancho suficiente para ver esta pagina. <b>El ancho debe ser mínimo 320px.</b> </p>
+                                     <p class="px-2"><code>Blisnet.com</code></p>
+                                     `
+        } else{
+            
+            mainElement.style.display = "block";
+        }
+        
+    })
+    
+</script>
+
+<script>
+    //contola el js del footer
+    const mainMail = document.querySelector('.mainMail');
+    const emaiHidden = document.getElementById('emaiHidden'); 
+    const spnEmail = document.querySelector('.spnEmail');
+    
+    
+    const msgSaveMail = document.querySelector('.msgSaveMail');//contendor oculto importante que dice que se ha guardaddo en portapales
+    
+    if (mainMail){
+
+        mainMail.addEventListener('click', copiar);
+  
+        function copiar(){
+             
+            let email = spnEmail.textContent;
+            navigator.clipboard.writeText(email)
+                .then(() => {
+                    //efecto de poner y quitar el alert
+                    msgSaveMail.classList.remove('close');
+                    setTimeout(hideMsg, 3000);
+                })
+                .catch(err =>{
+                    msgSaveMail.innerHTML += `<div class="alert-danger py-1 px-2 "> 
+                                                <span>No guardado</span>  
+                                                </div>` 
+                })
+
+            function hideMsg(){
+                msgSaveMail.classList.add('close');
+            }
+      
+        }
+
+    }
+ 
+    </script>

@@ -1,0 +1,332 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    max-width: 100vw;
+    height: 100vh;
+    scroll-behavior: smooth;
+    
+}
+
+main{
+    width: 100%;
+    height: 100%;
+}
+
+@font-face{
+  font-family: "modelo1";
+  src: url("/fonts/Dream MMA.ttf");
+}
+
+.bordering{
+    border: 2px dotted violet;
+}
+
+.rowWidth{
+    width: 100%;
+    margin: 0;
+    
+}
+
+.overflow80{
+    height: 90%;
+    overflow-y: auto;
+    border: none;
+}
+
+.auctionsMessages{
+    z-index: 200;
+    position: absolute;
+    top: 65px;
+    
+}
+
+.auctionsMessagesSon{
+  width: 60%;
+}
+
+.successBannerFront{
+    z-index: 200;
+    position: absolute;
+    top: 65px;
+}
+
+.successBannerSon{
+    width: 60%;
+}
+
+.formTransp{
+  background-color: rgba(15, 0, 0, 0.5);
+  color: antiquewhite;
+}
+.rogelio{
+    background-color: rgb(184, 55, 55);
+}
+
+.rogelioLight{
+    background-color: rgb(196, 64, 64);
+    color: antiquewhite;
+}
+
+
+/* estyle of the profiles */
+
+.anchorRRSS{
+    width: 33%;
+}
+
+
+.contentImgs{
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+/* .prevImg{
+    width: 100px;
+    height: 80px;
+    border: 1px solid rgb(90, 5, 5);
+} */
+
+
+.preview{
+    width: 100px;
+    height: 80px;
+    object-fit:contain;
+}
+
+
+.add_photo{
+    cursor: pointer;
+}
+
+.inpFile, .inpFileUpdate{
+    display: none;
+}
+
+.inpAddPhoto, .inpAddSound, .subSound, .inpAddVideo, .subVideo{
+    display: none;
+}
+
+#submitAddPhotoFirst, #submitAddPhotoLast {
+    display: none;
+}
+
+.invisibleBtn{
+    display: none;
+}
+
+.invisibleBtnEdit{
+    display: none;
+}
+
+.invisibleBtnDelete{
+    display: none;
+}
+
+.invisibleBtnActive{
+    display: none;
+}
+
+.btnSearcherClass{
+  height: 100% !important;
+  width: 80px;
+}
+
+/* ---- efecto de sobra en los buscadores */
+
+.btnEFECT{
+  box-shadow: none;
+  transition: 0.5s ease box-shadow;
+}
+
+.btnEFECT:hover{
+  box-shadow: 1px 2px 2px 1px white;
+}
+
+/* ///// footerCSS \\\\\ */
+.close{
+  display: none;
+  
+}
+
+.mainMail{
+  cursor: pointer;
+  border: 1px solid black
+}
+
+.mainMail:hover{
+  cursor: pointer;
+  color: blueviolet;
+  border: 1px solid blueviolet;
+}
+
+.itemOption{
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.itemOption:hover{
+  .linkOptions{
+      text-decoration: 2px underline blueviolet;
+  }
+}
+
+.linkOptions{
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.icon {
+display: inline-block;
+width: 1em;
+height: 1em;
+stroke-width: 0;
+stroke: currentColor;
+fill: currentColor;
+
+color: blueviolet;
+}
+/* end footer */
+
+/*  Media queries */
+@media screen and (min-width: 500px) and (max-width: 991px){
+/* :::::: navi-simple Tablet :::::: */
+
+  #navHead{
+    padding: 5px 0px !important;
+  }
+
+  .navSon{
+    /* este es el contenedor interno del nav padre */
+    margin: 10px 0px !important;
+    width: 100% !important;
+  }
+
+  .contentThemesSesion{
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  .themes{
+    /* este es el boton de los temas */
+    margin: 0px !important;
+  }
+
+  .login{
+    margin-right: 10px !important;
+  }
+   
+  .contentSearchMain{
+    margin: 10px 0px !important;
+   
+  } 
+
+  .formSearch{
+    width: 100% !important;
+  }
+
+  .contentSearch{
+    width: 100% !important;
+    border-radius: 5px !important;
+    height: 100% !important;
+  }
+
+  .usernameMain{
+    margin: 0px !important;
+  }
+
+  .publications{
+    margin: 0 !Important;
+  }
+
+  .viewCollection{
+    justify-content: center !important;
+  
+  }
+
+  .contentSelectPlaces{
+    width: 100% !important;
+  }
+
+  .btnSearcherClass{
+    height: 100% !important;
+    width: 80px;
+  }
+   /* :::::::::::::::::: */
+
+    
+}
+    
+
+@media screen and (min-width: 290px) and (max-width: 499px){
+/* :::::: navi-simple smarphone:::::: */
+    #navHead{
+        padding: 5px 0px !important;
+    }
+
+  .navSon{
+    /* este es el contenedor interno del nav padre */
+    margin: 10px 0px !important;
+    width: 100% !important;
+  }
+
+  .contentThemesSesion{
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  .themes{
+    /* este es el boton de los temas */
+    margin: 0px !important;
+  }
+
+  .login{
+    margin-right: 10px !important;
+  }
+
+  .contentSearchMain{
+    margin: 10px 0px !important;
+  }
+
+  .formSearch{
+    width: 100% !important;
+  }
+
+  .contentSearch{
+    width: 100% !important;
+  }
+
+  .usernameMain{
+    margin: 0px !important;
+  }
+
+  .publications{
+    margin: 0 !Important;
+  }
+
+  .viewCollection{
+    justify-content: center !important;
+  
+  }
+
+  .contentSelectPlaces{
+    width: 100% !important;
+  }
+
+  .btnSearcherClass{
+    height: 100% !important;
+    width: 80px;
+  }
+    /* :::::::::::::::::: */
+
+    
+}
+
+

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Admin</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .close{
+        display: none;
+    }
+
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+
+        <% if (userAdmin) { %> 
+            
+            <% if (msgBannerSave) { %>
+                <%- include('../alertAdmin/msgBannerSave.ejs') %>
+            <% } %>
+    
+            <% if (msgBannerNoSave) { %>
+                <%- include('../alertAdmin/msgBannerNoSave.ejs') %>
+            <% } %>
+    
+            <% if (msgBannerDelete) { %>
+                <%- include('../alertAdmin/msgBannerDelete.ejs') %>
+            <% } %>
+    
+            <% if (msgBannerActive) { %>
+                <%- include('../alertAdmin/msgBannerActive.ejs') %>
+            <% } %>
+    
+            <% if (msgBannerPaused) { %>
+                <%- include('../alertAdmin/msgBannerPaused.ejs') %>
+            <% } %>
+            
+            <% if (adminError) { %>
+                <%- include('../alertAdmin/adminError.ejs') %>
+            <% } %>
+            
+            <div class="containerPlace">
+                    <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                        <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Update Carousel</span>
+                    </div>
+            </div>
+
+            
+            <div class="containerBanners">
+                    <div class="row m-0 p-0">
+                        <div class="col-lg-4 p-0">
+                            
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Create Banner
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body px-0">
+
+                                        <div class="containerAddBanner p-0">
+                                            <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                            
+                                                <div class="card-body my-2">
+                                                    <form action="/admin/banner/create" method="POST" id="formCreate" enctype="multipart/form-data"
+                                                                    accept=".jpg, .jpeg, .png">
+                        
+                                                                    <div class="card-header">+ Add to Banner</div>
+                                                                    <% if (userAdmin) { %>
+                                                                    <div class="input-group my-2">
+                                                                        <span class="input-group-text">Type Banner</span>
+                                                                        <select class="form-control" name="typeBanner" id="seletType">
+                                                                            <option value="admin">Admin</option>
+                                                                            <option value="customer">Customer</option>
+                                                                        </select>
+                                                                    </div> 
+                                                                    <div class="input-group my-2">
+                                                                        <span class="input-group-text">N. Invoice</span>
+                                                                        <input class="form-control nInvoice" type="text" name="nInvoice" placeholder="Intro N. de Invoice" readonly>
+                                                                        <button type="button" class="input-group-text btn btn-secondary btnSearch" disabled><i class="bi bi-search"></i></button>
+                                                                    </div>
+                                                                    <div class="input-group my-2">
+                                                                        <span class="input-group-text">Customer name</span>
+                                                                        <input class="form-control customerName" type="text" name="customerName" placeholder="Customer Names" readonly>
+                                                                    </div>
+                                                                    <div class="input-group my-2">
+                                                                        <span class="input-group-text">Time in days</span>
+                                                                        <input class="form-control timeInDays" type="number" name="timeDays" placeholder="Time in Days" readonly>
+                                                                    </div> 
+                                                                    <div class="input-group my-2">
+                                                                        <span class="input-group-text">End Public</span>
+                                                                        <input class="form-control endPublic" type="text" name="endPublic" placeholder="End Public" readonly>
+                                                                    </div>
+                                                                    <div class="form-group d-flex justify-content-start my-2 border">
+                                                                        <div class="add_photo me-1" id="add_photo">
+                                                                            <span><img src="/img/addPhoto.png" class="my-2 mx-1" style="width: 60px;"></span>
+                                                                        </div>
+                                                                        <span class="mx-1"> <small>
+                                                                                        <ul class="my-1 mx-4 p-0 text-secondary">
+                                                                                                <li>un Banner con formato JPG.</li>
+                                                                                                <li>Peso max. 3 MB.</li>
+                                                                                                <li>Resolución 1600p x 400p.</li>
+                                                                                        </ul> 
+                                                                                            </small> </span>
+                                                                        <input type="file" name=fileImg class="inpFile form-control" required>
+                                                                    </div>
+                                                                    <div class="form-group d-flex justify-content-center my-2 border" id="newShowBanner">
+                                                                        <!-- contenedor con img dinamica -->
+
+                                                                    </div>
+                                                                    <% }; %>               
+                                
+                                                                    <div class="form-group my-2">
+                                                                        <button type="submit" class="btn btn-primary form-control my-3" id="btnCreate"> Add New Banner </button>
+                                                                        <button class="btn btn-primary form-control invisibleBtn my-3" type="button" id="btnCreateLoading" disabled>
+                                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                            Uploading...
+                                                                        </button>
+                                                                    </div>
+                        
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                </div>
+                            
+                            
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Update Banner
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body px-0">
+
+                                            <div class="containerAddBanner p-0">
+                                                <div class="card p-0 m-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                                
+                                                    <div class="card-body my-2">
+                                                        <% if (currentBanner.length !== 0) { %> 
+
+                                                        <form action="/admin/banner/update" method="POST" id="formUpdate" enctype="multipart/form-data" accept=".jpg, .jpeg, .png">
+                        
+                                                                        
+                                                            <div class="card-header">Select Code-Banner and Update</div>
+                                                            <div class="form-group my-2">
+                                                                
+                                                                <select name="id" class="form-control" id="selectUpdate">
+                                                                    <option value="select">Select it</option>
+                                                                    <% currentBanner.forEach((ele)=>{ %>
+                                                                    <option value="<%= ele._id %>"><%= ele.codeBanner %></option>
+                                                                    <% }) %>                                                             
+                                                                                                                                                        
+                                                                </select>
+                                                            </div>
+                                                            
+                                                            <div class="card-header">Current Banner </div>
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text">Type</span>
+                                                                <input type="text" class="form-control typeBanner" readonly>
+                                                            </div>
+                                                            <div class="form-group d-flex justify-content-center my-2 border" id="showCurrentBanner">
+                                                                <!-- contenedor con img dinamica -->
+                                                            </div>
+                                              
+                                                            <div class="form-group d-flex justify-content-start my-2 border">
+                                                                <div class="add_photo me-1" id="add_photoUpdate">
+                                                                    <span><img src="/img/addPhoto.png" class="my-2 mx-1" style="width: 60px;"></span>
+                                                                </div>
+                                                                <span class="mx-1"> <small>
+                                                                                <ul class="my-1 mx-4 p-0 text-secondary">
+                                                                                        <li>Imagen con formato JPG.</li>
+                                                                                        <li>Peso max. 3 MB.</li>
+                                                                                        <li>Resolución 1600p x 400p.</li>
+                                                                                </ul> 
+                                                                                    </small> </span>
+                                                                <input type="file" name="fileImg" class="inpFileUpdate form-control" required>
+                                                            </div>
+                                                            <div class="form-group d-flex justify-content-center my-2 border" id="updateShowBanner">
+                                                                <!-- contenedor con img dinamica -->
+                                                            </div>
+                                                                                
+                                                            <div class="form-group my-2">
+                                                                <button type="submit" class="btn btn-secondary form-control my-3" id="btnUpdate"> Update Banner </button>
+                                                                <button class="btn btn-secondary form-control invisibleBtnEdit my-3" type="button" id="btnUpdateLoading" disabled>
+                                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                    Uploading...
+                                                                </button>
+                                                            </div>
+                            
+                                                        </form>
+
+                                                        <% } else { %>
+                                                            <div class="alert alert-info">
+                                                                <span> <strong>NO hay banner Disponibles, Apresurese y coloque uno.</strong></span>
+                                                            </div>
+                                                        <% }; %>    
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>    
+
+
+                        </div>
+
+                        <div class="col-lg-8 p-0">
+                            <div class="containerGeneralBanner p-0">
+                                <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs">
+
+                                            <li class="nav-item">
+                                                <a class="nav-link currentBanner active" style="cursor: pointer;">Current Carousel</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link bannerDelete " style="cursor: pointer;">Banner Actions</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link bannerUpdate " style="cursor: pointer;">Banner Update</a>
+                                            </li>
+                                    
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="containerMain" style="height: auto;">
+
+                                            <% if (currentBanner.length !== 0) { %>
+                                            <div class="containerCurrentBanner">
+
+                                                
+                                                <div id="carouselCurrentBanner" class="carousel slide" data-bs-ride="carousel">
+                                                    <div class="carousel-indicators">
+                                                        <% currentBanner.forEach((ele, i)=>{ %>
+
+                                                            <% if (i === 0) { %>
+                                                                <button type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide-to="<%= i %>" class="active" aria-current="true" aria-label="Slide <%= i + 1 %>"></button>
+                                                            <% } else { %>
+                                                                <button type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide-to="<%= i %>" aria-label="Slide <%= i + 1 %>"></button>
+                                                            <% }; %> 
+                                                                                                        
+                                                        <% }); %>
+                                                    </div>
+                                                    <div class="carousel-inner">
+                                                        <% currentBanner.forEach((ele, i)=>{ %>
+                                                            
+
+                                                                <% if (i === 0) { %>
+                                                                <div class="carousel-item active"> <img src="<%= ele.url %>" class="d-block w-100" alt="..."></div>
+                                                                <% } else { %>    
+                                                                <div class="carousel-item"> <img src="<%= ele.url %>" class="d-block w-100" alt="..."></div>
+                                                                <% }; %>
+                                                                
+                                                            
+                                                        <% }); %>
+                                                    </div>
+
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselCurrentBanner" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </button>     
+
+                                                </div>                                                        
+                                                    
+                                            </div>
+                                            
+
+                                            <div class="containerBannerDelete close border">
+                                                
+                                                <% currentBanner.forEach((ele, i)=>{ %>
+                                                    <div class="contenBanner m-2">
+                                                        <div class="row m-0">
+                                                            <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 p-0 border-bottom border-secondary">
+                                                                <div class="contentBanners" style="position: relative;">
+                                                                    <img src="<%= ele.url %>" alt="banner" class="me-1" style="width: 300px;">
+                                                                    <span class="rounded-2 px-2" style="background-color: rgba(240, 248, 255, 0.7); position: absolute; bottom: 5px; left: 10px; "><%= ele.codeBanner %></span>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 p-0 m-0 border-bottom border-secondary">
+                                                                <div class="contentDetailButton alert alert-danger d-flex justify-content-between m-0 py-2" style="height: 100%;">
+                                                                    <% let date = ele.createdAt %>
+                                                                    <% let dia = date.getDate() %><% let mes = date.getMonth() + 1 %><% let anio = date.getFullYear() %>
+                                                                    <%let publicate = `${dia}-${mes}-${anio}` %>
+                                                                    <div class="mb-0" style="height: 100%;">
+                                                                        
+                                                                        <% if (ele.typeBanner === 'admin'){ %>
+                                                                            <div class="top">
+                                                                                <span class="mx-2 my-1">Type: <%= ele.typeBanner %></span>
+                                                                                <span class="mx-2 my-1">Name: Blisnet </span>
+                                                                            </div>
+                                                                            <div class="bottom">
+                                                                                <span class="mx-2 my-1">Public : <%= publicate %></span>
+                                                                            </div>
+                                                                            
+                                                                        <% } else { %>
+                                                                            <div class="top">
+                                                                                <span class="mx-2 my-1">Type: <%= ele.typeBanner %></span>
+                                                                                <span class="mx-2 my-1">Name: <%= ele.customerName %></span>
+                                                                            </div>
+                                                                            <div class="bottom">
+                                                                                <span class="mx-2 my-1"> Public : <%= publicate %></span>
+                                                                                <span class="mx-2 my-1"> EndPublic : <%= ele.endPublic %></span>
+                                                                            </div>    
+                                                                        <% }; %>        
+                                                                        
+                                                                    </div>
+                                                                    <div class="contenButton d-flex align-items-center">
+
+                                                                        <% if (ele.typeBanner === 'admin'){ %>
+                                                                            <a href="/admin/bannersFront/paused/<%= ele.public_id %>" class="mx-2"><button class="btn btn-warning"> Pause</button></a>
+                                                                            <a href="/admin/bannersFront/delete/<%= ele.public_id %>" class="mx-2"><button class="btn btn-danger"> Delete</button></a>
+                                                                        <% } else { %>
+                                                                            <a href="/admin/bannersFront/delete/<%= ele.public_id %>" class="mx-2"><button class="btn btn-danger"> Delete</button></a>
+                                                                        <% }; %>    
+                                                            
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+
+                                                    </div>
+                                                <% }); %>
+                                    
+
+                                            </div>
+
+                                            <div class="containerBannerUpdate close ">
+                                                <% updateBanner.forEach((ele, i)=>{ %>
+                                                    <div class="contenBanner m-2">
+                                                        <div class="row m-0">
+                                                            <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 p-0 border-bottom border-secondary">
+                                                                <img src="<%= ele.url %>" alt="banner" class="mx-2" style="width: 300px;">
+                                                            </div>
+                                                            <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 p-0 m-0 border-bottom border-secondary">
+                                                                <div class="contentDetailButton alert alert-success d-flex justify-content-between m-0" style="height: 100%;">
+                                                                    <% let date = ele.createdAt %>
+                                                                    <% let dia = date.getDate() %><% let mes = date.getMonth() + 1 %><% let anio = date.getFullYear() %>
+                                                                    <%let publicate = `${dia}-${mes}-${anio}` %>
+                                                                    <div class="mb-0" style="height: 100%;">
+                                                                        
+                                                                        <% if (ele.typeBanner === 'admin'){ %>
+                                                                            <div class="top">
+                                                                                <span class="mx-2 my-1">Type: <%= ele.typeBanner %></span>
+                                                                                <span class="mx-2 my-1">Name: Blisnet </span>
+                                                                            </div>
+                                                                            <div class="bottom">
+                                                                                <span class="mx-2 my-1">publicado : <%= publicate %></span>
+                                                                            </div>
+                                                                            
+                                                                        <% }; %>
+                                                                
+                                                                        
+                                                                    </div>
+                                                                    <a href="/admin/bannersFront/active/<%= ele.public_id %>" class="mx-2"><button class="btn btn-success"> Active</button></a>
+            
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                <% }); %>
+
+                                            </div>
+                                            <% }; %> 
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            
+        <% } else { %>
+
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+                <%- include('../partials/adminNoLogin.ejs') %>
+            
+            </div>
+            
+        <% }; %>    
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+<script>
+    const add_photo = document.getElementById('add_photo');
+    const add_photoUpdate = document.getElementById('add_photoUpdate'); 
+    const inpFile = document.querySelector('.inpFile');
+    const inpFileUpdate  = document.querySelector('.inpFileUpdate');
+    const newShowBanner = document.getElementById('newShowBanner');
+    const updateShowBanner = document.getElementById('updateShowBanner');
+    const carouselInner = document.querySelector('#carouselIDBanner'); 
+
+    const btnCreate = document.getElementById('btnCreate'); 
+    const btnCreateLoading = document.getElementById('btnCreateLoading');
+
+    const btnUpdate = document.getElementById('btnUpdate'); 
+    const btnUpdateLoading = document.getElementById('btnUpdateLoading');
+
+    add_photo.addEventListener('click', ()=>{
+        inpFile.click();
+
+        console.log(inpFile.files);
+    });
+
+    inpFile.addEventListener('change', ()=>{
+        let archivo = inpFile.files;
+        console.log("arhivo:", archivo);
+
+        if (!archivo || archivo.length === 0 ){
+            console.log("aqui no hay nada")
+        };
+
+        for (let i = 0; i < archivo.length; i++) {
+                    const file = archivo[i];
+                    console.log("esto es el file", file)
+                    let objectURL = URL.createObjectURL(file);
+                    console.log("esto es el objectURL",objectURL)
+
+
+                    newShowBanner.innerHTML = ` <div class="contententShowBanner">
+                                                    <img src="${objectURL}" alt="un banner" style="width: 100%;">
+                                                </div>
+                                            `                                             
+
+        };
+
+    });
+
+
+
+
+btnCreate.addEventListener('click', ()=>{
+
+    //console.log(inpFile.files)
+
+    if (inpFile.files.length !== 0){
+        //console.log("hay informacion en el inpFile debo hacer el efecto")
+        btnCreate.classList.add('invisibleBtn');
+        btnCreateLoading.classList.remove('invisibleBtn');
+    } else {
+        //console.log("no hay nada y me quedo quieto")
+        btnCreateLoading.classList.add('invisibleBtn');
+        btnCreate.classList.remove('invisibleBtn');
+    } 
+
+});
+
+//muestra de imagen en caso de actualizacion
+add_photoUpdate.addEventListener('click', ()=>{
+        inpFileUpdate.click();
+
+        console.log(inpFileUpdate.files);
+});
+
+inpFileUpdate.addEventListener('change', ()=>{
+        let archivo = inpFileUpdate.files;
+        console.log("arhivo:", archivo);
+
+        if (!archivo || archivo.length === 0 ){
+            console.log("aqui no hay nada")
+        };
+
+        for (let i = 0; i < archivo.length; i++) {
+                    const file = archivo[i];
+                    console.log("esto es el file", file)
+                    let objectURL = URL.createObjectURL(file);
+                    console.log("esto es el objectURL",objectURL)
+
+
+                    updateShowBanner.innerHTML = ` <div class="contententShowBanner">
+                                                    <img src="${objectURL}" alt="un banner" style="width: 100%;">
+                                                </div>
+                                            `                                             
+
+        };
+
+});
+
+btnUpdate.addEventListener('click', ()=>{
+    console.log("inpFileUpdate.files.length : ", inpFileUpdate.files.length)
+
+
+    if (inpFileUpdate.files.length !== 0){
+        console.log("hay informacion en el input debo hacer el efecto")
+        btnUpdate.classList.add('invisibleBtnEdit');
+        btnUpdateLoading.classList.remove('invisibleBtnEdit');
+    } else {
+        console.log("no hay nada y me quedo quieto")
+        btnUpdateLoading.classList.add('invisibleBtnEdit');
+        btnUpdate.classList.remove('invisibleBtnEdit');
+    } 
+
+});    
+
+</script>
+
+<script> 
+
+  
+    const bannerDelete = document.querySelector('.bannerDelete');
+    const currentBanner = document.querySelector('.currentBanner');
+    const bannerUpdate = document.querySelector('.bannerUpdate');
+    const containerBannerDelete = document.querySelector('.containerBannerDelete');
+    const containerCurrentBanner = document.querySelector('.containerCurrentBanner');
+    const containerBannerUpdate = document.querySelector('.containerBannerUpdate');
+    //const containerShowBanner = esta declarado arriba
+        
+
+    currentBanner.addEventListener('click', ()=>{
+        containerCurrentBanner.classList.remove('close');
+        containerBannerDelete.classList.add('close');
+        containerBannerUpdate.classList.add('close');
+
+        currentBanner.classList.add('active');
+        bannerDelete.classList.remove('active');
+        bannerUpdate.classList.remove('active');
+    });
+
+    bannerDelete.addEventListener('click', ()=>{
+
+        containerCurrentBanner.classList.add('close');
+        containerBannerDelete.classList.remove('close');
+        containerBannerUpdate.classList.add('close');
+
+        currentBanner.classList.remove('active');
+        bannerDelete.classList.add('active')
+        bannerUpdate.classList.remove('active');
+    });
+
+    bannerUpdate.addEventListener('click', ()=>{
+
+        containerCurrentBanner.classList.add('close');
+        containerBannerDelete.classList.add('close');
+        containerBannerUpdate.classList.remove('close');
+
+        currentBanner.classList.remove('active');
+        bannerDelete.classList.remove('active')
+        bannerUpdate.classList.add('active');
+    })
+
+</script>
+
+<script>
+    let seletType = document.getElementById('seletType');
+    let nInvoice = document.querySelector('.nInvoice');
+    let customerName = document.querySelector('.customerName');
+    let timeInDays = document.querySelector('.timeInDays');
+    let endPublic = document.querySelector('.endPublic');
+    let btnSearch = document.querySelector('.btnSearch');
+    
+    seletType.addEventListener('change', ()=>{
+       
+        const type = seletType.value;
+        if (type === 'customer'){
+
+            nInvoice.removeAttribute('readonly');
+            btnSearch.removeAttribute('disabled');
+
+        } else {
+
+            nInvoice.setAttribute('readonly', '');
+            btnSearch.setAttribute('disabled', '');
+            nInvoice.value ="";
+            customerName.value ="";
+            timeInDays.value = "";
+            endPublic.value = "";
+
+        }
+    })
+    
+    btnSearch.addEventListener('click', ()=>{
+        const searchInvoice = nInvoice.value
+        
+        const dato = {
+            invoice : searchInvoice
+        };
+
+        fetch('/admin/search-invoice-marketing/banner', {
+
+        method: "post",
+        body: JSON.stringify(dato),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonxInvoice =>{
+            console.log("jsonxInvoice", jsonxInvoice)
+            
+            if (jsonxInvoice.length !==0){
+
+                const customerV = jsonxInvoice[0].receptorName;
+                const timeDaysV = jsonxInvoice[0].timeDays;
+                const endPublicV = jsonxInvoice[0].endPublic;
+
+                customerName.value =  customerV
+                timeInDays.value = timeDaysV
+                endPublic.value = endPublicV
+
+            } else {
+
+                customerName.value =  ""
+                timeInDays.value = ""
+                endPublic.value = ""
+            }
+
+
+
+            })
+        .catch( err => console.log(err));
+            })
+
+</script>
+
+<script>
+    let selectUpdate = document.querySelector('#selectUpdate');
+    let typeBanner = document.querySelector('.typeBanner');
+    let showCurrentBanner = document.getElementById('showCurrentBanner');
+    
+    selectUpdate.addEventListener('change', ()=>{
+        const idBanner = selectUpdate.value;
+
+        console.log("idBanner", idBanner);
+
+        if (idBanner === "select" ){
+        //limpiar todo 
+        } 
+
+        const dato = {
+                id : idBanner
+        };
+
+    fetch('/admin/banner/selectID', {
+
+    method: "post",
+    body: JSON.stringify(dato),
+    headers: {"content-type" : "application/json"}
+
+    })
+    .then(response =>response.json() )
+    .then( seletTitle =>{
+        
+        console.log("seletTitle :", seletTitle)     
+        const type = seletTitle.typeBanner;
+        const img = seletTitle.url;
+        typeBanner.value = type;
+        showCurrentBanner.innerHTML =  `<img src="${img}" alt="" style="width : 100%">`
+ 
+    
+    })
+    .catch( err => console.log(err));
+
+    })
+</script>
+
+</body>
+</html>
+
+

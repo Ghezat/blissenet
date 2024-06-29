@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet  View-Raffles</title>
+</head>
+<style>
+
+  .textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+  }
+
+  .SectionPublish{
+    width: 100%;
+  }
+
+  .searchMain{
+    border: none;
+
+  }
+  .searchMain:focus {
+    outline:none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    
+  }
+
+  .contentSearchMain{
+    margin: 0px 60px;
+  }
+
+    .departList{
+      background-color: #fff4f4;
+      padding: 0px 8px;
+      color: rgb(54, 52, 49);
+      border-radius: 12px;
+    }
+
+
+    .carousel .carousel-control-prev {
+      position: absolute;
+      left: 20px;
+      left: 1%;
+      z-index: 1;
+      width: 20px;
+    }
+
+    .carousel .carousel-control-next {
+      position: absolute;
+      width: 20px;
+      right: 1%;
+      z-index: 1;
+      width: 20px;
+      
+    }
+
+    .cardPublished{
+      width: 220px;
+      transition: 0.3s ease border;
+    }
+
+    .imgFront{
+          width: 220px; height: auto;
+          transition: .5s ease width;
+        }
+    
+    .cardPublished:hover{
+        outline: 2px solid lightskyblue;
+
+          .imgFront{
+            width: 230px;
+          }
+    }
+
+    .closed{
+          display: none;
+    }
+  
+</style>
+<body class="mainTheme">
+     
+
+  <main>
+
+  <!-- navegador con buscador homologo a navi-simple --> 
+  <nav class="navbar navbar-expand-lg py-3" id="navHead">
+      <div class="container-fluid mx-4 navSon" style="width: 100%;">
+
+        <a class="navbar-brand" href="/" id="logoBlissenet"> </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+        aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+       
+
+        <div class="collapse navbar-collapse" id="navbarScroll" style="width: 100%;">
+
+         <div class="contentThemesSesion me-4 d-flex">
+            <!-- themes -->
+              <div class="dropdown ms-4 me-2 themes">
+
+              <a class="text-decoration-none text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                <li style="cursor: pointer;"><a class="dropdown-item controlHead"></a></li>
+                <li> <hr></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlBrick"><img src="/img/iconoBrick.png" class="me-1" style="width: 20px;">   Brick</a><span class="checkBrick"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSummer" href="#"> <img src="/img/iconoSummer.png" class="me-1"  style="width: 20px;">Summer</a><span class="checkSummer"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlLemon" href="#"> <img src="/img/iconoLemon.png" class="me-1"  style="width: 20px;"> Lemon</a><span class="checkLemon"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSky" href="#"> <img src="/img/iconoSky.png" class="me-1"  style="width: 20px;"> Sky</a><span class="checkSky"></span></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlOctopus" href="#"> <img src="/img/iconoOctopus.png" class="me-1"  style="width: 20px;"> Octopus</a><span class="checkOctopus"></span></li>
+                <li> <hr></li>
+                <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item ico-colors"><img src="/img/iconoColorIcons.png" class="me-1"  style="width: 20px;"> Color icons</a><span class="checkColor"></span> </li>
+                
+              </ul>
+
+            </div>
+
+            <!-- session -->
+            <div class="dropdown ms-4 me-2 login">
+          
+              <a class="text-decoration-none text-secondary" href="#" id="navbarScrollingDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Session
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+                <% if (user) { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login </a></li>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"> </i> Register</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                <% } else { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login</a></li>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"></i> Register</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                <% }; %>
+
+                <% if (user) { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                <% } else { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                <% }; %>
+
+              </ul>
+       
+            </div>
+         </div>
+
+          <!-- searcher -->      
+          <div class="contentSearchMain d-flex justify-content-center" style="width: 100%;">
+
+            <form action="/view-raffles" method="post" style="width: 100%;"> <!-- :::: El cierre de esta etiquera form esta abajo  -->
+
+              <div class="contentSearch d-flex p-0" style="width: 100%; height: 100%;">
+                <% if (searcherCache) { %> 
+                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="<%= searcherCache %>" aria-label="Search">
+                <% } else { %>
+                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" placeholder="Busqueda por Titulo..." aria-label="Search">
+                <% }; %> 
+                <button class="btnEFECT" type="submit" id="btnSearcher" style="width: 70px; height: 100%; border-left: 5px solid black ;border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                  <i class="bi bi-search" id="iconLupa" style="color: #f39a9a;"></i>
+                </button>
+              </div>
+
+          </div>
+
+          <!-- actions -->
+
+          <!-- username -->
+          <div class="contentUsername me-1">
+            <ul class="navbar-nav m-0 usernameMain">
+              <li class="nav-item dropdown">
+
+                <% if (user) { %>
+                  <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <p class="m-0 p-0" style="max-width: 100px; white-space: noWrap; text-overflow: ellipsis; overflow: hidden;" > 
+                      <i class="bi bi-person"></i> <%= user.username %>
+                    </p>
+                  </a>
+                  <% } else { %>
+                    <a class="nav-link disabled d-flex" href="#">
+                      <i class="bi bi-person me-1"></i> username
+                    </a>
+                  <% }; %>
+                  <% if (user) { %>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                      <li><a class="dropdown-item" href="/myaccount/messenger">Mensajeria</a></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                      <li><a class="dropdown-item" href="/account/<%= user.username %>">Mi Tienda</a></li>
+                      <% }; %>
+                      <li><a class="dropdown-item" href="/buysell-list/">Sala de Negocios</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/myfavorites">Favoritos</a></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                        <li><a class="dropdown-item" href="/mytickets">Mis Tickets</a></li>
+                        <li><a class="dropdown-item" href="/follow">Siguiendo </a></li>
+                        <li><a class="dropdown-item" href="/followme">Siguiendome </a></li>
+                      <% }; %>
+                      <li><hr class="dropdown-divider"></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                      <li><a class="dropdown-item" href="/myaccount/manage">Gerencia</a></li>
+                      <% }; %>
+                      <li><a class="dropdown-item" href="/myaccount/profile">Perfil</a></li>
+                    </ul>
+                  <% }; %> 
+              </li>
+            </ul>
+          </div>  
+
+          <!-- publications -->
+          <ul class="navbar-nav my-lg-0">
+            <li class="nav-item dropdown">
+              <% if (user) { %>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Publicaciones
+                </a>
+              <% } else { %>
+                <a class="nav-link dropdown-toggle invisible" href="#" id="navbarScrollingDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Publicaciones
+                </a>
+              <% }; %>
+                  
+                <% if (user) { %>
+                  <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                      <li><a class="dropdown-item" href="/department/create">Herramienta ADS</a></li>
+                    <% if (searchProfile.length !==0 ) { %> 
+                      <li><a class="dropdown-item" href="/department/raffle">Herramienta Raffle</a></li> 
+                      <li><a class="dropdown-item" href="/my-ads">Mis Anuncios</a></li>
+                      <li><a class="dropdown-item" href="/my-invoices">Facturas</a></li>
+                    <% }; %>
+                      <li><a class="dropdown-item" href="/history">Historial</a></li>
+                    <% if (searchProfile.length !==0 ) { %>
+                      <li><a class="dropdown-item" href="/record">Record</a></li>  
+                    <% }; %>  
+                  </ul>
+                <% }; %>  
+            </li>
+          </ul>
+          
+          <!-- bell messages -->
+          <div class="contentAlerts d-flex">
+
+            <% if (user) { %>
+    
+              <% if (countMessages) { %>
+                <a class="nav-link text-secondary" title="Alert of inbox"  href="/myaccount/messenger">
+             
+                <i class="bi bi-bell position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= countMessages %>
+                   <span class="visually-hidden">unread messages</span>
+                </span>
+                </i>  
+    
+                </a>
+              <% }; %> 
+            
+    
+              <% if (countNegotiationsBuySell) { %>    
+                <a class="nav-link text-secondary" title="Alert of negotiation"  href="/buysell-list">
+                <i class="bi bi-briefcase position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                <%= countNegotiationsBuySell %>
+                <!-- <span class="visually-hidden">unread messages</span> -->
+                </span>
+                </i>
+                  
+                </a>  
+              <% }; %>
+    
+            <% }; %>  
+          </div>
+
+        </div>
+      </div>
+  </nav>
+
+  <div class="row rowWidth SectionPublish"> 
+    <div class="col-lg-3 col-md-3 col-sm-12 bg-light p-0 p-1 OptionsBar bg-dark frame">
+      
+      <div class="card mx-0 border border-info cardResultSearch"  style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; ">
+        <div class="card-header d-flex justify-content-between"><span>Sala de Sorteos</span> <img src="/img/ico-raffleW.png" alt="" class=" mx-2 rounded-pill" style="width: 35px;"></div>
+        <div class="card-body">
+
+          <% if (searcherCache) { %>
+            <p class="border-bottom border-secondary"><i class="bi bi-search me-1"></i> Buscando : <span id="searcherSpan"> <%= searcherCache %> </span> </p>
+          <% } else { %>
+            <p><i class="bi bi-search me-1"></i> Buscando :  ¡Iniciando búsqueda!</p>
+          <% } %>
+
+     
+            <% if (countSearch !== 0 ) { %>
+                <% if (countSearch) { %> <p> <i class="bi bi-funnel me-1"></i> Sorteos encontrados : <span class="ms-2"><%= countSearch %></span> </p>  <% }; %>
+            <% }; %>
+                             
+                             
+                <% if (stateGroup) { %>
+                  <div class="contentStatesGroup overflow-auto ps-1" style="max-height: 160px; border-radius: 3px;">
+                    <% stateGroup.forEach((ele)=>{ %>
+
+                        <% if (ele.type == "1") { %>
+
+                            <% if (Searcher) { %>
+                              <a href="/view-raffles/type1/<%= Searcher %>/<%= ele._id %>">
+                                <p class="mb-1">
+                                    <%= ele._id %> (<%= ele.repetido %>)
+                                </p>
+                              </a>
+                            <% } else { %>
+                              <a href="/view-raffles/type1/<%= ele._id %>">
+                                <p class="mb-1">
+                                    <%= ele._id %> (<%= ele.repetido %>)
+                                </p>
+                              </a>
+                            <% }; %>
+
+                        <% } else if (ele.type == "2") { %>
+
+                          <% if (Searcher) { %>
+                            <a href="/view-raffles/type2/<%= Searcher %>/<%= ele.category %>/<%= ele._id %>">
+                              <p class="mb-1">
+                                  <%= ele._id %> (<%= ele.repetido %>)
+                              </p>
+                            </a>
+                          <% } else { %>
+                            <a href="/view-raffles/type2/<%= ele.category %>/<%= ele._id %>">
+                              <p class="mb-1">
+                                  <%= ele._id %> (<%= ele.repetido %>)
+                              </p>
+                            </a>
+                          <% }; %>  
+
+                        <% } else if (ele.type == "3") { %>
+
+                          <% if (Searcher) { %>
+                            <a href="/view-raffles/type3/<%= Searcher %>/<%= ele.category %>/<%= ele.sub_category %>/<%= ele._id %>">
+                              <p class="mb-1">
+                                  <%= ele._id %> (<%= ele.repetido %>)
+                              </p>
+                            </a>
+                          <% } else { %>
+                            <a href="/view-raffles/type3/<%= ele.category %>/<%= ele.sub_category %>/<%= ele._id %>">
+                              <p class="mb-1">
+                                  <%= ele._id %> (<%= ele.repetido %>)
+                              </p>
+                            </a>
+                          <% }; %>
+
+                        <% } %>
+                     
+                    <% }); %>
+                  </div>  
+                <% } %>
+                   
+                <% if (countSearch == 0) { %>  
+              
+                    <span>¡No se ha encontrado nada!</span>
+
+                    <div class="containerImageSinResultados d-flex justify-content-center">
+                        <img src="/img/sinResultados.png" style="width: 150px;">
+                    </div>
+           
+                <% }; %>
+
+                
+                  <p class="border-bottom border-secondary mt-3"><i class="bi bi-folder2 me-1"></i> Categorias/Sub-Categorias </p>
+               
+
+                <div class="contentCategory ps-1" style="height: 50%; border-radius: 3px;">
+
+                  <div class="mb-2 form-check">
+                    <input class="form-check-input radioCategory" type="radio" name="category" value="All" id="All" checked>
+                    <label class="form-check-label" for="All">Todo</label>
+                  </div>
+
+                  <% if (categoryAndSub) {%>
+
+                    <% if (categoryAndSub.length !== 1) { %>
+
+                      <% categoryAndSub.forEach( (ele, i)=>{ %> 
+                        
+                        <div class="mb-2 form-check">
+                          <label class="form-check-label" for="<%= ele.category %>"> <a href="/view-raffles/type2/<%= ele.category %>"><%= ele.category %></a>  </label>
+                        </div>
+                        
+                        <div class="contentSub closed border border-danger" id="sub-<%= ele.category %>">
+                      
+                            <div class="ms-3 mb-2 form-check">
+                              <input class="form-check-input subAll" type="radio" name="subCategory" value="All" id="subAll-<%= ele.category %>">
+                              <label class="form-check-label" for="subAll-<%= ele.category %>">Todo</label>
+                            </div>
+                      
+                          <% ele.sub_categories.forEach( (elem)=> { %> 
+                      
+                            <div class="ms-3 mb-2 form-check border border-danger"> <!-- // implementar esto en todos los demas -->
+                              <input class="form-check-input" type="radio" name="subCategory" value="<%= elem %>" id="<%= ele.category %><%= elem %>">
+                              <label class="form-check-label" for="<%= ele.category %><%= elem %>"> <a href="view-raffles/type3/<%= elem %>"></a>  </label>
+                            </div>
+                        
+                          <% }); %>
+                        </div>
+                  
+                      <% }); %>
+
+                    <% } else { %> 
+                      
+                     
+                      <% let category = categoryAndSub[0]._id %>
+
+                     
+                        <% if (subCategory !== null ) { %>
+                          <% categoryAndSub.forEach( (ele, i)=>{ %>
+                            
+                            
+                            <div class="mb-2 form-check">
+                              <input class="form-check-input radioCategory" type="radio" name="category" value="<%= ele._id %>" id="<%= ele._id %>" checked>
+                              <label class="form-check-label" for="<%= ele._id %>"><%= ele._id %></label>
+                            </div>
+
+                            <div class="contentSub1" id="sub1-<%= ele.category %>">
+                          
+                                <% if (subCategory == "All") { %>
+                                <div class="ms-3 mb-2 form-check">
+                                  <label class="form-check-label"> <a href="/view-raffles/type2/<%= category %>">Todo</a></label>
+                                </div>
+                                <% } else { %>
+                                <div class="ms-3 mb-2 form-check">
+                                  <label class="form-check-label"><a href="/view-raffles/type2/<%= category %>">Todo</a></label>
+                                </div>
+                                <% };%>  
+                        
+                              <% ele.sub_categories.forEach( (elem)=> { %>
+                      
+                                  <% if (elem == subCategory) { %>
+                                    <div class="ms-3 mb-2 form-check">
+                                      <label class="form-check-label" for="<%= elem %>"><a href="/view-raffles/type3/<%= category %>/<%= elem %>"><%= elem %></a></label>
+                                    </div>
+                                  <% } else { %>
+                              
+                                    
+                                    <div class="ms-3 mb-2 form-check">
+                                      <label class="form-check-label text-light" for="<%= elem %>"> <a href="/view-raffles/type3/<%= category %>/<%= elem %>"><%= elem %></a> </label>
+                                    </div>
+                                  <% }; %>
+                                  
+                              <% }); %>
+    
+                            </div>
+    
+                          <% }); %>  
+                      
+                        <% } else { %>    
+                          <% categoryAndSub.forEach( (ele, i)=>{ %>
+                            <div class="mb-2 form-check">
+                              <input class="form-check-input radioCategory" type="radio" name="category" value="<%= ele.category %>" id="<%= ele.category %>" checked>
+                              <label class="form-check-label" for="<%= ele.category %>"><%= ele.category %></label>
+                            </div>
+  
+                            <div class="contentSub closed" id="sub-<%= ele.category %>">
+                                                                                                                
+                                <% ele.sub_categories.forEach( (elem)=> { %>
+                        
+                                    <div class="ms-3 mb-2 form-check">
+                                      <input class="form-check-input radioSubCategory" type="radio" name="subCategory" value="<%= elem %>" id="<%= elem %>" checked>
+                                      <label class="form-check-label" for="<%= elem %>"><%= elem %></label>
+                                    </div>                               
+                            
+                                <% }); %>
+      
+                            </div>
+                          <% }); %>
+
+                        <% }; %>
+
+                    <% }; %>  
+                    
+                  <% }; %>  
+               
+                  
+                </div>
+
+                <div class="form-group my-3">
+                  <button class="form-control btnEFECT" type="submit" id="btnSearcherAuxiliar" style="width: 100%; height: 100%;">
+                    <i class="bi bi-search" id="iconLupaAuxiliar" style="color: #f39a9a;"></i>
+                  </button>
+                </div>
+
+    </form> <!-- :::::::::  aqui termine de cerrar el form ::::::::: -->
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-lg-9 col-md-9 col-sm-12 p-0">
+       <div class="barrHorizontIcon p-0 m-0 d-flex flex-wrap border-bottom border-dark" style="width: 100%;">
+          <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto;">
+            <a href="/view-raffles" class="text-decoration-none mx-4 p-0 raffle border-bottom" style="width: 40px; height: 40px;"></a>
+            <a href="/view-artes" class="text-decoration-none mx-4 p-0 arteGallery" style="width: 40px; height: 40px;"></a>
+            <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 aeronautica" style="width: 40px; height: 40px;"> </a>
+            <a href="/view-items" class="text-decoration-none mx-4 p-0 articulo" style="width: 40px; height: 40px;"></a>
+            <a href="/view-automotive" class="text-decoration-none mx-4 p-0 automotriz" style="width: 40px; height: 40px;"></a> 
+            <a href="/view-realstate" class="text-decoration-none mx-4 p-0 bienesraices" style="width: 40px; height: 40px;"></a>
+            <a href="/view-nautical" class="text-decoration-none mx-4 p-0 nautico" style="width: 40px; height: 40px;"></a>
+            <a href="/view-services" class="text-decoration-none mx-4 p-0 servicio" style="width: 40px; height: 40px;"></a>
+            <a href="/view-auction" class="text-decoration-none mx-4 p-0 subasta" style="width: 40px; height: 40px;"></a>
+          </ul>
+       </div>
+       <div class="viewCollection" style="height: 100vh;">
+            
+          <% if (cardArticleRaffle.docs.length !==0 ) {%>
+              <div class="contentAll d-flex flex-wrap justify-content-start p-3">
+                <% cardArticleRaffle.docs.forEach( (ele, i)=>{ %>
+
+                    <div class="card m-2 p-0 shadow cardPublished">
+
+                            <div class="card-body d-flex flex-column p-0">
+                                
+                              <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
+                                <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
+                                <div id="carouselExampleControls<%= i %>" class="carousel slide data-bs-ride="carousel" data-bs-interval="false" data-bs-touch="true" >
+                                  <div class="carousel-inner" style="width: 100%; height: 220px;">
+                                    <div class="carousel-item active" style="filter: none !important;">
+                                      <a href="/product/<%= ele.department %>/<%= ele._id %>"><img src="<%= ele.images[0].url%>" class="imgFront" alt="..."></a>
+                                    </div>
+                                  <%  for (let x = 1; x < ele.images.length; x++) { %>
+                                    <% const element = ele.images[x] %>
+                                    
+                                      <div class="carousel-item">
+                                        <a href="/product/<%= ele.department %>/<%= ele._id %>"><img src="<%= element.url %>" class="d-block w-100" style="  width: 100%; height: 100%; object-fit: cover;"></a>
+                                      </div>
+                                      
+                                  <% }; %>
+                                  </div>
+                                  
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
+                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                      <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
+                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                      <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                              </div>
+                              
+                              <hr class="m-0">
+
+                              
+                             
+                              <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+
+                                      <div class="containerTitleFavorite d-flex justify-content-between">
+                                        <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                          style="text-decoration: none;">
+                                          <%= ele.title %>
+                                        </a>                                            
+                                      
+                                        <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                      </div>
+  
+                                      <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                      
+                                      <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+
+                                        <div class="containerPrice d-flex justify-content-between px-2">
+                                          <p class="m-0 px-1 border border-dark rounded-pill">
+                                            $ <%= ele.price %>
+                                          </p>
+                                          <div class="containerTickets">
+                                            <div class="containerIconCategory">
+                                              <% if (ele.category == 'Gratis' ) {%>
+                                              <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
+                                              </span>
+                                              <% } else { %>
+                                              <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                <i class="bi bi-ticket-fill" style="color: brown;"></i>
+                                              </span>
+                                              <% }; %>  
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                     
+  
+                                    </div>
+   
+                              </div>
+
+
+             
+
+
+                            </div>   
+                   
+                    </div>
+                    
+                <% }); %>
+              </div>  
+          <% } else { %>    
+              <div class="containerImageSinResultados d-flex justify-content-center p-5">
+                <img src="/img/sinResultados.png" class="py-3" style="width: 212px;">
+              </div>
+          <% }; %>
+              
+         
+          <div class="contentPagination border-bottom border-secondary" style="height: 100%;">
+
+            <% if (cardArticleRaffle) { %>
+             
+                <% if ( cardArticleRaffle.page == 1 && cardArticleRaffle.totalPages !== 1 ) {  %>
+                                        
+                <nav aria-label="Page navigation">
+                 <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                
+                     <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                     <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleRaffle.prevPage %>">Prev</a></li>
+                     <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleRaffle.page %>"><%= cardArticleRaffle.page %></a></li>
+                     <li class="page-item "><a class="page-link" href="?page=<%= cardArticleRaffle.nextPage %>">Next</a></li>
+                     <li class="page-item "><a class="page-link" href="?page=<%= cardArticleRaffle.totalPages %>"> <%= cardArticleRaffle.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+              
+                  </ul>
+                </nav>
+
+                <% } else if ( cardArticleRaffle.page == 1 && cardArticleRaffle.totalPages == 1 ) {  %>
+
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                   
+                        <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleRaffle.prevPage %>">Prev</a></li>
+                        <li class="page-item active"><a class="page-link disabled href="?page=<%= cardArticleRaffle.page %>"><%= cardArticleRaffle.page %></a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleRaffle.nextPage %>">Next</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleRaffle.totalPages %>"> <%= cardArticleRaffle.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                 
+                     </ul>
+                   </nav>
+
+                <% } else if ( cardArticleRaffle.page !== cardArticleRaffle.totalPages && cardArticleRaffle.page !== 1 ) {  %>
+
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                        <li class="page-item"><a class="page-link" href="?page=1"><i class="bi bi-arrow-bar-left"></i>1</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleRaffle.prevPage %>">Prev</a></li>
+                        <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleRaffle.page %>"><%= cardArticleRaffle.page %></a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleRaffle.nextPage %>">Next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleRaffle.totalPages %>"> <%= cardArticleRaffle.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                    </ul>
+                  </nav>  
+
+                <% } else if ( cardArticleRaffle.page == cardArticleRaffle.totalPages ) {  %> 
+
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                        <li class="page-item"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i>1</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleRaffle.prevPage %>">Prev</a></li>
+                        <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleRaffle.page %>"><%= cardArticleRaffle.page %></a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleRaffle.nextPage %>">Next</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleRaffle.totalPages %>"> <%= cardArticleRaffle.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                     </ul>
+                  </nav>
+
+                <% }; %>   
+
+            <% }; %>
+
+          </div>
+
+       </div>
+
+    </div>
+  </div>
+  <%- include('../partials/footer.ejs') %> 
+
+  </main>
+    <%- include('../partials/scripts.ejs') %>
+    <!--  este script controla el estado de los themas. -->
+    <%- include('../partials/scriptsThemes.ejs') %>
+
+   <% if ( user !== undefined ) { %>
+    <script>
+
+        const linkHeart = document.querySelectorAll('.linkHeart')
+        for (let i = 0; i < linkHeart.length; i++) {
+        const element = linkHeart[i];
+        element.addEventListener('click', ()=>{
+         
+          efecto()
+          setInterval( normalHeart, 2000)
+          //console.log(element.childNodes)
+          //console.log(element.childNodes[0].value)
+          //console.log(element.childNodes[1].value)
+          const depart = element.childNodes[0].value;
+          const id = element.childNodes[1].value;
+          console.log(depart)
+          console.log(id)
+
+          const datos = {
+            depart : depart,
+            id : id
+          }
+
+          fetch('/myfavorites', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+          })
+            .then(response =>response.json() )
+            .then( jsonx => console.log(jsonx))
+            .catch( err => console.log(err));
+
+        })
+      
+
+        function efecto(){
+          element.classList.remove('bi-heart');
+          element.classList.add('bi-heart-fill')
+        }
+
+        function normalHeart(){
+          element.classList.remove('bi-heart-fill');
+          element.classList.add('bi-heart')
+        }
+
+        
+      }
+
+    </script>
+   <% } %>
+
+   <script>
+    let radioCategory = document.querySelectorAll('.radioCategory');
+    let contentSub = document.querySelectorAll('.contentSub');          
+
+    for (let i = 0; i < radioCategory.length; i++) {
+      const category = radioCategory[i];       
+      const valor = category.value;
+      //let contentSub = document.getElementById(`sub-${valor}`);
+      let content = contentSub[i - 1];
+                   
+
+      category.addEventListener('click', ()=>{  
+
+       //console.log("Esto es element --->", category);
+       console.log("Esto es valor --->",valor);
+       console.log("Esto es i ", i);
+       let inputAll = document.querySelectorAll('.subAll');
+       let inpAll = inputAll[i - 1];
+       console.log("este es el input All --->", inpAll)
+               
+
+          if (valor !== "All"){
+
+              function contraerAllContent(indice){
+                  console.log("Esto es indice elegido", indice);
+                    contentSub.forEach((ele, i)=>{
+                      //console.log("Esto es ele -->",ele );
+                      console.log("Esto es i del contenSub -->", i + 1 );
+                      let I = i+1
+                      if (I !== indice){
+                        ele.classList.add('closed');
+                      } 
+                    
+                    })
+              }
+
+              const estado = content.classList.contains('closed');
+                      
+              console.log("estado : ", estado)
+
+              if (estado == false){
+                  content.classList.add('closed');
+                  console.log(inpAll);
+                  inpAll.removeAttribute("checked");
+                  
+              } else {
+                  content.classList.remove('closed');
+                  console.log(inpAll);
+                  inpAll.setAttribute("checked", "");
+                            
+              }
+
+              contraerAllContent(i)
+
+          }    
+
+      })
+
+    }
+
+   </script>
+
+</body>
+</html>

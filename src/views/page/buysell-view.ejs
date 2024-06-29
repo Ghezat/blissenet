@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Buy&Sell</title>
+</head>
+<style>
+ 
+    .open{
+    display: block;
+    }
+
+    .closed{
+    display: none;
+   
+    }
+
+</style>
+<body style="background-color: #e9ecef;">
+
+     
+  <main>
+    <%- include('../partials/navi-simple.ejs') %>
+    
+    <div class="container-fluid d-flex justify-content-between p-1 themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+        <div class="containerNav"><p class="m-0 ps-5">Buy&Sell</p></div>
+        <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-secondary" id="btnInbox">Buyes</button>
+          <button type="button" class="btn btn-secondary" id="btnOutbox">Selles</button>
+        </div>
+    </div>
+   
+    <div class="contentInbox">
+        <div class="row border border-light m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+            <div class="col-lg-10  my-4 p-0">
+                      <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                         
+                      </div>
+            </div> 
+  
+      </div>
+    </div>
+    <div class="contentOutbox closed">
+        <div class="row border border-light m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+            <div class="col-lg-10  my-4 p-0">
+                <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                 
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+  <script>
+    let btnInbox = document.getElementById('btnInbox');
+    let btnOutbox = document.getElementById('btnOutbox');
+    let contentInbox = document.querySelector('.contentInbox');
+    let contentOutbox = document.querySelector('.contentOutbox');
+                                                  
+    btnInbox.addEventListener('click', ()=>{
+      contentOutbox.classList.add('closed')
+      contentInbox.classList.remove('closed')
+      
+    })
+
+    btnOutbox.addEventListener('click', ()=>{
+      contentOutbox.classList.remove('closed')
+      contentInbox.classList.add('closed')
+    
+    })
+
+  </script>
+</body>
+</html>
+

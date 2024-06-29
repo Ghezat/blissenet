@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Admin</title>
+</head>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+        <% if (lockedAdmin) { %>
+            <%- include('../alertAdmin/lockedAdmin.ejs') %>
+        <% } %>
+        
+        <% if (noAccount) { %>
+            <%- include('../alertAdmin/noAccount.ejs') %>
+        <% }; %>
+
+        <% if (errorPassw) { %>
+            <%- include('../alertAdmin/errorPassw.ejs') %>
+        <% }; %>
+      
+       <div class="containerSignup">
+            <div class="row d-flex justify-content-center my-5 mx-0 p-2 border border-light">
+                <div class="col-lg-4 col-md-5 col-sm-8 p-3 me-3 border">
+                    <div class="card rogelio border">
+                        <div class="card-header">
+                            session
+                        </div>
+                        <div class="card-body">
+                            <form action="/admin/signin" method="POST" id="signinAdmin">
+                                <div class="form-group my-2">
+                                    <input type="email" name="email" placeholder="Enter your email" class="form-control"
+                                    id="admin_user" autocomplete="off"  required>
+                                </div>
+                                <div class="form-group my-2">
+                                    <input type="password" name="password" placeholder="Enter your password" class="form-control"
+                                    id="admin_passw"  autocomplete="off"  minlength="7" maxlength="20" style="letter-spacing: 3px;" required>
+                                </div>
+                               
+                                <div class="form-group my-3">                                      
+                                    <button class="g-recaptcha form-control btn btn-dark" 
+                                        data-sitekey="6LfiYtEmAAAAALTQNN9yzyt_sRzqsr-6xVQTeEg8" 
+                                        data-callback='signinAdmin' 
+                                        data-action='submit'>
+                                        Login
+                                    </button>
+                                <!-- clave secreta 6LfiYtEmAAAAAJijFJXY0QI0amKJORxHJhTLT_Ti -->
+                                
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+                       
+       
+
+    </main>
+
+    <%- include('../partials/scripts.ejs')%>
+</body>
+
+</html>
+
+<script>
+    window.addEventListener('load', ()=>{
+        const adminUser = document.getElementById('admin_user');
+        const adminPassw = document.getElementById('admin_passw');
+
+        adminUser.value= "Solo Administradores 🔒";
+        adminPassw.value= "";
+    })
+</script>

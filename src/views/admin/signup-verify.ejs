@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Admin-verify</title>
+</head>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+
+       <div class="containerSignup">
+            <div class="row d-flex justify-content-center my-5 mx-0 p-2">
+                <div class="col-lg-4 col-md-5 col-sm-8 p-3 me-3">
+                    
+                        <div class="card rogelio border">
+                            <div class="card-header d-flex justify-content-between">
+                                <span><i class="bi bi-journal-check mx-1"></i> Register</span>
+                                <span><i class="bi bi-2-square me-1"></i></span>
+                            </div>
+                            <div class="card-body">
+
+                                <% if (newAdmin) { %> 
+                                <form action="/admin/signup-verify" method="POST" id="signupAdminVerify">
+                                           
+                                    <% if (userAdmin) { %> 
+                                    <div class="input-group my-2">
+                                        <span class="input-group-text"> Admin-Master : </span>
+                                        <input type="text" class="form-control" value="<%= userAdmin[0].adminName %>" readonly>
+                                    </div>
+                                    <% }; %>
+
+                                    
+                                    <div class="input-group my-2">
+                                        <span class="input-group-text"> New-Admin : </span>
+                                        <input type="text" name="new_admin" class="form-control new_admin" value="<%= newAdmin %>" readonly>
+                                    </div>
+                                                        
+
+                                    <div class="input-group my-2">
+                                        <span class="input-group-text"> Token :</span>
+                                        <input type="text" name="token" class="form-control" style="letter-spacing: 10px; font-weight: bold; font-size: 18px;" maxlength="6" required>
+                                    </div>
+
+                                    <div class="form-group my-3">  
+                                        <button class="form-control btn btn-primary" type="submit"> Validar Registro</button>
+                                    </div>
+
+                                    <div class="form-group my-3 p-1 bg-light rounded-2 text-dark">
+                                        <label for="" class=" mx-1"><small> Consiga el Token requerido aqui. Si no tiene acceso al Token de seguridad administrativa. Comuniquese con el departamento de Sistemas y Tecnologias de Blissenet </small> </label>
+                                    </div>
+
+                                    <div class="d-flex justify-content-center my-2 p-1 text-light">
+                                        <label for="" class="mx-1 timeless"> <small> Timer </small> </label>
+                                    </div>
+
+                                </form>
+                                <% } else { %>
+                                    <div class="alert alert-warning">
+                                        <span>Sin data para crear nuevo registro administrativo </span>
+                                    </div>
+                                <% }; %>    
+                            
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+        </div> 
+                              
+
+    
+
+    <%- include('../partials/scripts.ejs')%>
+
+    </main>
+</body>
+</html>
+
+<script>
+    const timeless = document.querySelector('.timeless');
+    const user = document.querySelector('.new_admin');
+    
+    window.addEventListener('load', ()=>{
+        
+        let userV = user.value;
+        
+        let startT = 90;
+        let interval = setInterval(timer, 1000);
+
+        function timer(){
+            
+            let timesless = startT --;
+            //console.log(typeof timesless);
+            //console.log("timesless", timesless);
+            let timer = timesless > 0;  // true or false;
+            console.log("timer", timer);
+
+            if (timer === true ){
+                timeless.innerHTML = `<i class="bi bi-hourglass-split me-2"></i>
+                                      <span> ${timesless} seg. </span>`;
+            } else {
+                timeless.innerText = `Tiempo agotado. Registro eliminado`;
+                clearInterval(interval);
+                //ahora enviamos un fetch al backend para eliminar el registro antes realizado
+
+                const dato = {
+                    user : userV
+                };
+
+                console.log("Estos datos viajaran al backend para eliminar este user")
+                console.log("dato", dato);
+                
+                fetch('/admin/signup-delete', {
+
+                method: "post",
+                body: JSON.stringify(dato),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => 
+                    {
+                        console.log("Llegando : ",jsonx)
+                        const type = jsonx.type;
+                        const resp = jsonx.resp;
+                        
+
+                        if (type == "delete"){
+                            //esta direccion aqui abajo debemos cambiarla por la direccion real cuando este en el servidor
+                            //('https://blissenet.com/myaccount/signup', '_self'); ---- el _self es para que abra en la misma ventana o se coporte como una actualizacion de ventana.
+                            window.open('http://localhost:1263/admin/','_self');
+                        }
+                        // resp: "Registro Eliminado",  type: "delete"
+
+
+                    })
+                .catch( err => console.log(err));
+                
+            }
+
+            
+        }
+
+    })
+</script>

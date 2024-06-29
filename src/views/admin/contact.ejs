@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Contact</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+        <% if (userAdmin) { %>
+       
+            <div class="container-fluid d-flex justify-content-between align-items-center p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                
+                <div class="container" style="width: 70%;">
+
+                    <form action="/admin/contact" method="post" class="d-flex">
+
+                        <input type="date" name="dateForm" class="form-control me-1" style="width: 310px;">
+                        <input class="form-control me-2" type="search" name="searcher"  placeholder="Buscar por: Depart, CodeReport, Anunciante & Admin" aria-label="Search">
+                        <select name="selectSearcher"  class="form-control border border-success" style="width: 300px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                            <option value="Date">Date  </option>
+                            <option value="Bank">Banco </option>
+                            <option value="Ref">Referencia </option>
+                            <option value="User">Usuario </option>
+                            <option value="Admin">Admin </option>
+                        </select>
+                        <button class="btn btn-outline-success" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Search</button>
+                    
+                    </form>
+                 
+                </div>    
+
+                <div>
+                    <span class=" me-5 p-0" style="color:gray; font-weight: 500;"> Contactos</span>
+                </div>
+
+            </div>
+
+            <div class="row d-flex justify-content-center mx-0 p-2">
+                
+                <div class="col-lg-12 my-1">
+               
+                    <ul class="nav nav-tabs">
+                        
+                        <li class="nav-item">
+                            <button class="nav-link paymentsToProcess active">Pagos a Procesar</button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="nav-link searchToProcessNoPay">Pagos Fallidos</button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="nav-link historico">Historico</button>
+                        </li>
+                      
+                    </ul> 
+                    
+                </div>
+
+                <div class="col-12 paymentsToProcessBody">
+                   
+                    <% if (searchToProcessCount) { %>
+                        <div class="alert alert-info my-2">
+                            <strong><i class="bi bi-search me-2"></i> Result : <span class="bg-info px-2 py-1 rounded-2 ms-1"><%= searchToProcessCount %></span>   </strong>
+                        </div>
+                    <% } %>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Date</th><th>Id</th><th>User</th><th>Price</th><th>Comm-USD</th><th>Comm-VES</th><th>Bank</th><th>Ref.</th><th>Action</th><th>Action</th>
+                        </tr>
+                        
+                        <% if (searchToProcess) { %>
+                            <% searchToProcess.forEach((ele, i)=>{ %>
+                        <tr>
+                            
+                                <td><%= ele.dates %></td><td><%= ele._id %></td><td><%= ele.usernameSell %></td>
+                                <td><%= ele.price %></td><td class="table-warning"><%= ele.commission %></td><td class="table-warning"><%= ele.montoPay %></td><td class="table-primary"><%= ele.bank %></td><td><%= ele.refer %></td> 
+                                <% if (ele.userDeclare === false ) { %>
+                                <td><button class="btn btn-secondary btn-sm" disabled>Yes</button></td><td><button class="btn btn-secondary btn-sm" disabled>No</button></td>
+                                <% } else { %>
+                                <td>
+                                    <form action="/admin/contact/process" method="post">
+                                        <button class="btn btn-success btn-sm">Yes</button>
+                                        <input type="hidden" value="<%= ele._id %>" name="idOper">
+                                        <input type="hidden" value="Yes" name="Action">
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="/admin/contact/process" method="post">
+                                        <button class="btn btn-danger btn-sm">No</button>
+                                        <input type="hidden" value="<%= ele._id %>" name="idOper">
+                                        <input type="hidden" value="No" name="Action">
+                                    </form>
+                                </td>    
+                                <% }; %>        
+                        </tr>
+                            <% }); %>
+                        <% }; %>   
+                    </table>
+                </div>
+
+                <div class="col-12 searchToProcessNoPayBody closed">
+                    <% if (searchToProcessNoPayCount) { %>
+                        <div class="alert alert-info my-2">
+                            <strong><i class="bi bi-search me-2"></i> Result : <span class="bg-info px-2 py-1 rounded-2 ms-1"><%= searchToProcessNoPayCount %></span>   </strong>
+                        </div>
+                    <% } %>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Date</th><th>Admin</th><th>Id</th><th>User</th><th>Comm-USD</th><th>Comm-VES</th><th>Bank</th><th>Ref.</th><th>payCommission</th>
+                        </tr>
+
+                        <% if ( searchToProcessNoPay ) { %>
+                            <%  searchToProcessNoPay.forEach((ele, i)=>{ %>
+                        <tr>
+                                <td><%= ele.dates %></td><td><%= ele.admin %></td><td><%= ele._id %></td><td><%= ele.usernameSell %></td>
+                                <td><%= ele.commission %></td><td class="table-warning"><%= ele.montoPay %></td><td><%= ele.bank %></td><td><%= ele.refer %></td> 
+                                <td class="table-danger"><%= ele.payCommission %></td>
+                        </tr>        
+                            <% }); %>
+                        <% }; %>   
+                    </table>
+                </div>
+
+                <div class="col-12 historicoBody closed">
+                    <% if (searchProcessCount) { %>
+                        <div class="alert alert-info my-2">
+                            <strong><i class="bi bi-search me-2"></i> Result : <span class="bg-info px-2 py-1 rounded-2 ms-1"><%= searchProcessCount %></span>   </strong>
+                        </div>
+                    <% } %>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Date</th><th>Id</th><th>User</th><th>Price</th><th>Comm-USD</th><th>Comm-VES</th><th>Bank</th><th>Ref.</th><th>Admin</th><th>Process</th><th>PayCom.</th>
+                        </tr>
+                        
+                        <% if (searchProcess) { %>
+                            <% searchProcess.forEach((ele, i)=>{ %>
+                        <tr>
+                                <td><%= ele.dates %></td><td><%= ele._id %></td><td><%= ele.usernameSell %></td>
+                                <td><%= ele.price %></td><td class="table-warning"><%= ele.commission %></td><td class="table-warning"><%= ele.montoPay %></td><td class="table-primary"><%= ele.bank %></td><td><%= ele.refer %></td> 
+                                <td><%= ele.admin %></td><td class="table-success"><%= ele.process %></td>
+                                <%  if (ele.payCommission === true ){ %>
+                                <td class="table-success"><%= ele.payCommission %></td>
+                                <% } else {%>
+                                <td class="table-danger"><%= ele.payCommission %></td>
+                                <% }; %>
+                        </tr>
+                            <% }); %>
+                        <% }; %>   
+                    </table>
+                </div>
+                
+            </div>  
+                  
+        <% } else { %>
+
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+        
+                
+                <%- include('../partials/adminNoLogin.ejs') %>
+            
+            </div>
+    
+        <% }; %>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+</body>
+</html>
+
+<script>
+
+let paymentsToProcess = document.querySelector('.paymentsToProcess');
+let historico = document.querySelector('.historico');
+let searchToProcessNoPay = document.querySelector('.searchToProcessNoPay');
+
+let paymentsToProcessBody = document.querySelector('.paymentsToProcessBody');
+let historicoBody = document.querySelector('.historicoBody');
+let searchToProcessNoPayBody = document.querySelector('.searchToProcessNoPayBody');
+
+
+paymentsToProcess.addEventListener('click', ()=>{
+    
+    paymentsToProcess.classList.add('active');
+    historico.classList.remove('active');
+    searchToProcessNoPay.classList.remove('active');
+ 
+    historicoBody.classList.add('closed');
+    searchToProcessNoPayBody.classList.add('closed');
+    paymentsToProcessBody.classList.remove('closed');
+    
+});
+
+historico.addEventListener('click', ()=>{
+       
+    paymentsToProcess.classList.remove('active');
+    searchToProcessNoPay.classList.remove('active');
+    historico.classList.add('active');
+   
+    historicoBody.classList.remove('closed');
+    searchToProcessNoPayBody.classList.add('closed');
+    paymentsToProcessBody.classList.add('closed');
+    
+});
+
+searchToProcessNoPay.addEventListener('click', ()=>{
+       
+   paymentsToProcess.classList.remove('active');
+   historico.classList.remove('active');
+   searchToProcessNoPay.classList.add('active');
+  
+   historicoBody.classList.add('closed');
+   paymentsToProcessBody.classList.add('closed');
+   searchToProcessNoPayBody.classList.remove('closed');
+   
+});
+
+</script>

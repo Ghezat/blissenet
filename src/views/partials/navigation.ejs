@@ -1,0 +1,150 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid mx-4">
+
+    <a class="navbar-brand" href="/" id="logoBlissenet"> </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+      aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarScroll">
+
+      <ul class="navbar-nav my-lg-0  navbar-nav-scroll mx-3" >
+        <li><a href="" class="text-dark" ><i class="bi bi-newspaper"></i></a> </li>
+      </ul>
+
+      <!-- session -->
+     
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll ms-1" style="--bs-scroll-height: 100px;">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Session
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+              <% if (user) { %>
+                <li><a class="dropdown-item disabled" href="/myaccount/signin">Signin</a></li>
+                <li><a class="dropdown-item disabled" href="/myaccount/signup">Singup</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <% } else { %>
+                  <li><a class="dropdown-item" href="/myaccount/signin">Signin</a></li>
+                  <li><a class="dropdown-item" href="/myaccount/signup">Singup</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <% }; %>
+
+                    <% if (user) { %>
+                      <li><a class="dropdown-item" href="/myaccount/logout">Logout</a></li>
+                    <% } else { %>
+                        <li><a class="dropdown-item disabled" href="/logout">Logout</a></li>
+                    <% }; %>
+
+            </ul>
+          </li>
+        </ul>
+    
+
+      <!-- searcher -->
+      
+        <form class="d-flex me-5">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      
+
+      <!-- actions -->
+    
+        <!-- username -->
+        <ul class="navbar-nav my-lg-0 navbar-nav-scroll usernameMain" style="--bs-scroll-height: 100px;">
+          <li class="nav-item dropdown">
+
+              <% if (user) { %>
+              <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person"></i>
+                <%= user.username %>
+              </a>
+              <% } else { %>
+                <a class="nav-link disabled" href="#" id="navbarScrollingDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person"></i> username
+                </a>
+              <% }; %>
+              <% if (user) { %>
+                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                  <li><a class="dropdown-item" href="/myaccount/messenger">Mensajeria</a></li>
+                  <% if (searchProfile.length !==0 ) { %>
+                  <li><a class="dropdown-item" href="/account/<%= user.username %>">Mi Tienda</a></li>
+                  <% }; %>
+                  <li><a class="dropdown-item" href="/buysell-list/">Sala de Negocios</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/myfavorites">Favoritos</a></li>
+                  <% if (searchProfile.length !==0 ) { %>
+                  <li><a class="dropdown-item" href="/mytickets">Mis Tickets</a></li>
+                  <li><a class="dropdown-item" href="/follow">Siguiendo </a></li>
+                  <li><a class="dropdown-item" href="/followme">Siguiendome </a></li>
+                  <% }; %>
+                  <li><hr class="dropdown-divider"></li>
+                  <% if (searchProfile.length !==0 ) { %>
+                  <li><a class="dropdown-item" href="/myaccount/manage">Gerencia</a></li>
+                  <% }; %>
+                  <li><a class="dropdown-item" href="/myaccount/profile">Perfil</a></li>
+                </ul>
+              <% }; %> 
+          </li>
+        </ul>
+
+        <!-- publications -->
+        <ul class="navbar-nav my-lg-0  ms-2 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item dropdown">
+            <% if (user) { %>
+              <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Publicaciones
+              </a>
+            <% } else { %>
+              <a class="nav-link dropdown-toggle invisible" href="#" id="navbarScrollingDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Publicaciones
+              </a>
+            <% }; %>
+                
+            <% if (user) { %>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item" href="/department/create">Herramienta ADS</a></li>
+              <% if (searchProfile.length !==0 ) { %>
+                <li><a class="dropdown-item" href="/department/raffle">Herramienta Raffle</a></li>  
+                <li><a class="dropdown-item" href="/my-ads">Mis Anuncios</a></li>
+                <li><a class="dropdown-item" href="/my-invoices">Facturas</a></li>
+              <% }; %>
+                <li><a class="dropdown-item" href="/history">Historial</a></li>
+              <% if (searchProfile.length !==0 ) { %>
+                <li><a class="dropdown-item" href="/record">Record</a></li>  
+              <% }; %>  
+            </ul>
+            <% }; %>
+
+          </li>
+        </ul>
+
+        <!-- bell messages -->
+        <ul class="navbar-nav mb-lg-0 me-5">
+          <li class="nav-item">
+            <% if (user) { %>
+            <a class="nav-link" role="button" data-bs-toggle="popover" title="Alert of inbox" data-bs-content="!la campana cambia de color cuando tengas un mensaje!" href="/myaccount/inbox"><i class="bi bi-bell"></i></a>
+            <% } else { %>
+            <a class="nav-link invisible" href="#"><i class="bi bi-bell"></i></a>  
+            <% }; %>  
+          </li>
+        </ul>
+      
+
+
+
+    </div>
+  </div>
+</nav>

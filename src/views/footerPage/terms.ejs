@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blisnet - Manual</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        width: 100wh;
+    }
+    main{
+        width: 100%;
+        height: auto;
+    }
+
+    .theme{
+        cursor: pointer;
+    }
+
+    .close{
+        display: none;
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+
+</style>
+<body class="mainTheme">
+    <main>
+
+        <%- include('../partials/navi-simple.ejs') %>
+        <div class="row p-0 themaTextLight d-flex justify-content-center mx-0 my-3" style="width: 100%;">
+            <div class="col-10 col-sm-10 col-md-10 col-lg-10 px-0">
+                <div class="Terminos d-flex flex-column">
+                    <div class="titulo d-flex justify-content-center mt-3 mb-4">
+                        <h5>Términos y Condiciones de Uso</h5>
+                    </div>
+                    <div class="cuerpo my-2">
+                        <div class="chapter1">
+                            <h6>1. Aceptación de los Términos</h6>
+                            <p>Al registrarse en el marketplace digital, el usuario acepta cumplir con los siguientes términos y condiciones. El uso continuado de la plataforma constituye la aceptación de estos términos.</p>
+                        </div>
+                        <div class="chapter2">
+                            <h6>2. Responsabilidad del Contenido</h6>
+                            <p>Los usuarios son responsables del contenido que publican en la plataforma. Se prohíbe la publicación de contenido que infrinja los derechos de propiedad intelectual, incluyendo la venta de productos robados o fraudulentos. La infracción de leyes sobre derechos de autor podría conllevar consecuencias legales para el usuario. Tenga mucho cuidado sobre todo al subir un video o audio. Ya que podría estar al marguen de la ley. Y aunque realizamos revisiones manuales del contenido publicado, es posible que algunos materiales no autorizados se filtren en la plataforma. Por lo tanto, se recomienda a los usuarios estar atentos y cuidadosos al seleccionar el material para su anuncios.</p>
+                        </div>
+                        <div class="chapter3">
+                            <h6>3. Comportamiento Ético</h6>
+                            <p>Se espera que los usuarios actúen de manera ética y respetuosa hacia otros usuarios y hacia la plataforma. Cualquier comportamiento inapropiado, como el acoso o la discriminación, será motivo de suspensión o eliminación de la cuenta.</p>
+                        </div>
+                        <div class="chapter4">
+                            <h6>4. Transacciones Comerciales</h6>
+                            <p>El marketplace digital facilita las transacciones entre compradores y vendedores, pero no se hace responsable de las disputas comerciales que puedan surgir. Los usuarios asumen la responsabilidad total de sus transacciones.</p>
+                        </div>
+                        <div class="chapter5">
+                            <h6>5. Exoneración de Responsabilidad</h6>
+                            <p>La plataforma no se hace responsable por pérdidas, daños o reclamaciones que surjan del uso del marketplace digital. Los usuarios utilizan la plataforma bajo su propio riesgo.</p>
+                        </div>
+                        <div class="chapter6">
+                            <h6>6. Contenido Inapropiado</h6>
+                            <p>Los usuarios que ofrezcan servicios vinculados a acompañamientos a terceros o masajes se comprometen a publicar únicamente imágenes y contenido que sean apropiados y respetuosos. Se prohíbe la publicación de imágenes explícitas, desnudos o cualquier contenido que pueda considerarse ofensivo o que viole las normas de moral y buenas costumbres. La publicación de este tipo de contenido será motivo suficiente para la cancelación inmediata de la cuenta del usuario.</p>
+                        </div>
+                        <div class="chapter7">
+                            <h6>7. Modificaciones a los Términos</h6>
+                            <p>La plataforma se reserva el derecho de modificar estos términos y condiciones en cualquier momento. Los usuarios serán notificados de cualquier cambio y se espera que revisen periódicamente los términos actualizados.</p>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+    </main>
+    <%- include('../partials/scripts.ejs') %>
+    <!--  este script controla el estado de los themas. -->
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+</body>    

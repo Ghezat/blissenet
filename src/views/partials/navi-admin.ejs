@@ -1,0 +1,162 @@
+<div class="container-fluid m-0 p-0">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light px-2">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/admin">Administrations</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse contenController" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+           <!-- session -->
+       
+          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Session
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+  
+                    <% if (userAdmin !== undefined ) { %>
+                    <li><a class="dropdown-item disabled" href="/admin/signin">Signin</a></li>
+                    <% } else { %>
+                    <li><a class="dropdown-item" href="/admin/signin">Signin</a></li>
+                    <% }; %>  
+
+                    <% if (userAdmin !== undefined) { %>
+                      <% if (userAdmin[0].rol === 'adminMaster') { %>
+                        <li><a class="dropdown-item" href="/admin/signup">Singup</a></li>
+                      <% }; %>
+                    <% }; %>                  
+                    
+                    <li><hr class="dropdown-divider"></li>
+
+                    <% if (userAdmin !== undefined ) { %>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    <% } else { %>
+                    <li><a class="dropdown-item disabled" href="/logout">Logout</a></li>
+                    <% }; %> 
+              </ul>
+            </li>
+          </ul>
+      
+          <% if (userAdmin !== undefined) { %>
+              <!-- data -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Data
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="/admin/demographic">Datos Demograficos</a></li>
+                  <li><a class="dropdown-item" href="/admin/commercial">Datos Comerciales</a></li>
+                  <li><a class="dropdown-item" href="/admin/mercantil">Datos Mercantiles</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/admin/update-rate">Update Rate</a></li>
+                </ul>
+              </li>
+          <% }; %>        
+
+
+          <% if (userAdmin !== undefined) { %>
+            <% if (userAdmin[0].rol === 'adminMaster' || userAdmin[0].rol === 'adminMarketing' ) { %>
+                <!-- marketing -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Marketing
+                  </a> 
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="/admin/invoice-marketing">Create Invoice</a></li> 
+                    <li><a class="dropdown-item" href="/admin/bannersFront">Banners</a></li>                    
+                    <li><a class="dropdown-item" href="/admin/newsDay">News Day</a></li>
+                    <hr class="dropdown-divider">
+                    <li><a class="dropdown-item" href="/admin/Bg-sign">Background Sign</a></li>                    
+                  </ul>
+                </li>
+            <% }; %>
+          <% }; %>     
+        
+          <% if (userAdmin !== undefined) { %>
+            <% if (userAdmin[0].rol === 'adminMaster' || userAdmin[0].rol === 'adminAdmin' ) { %>
+                <!-- adminitrations -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Administrations
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="/admin/invoiceReceipt">Facturas y Recibos</a></li>
+                    <hr class="dropdown-divider">
+                    <li><a class="dropdown-item" href="/admin/contact">Contactos</a></li>
+                    <li><a class="dropdown-item" href="/admin/buydirect">Compras Directas</a></li>
+                    <hr class="dropdown-divider">
+                    <li><a class="dropdown-item" href="/admin/sala/contactos">Pool Contactos</a></li>
+                    <li><a class="dropdown-item" href="/admin/sala/comprasDirectas">Pool Compras Directas</a></li>
+                    <% if (userAdmin[0].rol === 'adminMaster') { %>
+                      <hr class="dropdown-divider">
+                      <li><a class="dropdown-item" href="/admin/cronoTask">Tareas Cronometradas</a></li>
+                      <li><a class="dropdown-item" href="/admin/finishMechanic">Cierre y Celebración Mecanico</a></li>
+                      <li><a class="dropdown-item" href="/admin/adminControl">Controlador de Admin</a></li>
+                      <li><a class="dropdown-item" href="/admin/accountbanks">Cuentas Bancarias</a></li>
+                      <li><a class="dropdown-item" href="/admin/administrativeProfile">Perfil Administrativo</a></li>
+                    <% }; %>
+                  </ul>
+                </li>
+            <% }; %>
+          <% }; %> 
+
+          <% if (userAdmin !== undefined) { %>
+            <% if (userAdmin[0].rol === 'adminMaster' || userAdmin[0].rol === 'adminReport' ) { %>
+                <!-- adminitrations -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Reports
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="/admin/process/reports">Ver Reportes</a></li>
+                    <hr class="dropdown-divider">
+                    <li><a class="dropdown-item" href="/admin/pool/reports">Pool Reportes</a></li>
+                  </ul>
+                </li>
+            <% }; %>
+          <% }; %> 
+
+
+        </ul>
+
+        <% if (userAdmin) { %>
+          <ul class="navbar-nav useradmin">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-person-workspace mx-1"></i> <span><%= userAdmin[0].adminName %></span></a>
+            </li>
+          </ul>
+        <% }; %>
+
+      </div>
+    </div>
+</nav>
+</div>
+
+<style>
+  
+
+  @media screen and (min-width: 320px) and (max-width: 800px ) {
+    .contenController{
+      display: block;
+    }
+
+  }
+
+  @media screen and (min-width: 801px) and (max-width: 2000px ) {
+    .contenController{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .useradmin{
+      margin-right: 100px;
+    }
+
+  }
+  
+  
+</style>
+

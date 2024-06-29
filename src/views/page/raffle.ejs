@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Raffle</title>
+</head>
+<style>
+
+    body{
+        height: 100vh;
+        background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+    }
+
+   .barrX{
+    background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+   
+    }
+  
+
+ 
+
+    .cube1{
+        transition: all 1.3s !important;
+    }
+
+
+  
+    .ContentTikets1:hover .cube1{
+        
+            transform: rotate(-30deg) !important ;
+            
+            cursor: pointer;
+        
+    }
+
+    .ContentTikets1:hover{
+        cursor: pointer;
+    }
+
+
+
+    .imgTickets{
+       margin: 5px;
+       width: 200px;
+  
+    }
+
+    .message{
+        background-color:  rgb(237, 240, 249, 0.5);
+    }
+
+    .imgMessage{
+        width: 60px;
+    }
+
+
+
+    .imgBack{
+        /* background-image: url("img/backDepartment.png"); */
+        background-color: rgb(24, 23, 23);
+        
+    }
+    
+    .filters{
+        background-color: rgb(165, 42, 42, 0.3);
+        background-color:  rgb(237, 240, 249, 0.5);
+    }
+
+    .borderes{
+        border-radius: 10px;
+    }
+
+    @media screen and (min-width: 320px) and (max-width: 991px){
+
+        .content-Tikets{
+            margin: 20px 0px;
+        }
+
+        .imgTickets{  
+            width: 160px;
+        }
+
+        .message{
+            margin: 10px 20px;
+            border: 2px solid red;
+        }
+    }
+    
+</style>
+
+
+<body class="mainTheme">
+    <%- include('../partials/navi-simple.ejs') %>
+    <main class="d-flex flex-column align-items-center">
+        
+        <% if (user) { %>
+
+        <div class="container barrX d-flex text-dark justify-content-end mt-5 shadow">
+            <a href="/"><i class="bi bi-x-square text-dark"></i> </a>
+        </div>
+        <div class="container d-flex justify-content-center" style="width: 100%; height: auto;">
+        
+            <div class="row filters d-flex justify-content-center align-items-center m-1 shadow" style="width: 100%; height: auto;">
+                <!-- usuarios sin perfil creados -->
+                <% if (searchProfile.length !== 0 ) { %>
+   
+                    <div class="col-lg-7 col-10 p-0 py-3 content-Tikets" style="height: 260px;">
+                      
+                         
+                        <div class="row contentFatherPay mx-0 d-flex justify-content-around" style="height: 100%;">
+
+                                <div class="col-lg-5 col-12 px-0 ContentTikets1 d-flex justify-content-center align-items-center tiketPay  my-2" style="position: relative; top: 0;">
+                                    
+                                    <div class="cube1" style="width: 100%; height: 100%; position: relative; top: 0px">
+                                        <img src="/img/TicketPago.png" class="imgTickets" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"> 
+                                    </div>
+                                    <div class="cube" style="width: 100%; height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                        <a href="/department/create/raffle"> <img src="/img/TicketPago.png" class="imgTickets typeTiket" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"> </a>
+                                    </div>
+                                                                           
+                                </div>
+                            
+                            
+                                <div class="col-lg-5 col-12 px-0 ContentTikets1 d-flex justify-content-center align-items-center tiketPay  my-2" style="position: relative; top: 0;">
+
+                                    <div class="cube1" style="width: 100%; height: 100%; position: relative; top: 0px">
+                                        <img src="/img/TicketGrati.png" class="imgTickets" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                    </div>
+                                    <div class="cube" style="width: 100%; height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                        <a href="/department/create/raffle"> <img src="/img/TicketGrati.png" class="imgTickets typeTiket" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"> </a>
+                                    </div>
+
+                                </div>
+
+                        </div>  
+            
+                       
+                    </div>
+                    <div class="col-lg-5 col-12 p-0" style="height: 260px; overflow-y: auto;">
+                        <div class="container-fluid p-0">
+                            <div class="card mx-0" style="height: auto;">
+                                <div class="card-body">
+                                    <p><b>¡Bienvenido al Constructor de Sorteos!</b></p>
+                                    <p>Si estás buscando una forma efectiva de promocionar tu tienda o un nuevo producto, has llegado al lugar indicado. Nuestro constructor de sorteos te brinda la oportunidad de crear rápidamente un sorteo atractivo que te ayudará a atraer clientes en todo el país y aumentar tus ventas.</p>
+                                    <p><b> Algunos consejos para realizar un sorteo exitoso: </b></p> 
+                                    <ol>
+                                        <li>Comienza con un sorteo gratuito para atraer tus primeros clientes.</li>
+                                        <li>Ofrece al menos 3 premios atractivos para aumentar la probabilidad de ganar.</li>
+                                        <li>Asegúrate de que los premios sean atractivos y no estén limitados a una ubicación específica.</li>
+                                        <li>Muestra fotos y videos de los premios disponibles para generar interés.</li>
+                                        <li>Cumple con los plazos de entrega y ofrece envío gratuito para mejorar la experiencia del cliente.</li>
+                                        <li>Prepárate con los recursos necesarios para llevar a cabo la campaña con éxito.</li>
+                                        <li>Evita realizar sorteos promocionales muy seguidos; es mejor reservarlos para el lanzamiento de una tienda o la promoción de un nuevo producto o servicio.</li>
+                                    </ol> 
+                                    </p>
+                                    <p>Una vez hayas construido una base sólida de clientes, considera la posibilidad de realizar un sorteo pagado para seguir impulsando tu negocio.</p>
+                                    <p>Estamos aquí para ayudarte en cada paso del proceso. <i>¡Comienza ahora y haz que tu próximo sorteo sea un éxito!"</i>. </p>
+                                </div>
+                            </div> 
+                        </div>    
+                            
+                    </div>
+
+                <% } %>    
+           
+            </div> 
+    
+        </div>
+        <div class="container message my-3 d-flex justify-content-start align-items-center border rounded-1">
+            <img src="/img/opcionesDepart.png" alt="" class="mx-3" style="width: 60px;">
+            <p class="mb-0 px-2">Estas en el panel de opciones del Constructor de Sorteos, elija la opción que requiera y has un Sorteo con Tickets pagos o gratuitos.</p>
+        </div>
+
+        <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+                <%- include('../partials/noLogin.ejs') %>
+            
+              </div>   
+        <% }; %>
+    </main>    
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+</body>
+</html>
+
+<script>
+    const message = document.querySelector('.message');
+    const typeTiket = document.querySelectorAll('.typeTiket');
+
+    typeTiket[0].addEventListener('mouseover', ()=>{
+      
+        message.innerHTML = `
+                            <img src="/img/TicketPago.png" alt="" class="mx-3" style="width: 65px;">
+                            <p class="mb-0 py-3 px-2">Opción para crear sorteo de Tikets pagos. Recomendado para Tiendas con trayectoria y clientes potenciales. Beneficios multiples para ayuda a terceros o agrandar la Tienda mejorando el servicio o stock. Importante tener los premios y recursos mínimos al iniciar.</p>
+                            `
+    })
+
+    typeTiket[1].addEventListener('mouseover', ()=>{
+      
+        message.innerHTML = `
+                            <img src="/img/TicketGrati.png" alt="" class="mx-3" style="width: 65px;">
+                            <p class="mb-0 py-3 px-2">Opción para crear sorteo de Tikets gratuitos. Recomendado para Tiendas nuevas y captar de forma rápida sus primeros clientes. Importante tener los premios y recursos mínimos al iniciar.</p>
+                            `
+    })
+
+
+</script>
+
+

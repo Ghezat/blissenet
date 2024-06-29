@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - finishMechanic</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .open{
+        display: block;
+    }
+
+    .closed{
+        display: none !important;
+    }
+  
+</style>
+<body>
+    <main>
+
+    <%- include('../partials/navi-admin.ejs') %>
+     
+      
+    <% if (userAdmin) { %> 
+        <!-- finishMechanicErrorAuction, finishMechanicSuccessAuction, finishMechanicSuccessRaffle, finishMechanicErrorRaffle -->
+
+        <% if (finishMechanicErrorAuction) { %>
+            <%- include('../alertAdmin/finishMechanicErrorAuction.ejs') %>
+        <% } %>
+
+        <% if (finishMechanicSuccessAuction) { %>
+            <%- include('../alertAdmin/finishMechanicSuccessAuction.ejs') %>
+        <% } %>
+
+        <% if (finishMechanicErrorRaffle) { %>
+            <%- include('../alertAdmin/finishMechanicErrorRaffle.ejs') %>
+        <% } %>
+
+        <% if (finishMechanicSuccessRaffle) { %>
+            <%- include('../alertAdmin/finishMechanicSuccessRaffle.ejs') %>
+        <% } %>
+  
+
+       <div class="containerAddBanks mb-2">
+            <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Finish Mechanic</span>
+            </div>
+       </div>
+       <div class="row mx-0" style="height: 100vh;">
+        <div class="col-lg-4">
+            <div class="containAddAccount p-2 mt-2 border" style="height: 80%; background-color: rgba(243, 243, 243, 0.8);">
+                <!-- formulario de crear -->
+                <div class="card create">
+                    <div class="card-header">
+                        Choose Task for Finish
+                    </div>
+                    <div class="card-body">
+
+                        <form action="/admin/process/finishMechanic" method="post" id="formCreate">
+
+                            <div class="form-group my-2">
+                                <select class="form-control" name="chooseTask" id="chooseTask">
+                                    <option value="select">Select type</option>
+                                    <option value="auction">Subasta</option>
+                                    <option value="raffle">Sorteo</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group my-2">
+                                <select class="form-control selectTitles" name="selectId" id="selectTitle">
+                                    <option value="select"> Select Title </option>
+                                    <!-- other option dinamic -->
+                                </select>
+                            </div>
+
+                            <div class="input-group my-2 border">
+                                <span class="input-group-text">Username :</span>
+                                <input type="text" name="store" class="form-control store" readonly>
+                            </div>
+
+                            <div class="containRaffle">
+                                <div class="input-group my-2">
+                                    <span class="input-group-text">Date Start :</span>
+                                    <input type="text" class="form-control dateStart" readonly>
+                                </div>
+                                <div class="input-group my-2">
+                                    <span class="input-group-text">Date End :</span>
+                                    <input type="text" class="form-control dateEnd" readonly>
+                                </div>
+                            </div>
+                          
+                            <div class="form-group my-4">
+                                <button type="submit" class="btn btn-success form-control" id="btnCreate" disabled> Finish Process </button>
+                                <button type="button" class="btn btn-success form-control invisibleBtn"  id="btnCreateLoading" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Finishing...
+                                </button>
+                            </div>
+
+
+                        </form>    
+                        
+                    </div>
+                </div>
+
+              
+            </div>
+        </div>
+        <div class="col-lg-8">
+
+            <div class="containBlank p-2 mt-2 border" style="height: 80%; background-color: rgba(243, 243, 243, 0.8);" >
+                <div class="card">
+                    <div class="card-header">
+                        Tool Administratives Auctions & Raffles
+                    </div>
+                    <div class="card-body">
+                        <div class="containerMain">
+                            
+                                    <div class="containAccount p-3 my-2 rounded-3 shadow-sm alert alert-danger" >
+                                        <p class="mb-0">La información aqui presentada es solo para ser usada con fines administrativos y solo podrá ser editada por el <strong>Gerente de Operaciones</strong>.</p>
+                                    </div>
+                                
+
+                                    <div class="containAccount p-3 my-2 rounded-3  alert alert-secondary" >
+                                        <p> <strong>Cierre de Subastas :</strong> Procesos que se ejecutan cuando es accionado una Subasta. </p>
+                                        <p> <strong>Celebración de Sorteos :</strong> Procesos que se ejecutan cuando es accionado un Sorteo. </p>
+                                    </div>
+                              
+                        </div>        
+                    </div>
+                </div>
+            </div>
+
+            <div class="containAuctions p-2 mt-2 border close" style="height: 80%; background-color: rgba(243, 243, 243, 0.8);">
+                <div class="card">
+                    <div class="card-header">
+                        See Auctions to Update
+                    </div>
+                    <div class="card-body">
+                        <div class="containerMain">
+                            
+                                    <div class="containAccount p-3 my-2 rounded-3 border d-flex shadow-sm alert alert-danger">
+                                        <p class="mb-0"> <strong> Cerrar Subasta Mecanicamente. </strong></p>
+                                    </div>
+                                
+
+                                    <div class="containAccount p-3 my-2 rounded-3 border alert alert-secondary" >
+                                        <p> <strong>Cierre de Subasta </strong></p>
+                                        <p> <i>Caso de que hubiese participantes :</i>
+                                            <ul>
+                                                <li>Coloca al mejor postor en la sala de negocio con el anfitrión. <small>( El mejor comprador será el mejor precio colocado antes de la hora definida por el anfitrión. )</small></li>
+                                                <li>La subasta es eliminada y solo quedaría en historial un registro de su existencia.</li>
+                                            </ul> 
+                                        </p>
+                                        <p> <i>Caso de no participantes :</i>
+                                            <ul>
+                                                <li>Coloca este anuncio como pausado.</li>
+                                                <li>Resetea las fechas de inicio y de Celebración.</li>
+                                            </ul> 
+                                        </p>
+                                    </div>
+                              
+                        </div>        
+                    </div>
+                </div>
+            </div>
+
+            <div class="containRaffles p-2 mt-2 border close" style="height: 80%; background-color: rgba(243, 243, 243, 0.8);">
+                <div class="card">
+                    <div class="card-header">
+                        See Raffles to Update
+                    </div>
+                    <div class="card-body">
+                        <div class="containerMain">
+                            
+                            <div class="containAccount p-3 my-2 rounded-3 border d-flex shadow-sm alert alert-danger">
+                                <p class="mb-0"> <strong> Celebrar Sorte Mecanicamente. </strong></p>
+                            </div>
+                                
+
+                            <div class="containAccount p-3 my-2 rounded-3 border alert alert-secondary" >
+                                <p> <strong>Celebrar Sorte : </strong></p>
+                                <p> 
+                                    <ul>
+                                        <li>Genera los números ramdon necesarios para cumplir con la cantidad de premios y lo hace tomando en consideración la cantidad de Ticket dispensados.</li>
+                                        <li>Detecta los ganadores y envia un mensaje a su "inbox" de que ha sido ganador de dicho sorteo. </li>
+                                        <li>Genera la factura al Anfitrión que tendra en el apartado "invoice" </li>
+                                    </ul> 
+                                </p>
+                                <p> <strong>Nota :</strong><small> si en el Sorteo hubo poca participación o ninguna, todo el proceso antes mencionado es ejecutado de igual forma, el sistema generará los números ramdon necesarios y si este número no ha sido tomado por un participante entonces el sistema asiga este premio al Anfitrión. </small></p>
+                            </div>
+                              
+                        </div>        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+       </div>
+
+    <% } else { %>
+        
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/adminNoLogin.ejs') %>
+        
+        </div>
+
+    <% }; %>     
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+<script>
+
+    //aqui los input seleccionados
+    const chooseTask = document.getElementById('chooseTask');
+    const selectTitles = document.querySelector('.selectTitles');
+    const store = document.querySelector('.store');
+    const dateStart = document.querySelector('.dateStart');
+    const dateEnd = document.querySelector('.dateEnd');
+
+    const create = document.querySelector('.create');
+    const edit = document.querySelector('.edit');
+    const btnEditing = document.querySelectorAll('.btnEditing');
+
+    //contenedores details
+    const containBlank = document.querySelector('.containBlank');
+    const containAuctions = document.querySelector('.containAuctions');
+    const containRaffles = document.querySelector('.containRaffles');
+        
+        
+
+    chooseTask.addEventListener('change', ()=>{
+
+        selectTitles.innerHTML = ""; //limpamos el selector para que no se ensucie con otras busquedas.
+        selectTitles.innerHTML = `<option value="select"> Select it </option>`;
+        let task = chooseTask.value;
+
+        const dato = {
+            task : task
+        }
+
+        fetch('/admin/search/finishMechanic', {
+
+            method: "post",
+            body: JSON.stringify(dato),
+            headers: { "content-type": "application/json" }
+
+        })
+            .then(response => response.json())
+            .then(jsonx => {
+            console.log("esto es jsonx", jsonx);
+            const type = jsonx.type; //options to recesive > auction, raffle, blank
+            const search = jsonx.search;
+       
+            console.log("type >", type);
+            console.log("search >", search); 
+
+                if (type !== "blank"){
+
+                    if (search.length !==0){
+                
+                        search.forEach((ele)=>{
+                            selectTitles.innerHTML +=`  <option value="${ele._id}"> ${ele.title} </option>
+                                                    `
+                                                                    
+                            const selectTitle = document.getElementById('selectTitle');
+                            selectTitle.addEventListener("change", ()=>{
+                                console.log("selectTitle---->", selectTitle.value);
+                                const IdTitle = selectTitle.value;
+
+                                if (IdTitle !== "select"){
+                                    jsonx.search.forEach((ele)=>{
+                                        if (IdTitle === ele._id){
+                                            store.value = ele.username;
+
+                                            if (type === 'auction'){
+                                                console.log(ele.auctionDate)
+                                                console.log(ele.auctionDateClose)
+                                                dateStart.value = ele.auctionDate;
+                                                dateEnd.value = ele.auctionDateClose;
+
+                                            } else {
+                                                console.log(ele.dateStart)
+                                                console.log(ele.dateEnd) //este es un objeto date asi que debemos trabajarlo.
+                                                const End = new Date(ele.dateEnd) ; // DD-MM-YYY HH:MM
+                                                console.log("dateEnd", dateEnd);
+                                                let diaEnd = End.getDate(); let mesEnd = End.getMonth() + 1; let anioEnd = End.getFullYear();
+                                                let horaEnd = End.getHours(); let minuEnd = End.getMinutes();
+                                                let celebration;
+                                                if (minuEnd <= 9){
+                                                    celebration = `${diaEnd}-${mesEnd}-${anioEnd} ${horaEnd}:0${minuEnd}`;
+                                                } else {
+                                                    celebration = `${diaEnd}-${mesEnd}-${anioEnd} ${horaEnd}:${minuEnd}`;
+                                                }
+                                            
+                                                console.log("celebration", celebration);
+                                                dateStart.value = ele.dateStart;
+                                                dateEnd.value = celebration;
+                                            }
+
+
+
+                                        }
+                                    })
+                                } else {
+                                    store.value = "";    
+                                    dateStart.value = "";
+                                    dateEnd.value = "";
+                                }    
+                                
+                            })                            
+                            
+                        })
+
+                        //activar el botton
+                        btnCreate.removeAttribute("disabled");
+                     
+                    } else {
+                        btnCreate.setAttribute("disabled", "");
+                    }    
+                
+                    //show contain details
+                    if (type === "auction"){
+                        containAuctions.classList.remove('close');
+                        containRaffles.classList.add('close');
+                        containBlank.classList.add('close');
+                    } else if (type === "raffle"){
+                        containAuctions.classList.add('close');
+                        containRaffles.classList.remove('close');
+                        containBlank.classList.add('close');
+                    } else {
+                        containAuctions.classList.add('close');
+                        containRaffles.classList.add('close');
+                        containBlank.classList.remove('close');
+                    }
+
+                } else {
+
+                    store.value = "";    
+                    dateStart.value = "";
+                    dateEnd.value = "";
+
+                    //Show contain Details mode Blank
+                    containAuctions.classList.add('close');
+                    containRaffles.classList.add('close');
+                    containBlank.classList.remove('close');
+
+                    btnCreate.setAttribute("disabled", "");
+                }              
+
+            })
+            .catch(err => console.log(err));
+         
+    })            
+    
+    
+    </script>
+    
+
+   <script>//aqui creo el spinnier de create
+
+        const btnCreate = document.getElementById('btnCreate');
+        const btnCreateLoading = document.getElementById('btnCreateLoading');
+        const formCreate = document.getElementById('formCreate')
+        
+        formCreate.addEventListener('submit', (e) => {
+            if (e) {
+                //console.log("existe un evento en desarrollo")
+                btnCreate.classList.add('invisibleBtn')
+                btnCreateLoading.classList.remove('invisibleBtn')
+            } else {
+                //console.log("no hay ningun evento")
+                btnCreate.classList.remove('invisibleBtn')
+            }
+
+        })
+
+    </script>
+
+    
+</body>
+</html>
+
+
+
+

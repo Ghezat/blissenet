@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet Raffle-Admin</title>
+</head>
+<style>
+
+
+  .textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+  }
+
+  .close{
+    display: none;
+  }
+
+</style>
+<body class="mainTheme">
+
+  
+    <main>
+        <%- include('../partials/navi-simple.ejs') %>
+
+        <div class="contentSerial py-3 px-2 d-flex justify-content-end align-itens-center border-bottom border-dark" style="background-color: gray;">
+          <% if (search) { %>
+            <p class="my-0"> <span><b>Serial Raffle : </b></span><span class="rounded-pill ms-1 px-2 py-1 bg-dark text-light"><a href="/raffleModule/<%= search._id %>" class="text-decoration-none" style="color: white;"><b><%= search._id %></b></a> </span> </p>
+            <input type="hidden" value="<%= search._id %>" id="idRaffle">
+          <% }; %>
+        </div>
+        <div class="row mx-0 d-flex justify-content-center themaTextLight" style="background-color: rgba(233, 236, 239, 0.1)">
+            
+            <div class="col-12 col-sm-12 col-md-11 col-lg-11  px-0">
+                
+                <div class="contentTable">
+                  
+                  <% if (search.category === "Gratis") { %>
+
+                    <div class="content-fluid py-1">  
+                      <ul class="nav nav-tabs">
+      
+                        <li class="nav-item">
+                          <a class="nav-link Verified-Free active" style="cursor: pointer;">Verify</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link Data-Free" style="cursor: pointer;">Data</a>
+                        </li> 
+                   
+                      </ul>
+                    </div>
+                    <div class="content-fluid contentVerified-Free table-responsive">
+                      <table class="table themaTextLight">
+                        <thead>
+                           <tr>
+                             <td>No.</td><td>Serial</td><td>User</td><td>Date</td><td>Take</td>
+                           </tr>
+                        </thead>
+                        <tbody>
+ 
+                         <% boxTickets.forEach((ele, i)=>{  %>
+ 
+                             <% if (ele.Take === true ) { %>
+                                     <tr>
+                                       <td><i class="bi bi-ticket-perforated mx-2"></i><%= ele.No %></td><td><%= ele.No_Serial %></td><td><%= ele.Contestan %></td><td><%= ele.Date %></td> <td><i class="bi bi-check2-square"></i></td>
+                                     </tr>
+                             <% }; %>                               
+ 
+                         <% }); %>
+ 
+                         </tbody>
+                      </table>  
+                    </div>
+                    <div class="content-fluid contentData-Free close">
+                      <div class="row mx-0 mt-2 d-flex justify-content-between">
+                        <div class="col-lg-7 px-0">
+                            <div class="contentMain">
+                                <div class="contentDetails alert alert-info">
+                                  <!--  Aqui todos los detalles y recomendaciones  -->
+                                </div>
+                                <div class="content2 alert alert-dark">
+    
+                                </div>
+  
+                            </div>    
+                        </div>
+                        <div class="col-lg-4 px-0 d-flex flex-column">
+                    
+                            <div class="contentDonut d-flex flex-column align-items-center mb-2">
+                              <span style="font-size: 18px;">Estatus de Sorteo</span>
+                              <canvas id="myChart"></canvas>
+                            </div>
+                            <div class="contentPercent d-flex justify-content-around border-bottom border-secondary" style="color: grey">
+                              <span class="parts" style="font-size: 28px;"></span>
+                              <span class="percent" style="font-size: 36px;"></span>
+                            </div>
+                       
+                        </div>
+                      </div>
+                      <div class="row mx-0 my-2 d-flex justify-content-center">
+                        <div class="col-12 p-0">
+                          <div class="recaudacionEfectividad alert alert-dark m-0 d-flex flex-column mb-3">
+                              <div class="contentTypeRaffle d-flex flex-column">
+                                  <p style="font-size: 20px; color: rgb(66, 66, 66);">Resumen de Sorteo :</p>
+                              </div>
+                              <div class="contentCeleTotalRate d-flex flex-wrap" style="font-size: 18px; color: rgb(66, 66, 66);">
+                                <!-- data dinamica -->
+                            </div>
+                              <div class="contenRecauEfect d-flex flex-wrap" style="font-size: 18px; color: rgb(66, 66, 66);">
+                                <!-- data dinamica -->
+                              </div>
+                              <div class="contentTablePrizesRate table-responsive">
+                                <table class="table mt-1">
+                                  <thead>
+                                    <tr>
+                                      <th>Lugar</th><th>Ticket</th> <th>User</th> <th>Premio</th><th>Calificacion</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody class="data-tbody">
+  
+                                      <!-- data dinamica -->
+  
+                                  </tbody>
+                                </table>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                        
+                  <% } else { %>
+
+                  <div class="content-fluid py-1">  
+                    <ul class="nav nav-tabs">
+    
+                      <li class="nav-item">
+                        <a class="nav-link Verify active" style="cursor: pointer;">Verify</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link Verified" style="cursor: pointer;">Verified</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link Data" style="cursor: pointer;">Data</a>
+                      </li> 
+                 
+                    </ul>
+                  </div>
+                  <div class="content-fluid contentVerify table-responsive">
+                
+                    <table class="table themaTextLight">
+                        <thead>
+                          <tr>
+                            <td>No.</td><td>Serial</td><td>User</td><td>Date</td><td>Ref</td><td>Action</td><td>Action</td>
+                          </tr>
+                        </thead>
+                        <tbody>                    
+                      
+                          <% boxTickets.forEach((ele, i)=>{  %>
+                                
+                              <% if (ele.Take === true && ele.Verified === false ) { %>
+                                      <tr>
+                                        <td><i class="bi bi-ticket-perforated mx-2"></i><%= ele.No %></td><td><%= ele.No_Serial %></td><td><%= ele.Contestan %></td><td><%= ele.Date %></td><td><%= ele.Ref %></td>   
+                                        <td><a href="/raffleModule/verifiedTicket/payYes/<%= search._id %>/<%= ele.Contestan %>/<%= ele.No %>" class="btn btn-primary btn-sm" style="width: 35px;"> Si</a></td>
+                                        <td><a href="/raffleModule/verifiedTicket/payNo/<%= search._id %>/<%= ele.Contestan %>/<%= ele.No %>" class="btn btn-danger btn-sm" style="width: 35px;"> No</a></td>
+                                      </tr>
+                              <% }; %>
+
+                          <% }); %>
+
+                        </tbody>
+                    </table>
+                      
+                  </div>
+                  <div class="content-fluid contentVerified table-responsive close">
+
+                    <table class="table themaTextLight">
+                      <thead>
+                         <tr>
+                           <td>No.</td><td>Serial</td><td>User</td><td>Date</td><td>Ref</td><td>Verified</td>
+                         </tr>
+                      </thead>
+                      <tbody>                    
+                    
+                        <% boxTickets.forEach((ele, i)=>{  %>
+                              
+                            <% if (ele.Take === true && ele.Verified === true ) { %>
+                                    <tr>
+
+                                      <td><i class="bi bi-ticket-perforated mx-2"></i><%= ele.No %></td><td><%= ele.No_Serial %></td><td><%= ele.Contestan %></td><td><%= ele.Date %></td><td><%= ele.Ref %></td> <td><i class="bi bi-clipboard-check"></i></td>   
+                
+                                    </tr>
+                            <% }; %>
+
+                        <% }); %>
+
+                      </tbody>
+                    </table>
+
+                  </div>
+                  <div class="content-fluid contentData close">
+                    <div class="row mx-0 mt-2 d-flex justify-content-between">
+                      <div class="col-lg-7 px-0">
+                          <div class="contentMain">
+                              <div class="contentDetails alert alert-info">
+                                <!--  Aqui todos los detalles y recomendaciones  -->
+                              </div>
+                              <div class="content1 alert alert-dark">
+  
+                              </div>
+
+                          </div>    
+                      </div>
+                      <div class="col-lg-4 px-0 d-flex flex-column">
+
+                        <div class="contentDonut d-flex flex-column align-items-center mb-2">
+                          <span style="font-size: 18px;">Estatus de Sorteo</span>
+                          <canvas id="myChart"></canvas>
+                        </div>
+                        <div class="contentPercent d-flex justify-content-around border-bottom border-secondary" style="color: grey">
+                          <span class="parts" style="font-size: 28px;"></span>
+                          <span class="percent" style="font-size: 36px;"></span>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="row mx-0 my-2 d-flex justify-content-center">
+                      <div class="col-12 p-0">
+                        <div class="recaudacionEfectividad alert alert-dark m-0 d-flex flex-column mb-3">
+                            <div class="contentTypeRaffle d-flex flex-column">
+                                <p style="font-size: 20px; color: rgb(66, 66, 66);">Resumen de Sorteo :</p>
+                            </div>
+                            <div class="contentCeleTotalRate d-flex flex-wrap" style="font-size: 18px; color: rgb(66, 66, 66);">
+                              <!-- data dinamica -->
+                            </div>
+                            <div class="contenRecauEfect d-flex flex-wrap" style="font-size: 18px; color: rgb(66, 66, 66);">
+                              <!-- data dinamica -->
+                            </div>
+                            <div class="contentTablePrizesRate table-responsive">
+                              <table class="table mt-1">
+                                <thead>
+                                  <tr>
+                                    <th>Lugar</th><th>Ticket</th> <th>User</th> <th>Premio</th><th>Calificacion</th>
+                                  </tr>
+                                </thead>
+                                <tbody class="data-tbody">
+
+                                    <!-- data dinamica -->
+
+                                </tbody>
+                              </table>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                           
+                      
+                  <% }; %>
+                  
+                
+
+                </div>  
+
+            </div>
+          
+        </div>
+
+
+    </main>
+
+    <%- include('../partials/scripts.ejs') %>
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
+
+<script>
+
+const idRaffle = document.getElementById('idRaffle');
+const id = idRaffle.value;
+let chartData;
+const progress = [];
+
+console.log("Esto es id", id);
+
+const dato = {
+      id : id
+};
+
+fetch('/raffleModule/data/', {
+
+  method: "post",
+  body: JSON.stringify(dato),
+  headers: {"content-type" : "application/json"}
+
+})
+  .then(response =>response.json() )
+  .then( jsonx => {
+    console.log('jsonx :', jsonx)
+    const category = jsonx.category; //aqui la categoria
+    const numTickets = jsonx.numTickets; //aqui el total de los tickets;
+    const price = jsonx.price; //aqui el precio pro ticket
+    const policy = jsonx.raffleClosingPolicy; //aqui la politica del sorteo;
+    const dateStart = jsonx.dateStart; //fecha de creacion del sorteo.
+    const dateEndBruto = jsonx.dateEnd; //fecha de celebracion del sorteo.
+    const PrizesObject = jsonx.PrizesObject; //aqui el array de los premios;
+    const boxTickets =  jsonx.boxTickets; //aqui esta el array de Tickets;
+    const allTicketsTake = jsonx.allTicketsTake; //este dato identifica la Celebración del Sorteo
+    const favorite = jsonx.favorite; //favorito
+    const view = jsonx.view; //vistas
+
+    console.log("boxTickets :", boxTickets);
+    console.log("PrizesObject :", PrizesObject);
+    const totalTickets = boxTickets.length;
+    const totalPrizes = PrizesObject.length;
+    console.log("*********************");
+    console.log("category :", category);
+    console.log("dateStart", dateStart);
+    console.log("totalTickets", totalTickets);
+    console.log("totalPrizes", totalPrizes);
+
+    const DEB = new Date(dateEndBruto);
+    const diaDE = DEB.getDate();
+    const mesDE = DEB.getMonth() +1;
+    const anioDE = DEB.getFullYear();
+    const horaDE = DEB.getHours();
+    const minuDE = DEB.getMinutes();
+    let dateEnd;
+
+    if (minuDE <=9 ){
+      dateEnd = `${diaDE}-${mesDE}-${anioDE} ${horaDE}:0${minuDE}`
+    } else {
+      dateEnd = `${diaDE}-${mesDE}-${anioDE} ${horaDE}:${minuDE}`
+    }
+    
+
+    const contentDetails = document.querySelector('.contentDetails');
+    const content1 = document.querySelector('.content1');
+    const content2 = document.querySelector('.content2');
+    const parts = document.querySelector('.parts'); // ejemplo 11/100
+    const percent = document.querySelector('.percent'); // ejemplo 5%
+
+    if (policy === 'byDate'){
+      contentDetails.innerHTML = `<p class="mb-0"> <b>Datos :</b> Su sorteo ha iniciado el <b class="mx-1">${dateStart}</b> de <b class="mx-1"> ${totalTickets}</b> Tickets con <b class="mx-1">${totalPrizes}</b> premios a repartir. Politica de Celebración es <b class="mx-1">${policy}</b>. Con fecha de Celebración : <b class="mx-1">${dateEnd}</b> </p>`
+    } else {
+      contentDetails.innerHTML = `<p class="mb-0"> <b>Datos :</b> Su sorteo ha iniciado el <b class="mx-1">${dateStart}</b> de <b class="mx-1"> ${totalTickets}</b> Tickets con <b class="mx-1">${totalPrizes}</b> premios a repartir. Politica de Celebración es <b class="mx-1">${policy}</b>. La celebración se ejecutará al ser verificado todos los Tickets tomados. </p>`
+    }
+    
+    
+    if (category === "Pago"){
+      content1.innerHTML = `<p>Este sorteo es <b>"Pago"</b> por lo tanto debe mantener una campaña de marketing enfocada a realzar los beneficios  que pudiera  lograr si llegara a ser ganador en su sorteo. </p>
+      <p> Utilize todos los recursos disponibles de <b>Media</b> como (Imagenes y Video), asegurese de tener una descripción llamativa y explicita que ofrezca transparencia y genere seguridad en su comunidad. </p>
+      <p class="ps-3 py-2 rounded-2 alert-warning" style ="border-left: 5px solid gold;"> <i class="bi bi-exclamation-triangle me-2"></i>Procure tener un Password <b>seguro</b> para no ser <b>victima de hackeo, perdida de cuenta y con ello el control del Sorteo.</b> </p>
+      <p class="ps-3 py-2 rounded-2 alert alert-danger" style ="border-left: 5px solid crimson;"> Debe usted revisar al menos dos (2) veces al dia la administración de este Sorteo para garantizar la actualización de dicho evento. </p>
+      <p class="ps-3 py-2 rounded-2 alert alert-danger" style ="border-left: 5px solid crimson;"> tenga mucho cuidado al verificar una operación de pago por concepto de Tickets. Tenga en cuenta los datos <b>Fecha, Monto y Número de Confirmación</b> para acreditar o no un Pago. Ya que al hacerlo usted confirma que se ha realizado. <b><i>No hay forma de revertir una operación verificada</i></b>. </p>
+      `
+
+    }
+
+    if (category === "Gratis"){
+
+      content2.innerHTML = `<p class="ps-3 rounded-2" style ="border-left: 5px solid grey;">Este sorteo es <b>"Gratis"</b> por lo tanto debe hacerle saber a su comunidad que solo puede adquirir un (1) solo Ticket.</p>
+      <p> Utilize todos los recursos disponibles de <b>Media</b> como (Imagenes y Video), asegurese de tener una descripción llamativa y explicita que ofrezca transparencia y genere seguridad en su comunidad. </p>
+      <p class="ps-3 py-2 rounded-2 alert-warning" style ="border-left: 5px solid gold;"> <i class="bi bi-exclamation-triangle me-2"></i>Procure tener un Password <b>seguro</b> para no ser <b>victima de hackeo, perdida de cuenta y con ello el control del Sorteo.</b> </p>
+      <p class="ps-3 py-2 rounded-2 alert alert-danger" style ="border-left: 5px solid crimson;"> Tenga en cuenta que esta llevando un sorteo y al ser <b>"Gratis"</b> es posible que pueda cerrar el evento en muy corto tiempo. <b>Mantenga actualizado y haga sentir a su comunidad y participantes seguros de que recibiran su(s) premio(s) en el tiempo establecido.</b> </p>
+      <p class="ps-3 py-2 rounded-2 alert alert-danger" style ="border-left: 5px solid crimson;"> En el sorteo Gratuito no tiene usted que validar ninguna operación. El sistema ordenará y desarrollará todas la actividades. </p>`
+      
+    }
+
+    //recorrer el array para contabilizar cuantos ticket han sido tomados y cuantos estan libres
+    
+    let Take = 0;
+    let NoTake = 0;
+
+    for (let i = 0; i < boxTickets.length; i++) {
+      const ele = boxTickets[i];
+      if ( ele.Take === true ){
+        Take = Take + 1;
+      } else {
+        NoTake = NoTake + 1;
+      }
+      
+    }
+
+    progress.push( Take, NoTake );
+    chartData = { label: ["Take", "No Take"],  data : progress }
+    
+    console.log("progress :", progress);
+    console.log("chartData :", chartData.data);
+    
+    const ctx = document.getElementById('myChart');
+    //console.log("chartData :", chartData)
+
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: chartData.label,
+      datasets: [{ label: "Parts", data : chartData.data }]
+    },
+    options: {
+      responsive: true,
+      plugins : {legend: { position: 'bottom'}, title: { display: true }}
+    }
+  });
+
+  // armar el indicador Parts y percent
+  let eleParts = `${Take}/${totalTickets}`;
+  let resolvePercent = (Take * 100) / totalTickets;
+  let elePercent = resolvePercent.toFixed(1);
+
+  parts.innerHTML = `<b>${eleParts}</b>`;
+  percent.innerHTML = `<b>${elePercent} %</b>`;
+
+
+  //Datos de Celebración y TotalRate
+  const contentCeleTotalRate = document.querySelector('.contentCeleTotalRate');
+  //allTicketsTake --celebracion del sorteo dato booleano--
+  let countPrize = PrizesObject.length
+  let countRate = 0;
+  let totalRate; //basado en 10 puntos esto esta bajo obeservacion es posible que el futuro se deba cambiar.
+  for (let i = 0; i < PrizesObject.length; i++) {
+    const rate = PrizesObject[i].rate;
+    //console.log("rate", rate)
+    if (rate === "positivo"){
+      countRate = countRate + 1;
+    }
+  }
+  console.log("countPrize ->", countPrize);
+  console.log("countRate ->", countRate);
+  totalRate = `${countRate} / ${countPrize} `;
+  
+  
+
+  if (allTicketsTake === true){
+    contentCeleTotalRate.innerHTML = `<p class="me-4">Celebrado : <b>Si</b> </p>
+                                      <p>Calificacion de Sorteo : <b>${totalRate}</b> </p>`
+  }else {
+    contentCeleTotalRate.innerHTML = `<p class="me-4">Celebrado : <b>No</b> </p>
+                                      <p>Calificacion de Sorteo : <b>Data no Disponible</b> </p>`
+  }
+
+  //Ultimos Datos Recaudaciones y Efectividad
+  const contenRecauEfect = document.querySelector('.contenRecauEfect');
+  let countTicketVerified = 0;
+
+  for (let i = 0; i < boxTickets.length; i++) {
+      const take = boxTickets[i].Take;
+      const verified = boxTickets[i].Verified;
+
+      if (take == true && verified == true){
+        countTicketVerified = countTicketVerified + 1;
+      }
+    
+  }
+
+  console.log("countTicketVerified : ", countTicketVerified);
+  console.log("price : ", price);
+  console.log("numTickets : ", numTickets)
+  let recauReceive = countTicketVerified * price;
+  let recauHope = numTickets * price;
+  let efective = ((recauReceive * 100) / recauHope).toFixed(0);
+
+
+  if (category === "Pago"){
+    contenRecauEfect.innerHTML = `    <p class="mb-1 me-4">Recaudación Recibida : <b>$ ${recauReceive}</b> </p>
+                                      <p class="mb-1 me-4">Recaudación Esperada : <b>$ ${recauHope}</b> </p>
+                                      <p class="mb-1 me-4">Efectividad : <b>${efective} %</b> </p>
+                                      <p class="mb-1 me-4">Visto : <b>${view}</b> </p>
+                                      <p class="mb-1 me-4">Favorito : <b>${favorite}</b> </p>`
+      
+    
+  } else {        
+    contenRecauEfect.innerHTML = `    <p class="mb-1 me-4">Tiket Tomados : <b>${Take}</b> </p>
+                                      <p class="mb-1 me-4">Tikect No Tomados : <b>${NoTake}</b> </p>
+                                      <p class="mb-1 me-4">Efectividad : <b>${elePercent} %</b> </p>
+                                      <p class="mb-1 me-4">Visto : <b>${view}</b> </p>
+                                      <p class="mb-1 me-4">Favorito : <b>${favorite}</b> </p>`
+  } 
+
+
+  
+  //aqui estara los datos de la tabla
+  const datatbody = document.querySelector('.data-tbody');
+  //console.log("PrizesObject ---->", PrizesObject);
+
+    for (let i = 0; i < PrizesObject.length; i++) {
+        const prize = PrizesObject[i].Prize;
+        const winTicket = PrizesObject[i].winTicket;
+        const winUser = PrizesObject[i].winUser;
+        const rate = PrizesObject[i].rate;
+
+        if (rate === 'positivo'){
+          datatbody.innerHTML += `
+                                  <tr>
+                                    <th>${i + 1}º</th><td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket} </td><td> ${winUser} </td><td> ${prize} </td><td> <i class="bi bi-plus-square"></i> </td>
+                                  </tr
+                              `
+        } else if (rate === 'negativo') {
+
+          datatbody.innerHTML += `
+                                  <tr>
+                                    <th>${i + 1}º</th><td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td><td> <i class="bi bi-dash-square"></i> </td>
+                                  </tr
+                              `
+        } else {
+
+          datatbody.innerHTML += `
+                                  <tr>
+                                    <th>${i + 1}º</th><td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td><td> Sin Datos </td>
+                                  </tr
+                              `
+        }
+
+
+      
+    }
+
+
+  })
+  .catch( err => console.log(err));
+
+</script>
+
+<script>
+  //selector de pestañas para visualizar las diferentes tablas y datos
+  //:: Version Pago::
+  const Verify = document.querySelector('.Verify');
+  const Verified = document.querySelector('.Verified');
+  const Data = document.querySelector('.Data');
+
+  const contentVerify = document.querySelector('.contentVerify');
+  const contentVerified = document.querySelector('.contentVerified');
+  const contentData = document.querySelector('.contentData');
+
+  Verify.addEventListener('click', ()=>{
+    Verify.classList.add('active');
+    Verified.classList.remove('active');
+    Data.classList.remove('active');
+
+    contentVerify.classList.remove('close');
+    contentVerified.classList.add('close');
+    contentData.classList.add('close');
+  });
+
+  Verified.addEventListener('click', ()=>{
+    Verify.classList.remove('active');
+    Verified.classList.add('active');
+    Data.classList.remove('active');
+
+    contentVerify.classList.add('close');
+    contentVerified.classList.remove('close');
+    contentData.classList.add('close');
+  });
+
+  Data.addEventListener('click', ()=>{
+    Verify.classList.remove('active');
+    Verified.classList.remove('active');
+    Data.classList.add('active');
+
+    contentVerify.classList.add('close');
+    contentVerified.classList.add('close');
+    contentData.classList.remove('close');
+  });
+
+</script>
+<script>
+  const VerifiedFree = document.querySelector('.Verified-Free');
+  const DataFree = document.querySelector('.Data-Free');
+
+  const contentVerifiedFree = document.querySelector('.contentVerified-Free');
+  const contentDataFree = document.querySelector('.contentData-Free');
+
+  VerifiedFree.addEventListener('click', ()=>{
+    VerifiedFree.classList.add('active');
+    DataFree.classList.remove('active');
+
+    contentVerifiedFree.classList.remove('close');
+    contentDataFree.classList.add('close');
+  });
+
+  DataFree.addEventListener('click', ()=>{
+    VerifiedFree.classList.remove('active');
+    DataFree.classList.add('active');
+
+    contentVerifiedFree.classList.add('close');
+    contentDataFree.classList.remove('close');
+  });
+  
+</script>
+
+

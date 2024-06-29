@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet All departments</title>
+</head>
+<style>
+
+    body{
+        height: 100vh;
+        background-color: antiquewhite;
+        background: radial-gradient(circle, rgba(227,118,15,1) 11%, rgba(34,237,201,1) 53%, rgba(73,100,244,1) 91%);
+        background: radial-gradient(circle, rgba(240,228,114,1) 11%, rgba(34,237,201,1) 53%, rgba(73,100,244,1) 91%);
+        background: linear-gradient(90deg, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+        background: radial-gradient(circle, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+        background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+    }
+
+   .barrX{
+    background: radial-gradient(circle, rgba(240,228,114,1) 11%, rgba(34,237,201,1) 53%, rgba(73,100,244,1) 91%);
+    background: linear-gradient(90deg, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+    background: radial-gradient(circle, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+    background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+   
+    }
+
+    .card{
+        margin: 5px 11px;
+        border: 1px solid rgb(51, 51, 50);
+       
+    }
+    .card-body{
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .aBorder{
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       
+    }
+
+    .aBorder:hover{
+       
+        background: radial-gradient(circle, rgba(240,228,114,1) 11%, rgba(34,237,201,1) 53%, rgba(73,100,244,1) 91%);
+        background: radial-gradient(circle, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+    }
+
+    .imgDepart{
+       margin: 5px;
+       width: 80px;
+       
+    }
+
+    .message{
+        background-color:  rgb(237, 240, 249, 0.5);
+    }
+
+    .imgMessage{
+        width: 60px;
+    }
+
+
+    .absolute{
+        position: absolute;
+    }
+
+    .imgBack{
+        /* background-image: url("img/backDepartment.png"); */
+        background-color: rgb(24, 23, 23);
+        
+    }
+    
+    .filters{
+        background-color: rgb(165, 42, 42, 0.3);
+        background-color:  rgb(237, 240, 249, 0.5);
+    }
+
+    .borderes{
+        border-radius: 10px;
+    }
+
+    
+</style>
+
+
+<body class="mainTheme">
+    <%- include('../partials/navi-simple.ejs') %>
+    <main class="d-flex flex-column align-items-center">
+        
+        <% if (user) { %>
+
+        <div class="container barrX d-flex text-dark justify-content-end mt-5 shadow">
+            <a href="/"><i class="bi bi-x-square text-dark"></i> </a>
+        </div>
+        <div class="container d-flex justify-content-center">
+        
+            <div class="row d-flex justify-content-center filters m-1 shadow">
+                <!-- usuarios sin perfil creados -->
+                <% if (searchProfile.length == 0 ) { %>
+                    <%- include('../alert/noExistProfile.ejs') %>
+                    <div class="col-lg-8 col-sm-12" >
+                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap my-3">
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="#" class="aBorder"><img src="/img/aeronautico.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="#" class="aBorder"> <img src="/img/arte.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="#" class="aBorder"><img src="/img/articulos.png" alt="" class="imgDepart"> </a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="#" class="aBorder"><img src="/img/automotriz.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="#" class="aBorder"><img src="/img/bienesRaices.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body">
+                                    <a href="#" class="aBorder"> <img src="/img/nautico.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="#" class="aBorder">  <img src="/img/servicio.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="#" class="aBorder"> <img src="/img/subasta.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                <!-- usuarios con perfil creados -->    
+                <% } else {  %>
+                    <div class="col-lg-8 col-sm-12">
+                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap my-3">
+                            
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/aeronaves" class="aBorder" ><img src="/img/aeronautico.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/artes" class="aBorder"> <img src="/img/arte.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/items" class="aBorder"><img src="/img/articulos.png" alt="" class="imgDepart"> </a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/automotive" class="aBorder"><img src="/img/automotriz.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/realstate" class="aBorder"><img src="/img/bienesRaices.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/nautical" class="aBorder"> <img src="/img/nautico.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/service" class="aBorder">  <img src="/img/servicio.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                            <div class="card rounded-pill" style="background-color: transparent">
+                                <div class="card-body rounded-pill">
+                                    <a href="/department/create/auctions" class="aBorder"> <img src="/img/subasta.png" alt="" class="imgDepart"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>    
+           
+            </div> 
+    
+        </div>
+        <div class="container message mt-2 d-flex justify-content-between align-items-center border rounded-1">
+            <img src="/img/opcionesDepart.png" alt="" class="mx-3" style="width: 60px;">
+            <p class="mb-0 px-2">Estas en el panel de opciones de departamentos, elije la opcion que requieres y has un anuncio que impacte y atraiga mas personas a tu tienda.</p>
+        </div>
+
+        <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+                <%- include('../partials/noLogin.ejs') %>
+            
+              </div>   
+        <% }; %>
+    </main>    
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+        <script>
+            let department = document.querySelectorAll('.aBorder');
+            let message = document.querySelector('.message');
+       
+
+            const depart0 = "Estas en el departamento Eronautico, aqui podrás vender o alquilar naves aereas";
+            const depart1 = "Estas en el departamento Artes y galeria";
+            const depart2 = "Estas en el departamento Items";
+
+            console.log(department)
+
+            for (let i = 0; i < department.length; i++) {
+                let element = department[i];
+                
+                element.addEventListener('mouseover', ()=>{
+                    
+                    if (department[0] == element){
+                        message.innerHTML = `<img src="/img/aeronautico.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento Aeronautuco :</span> Aqui podrás Crear, Editar y Eliminar tus anuncios de venta y alquileres de naves aereas. Logra cubrir todas las fotos disponibles que posees y se detallado con las descripciones. Tu potencial cliente esta afuera, atiendele con paciencia y buen agrado cada vez que te haga una pregunta.  </p>`
+                    } else if (department[1] == element){
+                        message.innerHTML = `<img src="/img/arte.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento de Arte y Galeria :</span> Aqui podrás Crear, Editar y Eliminar tus anuncios de Arte. Los anuncios que puedes crear aqui son muy variados pero debe tener siempre el sello artistico, ya sea una cuadro o una obra de arte plastica. Aprovecha las mejores fotos en diversos lugares si es de facíl traslado. Logra tomar desde varios angulos y desde varias distancias. Detalla el año, la técnica y los datos mas importantes de la obra a publicar.</p>`
+                    } else if (department[2] == element){
+                        message.innerHTML = `<img src="/img/articulos.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento de Items :</span> Aqui podrás Crear, Editar y Eliminar tus anuncios de tipo Items. Esto engloba desde un par de zapatos hasta un juego de vajillas, una lampara hasta una silla. Imagina este departamento como si fueras a publicar algo en cualquier marketplace. Esfuerzate por tener buenas fotos y la primera si es posible en fondo blanco, para que realces entre las demas. </p>`
+                    } else if (department[3] == element){
+                        message.innerHTML = `<img src="/img/automotriz.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento Automotriz :</span> Aqui podrás Crear, Editar y Eliminar tus anuncios de venta de parque automotriz. Logra las fotos adecuadas, en la descripcion no obvies los detalles negativos y positivos, Tu potencial cliente lo valorará. </p>`
+                    } else if (department[4] == element){
+                        message.innerHTML = `<img src="/img/bienesRaices.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento de Bienes y Raices :</span> Aqui podrás Crear, Editar y Eliminar tus anuncios de venta y alquileres de casas, departamentos, oficinas y galpones. Logra cubrir todas las fotos disponibles que posees y se detallado con las descripciones. Tu potencial cliente esta afuera, atiendele con paciencia y buen agrado cada vez que te haga una pregunta. </p>`
+                    } else if (department[5] == element){
+                        message.innerHTML = `<img src="/img/nautico.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento Nautico :</span> Aqui podrás Crear, Editar y Eliminar tus anuncios de venta y alquiler de embarcaciones nauticas. Logra cubrir todas las fotos disponibles que posees y se detallado con las descripciones. Tu comprador lo valorará</p>`
+                    } else if (department[6] == element){
+                        message.innerHTML = `<img src="/img/servicio.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento de Servicio :</span> Aqui podrás Crear, Editar y Eliminar tus anuncios de Servicios. Esfuerzate por lograr fotos de calidad y un escrito resumido y objetivo de lo que deseas explotar.</p>`
+                    } else if (department[7] == element){
+                        message.innerHTML = `<img src="/img/subasta.png" alt="" class="mx-3" style="width: 60px;">
+                        <p class="mb-0 px-2"> <span class="fw-bold me-2"> Departamento de Subasta :</span> Aqui podrás Crear, Editar y Eliminar tus Subastas. Esfuerzate por lograr fotos de calidad y aprovecha al maximo el streaming que tienes disponible, asegura tu exito con una campaña de marketing de al menos 30 dias.</p>`
+                    } 
+                    
+                })
+            }
+                   
+
+
+        </script>
+</body>
+</html>
+
+<!-- :::: NOta : esta ruta se encuenta en el index.js linea 717 aprox. :::: -->

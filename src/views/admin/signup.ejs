@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Admin</title>
+</head>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+        <% if (shortPassword) { %>
+            <%- include('../alertAdmin/shortPassword.ejs') %>
+        <% }; %>
+        
+        <% if (emailInUse){ %>
+            <%- include('../alertAdmin/emailInUse.ejs') %>
+        <% }; %>
+        
+        <% if (adminNameInUse) { %>
+            <%- include('../alertAdmin/adminNameInUse.ejs') %>
+        <% }; %>  
+
+       <div class="containerSignup">
+        <div class="row d-flex justify-content-center my-5 mx-0 p-2">
+            <div class="col-lg-4 col-md-5 col-sm-8 p-3 me-3">
+                    <div class="card rogelio border">
+                        <div class="card-header d-flex justify-content-between">
+                            <span><i class="bi bi-journal-check mx-1"></i> Register</span>
+                            <span><i class="bi bi-1-square me-1"></i></span>
+                        </div>
+                        <div class="card-body">
+                        
+                            <form action="/admin/signup" method="POST" id="signupAdmin">
+                                <div class="form-group my-2">
+                                        <input type="text" name="adminName" placeholder="Admin enter your username" class="form-control" minlength="6" maxlength="14" required >
+                                </div>
+                                <div class="form-group my-2">
+                                        <input type="email" name="email" placeholder="Enter your email" class="form-control" style="text-transform:lowercase;" required>
+                                </div>
+                                <div class="form-group my-2">
+                                    <select name="rol" id="rol" class="form-control">
+                                        <option value="adminAdmin">Admin</option>
+                                        <option value="adminReport">Report</option>
+                                        <option value="adminMarketing">Marketing</option>
+                                        <option value="adminMaster">Master</option>
+                                    </select>
+                                </div>
+                                <div class="form-group my-2">
+                                        <input type="password" name="password" placeholder="Enter your password" class="form-control"   minlength="7" maxlength="20" style="letter-spacing: 3px;" autocomplete="off"  required>
+                                </div>
+                                <div class="form-group my-2">
+                                        <input type="password" name="confirmPassword" placeholder="Confirm your password" class="form-control"   minlength="7" maxlength="20" style="letter-spacing: 3px;" autocomplete="off"  required>
+                                </div>
+                                                                  
+                                <div class="form-group my-3">                                      
+                                        <button class="g-recaptcha form-control btn btn-dark" 
+                                            data-sitekey="6LdfbNEmAAAAADLoxUXtqIh5I6vw7XP3kDcRoC-v" 
+                                            data-callback='signupAdmin' 
+                                            data-action='submit'>
+                                                Register
+                                        </button>
+
+                                        <!-- clave secreta 6LdfbNEmAAAAAJ_fJWvKiDg5HfmooDmnVWH-zt-4 -->
+                                </div>
+                            </form>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+                       
+       
+
+    
+
+    <%- include('../partials/scripts.ejs')%>
+
+    </main>
+</body>
+</html>

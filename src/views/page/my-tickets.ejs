@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet My Tickets</title>
+</head>
+<style>
+
+    
+    
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+    .borderSelect{
+        transition: box-shadow 0.5s ease;
+    }
+
+    .borderSelect:hover{
+        box-shadow: 1px 2px 6px 1px gray;
+    }
+
+    .contentTicketGratis:hover{
+        .deleteIcon{
+            display: block;
+        }
+        cursor: pointer;
+    }
+
+    .contentTicketPago:hover{
+        .deleteIcon{
+            display: block;
+        }
+        cursor: pointer;
+    }
+
+    .deleteIcon{
+        display: none;
+    }
+
+    .contentLeftGratis{
+        width: 50%;
+        border-left: 25px solid rgb(3, 153, 247);
+        border-top: 4px solid rgb(2, 112, 180);
+        border-bottom: 4px solid rgb(2, 112, 180);
+        border-right: 4px dashed gray;
+    }
+
+    .contentRightGratis{
+        width: 50%;
+        border-right: 25px solid rgb(3, 153, 247);
+        border-top: 4px solid rgb(2, 112, 180);
+        border-bottom: 4px solid rgb(2, 112, 180)
+    }
+
+    .contentLeftPago{
+        width: 50%;
+        border-left: 25px solid rgb(200, 82, 47);
+        border-top: 4px solid rgb(214, 99, 64);
+        border-bottom: 4px solid rgb(214, 99, 64);
+        border-right: 4px dashed gray ;
+    }
+
+    .contentRightPago{
+        width: 50%;
+        border-right: 25px solid rgb(200, 82, 47);
+        border-top: 4px solid rgb(214, 99, 64);
+        border-bottom: 4px solid rgb(214, 99, 64);
+    }
+
+@media screen and (min-width: 500px) and (max-width: 767px){
+    
+    .contentTicketGratis{
+        display: flex;
+        flex-direction: column;
+        border-top: 4px solid rgb(2, 112, 180);
+        border-bottom: 4px solid rgb(2, 112, 180);
+        border-left: 25px solid rgb(3, 153, 247);
+        border-right: 25px solid rgb(3, 153, 247);
+    }
+
+    .contentTicketPago{
+        display: flex;
+        flex-direction: column;
+        border-right: 25px solid rgb(200, 82, 47);
+        border-left: 25px solid rgb(200, 82, 47);
+        border-top: 4px solid rgb(214, 99, 64);
+        border-bottom: 4px solid rgb(214, 99, 64);
+    }
+
+
+    .contentLeftPago, .contentRightPago{
+        width: 100%;
+        border-left:0;
+        border-top:0;
+        border-bottom: 0;
+        border-right: 0;
+    }
+
+    .contentLeftGratis, .contentRightGratis{
+        width: 100%;
+        border-left:0;
+        border-top:0;
+        border-bottom: 0;
+        border-right: 0;
+    }
+
+
+}
+
+@media screen and (min-width: 290px) and (max-width: 499px){
+
+    .contentRow{
+        height: auto;
+        padding: 0;
+        
+    }
+    .mainBuyDetails{
+        display: flex;
+        flex-direction: column;
+        margin: 0px;
+        padding: 0 !important;
+        background-color: #e4e4e4;
+        border: 5px;
+    }
+
+    .containerRecordBuy, .containerRecordSeller, .containerTrustBuy, .containerTrustSeller, .trustBuy{
+        width: 100% !important;
+        margin: 20px 0px  !important;
+    }
+
+    .containerRecordBuyDetails, .containerRecordSellerDetails, .containerTrustBuyDetails, .trustBuyDetails, .cardTrust{
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .contentTicketGratis{
+        display: flex;
+        flex-direction: column;
+        border-top: 4px solid rgb(2, 112, 180);
+        border-bottom: 4px solid rgb(2, 112, 180);
+        border-left: 25px solid rgb(3, 153, 247);
+        border-right: 25px solid rgb(3, 153, 247);
+    }
+
+    .contentTicketPago{
+        display: flex;
+        flex-direction: column;
+        border-right: 25px solid rgb(200, 82, 47);
+        border-left: 25px solid rgb(200, 82, 47);
+        border-top: 4px solid rgb(214, 99, 64);
+        border-bottom: 4px solid rgb(214, 99, 64);
+    }
+
+    .contentLeftPago, .contentRightPago{
+        width: 100%;
+        border-left:0;
+        border-top:0;
+        border-bottom: 0;
+        border-right: 0;
+   
+    }
+
+    .contentLeftGratis, .contentRightGratis{
+        width: 100%;
+        border-left:0;
+        border-top:0;
+        border-bottom: 0;
+        border-right: 0;
+    }
+
+
+}    
+    
+
+</style>
+<body class="mainTheme">
+
+     
+  <main class="themaTextLight">
+
+    
+    <%- include('../partials/navi-simple.ejs') %>
+
+    <% if (deleteTicket) { %>
+        <%- include('../alert/deleteTicket.ejs') %>
+    <% }; %> 
+
+    <% if (deleteNoTicket) { %>
+        <%- include('../alert/deleteNoTicket.ejs') %>
+    <% }; %>
+
+    <% if (user) { %>
+
+        <div class="container-fluid mt-2 d-flex justify-content-center">
+            <div class="row m-0 d-flex justify-content-between" style="width: 100%; height:100%">
+               
+                <% if (tickets.docs.length !==0 ) { %>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 p-2" style="background-color: rgba(119, 119, 119, 0.2); ">
+                            <div class="card" style="background-color: rgba(255, 255, 255, 0.1);">
+                                <div class="card-header">
+                                    Información De Sorteo
+                                </div>
+                                <div class="card-body infoData">
+                                    <div class="alert alert-dark">
+                                        <i class="bi bi-exclamation-triangle me-2"></i> Seleccione un Ticket y obtenga toda la Infomarción necesaria. 
+                                    </div>
+                                </div>    
+                                <div class="contentText m-0 p-0" id="showDescrip" style="width: 100%; height: 250px; overflow-y: auto;"></div>
+                                <div class="PrizesObjectShow border-top border-secondary pt-2"></div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7 col-xxl-7 p-0">
+                        <% tickets.docs.forEach((ele)=> {  %>
+
+                            <% if (ele.category === 'Gratis') { %>
+                                
+                                <div class="contentTicketGratis p-0 d-flex flex-wrap mt-3 mb-2 Ticket borderSelect" style="width: 100%; color: rgb(36, 36, 36); background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%); position: relative;">
+                                            <a href="/deleteTicket/<%= ele.id_raffle %>/<%= ele.serial %>" style="color: black;" ><i class="bi bi-x-square-fill deleteIcon" style="position: absolute; top: 10px; right: 5px;"></i></a> 
+                                            <div class="contentLeftGratis m-0 d-flex flex-column">
+                                                <div class="title">
+                                                    <p class="ms-2 me-3" style="font-size: 24px;"><%= ele.title %> </p>
+                                                </div>
+                                                <div class="NoAnfitrion d-flex justify-content-around">
+                                                    <div class="NoTicket d-flex align-items-center">
+                                                        <span class="m-2 p-2 d-flex justify-content-center align-items-center" style="font-size: 38px; border-radius: 50%; border: 2px dashed black; width: 80px; height: 80px;"><b><%= ele.No %></b> </span>
+                                                    </div>
+                                                    <div class="AnfitrionDateStart d-flex flex-column py-2 px-3">
+                                                        <p class="mb-1">Anfitrion : <span><%= ele.anfitrion %></span></p>
+                                                        <p class="mb-1">Inicio : <span><%= ele.dateStart %></span></p>
+                                                        <p class="mb-1">Policy : <span><%= ele.raffleClosingPolicy %></span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="contentRightGratis m-0 d-flex justify-content-end">
+                                                <div class="contentElement m-2  d-flex flex-column align-items-end">
+                                                    <a href="product/raffle/<%= ele.id_raffle %>" class="text-dark text-decoration-none"> <p class="mb-1"> <b>ID :</b> <span class="mx-2 border border-secondary rounded-2 px-2"><%= ele.id_raffle %></span></p> </a> 
+                                                    <input type="hidden" value="<%= ele.id_raffle %>" class="id-Raffle">
+                                                    <p> <b>Serial :</b> <span class="mx-2 border border-secondary rounded-2 text-light px-2" style="font-family: monospace; letter-spacing: 3px; background: linear-gradient(90deg, rgba(9,9,9,1) 0%, rgba(78,78,78,1) 100%);"><%= ele.serial %></span></p>
+                                                    
+                                                    <div class="contentCountTicketPrice d-flex">
+                                                        <p class="">Cant Ticket: <span><%= ele.numTickets %></span></p>
+                                                        <p class="mx-3">Price: <span><i class="bi bi-currency-dollar"></i> <%= ele.price %></span></p>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                </div>
+                                
+                            <% } else { %>
+                                
+                                <div class="contentTicketPago p-0 d-flex flex-wrap mt-3 mb-2 Ticket borderSelect" style="width: 100%; color: rgb(36, 36, 36); background: radial-gradient(circle, rgb(248, 245, 243) 9%, rgb(221, 206, 197) 53%, rgb(250, 160, 100) 91%); position: relative;">
+                                    <a href="/deleteTicket/<%= ele.id_raffle %>/<%= ele.serial %>" style="color: black;" ><i class="bi bi-x-square-fill deleteIcon" style="position: absolute; top: 10px; right: 5px;"></i></a> 
+                                        <div class="contentLeftPago m-0 d-flex flex-column">
+                                            <div class="title">
+                                                <p class="ms-2 me-3" style="font-size: 24px;"><%= ele.title %></p>
+                                            </div>
+                                            <div class="NoAnfitrion d-flex justify-content-around">
+                                                <div class="NoTicket d-flex align-items-center">
+                                                    <span class="m-2 p-2 d-flex justify-content-center align-items-center" style="font-size: 38px; border-radius: 50%; border: 2px dashed black; width: 80px; height: 80px;"><b><%= ele.No %></b> </span>
+                                                </div>
+                                                <div class="AnfitrionDateStart d-flex flex-column py-2 px-3">
+                                                    <p class="mb-1">Anfitrion : <span><%= ele.anfitrion %></span></p>
+                                                    <p class="mb-1">Inicio : <span><%= ele.dateStart %></span></p>
+                                                    <p class="mb-1">Policy : <span><%= ele.raffleClosingPolicy %></span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="contentRightPago m-0 d-flex justify-content-end">
+                                            <div class="contentElement m-2  d-flex flex-column align-items-end">
+                                                <a href="product/raffle/<%= ele.id_raffle %>" class="text-dark text-decoration-none"> <p class="mb-1"> <b>ID :</b> <span class="mx-2 border border-secondary rounded-2 px-2"><%= ele.id_raffle %></span></p> </a> 
+                                                <input type="hidden" value="<%= ele.id_raffle %>" class="id-Raffle">
+                                                <p> <b>Serial :</b> <span class="mx-2 border border-secondary rounded-2 text-light px-2" style="font-family: monospace; letter-spacing: 3px; background: linear-gradient(90deg, rgba(17,17,17,1) 0%, rgba(68,68,68,1) 100%);"><%= ele.serial %></span></p>
+                                                
+                                                <div class="contentCountTicketPrice d-flex">
+                                                    <p class="">Cant Ticket: <span><%= ele.numTickets %></span></p>
+                                                    <p class="mx-3">Price: <span><i class="bi bi-currency-dollar"></i> <%= ele.price %></span></p>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                </div>
+                                
+                            <% }; %>
+
+                        <% }); %> 
+                        
+                            <div class="contentPagination mt-3" style="height: 80px;">
+
+                            <% if (tickets) { %>
+                             
+                                <% if ( tickets.page == 1 && tickets.totalPages !== 1 ) {  %>
+                                                        
+                                <nav aria-label="Page navigation">
+                                 <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                                
+                                     <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                                     <li class="page-item disabled"><a class="page-link" href="?page=<%= tickets.prevPage %>">Prev</a></li>
+                                     <li class="page-item active"><a class="page-link" href="?page=<%= tickets.page %>"><%= tickets.page %></a></li>
+                                     <li class="page-item "><a class="page-link" href="?page=<%= tickets.nextPage %>">Next</a></li>
+                                     <li class="page-item "><a class="page-link" href="?page=<%= tickets.totalPages %>"> <%= tickets.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                              
+                                  </ul>
+                                </nav>
+                
+                                <% } else if ( tickets.page == 1 && tickets.totalPages == 1 ) {  %>
+                
+                                  <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                                   
+                                        <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="?page=<%= tickets.prevPage %>">Prev</a></li>
+                                        <li class="page-item active"><a class="page-link disabled href="?page=<%= tickets.page %>"><%= tickets.page %></a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="?page=<%= tickets.nextPage %>">Next</a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="?page=<%= tickets.totalPages %>"> <%= tickets.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                                 
+                                     </ul>
+                                   </nav>
+                
+                                <% } else if ( tickets.page !== tickets.totalPages && tickets.page !== 1 ) {  %>
+                
+                                  <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                                        <li class="page-item"><a class="page-link" href="?page=1"><i class="bi bi-arrow-bar-left"></i>1</a></li>
+                                        <li class="page-item"><a class="page-link" href="?page=<%= tickets.prevPage %>">Prev</a></li>
+                                        <li class="page-item active"><a class="page-link" href="?page=<%= tickets.page %>"><%= tickets.page %></a></li>
+                                        <li class="page-item"><a class="page-link" href="?page=<%= tickets.nextPage %>">Next</a></li>
+                                        <li class="page-item"><a class="page-link" href="?page=<%= tickets.totalPages %>"> <%= tickets.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                                    </ul>
+                                  </nav>  
+                
+                                <% } else if ( tickets.page == tickets.totalPages ) {  %> 
+                
+                                  <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                                        <li class="page-item"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i>1</a></li>
+                                        <li class="page-item"><a class="page-link" href="?page=<%= tickets.prevPage %>">Prev</a></li>
+                                        <li class="page-item active"><a class="page-link" href="?page=<%= tickets.page %>"><%= tickets.page %></a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="?page=<%= tickets.nextPage %>">Next</a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="?page=<%= tickets.totalPages %>"> <%= tickets.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                                     </ul>
+                                  </nav>
+                
+                                <% }; %>   
+                
+                            <% }; %>
+                
+                            </div>
+                        </div>         
+                <% } else { %>
+                    
+                    <div class="containerMessage m-2 p-3" style="background-color: rgba(56, 61, 66, 0.2); ">
+                        <span style="font-size: 18px;">¡No hay Tickets!<i class="bi bi-emoji-frown ms-3"></i></span>
+                    </div>
+                    
+                <% }; %>    
+                
+
+            </div>
+        </div>
+        
+    <% } else { %>
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/noLogin.ejs') %>
+        
+          </div>
+    <% }; %>         
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+</body>
+</html>
+
+
+<% if (user) { %>
+    <!-- aqui es script cuando exista un user -->
+    
+    <script>
+
+        const infoData = document.querySelector('.infoData');
+
+        const titleShow = document.querySelector('.titleShow');
+        const iDShow = document.querySelector('.iDShow');
+        const categoryShow = document.querySelector('.categoryShow');
+        const raffleClosingPolicyShow = document.querySelector('.raffleClosingPolicyShow');
+        const dateEndShow = document.querySelector('.dateEndShow');
+        const prizesObjectShow = document.querySelector('.PrizesObjectShow');
+
+        const Ticket = document.querySelectorAll('.Ticket');
+        const id = document.querySelectorAll('.id-Raffle')
+        let iDraffle;
+
+        for (let t = 0; t < Ticket.length; t++) {
+            const element = Ticket[t];
+            element.addEventListener('click', ()=>{                
+                iDraffle = id[t].value;
+                console.log(iDraffle)
+
+                const dato = {
+                    id : iDraffle
+                };
+   
+
+                fetch('/mytickets', {
+
+                method: "post",
+                body: JSON.stringify(dato),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {
+                    
+                    console.log("Esto es lo que se recibe del backend -->", jsonx)
+                    const Id = jsonx._id;
+                    const title = jsonx.title;
+                    const anfitrion = jsonx.username;
+                    const category = jsonx.category;
+                    const raffleClosingPolicy = jsonx.raffleClosingPolicy;
+                    const dateEnd = jsonx.dateEnd;
+                    const tecnicalDescription = jsonx.tecnicalDescription
+                    const PrizesObject = jsonx.PrizesObject
+                    console.log("PrizesObject --->", PrizesObject)
+                    console.log("dateEnd --->", dateEnd)
+                    let Celebracion;
+
+                    if (dateEnd !== null){
+                        
+                        //--------- date --------
+                        const DE = new Date(dateEnd);
+                        const dia = DE.getDate();
+                        const mes = DE.getMonth() + 1;
+                        const anio = DE.getFullYear();
+                        const hora = DE.getHours();
+                        const minu = DE.getMinutes();
+
+                        if (minu <= 9){
+                            Celebracion = `${dia}-${mes}-${anio} ${hora}:0${minu}`
+                        } else {
+                            Celebracion = `${dia}-${mes}-${anio} ${hora}:${minu}`
+                        }
+
+                    } else {
+                        Celebracion = "Hasta agotarse los Tickets";
+                    }
+                    //-----------------------
+
+
+                    let delta = JSON.parse(tecnicalDescription);
+                    //console.log("delta", delta);
+      
+                    let quillShow = new Quill('#showDescrip', {
+                        modules: {
+                            toolbar: false
+                        },
+                        readOnly: true
+                    });
+      
+                    quillShow.setContents(delta);
+
+                    prizesObjectShow.innerHTML ="";
+                    PrizesObject.forEach((ele, i) => {
+                        prizesObjectShow.innerHTML += ` <p class="mb-1 alert-secondary px-1 rounded-2">
+                                                            <label class="me-2"><i class="bi bi-gift me-1"></i> Premio ${i + 1} : </label> 
+                                                            ${ele.Prize}
+                                                        </p> `
+
+                    });
+
+                    infoData.innerHTML = `<p class="mb-1"> <b>Titulo : </b> <span class="ms-2 titleShow"> ${title} </span></p>
+                                          <p class="mb-1"> <b>Anfitrión : </b> <span class="ms-2 titleShow"> ${anfitrion} </span></p>
+                                          <p class="mb-1"> <b>ID-Sorteo : </b> <span class="ms-2 iDShow"> ${Id} </span></p>
+                                          <p class="mb-1"> <b>Category : </b> <span class="ms-2 categoryShow"> ${category} </span> <span class="ms-2"><b>Politica :</b> <span class="ms-2 raffleClosingPolicyShow"> ${raffleClosingPolicy} </span> </span> </p>
+                                          <p class="mb-1"> <b>Celebración : </b> <span class="ms-2 dateEndShow"> ${Celebracion} </span></p>
+                                        `
+                        
+                
+                })
+
+                .catch( err => console.log(err)); 
+
+            })
+            
+        }
+   
+
+
+
+    </script>
+<% }; %>

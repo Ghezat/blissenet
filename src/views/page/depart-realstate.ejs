@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+        <title>Blissenet RealState</title>
+
+</head>
+
+<style>
+    .borderView{
+        border: 1px ridge darkgray;
+    }
+    .bg-secondaryLight{
+        background-color: rgb(255, 245, 226);
+        background-color: rgb(243, 238, 238);
+    }
+    .spnMark{
+        background-color: rgb(255, 253, 243);
+        background-color: rgb(250, 250, 250);
+        border-radius: 4px;
+        padding: 0px 3px;
+    }
+
+    .caret{
+        opacity: 0;
+        transition: 1s all ease;
+    }
+
+    .beforeControl{
+        width: 50%;
+        height: 100%;
+        font-size: 25px;
+        color: red;
+        transition: 1s all ease;
+    }
+
+    .beforeControl:hover{
+        cursor: pointer;
+        background-color: rgb(255, 0, 0, 0.5);
+        border: 2px dotted rgb(236, 31, 4);
+        border-top-left-radius: 5px;
+        opacity: 0.7;
+        .caret{
+            opacity: 1;
+        }
+    }
+
+
+    .afterControl{
+        width: 50%;
+        height: 100%;
+        font-size: 25px;
+        color: red;
+        transition: 1s all ease;
+    }
+
+    .afterControl:hover{
+        cursor: pointer;
+        background-color: rgb(255, 0, 0, 0.5);
+        border: 2px dotted rgb(236, 31, 4);
+        border-top-right-radius: 5px;
+        opacity: 0.7;
+        .caret{
+            opacity: 1;
+        }
+       
+    }
+
+    .delImgX{
+        opacity: 0;
+        transition: 1s all ease;
+    }
+    .contentImg:hover{
+        .delImgX{
+            opacity: 1;
+        }
+    }
+
+    .blueMask{
+        background-color:  rgba(101, 153, 239, 0);
+        transition: all 1s ease;
+    }
+
+    .blueMask:hover{
+        background-color: rgba(101, 153, 239, 0.3);
+        outline: 1px solid #6599ef;
+        cursor: pointer;
+    }
+
+    .redMask{
+        background-color: rgba(255, 0, 0, 0);
+        transition: all 1s ease;
+    }
+
+    .redMask:hover{
+        background-color: rgba(255, 0, 0, 0.3);
+        outline: 1px solid red;
+        cursor: pointer;
+    }
+
+    .contentController{
+        width: 100%;
+    }
+
+    .close{
+        display: none;
+    }
+    
+    @media screen and (min-width: 290px) and (max-width: 499px){
+     
+        .contentController{
+            width: max-content;
+        }
+    }
+
+</style>
+
+<body>
+
+    <%- include('../partials/navi-simple.ejs') %>
+
+    <% if (uploadPublication) { %>
+        <%- include('../alert/uploadPublication.ejs') %>
+    <% }; %> 
+
+    <% if (updatePublication) { %>
+        <%- include('../alert/updatePublication.ejs') %>
+    <% }; %> 
+
+    <% if (deletePublication) { %>
+        <%- include('../alert/deletePublication.ejs') %>
+    <% }; %> 
+
+    <% if (uploadFall) { %>
+        <%- include('../alert/uploadFall.ejs') %>
+    <% }; %>
+    
+    <% if (uploadVideo) { %>
+        <%- include('../alert/uploadVideo.ejs') %>
+    <% }; %>
+
+    <% if (uploadVideoFall) { %>
+        <%- include('../alert/uploadVideoFall.ejs') %>
+    <% }; %>
+
+    <% if (uploadVideoDone) { %>
+        <%- include('../alert/uploadVideoDone.ejs') %>
+    <% }; %>
+
+    <% if (videoDelete) { %>
+        <%- include('../alert/videoDelete.ejs') %>
+    <% }; %>
+    
+    <% if (catchError) { %>
+        <%- include('../alert/catchError.ejs') %>
+    <% }; %>
+
+    <main class="mainTheme">
+
+    <% if (user) { %>
+
+        <% if (countImpagos >= 3) { %>
+            <!-- Modal restrictivo por imapago -->
+            <div class="conuntenImpagos d-flex justify-content-center my-5" style="width: 100%; height: 100%; background-color: white;">
+                <div class="contentMenssage mt-5" style="width: 60%;">
+                    <p class="p-3 rounded-2 mt-2 alert-danger" style="border: 2px ridge red">
+                        <span><b> <i class="bi bi-chat-right-text me-2"></i> Cuenta limitada por impagos, vaya al apartado de Facturas y gestione al menos un (1) pago. </b></span>
+                    </p>
+                    <p class="p-3 rounded-2 mt-2" style="background-color: lightseagreen; color: black;">
+                        <span><i class="bi bi-chat-right-quote me-2"></i>Apreciado Usuario. es importante mantener su cuenta al dia. ya que los servicios para mantener esta plataforma de compra y venta son elevados. Su pago nos permite mantenerla activa. Muchas gracias.</span>
+                        <span><a href="" class="text-dark">ver politicas</a>  ir  <a href="/my-invoices" class="text-dark">a Facturas.</a></span>
+                    </p>
+                    
+                </div>
+            </div>
+        <% } else { %>
+
+            <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class=" me-5 p-0" style="color:gray; font-weight: 500;" > Realstate </span>
+            </div>
+            <!-- este container es el spinner que veraz cuando un usuario carga un archivo de video o img de la barra de herramientas de los anuncios. -->
+            <div class="container-fluid bodySpinner close" style="height: 100%;  background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);">
+                <div class="container d-flex justify-content-center p-5">   
+                    <div class="container mt-5 d-flex flex-column justify-content-start align-items-center" style="height: 50%;">
+
+                        <h4 class="mt-5" style="text-align: center; margin-bottom: 20px;">Subiendo un Archivo, No salga de esta pagina.</h4>
+                        <h4>¡Espere por favor.!</h4>
+                        <div class="spinner-border mt-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+
+                    </div>
+                </div>    
+            </div>            
+            <div class="container-fluid bodyToolADS p-0">
+                <div class="row rowWidth">
+    
+                    <div class="col-lg-4 col-md-12 col-sm-12 py-1" style="background-color: #e9ecef;">
+                             
+                        <div class="accordion" id="accordionExample">
+    
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                  Crear Publicacion.
+                                </button>
+                              </h2>
+                              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                  
+                                     <!-- Crear -->
+                                    <div class="card overflow80">
+                                       
+                                        <div class="card-body px-0">
+                                                         
+                                            <form action="/department/create/realstate" method="POST" id="formCreate" enctype="multipart/form-data"
+                                                accept=".jpg, .jpeg, .png, .gif">
+    
+                                                <div class="form-goup my-2">
+                                                    <input type="text" name="title" placeholder="Coloque un titulo a su publicacion"
+                                                        class="form-control" maxlength="50" required>
+                                                </div>
+                                                <div class="form-goup my-2">
+                                                    <select name="category" class="form-control category nivel1" id="category" required>
+                                                        <option value="no_data">Select it</option>
+                                                        <option value="Terrenos">Terrenos</option>
+                                                        <option value="Casas">Casas</option>
+                                                        <option value="Anexos">Anexos</option>
+                                                        <option value="Habitaciones">Habitaciones</option>
+                                                        <option value="Departamentos">Departamentos</option>
+                                                        <option value="Oficinas">Oficinas</option>
+                                                        <option value="Locales Comerciales">Locales Comerciales</option>
+                                                        <option value="Galpones">Galpones</option>
+                                                        <option value="Edificios">Edificios</option>
+                                                        <option value="Contrucciones">Contrucciones</option>
+                                                        <option value="Proyectos">Proyectos</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    <!-- <select name="produce" id="nivel1" class="form-control nivel2 me-1" required> -->
+                                                    <select name="sub_category" id="nivel1" class="form-control nivel2 me-1" required>
+                                                       
+                                                    </select>
+                                                </div>
+    
+                                                <div class="form-group d-flex my-2">
+                                                    <input type="text" name="construcDate"  class="form-control me-1" pattern="[0-9]{4}" title="debe introducir una fecha de año compuesta por cuatro (4) digitos numericos, ej. 1998 " maxlength="4"  placeholder="Example...1998"  required>
+                                                    <input type="text" name="mtrs2" placeholder="Metros cuadrados" class="form-control" required>
+                                                </div>
+    
+                                                <div class="form-goup" id="tecDescrip"></div>
+                                                <div class="alert alert-warning mb-2">
+                                                    <span>Aprovecha estos caracteres para crear un anuncio impactante. ¡Buena suerte! </span>
+                                                    <span class="ms-2 spnCharacterCount"> 1500 </span> 
+                                                </div>
+                                                <!-- Campo de entrada oculto -->
+                                                <input type="hidden" id="hiddenInput" name="tecnicalDescription">
+                                                  
+    
+                                                <div class="card-header">Subir imagenes</div>
+                                                <div class="form-group d-flex justify-content-start my-2 border">
+                                                    <div class="add_photo me-2" id="add_photo">
+                                                        <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
+                                                    </div>
+                                                    <span class="mx-2"> <small>Puede subir hasta tres (3) imagenes juntas, ¡ya luego puede colocar mas fotos.!</small></span>
+                                                    <input type="file" name=fileImg class="inpFile form-control" multiple required>
+                                                </div>
+                                                <div class="my-2 d-flex justify-content-center contentImgs border" id="addObjectImg">
+    
+                                                    <!--   <img src="" class="preview"> -->
+    
+                                                </div>
+    
+                                                <div class="input-group my-2">
+                                                    <span class="input-group-text"> Precio</span>
+                                                    <input type="number" name="price" placeholder="precio"
+                                                        class="form-control" style="font-size: 18px;" step="0.01" required>
+                                                    <span class="input-group-text"> USD</span>    
+                                                </div>
+
+                                                <div class="form-group my-2">
+                                                    <button type="submit" class="btn btn-primary form-control my-3" id="btnCreate"> Crear </button>
+                                                    <button class="btn btn-primary form-control invisibleBtn my-3" type="button" id="btnCreateLoading" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Uploading...
+                                                      </button>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+    
+                                </div>
+                              </div>
+                            </div>
+    
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                  Editar Publicacion.
+                                </button>
+                              </h2>
+                              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+    
+                                    <!-- Editar -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <% if (Realstate.length !==0) { %>
+    
+                                                <form action="/department/create/realstate/edit" method="post" id="formEdit">
+                                                
+                                                    <div class="form-group d-flex my-2">
+    
+                                                        <select name="titleToEdit" id="titleToEdit" class="form-control me-1">
+                                                            <option value="no_data">select it</option>
+                                                            <% Realstate.forEach((ele)=> { %>
+                
+                                                                <option value="<%= ele._id %>"><%= ele.title %></option>
+                
+                                                            <% }); %>
+                                                        </select>
+                                                        
+                                                    </div>                      
+                                                    <div class="form-control d-flex align-items-center justify-content-start">
+                                                        <img src="/img/admiracion.png" style=" width : 40px; height: 40px;" class="me-4">
+                                                        <p class="text-secondary m-0" > ¡Aqui puedes editar tu publicación!</p>
+                                                    </div>
+
+                                                    <div class="contentElemetEdit close">
+    
+                                                            <div class="form-group d-flex my-2">
+                                                                <input type="text" name="title" id="titleEdit" class="form-control" placeholder="Titulo" maxlength="50" required>
+                                                            </div>
+
+                                                            <div class="form-group d-flex my-2">
+                                                                <select name="category" class="form-control nivel1" id="categoryEdit" required>
+                                                                    <option value="no_data">Select it</option>
+                                                                    <option value="Terrenos">Terrenos</option>
+                                                                    <option value="Casas">Casas</option>
+                                                                    <option value="Anexos">Anexos</option>
+                                                                    <option value="Habitaciones">Habitaciones</option>
+                                                                    <option value="Departamentos">Departamentos</option>
+                                                                    <option value="Oficinas">Oficinas</option>
+                                                                    <option value="Locales Comerciales">Locales Comerciales</option>
+                                                                    <option value="Galpones">Galpones</option>
+                                                                    <option value="Edificios">Edificios</option>
+                                                                    <option value="Contrucciones">Contrucciones</option>
+                                                                    <option value="Proyectos">Proyectos</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group d-flex my-2">
+                                                                <select name="sub_category" id="tipeEdit" class="form-control nivel2 me-2" required>
+                                                                
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group d-flex my-2">
+                                                                <input type="text" name="construcDate" id="yearEdit" class="form-control me-2" placeholder="Example...1998">
+                                                                <input type="text" name="mtrs2" id="mtrs2Edit" placeholder="Metros cuadrados" class="form-control" required>
+                                                            </div>
+
+                                                            <div class="form-goup" id="tecDescripEdit">
+                                                            </div>
+                                                            <div class="alert alert-warning mb-2">
+                                                                <span>Aprovecha estos caracteres para crear un anuncio impactante. ¡Buena suerte! </span>
+                                                                <span class="ms-2 spnCharacterCountEdit"> 1500 </span> 
+                                                            </div>            
+                                                            <!-- Campo de entrada oculto -->
+                                                            <input type="hidden" id="hiddenInputEdit" name="tecnicalDescription">
+                                                            
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text"> Precio</span>
+                                                                <input type="number" name="price" id="priceEdit"
+                                                                    class="form-control" style="font-size: 18px;" step="0.01" required>
+                                                                <span class="input-group-text"> USD</span>
+                                                            </div>
+
+                                                            <div class="my-2 d-flex justify-content-center contentImgs border"  id="addObjectImgEdit">
+            
+                                                                <!--   <img src="" class="preview"> -->
+                
+                                                            </div>
+            
+                                                            <input type="submit" class="btn btn-success form-control my-3" value="Edit" id="btnEdit">
+                                                            <button class="btn btn-success form-control invisibleBtnEdit my-3" type="button" id="btnEditLoading" disabled>
+                                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                Updating...
+                                                            </button> 
+
+                                                    </div>
+
+                                                </form>
+                                                   
+                                            <% } else { %>
+                                               <span class="text-secondary"> ¡No hay documentos a editar!</span>
+                                            <% } %>    
+                                        </div>
+                                   </div>
+    
+                                </div>
+                              </div>
+                            </div>
+    
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                  Eliminar Publicacion.
+                                </button>
+                              </h2>
+                              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+    
+                                   <!-- eliminar -->
+                                   <div class="card">
+                                        <div class="card-body">
+                                            <% if (Realstate.length !==0) { %>
+    
+                                                <form action="/department/create/realstate/delete" method="post" id="formDelete">
+                                                   
+                                                    <select name="titleToDelete"  class="form-control my-2">
+                                                        <option value="no_data">select it</option>
+                                                        <% Realstate.forEach((ele)=> { %>
+            
+                                                            <option value="<%= ele._id %>"><%= ele.title %></option>
+            
+                                                        <% }); %>
+                                                    </select>                       
+                                                    <div class="form-control d-flex align-items-center justify-content-center">
+                                                        <img src="/img/admiracion.png" style=" width : 40px; height: 40px;" class="me-3">
+                                                        <p class=" m-0"><small> Eliminar su documento tomara tiempo ejecute esta acción si esta seguro.</small> </p>
+                                                    </div>
+                                                    <input type="submit" class="btn btn-danger form-control my-3" value="Eliminar" id="btnDelete">
+                                                    <button class="btn btn-danger form-control invisibleBtnDelete my-3" type="button" id="btnDeleteLoading" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Deleting...
+                                                      </button>
+    
+                                                </form>
+                                                   
+                                            <% } else { %>
+                                               <span class="text-secondary"> ¡No hay documentos a eliminar!</span>
+                                            <% } %>    
+                                        </div>
+                                   </div>
+    
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+    
+                    </div>
+    
+                    <div class="col-lg-8 col-md-12 col-sm-12 py-1" style="background-color: #e9ecef;">
+                        <div class="card">
+    
+                            <div class="card-header">
+                                <form action="">
+                                    <div class="form-group d-flex">
+    
+                                        <% if (Realstate.length !==0) { %>
+    
+                                            <select name="title" id="selectTitle" class="form-control mx-1">
+                                                <option value="">select it</option>
+                                                <% Realstate.forEach((ele)=> { %>
+    
+                                                    <option value="<%= ele._id %>">
+                                                        <%= ele.title %>
+                                                    </option>
+    
+                                                    <% }); %>
+                                            </select>
+    
+                                        <% } else { %>
+                                                <select name="title" id="" class="form-control">
+                                                    <option value="no_data"> sin publicacion</option>
+                                                </select>
+                                        <% } %>
+    
+                                                <input type="Submit" class="btn btn-primary form-control mx-1"
+                                                value="Select">
+    
+                                    </div>
+                                </form>
+                            </div>
+    
+                            <!-- Aqui incia la seccion de muestra de carga de imaganes con sus opciones -->
+                            <div class="card-body">
+    
+                                <% if (TitleSelect) { %>
+    
+                                    <% if (Images.length !==0) { %>
+                                       <% if (Video) { %>
+                                        <div class="contentCtrlImgs" style="width: auto; overflow-x: auto;">
+    
+                                                <div class="contentController d-flex text-light bg-dark">
+                                                    
+                                                    <div class="boxButton  d-flex justify-content-center align-items-center blueMask" id="videoDisplay" style="width: 60px; height: 40px;"><i class="bi bi-play-btn"></i></div>
+                                                    <div class="boxButton  d-flex justify-content-center align-items-center blueMask" id="videoControl" style="width: 60px; height: 40px;"><i class="bi bi-arrow-bar-up"></i>
+                                                        <form action="/department/create/realstate/add/video" method="post" enctype="multipart/form-data">
+                                                                                                                               
+                                                            <input type="file" name=fileImg id="videoField" class="inpAddVideo"> 
+                                                            <input type="submit" id="submitAddVideo" class="subVideo">
+                                            
+                                                        </form>
+                                                    </div>
+                                                    <div class="boxButton  d-flex justify-content-center align-items-center" id="videoLength" style="width: 60px; height: 40px;"> <%= Video.length %>/1</div>
+                                                    <div class="boxButton  d-flex justify-content-center align-items-center redMask" id="imageDisplay" style="width: 60px; height: 40px;"><i class="bi bi-card-image"></i></div>
+                                                    <div class="boxButton  d-flex justify-content-center align-items-center redMask" id="beforeControl" style="width: 60px; height: 40px;"><i class="bi bi-arrow-bar-left"></i>        
+                                                        <form action="/department/create/realstate/add/first/realstate" method="post" enctype="multipart/form-data">
+                                                            <input type="file" name=fileImg id="imgFirst" class="inpAddPhoto">
+                                                            <input type="submit" id="submitAddPhotoFirst">
+                                                        </form>
+                                                    </div>
+                                                    <div class="boxButton  d-flex justify-content-center align-items-center redMask" id="afterControl" style="width: 60px; height: 40px;"><i class="bi bi-arrow-bar-right"></i>
+                                                        <form action="/department/create/realstate/add/last/realstate" method="post" enctype="multipart/form-data">
+                                                            <input type="file" name=fileImg id="imgLast" class="inpAddPhoto">
+                                                            <input type="submit" id="submitAddPhotoLast">
+                                                        </form>
+                                                    </div>
+                                                    <div class="boxButton  d-flex justify-content-center align-items-center" id="imageLength" style="width: 60px; height: 40px;">
+                                                        <span><%= Images.length %>/12</span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center align-items-center px-2" id="boxDisplay" style="width: auto; height: 40px;">
+                                                        <!-- este es el display de mensajes -->
+                                                    </div>
+                                                    
+    
+                                                </div>
+    
+                                                <div class="contentImages d-flex p-3 flex-wrap borderView" style="width: 100%">
+    
+                                                    <% Video.forEach( (elem, i)=>{ %>
+    
+                                                        <div class="m-2">
+                                                            <div class="cardImg blueMask rounded-2">
+                                                                <div class="contentImg pesoFormatVideo" style="position: relative; width: 120px; height: 120px;">
+                                                                    <video src="<%= elem.url %>" class="rounded-2" style="width: 120px; max-height: 120px;" controls></video>
+                                                                    <a href="/department/create/realstate/del/video/<%= Video[0].public_id %>" class="text-dark rounded-pill d-flex justify-content-center align-items-center delImgX" style="width: 30px; height: 30px; position: absolute; top: 5px; left: 5px; background-color: rgba(255, 255, 255, 0.5)"><i class="bi bi-trash3-fill"></i></a>
+                                                                    <input type="hidden" class="bytes" value="<%= elem.bytes %>">
+                                                                    <input type="hidden" class="format" value="<%= elem.format %>">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+    
+                                                    <% }); %>
+    
+                                                    <% Images.forEach( (elem, i)=>{ %>
+            
+                                                        <div class="m-2">
+                                                                <div class="cardImg redMask rounded-2">
+                                                                    <div class="contentImg pesoFormatImg" style="position: relative; width: 120px; height: 120px;">
+                                                                        <img src="<%= elem.url %>" class="rounded-2" style="width: 120px; max-height: 120px;">
+                                                                        <a href="/department/create/realstate/del/<%= Images[i].public_id %>" class="text-dark rounded-pill d-flex justify-content-center align-items-center delImgX" style="width: 30px; height: 30px; position: absolute; top: 5px; left: 5px; background-color: rgba(255, 255, 255, 0.5)"><i class="bi bi-trash3-fill"></i></a>
+                                                                        <input type="hidden" class="bytes" value="<%= elem.bytes %>">
+                                                                        <input type="hidden" class="format" value="<%= elem.format %>">
+                                                                    </div>
+                                                                </div>
+                                                        </div>    
+                                                    
+                                                    <% }); %>
+    
+                                                </div>
+                                                    
+                                        </div>
+    
+    
+                                        <div class="container-fluid borderView bg-secondaryLight">
+                                            <div class="container-fluid  p-0 d-flex justify-content-start align-items-center flex-wrap">
+                                                <div class="form-group d-flex my-2">
+                                                   <span class="me-2 spnMark"><label class="me-2">Titulo : </label> <%= TitleSelect.title %></span>
+                                                </div>
+                                                <div class="form-group d-flex my-2">
+                                                    <span class="me-2 spnMark"><label class="me-2">Categoria : </label> <%= TitleSelect.category %></span>
+                                                     <span class="me-2 spnMark"><label class="me-2">Oferta : </label> <%= TitleSelect.sub_category%></span>
+                                                </div>
+                                                <div class="form-group d-flex my-2">
+                                                    <span class="me-2 spnMark"><label class="me-2">Año : </label> <%= TitleSelect.construcDate %></span>
+                                                    <span class="me-2 spnMark"><label class="me-2">Mtrs2 : </label> <%= TitleSelect.mtrs2 %></span>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="container-fluid p-0 my-2">
+                                                <div class="form-group d-flex">
+                                                    <div class="contentText spnMark m-0 p-0" id="showDescrip" style="width: 100%;"></div>
+                                                    <input type="hidden" value="<%= TitleSelect.tecnicalDescription %>" id="hiddenShowDescrip">
+                                                </div>
+                                            </div>
+
+                                            <div class="container-fluid p-0 my-2">
+                                                <div class="form-group d-flex">
+                                                    <span class="m-0 bg-warning rounded-1 text-dark fw-bold py-2 px-2"><label class="me-2"> Precio : </label>$ <%= TitleSelect.price %></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="container-fluid p-0 my-2">
+                                                <div class="form-group m-0">
+
+                                                    <% if  (Spreading === false) { %>                                             
+                                                    
+                                                        <div class="contentSpread" style="width: 100%;">
+                                                            <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                                <span class="me-2"> Difundir a todos mis seguidores</span> 
+                                                                <button class="btn btn-success px-3 mt-1" id="btnSpread" style="width: 200px;">Listo para Difundir <i class="bi bi-megaphone ms-1"></i> </button>   
+                                                                    <button class="btn btn-success px-3 mt-1 close" id="btnSpreadSpin" style="width: 220px;" disabled>Difundiendo <span class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span> </button>
+                                                                    <input type="hidden" value="<%= TitleSelect.department %>" id="department_Difundir">
+                                                                    <input type="hidden" value="<%= TitleSelect._id %>" id="titleID_Difundir">
+                                                                    <input type="hidden" value="<%= TitleSelect.title %>" id="title_Difundir">
+                                                            </div>
+                                                        </div>
+                                                        <div class="contentSpreadUpdate close" style="width: 100%;">
+                                                            <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                                <span class="me-2"> Difundir a todos mis seguidores</span>
+                                                                <button class="btn btn-primary px-3 mt-1" id="btnSpreadDone" style="width: 200px;" disabled>Anuncio Difundido <i class="bi bi-megaphone ms-1"></i>  </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="contentSpreadMessage" style="width: 100%;">
+                                                            <!-- bloque dinamico -->
+                                                         
+                                                        </div>
+    
+                                                    <% } else { %>
+
+                                                        <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                            <% if (Time) { %>
+                                                                <% let dia = Time.getDate() %> <% let mes = Time.getMonth() +1 %> <% let anio = Time.getFullYear()  %> <% let hora = Time.getHours() %> <% let minu = Time.getMinutes()  %> 
+                                                            <div class="contentSpreadDone">
+                                                                <span class="me-2"> <i class="bi bi-megaphone me-1"></i> Difundido el dia :</span>
+                                                                <button class="btn btn-primary px-3 mt-1 me-2" id="btnSpreadDone" style="width: 200px" disabled> <%= dia %>-<%= mes %>-<%= anio %> <%= hora %>:<%= minu %> </button>
+                                                            </div>
+                                                            <% }; %>
+                                                        </div>
+                                                        <div class="alert alert-light alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                            <strong class="me-2"> Podrás volver a Difundir en dos (2) semanas.</strong>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                    
+                                                    <% }; %>
+
+                                                </div>
+                                                <div class="form-group m-0">                                                
+                                                    <div class="alert alert-warning mx-0 mb-3" style="width: 100%;">
+                                                        Este anuncio esta publicado, <a href="/product/<%= TitleSelect.department %>/<%= TitleSelect._id %>" class="alert-link ms-2"><span class="fst-italic">mirar mi anuncio.</span> </a>.
+                                                    </div>   
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                       <% }; %>
+                                    <% } else {  %>
+                                        
+    
+                                        <div class=" d-flex flex-row borderView p-4">
+                                            <div class="m-2">
+                                                <img src="/img/sinImagen.png" style="width: 120px;">
+                                            </div>
+                                        </div>
+                                        <div class="container-fluid bg-secondaryLight borderView">
+                                            <div class="container-fluid p-0 d-flex justify-content-start align-items-center flex-wrap">
+                                                <div class="form-group d-flex my-2">
+                                                    <span class="ms-2 spnMark"><label class="me-2">Titulo : </label> <%= TitleSelect.title %></span>
+                                                 </div>
+                                                 <div class="form-group d-flex my-2">
+                                                     <span class="ms-2 spnMark"><label class="me-2">Categoria : </label> <%= TitleSelect.category %></span>
+                                                     <span class="ms-2 spnMark"><label class="me-2">Oferta : </label> <%= TitleSelect.sub_category%></span>
+                                                 </div>
+                                                 <div class="form-group d-flex my-2">
+                                                     <span class="ms-2 spnMark"><label class="me-2">Año : </label> <%= TitleSelect.construcDate %></span>
+                                                 </div>
+                                              
+                                                 <div class="form-group d-flex my-2">
+                                                     <span class="ms-2 spnMark"><label class="me-2">  Descripcion Tecnica : </label> <%= TitleSelect.tecnicalDescription %></span>
+                                                 </div>
+                                                 <div class="form-group d-flex my-2">
+                                                     <span class="ms-2 spnMark"><label class="me-2">  Descripcion General : </label> <%= TitleSelect.generalMessage %></span>
+                                                 </div>
+                                               
+                                            </div>
+                                            <div class="container-fluid  p-0">
+                                                <div class="form-group d-flex my-2">
+                                                    <span class="ms-2 bg-warning rounded-1 text-dark fw-bold px-2"><label class="me-2"> Precio : </label>$ <%= TitleSelect.price %></span>
+                                                </div>
+                                            </div>
+                                            
+
+                                        </div>
+                                       
+    
+                                        
+                                    <% }; %>   
+    
+                                <% } else { %> <!-- no hay TitleSelect -->
+                                    <div class=" d-flex flex-row borderView p-4">
+                                        <div class="m-2">
+                                            <img src="/img/sinImagen.png" style="width: 120px;">
+                                        </div>
+                                    </div>
+                                <% }; %>
+    
+                            </div>
+    
+                        </div>
+                    </div>
+    
+    
+                </div>
+            </div>
+        
+        <% }; %>
+     
+    <% } else { %>
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/noLogin.ejs') %>
+        
+        </div>   
+    <% }; %>        
+
+
+    </main>
+
+
+        <script>
+
+            let nivel1 = document.querySelectorAll('.nivel1');
+            let nivel2 = document.querySelectorAll('.nivel2');
+
+            let terrenos = ["Select it", "Venta", "Compra", "Alquiler" ];
+            let casas = ["Select it", "Venta", "Compra", "Alquiler" ]; 
+            let anexos = ["Select it", "Alquiler" ]; 
+            let habitaciones = ["Select it", "Alquiler" ];
+            let departamentos = ["Select it", "Venta", "Compra", "Alquiler" ];
+            let oficinas = ["Select it", "Venta", "Compra", "Alquiler" ];
+            let locales = ["Select it", "Venta", "Compra", "Alquiler" ]; 
+            let galpones = ["Select it", "Venta", "Compra", "Alquiler" ]; 
+            let edificios = ["Select it", "Venta", "Compra" ]; 
+            let construcciones = ["Select it", "Venta", "Compra" ]; 
+            let proyectos = ["Select it", "Venta" ]; 
+                                                
+            
+
+            /* select create */
+            nivel1[0].addEventListener('change', ()=>{
+                console.log(nivel1[0].value)
+                const selected = nivel1[0].value;
+    
+                if ( selected == "Terrenos" ){
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < terrenos.length; i++) {
+                        const element = terrenos[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                    
+                } else if ( selected == "Casas") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < casas.length; i++) {
+                        const element = casas[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+
+                } else if ( selected == "Anexos") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < anexos.length; i++) {
+                        const element = anexos[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }    
+
+                } else if ( selected == "Habitaciones") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < habitaciones.length; i++) {
+                        const element = habitaciones[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    } 
+                    
+                } else if ( selected == "Departamentos") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < departamentos.length; i++) {
+                        const element = departamentos[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }    
+                    
+                } else if ( selected == "Oficinas") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < oficinas.length; i++) {
+                        const element = oficinas[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }  else if ( selected == "Locales Comerciales") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < locales.length; i++) {
+                        const element = locales[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Galpones") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < galpones.length; i++) {
+                        const element = galpones[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Edificios") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < edificios.length; i++) {
+                        const element = edificios[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Construcciones") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < construcciones.length; i++) {
+                        const element = construcciones[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Proyectos") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < proyectos.length; i++) {
+                        const element = proyectos[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }
+
+
+                    
+            });            
+
+            /* select edit */
+            nivel1[1].addEventListener('change', ()=>{
+                console.log(nivel1[1].value)
+                const selected = nivel1[1].value;
+
+                if ( selected == "Terrenos" ){
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < terrenos.length; i++) {
+                        const element = terrenos[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                    
+                } else if ( selected == "Casas") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < casas.length; i++) {
+                        const element = casas[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+
+                } else if ( selected == "Anexos") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < anexos.length; i++) {
+                        const element = anexos[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }    
+
+                } else if ( selected == "Habitaciones") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < habitaciones.length; i++) {
+                        const element = habitaciones[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                    
+                } else if ( selected == "Departamentos") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < departamentos.length; i++) {
+                        const element = departamentos[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }    
+                    
+                } else if ( selected == "Oficinas") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < oficinas.length; i++) {
+                        const element = oficinas[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }  else if ( selected == "Locales Comerciales") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < locales.length; i++) {
+                        const element = locales[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Galpones") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < galpones.length; i++) {
+                        const element = galpones[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Edificios") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < edificios.length; i++) {
+                        const element = edificios[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Construcciones") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < construcciones.length; i++) {
+                        const element = construcciones[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }   else if ( selected == "Proyectos") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < proyectos.length; i++) {
+                        const element = proyectos[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                }
+
+            });    
+
+
+
+
+
+
+            /* vista general */
+            const optionTitle = document.getElementById('selectTitle');
+            optionTitle.addEventListener('change', () => {
+                console.log(optionTitle.value)
+                if (optionTitle.value !== "") {
+                    selectFunction();
+                }
+            });
+
+            function selectFunction() {
+
+                fetch('/department/create/realstate/selector', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        titulo: optionTitle.value
+                    })
+                });
+            }
+
+          
+        </script>
+
+
+<script>
+    // script declaracion del editores -->
+    //control del editor de texto enriquecido con Quill.js
+      const tecDescrip = document.getElementById('tecDescrip');
+      const spnCharCount = document.querySelector('.spnCharacterCount');
+      const hiddenInput = document.getElementById('hiddenInput');
+              
+      const tecDescripEdit = document.getElementById('tecDescripEdit');
+      const spnCharCountEdit = document.querySelector('.spnCharacterCountEdit'); 
+      const hiddenInputEdit = document.getElementById('hiddenInputEdit');
+  
+      //esto es para trabajar con el objeto de muestra producto del select
+      const hiddenShowDescrip = document.getElementById('hiddenShowDescrip');
+      const showDescrip = document.getElementById('showDescrip');
+      //----------------------------------------------------------------
+  
+      const toolbaroptions = [
+          [{ header : [1,2,3,4, false]}],
+          [{ size : ["small", "large", "huge", false]}],
+          ["bold", "italic", "underline", "strike"],
+          [{list: "ordered"}, {list: "bullet"}],
+          [{indent: "+1"}, {indent: "-1"}],
+          [{align: []}],
+          ["link"],
+          [{color: []}, {background: []} ]
+      ]
+    
+      var quill = new Quill('#tecDescrip', {
+      
+          modules: {
+              toolbar: toolbaroptions
+          },
+          theme: 'snow',
+          placeholder: 'Ingrese aqui el contenido "texto" de su anuncio'
+      });
+  
+       //manejador evento escuchando "text-change"
+      quill.on('text-change', function() {
+          let content = quill.getContents();
+          let delta = JSON.stringify(content); 
+          hiddenInput.value = delta;
+  
+          let limit = 1500;
+          let longitud = quill.getLength() -1;
+          quill.deleteText(limit, 10);
+          spnCharCount.innerText = (limit-longitud);
+          //he capturado el contenido creado en quill guardandolo de forma natural en una variable llamanda content
+          //como esta data sera enviado a un endPoint (api) es necesario transformarlo en un json, por tal motivo
+          //creamos la variable delta donde meto content ya transformado a un objeto json.
+          //por ultimo al input hidden le coloco el valor delta ya listo para cuando el evento submit se dispare envie el objeto ya preparado para ser guardado en la DB.
+      });
+  
+      //inciacion del quillEdit
+      var quillEdit = new Quill('#tecDescripEdit', {
+          
+          modules: {
+              toolbar: toolbaroptions
+          },
+          theme: 'snow'
+      });
+  
+      //manejador evento escuchando "text-change"
+      quillEdit.on('text-change', function() {
+          let content = quillEdit.getContents();
+          let deltaEdit = JSON.stringify(content);
+          hiddenInputEdit.value = deltaEdit;
+  
+          let limit = 1500;
+          let longitud = quillEdit.getLength() -1;
+          quillEdit.deleteText(limit, 10);
+          spnCharCountEdit.innerText = (limit-longitud);
+      
+      });
+      
+      
+      let hdShowDescrip = hiddenShowDescrip.value;
+      console.log('este es el objeto hdShowDescrip :')
+      console.log(hdShowDescrip)
+      let delta = JSON.parse(hdShowDescrip);
+  
+      let quillShow = new Quill('#showDescrip', {
+          modules: {
+              toolbar: false
+          },
+          readOnly: true
+      });
+  
+      quillShow.setContents(delta);
+  
+  </script>
+
+        <script>
+
+            let addObjectImg = document.getElementById('addObjectImg'); //este es el span que crea los img
+            let addPhoto = document.querySelector('.add_photo')
+            let inpFile = document.querySelector('.inpFile')
+     
+
+             addPhoto.addEventListener('click', ()=>{
+             inpFile.click()
+            })
+
+            inpFile.addEventListener('change', ()=>{
+  
+                let archivo = inpFile.files
+                console.log(archivo);
+
+                if (! archivo || !archivo.length){
+                    preview.src = "";
+                    return
+                };
+
+
+                for (let i = 0; i < archivo.length; i++) {
+                    const file = archivo[i];
+                    console.log(file)
+                    let objectURL = URL.createObjectURL(file);
+                    console.log(objectURL)
+                    addObjectImg.innerHTML += ` <div class="contImg" data-id="${i}"><img src="${objectURL}" class="preview">  <div>`
+                    
+                }
+
+
+            });
+
+  //declarar todos las variables de los objetos del front edit
+    const contEleEdit = document.querySelector('.contentElemetEdit');  
+    const titleEdit = document.getElementById('titleEdit');
+    const categoryEdit = document.getElementById('categoryEdit');
+    const tipeEdit = document.getElementById('tipeEdit');
+    const yearEdit = document.getElementById('yearEdit');
+    const mtrs2Edit = document.getElementById('mtrs2Edit');
+    const tecnicalDescripEdit = document.getElementById('tecnicalDescripEdit');
+    const generalMessageEdit = document.getElementById('generalMessageEdit');
+    const priceEdit = document.getElementById('priceEdit');
+    const addObjectImgEdit = document.getElementById('addObjectImgEdit');
+     
+
+  /* busqueda y edit */
+  let titleToEdit = document.getElementById('titleToEdit')
+    titleToEdit.addEventListener('change', async()=> {
+        console.log('me estas cambiando');
+        console.log(titleEdit.value)
+        addObjectImgEdit.innerHTML =""; //aqui debo limpiar para que no concatene imaganes
+
+        const DataFetch = await fetch('/department/create/realstate/searh-edit')
+            .then(response => response.json())
+            .then( jsondata => {
+                //console.log(jsondata)
+                const dataId = jsondata.data;
+                console.log("aqui todos los objetos del user:", dataId);
+                const IdPublicationToEdit = titleToEdit.value;
+                console.log("id de la publicacion seleccionado:", IdPublicationToEdit);
+          
+
+                    for (let i = 0; i < dataId.length; i++) {
+                        const MyPublication = dataId[i];
+                        const myImages = MyPublication.images;
+                        if  (IdPublicationToEdit == MyPublication._id) {
+                            console.log('Este es la publicacion a mostrar', MyPublication)
+                            contEleEdit.classList.remove('close');
+                            titleEdit.value = MyPublication.title;
+                            categoryEdit.value = MyPublication.category;
+                            tipeEdit.value = MyPublication.sub_category;
+                            yearEdit.value =  MyPublication.construcDate;
+                            mtrs2Edit.value = MyPublication.mtrs2;
+
+                            let delta = MyPublication.tecnicalDescription;
+                            let Delta = JSON.parse(delta);
+                            quillEdit.setContents(Delta);
+
+                            priceEdit.value = MyPublication.price;
+
+                            for (let i = 0; i < myImages.length; i++) {
+                                const picture = myImages[i].url;
+                                addObjectImgEdit.innerHTML += `<div data-id="${i}"> <img src="${picture}" class="preview"> </div>`
+                                
+                            }
+                            
+                        } else if (IdPublicationToEdit == 'no_data') {
+                             console.log("Aqui los campos se limpian");
+                             contEleEdit.classList.add('close');
+                             titleEdit.value = "";
+                             categoryEdit.value = "";
+                             tipeEdit.value ="";
+                             yearEdit.value =  "";
+                             mtrs2Edit.value = "";
+                             quillEdit.setContents("");
+                             priceEdit.value = "";
+                        }
+                    }
+          
+            })
+        .catch(err => console.log(err))
+   })
+
+        </script>
+           <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
+           <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+           
+        <script>
+           const dateSortable = Sortable.create(addObjectImgEdit ,{
+                animation : 200,
+                easing: "cubic-bezier(0.5, 0, 0.75, 0)",
+                handle:".preview",
+                ghostClass: "active",
+                store : {
+                    set : function(Sortable){
+                       const order = Sortable.toArray();
+                       console.log(order);
+                       
+                        fetch('/department/create/realstate/edit-images', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                Order: order
+                            })
+                        });
+                    }
+                }
+               
+                });
+            
+              
+        </script>
+        <script>//con este script logro proteger y dar el spinnier en el boton de carga.
+            const btnCreate = document.getElementById('btnCreate');
+            const btnCreateLoading = document.getElementById('btnCreateLoading');
+
+            const formCreate = document.getElementById('formCreate')
+            formCreate.addEventListener('submit', (e)=>{
+                if (e){
+                    //console.log("existe un evento en desarrollo")
+                    btnCreate.classList.add('invisibleBtn')
+                    btnCreateLoading.classList.remove('invisibleBtn')
+                } else {
+                    //console.log("no hay ningun evento")
+                    btnCreate.classList.remove('invisibleBtn')   
+                }
+                
+            })
+        </script>
+        <script> //aqui creo el spinner en el edit
+              const btnEdit = document.getElementById('btnEdit');
+              const btnEditLoading = document.getElementById('btnEditLoading');
+
+              const formEdit = document.getElementById('formEdit')
+              formEdit.addEventListener('submit', (e)=>{
+                if (e){
+                    //console.log("existe un evento en desarrollo")
+                    btnEdit.classList.add('invisibleBtnEdit')
+                    btnEditLoading.classList.remove('invisibleBtnEdit')
+                } else {
+                    //console.log("no hay ningun evento")
+                    btnEdit.classList.remove('invisibleBtnEdit')   
+                }
+                
+            })
+        </script>
+        <script> //aqui creo el spinner en el delete
+            const btnDelete = document.getElementById('btnDelete');
+            const btnDeleteLoading = document.getElementById('btnDeleteLoading');
+
+            const formDelete = document.getElementById('formDelete')
+            formDelete.addEventListener('submit', (e)=>{
+            if (e){
+                //console.log("existe un evento en desarrollo")
+                btnDelete.classList.add('invisibleBtnDelete')
+                btnDeleteLoading.classList.remove('invisibleBtnDelete')
+            } else {
+                //console.log("no hay ningun evento")
+                btnDelete.classList.remove('invisibleBtnDelete')   
+            }
+            
+        })
+        </script>
+
+<script>
+    const bodyToolADS = document.querySelector('.bodyToolADS');
+    const bodySpinner = document.querySelector('.bodySpinner');
+    const beforeControl = document.getElementById('beforeControl');
+    const afterControl = document.getElementById('afterControl');
+    const imgFirst = document.getElementById('imgFirst');
+    const imgLast = document.getElementById('imgLast');
+    const submitAddPhotoFirst = document.getElementById('submitAddPhotoFirst')
+    const submitAddPhotoLast = document.getElementById('submitAddPhotoLast')
+         
+    beforeControl.addEventListener('click', ()=>{
+        imgFirst.click();
+        
+    });
+
+    imgFirst.addEventListener('change', ()=> {
+
+        let archivo = imgFirst.files[0];
+
+        console.log(archivo);
+        submitAddPhotoFirst.click();  
+        
+        //esconder el bodyToolsADS y aparece el bodySpinner
+        bodyToolADS.classList.add('close');
+        bodySpinner.classList.remove('close');         
+
+    });
+
+    afterControl.addEventListener('click', ()=>{
+        imgLast.click();
+        
+    });
+
+    imgLast.addEventListener('change', ()=> {
+
+        let archivo = imgLast.files[0];
+
+        console.log(archivo);
+        submitAddPhotoLast.click();
+
+        //esconder el bodyToolsADS y aparece el bodySpinner
+        bodyToolADS.classList.add('close');
+        bodySpinner.classList.remove('close');         
+        
+    });
+
+
+</script>
+
+<script>
+    //controlador de mensajes en el display
+    let videoDisplay = document.getElementById('videoDisplay');
+    let imageDisplay = document.getElementById('imageDisplay');
+    let boxDisplay = document.getElementById('boxDisplay');
+    let videoLength = document.getElementById('videoLength');
+    let imageLength = document.getElementById('imageLength');
+
+    videoDisplay.addEventListener('mouseover', ()=>{
+        boxDisplay.innerHTML = `<span class="text-primary"> Video soportado max. 20MB. </span>`
+    });
+
+    imageDisplay.addEventListener('mouseover', ()=>{
+        boxDisplay.innerHTML = `<span class="text-danger"> Imagen soportado max. 2MB. </span>`
+    });
+
+    videoControl.addEventListener('mouseover', ()=>{
+        boxDisplay.innerHTML = `<span class="text-primary"> Subir video. </span>`
+    });
+
+    beforeControl.addEventListener('mouseover', ()=>{
+        boxDisplay.innerHTML = `<span class="text-danger"> Subir imagen adelante. </span>`
+    });
+
+    afterControl.addEventListener('mouseover', ()=>{
+        boxDisplay.innerHTML = `<span class="text-danger"> Subir imagen atras. </span>`
+    });
+
+    videoLength.addEventListener('mouseover', ()=>{
+        boxDisplay.innerHTML = `<span class="text-primary"> [ video subido/ limite de subida ] </span>`
+        videoLength.style.cursor = "pointer";
+    });
+
+    imageLength.addEventListener('mouseover', ()=>{
+        boxDisplay.innerHTML = `<span class="text-danger"> [ img subidas/ limite de subida ] </span>`
+        imageLength.style.cursor = "pointer";
+    });
+</script>
+
+<script>
+    //script para subir video.
+    const videoControl = document.getElementById('videoControl');
+    const videoField = document.getElementById('videoField');
+    const submitAddVideo = document.getElementById('submitAddVideo');
+
+    videoControl.addEventListener('click', ()=>{
+        videoField.click();
+    });
+    videoField.addEventListener('change', ()=> {
+        let archivo = videoField.files[0];
+
+        console.log(archivo);
+        submitAddVideo.click(); 
+        
+        //esconder el bodyToolsADS y aparece el bodySpinner
+        bodyToolADS.classList.add('close');
+        bodySpinner.classList.remove('close');         
+    });
+
+</script>
+
+<script>
+    /* script que marca el formato y peso de los archivos subidos */
+    const pesoFormatVideo = document.querySelector('.pesoFormatVideo');
+    const pesoFormatImg = document.querySelectorAll('.pesoFormatImg');
+   
+    if(pesoFormatImg){
+        for (let i = 0; i < pesoFormatImg.length; i++) {
+            let element = pesoFormatImg[i];
+            
+            element.addEventListener('click', ()=>{
+                let byte = (element.childNodes[5].value)/1000000;
+                let mega = byte.toFixed(3); 
+                let format = element.childNodes[7].value;
+                console.log(byte);
+                console.log(format);
+                boxDisplay.innerHTML = `<span class="text-danger">Formato: ${format} | Peso: ${mega} MB. </span>`
+            })
+
+        }
+    }
+
+    if(pesoFormatVideo){
+ 
+            
+        pesoFormatVideo.addEventListener('click', ()=>{
+            let byte = (pesoFormatVideo.childNodes[5].value)/1000000;
+            let mega = byte.toFixed(3); 
+            let format = pesoFormatVideo.childNodes[7].value;
+            console.log(byte);
+            console.log(format);
+            boxDisplay.innerHTML = `<span class="text-primary">Formato: ${format} | Peso: ${mega} MB. </span>`
+        })
+
+        
+    }
+
+</script>
+
+<script>
+    const btnSpread = document.getElementById('btnSpread');
+    const btnSpreadSpin = document.getElementById('btnSpreadSpin');
+    const btnSpreadDone = document.getElementById('btnSpreadDone');
+    const department_Difundir = document.getElementById('department_Difundir');
+    const titleID_Difundir = document.getElementById('titleID_Difundir');
+    const title_Difundir = document.getElementById('title_Difundir');
+
+    const contentSpread = document.querySelector('.contentSpread');
+    const contentSpreadUpdate = document.querySelector('.contentSpreadUpdate');
+    const contentSpreadMessage = document.querySelector('.contentSpreadMessage');
+    
+    let depart, titleId, title;
+
+    btnSpread.addEventListener('click', ()=>{
+
+        btnSpread.classList.add('close');
+        btnSpreadSpin.classList.remove('close');
+
+        depart = department_Difundir.value;
+        titleId = titleID_Difundir.value;
+        title = title_Difundir.value;
+
+        const datos = {
+            depart : depart,
+            titleId : titleId,
+            title : title
+
+        };
+
+        fetch('/account/spread', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx =>{
+            
+            console.log("mirar este msg :", jsonx)
+            //response : "Se ha enviado el mensage a todos nuestros seguidores.", type : "success"
+            const type = jsonx.type;
+            const response = jsonx.response;
+            const followMe = jsonx.followMe;
+
+            if (type === "success"){
+
+                contentSpread.classList.add('close');
+                contentSpreadUpdate.classList.remove('close');
+                contentSpreadMessage.innerHTML = `  <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                        <span class="text-secondary">Este anuncio ha sido entregado a : <strong class="ms-1"> ${followMe} seguidores <i class="bi bi-send-check"></i> </strong> </span>
+                                                    </div>`;
+
+            } else {
+
+                contentSpread.classList.remove('close');
+                contentSpreadUpdate.classList.add('close');
+                contentSpreadMessage.innerHTML = `  <div class="alert alert-danger mx-0 mb-3" style="width: 100%;">
+                                                        <span class="text-secondary"><strong class="ms-1"> ${response} <i class="bi bi-exclamation-triangle"></i> </strong> </span>
+                                                    </div>`;
+            }
+        
+        })
+        .catch( err => console.log(err));
+
+        })
+
+
+</script>
+
+        <script type="text/javascript"></script>
+           <%- include('../partials/scripts.ejs') %>
+           <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+         
+       
+</body>
+
+</html>

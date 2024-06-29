@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Admin</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .close{
+        display: none;
+    }
+
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+
+            
+        <% if (userAdmin) { %>
+
+            <% if (newsDaySave) { %>
+                <%- include('../alertAdmin/newsDaySave.ejs') %>
+            <% } %>
+
+            <% if (newsDayNoSave) { %>
+                <%- include('../alertAdmin/newsDayNoSave.ejs') %>
+            <% } %>
+        
+            <% if (newsDayError) { %>
+                <%- include('../alertAdmin/newsDayError.ejs') %>
+            <% } %>
+            
+            <% if (newsDayUpdate) { %>
+                <%- include('../alertAdmin/newsDayUpdate.ejs') %>
+            <% } %>
+
+            <% if (adminError) { %>
+                <%- include('../alertAdmin/adminError.ejs') %>
+            <% } %>
+
+                    
+            <div class="containerPlace">
+                    <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                        <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Update News Day</span>
+                    </div>
+            </div>
+
+            
+            <div class="containerNewDay">
+                    <div class="row m-0 p-0">
+                    
+                        <div class="col-lg-12 p-0">
+                            <div class="containerGeneralNewDay p-0">
+                                <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs">
+
+                                            <li class="nav-item">
+                                            <a class="nav-link createNewsDay active" style="cursor: pointer;">Create News Day</a>
+                                            </li>
+                                            <li class="nav-item">
+                                            <a class="nav-link currentShowNewsDay" style="cursor: pointer;">News Day Current</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link deleNewsDay" style="cursor: pointer;">News Day Actions</a>
+                                            </li>
+                                    
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="containerMain border" style="height: auto;">
+
+                                            <div class="contentCreateNewsDay">
+                                                <div class="row m-0 p-0">
+                                                    <div class="col-lg-4 p-0">
+
+                                                        <div class="accordion" id="accordionExample">
+                                                            <div class="accordion-item">
+                                                            <h2 class="accordion-header" id="headingOne">
+                                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                                Create News Day
+                                                                </button>
+                                                            </h2>
+                                                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                                <div class="accordion-body px-0">
+                                                                    <div class="containerAddBanner p-0">
+                                                                        <div class="card p-0 m-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                                                        
+                                                                            <div class="card-body my-2">
+                                                                                <form action="/admin/newsDay/create" method="POST" id="formCreate" enctype="multipart/form-data"
+                                                                                                accept=".jpg, .jpeg, .png">
+                                                    
+                                                                                                
+                                                                                                <% if (userAdmin) { %>
+                                                                                                <div class="input-group my-2">
+                                                                                                    <span class="input-group-text">Type News Day</span>
+                                                                                                    <select class="form-control" name="typeNewsDay" id="seletType">
+                                                                                                        <option value="admin">Admin</option>
+                                                                                                        <option value="customer">Customer</option>
+                                                                                                    </select>
+                                                                                                </div> 
+                                                                                                <div class="input-group my-2">
+                                                                                                    <span class="input-group-text">N. Invoice</span>
+                                                                                                    <input class="form-control nInvoice" type="text" name="nInvoice" placeholder="Intro N. de Invoice" readonly>
+                                                                                                    <button type="button" class="input-group-text btn btn-secondary btnSearch" disabled><i class="bi bi-search"></i></button>
+                                                                                                </div>
+                                                                                                <div class="input-group my-2">
+                                                                                                    <span class="input-group-text">Customer name</span>
+                                                                                                    <input class="form-control customerName" type="text" name="customerName" placeholder="Customer Names" readonly>
+                                                                                                </div>
+                                                                                                <div class="input-group my-2">
+                                                                                                    <span class="input-group-text">Time in days</span>
+                                                                                                    <input class="form-control timeInDays" type="number" name="timeDays" placeholder="Time in Days" readonly>
+                                                                                                </div> 
+                                                                                                <div class="input-group my-2">
+                                                                                                    <span class="input-group-text">End Public</span>
+                                                                                                    <input class="form-control endPublic" type="text" name="endPublic" placeholder="End Public" readonly>
+                                                                                                </div>
+                                                                                                <div class="input-group my-2">
+                                                                                                    <span class="input-group-text">Title</span>
+                                                                                                    <input class="form-control newDayTitle" type="text" name="newDayTitle" placeholder="Intro the Title" required>
+                                                                                                </div>
+                                                                                                <div class="card-header">Nota de Imagen</div>
+                                                                                                <div class="input-group my-2">
+                                                                                                    <textarea class="form-control" name="newDayDetails" id="" rows="1" cols="30" required></textarea>
+                                                                                                </div>
+                                                                                                <div class="form-group d-flex justify-content-start my-2 border">
+                                                                                                    <div class="add_photo me-1" id="add_photo">
+                                                                                                        <span><img src="/img/addPhoto.png" class="my-2 mx-1" style="width: 60px;"></span>
+                                                                                                    </div>
+                                                                                                    <span class="mx-1"> <small>
+                                                                                                                    <ul class="my-1 mx-4 p-0 text-secondary">
+                                                                                                                            <li>Imagen con formato JPG.</li>
+                                                                                                                            <li>Peso max. 2 MB.</li>
+                                                                                                                            <li>Resolución 200p...500p x 200p.</li>
+                                                                                                                    </ul> 
+                                                                                                                        </small> </span>
+                                                                                                    <input type="file" name=fileImg class="inpFile form-control" required>
+                                                                                                </div>
+                                                                                                <div class="form-group d-flex justify-content-center my-2 border" id="newShowNewsDay">
+                                                                                                    <!-- contenedor con img dinamica -->
+                                        
+                                                                                                </div>
+                                                                                                <% }; %>               
+                                                            
+                                                                                                <div class="form-group my-2">
+                                                                                                    <button type="submit" class="btn btn-primary form-control my-3" id="btnCreate"> Create News Day </button>
+                                                                                                    <button class="btn btn-primary form-control invisibleBtn my-3" type="button" id="btnCreateLoading" disabled>
+                                                                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                                                        Uploading...
+                                                                                                    </button>
+                                                                                                </div>
+                                                    
+                                                                                </form>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+
+                                                            <div class="accordion-item">
+                                                            <h2 class="accordion-header" id="headingTwo">
+                                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                                Update News Day
+                                                                </button>
+                                                            </h2>
+                                                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                                <div class="accordion-body px-0">
+                                                                    <div class="containerAddBanner p-0">
+                                                                        <div class="card p-0 m-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                                                        
+                                                                            <div class="card-body my-2">
+                                                                                            
+                                                                                <form action="/admin/newsDay/update" method="POST" id="formUpdate" enctype="multipart/form-data" accept=".jpg, .jpeg, .png">
+                                                    
+                                                                                                
+                                                                                                <% if (userAdmin) { %>
+                                                                                                
+                                                                                                <% if (currentNewsDay) { %>
+                                                                                                <div class="card-header">Select Title and Update</div>
+                                                                                                <div class="form-group my-2">
+                                                                                                    
+                                                                                                    <select name="id" class="form-control" id="selectUpdate">
+                                                                                                        <option value="select">Select it</option>
+                                                                                                    <% currentNewsDay.forEach((ele)=>{ %>
+                                                                                                        <option value="<%= ele._id %>"><%= ele.newDayTitle %></option>
+                                                                                                    <% }); %>
+                                                                                                                                                                                            
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                                <% }; %>
+                                                                                                <div class="card-header">Edit Title</div>
+                                                                                                <div class="input-group my-2">
+                                                                                                    <input type="text" class="form-control titleUpdate" name="titleUpdate" readonly>
+                                                                                                </div>
+                                                                                                <div class="card-header">Edit Note</div> 
+                                                                                                <div class="input-group my-2">
+                                                                                                    <textarea class="form-control noteUpdate" name="noteUpdate" id="" rows="1" cols="30" readonly></textarea>
+                                                                                                </div>
+                                                                                                <div class="form-group d-flex justify-content-start my-2 border">
+                                                                                                    <div class="add_photo me-1" id="add_photoUpdate">
+                                                                                                        <span><img src="/img/addPhoto.png" class="my-2 mx-1" style="width: 60px;"></span>
+                                                                                                    </div>
+                                                                                                    <span class="mx-1"> <small>
+                                                                                                                    <ul class="my-1 mx-4 p-0 text-secondary">
+                                                                                                                            <li>Imagen con formato JPG.</li>
+                                                                                                                            <li>Peso max. 2 MB.</li>
+                                                                                                                            <li>Resolución 200p...500p x 200p.</li>
+                                                                                                                    </ul> 
+                                                                                                                        </small> </span>
+                                                                                                    <input type="file" name="fileImg" class="inpFileUpdate form-control" >
+                                                                                                </div>
+                                                                                                <div class="form-group d-flex justify-content-center my-2 border" id="newShowNewsDayUpdate">
+                                                                                                    <!-- contenedor con img dinamica -->
+                                        
+                                                                                                </div>
+                                                                                                <% }; %>             
+                                                            
+                                                                                                <div class="form-group my-2">
+                                                                                                    <button type="submit" class="btn btn-secondary form-control my-3" id="btnUpdate"> Update News Day </button>
+                                                                                                    <button class="btn btn-secondary form-control invisibleBtnEdit my-3" type="button" id="btnUpdateLoading" disabled>
+                                                                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                                                        Uploading...
+                                                                                                    </button>
+                                                                                                </div>
+                                                    
+                                                                                </form>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+            
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-lg-8 p-0">
+                                                        <div class="containerGeneralBanner p-0">
+                                                            <% if (currentNewsDay) { %>
+                                                            <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                                                <% currentNewsDay.forEach((ele, i)=>{  %>
+                                                                    <div class="content-item d-flex flex-column mb-2 p-1">
+                                                                        <div class="contentImgTitle d-flex">
+                                                                            <img src="<%= ele.url %>" class="me-3" alt="..." style="height: 40px;" >
+                                                                            <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
+                                                                        </div>
+                                                                                                                                        
+                                                                        <div class="contenDetails d-flex">
+                                                                            <p><%= ele.newDayDetails %></p> 
+                                                                        </div>
+
+                                                                        <div class="contenAdmin d-flex justify-content-end border alert-secondary pe-2">
+                                                                            <span class="me-1 fst-italic"><%= ele.adminName %></span>
+                                                                            <span>(<%= ele.simplifiedDate %>)</span>
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                    
+                                                                <% }); %>    
+                                                            </div>
+                                                        
+                                                            <% }; %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="contentCurrentShowNewsDay close">
+
+                                                <% if (currentNewsDay) { %>
+                                                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="height: 210px;">
+                                                    <div class="carousel-indicators">
+                                                    <% currentNewsDay.forEach((ele, i)=>{  %>
+
+                                                        <% if (i === 0 ) { %>
+                                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= i %>" class="active" aria-current="true" aria-label="Slide <%= i + 1 %>" style="background-color: black;"></button>
+                                                        <% } else { %>
+                                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= i %>" aria-label="Slide <%= i + 1 %>" style="background-color: black;"></button>
+                                                        <% }; %>    
+
+                                                    <% }); %>        
+                                                                                                    
+                                                    </div>
+                                                    <div class="carousel-inner">
+                                                    <% currentNewsDay.forEach((ele, i)=>{  %>
+
+                                                        <% if (i === 0 ) { %>
+                                                            <div class="carousel-item active">
+
+                                                                <div class="content-item d-flex">
+                                                                    <img src="<%= ele.url %>" class="me-3" alt="...">
+                                                                    <div class="contenDetails d-flex flex-column">
+                                                                        <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
+                                                                        <p><%= ele.newDayDetails %></p>
+                                                                        <div class="contenAuthorDate d-flex justify-content-end my-0">
+                                                                            <span class="me-1 fst-italic"><%= ele.adminName %></span>
+                                                                            <span>(<%= ele.simplifiedDate %>)</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="carousel-item">
+                                                                <div class="content-item d-flex">
+                                                                    <img src="<%= ele.url %>" class="me-3" alt="...">
+                                                                    <div class="contenDetails d-flex flex-column">
+                                                                        <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
+                                                                        <p><%= ele.newDayDetails %></p>
+                                                                        <div class="contenAuthorDate d-flex justify-content-end my-0">
+                                                                            <span class="me-1 fst-italic"><%= ele.adminName %></span>
+                                                                            <span>(<%= ele.simplifiedDate %>)</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <% }; %>    
+
+                                                    <% }); %>
+                    
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </button>
+                                                </div>
+                                                <% }; %>     
+                                            </div>
+
+                                            <div class="contentDeleNewsDay close">
+                                                <table class="table table-hover">
+                                                    
+                                                        
+                                                    <tr>
+                                                        <th>Image</th> <th>Type</th> <th>Title</th> <th>Public</th> <th>End Public</th><th>Action</th><th>Action</th>
+                                                    </tr>
+                                                    <% if (updateNewsDay) { %>
+                                                        <% updateNewsDay.forEach((ele, i)=>{  %>
+                                                        <tr>
+                                                            
+                                                            <td><img src="<%= ele.url %>" style="height: 30px;"></td><td><%= ele.typeNewsDay %></td> <td><%= ele.newDayTitle %></td> <td><%= ele.simplifiedDate %></td> 
+                                                                                                                        
+                                                            <% if (ele.typeNewsDay == "admin"){ %>
+                                                                <td class="d-flex align-items-center justify-content-center"> <span class="alert-secondary p-1 rounded-2">N/D</span> </td>
+                                                                <% if (ele.active === true) { %>
+                                                                    <td> <a href="/admin/newsDay/pausar/<%= ele._id %>" class="btn btn-sm btn-warning">Pausar</a> </td>
+                                                                <% } else { %>
+                                                                    <td> <a href="/admin/newsDay/active/<%= ele._id %>" class="btn btn-sm btn-success">Activar</a> </td>
+                                                                <% }; %>    
+                                                                
+                                                            <% } else { %>
+                                                                <td><%= ele.endPublic %> </td>
+                                                                <td> <button class="btn btn-sm btn-secondary px-3" disabled>N/D</button> </td>
+                                                            <% }; %>    
+                                                                                                        
+                                                            <td> <a href="/admin/newsDay/delete/<%= ele._id %>" class="btn btn-sm btn-danger">Delete</a> </td>
+                                                        </tr>
+                                                        <% }); %>
+                                                    <% } %> 
+                                                </table>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+
+
+        <% } else { %>
+
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+                <%- include('../partials/adminNoLogin.ejs') %>
+            
+            </div>
+            
+        <% }; %>    
+                    
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+<script>
+    let seletType = document.getElementById('seletType');
+    let nInvoice = document.querySelector('.nInvoice');
+    let customerName = document.querySelector('.customerName');
+    let timeInDays = document.querySelector('.timeInDays');
+    let endPublic = document.querySelector('.endPublic');
+    let btnSearch = document.querySelector('.btnSearch');
+
+    let titleUpdate = document.querySelector('.titleUpdate');
+    let noteUpdate = document.querySelector('.noteUpdate');
+
+    const createNewsDay = document.querySelector('.createNewsDay');
+    const currentShowNewsDay = document.querySelector('.currentShowNewsDay');
+    const deleNewsDay = document.querySelector('.deleNewsDay');
+
+    //contenCreateNewsDay, contentCurrentShowNewsDay, contentDeleNewsDay
+    const contentCreateNewsDay = document.querySelector('.contentCreateNewsDay');
+    const contentCurrentShowNewsDay = document.querySelector('.contentCurrentShowNewsDay');
+    const contentDeleNewsDay = document.querySelector('.contentDeleNewsDay');
+
+    createNewsDay.addEventListener('click', ()=>{
+
+        contentCreateNewsDay.classList.remove('close');
+        contentCurrentShowNewsDay.classList.add('close');
+        contentDeleNewsDay.classList.add('close');
+
+        createNewsDay.classList.add('active');
+        currentShowNewsDay.classList.remove('active');
+        deleNewsDay.classList.remove('active');
+    });
+
+    currentShowNewsDay.addEventListener('click', ()=>{
+        
+        contentCreateNewsDay.classList.add('close');
+        contentCurrentShowNewsDay.classList.remove('close');
+        contentDeleNewsDay.classList.add('close');
+
+        createNewsDay.classList.remove('active');
+        currentShowNewsDay.classList.add('active');
+        deleNewsDay.classList.remove('active');
+    });
+
+    deleNewsDay.addEventListener('click', ()=>{
+
+        contentDeleNewsDay.classList.remove('close');
+        contentCreateNewsDay.classList.add('close');
+        contentCurrentShowNewsDay.classList.add('close');
+
+        deleNewsDay.classList.add('active');
+        createNewsDay.classList.remove('active');
+        currentShowNewsDay.classList.remove('active');
+        
+
+    })
+
+    
+</script>
+
+<script>
+    const add_photo = document.getElementById('add_photo');
+    const add_photoUpdate = document.getElementById('add_photoUpdate');
+    const inpFile = document.querySelector('.inpFile');
+    const inpFileUpdate  = document.querySelector('.inpFileUpdate');
+    const newShowNewsDay = document.getElementById('newShowNewsDay');
+    const newShowNewsDayUpdate = document.getElementById('newShowNewsDayUpdate');
+   
+    const btnCreate = document.getElementById('btnCreate'); 
+    const btnCreateLoading = document.getElementById('btnCreateLoading');
+
+    const btnUpdate = document.getElementById('btnUpdate'); 
+    const btnUpdateLoading = document.getElementById('btnUpdateLoading');
+  
+    add_photo.addEventListener('click', ()=>{
+        inpFile.click();
+
+        console.log(inpFile.files);
+    });
+
+    inpFile.addEventListener('change', ()=>{
+        let archivo = inpFile.files;
+        console.log("arhivo:", archivo);
+
+        if (!archivo || archivo.length === 0 ){
+            console.log("aqui no hay nada")
+        };
+
+        for (let i = 0; i < archivo.length; i++) {
+                    const file = archivo[i];
+                    console.log("esto es el file", file)
+                    let objectURL = URL.createObjectURL(file);
+                    console.log("esto es el objectURL",objectURL)
+
+
+                    newShowNewsDay.innerHTML = ` <div class="contententShowBanner">
+                                                    <img src="${objectURL}" alt="un banner" style="width: 100%;">
+                                                </div>
+                                            `                                             
+
+        };
+
+    });
+
+    btnCreate.addEventListener('click', ()=>{
+
+        //console.log(inpFile.files)
+
+        if (inpFile.files.length !== 0){
+            //console.log("hay informacion en el inpFile debo hacer el efecto")
+            btnCreate.classList.add('invisibleBtn');
+            btnCreateLoading.classList.remove('invisibleBtn');
+        } else {
+            //console.log("no hay nada y me quedo quieto")
+            btnCreateLoading.classList.add('invisibleBtn');
+            btnCreate.classList.remove('invisibleBtn');
+        } 
+
+    });
+
+    //----------------update------------------------
+
+    add_photoUpdate.addEventListener('click', ()=>{
+        inpFileUpdate.click();
+
+        console.log(inpFileUpdate.files);
+    });
+
+    inpFileUpdate.addEventListener('change', ()=>{
+        let archivo = inpFileUpdate.files;
+        console.log("arhivo:", archivo);
+
+        if (!archivo || archivo.length === 0 ){
+            console.log("aqui no hay nada")
+        };
+
+        for (let i = 0; i < archivo.length; i++) {
+                    const file = archivo[i];
+                    console.log("esto es el file", file)
+                    let objectURL = URL.createObjectURL(file);
+                    console.log("esto es el objectURL",objectURL)
+
+
+                    newShowNewsDayUpdate.innerHTML = ` <div class="contententShowBanner">
+                                                    <img src="${objectURL}" alt="un banner" style="width: 100%;">
+                                                </div>
+                                            `                                             
+
+        };
+
+    });
+
+
+
+btnUpdate.addEventListener('click', ()=>{
+        console.log("titleUpdate.value : ", titleUpdate.value)
+  
+
+        if (titleUpdate.value !== "" ){
+            console.log("hay informacion en el input debo hacer el efecto")
+            btnUpdate.classList.add('invisibleBtnEdit');
+            btnUpdateLoading.classList.remove('invisibleBtnEdit');
+        } else {
+            console.log("no hay nada y me quedo quieto")
+            btnUpdateLoading.classList.add('invisibleBtnEdit');
+            btnUpdate.classList.remove('invisibleBtnEdit');
+        } 
+
+});    
+</script>
+    
+    <script>
+
+        
+        seletType.addEventListener('change', ()=>{
+           
+            const type = seletType.value;
+            if (type === 'customer'){
+    
+                nInvoice.removeAttribute('readonly');
+                btnSearch.removeAttribute('disabled');
+    
+            } else {
+    
+                nInvoice.setAttribute('readonly', '');
+                btnSearch.setAttribute('disabled', '');
+                nInvoice.value ="";
+                customerName.value ="";
+                timeInDays.value = "";
+                endPublic.value = "";
+    
+            }
+        })
+        
+        btnSearch.addEventListener('click', ()=>{
+            const searchInvoice = nInvoice.value
+            
+            const dato = {
+                invoice : searchInvoice
+            };
+    
+            fetch('/admin/search-invoice-marketing/newsDay', {
+    
+            method: "post",
+            body: JSON.stringify(dato),
+            headers: {"content-type" : "application/json"}
+    
+            })
+            .then(response =>response.json() )
+            .then( jsonxInvoice =>{
+                console.log("jsonxInvoice", jsonxInvoice)
+                
+                if (jsonxInvoice.length !==0){
+    
+                    const customerV = jsonxInvoice[0].receptorName;
+                    const timeDaysV = jsonxInvoice[0].timeDays;
+                    const endPublicV = jsonxInvoice[0].endPublic;
+    
+                    customerName.value =  customerV
+                    timeInDays.value = timeDaysV
+                    endPublic.value = endPublicV
+    
+                } else {
+    
+                    customerName.value =  ""
+                    timeInDays.value = ""
+                    endPublic.value = ""
+                }
+    
+    
+    
+                })
+            .catch( err => console.log(err));
+                })
+    
+    </script>
+
+    <script>
+        let selectUpdate = document.querySelector('#selectUpdate');
+
+
+        selectUpdate.addEventListener('change', ()=>{
+            const idNewsDay = selectUpdate.value;
+
+            console.log("idNewsDay", idNewsDay);
+
+            if (idNewsDay === "select" ){
+                titleUpdate.value = "";
+                noteUpdate.value = "";
+                titleUpdate.setAttribute('readonly', '')
+                noteUpdate.setAttribute('readonly', '')
+
+            } 
+
+            const dato = {
+                    id : idNewsDay
+            };
+
+        fetch('/admin/newsDay/selectID', {
+
+        method: "post",
+        body: JSON.stringify(dato),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( seletTitle =>{
+            
+            console.log("seletTitle :", seletTitle)     
+            const title = seletTitle.newDayTitle;
+            const nota = seletTitle.newDayDetails;
+
+            titleUpdate.value = title;
+            noteUpdate.value = nota;
+            titleUpdate.removeAttribute('readonly');
+            noteUpdate.removeAttribute('readonly');
+        
+        })
+        .catch( err => console.log(err));
+
+        })
+    </script>
+
+</body>
+</html>
+
+
