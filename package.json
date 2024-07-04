@@ -27,7 +27,7 @@
     "nodemon": "^1.14.9"
   },
   "name": "blissenet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
@@ -36,5 +36,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "version mejoraada de sessionUno"
+  "description": "Marketplace por departamentos con cualidades de red social"
 }
