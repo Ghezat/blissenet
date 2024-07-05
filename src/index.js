@@ -1,4 +1,5 @@
-const dotenv = require('dotenv').config();
+//blissenetVE
+const dotenv = require('dotenv').config({path: '/.env'});
 require('./server');
 require('./database');
 require('./socket');
