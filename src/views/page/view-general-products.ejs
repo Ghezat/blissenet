@@ -1078,24 +1078,24 @@
                             
                             <% if (user) {  %>
 
-                                <div class="containerMakeQuestion me-5" style="width: 100%; ">
+                                <div class="containerMakeQuestion me-1" style="width: 100%; ">
 
                                    <% if (search) { %> 
                                         <% if (user.username !== search.username) { %>
                                         <h6 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h6>
                                         <div class="form-group d-flex">
-                                            <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 70%;">    
+                                            <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;">    
                                         </div>
-                                        <div class="form-group mt-2">
-                                            <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar" style="width: 25%;">
+                                        <div class="form-group mt-3">
+                                            <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar Pregunta" style="width: 100%;">
                                         </div>
                                         <% } else { %>
                                         <h6 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h6>
                                         <div class="form-group d-flex">
-                                             <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 70%;" disabled>    
+                                             <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;" disabled>    
                                         </div>
-                                        <div class="form-group mt-2">
-                                             <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar" style="width: 25%;" disabled>
+                                        <div class="form-group mt-3">
+                                             <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar Pregunta" style="width: 100%;" disabled>
                                         </div>
                                         <% }; %>
                                    <% }; %>
@@ -1332,12 +1332,12 @@ const DataFetch = fetch('/extraer')
 
                         if (typeNote === "messages"){
                             if (answer !== 'waiting'){
-                            showMessageCharge.innerHTML += ` <div class="rounded-3 ms-2 mt-1 pt-2 pb-1 ps-2 pe-5" style="background-color: rgb(207, 207, 207, 0.1); margin-left: 5px;">
+                            showMessageCharge.innerHTML += ` <div class="rounded-3 ms-2 mt-1 pt-2 pb-1 ps-2 pe-0" style="background-color: rgb(207, 207, 207, 0.1); margin-left: 5px;">
                                                                 <span class="bg-secondary rounded-2 px-1 text-light shadow-sm">${username}</span>
                                                                 <span class="ms-1 me-1">${question}</span>
                                                                 <span class="p-1 rounded-pill shadow-sm border" style="font-size: 13px;">${dateCreate}</span>
                                                             </div> 
-                                                            <div class="rounded-3 ms-4 pt-1 pb-1 ps-2 pe-5" style=" background-color: rgb(233, 236, 239, 0); margin-bottom: 10px;">
+                                                            <div class="rounded-3 ms-4 pt-1 pb-1 ps-2 pe-0" style=" background-color: rgb(233, 236, 239, 0); margin-bottom: 10px;">
                                                                 <i class="bi bi-arrow-return-right ms-1 me-2"></i>
                                                                 <span class="me-1">${answer}</span>
                                                                 <span class="p-1 rounded-pill shadow-sm border" style="font-size: 13px;">${updatedCreate}</span>
@@ -1347,7 +1347,7 @@ const DataFetch = fetch('/extraer')
 
                         
                             if (answer == 'waiting'){
-                            showMessageCharge.innerHTML += ` <div class="rounded-3 ms-2 my-1 pt-2 pb-1 ps-2 pe-5" style="background-color: rgb(207, 207, 207, 0.2); margin-left: 5px;">
+                            showMessageCharge.innerHTML += ` <div class="rounded-3 ms-2 my-1 pt-2 pb-1 ps-2 pe-0" style="background-color: rgb(207, 207, 207, 0.2); margin-left: 5px;">
                                                                 <span class="bg-secondary rounded-2 px-1 text-light shadow-sm">${username}</span>
                                                                 <span class="ms-1 me-1">${question}</span>
                                                                 <span class="p-1 rounded-pill shadow-sm border" style="font-size: 13px;">${dateCreate}</span>

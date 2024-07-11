@@ -725,6 +725,8 @@ routes.post('/department/create/automotive/add/video', async(req, res)=>{
                 s3.upload(params, (err, data)=>{
                     if (err){
                         console.error("Error al subir un video", err);
+                        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+                        res.redirect('/department/create/automotive');
                     } else {
                         console.error("Video subido con exito", data);
         
