@@ -241,11 +241,11 @@
                                   <div class="carousel-item active">
 
                                       <div class="content-item d-flex">
-                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..."></div>
+                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..." style="max-height: 200px; max-width: 500px;"></div>
                                           <div class="contenDetails d-flex flex-column">
                                               <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
                                               <p><%= ele.newDayDetails %></p>
-                                              <div class="contenAuthorDate d-flex justify-content-end my-0">
+                                              <div class="contenAuthorDate d-flex justify-content-end my-0" >
                                                   <span class="me-1 fst-italic"><%= ele.adminName %></span>
                                                   <span>(<%= ele.simplifiedDate %>)</span>
                                               </div>
@@ -256,7 +256,7 @@
                               <% } else { %>
                                   <div class="carousel-item">
                                       <div class="content-item d-flex">
-                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..."></div>
+                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..." style="max-height: 200px; max-width: 500px;"></div>
                                           <div class="contenDetails d-flex flex-column">
                                               <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
                                               <p><%= ele.newDayDetails %></p>

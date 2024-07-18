@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Banner Default</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .close{
+        display: none;
+    }
+
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+
+        <% if (userAdmin) { %> 
+               
+            
+            <div class="containerPlace">
+                    <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                        <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Banner Defult Users</span>
+                    </div>
+            </div>
+
+            
+            <div class="containerBanners">
+                    <div class="row m-0 p-0">
+                        <div class="col-lg-4 p-0">
+                            
+                            <div class="containerAddBanner p-0">
+                                <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                
+                                    <div class="card-body my-2">
+                                        <form action="/admin/bannerDefault/create" method="POST" id="formCreate" enctype="multipart/form-data"
+                                                        accept=".jpg, .jpeg, .png">
+            
+                                                        <div class="card-header">Add to Banner Default</div>
+                                                        <% if (userAdmin) { %>
+                                                        <div class="input-group my-2">
+                                                            <span class="input-group-text">Banner Name</span>
+                                                            <input type="text" class="form-control" name="bannerName" placeholder="ej. Banner2024">
+                                                        </div> 
+                                                     
+                                                        <div class="form-group d-flex justify-content-start my-2 border">
+                                                            <div class="add_photo me-1" id="add_photo">
+                                                                <span><img src="/img/addPhoto.png" class="my-2 mx-1" style="width: 60px;"></span>
+                                                            </div>
+                                                            <span class="mx-1"> 
+                                                                <small>
+                                                                    <ul class="my-1 mx-4 p-0 text-secondary">
+                                                                            <li>Banner con formato <strong>JPG</strong>.</li>
+                                                                            <li>Peso max. 3 MB.</li>
+                                                                            <li>Resolución Min. 1600px x 130px</li>
+                                                                            <li>Resolución Max. 1600px x 210px</li>
+                                                                    </ul> 
+                                                                </small> 
+                                                            </span>
+                                                            <input type="file" name=fileImg class="inpFile form-control" required>
+                                                        </div>
+                                                        <div class="form-group d-flex justify-content-center my-2 border" id="newShowBanner">
+                                                            <!-- contenedor con img dinamica -->
+
+                                                        </div>
+                                                        <% }; %>               
+                    
+                                                        <div class="form-group my-2">
+                                                            <button type="submit" class="btn btn-primary form-control my-3" id="btnCreate"> Add New Banner User</button>
+                                                            <button class="btn btn-primary form-control invisibleBtn my-3" type="button" id="btnCreateLoading" disabled>
+                                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                Uploading...
+                                                            </button>
+                                                        </div>
+            
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>  
+
+                        </div>
+
+                        <div class="col-lg-8 p-0">
+                            <div class="containerGeneralBanner p-0">
+                                <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                    <div class="card-header">
+                                        Banner Default for users.
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="containerMain" style="height: auto;">
+
+                                            <% if (bannerDefault.length !== 0) { %>
+                                                                                    
+                                                <div class="containerBannerDefault border">
+                                                    
+                                                    <% bannerDefault.forEach((ele, i)=>{ %>
+                                                        <div class="contenBanner m-2">
+                                                            <div class="row m-0 d-flex justify-content-center">
+
+                                                                <div class="col-12 p-0">
+                                                                    
+                                                                    <div class="contentBackground" style="position: relative;">
+                                                                        <img src="<%= ele.url %>" alt="banner" class="mx-1" style="width: 100%"> 
+                                                                        <span class="rounded-2 px-2" style="background-color: rgba(240, 248, 255, 0.7); position: absolute; bottom: 5px; left: 10px;"> <%= ele.bannerName %> </span>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    <% }); %>
+                                        
+
+                                                </div>
+
+                                            <% } else { %>
+                                                
+                                                <div class="containerBannerDefault border">
+                                                    
+                                                    <div class="contenBanner m-2">
+                                                        
+                                                        <div class="row m-0">
+
+                                                            <div class="col-11 p-0">
+                                                                
+                                                                <div class="contentBackground" style="position: relative;">
+
+                                                                    <img src="/img/sinResultados.png"  class="me-1" style="width: 100px;">
+                                                                    
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                        
+                                                    </div>                                    
+
+                                                </div>
+                                            
+                                            <% }; %>    
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            
+        <% } else { %>
+
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+                <%- include('../partials/adminNoLogin.ejs') %>
+            
+            </div>
+            
+        <% }; %>    
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+<script>
+    const add_photo = document.getElementById('add_photo');
+    const inpFile = document.querySelector('.inpFile');
+
+    const btnCreate = document.getElementById('btnCreate'); 
+    const btnCreateLoading = document.getElementById('btnCreateLoading');
+
+    add_photo.addEventListener('click', ()=>{
+        inpFile.click();
+
+        console.log(inpFile.files);
+    });
+
+    inpFile.addEventListener('change', ()=>{
+        let archivo = inpFile.files;
+        console.log("arhivo:", archivo);
+
+        if (!archivo || archivo.length === 0 ){
+            console.log("aqui no hay nada")
+        };
+
+        for (let i = 0; i < archivo.length; i++) {
+                    const file = archivo[i];
+                    console.log("esto es el file", file)
+                    let objectURL = URL.createObjectURL(file);
+                    console.log("esto es el objectURL",objectURL)
+
+
+                    newShowBanner.innerHTML = ` <div class="contententShowBanner">
+                                                    <img src="${objectURL}" alt="un banner" style="width: 100%;">
+                                                </div>
+                                            `                                             
+
+        };
+
+    });
+
+
+    btnCreate.addEventListener('click', ()=>{
+
+        //console.log(inpFile.files)
+        if (inpFile.files.length !== 0){
+            //console.log("hay informacion en el inpFile debo hacer el efecto")
+            btnCreate.classList.add('invisibleBtn');
+            btnCreateLoading.classList.remove('invisibleBtn');
+        } else {
+            //console.log("no hay nada y me quedo quieto")
+            btnCreateLoading.classList.add('invisibleBtn');
+            btnCreate.classList.remove('invisibleBtn');
+        } 
+
+    });
+
+</script>
+
+
+</body>
+</html>
+
+

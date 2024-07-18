@@ -21,6 +21,7 @@ const modelBankAccount = require('../models/bank.js');
 const modelBannerFront = require('../models/bannerFront.js');
 const modelNewsDay = require('../models/newsDay.js');
 const modelBackgroundSign = require('../models/backgroundSign.js');
+const modelBannerDefault = require('../models/bannerUserDefault.js');
 const modelRateCurrency = require('../models/rateCurrency.js');
 const modelAdminProfile = require('../models/profileAdmin.js'); 
 const modelDocumentInvoice = require('../models/documentInvoices.js');
@@ -38,7 +39,7 @@ const puppeteer = require('puppeteer');
 const pdfMake = require('pdfmake');
 const bcrypt = require('bcryptjs');
 const cloudinary = require('cloudinary').v2;//esto no tendrá cambio
-const fs = require('fs-extra');//esto no tendrá cambio
+
 const path = require('path');
 
 const nodemailer = require('nodemailer');
@@ -51,6 +52,23 @@ cloudinary.config({
     api_secret : process.env.API_SECRET,
     secure: true
 })
+
+
+const fs = require('fs-extra');
+const {S3} = require('aws-sdk');
+
+const endpoint = 'nyc3.digitaloceanspaces.com';
+const bucketName = 'bucket-blissve';
+
+const s3 = new S3({
+    endpoint,
+    region : 'us-east-1',
+    credentials : {
+        accessKeyId : process.env.ACCESS_KEY,
+        secretAccessKey : process.env.SECRET_KEY
+    }
+});
+
 
 
 routes.get('/admin', (req,res)=>{
@@ -2438,6 +2456,7 @@ const userAdmin = req.session.userAdmin;
 
     if (userAdmin){
         //console.log("aqui userAdmin ---->",userAdmin)
+    
         const newsDaySave = req.session.newsDaySave; //'Se ha agregado un NewsDay al Carousel.';
         const newsDayNoSave = req.session.newsDayNoSave; //'Falta Imagen o Datos requeridos';
         const newsDayError = req.session.newsDayError; // "Sin petición especifica";
@@ -2489,7 +2508,7 @@ routes.post('/admin/newsDay/create', async (req, res)=>{
 
         const { mimetype, size, path } = req.files[0];
         const {typeNewsDay, nInvoice, customerName, timeDays, endPublic, newDayTitle, newDayDetails } = req.body;
-
+        
         //console.log("mimetype :", mimetype); console.log("size :", size); console.log("path :", path);
         //console.log("typeNewsDay :", typeNewsDay); console.log("nInvoice :", nInvoice); console.log("customerName :", customerName);
         //console.log("timeDays :", timeDays); console.log("endPublic", endPublic); console.log("newDayTitle", newDayTitle);
@@ -2507,6 +2526,14 @@ routes.post('/admin/newsDay/create', async (req, res)=>{
             simplifiedDate = `${dia}-${mes}-${anio}`;
         }
 
+        const epoch = new Date().getTime(); //esto sera el valor del campo codeBanner : epoch
+        const folder = 'newsDay';
+        const pathField = path; const extPart = pathField.split(".");
+        const ext = extPart[1];
+
+        const fileContent = fs.readFileSync(pathField);
+        const key = `${folder}/${epoch}.${ext}`;
+        console.log("key -->", key);
 
         if (typeNewsDay === "admin"){
 
@@ -2514,28 +2541,55 @@ routes.post('/admin/newsDay/create', async (req, res)=>{
             
                 if (size <= 2000000 && mimetype.startsWith("image/")){
 
-                    const result = await cloudinary.uploader.upload(path, {folder: 'newsDay'});
-                    console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                    const { url, public_id } = result;
+   
+                    const params = { 
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read' 
+                    };
+        
+                    s3.putObject(params, function(err, data){
+                    
+                        if (err){
+                            console.log('Error al subir un archivo', err);
+                        } else {
+                            console.log('La imagen fue subida, Exito', data);
+                            //ahora vamos a eliminar la imagen vieja;
+                            saveNewsDayDB()
+                                .then(()=>{
+                                    req.session.newsDaySave = 'Se ha agregado un NewsDay al Carousel.';
+                                    res.redirect('/admin/newsDay'); 
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha ocurrido un error", err)
+                                })
+                        }
+                        
+                    })   
 
-                    //elimino del server
-                    await fs.unlink(path);
+                    let url = `https://${bucketName}.${endpoint}/${key}`;    
+                    let public_id = key;
 
-                    console.log("Datos del NewsDay se guardarán en la base de datos");
-                    const newDays = new modelNewsDay({ active: true, typeNewsDay, customerName, timeDays, url, public_id, adminName, endPublic, newDayTitle, newDayDetails, simplifiedDate });
-                    const newDaysSave = await newDays.save();
+                    async function saveNewsDayDB(){
+                        await fs.unlink(path); //elimino de uppload server
 
-                    const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
+                        console.log("Datos del NewsDay se guardarán en la base de datos");
+                        const newDays = new modelNewsDay({ active: true, typeNewsDay, customerName, timeDays, url, public_id, adminName, endPublic, newDayTitle, newDayDetails, simplifiedDate });
+                        const newDaysSave = await newDays.save();
+    
+                        //const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
+                
+                    }
 
-                    req.session.msgNewsDaySave = 'Se ha agregado un NewsDay al Carousel.';
-                    res.redirect('/admin/newsDay'); 
+                   
                 }
 
 
             } else {
     
-                req.session.msgNewsDayNoSave = 'Falta Imagen o Datos requeridos';
-                res.redirect('/admin/bannersFront');
+                req.session.newsDayNoSave = 'Falta Imagen o Datos requeridos';
+                res.redirect('/admin/newsDay');
             } 
 
         } else {
@@ -2544,21 +2598,46 @@ routes.post('/admin/newsDay/create', async (req, res)=>{
             
                 if (size <= 2000000 && mimetype.startsWith("image/")){
 
-                    const result = await cloudinary.uploader.upload(path, {folder: 'bannerFront'});
-                    console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                    const { url, public_id } = result;
-                    //elimino del server
+                    const params = { 
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read' 
+                    };
+        
+                    s3.putObject(params, function(err, data){
                     
-                    await fs.unlink(path);
+                        if (err){
+                            console.log('Error al subir un archivo', err);
+                        } else {
+                            console.log('La imagen fue subida, Exito', data);
+                            //ahora vamos a eliminar la imagen vieja;
+                            saveNewsDayDB()
+                                .then(()=>{
+                                    req.session.newsDaySave = 'Se ha agregado un NewsDay al Carousel.';
+                                    res.redirect('/admin/newsDay'); 
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha ocurrido un error", err)
+                                })
+                        }
+                        
+                    })   
 
-                    console.log("Datos del News se guardarán en la base de datos");
-                    const newsDay = new modelNewsDay({ active: true, typeNewsDay, customerName, timeDays, url, public_id, adminName, endPublic, newDayTitle, newDayDetails, simplifiedDate });
-                    const newsDaySave = await newsDay.save();
+                    let url = `https://${bucketName}.${endpoint}/${key}`;    
+                    let public_id = key;
 
-                    const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
+                    async function saveNewsDayDB(){
+                        await fs.unlink(path); //elimino de uppload server
 
-                    req.session.newsDaySave = 'Se ha agregado un NewsDay al Carousel.';
-                    res.redirect('/admin/newsDay');
+                        console.log("Datos del NewsDay se guardarán en la base de datos");
+                        const newDays = new modelNewsDay({ active: true, typeNewsDay, customerName, timeDays, url, public_id, adminName, endPublic, newDayTitle, newDayDetails, simplifiedDate });
+                        const newDaysSave = await newDays.save();
+    
+                        const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
+                
+                    }
+
                 }
 
                   
@@ -2571,7 +2650,6 @@ routes.post('/admin/newsDay/create', async (req, res)=>{
 
     } catch (error) {
         console.log("------Error------")
-        console.log("Ha ocurrido un error", error);
         req.session.adminError = "Ha ocurrido un Error, intente luego.";
         res.redirect('/admin/newsDay');        
     }
@@ -2603,20 +2681,69 @@ routes.post('/admin/newsDay/update', async (req, res)=>{
             const { mimetype, size, path } = req.files[0];
             console.log(mimetype, size, path)
 
+            const epoch = new Date().getTime(); 
+            const folder = 'newsDay';
+            const pathField = path; const extPart = pathField.split(".");
+            const ext = extPart[1];
+    
+            const fileContent = fs.readFileSync(pathField);
+            const key = `${folder}/${epoch}.${ext}`;
+            console.log("key -->", key);
+
             if (size <= 2000000 && mimetype.startsWith("image/")){
 
-                //primero eliminamos la imagen en cloudinary y luego cargamos la nueva
-                const resultDelete = await cloudinary.uploader.destroy(publicToDelete);
-
-                const result = await cloudinary.uploader.upload(path, {folder: 'newsDay'});
-                console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                const { url, public_id } = result;
-                //elimino del server
+                //primero guardamos la imagen en el bucket
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+    
+                s3.putObject(params, function(err, data){
                 
-                await fs.unlink(path);
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        //ahora vamos a eliminar la imagen vieja;
 
-                const newsDayUpdate = await modelNewsDay.findByIdAndUpdate(id, { newDayTitle : titleUpdate , newDayDetails : noteUpdate, url, public_id });
-                req.session.newsDayUpdate = "Ha Actualizado un News Day.";
+                        const paramsDel = {
+                            Bucket : bucketName,
+                            Key : publicToDelete
+                        }
+
+                        s3.deleteObject(paramsDel, function(err, data){
+
+                            if (err){
+                                console.log('Error al eliminar un archivo', err);
+                            } else {
+                                console.log('Archivo eliminado con Exito');
+                                updateNewsDay()
+                                    .then(()=>{
+                                        req.session.newsDayUpdate = "Se ha actualizado un News Day.";
+                                        res.redirect('/admin/newsDay');
+                                    })
+                                    .catch((err)=>{
+                                        req.session.adminError = "Ha ocurrido un Error, intente luego."
+                                        res.redirect('/admin/newsDay');
+                                    })
+                            }
+                        })
+
+                        let url = `https://${bucketName}.${endpoint}/${key}`;    
+                        let public_id = key;
+                        
+                        async function updateNewsDay(){
+                                            
+                            await fs.unlink(path);
+                            const newsDayUpdate = await modelNewsDay.findByIdAndUpdate(id, { newDayTitle : titleUpdate , newDayDetails : noteUpdate, url, public_id });
+                            
+                        }
+                    }
+                    
+                })   
+
             }
             
         } else if (req.files.length ==0  && id !=="select") {
@@ -2625,25 +2752,27 @@ routes.post('/admin/newsDay/update', async (req, res)=>{
             console.log("id ----->", id);
             //console.log("solo texto <title y note>, (se ejecuta una accion de actualizar)");
             const newsDayUpdate = await modelNewsDay.findByIdAndUpdate(id, { newDayTitle : titleUpdate , newDayDetails : noteUpdate });
-            req.session.newsDayUpdate = "Ha Actualizado un News Day.";
+            req.session.newsDayUpdate = "Se ha actualizado un News Day.";
+            res.redirect('/admin/newsDay');
         } else if (req.files.length !==0  && id ==="select"){
             // solo foto (No se ejecuta ninguna accion)
             
             console.log("solo foto (No se ejecuta ninguna accion)");
             console.log("NO HAY NADA QUE HACER. SIN PETICION PARA ACTUALIZAR NEWS DAY")
             req.session.newsDayError = "Sin petición especifica";
+            res.redirect('/admin/newsDay');
         } else if (req.files.length ==0  && id ==="select"){
             console.log("no hay nada (No se ejecuta ninguna accion)");
             console.log("NO HAY NADA QUE HACER. SIN PETICION PARA ACTUALIZAR NEWS DAY")
             req.session.newsDayError = "Sin petición especifica";
+            res.redirect('/admin/newsDay');
         }  
         
         console.log("***********end update**********");
-        res.redirect('/admin/newsDay');
+        
 
     } catch (error) {
-        console.log("------Error------")
-        console.log("Ha ocurrido un error, intente luego", error);
+        console.log("------Error------");
         req.session.adminError = "Ha ocurrido un Error, intente luego."
         res.redirect('/admin/newsDay');
     }    
@@ -2674,21 +2803,41 @@ routes.get('/admin/newsDay/delete/:id', async (req, res)=>{
         console.log("Este es el id ----->", idNewsDay);
 
         const resulDB = await modelNewsDay.findById(idNewsDay);
-        const elePublic = resulDB.public_id;
+        const publicToDelete = resulDB.public_id;
         //console.log("Esto es resultDB ------>",resulDB);
-        
-        const resultCloudinary = await cloudinary.uploader.destroy(elePublic);
-        const resultDele = await modelNewsDay.findByIdAndUpdate(idNewsDay, { active : false, delete : true, public_id : "", url : "" });
-        req.session.newsDayDelete = "Ha Eliminado un News Day.";
 
-        res.redirect('/admin/newsDay');
+        const paramsDel = {
+            Bucket : bucketName,
+            Key : publicToDelete
+        }
+
+        s3.deleteObject(paramsDel, function(err, data){
+
+            if (err){
+                console.log('Error al eliminar un archivo', err);
+            } else {
+                console.log('Archivo eliminado con Exito');
+                updateNewsDay()
+                    .then(()=>{
+                        req.session.newsDayDelete = "Ha Eliminado un News Day.";
+                        res.redirect('/admin/newsDay');
+                    })
+                    .catch((err)=>{
+                        req.session.adminError = "Ha ocurrido un Error, intente luego."
+                        res.redirect('/admin/newsDay');
+                    })
+            }
+        })
+
+        async function updateNewsDay(){
+            const resultDele = await modelNewsDay.findByIdAndUpdate(idNewsDay, { active : false, delete : true, public_id : "", url : "" });    
+        }
+        
 
     } catch (error) {
         console.log("------Error------")
-        console.log("Ha ocurrido un error, intente luego", error);
         req.session.adminError = "Ha ocurrido un Error, intente luego."
         res.redirect('/admin/newsDay');        
-        
     }
 
 });
@@ -2741,7 +2890,8 @@ routes.get('/admin/bannersFront', async (req, res)=>{
         const msgBannerNoSave = req.session.msgBannerNoSave; //'Falta Imagen o Datos requeridos';
         const msgBannerDelete = req.session.msgBannerDelete; //'Se ha eliminado el Banner satisfactoriamente.'
         const msgBannerActive = req.session.msgBannerActive; //Banner Activado.
-        const msgBannerPaused = req.session.msgBannerPaused; ////Banner Pausado.
+        const msgBannerPaused = req.session.msgBannerPaused; //Banner Pausado.
+        const msgBannerUpdate = req.session.msgBannerUpdate; //"Se ha Actualizado un Banner."
         const adminError = req.session.adminError; // "Ha ocurrido un Error, intente luego."
 
         delete req.session.msgBannerSave;
@@ -2749,6 +2899,7 @@ routes.get('/admin/bannersFront', async (req, res)=>{
         delete req.session.msgBannerDelete;
         delete req.session.msgBannerActive;  
         delete req.session.msgBannerPaused;
+        delete req.session.msgBannerUpdate;
         delete req.session.adminError;
 
         //console.log("aqui userAdmin ---->",userAdmin)
@@ -2757,7 +2908,7 @@ routes.get('/admin/bannersFront', async (req, res)=>{
 
         const updateBanner = await modelBannerFront.find({ "typeBanner" : "admin", "active" : false, "delete" : false });
 
-        res.render('admin/bannersFront', ({userAdmin, currentBanner, updateBanner, msgBannerSave, msgBannerNoSave, msgBannerDelete, msgBannerActive, msgBannerPaused, adminError }));
+        res.render('admin/bannersFront', ({userAdmin, currentBanner, updateBanner, msgBannerSave, msgBannerNoSave, msgBannerDelete, msgBannerActive, msgBannerPaused, msgBannerUpdate, adminError }));
 
     } else {
 
@@ -2778,7 +2929,7 @@ routes.post('/admin/search-invoice-marketing/banner', async (req, res)=>{
     res.json(search);
 });
 
-//ruta para crear un banner en el home
+//ruta para crear un banner en el home Carousel
 routes.post('/admin/banner/create', async (req, res)=>{
 
     try {
@@ -2798,28 +2949,70 @@ routes.post('/admin/banner/create', async (req, res)=>{
     
         //crearemos el codeBanner con epoc fecha unix
         const epoch = new Date().getTime(); //esto sera el valor del campo codeBanner : epoch
+        const folder = 'bannerCarousel';
+        const pathField = path; const extPart = pathField.split(".");
+        const ext = extPart[1];
+
+        const fileContent = fs.readFileSync(pathField);
+        const key = `${folder}/${epoch}.${ext}`;
+        console.log("key -->", key);
 
         if (typeBanner === "admin"){
 
             if (req.files.length !==0 ) {
             
                 if (size <= 3000000 && mimetype.startsWith("image/")){
-
-                    const result = await cloudinary.uploader.upload(path, {folder: 'bannerFront'});
-                    console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                    const { url, public_id } = result;
-                    //elimino del server
+        
+                    const params = { 
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read' 
+                    };
+        
+                    s3.putObject(params, function(err, data){
                     
-                    await fs.unlink(path);
+                        if (err){
+                            console.log('Error al subir un archivo', err);
+                        } else {
+                            console.log('La imagen fue subida, Exito', data);
+                    
+                            // Ahora que la imagen se ha subido vamos a actualizar la Base de Datos
+                            // no se elimina del Cluster ya que como tiene el mismo nombre esta se sobre-escribe
+    
+                            saveDB()
+                                .then(()=>{
+                                    console.log("Se ha guardado en la base de datos.");
+                                    req.session.msgBannerSave = 'Se ha agregado un Banner al Carousel.';
+                                    res.redirect('/admin/bannersFront');
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                    res.redirect('/admin/bannersFront');
+                                })
+    
+                            
+                            let url = `https://${bucketName}.${endpoint}/${key}`;    
+                            let public_id = key;
+    
+                            async function saveDB(){
+                                //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                
+                                await fs.unlink(path); 
+    
+                                console.log("Datos del Banner se guardarán en la base de datos");
+                                const banner = new modelBannerFront({ active: true, typeBanner, customerName, timeDays, url, public_id, adminName, endPublic, codeBanner : epoch });
+                                const bannerSave = await banner.save();
+            
+                                //const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
+            
+                            }
+         
+    
+                        }
+                        
+                    });  
 
-                    console.log("Datos del Banner se guardarán en la base de datos");
-                    const banner = new modelBannerFront({ active: true, typeBanner, customerName, timeDays, url, public_id, adminName, endPublic, codeBanner : epoch });
-                    const bannerSave = await banner.save();
-
-                    const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
-
-                    req.session.msgBannerSave = 'Se ha agregado un Banner al Carousel.';
-                    res.redirect('/admin/bannersFront'); 
                 }       
 
 
@@ -2835,21 +3028,57 @@ routes.post('/admin/banner/create', async (req, res)=>{
             
                 if (size <= 3000000 && mimetype.startsWith("image/")){
 
-                    const result = await cloudinary.uploader.upload(path, {folder: 'bannerFront'});
-                    console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                    const { url, public_id } = result;
-                    //elimino del server
+
+                    const params = { 
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read' 
+                    };
+        
+                    s3.putObject(params, function(err, data){
                     
-                    await fs.unlink(path);
+                        if (err){
+                            console.log('Error al subir un archivo', err);
+                        } else {
+                            console.log('La imagen fue subida, Exito', data);
+                    
+                            // Ahora que la imagen se ha subido vamos a actualizar la Base de Datos
+                            // no se elimina del Cluster ya que como tiene el mismo nombre esta se sobre-escribe
+    
+                            saveDB()
+                                .then(()=>{
+                                    console.log("Se ha guardado en la base de datos.");
+                                    req.session.msgBannerSave = 'Se ha agregado un Banner al Carousel.';
+                                    res.redirect('/admin/bannersFront');
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                    res.redirect('/admin/bannersFront');
+                                })
+    
+                            
+                            let url = `https://${bucketName}.${endpoint}/${key}`;    
+                            let public_id = key;
+    
+                            async function saveDB(){
+                                //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                
+                                await fs.unlink(path); 
+    
+                                console.log("Datos del Banner se guardarán en la base de datos");
+                                const banner = new modelBannerFront({ active: true, typeBanner, customerName, timeDays, url, public_id, adminName, endPublic, codeBanner : epoch });
+                                const bannerSave = await banner.save();
+            
+                                const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
+            
+                            }
+         
+    
+                        }
+                        
+                    });  
 
-                    console.log("Datos del Banner se guardarán en la base de datos");
-                    const banner = new modelBannerFront({ active: true, typeBanner, customerName, timeDays, url, public_id, adminName, endPublic, codeBanner : epoch });
-                    const bannerSave = await banner.save();
-
-                    const updateInvoice = await modelDocumentInvoice.updateOne({ numberInvoice : nInvoice}, { $set : {invoiceUsedMarketing : true} });
-
-                    req.session.msgBannerSave = 'Se ha agregado un Banner al Carousel.';
-                    res.redirect('/admin/bannersFront'); 
                 }
 
                 
@@ -2910,21 +3139,73 @@ routes.post('/admin/banner/update', async (req, res)=>{
             const { mimetype, size, path } = req.files[0];
             console.log(mimetype, size, path)
 
+            const epoch = new Date().getTime();
+            const folder = 'bannerCarousel';
+            const pathField = path; const extPart = pathField.split(".");
+            const ext = extPart[1];
+
+            const fileContent = fs.readFileSync(pathField);
+            const key = `${folder}/${epoch}.${ext}`;
+            console.log("key -->", key);
+
+
+
             if (size <= 3000000 && mimetype.startsWith("image/")){
 
-                //primero eliminamos la imagen en cloudinary y luego cargamos la nueva
-                const resultDelete = await cloudinary.uploader.destroy(publicToDelete);
-
-                const result = await cloudinary.uploader.upload(path, {folder: 'bannerFront'});
-                console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                const { url, public_id } = result;
+                //primero cargamos la imagen en digitalOcean y luego eliminamos al vieja
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+    
+                s3.putObject(params, function(err, data){
                 
-                //elimino del server
-                await fs.unlink(path);
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        //ahora vamos a eliminar la imagen vieja;
+                                          
+                        const paramsDel = { 
+                            Bucket : bucketName,
+                            Key : publicToDelete 
+                        };
 
-                const bannerUpdate = await modelBannerFront.findByIdAndUpdate(id, { url, public_id });
-                req.session.bannerUpdate = "Ha Actualizado un Banner.";
-                res.redirect('/admin/bannersFront');
+                        s3.deleteObject(paramsDel, function(err, data){
+
+                            if (err){
+                                console.log('Error al eliminar un Banner', err);
+                            } else {
+                                console.log('Un Banner eliminado satisfactoriamente');
+                                updateData()
+                                    .then(()=>{
+                                        req.session.msgBannerUpdate = "Se ha Actualizado un Banner.";
+                                        res.redirect('/admin/bannersFront');
+                                    })
+                                    .catch((err)=>{
+
+                                    })
+                            }
+                        })
+
+                        let url = `https://${bucketName}.${endpoint}/${key}`;    
+                        let public_id = key;
+
+                        async function updateData(){
+                            await fs.unlink(path); //elimino el archivo en upload del servidor
+                            //actualizo la base de datos.
+
+                            const bannerUpdate = await modelBannerFront.findByIdAndUpdate(id, { url, public_id });
+                        
+                        }
+     
+
+                    }
+                    
+                });  
+
 
             } else {
                 console.log("ha superado el maximo permitido o no es de tipo imagen")
@@ -2950,18 +3231,47 @@ routes.get('/admin/bannersFront/delete/:dir/:public', async (req, res)=>{
         
         const dir = req.params.dir;
         const publicId = req.params.public;
-        const publicIdToDelete = `${dir}/${publicId}`;
+        const public_id = `${dir}/${publicId}`;
         console.log("Ese es el public_Id del banner que deseamos eliminar")
         console.log("Esto es dir", dir);
         console.log("Esto es publicId", publicId);
+        console.log("Esto es public_id", public_id);
+
+        const params = {
+            Bucket : bucketName,
+            Key : public_id
+        }
+        s3.deleteObject(params, (err, data)=>{
+            if (err){
+                console.error("Error al eliminar el archivo", err);
+            } else {
+                console.error("Archivo eliminado con exito", data);
+
+                async function deleteDB(){
+                    const updateDB = await modelBannerFront.updateOne({public_id: public_id}, { $set : { "active" : false , "delete" : true, "url" : "", "public_id" : "" }});
+                }    
+
+                deleteDB()
+                    .then(()=>{
+                        req.session.msgBannerDelete = 'Se ha eliminado el Banner satisfactoriamente.' 
+                        res.redirect('/admin/bannersFront')
+                    })
+                    .catch((err)=>{
+                        console.log("Ha habido un error, intente mas tarde.", err);
+                    })
+                
+
+            }
+        });
     
+/*
         async function deleteBannerCloudy(){
-        const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
-        console.log("ya he eliminado la imagen de Cloudinary", resultDelete);
+            const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
+            console.log("ya he eliminado la imagen de Cloudinary", resultDelete);
         }
 
         async function updateBannerDB(){
-        const updateDB = await modelBannerFront.updateOne({public_id: publicIdToDelete}, { $set : { "active" : false , "delete" : true, "url" : "", "public_id" : "" }});
+            const updateDB = await modelBannerFront.updateOne({public_id: publicIdToDelete}, { $set : { "active" : false , "delete" : true, "url" : "", "public_id" : "" }});
         }
 
         deleteBannerCloudy()
@@ -2972,6 +3282,7 @@ routes.get('/admin/bannersFront/delete/:dir/:public', async (req, res)=>{
                         res.redirect('/admin/bannersFront')
                     })
             })
+*/
 
     } catch (error) {
         console.log("------Error------")
@@ -3064,7 +3375,14 @@ routes.get('/admin/Bg-sign', async (req,res)=>{
 
     if (userAdmin){
 
+        const msgBackgroundSave = req.session.msgBackgroundSave; //'Se ha agregado un Background.';
+        const msgBackgroundUpdate = req.session.msgBackgroundUpdate; //"Se ha Actualizado un Background.";
+        const msgBackgroundDelete = req.session.msgBackgroundDelete; //'Se ha eliminado un Background.'
         const adminError = req.session.adminError;  //"Ha ocurrido un Error, intente luego."
+
+        delete req.session.msgBackgroundSave;
+        delete req.session.msgBackgroundUpdate;
+        delete req.session.msgBackgroundDelete;
         delete req.session.adminError;
               
         const currentBackgrounds = await modelBackgroundSign.find( {active : true} );
@@ -3072,7 +3390,7 @@ routes.get('/admin/Bg-sign', async (req,res)=>{
         const disabledBackgroundsSignIn = await modelBackgroundSign.find( {typeBackground : "SignIn", active : false} );
         const disabledBackgroundsSignUp = await modelBackgroundSign.find( {typeBackground : "SignUp", active : false} );
               
-        res.render('admin/bg-sign', ({userAdmin, currentBackgrounds, disabledBackgroundsSignIn, disabledBackgroundsSignUp, adminError}));
+        res.render('admin/bg-sign', ({userAdmin, currentBackgrounds, disabledBackgroundsSignIn, disabledBackgroundsSignUp, msgBackgroundSave, msgBackgroundUpdate, msgBackgroundDelete, adminError}));
 
     } else {
 
@@ -3096,9 +3414,14 @@ routes.post('/admin/background/create', async (req,res)=>{
         //type = 'SignUp or signIn'
         const type = req.body.typeBackground;
         const { mimetype, path, size } = req.files[0];
+        console.log("type -------->", type);
 
             //crearemos el codeBackground con epoc fecha unix
             const epoch = new Date().getTime(); //esto sera el valor del campo codeBackground : epoch
+            
+            const folder = 'Backgrounds'; const ident = epoch;
+            const pathField = path; const extPart = pathField.split(".");
+            const ext = extPart[1];
 
             if (type === "signIn"){
 
@@ -3106,19 +3429,60 @@ routes.post('/admin/background/create', async (req,res)=>{
                 
                     if (size <= 3000000 && mimetype.startsWith("image/")){
 
-                        const result = await cloudinary.uploader.upload(path, {folder: 'Backgrounds'});
-                        console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                        const { url, public_id } = result;
-                        //elimino del server
+                    const fileContent = fs.readFileSync(pathField);
+                    const key = `${folder}/${ident}.${ext}`;
+                    console.log("key -->", key);
+
+                    const params = { 
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read' 
+                    };
+        
+                    s3.putObject(params, function(err, data){
+                    
+                        if (err){
+                            console.log('Error al subir un archivo', err);
+                        } else {
+                            console.log('La imagen fue subida, Exito', data);
+                            //ahora vamos a eliminar la imagen vieja;
+                            saveSingInDB()
+                                .then(()=>{
+                                    req.session.msgBackgroundSave = 'Se ha agregado un Background.';
+                                    res.redirect('/admin/bg-sign'); 
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha ocurrido un error", err)
+                                })
+                        }
                         
+                    })   
+
+                    let url = `https://${bucketName}.${endpoint}/${key}`;    
+                    let public_id = key;
+
+                    async function saveSingInDB(){
+
+                        // eliminamos el archivo de upload
                         await fs.unlink(path);
 
                         console.log("Datos del Banner se guardarán en la base de datos");
                         const background = new modelBackgroundSign({ active: false, typeBackground : type, codeBackground : epoch, url, public_id, adminName });
                         const backgroundSave = await background.save();
-
+                    }
+                     
+                     
+/*                         const result = await cloudinary.uploader.upload(path, {folder: 'Backgrounds'});
+                        console.log("Esto es result de lo que viene de cloudinary ---->",result);
+                        const { url, public_id } = result;
+                        //elimino del server
+                        await fs.unlink(path);
+                        console.log("Datos del Banner se guardarán en la base de datos");
+                        const background = new modelBackgroundSign({ active: false, typeBackground : type, codeBackground : epoch, url, public_id, adminName });
+                        const backgroundSave = await background.save();
                         req.session.msgBackgroundSave = 'Se ha agregado un Background sl Sign.';
-                        res.redirect('/admin/bg-sign'); 
+                        res.redirect('/admin/bg-sign'); */ 
                     }       
 
 
@@ -3134,7 +3498,51 @@ routes.post('/admin/background/create', async (req,res)=>{
                 
                     if (size <= 3000000 && mimetype.startsWith("image/")){
 
-                        const result = await cloudinary.uploader.upload(path, {folder: 'Backgrounds'});
+
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
+    
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+            
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                //ahora vamos a eliminar la imagen vieja;
+                                saveSingUpDB()
+                                    .then(()=>{
+                                        req.session.msgBackgroundSave = 'Se ha agregado un Background.';
+                                        res.redirect('/admin/bg-sign'); 
+                                    })
+                                    .catch((err)=>{
+                                        console.log("Ha ocurrido un error", err)
+                                    })
+                            }
+                            
+                        })
+                        
+                        let url = `https://${bucketName}.${endpoint}/${key}`;    
+                        let public_id = key;
+
+                        async function saveSingUpDB(){
+
+                            // eliminamos el archivo de upload
+                            await fs.unlink(path);
+    
+                            console.log("Datos del Banner se guardarán en la base de datos");
+                            const background = new modelBackgroundSign({ active: false, typeBackground : type, codeBackground : epoch, url, public_id, adminName });
+                            const backgroundSave = await background.save();
+                        }
+
+/*                         const result = await cloudinary.uploader.upload(path, {folder: 'Backgrounds'});
                         console.log("Esto es result de lo que viene de cloudinary ---->",result);
                         const { url, public_id } = result;
 
@@ -3146,7 +3554,7 @@ routes.post('/admin/background/create', async (req,res)=>{
                         const backgroundSave = await background.save();
 
                         req.session.msgBackgroundSave = 'Se ha agregado un Background sl Sign.';
-                        res.redirect('/admin/bg-sign'); 
+                        res.redirect('/admin/bg-sign');  */
                     }
 
                     
@@ -3162,6 +3570,7 @@ routes.post('/admin/background/create', async (req,res)=>{
             
     } catch (error) {
         console.log("Ha ocurrido un error", error);
+        req.session.adminError = "Ha ocurrido un Error, intente luego.";
         res.redirect('/admin/bg-sign');
     }        
 
@@ -3199,7 +3608,7 @@ routes.post('/admin/background/update', async (req, res)=>{
             console.log("search :", search);
             publicToDelete = search.public_id;
         }    
-         
+        
         if (req.files.length !==0  && id !=="select" ) {
             // update de imagen y un banner seleccionado
             console.log("Hemos pasado el  primer filtro hay una foto y id es diferente de select");
@@ -3207,21 +3616,72 @@ routes.post('/admin/background/update', async (req, res)=>{
             const { mimetype, size, path } = req.files[0];
             console.log(mimetype, size, path)
 
+            const epoch = new Date().getTime();
+            const folder = 'Backgrounds';
+            const pathField = path; const extPart = pathField.split(".");
+            const ext = extPart[1];
+
+            const fileContent = fs.readFileSync(pathField);
+            const key = `${folder}/${epoch}.${ext}`;
+            console.log("key -->", key);
+
             if (size <= 3000000 && mimetype.startsWith("image/")){
 
-                //primero eliminamos la imagen en cloudinary y luego cargamos la nueva
-                const resultDelete = await cloudinary.uploader.destroy(publicToDelete);
+                //primero guardamos la foto en el Bucket
 
-                const result = await cloudinary.uploader.upload(path, {folder: 'Backgrounds'});
-                console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                const { url, public_id } = result;
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+    
+                s3.putObject(params, function(err, data){
                 
-                //elimino del server
-                await fs.unlink(path);
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        //ahora vamos a eliminar la imagen vieja;
+                                          
+                        const paramsDel = { 
+                            Bucket : bucketName,
+                            Key : publicToDelete 
+                        };
 
-                const backgroundUpdate = await modelBackgroundSign.findByIdAndUpdate(id, { url, public_id });
-                req.session.backgroundUpdate = "Ha Actualizado un Background.";
-                res.redirect('/admin/bg-sign'); 
+                        s3.deleteObject(paramsDel, function(err, data){
+
+                            if (err){
+                                console.log('Error al eliminar un Banner', err);
+                            } else {
+                                console.log('Un Banner eliminado satisfactoriamente');
+                                updateData()
+                                    .then(()=>{
+                                        req.session.msgBackgroundUpdate = "Se ha Actualizado un Background.";
+                                        res.redirect('/admin/bg-sign');
+                                    })
+                                    .catch((err)=>{
+                                        req.session.adminError = "Ha ocurrido un Error, intente luego.";
+                                        res.redirect('/admin/bg-sign');
+                                    })
+                            }
+                        })
+
+                        let url = `https://${bucketName}.${endpoint}/${key}`;    
+                        let public_id = key;
+
+                        async function updateData(){
+                            await fs.unlink(path); //elimino el archivo en upload del servidor
+                            //actualizo la base de datos.
+
+                            const backgroundUpdate = await modelBackgroundSign.findByIdAndUpdate(id, { url, public_id });
+                        }
+
+                    }
+                    
+                });  
+
+
             } else {
                 console.log("ha superado el maximo permitido o no es de tipo imagen")
                 res.redirect('/admin/bg-sign'); 
@@ -3319,18 +3779,46 @@ routes.get('/admin/background/delete/:dir/:public', async (req, res)=>{
         
         const dir = req.params.dir;
         const publicId = req.params.public;
-        const publicIdToDelete = `${dir}/${publicId}`;
+        const publicToDelete = `${dir}/${publicId}`;
         console.log("Ese es el public_Id del background que deseamos eliminar")
         console.log("Esto es dir", dir);
         console.log("Esto es publicId", publicId);
     
+        const paramsDel = { 
+            Bucket : bucketName,
+            Key : publicToDelete 
+        };
+
+        s3.deleteObject(paramsDel, function(err, data){
+
+            if (err){
+                console.log('Error al eliminar un Banner', err);
+            } else {
+                console.log('Un Banner eliminado satisfactoriamente');
+                updateData()
+                    .then(()=>{
+                        req.session.msgBackgroundDelete = 'Se ha eliminado un Background.';
+                        res.redirect('/admin/bg-sign');
+                    })
+                    .catch((err)=>{
+                        req.session.adminError = "Ha ocurrido un Error, intente luego.";
+                        res.redirect('/admin/bg-sign');
+                    })
+            }
+        })
+
+        async function updateData(){
+            const updateDB = await modelBackgroundSign.deleteOne({public_id: publicToDelete});
+        }
+
+/*
         async function deleteBakgroundCloudy(){
-        const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
-        console.log("ya he eliminado la imagen de Cloudinary", resultDelete);
+            const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
+            console.log("ya he eliminado la imagen de Cloudinary", resultDelete);
         }
 
         async function updateBackgroundDB(){
-        const updateDB = await modelBackgroundSign.deleteOne({public_id: publicIdToDelete});
+            const updateDB = await modelBackgroundSign.deleteOne({public_id: publicIdToDelete});
         }
 
         deleteBakgroundCloudy()
@@ -3341,6 +3829,7 @@ routes.get('/admin/background/delete/:dir/:public', async (req, res)=>{
                         res.redirect('/admin/bg-sign');
                     })
             })
+*/
 
     } catch (error) {
         console.log("------Error------")
@@ -3353,6 +3842,153 @@ routes.get('/admin/background/delete/:dir/:public', async (req, res)=>{
 
 });
 
+
+
+// ---------- Crear el banner que tendran los usuarios por default ---------
+routes.get('/admin/bannerDefault', async (req, res)=>{
+    const userAdmin = req.session.userAdmin;
+
+    if (userAdmin){
+
+        const bannerDefault = await modelBannerDefault.find();
+        res.render('admin/bannerDefault', ({userAdmin, bannerDefault}));
+
+    } else {
+
+        res.render('admin/bannerDefault', ({userAdmin}));
+
+    }
+
+});
+
+routes.post('/admin/bannerDefault/create', async (req, res)=>{
+    console.log("Estos son los datos que llegan del front ->",req.body)
+    //console.log("Esto es el archivo de imagen ->", req.files)
+    const {bannerName} = req.body; 
+    const element = req.files[0];
+    
+    console.log("bannerName ->", bannerName);
+    console.log("element ->", element); //aqui tenemos la imagen que el admin esta subiendo
+        
+    try{
+        
+        if ( element.size <= 3000000  && element.mimetype === "image/jpeg" ){
+
+            //console.log("una imagen aqui aceptada----->", element)
+
+            const folder = 'bannerUserDefault'; const ident = 'banner';
+            const pathField = element.path; const extPart = pathField.split(".");
+            const ext = extPart[1];
+
+            const searchBanner = await modelBannerDefault.find();
+
+            if ( searchBanner.length !==0 ) {
+                //aqui guardamos la imagen nueva y luego actualizamos la base de Datos (no hace falta eliinar la vieja es sobre-escrita). 
+
+                const fileContent = fs.readFileSync(pathField);
+                const key = `${folder}/${ident}.${ext}`;
+                console.log("key -->", key);
+    
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+    
+                s3.putObject(params, function(err, data){
+                
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        
+                        // Ahora que la imagen se ha subido vamos a actualizar la Base de Datos
+                        // no se elimina del Bucket ya que como tiene el mismo nombre esta se sobre-escribe
+
+                        saveDB()
+                            .then(()=>{
+                                console.log("Se ha guardado en la base de datos.");
+                                res.redirect('/admin/bannerDefault');
+                            })
+                            .catch((err)=>{
+                                console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                res.redirect('/admin/bannerDefault');
+                            })
+
+                        
+                        let url = `https://${bucketName}.${endpoint}/${key}`;    
+                        let public_id = key;
+
+                        async function saveDB(){
+                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                            await fs.unlink(element.path) 
+
+                            const iDBanner = searchBanner[0]._id;                                                                        
+                            const updateImg = await modelBannerDefault.findByIdAndUpdate(iDBanner, { bannerName, url, public_id } );
+                        }
+     
+
+                    }
+                    
+                });    
+            
+            } else {
+                //aqui subimos una imagen al bucket y luego guardamos en la base de datos
+
+                const fileContent = fs.readFileSync(pathField);
+                const key = `${folder}/${ident}.${ext}`;
+                console.log("key -->", key);
+    
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+
+                s3.putObject(params, function(err, data){
+
+                    if (err){
+                        console.log('ha habido un error en la subida de imagen al Cluster', err);
+                    } else {
+                        console.log('Imagen subida al Cluster', data)
+                        newData()
+                            .then(()=>{
+                                console.log("Se ha guardado en la base de datos.");
+                                res.redirect('/admin/bannerDefault');
+                            })
+                            .catch((err)=>{
+                                console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                res.redirect('/admin/bannerDefault');
+                        })
+                    }
+                })
+
+                let url = `https://${bucketName}.${endpoint}/${key}`;    
+                let public_id = key;
+
+                async function newData(){
+                    const newBanner = new modelBannerDefault({ bannerName, url, public_id });
+                    const bannerSave = newBanner.save();
+                }
+
+            }                 
+
+            
+        } else {
+            console.log("Archivos no subidos por ser muy pesados o no ser de tipo image 'jpg'.")
+            res.redirect('/admin/bannerDefault');        
+        }
+        
+
+    }catch(error){
+        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/admin/bannerDefault');
+    }
+
+
+});
 
 //:::::::: Cierre y Celebracion Mecanica Administrativo de Emergencia ::::::::
 routes.get('/admin/finishMechanic', async (req, res)=>{

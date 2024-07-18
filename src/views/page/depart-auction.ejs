@@ -1498,11 +1498,16 @@
     videoControl.addEventListener('click', ()=>{
         videoField.click();
     });
+
     videoField.addEventListener('change', ()=> {
         let archivo = videoField.files[0];
 
         console.log(archivo);
-        submitAddVideo.click();     
+        submitAddVideo.click();
+        
+        //esconder el bodyToolsADS y aparece el bodySpinner
+        bodyToolADS.classList.add('close');
+        bodySpinner.classList.remove('close');     
     });
 
 </script>

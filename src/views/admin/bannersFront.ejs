@@ -40,7 +40,11 @@
             <% if (msgBannerPaused) { %>
                 <%- include('../alertAdmin/msgBannerPaused.ejs') %>
             <% } %>
-            
+
+            <% if (msgBannerUpdate) { %>
+                <%- include('../alertAdmin/msgBannerUpdate.ejs') %>
+            <% } %>
+                        
             <% if (adminError) { %>
                 <%- include('../alertAdmin/adminError.ejs') %>
             <% } %>
@@ -310,7 +314,7 @@
                                                                         <% if (ele.typeBanner === 'admin'){ %>
                                                                             <div class="top">
                                                                                 <span class="mx-2 my-1">Type: <%= ele.typeBanner %></span>
-                                                                                <span class="mx-2 my-1">Name: Blisnet </span>
+                                                                                <span class="mx-2 my-1">Name: Blissenet </span>
                                                                             </div>
                                                                             <div class="bottom">
                                                                                 <span class="mx-2 my-1">Public : <%= publicate %></span>
@@ -388,7 +392,13 @@
                                                 <% }); %>
 
                                             </div>
-                                            <% }; %> 
+                                            <% } else { %>
+                                                <div class="contentBackground" style="position: relative;">
+
+                                                    <img src="/img/sinResultados.png"  class="me-1" style="width: 100px;">
+                                                    
+                                                </div>
+                                            <% }; %>
 
                                         </div>
                                         
@@ -418,8 +428,9 @@
 
 <script>
     const add_photo = document.getElementById('add_photo');
-    const add_photoUpdate = document.getElementById('add_photoUpdate'); 
     const inpFile = document.querySelector('.inpFile');
+
+    const add_photoUpdate = document.getElementById('add_photoUpdate'); 
     const inpFileUpdate  = document.querySelector('.inpFileUpdate');
     const newShowBanner = document.getElementById('newShowBanner');
     const updateShowBanner = document.getElementById('updateShowBanner');

@@ -18,31 +18,38 @@ const modelService = require('../models/services.js');
 const modelAuction = require('../models/auction.js');
 const modelBannerFront = require('../models/bannerFront.js');
 const modelNewsDay = require('../models/newsDay.js');
+const modelBannerDefault = require('../models/bannerUserDefault.js');
 const modelBackgroundSign = require('../models/backgroundSign.js');
 
-const cloudinary = require('cloudinary').v2;
 
-const fs = require('fs-extra');
 const bcrypt = require('bcryptjs');
 
+
+/*
+const cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name : process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
     api_secret : process.env.API_SECRET,
     secure: true
 })
+*/
 
+const fs = require('fs-extra');
+const {S3} = require('aws-sdk');
 
-/*---- manejador de error de promesas en todas las rutas -------*/
-/* 
-process.on("unhandledRejection", (error) => {
-    console.log("ubicacion: index.routes.js");
-    console.log(error);
-    console.log("UnhanledRejection Shutting down application");
-    process.exit(0);
-})  */
+const endpoint = 'nyc3.digitaloceanspaces.com';
+const bucketName = 'bucket-blissve';
 
-/*  ------------------------------------------------ */
+const s3 = new S3({
+    endpoint,
+    region : 'us-east-1',
+    credentials : {
+        accessKeyId : process.env.ACCESS_KEY,
+        secretAccessKey : process.env.SECRET_KEY
+    }
+});
+
 
 routes.get('/', async(req, res)=>{
     const user = req.session.user;
@@ -110,7 +117,7 @@ routes.get('/', async(req, res)=>{
 });
 
 
-//top 30 de tiendas mas vistas.
+//top 50 de tiendas mas vistas.
 routes.get('/mosaico-store-view', async (req,res)=>{
     const resultStore = await modelProfile.find().sort({ view : -1 }).limit(50);
     res.json(resultStore);
@@ -331,16 +338,19 @@ routes.get('/myaccount/signup', async (req,res)=>{
     const passwNoMatch = req.session.passwNoMatch;
     const passMaxLength = req.session.passMaxLength;
     const usernameExist = req.session.usernameExist;
+    const usernameErr = req.session.usernameErr;
+
     delete req.session.email;
     delete req.session.passwNoMatch;
     delete req.session.passMaxLength;
     delete req.session.usernameExist;
+    delete req.session.usernameErr
 
     if (user === undefined){
 
         //lo que obtiene esta const es un array con un objeto que posee la imagen de fondo del signUp.
         const signUp = await modelBackgroundSign.find({active : true, typeBackground : "SignUp"});
-        res.render('page/signup', {user, signUp,  mailExist, passwNoMatch, passMaxLength, usernameExist});
+        res.render('page/signup', {user, signUp,  mailExist, passwNoMatch, passMaxLength, usernameExist, usernameErr});
 
     } else {
         //console.log("estas logeado no tienes acceso a este apartado");
@@ -357,148 +367,158 @@ routes.post('/myaccount/signup', async(req,res)=>{
     const emailLower = email.toLowerCase();//transformo en minisculas el correo
     const mailhash = hash.MD5(emailLower) 
 
-    if (password == confirmPassword) {
-        //console.log('password concuerda con la confirmacion')
-        //consulta en la base de datos del campo email
-        const searh = await modelUser.findOne({email})
-        //si existe tendremos un objeto sino tendremos un valor null
-        //console.log(searh);
-        if (searh) {
-            //console.log('correo ya existe')
-            req.session.email = "Este email ya esta registrado";
-            res.redirect('/myaccount/signup')
-        } else {
+    if (username.length > 5 && username.length <= 18 ){
+        // el username debe ser minimo 6 y maximo 18 
+        if (password == confirmPassword) {
+            //console.log('password concuerda con la confirmacion')
+            //consulta en la base de datos del campo email
+            const search = await modelUser.findOne({email})
+            //si existe tendremos un objeto sino tendremos un valor null
+            //console.log(search);
+            if (search) {
+                //console.log('correo ya existe')
+                req.session.email = "Este email ya esta registrado";
+                res.redirect('/myaccount/signup')
+            } else {
 
-            
-                if (password == null || password.length <= 6 ) {
-                    //console.log("no sean tramposo mete un dato que te estoy pillando");
-                    req.session.passMaxLength = "El campo no puede estar vacio o contener menos de seis (6) caracteres."
-                    res.redirect('/myaccount/signup')
-                } else {
-                    const result = await modelUser.find({ username });
-                    console.log("Esto es result ---->", result);
-                    if (result.length !== 0) {
-
-                        console.log("¡Este usuario existe! Debe buscar un nombre de usario unico.")
-                        req.session.usernameExist = "¡Este nombre de username ya existe!"
+                
+                    if (password == null || password.length <= 6 ) {
+                        //console.log("no sean tramposo mete un dato que te estoy pillando");
+                        req.session.passMaxLength = "El campo no puede estar vacio o contener menos de seis (6) caracteres."
                         res.redirect('/myaccount/signup')
                     } else {
-                        console.log("ha pasado todos los criterios y pasa a la segunda fase de registro");
-                        
-                        let hashPassword, newTN, newToken;
+                        const result = await modelUser.findOne({ username: new RegExp( '^' + username + '$','i' ) });
+                        console.log("Esto es result ---->", result);
+                        if (result.length !== 0) {
 
-                        async function hashing(){
-                            hashPassword = await bcrypt.hash(password, 6);
-                            console.log("password--->", password);
-                            console.log("Este es el hash del password--->",hashPassword);
-                            /* const compares = await bcrypt.compare(password, hashPassword);
-                            console.log("resul de la compracion--->",compares)*/
-                            //crear un token random de 6 caracteres
+                            console.log("¡Este usuario existe! Debe buscar un nombre de usario unico.")
+                            req.session.usernameExist = "¡Este nombre de username ya existe!"
+                            res.redirect('/myaccount/signup');
 
-                            createNewToken()
-                            function createNewToken(){
-                                let ran = Math.random();
-                                let random = Math.ceil(ran * 1000000);
-                                newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 6;
-                            }    
+                        } else {
+                            console.log("ha pasado todos los criterios y pasa a la segunda fase de registro");
+                            
+                            let hashPassword, newTN, newToken;
 
-                            while(newTN.length < 6){
+                            async function hashing(){
+                                hashPassword = await bcrypt.hash(password, 6);
+                                console.log("password--->", password);
+                                console.log("Este es el hash del password--->",hashPassword);
+                                /* const compares = await bcrypt.compare(password, hashPassword);
+                                console.log("resul de la compracion--->",compares)*/
+                                //crear un token random de 6 caracteres
+
                                 createNewToken()
-                            } 
+                                function createNewToken(){
+                                    let ran = Math.random();
+                                    let random = Math.ceil(ran * 1000000);
+                                    newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 6;
+                                }    
 
-                            newToken = `${newTN}`;
-                            console.log("newToken", newToken);
+                                while(newTN.length < 6){
+                                    createNewToken()
+                                } 
 
-                        }
+                                newToken = `${newTN}`;
+                                console.log("newToken", newToken);
 
-                        async function createUser(){
-                            const newUser = new modelUser({username, email: emailLower , password : hashPassword, mailhash, token: newToken});
-                            const saveUser = await newUser.save();
-                            console.log(saveUser);
-                        }
+                            }
 
-                        async function sendToken(){
-                            
-                            
-                            /* detalle del correo a enviar */
-                            const message = "Confirmar Correo Electronico."
-                            const contentHtml = `
-                            <h2 style="color: black">Token Enviado Para Validar Cuenta. </h2>
-                            <ul> 
-                                <li> cuenta : ${email} </li> 
-                                <li> asunto : ${message} </li>
-                            <ul>
-                            <h2> ${newToken} </h2>
-                            `
+                            async function createUser(){
+                                const newUser = new modelUser({username, email: emailLower , password : hashPassword, mailhash, token: newToken});
+                                const saveUser = await newUser.save();
+                                console.log(saveUser);
+                            }
 
-                            //enviar correo
-                            //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
-                            const emailMessage = {
-                                from: "Blissenet<sistemve@blissenet.com>", //remitente
-                                to: email,
-                                subject: "Ya casi esta lista su cuenta - Blissenet", //objeto
-                                text: message,
-                                html: contentHtml
-                            };
-
-                            //añadir las credenciales
-                            const transport = nodemailer.createTransport({
-                                host: "mail.blissenet.com",
-                                port: 465,
-                                auth: {
-                                    user: "sistemve@blissenet.com",
-                                    pass: process.env.pass_sistemve
-                                }
-                            });
-
-                            transport.sendMail(emailMessage, (error, info) => {
-                                if (error) {
-                                    console.log("Error enviando email")
-                                    console.log(error.message)
-                                } else {
-                                    console.log("Email enviado")
-                                }
-                            }) 
-
-
-                        }
-                        
-
-                        hashing()
-                            .then(()=>{
-                                createUser()
-                                    .then(()=>{
-                                        sendToken()
-                                            .then(()=>{
-                                                req.session.mailSent =  "Token enviado al correo para validación, 90 segundos para su confirmación.";
-                                                req.session.datauser = {username, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
-                                                res.redirect('/myaccount/signup-emailverify')
-                                            })
-                                            .catch((error)=>{
-                                                console.log("Ha habido un error en sendToken", error);
-                                            })
-
-                                    })
-                                    .catch((error)=>{
-                                        console.log("Ha habido un error en createUser()", error);
-                                    })
+                            async function sendToken(){
                                 
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error em hashing()", error);
-                            })
+                                
+                                /* detalle del correo a enviar */
+                                const message = "Confirmar Correo Electronico."
+                                const contentHtml = `
+                                <h2 style="color: black">Token Enviado Para Validar Cuenta. </h2>
+                                <ul> 
+                                    <li> cuenta : ${email} </li> 
+                                    <li> asunto : ${message} </li>
+                                <ul>
+                                <h2> ${newToken} </h2>
+                                `
 
+                                //enviar correo
+                                //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
+                                const emailMessage = {
+                                    from: "Blissenet<sistemve@blissenet.com>", //remitente
+                                    to: email,
+                                    subject: "Ya casi esta lista su cuenta - Blissenet", //objeto
+                                    text: message,
+                                    html: contentHtml
+                                };
+
+                                //añadir las credenciales
+                                const transport = nodemailer.createTransport({
+                                    host: "mail.blissenet.com",
+                                    port: 465,
+                                    auth: {
+                                        user: "sistemve@blissenet.com",
+                                        pass: process.env.pass_sistemve
+                                    }
+                                });
+
+                                transport.sendMail(emailMessage, (error, info) => {
+                                    if (error) {
+                                        console.log("Error enviando email")
+                                        console.log(error.message)
+                                    } else {
+                                        console.log("Email enviado")
+                                    }
+                                }) 
+
+
+                            }
+                            
+
+                            hashing()
+                                .then(()=>{
+                                    createUser()
+                                        .then(()=>{
+                                            sendToken()
+                                                .then(()=>{
+                                                    req.session.mailSent =  "Token enviado al correo para validación, 90 segundos para su confirmación.";
+                                                    req.session.datauser = {username, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
+                                                    res.redirect('/myaccount/signup-emailverify')
+                                                })
+                                                .catch((error)=>{
+                                                    console.log("Ha habido un error en sendToken", error);
+                                                })
+
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error en createUser()", error);
+                                        })
+                                    
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error em hashing()", error);
+                                })
+
+                        }
+                            
                     }
-                        
-                }
 
+            }
+
+        } else {
+            console.log('password no concuerda con la confirmacion')
+            req.session.passwNoMatch = "¡Error en confirmacion de password, vuelva a intentar!"
+            res.redirect('/myaccount/signup')
         }
 
     } else {
-        console.log('password no concuerda con la confirmacion')
-        req.session.passwNoMatch = "¡Error en confirmacion de password, vuelva a intentar!"
+        console.log('No cumple con la condicion de carcateres su usuario');
+        req.session.usernameErr = "¡Su username debe tener entre 6 y 18 caracteres!"
         res.redirect('/myaccount/signup')
-    }
+    }    
+
     
 });
 
@@ -1156,17 +1176,43 @@ routes.get('/myaccount/profile', async (req,res)=>{
 });
 
 routes.post('/myaccount/profile', async (req, res)=>{
+
     const user = req.session.user;
-    
-    const boxObjetBanner = [{ url : "https://res.cloudinary.com/dwvdtsuqk/image/upload/v1682875886/bannerProfile/bannerDefault_skrkar.png", public_id : "sin_data"}]
-    const boxObjetAvatar = [{ url : "" , public_id : "sin_data" }];
     console.log(req.body);      
-    const {names, identification, dateborn, gender, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body                                                   
-    const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, states, cities,  phone,  phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
-    const saveProfile =  await newProfile.save();
-    console.log("esto es lo que se registro en la DB ----->",saveProfile);
-    req.session.profSuccess = '¡ Perfil creado satifactoriamente !'
-    res.redirect('profile');
+    const {names, identification, dateborn, gender, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
+
+    try{
+    
+        const searchBanner = await modelBannerDefault.find();
+
+        if (searchBanner.length !== 0){
+            //tenemos banner default para darles a los usuarios, se puede crear el profile
+            const bannerDefault_url = searchBanner[0].url;           
+            console.log("bannerDefault_url ->", bannerDefault_url); //https://bucket-blissve.nyc3.digitaloceanspaces.com/bannerUserDefault/bannerDefault.png
+
+            const boxObjetBanner = [{ url : bannerDefault_url , public_id : "sin_data" }];
+            const boxObjetAvatar = [{ url : "" , public_id : "sin_data" }];
+                                                               
+            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, states, cities,  phone,  phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+            const saveProfile =  await newProfile.save();
+            console.log("esto es lo que se registro en la DB ----->",saveProfile);
+            req.session.profSuccess = '¡ Perfil creado satifactoriamente !'
+            
+            res.redirect('profile');
+
+        } else {
+            //NO hay banner default para darles a los usuarios, NO se puede crear el profile
+            res.redirect('profile');
+        }
+
+
+    }catch(error){
+
+        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/admin/bannerDefault');
+
+    }
+
 });
            
 routes.post('/myaccount/edit/:id', async (req, res)=>{
@@ -1220,29 +1266,138 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
                                 }
 
                                 async  function first(){
-                                    const result = await cloudinary.uploader.upload(fileBanner.path, {folder: 'bannerProfile'});
-                                    await fs.unlink(fileBanner.path);
-                                    console.log(result)
-                                    const { url, public_id } = result;
-                                    boxImg.push({url, public_id});
-                                    console.log("fin de procesos ------ excelent");
-                                    //const updatesProfile = await modelProfile.updateOne({ indexed : userId }, {$push: { bannerPerfil : boxImg} })
-                                    const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
-                                    console.log("aqui el resultado de la actualizacion --->",updatesProfile)
-                                    res.redirect('profile')
+
+                                    const folder = 'bannerProfile'; const ident = new Date().getTime();
+                                    const pathField = fileBanner.path; const extPart = pathField.split(".");
+                                    const ext = extPart[1];
+                                    
+                                    //console.log("Bucket :", bucketName);console.log("folder :", folder);
+                                    //console.log("patchField :", pathField);console.log("ext", ext);
+                                
+                                    const fileContent = fs.readFileSync(pathField);
+                                    const key = `${folder}/${ident}.${ext}`;
+                                    console.log("key -->", key);
+                    
+                                    const params = { 
+                                        Bucket : bucketName,
+                                        Key : key,
+                                        Body : fileContent,
+                                        ACL : 'public-read' 
+                                    };
+                    
+                                    s3.putObject(params, function(err, data){
+                                    
+                                        if (err){
+                                            console.log('Error al subir un archivo', err);
+                                        } else {
+                                            console.log('La imagen fue subida, Exito', data);
+                                            
+                                            //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                            let url = `https://${bucketName}.${endpoint}/${key}`;
+                                            let public_id = key;
+                                            
+                                            boxImg.push({url, public_id});
+                    
+                                            async function saveDB(){
+                                                //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                                await fs.unlink(fileBanner.path); 
+                                                                                 
+                                                const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
+                                                console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                            }
+                    
+                                                    
+                                            saveDB()
+                                                .then(()=>{
+                                                    console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                                    res.redirect('profile');
+                                                })
+                                                .catch((err)=>{
+                                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                                    res.redirect('profile');
+                                                })
+                    
+                                        }
+                                        
+                                    });
+
                                 }
+
                                 async  function some(publidIdentificado){
-                                    const result = await cloudinary.uploader.upload(fileBanner.path, {folder: 'bannerProfile'});
-                                    await fs.unlink(fileBanner.path);
-                                    console.log(result)
-                                    const { url, public_id } = result;
-                                    boxImg.push({url, public_id});
-                                    console.log("fin de procesos ------ excelent");
-                                    //const updatesProfile = await modelProfile.updateOne({ indexed : userId }, {$push: { bannerPerfil : boxImg} })
-                                    const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
-                                    console.log("aqui el resultado de la actualizacion --->",updatesProfile)
-                                    const resultCludinary = await cloudinary.uploader.destroy(publidIdentificado)
-                                    res.redirect('profile')
+
+                                    const folder = 'bannerProfile'; const ident = new Date().getTime();
+                                    const pathField = fileBanner.path; const extPart = pathField.split(".");
+                                    const ext = extPart[1];
+                                    
+                                    //console.log("Bucket :", bucketName);console.log("folder :", folder);
+                                    //console.log("patchField :", pathField);console.log("ext", ext);
+                                
+                                    const fileContent = fs.readFileSync(pathField);
+                                    const key = `${folder}/${ident}.${ext}`;
+                                    console.log("key -->", key);
+                    
+                                    const params = { 
+                                        Bucket : bucketName,
+                                        Key : key,
+                                        Body : fileContent,
+                                        ACL : 'public-read' 
+                                    };
+                    
+                                    s3.putObject(params, function(err, data){
+                                    
+                                        if (err){
+                                            console.log('Error al subir un archivo', err);
+                                        } else {
+                                            console.log('La imagen fue subida, Exito', data);
+                                            
+                                            //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                            let url = `https://${bucketName}.${endpoint}/${key}`;
+                                            let public_id = key;
+                                            
+                                            boxImg.push({url, public_id});
+                    
+                                            async function saveDB(){
+                                                //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                                await fs.unlink(fileBanner.path); 
+                                                                                 
+                                                const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
+                                                console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                            }
+
+                                            async function deleteBannerOld(){
+
+                                                //publidIdentificado es el public_id que debemos eliminar 
+
+                                                const params = {
+                                                    Bucket : bucketName,
+                                                    Key : publidIdentificado
+                                                }
+                                                s3.deleteObject(params, (err, data)=>{
+                                                    if (err){
+                                                        console.error("Error al eliminar el archivo", err);
+                                                        res.redirect('profile');
+                                                    } else {
+                                                        console.log("Archivo eliminado con exito");
+                                                        res.redirect('profile');
+                                                    }
+                                                });
+                                            }
+                    
+                                                    
+                                            saveDB()
+                                                .then(()=>{
+                                                    console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                                    deleteBannerOld();
+                                                })
+                                                .catch((err)=>{
+                                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                                    res.redirect('profile');
+                                                })
+                    
+                                        }
+                                        
+                                    });
+
                                 }
 
                             })          
@@ -1285,7 +1440,8 @@ routes.post('/myaccount/avatar', async (req, res)=>{
                 console.log("Se ha cargado un avatar");
                 console.log("este es profile", profile);
 
-                if (fileAvatar.size <= 2000000  &&  fileAvatar.mimetype.startsWith("image/")){
+                if (fileAvatar.size <= 3000000  &&  fileAvatar.mimetype.startsWith("image/")){
+
                     console.log("El archivo cumple con las condiciones establecidas para ser aceptado.");
                     const avatar = profile[0].avatarPerfil;
                     console.log("Este es el avatar --->", avatar)
@@ -1304,38 +1460,151 @@ routes.post('/myaccount/avatar', async (req, res)=>{
                     }
                     
                     async function firstAvatar(){
-                        const result = await cloudinary.uploader.upload(fileAvatar.path, {folder: 'avatar'});
-                        await fs.unlink(fileAvatar.path);
-                        console.log(result)
-                        const { url, public_id } = result;
-                        boxImg.push({url, public_id});
-                        console.log("fin de procesos ------ excelent");
 
-                        const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { avatarPerfil : boxImg});
-                        console.log("aqui el resultado de la actualizacion --->",updatesProfile);
+                        const folder = 'avatar'; const ident = new Date().getTime();
+                        const pathField = fileAvatar.path; const extPart = pathField.split(".");
+                        const ext = extPart[1];
+                        
+                        //console.log("Bucket :", bucketName);console.log("folder :", folder);
+                        //console.log("patchField :", pathField);console.log("ext", ext);
+                    
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
+        
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+        
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                
+                                //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                let url = `https://${bucketName}.${endpoint}/${key}`;
+                                let public_id = key;
+                                
+                                boxImg.push({url, public_id});
+        
+                                async function saveDB(){
+                                    //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                    await fs.unlink(fileAvatar.path); 
+                                                                     
+                                    const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { avatarPerfil : boxImg});
+                                    console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                }
+        
+                                        
+                                saveDB()
+                                    .then(()=>{
+                                        console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                        res.redirect('profile');
+                                    })
+                                    .catch((err)=>{
+                                        console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                        res.redirect('profile');
+                                    })
+        
+                            }
+                            
+                        });
 
-                        res.redirect('profile') 
+                                            
+                        
                     }
 
                     async function someAvatar(avatarIdentificado){
-                        const result = await cloudinary.uploader.upload(fileAvatar.path, {folder: 'avatar'});
-                        await fs.unlink(fileAvatar.path);
-                        console.log(result)
-                        const { url, public_id } = result;
-                        boxImg.push({url, public_id});
-                        console.log("fin de procesos ------ excelent");
-                        
-                        const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { avatarPerfil : boxImg});
-                        console.log("aqui el resultado de la actualizacion --->",updatesProfile)
-                        const resultCludinary = await cloudinary.uploader.destroy(avatarIdentificado);
 
-                        res.redirect('profile')
+                        console.log("Este perfil tiene un avatar debemos primero guardar el nuevo y luego eliminar el viejo"); 
+
+                        const folder = 'avatar'; const ident = new Date().getTime();
+                        const pathField = fileAvatar.path; const extPart = pathField.split(".");
+                        const ext = extPart[1];
+                        
+                        //console.log("Bucket :", bucketName);console.log("folder :", folder);
+                        //console.log("patchField :", pathField);console.log("ext", ext);
+                    
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
+        
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+        
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                
+                                //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                let url = `https://${bucketName}.${endpoint}/${key}`;
+                                let public_id = key;
+                                
+                                boxImg.push({url, public_id});
+        
+                                async function saveDB(){
+                                    //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                    await fs.unlink(fileAvatar.path); 
+                                                                     
+                                    const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { avatarPerfil : boxImg});
+                                    console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                }
+        
+                                        
+                                saveDB()
+                                    .then(()=>{
+                                        console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                        deleteAvatarOld()
+                                    })
+                                    .catch((err)=>{
+                                        console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                        res.redirect('profile');
+                                    })
+        
+                            }
+                            
+                        });
+
+
+                        async function deleteAvatarOld(){
+                            //Segunda tarea es eliminar el avatar
+                            //console.log("avatar existente que debemos eliminar------>", avatar); //esto es un array
+                            const public_id = avatar[0].public_id;
+
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo", err);
+                                    res.redirect('profile');
+                                } else {
+                                    console.log("Archivo eliminado con exito", data);
+                                    res.redirect('profile');
+                                }
+                            });
+
+                        }    
+
                     }
 
 
                 } else {
-                    console.log("Supera el maximo peso de 2 MB o el archivo no es de tipo image");
-                    req.session.avatarErrorSizeMimetype = 'Supera el maximo peso de 2 MB o el archivo no es de tipo image.';
+                    console.log("Supera el maximo peso de 3 MB o el archivo no es de tipo image");
+                    req.session.avatarErrorSizeMimetype = 'Supera el maximo peso de 3 MB o el archivo no es de tipo image.';
                     res.redirect('/myaccount/profile')
                 }    
 

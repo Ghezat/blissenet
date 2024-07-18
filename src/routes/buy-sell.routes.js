@@ -24,6 +24,23 @@ cloudinary.config({
   secure: true
 })
 
+
+const fs = require('fs-extra');
+const {S3} = require('aws-sdk');
+
+const endpoint = 'nyc3.digitaloceanspaces.com';
+const bucketName = 'bucket-blissve';
+
+const s3 = new S3({
+    endpoint,
+    region : 'us-east-1',
+    credentials : {
+        accessKeyId : process.env.ACCESS_KEY,
+        secretAccessKey : process.env.SECRET_KEY
+    }
+});
+
+
 //esta es la direccion cuando se gana una subasta. 
 routes.post('/buysell-one/direct/auction', async(req, res)=>{
   console.log(" ________ aqui_______")
@@ -253,7 +270,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
     //console.log("Esto es buyselle--------------->", buyselle)
     //Aqui es donde se define la comision de pago a la plataforma siendo para Arte y Items el 5%
     //Auction es el 3% no aparece aqui porque esta se crea automaticamante en depart-auction
-    
+    //Tambien se guarda una imagen inicial de la negociacion que es la que se mustra en la sala de negociacion
+
+  
       if (depart == 'arts') {
         let valueCommission = 0;
         const search = await modelArtes.findById(idProduct);
@@ -261,24 +280,67 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
         
         const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
         const image = search.images[0].url;
-        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
+        console.log("image ---->", image);
+
+        const folder = 'firstImgBuySell';
+        const key = `${folder}/${image}`;
+        
+        console.log("folder -->", folder);
+        console.log("key -->", key);
+/*
+        const params = { 
+          Bucket : bucketName,
+          Key : key,
+          Body : image,
+          ACL : 'public-read' 
+        };
+
+        s3.putObject(params, function(err, data){
+        
+            if (err){
+                console.log('Error al subir un archivo', err);
+            } else {
+                console.log('La imagen fue subida, Exito', data);
+                //ahora vamos a eliminar la imagen vieja;
+                saveDB()
+                    .then(()=>{
+                        console.log("Proceso ejecutado satisfactoriamente"); 
+                    })
+                    .catch((err)=>{
+                        console.log("Ha ocurrido un error", err)
+                    })
+            }
+            
+        })   
+
+*/        
+        let url = `https://${bucketName}.${endpoint}/${key}`;    
+        let public_id = key;
+
+        const dImage = {public_id, url};
+
+        //const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
         //console.log("Aqui resultUpload ----->", resultUpload);
-        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
+        //const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
+        //const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
         //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
               
-        valueCommission = (price * 0.05);
-        let commission = valueCommission.toFixed(2); 
+        async function saveDB(){
+    
+          valueCommission = (price * 0.05);
+          let commission = valueCommission.toFixed(2); 
 
-        const BuySell = new modelBuysell({ usernameBuy : userBuy, usernameSell : userSell, indexed, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price, commission  });
-        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-        //console.log('Aqui BuySell ---->', BuySell);
-        
-        mailSell(emailSell, title);
-        mailBuy(emailBuy, title);
+          const BuySell = new modelBuysell({ usernameBuy : userBuy, usernameSell : userSell, indexed, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price, commission  });
+          const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+          //console.log('Aqui BuySell ---->', BuySell);
+          
+          mailSell(emailSell, title);
+          mailBuy(emailBuy, title);
 
-        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-        res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+          //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+          res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell });
+        } 
+         
       }
 
       if (depart == 'items') {

@@ -6,16 +6,21 @@ const modelItems = require('../models/items.js');
 const modelBuySell = require('../models/buySell.js');
 const modelInvoice = require('../models/invoice.js');
 
-const cloudinary = require('cloudinary').v2;
+
 const fs = require('fs-extra');
+const {S3} = require('aws-sdk');
 
+const endpoint = 'nyc3.digitaloceanspaces.com';
+const bucketName = 'bucket-blissve';
 
-cloudinary.config({
-    cloud_name : process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret : process.env.API_SECRET,
-    secure: true
-})
+const s3 = new S3({
+    endpoint,
+    region : 'us-east-1',
+    credentials : {
+        accessKeyId : process.env.ACCESS_KEY,
+        secretAccessKey : process.env.SECRET_KEY
+    }    
+});
             
 
 routes.get('/department/create/items', async(req,res)=>{
@@ -138,9 +143,8 @@ routes.post('/department/create/items', async(req,res)=>{
     const user = req.session.user
     console.log(user.username)
     const username = user.username; //aqui tengo el username
-     
-    console.log("imagenes : ", req.files.length)
-    console.log('________search of state__________')
+    const department = 'items';     
+
 
     try{
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
@@ -149,8 +153,11 @@ routes.post('/department/create/items', async(req,res)=>{
         const state = searchProfile[0].states
         const { title, category, sub_category, state_use, tecnicalDescription, generalMessage, price } = req.body
 
+        
         let countFall = 0;
         let countSuccess = 0;
+        let countImgAcept = 0;
+        let uploadToS3;
 
    
         if (req.files.length !== 0) {
@@ -160,50 +167,102 @@ routes.post('/department/create/items', async(req,res)=>{
                     const element = req.files[i];
                    
                     if (element.size <= 2000000  && element.mimetype.startsWith("image/")){
-                        //console.log("una imagen aqui aceptada----->", element)
-                        const result = await cloudinary.uploader.upload(element.path, {folder: 'items'});
-                        //console.log(result);
-                        const { url, public_id, bytes, format } = result
-                        //console.log(`url : ${url} Public_Id : ${public_id} `)
-                        boxImg.push( {url, public_id, bytes, format} );
-                
-                        //console.log("este es el path que tiene que ser eliminado:", element.path)
-                        await fs.unlink(element.path) 
-                        //console.log("Esta imagen se guardarà")
-                        countSuccess ++;  
-                    }
-                   
-                    else {
+
+                        countImgAcept ++;
+                        console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
+
+                        const folder = department; const ident = new Date().getTime();
+                        const pathField = element.path; const extPart = pathField.split(".");
+                        const ext = extPart[1];
+                        
+                        //console.log("Bucket :", bucketName); console.log("folder :", folder);
+                        //console.log("patchField :", pathField); console.log("ext", ext);
+                        
+                        uploadToS3 = async function (bucketName, folder, ident, pathField ){
+                            
+                            const fileContent = fs.readFileSync(pathField);
+                            const key = `${folder}/${ident}.${ext}`;
+                            console.log("key -->", key);
+
+                            const params = { 
+                                Bucket : bucketName,
+                                Key : key,
+                                Body : fileContent,
+                                ACL : 'public-read' 
+                            };
+        
+                            s3.putObject(params, function(err, data){
+                            
+                                if (err){
+                                    console.log('Error al subir un archivo', err);
+                                    countFall ++;
+                                } else {
+                                    console.log('La imagen fue subida, Exito', data);
+                                    
+                                    //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                    let format = ext;
+                                    let url = `https://${bucketName}.${endpoint}/${key}`;
+                                    let bytes = element.size;
+                                    let public_id = key;
+                                    
+                                    console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                                    boxImg.push( {url, public_id, bytes, format} );
+
+                                    countSuccess ++;
+                                    console.log( "countSuccess :", countSuccess );
+
+                                    async function deleteEleUpload(){
+                                        //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                        fs.unlink(element.path)
+                                    }
+                                    
+                                    deleteEleUpload();
+
+                                        
+                                }
+                                
+                            });
+                                        
+
+                        }
+
+                        // invocamos la funcion uploadToS3 para subir las imaganes
+                        uploadToS3(bucketName, folder, ident, pathField)
+                            .then(() => {
+                                console.log("Imagen subida al servidor digitalocean SPACES");
+                            })
+                            .catch((err) => {
+                                console.log("Ha habido un error al subir las fotos:", err);
+                            });
+                      
+                        
+                    } else {
                        console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
                        await fs.unlink(element.path); // element es el archivo de img y el .path tiene la direccion el metodo unlink del objet fs elimina el archivo de donde esta. 
                        countFall ++;
                     }
                 }
 
-                if (countSuccess !== 0){
+                setInterval(reviewUpload, 2000);
 
-                    createItems()
-                        .then(()=>{
-                            req.session.uploadPublication = "¡Su publicación se ha subido exitosamente!"
-                            res.redirect('/department/create/items'); //todo ha salido bien
-                        })
-                        .catch((error)=>{
-                            req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
-                            res.redirect('/department/create/items');
-                        })
+                function reviewUpload(){
 
-                } else {
-                    req.session.uploadFall = "¡Su publicación no se pudo crear, requiere de al menos una (1) imagen!"
-                    res.redirect('/department/create/items'); //no ha podido crear la publicacion.
-                }
+                    if (countImgAcept === (countSuccess + countFall)) {
+                        countImgAcept ++; //aseguramos con esto detener la funcion reviewUpload
+                        clearInterval(reviewUpload); //detenemos la evaluacion
+                        createAD();
+                    }
+                }         
+                
+                async function createAD(){
 
-                async function createItems(){
                     const Items =  new modelItems({ title, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state }) 
                     const ItemsSave = await Items.save()
-                    console.log("Nuevo anuncio de Items creado");
                     //console.log(ItemsSave);
-                }
-                
+                    
+                    req.session.uploadPublication = "¡Su publicación se ha subido exitosamente!"
+                    res.redirect('/department/create/items'); //todo ha salido bien
+                }  
 
             } else {
                 console.log("ha sobrepasado la cantidad de imagenes, puede subir un maximo de 3 imagenes");
@@ -222,7 +281,9 @@ routes.post('/department/create/items', async(req,res)=>{
 
 //ruta para eliminar un objeto "anuncio" con try-catch
 routes.post('/department/create/items/delete', async(req, res)=>{
-    
+    let boxMedia = [];
+    let countFall = 0;
+    let countSuccess = 0;
     console.log("este es el id a deletear: ", req.body);
     const valor = req.body.titleToDelete
     console.log( "aqui en una variable", valor);
@@ -232,20 +293,74 @@ routes.post('/department/create/items/delete', async(req, res)=>{
             const resultBD = await modelItems.findById(valor)
             console.log("Here this body for delete :", resultBD);
             const imagesToDelete = resultBD.images;
-            console.log("Here all array to the images :", imagesToDelete);
+            const videoToDelete = resultBD.video;
 
+            //console.log("Here all array to the images :", imagesToDelete);
+            //console.log("Here all array to the video :", videoToDelete);
 
-            /* Aqui elimino las fotos de cloudinary */
-            for (let i = 0; i < imagesToDelete.length; i++) {
-                const element = imagesToDelete[i];
-                console.log("este es el public_id a eliminar : ",element.public_id);
-                const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+            //abajo en este if else fusiono ambos arreglos images y video en boxMedia para usar solo un for.
+            if (videoToDelete.length !=0){
+                boxMedia = [...imagesToDelete, ...videoToDelete];
+                countMedia = boxMedia.length;         
+            } else {
+                boxMedia = [...imagesToDelete];
+                countMedia = boxMedia.length;
             }
 
-            const deletingDoc = await modelItems.findByIdAndDelete(valor);
-            req.session.deletePublication = "Publicación eliminada"
+            //console.log("Esto es boxMedia", boxMedia);
+            //console.log("Esto es countMedia", countMedia);
+
+            
+            for (let i = 0; i < boxMedia.length; i++) {
+                const public_id = boxMedia[i].public_id;
+                
+                console.log("este es el public_id a eliminar : ", public_id);
+
+                async function deleteMedias(public_id){
+
+                    const params = {
+                        Bucket : bucketName,
+                        Key : public_id
+                    }
+                    s3.deleteObject(params, (err, data)=>{
+                        if (err){
+                            countFall ++;
+                            console.error("Error al eliminar el archivo --->", err);
+                        } else {
+                            countSuccess ++;
+                            console.log("Media eliminada con exito --->", data);
+                        }
+                    })  
+                        
+                }
+
+                deleteMedias(public_id)
+                    
+            }         
+            
+            setInterval(reviewDelet, 3000);
+
+            function reviewDelet(){
+
+                if (countMedia === (countSuccess + countFall)) {
+                    
+                    countMedia ++; //aseguramos con esto detener la funcion reviewUpload
+                    clearInterval(reviewDelet); //detenemos la evaluacion
+                    deleteDB()
+
+                }
+            }         
+            
+            async function deleteDB(){
+                const deletingDoc = await modelItems.findByIdAndDelete(valor);
+
+                req.session.deletePublication = "Publicación eliminada"
+                res.redirect('/department/create/items');
+            } 
+
+
         } 
-        res.redirect('/department/create/items');
+        
     } catch(error){
         req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
         res.redirect('/department/create/items');
@@ -257,32 +372,56 @@ routes.post('/department/create/items/delete', async(req, res)=>{
 routes.get('/department/create/items/del/items/:id', async(req, res)=>{
     const TitleSelect =  req.session.titleSelect 
     const { id } = req.params;
-    const publicIdToDelete = "items/"+id;
-   
-    console.log("este es el titulo que se desea modificar o ver - image", TitleSelect)
-
+    const public_id = "items/"+id;
+    //console.log("este es el publicId a eliminar  ------>", public_id)
+    //const public_id => "items/1720566117383.jpg
+    //encontrar la imagen en la DB
     try{
-        //encontrar la imagen en la DB
         const result = await modelItems.findById(TitleSelect);
-        console.log("este es el documento es cuestion ---->",result);
-        console.log("Aqui el public_ id que se quiere eliminar ---->", publicIdToDelete)
+        //console.log("este es el documento es cuestion ---->",result);
 
         if (result.images.length > 1){
-            const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
-            console.log("ya he eliminado la imagen de Cloudinary", resultDelete);
 
-            const Images = result.images;
-            for (let i = 0; i < Images.length; i++) {
-             const element = Images[i];
-             console.log("Aqui todos los public_id ----->", element.public_id)
-             if (element.public_id == publicIdToDelete){
-                const resultBD = await modelItems.updateOne({ _id: TitleSelect},{ $pull: {"images":{"public_id": element.public_id }}} )
-                console.log("Aqui el resultado esperado ---->",resultBD)
-                }
-        
+            const params = {
+                Bucket : bucketName,
+                Key : public_id
             }
-  
-            res.redirect('/department/create/items');
+            s3.deleteObject(params, (err, data)=>{
+                if (err){
+                    console.error("Error al eliminar el archivo", err);
+                } else {
+                    console.error("Archivo eliminado con exito", data);
+
+
+                    async function deleteDB(){
+
+                        const Images = result.images;
+                        for (let i = 0; i < Images.length; i++) {
+                            const element = Images[i];
+                            console.log("Aqui todos los public_id ----->", element.public_id)
+                            if (element.public_id == public_id){
+                                const resultBD = await modelItems.updateOne({ _id: TitleSelect},{ $pull: {"images":{"public_id": element.public_id }}} )
+                                console.log("Aqui el resultado esperado ---->",resultBD)
+                            }
+                        
+                        }
+                
+                        
+
+                    }
+
+                    deleteDB()
+                        .then(()=>{
+                            res.redirect('/department/create/items');
+                        })
+                        .catch((err)=>{
+                            console.log("Ha ocurrido un error, intente mas tarde.", err);
+                            res.redirect('/department/create/items');
+                        })
+
+                }
+            });            
+
 
         } else {
             res.redirect('/department/create/items');
@@ -298,34 +437,82 @@ routes.get('/department/create/items/del/items/:id', async(req, res)=>{
 //ruta para agregar una (1) foto adelante con try-catch
 routes.post('/department/create/items/add/first/items', async(req, res)=>{
     const TitleSelect =  req.session.titleSelect; //aqui tenemos el id del articulo.
+    const department = 'items';
     const element = req.files[0];
     const boxImg = [];
-    console.log(TitleSelect);
-    console.log(element); //aqui tenemos la imagen que el usuario esta subiendo
-    console.log("estamos en el backend /department/create/artes/add/first/artes");
+    //console.log(TitleSelect);
+    //console.log(element); //aqui tenemos la imagen que el usuario esta subiendo
+    //console.log("estamos en el backend /department/create/artes/add/first/artes");
 
     try{
         const searchItems = await modelItems.findById(TitleSelect);
         //console.log("Esto es searchItems.images.length ---->",searchItems.images.length )
-        if (searchItems.images.length < 10){
+
+        if (searchItems.images.length < 12){
             if (element.size <= 2000000  && element.mimetype.startsWith("image/")){
-                console.log("una imagen aqui aceptada----->", element)
-                const result = await cloudinary.uploader.upload(element.path, {folder: 'items'});
-                //console.log(result);
-                const { url, public_id, bytes, format } = result
-                //const sorting = i;
-                console.log(`url : ${url} Public_Id : ${public_id} `)
-                boxImg.push( {url, public_id, bytes, format} );
-                //console.log("este es el path que tiene que ser eliminado:", element.path)
-                await fs.unlink(element.path) 
-                console.log("Esta imagen se guardará")
-                //console.log("Esto es boxImg -------->", boxImg);
-                const box = boxImg[0]; 
-                console.log("Esto es box -------->", box);
-                                                                
-                const updateImg = await modelItems.findByIdAndUpdate(TitleSelect, { $push :{images : { $each: [box], $position : 0} } });
-                console.log("Esto es updateImg ---->",updateImg);
-                res.redirect('/department/create/items');
+
+                //console.log("una imagen aqui aceptada----->", element)
+
+                const folder = department; const ident = new Date().getTime();
+                const pathField = element.path; const extPart = pathField.split(".");
+                const ext = extPart[1];
+                            
+                //console.log("Bucket :", bucketName); console.log("folder :", folder);
+                // console.log("pathField :", pathField); console.log("ext", ext);
+
+                const fileContent = fs.readFileSync(pathField);
+                const key = `${folder}/${ident}.${ext}`;
+                console.log("key -->", key);
+
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+
+                s3.putObject(params, function(err, data){
+                
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        
+                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                        let format = ext;
+                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                        let bytes = element.size;
+                        let public_id = key;
+                        
+                        //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                        boxImg.push( {url, public_id, bytes, format} );            
+
+                        async function saveDB(){
+                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                            await fs.unlink(element.path) 
+                            
+                            //console.log("Esto es boxImg -------->", boxImg);
+                            const box = boxImg[0]; 
+                            //console.log("Esto es box -------->", box);
+                                                                            
+                            const updateImg = await modelItems.findByIdAndUpdate(TitleSelect, { $push :{images : { $each: [box], $position : 0} } });
+                                                         
+                        }
+     
+                        saveDB()
+                            .then(()=>{
+                                console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                res.redirect('/department/create/items');
+                            })
+                            .catch((err)=>{
+                                console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                res.redirect('/department/create/items');
+                            })
+
+                    }
+                    
+                }); 
+
                 
             } else {
                 console.log("Archivos no subidos por ser muy pesados o no ser de tipo image")
@@ -346,34 +533,82 @@ routes.post('/department/create/items/add/first/items', async(req, res)=>{
 //ruta para agregar una (1) foto atras con try-catch            
 routes.post('/department/create/items/add/last/items', async(req, res)=>{
     const TitleSelect =  req.session.titleSelect; //aqui tenemos el id del articulo.
+    const department = 'items';
     const element = req.files[0];
     const boxImg = [];
-    console.log(TitleSelect);
-    console.log(element); //aqui tenemos la imagen que el usuario esta subiendo
-    console.log("estamos en el backend /department/create/items/add/last/items");
+    //console.log(TitleSelect);
+    //console.log(element); //aqui tenemos la imagen que el usuario esta subiendo
+    //console.log("estamos en el backend /department/create/items/add/last/items");
 
     try{
         const searchItems = await modelItems.findById(TitleSelect);
-        if (searchItems.images.length < 10){
 
+        if (searchItems.images.length < 12){
             if (element.size <= 2000000  && element.mimetype.startsWith("image/")){
-                console.log("una imagen aqui aceptada----->", element)
-                const result = await cloudinary.uploader.upload(element.path, {folder: 'items'});
-                //console.log(result);
-                const { url, public_id, bytes, format } = result
-                //const sorting = i;
-                console.log(`url : ${url} Public_Id : ${public_id} `)
-                boxImg.push( {url, public_id, bytes, format} );
-                //console.log("este es el path que tiene que ser eliminado:", element.path)
-                await fs.unlink(element.path) 
-                console.log("Esta imagen se guardará")
-                //console.log("Esto es boxImg -------->", boxImg);
-                const box = boxImg[0]; 
-                console.log("Esto es box -------->", box);
-                                                                
-                const updateImg = await modelItems.findByIdAndUpdate(TitleSelect, { $push : {images : box } });
-                console.log("Esto es updateImg ---->",updateImg);
-                res.redirect('/department/create/items');        
+
+                //console.log("una imagen aqui aceptada----->", element)
+
+                const folder = department; const ident = new Date().getTime();
+                const pathField = element.path; const extPart = pathField.split(".");
+                const ext = extPart[1];
+                
+                //console.log("Bucket :", bucketName);console.log("folder :", folder);
+                //console.log("patchField :", pathField);console.log("ext", ext);
+            
+                const fileContent = fs.readFileSync(pathField);
+                const key = `${folder}/${ident}.${ext}`;
+                console.log("key -->", key);
+
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+
+                s3.putObject(params, function(err, data){
+                
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        
+                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                        let format = ext;
+                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                        let bytes = element.size;
+                        let public_id = key;
+                        
+                        //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                        boxImg.push( {url, public_id, bytes, format} );            
+
+                        async function saveDB(){
+                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                            await fs.unlink(element.path) 
+                            
+                            //console.log("Esto es boxImg -------->", boxImg);
+                            const box = boxImg[0]; 
+                            //console.log("Esto es box -------->", box);
+
+                            const updateImg = await modelItems.findByIdAndUpdate(TitleSelect, { $push : {images : box } });
+                                                                                                            
+                        }
+
+                                
+                        saveDB()
+                            .then(()=>{
+                                console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                res.redirect('/department/create/items'); 
+                            })
+                            .catch((err)=>{
+                                console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                res.redirect('/department/create/items');
+                            })
+
+                    }
+                    
+                });
+                        
 
             } else {
                 console.log("Archivos no subidos por ser muy pesados o no ser de tipo image")
@@ -395,10 +630,11 @@ routes.post('/department/create/items/add/last/items', async(req, res)=>{
 //ruta para agregar (1) video con try-catch
 routes.post('/department/create/items/add/video', async(req, res)=>{
     const boxVideo = [];
+    const department = 'items';
     const TitleSelect =  req.session.titleSelect; //aqui tenemos el id del articulo.
     const element = req.files[0];
-    console.log("Esto es TitleSelect", TitleSelect);
-    console.log("::::::: **** Esto es video ----->", element);
+    //console.log("Esto es TitleSelect", TitleSelect);
+    //console.log("::::::: **** Esto es video ----->", element);
 
     try{
         const search = await modelItems.findById(TitleSelect);
@@ -406,32 +642,73 @@ routes.post('/department/create/items/add/video', async(req, res)=>{
         //console.log("search", search);
         if(search.video.length == 0){
 
-            //20000000 bit = 20 MB para video. sufiente para asegurar 2 minutos de video.
-            if (element.size <= 20000000  && element.mimetype.startsWith("video/")){
+            //50000000 bit = 50 MB para video. sufiente para asegurar 3 minutos de video.
+            if (element.size <= 50000000  && element.mimetype.startsWith("video/")){
 
-                console.log("un video aqui aceptado----->", element);
+                //console.log("un video aqui aceptado----->", element)
             
-                const result = await cloudinary.uploader.upload(element.path, {resource_type: 'video', folder: 'items'});
-                console.log("esto es result", result);
+                const folder = department;const ident = new Date().getTime();
+                const pathField = element.path; const extPart = pathField.split(".");
+                const ext = extPart[1];
 
-                console.log("Todo salio chevere");
-                console.log("Aqui la respuesta de cloudinary del sonido enviado ----->",result);
-                const { url, public_id, bytes, format } = result
-                console.log(`url : ${url} Public_Id : ${public_id} `)
-                boxVideo.push( {url, public_id, bytes, format} );
+                //const fileContent = fs.readFileSync(pathField);
+                const fileContent = fs.createReadStream(pathField);
+                const key = `${folder}/${ident}.${ext}`;
                 
-                //console.log("este es el path que tiene que ser eliminado:", element.path)
-                await fs.unlink(element.path) 
-                console.log("Este video se guardará")
-                console.log("Esto es boxVideo -------->", boxVideo);
-                const box = boxVideo[0]; 
-                console.log("Esto es box -------->", box);
-                                                                        
-                const updateItem = await modelItems.findByIdAndUpdate(TitleSelect, { $push : {video : box } });
-                console.log("Esto es updateAuction ---->",updateItem);
-                req.session.videoUploaded = "Video subido exitosamente."
+                const params = {
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read'
+                }
 
-                res.redirect('/department/create/items');        
+                s3.upload(params, (err, data)=>{
+                    if (err){
+                        console.error("Error al subir un video", err);
+                        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+                        res.redirect('/department/create/automotive');
+                    } else {
+                        console.log("Video subido con exito", data);
+        
+                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.
+                        let format = ext;
+                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                        let bytes = element.size;
+                        let public_id = key;
+                        
+                        console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);    
+                        boxVideo.push( {url, public_id, bytes, format} );
+                        //console.log("Esto es boxVideo -------->", boxVideo);
+
+                        const box = boxVideo[0]; 
+                        //console.log("Esto es box -------->", box);
+
+                          
+                        async function saveDB(){
+
+                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                            await fs.unlink(element.path) 
+                                
+                            const updateDB = await modelItems.findByIdAndUpdate(TitleSelect, { $push : {video : box } });
+                            console.log("Esto es updateDB ---->",updateDB);
+                            req.session.videoUploaded = "Video subido exitosamente."
+
+                            res.redirect('/department/create/items');
+
+                        }
+
+                        saveDB()
+                            .then(()=>{
+                                console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                            })
+                            .catch((err)=>{
+                                console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                            })
+
+
+                    }
+                });
+                
 
             } else {
                 console.log("Archivos no subidos por ser muy pesados o no ser de tipo video")
@@ -461,32 +738,53 @@ routes.post('/department/create/items/add/video', async(req, res)=>{
 routes.get('/department/create/items/del/video/items/:id', async(req, res)=>{
     const TitleSelect =  req.session.titleSelect 
     const { id } = req.params;
-    const publicIdToDelete = "items/"+id; //folder: 'items'  debe haber una igualdad entre ambos valores. 
-    console.log("Eliminando un video");
-    console.log("este es el publicId a eliminar publicIdToDelete ------>", publicIdToDelete);
+    const public_id = "items/"+id; //folder: 'items'  debe haber una igualdad entre ambos valores. 
+    //console.log("Eliminando un video");
+    //console.log("este es el public_id a eliminar ------>", public_id);
 
     //encontrar la imagen en la DB
     try{
         const result = await modelItems.findById(TitleSelect);
-        console.log("este es el documento es cuestion ---->",result);
-        console.log("Aqui el public_ id que se quiere eliminar ---->", publicIdToDelete);
+        //console.log("este es el documento es cuestion ---->",result);
     
-        const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
-        console.log("ya he eliminado el video de Cloudinary", resultDelete);
-    
-        const Video = result.video;
-            for (let i = 0; i < Video.length; i++) {
-                const element = Video[i];
-                console.log("Aqui todos los public_id ----->", element.public_id);
-                if (element.public_id == publicIdToDelete){
-                    const resultBD = await modelItems.updateOne({ _id: TitleSelect},{ $pull: {"video":{"public_id": element.public_id }}} );
-                    console.log("Aqui el resultado esperado ---->",resultBD);
-                }
+        const params = {
+            Bucket : bucketName,
+            Key : public_id
+        }
+        s3.deleteObject(params, (err, data)=>{
+            if (err){
+                console.error("Error al eliminar el archivo", err);
+            } else {
+                console.error("Archivo eliminado con exito", data);
+
+                async function deleteDB(){
+                    const Video = result.video;
+                    for (let i = 0; i < Video.length; i++) {
+                        const element = Video[i];
+                        console.log("Aqui todos los public_id ----->", element.public_id)
+                        if (element.public_id == public_id){
+                            const resultBD = await modelItems.updateOne({ _id: TitleSelect},{ $pull: {"video":{"public_id": element.public_id }}} )
+                            console.log("Aqui el resultado esperado ---->",resultBD)
+                        }
+
+                    }
+                }    
+
+                deleteDB()
+                    .then(()=>{
+                        req.session.videoDelete = 'Video eliminado exitosamente.'; 
+                        res.redirect('/department/create/items');
+                    })
+                    .catch((err)=>{
+                        console.log("Ha habido un error, intente mas tarde.", err);
+                    })
+                
+
             }
-        req.session.videoDelete = 'Video eliminado exitosamente.'; 
+        });
+       
       
-        res.redirect('/department/create/items');
-    } catch (error){
+    } catch(error){
         req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
         res.redirect('/department/create/items');
     }

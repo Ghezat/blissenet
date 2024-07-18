@@ -18,9 +18,27 @@
     <main>
         <%- include('../partials/navi-admin.ejs') %>
      
+        
 
         <% if (userAdmin) { %> 
-               
+
+            <% if (msgBackgroundSave) { %>
+                <%- include('../alertAdmin/msgBackgroundSave.ejs') %>
+            <% } %>
+
+            <% if (msgBackgroundUpdate) { %>
+                <%- include('../alertAdmin/msgBackgroundUpdate.ejs') %>
+            <% } %>
+
+            <% if (msgBackgroundDelete) { %>
+                <%- include('../alertAdmin/msgBackgroundDelete.ejs') %>
+            <% } %>
+
+            <% if (adminError) { %>
+                <%- include('../alertAdmin/adminError.ejs') %>
+            <% } %>
+            
+            
             
             <div class="containerPlace">
                     <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
@@ -350,7 +368,7 @@
                                             <% } else { %>
                                                 
                                             <div class="containerBannerDelete border">
-                                            
+                                                                                             
                                                 <% currentBackgrounds.forEach((ele, i)=>{ %>
                                                     <div class="contenBanner m-2">
                                                         <div class="row m-0">
@@ -390,13 +408,13 @@
                                                         </div>
                                                         
                                                     </div>
-                                                <% }); %>
+                                                <% }); %> 
                                     
 
                                             </div>
 
                                             <div class="containerBannerUpdate close border">
-
+                                               
                                                 <% disabledBackgroundsSignIn.forEach((ele, i)=>{ %>
                                                     <div class="contenBanner m-2">
                                                         <div class="row m-0">
@@ -443,7 +461,7 @@
                                             </div>
 
                                             <div class="containerSignUpDisabled close border">
-
+ 
                                                 <% disabledBackgroundsSignUp.forEach((ele, i)=>{ %>
                                                     <div class="contenBanner m-2">
                                                         <div class="row m-0">
@@ -483,7 +501,7 @@
                                                         </div>
                                                         
                                                     </div>
-                                                <% }); %>
+                                                <% }); %> 
 
                                             </div>                                                
                                                 

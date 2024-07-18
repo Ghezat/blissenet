@@ -296,8 +296,8 @@
                                                         <% if (i === 0 ) { %>
                                                             <div class="carousel-item active">
 
-                                                                <div class="content-item d-flex">
-                                                                    <img src="<%= ele.url %>" class="me-3" alt="...">
+                                                                <div class="content-item d-flex" >
+                                                                    <img src="<%= ele.url %>" class="me-3" alt="..." style="max-height: 200px; max-width: 500px;">
                                                                     <div class="contenDetails d-flex flex-column">
                                                                         <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
                                                                         <p><%= ele.newDayDetails %></p>
@@ -311,8 +311,8 @@
                                                             </div>
                                                         <% } else { %>
                                                             <div class="carousel-item">
-                                                                <div class="content-item d-flex">
-                                                                    <img src="<%= ele.url %>" class="me-3" alt="...">
+                                                                <div class="content-item d-flex" >
+                                                                    <img src="<%= ele.url %>" class="me-3" alt="..." style="max-height: 200px; max-width: 500px;" >
                                                                     <div class="contenDetails d-flex flex-column">
                                                                         <p style="font-weight: bold; font-size: 18px;"><%= ele.newDayTitle %></p>
                                                                         <p><%= ele.newDayDetails %></p>

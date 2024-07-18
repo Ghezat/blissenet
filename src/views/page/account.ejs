@@ -284,17 +284,17 @@
                         
                           <% if (searchProfile.length !== 0) { %>
                         
-                            <% if (storeProfile.length !==0) { %>
-                            <div class="containerStar d-flex justify-content-center align-items-center" style="position: absolute; right: 30px; bottom: 15px; border-radius: 50%; width: 40px; height: 40px;">
-                              <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
-                              <i class="bi bi-bookmark-check starData"  style="width: auto;">
-                                <input type="hidden" id="iDLogeado" value="<%= user._id %>">
-                                <input type="hidden" id="iDStore" value="<%= storeProfile[0].indexed %>">
-                              </i>
-                              <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
-                              <!-- el objetivo es saber quien es el que esta logeado y que tienda quiere como favorito -->
-                            </div>
-                            <% }; %>
+                              <% if (storeProfile.length !==0) { %>
+                              <div class="containerStar d-flex justify-content-center align-items-center" style="position: absolute; right: 30px; bottom: 15px; border-radius: 50%; width: 40px; height: 40px;">
+                                <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
+                                <i class="bi bi-bookmark-check starData"  style="width: auto;">
+                                  <input type="hidden" id="iDLogeado" value="<%= user._id %>">
+                                  <input type="hidden" id="iDStore" value="<%= storeProfile[0].indexed %>">
+                                </i>
+                                <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
+                                <!-- el objetivo es saber quien es el que esta logeado y que tienda quiere como favorito -->
+                              </div>
+                              <% }; %>
                     
                           <% }; %>
 
