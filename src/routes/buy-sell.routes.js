@@ -24,7 +24,7 @@ cloudinary.config({
   secure: true
 })
 
-
+const axios = require('axios');
 const fs = require('fs-extra');
 const {S3} = require('aws-sdk');
 
@@ -54,467 +54,769 @@ routes.post('/buysell-one/direct/auction', async(req, res)=>{
 //esta informacion se guardara en buySell si es arts, items, auction
 //para el resto se guaradara en negotiation (airplane, automotive, realstate, service) 
 routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req, res)=>{
-  const user = req.session.user;
-  const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
-  const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-  const searchProfile = await modelProfile.find({ indexed : user._id });
-
-  console.log('He llegado al apartado de buy&sell');
-  const buyselle = req.params; //todos los datos necesarios para la compraVenta
-  const userBuy = req.params.username; //aqui el username del comprador
-  const userSell = req.params.usernameSell; //aqui el username del vendedor
-  const depart = req.params.depart; //aqui el department
-  const idProduct = req.params.id; //aqui el id del articulo, producto o servicio.
-  let indexed, emailSell, emailBuy;
-
-
-    //crear el correo del vendedor y enviarlo, caso artes e items
-    function mailSell(emailSell, title){
-     
-        const message = "Venta realizada"
-        const contentHtml = `
-        <h2 style="color: black"> Felicidades has realizado una nueva venta. </h2>
-        <ul> 
-            <li> cuenta : ${emailSell} </li> 
-            <li> asunto : ${message} </li>
-        <ul>
-        <h2> Has vendido ${title} </h2>
-        <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociacion, donde le estará esperando su comprador. </p>
-        `
-
-        //enviar correo
-        //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
-        const emailMessage = {
-            from: "Blissenet<sistemve@blissenet.com>", //remitente
-            to: emailSell,
-            subject: "💰 Felicidades has vendido - Blissenet", //objeto
-            text: message,
-            html: contentHtml
-        };
-
-        //añadir las credenciales
-        const transport = nodemailer.createTransport({
-            host: "mail.blissenet.com",
-            port: 465,
-            auth: {
-                user: "sistemve@blissenet.com",
-                pass: process.env.pass_sistemve
-            }
-        });
-
-        transport.sendMail(emailMessage, (error, info) => {
-            if (error) {
-                console.log("Error enviando email")
-                console.log(error.message)
-            } else {
-                console.log("Email enviado")
-                
-            }
-        }) 
+  try {
     
-    }
+        const user = req.session.user;
+        const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    //crear el correo del comprador y enviarlo, caso artes e items
-    function mailBuy(emailBuy, title){
+        const searchProfile = await modelProfile.find({ indexed : user._id });
 
-      const message = "Compra realizada"
-      const contentHtml = `
-      <h2 style="color: black">Felicidades has realizado una nueva compra. </h2>
-      <ul> 
-          <li> cuenta : ${emailBuy} </li> 
-          <li> asunto : ${message} </li>
-      <ul>
-      <h2> Has comprado ${title} </h2>
-      <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociacion, donde le estará esperando su vendedor. </p>
-      `
-
-      const emailMessage = {
-          from: "Blissenet<sistemve@blissenet.com>", //remitente
-          to: emailBuy,
-          subject: "😃 Felicidades has comprado - Blissenet", //objeto
-          text: message,
-          html: contentHtml
-      };
-
-      //añadir las credenciales
-      const transport = nodemailer.createTransport({
-          host: "mail.blissenet.com",
-          port: 465,
-          auth: {
-              user: "sistemve@blissenet.com",
-              pass: process.env.pass_sistemve
-          }
-      });
-
-      transport.sendMail(emailMessage, (error, info) => {
-          if (error) {
-              console.log("Error enviando email")
-              console.log(error.message)
-          } else {
-              console.log("Email enviado")
-              
-          }
-      }) 
-  
-    }
-
-    //crear el correo del vendedor y enviarlo, caso de contactos
-    function mailSellContact(emailSell, title){
-  
-        const message = "Negociación en desarrollo."
-        const contentHtml = `
-        <h2 style="color: black"> Tienes una nueva negociación. </h2>
-        <ul> 
-            <li> cuenta : ${emailSell} </li> 
-            <li> asunto : ${message} </li>
-        <ul>
-        <h2> Tienes un interesado en ${title} </h2>
-        <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociación, donde le estará esperando su comprador. </p>
-        `
-
-        //enviar correo
-        //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
-        const emailMessage = {
-            from: "Blissenet<sistemve@blissenet.com>", //remitente
-            to: emailSell,
-            subject: "💼 Negociación en desarrollo - Blissenet", //objeto
-            text: message,
-            html: contentHtml
-        };
-
-        //añadir las credenciales
-        const transport = nodemailer.createTransport({
-            host: "mail.blissenet.com",
-            port: 465,
-            auth: {
-                user: "sistemve@blissenet.com",
-                pass: process.env.pass_sistemve
-            }
-        });
-
-        transport.sendMail(emailMessage, (error, info) => {
-            if (error) {
-                console.log("Error enviando email")
-                console.log(error.message)
-            } else {
-                console.log("Email enviado")
-                
-            }
-        }) 
-    
-    }
-
-    //crear el correo del comprador y enviarlo, caso de contactos
-    function mailBuyContact(emailBuy, title){
-
-      const message = "Negociación en desarrollo."
-      const contentHtml = `
-      <h2 style="color: black"> Tienes una nueva negociación. </h2>
-      <ul> 
-          <li> cuenta : ${emailBuy} </li> 
-          <li> asunto : ${message} </li>
-      <ul>
-      <h2> Interesado en ${title} </h2>
-      <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociación, donde le estará esperando su vendedor. </p>
-      `
-
-      const emailMessage = {
-          from: "Blissenet<sistemve@blissenet.com>", //remitente
-          to: emailBuy,
-          subject: "💼 Negociación en desarrollo - Blissenet", //objeto
-          text: message,
-          html: contentHtml
-      };
-
-      //añadir las credenciales
-      const transport = nodemailer.createTransport({
-          host: "mail.blissenet.com",
-          port: 465,
-          auth: {
-              user: "sistemve@blissenet.com",
-              pass: process.env.pass_sistemve
-          }
-      });
-
-      transport.sendMail(emailMessage, (error, info) => {
-          if (error) {
-              console.log("Error enviando email")
-              console.log(error.message)
-          } else {
-              console.log("Email enviado")
-              
-          }
-      }) 
-  
-    }
+        console.log('He llegado al apartado de buy&sell');
+        const buyselle = req.params; //todos los datos necesarios para la compraVenta
+        const userBuy = req.params.username; //aqui el username del comprador
+        const userSell = req.params.usernameSell; //aqui el username del vendedor
+        const depart = req.params.depart; //aqui el department
+        const idProduct = req.params.id; //aqui el id del articulo, producto o servicio.
+        let indexed, emailSell, emailBuy;
 
 
-  async function searchData(){
-
-    const searchIndexed = await modelProfile.find( { username : userSell } );
-    indexed = searchIndexed[0].indexed;
-
-    //aqui obtengo los email de ambas partes
-    const emailSELL = await modelUser.find({ username : userSell }, {_id: 0, email : 1}); //aqui solo recupero el correo del vendedor;
-    const emailBUY = await modelUser.find({ username : userBuy }, {_id: 0, email : 1}); //aqui solo recupero el correo del comprador;
-
-    //console.log("emailSell ->", emailSell); console.log("emailBuy ->", emailBuy);
-
-    emailSell = emailSELL[0].email //scorpinosred@gmail.com
-    emailBuy = emailBUY[0].email //onixbastardo@gmail.com
-
-  }
-
-  async function departEject(){
-    //console.log("Esto es buyselle--------------->", buyselle)
-    //Aqui es donde se define la comision de pago a la plataforma siendo para Arte y Items el 5%
-    //Auction es el 3% no aparece aqui porque esta se crea automaticamante en depart-auction
-    //Tambien se guarda una imagen inicial de la negociacion que es la que se mustra en la sala de negociacion
-
-  
-      if (depart == 'arts') {
-        let valueCommission = 0;
-        const search = await modelArtes.findById(idProduct);
-        //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
+        //crear el correo del vendedor y enviarlo, caso artes e items
+        function mailSell(emailSell, title){
         
-        const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-        const image = search.images[0].url;
-        console.log("image ---->", image);
+            const message = "Venta realizada"
+            const contentHtml = `
+            <h2 style="color: black"> Felicidades has realizado una nueva venta. </h2>
+            <ul> 
+                <li> cuenta : ${emailSell} </li> 
+                <li> asunto : ${message} </li>
+            <ul>
+            <h2> Has vendido ${title} </h2>
+            <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociacion, donde le estará esperando su comprador. </p>
+            `
 
-        const folder = 'firstImgBuySell';
-        const key = `${folder}/${image}`;
-        
-        console.log("folder -->", folder);
-        console.log("key -->", key);
-/*
-        const params = { 
-          Bucket : bucketName,
-          Key : key,
-          Body : image,
-          ACL : 'public-read' 
-        };
+            //enviar correo
+            //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
+            const emailMessage = {
+                from: "Blissenet<sistemve@blissenet.com>", //remitente
+                to: emailSell,
+                subject: "💰 Felicidades has vendido - Blissenet", //objeto
+                text: message,
+                html: contentHtml
+            };
 
-        s3.putObject(params, function(err, data){
+            //añadir las credenciales
+            const transport = nodemailer.createTransport({
+                host: "mail.blissenet.com",
+                port: 465,
+                auth: {
+                    user: "sistemve@blissenet.com",
+                    pass: process.env.pass_sistemve
+                }
+            });
+
+            transport.sendMail(emailMessage, (error, info) => {
+                if (error) {
+                    console.log("Error enviando email")
+                    console.log(error.message)
+                } else {
+                    console.log("Email enviado")
+                    
+                }
+            }) 
         
-            if (err){
-                console.log('Error al subir un archivo', err);
-            } else {
-                console.log('La imagen fue subida, Exito', data);
-                //ahora vamos a eliminar la imagen vieja;
-                saveDB()
-                    .then(()=>{
-                        console.log("Proceso ejecutado satisfactoriamente"); 
-                    })
-                    .catch((err)=>{
-                        console.log("Ha ocurrido un error", err)
-                    })
-            }
+        }
+
+        //crear el correo del comprador y enviarlo, caso artes e items
+        function mailBuy(emailBuy, title){
+
+          const message = "Compra realizada"
+          const contentHtml = `
+          <h2 style="color: black">Felicidades has realizado una nueva compra. </h2>
+          <ul> 
+              <li> cuenta : ${emailBuy} </li> 
+              <li> asunto : ${message} </li>
+          <ul>
+          <h2> Has comprado ${title} </h2>
+          <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociacion, donde le estará esperando su vendedor. </p>
+          `
+
+          const emailMessage = {
+              from: "Blissenet<sistemve@blissenet.com>", //remitente
+              to: emailBuy,
+              subject: "😃 Felicidades has comprado - Blissenet", //objeto
+              text: message,
+              html: contentHtml
+          };
+
+          //añadir las credenciales
+          const transport = nodemailer.createTransport({
+              host: "mail.blissenet.com",
+              port: 465,
+              auth: {
+                  user: "sistemve@blissenet.com",
+                  pass: process.env.pass_sistemve
+              }
+          });
+
+          transport.sendMail(emailMessage, (error, info) => {
+              if (error) {
+                  console.log("Error enviando email")
+                  console.log(error.message)
+              } else {
+                  console.log("Email enviado")
+                  
+              }
+          }) 
+      
+        }
+
+        //crear el correo del vendedor y enviarlo, caso de contactos
+        function mailSellContact(emailSell, title){
+      
+            const message = "Negociación en desarrollo."
+            const contentHtml = `
+            <h2 style="color: black"> Tienes una nueva negociación. </h2>
+            <ul> 
+                <li> cuenta : ${emailSell} </li> 
+                <li> asunto : ${message} </li>
+            <ul>
+            <h2> Tienes un interesado en ${title} </h2>
+            <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociación, donde le estará esperando su comprador. </p>
+            `
+
+            //enviar correo
+            //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
+            const emailMessage = {
+                from: "Blissenet<sistemve@blissenet.com>", //remitente
+                to: emailSell,
+                subject: "💼 Negociación en desarrollo - Blissenet", //objeto
+                text: message,
+                html: contentHtml
+            };
+
+            //añadir las credenciales
+            const transport = nodemailer.createTransport({
+                host: "mail.blissenet.com",
+                port: 465,
+                auth: {
+                    user: "sistemve@blissenet.com",
+                    pass: process.env.pass_sistemve
+                }
+            });
+
+            transport.sendMail(emailMessage, (error, info) => {
+                if (error) {
+                    console.log("Error enviando email")
+                    console.log(error.message)
+                } else {
+                    console.log("Email enviado")
+                    
+                }
+            }) 
+        
+        }
+
+        //crear el correo del comprador y enviarlo, caso de contactos
+        function mailBuyContact(emailBuy, title){
+
+          const message = "Negociación en desarrollo."
+          const contentHtml = `
+          <h2 style="color: black"> Tienes una nueva negociación. </h2>
+          <ul> 
+              <li> cuenta : ${emailBuy} </li> 
+              <li> asunto : ${message} </li>
+          <ul>
+          <h2> Interesado en ${title} </h2>
+          <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociación, donde le estará esperando su vendedor. </p>
+          `
+
+          const emailMessage = {
+              from: "Blissenet<sistemve@blissenet.com>", //remitente
+              to: emailBuy,
+              subject: "💼 Negociación en desarrollo - Blissenet", //objeto
+              text: message,
+              html: contentHtml
+          };
+
+          //añadir las credenciales
+          const transport = nodemailer.createTransport({
+              host: "mail.blissenet.com",
+              port: 465,
+              auth: {
+                  user: "sistemve@blissenet.com",
+                  pass: process.env.pass_sistemve
+              }
+          });
+
+          transport.sendMail(emailMessage, (error, info) => {
+              if (error) {
+                  console.log("Error enviando email")
+                  console.log(error.message)
+              } else {
+                  console.log("Email enviado")
+                  
+              }
+          }) 
+      
+        }
+
+
+      async function searchData(){
+
+        const searchIndexed = await modelProfile.find( { username : userSell } );
+        indexed = searchIndexed[0].indexed;
+
+        //aqui obtengo los email de ambas partes
+        const emailSELL = await modelUser.find({ username : userSell }, {_id: 0, email : 1}); //aqui solo recupero el correo del vendedor;
+        const emailBUY = await modelUser.find({ username : userBuy }, {_id: 0, email : 1}); //aqui solo recupero el correo del comprador;
+
+        //console.log("emailSell ->", emailSell); console.log("emailBuy ->", emailBuy);
+        emailSell = emailSELL[0].email //scorpinosred@gmail.com
+        emailBuy = emailBUY[0].email //onixbastardo@gmail.com
+
+      }
+
+      async function departEject(){
+        //console.log("Esto es buyselle--------------->", buyselle)
+        //Aqui es donde se define la comision de pago a la plataforma siendo para Arte y Items el 5%
+        //Auction es el 3% no aparece aqui porque esta se crea automaticamante en depart-auction
+        //Tambien se guarda una imagen inicial de la negociacion que es la que se mustra en la sala de negociacion
+
+      
+          if (depart == 'arts') {
+            let valueCommission = 0;
+            const search = await modelArtes.findById(idProduct);
+            //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
-        })   
+            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const image = search.images[0].url;
+            //console.log("image ---->", image);
 
-*/        
-        let url = `https://${bucketName}.${endpoint}/${key}`;    
-        let public_id = key;
+            let response;
+            async function downloadImgToUpload(){
+              response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+              //console.log("response ---->", response); //un espaguitero grande
+            }
 
-        const dImage = {public_id, url};
+            downloadImgToUpload()
+            .then(()=>{
+                    const epoch = new Date().getTime();
+                    const folder = 'firstImgBuySell';
+                    const pathField = image; const extPart = pathField.split(".");
+                    const ext = extPart[4]; console.log("ext------->", ext)
+                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
 
-        //const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-        //console.log("Aqui resultUpload ----->", resultUpload);
-        //const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        //const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-              
-        async function saveDB(){
-    
-          valueCommission = (price * 0.05);
-          let commission = valueCommission.toFixed(2); 
+                    const key = `${folder}/${epoch}.${ext}`;
+                    console.log("key -->", key);
+                    let dImage;
+                    
+                    const params = { 
+                      Bucket : bucketName,
+                      Key : key,
+                      Body : response.data,
+                      ACL : 'public-read' 
+                    };
+                            
+                    s3.putObject(params, function(err, data){
+                    
+                      if (err){
+                          console.log('Error al subir un archivo', err);
+                      } else {
+                          console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                  
+                          let url = `https://${bucketName}.${endpoint}/${key}`;    
+                          let public_id = key;
+                          dImage = {public_id, url};
+                          saveDB()
+                      }
+                      
+                    }); 
 
-          const BuySell = new modelBuysell({ usernameBuy : userBuy, usernameSell : userSell, indexed, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price, commission  });
-          const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-          //console.log('Aqui BuySell ---->', BuySell);
+                    async function saveDB(){
+        
+                      valueCommission = (price * 0.05);
+                      let commission = valueCommission.toFixed(2); 
+            
+                      const BuySell = new modelBuysell({ usernameBuy : userBuy, usernameSell : userSell, indexed, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price, commission  });
+                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                      //console.log('Aqui BuySell ---->', BuySell);
+                      
+                      mailSell(emailSell, title);
+                      mailBuy(emailBuy, title);
+            
+                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell });
+                    } 
+
+            })
+            .catch((err)=>{
+              console.log("ha habido un error en la compra de arte", err);
+            })
+                  
+            
+          }
+
+          if (depart == 'items') {
+            let valueCommission = 0;
+            const search = await modelItems.findById(idProduct);
+            //console.log("Este es el resultado de la busqueda de la coleccion items, aqui el objeto--->", search);
+            
+            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const image = search.images[0].url;
+            //console.log("image ---->", image);
+
+            let response;
+            async function downloadImgToUpload(){
+              response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+              //console.log("response ---->", response); //un espaguitero grande
+            }
+
+            downloadImgToUpload()
+            .then(()=>{
+                    const epoch = new Date().getTime();
+                    const folder = 'firstImgBuySell';
+                    const pathField = image; const extPart = pathField.split(".");
+                    const ext = extPart[4]; console.log("ext------->", ext)
+                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+
+                    const key = `${folder}/${epoch}.${ext}`;
+                    console.log("key -->", key);
+                    let dImage;
+                    
+                    const params = { 
+                      Bucket : bucketName,
+                      Key : key,
+                      Body : response.data,
+                      ACL : 'public-read' 
+                    };
+                            
+                    s3.putObject(params, function(err, data){
+                    
+                      if (err){
+                          console.log('Error al subir un archivo', err);
+                      } else {
+                          console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                  
+                          let url = `https://${bucketName}.${endpoint}/${key}`;    
+                          let public_id = key;
+                          dImage = {public_id, url};
+                          saveDB()
+                      }
+                      
+                    }); 
+                  
+
+                    async function saveDB(){
+                      valueCommission = (price * 0.05);
+                      let commission = valueCommission.toFixed(2); 
+
+                      const BuySell = new modelBuysell({ usernameBuy : userBuy, usernameSell : userSell, indexed, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price, commission });
+                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                      //console.log('Aqui BuySell ---->', BuySell);
+
+                      mailSell(emailSell, title);
+                      mailBuy(emailBuy, title);
+
+                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell });
+                    }
+                    
+            })
+            .catch((err)=>{
+              console.log("ha habido un error en la compra de items", err);
+            })
+
+          }
+        
+          if (depart == 'airplanes' ) {
+
+            const search = await modelAirplane.findById(idProduct);
+            //console.log("Este es el resultado de la busqueda de la coleccion airplane, aqui el objeto--->", search);
+            
+            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const image = search.images[0].url;
+            //console.log("image ---->", image);
+
+            let response;
+            async function downloadImgToUpload(){
+              response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+              //console.log("response ---->", response); //un espaguitero grande
+            }
+
+            downloadImgToUpload()
+            .then(()=>{
+                    const epoch = new Date().getTime();
+                    const folder = 'firstImgBuySell';
+                    const pathField = image; const extPart = pathField.split(".");
+                    const ext = extPart[4]; console.log("ext------->", ext)
+                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+
+                    const key = `${folder}/${epoch}.${ext}`;
+                    console.log("key -->", key);
+                    let dImage;
+                    
+                    const params = { 
+                      Bucket : bucketName,
+                      Key : key,
+                      Body : response.data,
+                      ACL : 'public-read' 
+                    };
+                            
+                    s3.putObject(params, function(err, data){
+                    
+                      if (err){
+                          console.log('Error al subir un archivo', err);
+                      } else {
+                          console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                  
+                          let url = `https://${bucketName}.${endpoint}/${key}`;    
+                          let public_id = key;
+                          dImage = {public_id, url};
+                          saveDB()
+                      }
+                      
+                    }); 
+                  
+
+                    async function saveDB(){
+                      
+                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                      //console.log('Aqui BuySell ---->', BuySell);
           
-          mailSell(emailSell, title);
-          mailBuy(emailBuy, title);
+                      mailSellContact(emailSell, title);
+                      mailBuyContact(emailBuy, title);
+          
+                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                    }
+                    
+            })
+            .catch((err)=>{
+              console.log("ha habido un error en la compra de airplanes", err);
+            })
+                  
 
-          //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-          res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell });
-        } 
-         
-      }
+          }
 
-      if (depart == 'items') {
-        let valueCommission = 0;
-        const search = await modelItems.findById(idProduct);
-        //console.log("Este es el resultado de la busqueda de la coleccion items, aqui el objeto--->", search);
-        
-        const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-        const image = search.images[0].url;
-        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-        //console.log("Aqui resultUpload ----->", resultUpload);
-        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-              
-        valueCommission = (price * 0.05);
-        let commission = valueCommission.toFixed(2); 
+          if ( depart == 'automotive' ) {
 
-        const BuySell = new modelBuysell({ usernameBuy : userBuy, usernameSell : userSell, indexed, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price, commission });
-        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-        //console.log('Aqui BuySell ---->', BuySell);
+            const search = await modelAutomotive.findById(idProduct);
+            //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
+            
+            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const image = search.images[0].url;
+            //console.log("image ---->", image);
 
-        mailSell(emailSell, title);
-        mailBuy(emailBuy, title);
+            let response;
+            async function downloadImgToUpload(){
+              response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+              //console.log("response ---->", response); //un espaguitero grande
+            }
 
-        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-        res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
-      }
+            downloadImgToUpload()
+            .then(()=>{
+                    const epoch = new Date().getTime();
+                    const folder = 'firstImgBuySell';
+                    const pathField = image; const extPart = pathField.split(".");
+                    const ext = extPart[4]; console.log("ext------->", ext)
+                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+
+                    const key = `${folder}/${epoch}.${ext}`;
+                    console.log("key -->", key);
+                    let dImage;
+                    
+                    const params = { 
+                      Bucket : bucketName,
+                      Key : key,
+                      Body : response.data,
+                      ACL : 'public-read' 
+                    };
+                            
+                    s3.putObject(params, function(err, data){
+                    
+                      if (err){
+                          console.log('Error al subir un archivo', err);
+                      } else {
+                          console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                  
+                          let url = `https://${bucketName}.${endpoint}/${key}`;    
+                          let public_id = key;
+                          dImage = {public_id, url};
+                          saveDB()
+                      }
+                      
+                    }); 
+                  
+
+                    async function saveDB(){
+                      
+                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                      //console.log('Aqui BuySell ---->', BuySell);
+          
+                      mailSellContact(emailSell, title);
+                      mailBuyContact(emailBuy, title);
+          
+                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                    }
+                    
+            })
+            .catch((err)=>{
+              console.log("ha habido un error en la compra de automotive", err);
+            })
+                  
+
+          }
+
+          if ( depart ==  'realstate' ) {
+
+            const search = await modelRealstate.findById(idProduct);
+            //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
+            
+            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const image = search.images[0].url;
+            //console.log("image ---->", image);
+
+            let response;
+            async function downloadImgToUpload(){
+              response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+              //console.log("response ---->", response); //un espaguitero grande
+            }
+
+            downloadImgToUpload()
+            .then(()=>{
+                    const epoch = new Date().getTime();
+                    const folder = 'firstImgBuySell';
+                    const pathField = image; const extPart = pathField.split(".");
+                    const ext = extPart[4]; console.log("ext------->", ext)
+                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+
+                    const key = `${folder}/${epoch}.${ext}`;
+                    console.log("key -->", key);
+                    let dImage;
+                    
+                    const params = { 
+                      Bucket : bucketName,
+                      Key : key,
+                      Body : response.data,
+                      ACL : 'public-read' 
+                    };
+                            
+                    s3.putObject(params, function(err, data){
+                    
+                      if (err){
+                          console.log('Error al subir un archivo', err);
+                      } else {
+                          console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                  
+                          let url = `https://${bucketName}.${endpoint}/${key}`;    
+                          let public_id = key;
+                          dImage = {public_id, url};
+                          saveDB()
+                      }
+                      
+                    }); 
+                  
+
+                    async function saveDB(){
+                      
+                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                      //console.log('Aqui BuySell ---->', BuySell);
+          
+                      mailSellContact(emailSell, title);
+                      mailBuyContact(emailBuy, title);
+          
+                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                    }
+                    
+            })
+            .catch((err)=>{
+              console.log("ha habido un error en la compra de automotive", err);
+            })
+            
+          }
+
+          if ( depart == 'nautical' ) {
+
+            const search = await modelNautical.findById(idProduct);
+            //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
+            
+            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const image = search.images[0].url;
+            //console.log("image ---->", image);
+
+            let response;
+            async function downloadImgToUpload(){
+              response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+              //console.log("response ---->", response); //un espaguitero grande
+            }
+
+            downloadImgToUpload()
+            .then(()=>{
+                    const epoch = new Date().getTime();
+                    const folder = 'firstImgBuySell';
+                    const pathField = image; const extPart = pathField.split(".");
+                    const ext = extPart[4]; console.log("ext------->", ext)
+                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+
+                    const key = `${folder}/${epoch}.${ext}`;
+                    console.log("key -->", key);
+                    let dImage;
+                    
+                    const params = { 
+                      Bucket : bucketName,
+                      Key : key,
+                      Body : response.data,
+                      ACL : 'public-read' 
+                    };
+                            
+                    s3.putObject(params, function(err, data){
+                    
+                      if (err){
+                          console.log('Error al subir un archivo', err);
+                      } else {
+                          console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                  
+                          let url = `https://${bucketName}.${endpoint}/${key}`;    
+                          let public_id = key;
+                          dImage = {public_id, url};
+                          saveDB()
+                      }
+                      
+                    }); 
+                  
+
+                    async function saveDB(){
+                      
+                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                      //console.log('Aqui BuySell ---->', BuySell);
+          
+                      mailSellContact(emailSell, title);
+                      mailBuyContact(emailBuy, title);
+          
+                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                    }
+                    
+            })
+            .catch((err)=>{
+              console.log("ha habido un error en la compra de nautical", err);
+            })
+
+/*             const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
+            //console.log("Aqui resultUpload ----->", resultUpload);
+            const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
+            const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
+            //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
+                  
+            const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+            const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+            //console.log('Aqui BuySell ---->', BuySell);
+
+            mailSellContact(emailSell, title);
+            mailBuyContact(emailBuy, title);
+
+            //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+            res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+           */
+          }
+
+          if ( depart == 'service' ) {
+
+            const search = await modelService.findById(idProduct);
+            //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
+            
+            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const image = search.images[0].url;
+            //console.log("image ---->", image);
+
+            let response;
+            async function downloadImgToUpload(){
+              response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+              //console.log("response ---->", response); //un espaguitero grande
+            }
+
+            downloadImgToUpload()
+            .then(()=>{
+                    const epoch = new Date().getTime();
+                    const folder = 'firstImgBuySell';
+                    const pathField = image; const extPart = pathField.split(".");
+                    const ext = extPart[4]; console.log("ext------->", ext)
+                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+
+                    const key = `${folder}/${epoch}.${ext}`;
+                    console.log("key -->", key);
+                    let dImage;
+                    
+                    const params = { 
+                      Bucket : bucketName,
+                      Key : key,
+                      Body : response.data,
+                      ACL : 'public-read' 
+                    };
+                            
+                    s3.putObject(params, function(err, data){
+                    
+                      if (err){
+                          console.log('Error al subir un archivo', err);
+                      } else {
+                          console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                  
+                          let url = `https://${bucketName}.${endpoint}/${key}`;    
+                          let public_id = key;
+                          dImage = {public_id, url};
+                          saveDB()
+                      }
+                      
+                    }); 
+                  
+
+                    async function saveDB(){
+                      
+                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                      //console.log('Aqui BuySell ---->', BuySell);
+          
+                      mailSellContact(emailSell, title);
+                      mailBuyContact(emailBuy, title);
+          
+                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                    }
+                    
+            })
+            .catch((err)=>{
+              console.log("ha habido un error en la compra de service", err);
+            })
+          
+          }
+
+          //:::::::: Nota Importante de Auction :::::::::
+          //aqui dependiendo del departamento se forma una nueva coleccion que puede ser negotiation o buySell
+          //no aparece auction porque esta se forma de manera automatico por el node-cron en la route depart-auction.routes.js
+          //despues de tener la colleccion buySell y negotiation, se procede ha crear el invoice del buySell cuando el vendedor valida su pago para los departamentos :
+          //'items', 'arts', 'auctions'; mientras que para el resto de los departamentos la invoice se crea acto seguido de crearse el anuncio.
+          // buySell y negotiation se usan para el historial y para poder luego gestionar en el casi del buySell la invoice.
+          //la invoice es el ultimo producto realizado
     
-      if (depart == 'airplanes' ) {
-
-        const search = await modelAirplane.findById(idProduct);
-        //console.log("Este es el resultado de la busqueda de la coleccion airplane, aqui el objeto--->", search);
-        
-        const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-        const image = search.images[0].url;
-        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-        //console.log("Aqui resultUpload ----->", resultUpload);
-        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-              
-        const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-        //console.log('Aqui BuySell ---->', BuySell);
-
-        mailSellContact(emailSell, title);
-        mailBuyContact(emailBuy, title);
-
-        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-        res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
       }
-
-      if ( depart == 'automotive' ) {
-
-        const search = await modelAutomotive.findById(idProduct);
-        //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
-        
-        const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-        const image = search.images[0].url;
-        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-        //console.log("Aqui resultUpload ----->", resultUpload);
-        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-              
-        const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-        //console.log('Aqui BuySell ---->', BuySell);
-
-        mailSellContact(emailSell, title);
-        mailBuyContact(emailBuy, title);
-
-        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-        res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
-      }
-
-      if ( depart ==  'realstate' ) {
-
-        const search = await modelRealstate.findById(idProduct);
-        //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
-        
-        const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-        const image = search.images[0].url;
-        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-        //console.log("Aqui resultUpload ----->", resultUpload);
-        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-              
-        const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price  });
-        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-        //console.log('Aqui BuySell ---->', BuySell);
-
-        mailSellContact(emailSell, title);
-        mailBuyContact(emailBuy, title);
-
-        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-        res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
-      }
-
-      if ( depart == 'nautical' ) {
-
-        const search = await modelNautical.findById(idProduct);
-        //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
-        
-        const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-        const image = search.images[0].url;
-        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-        //console.log("Aqui resultUpload ----->", resultUpload);
-        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-              
-        const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-        //console.log('Aqui BuySell ---->', BuySell);
-
-        mailSellContact(emailSell, title);
-        mailBuyContact(emailBuy, title);
-
-        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-        res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
-      }
-
-      if ( depart == 'service' ) {
-
-        const search = await modelService.findById(idProduct);
-        //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
-        
-        const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-        const image = search.images[0].url;
-        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-        //console.log("Aqui resultUpload ----->", resultUpload);
-        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-              
-        const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-        //console.log('Aqui BuySell ---->', BuySell);
-
-        mailSellContact(emailSell, title);
-        mailBuyContact(emailBuy, title);
-
-        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-        //de esta forma se logra proveer a los usuarios de un Historial que estara siempre a su disposicion.
-        res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
-      }
-
-      //:::::::: Nota Importante de Auction :::::::::
-      //aqui dependiendo del departamento se forma una nueva coleccion que puede ser negotiation o buySell
-      //no aparece auction porque esta se forma de manera automatico por el node-cron en la route depart-auction.routes.js
-      //despues de tener la colleccion buySell y negotiation, se procede ha crear el invoice del buySell cuando el vendedor valida su pago para los departamentos :
-      //'items', 'arts', 'auctions'; mientras que para el resto de los departamentos la invoice se crea acto seguido de crearse el anuncio.
-      // buySell y negotiation se usan para el historial y para poder luego gestionar en el casi del buySell la invoice.
-      //la invoice es el ultimo producto realizado
- 
-  }
-  
-  searchData()
-    .then(()=>{
-      departEject()
+      
+      searchData()
         .then(()=>{
-          console.log("Compra ejecutada satisfactoriamente")
+          departEject()
+            .then(()=>{
+              console.log("Compra ejecutada satisfactoriamente")
+            })
+            .catch((error)=>{
+              console.log("Ha ocurrido un error", error);
+            })
         })
         .catch((error)=>{
           console.log("Ha ocurrido un error", error);
         })
-    })
-    .catch((error)=>{
-      console.log("Ha ocurrido un error", error);
-    })
 
+  
+  } catch (error) {
+    console.log("Ha habido un error, intente luego");
+    res.redirect('/');
+  }      
 
 });
 

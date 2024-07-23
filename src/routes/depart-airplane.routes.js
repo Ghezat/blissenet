@@ -239,7 +239,6 @@ routes.post('/department/create/aeronaves', async(req,res, next)=>{
                     } else {
                         console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
                         await fs.unlink(element.path); // element es el archivo de img y el .path tiene la direccion el metodo unlink del objet fs elimina el archivo de donde esta. 
-                        countFall ++;
                     }
                 }
 
@@ -674,7 +673,7 @@ routes.post('/department/create/aeronaves/add/video', async(req, res)=>{
                     if (err){
                         console.error("Error al subir un video", err);
                         req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
-                        res.redirect('/department/create/automotive');
+                        res.redirect('/department/create/aeronaves');
                     } else {
                         console.log("Video subido con exito", data);
         

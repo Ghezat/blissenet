@@ -62,8 +62,8 @@
 
 </style>
 
-<body class="mainTheme">
-    <main>
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    <main style="max-width: 100% !important;">
 
         <%- include('../partials/navi-simple.ejs') %>
 
@@ -109,599 +109,604 @@
          
          <% if (user) { %>
             
-        <div class="container-fluid d-flex justify-content-start p-1 themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-            <span class=" ms-5 p-0" style="font-weight: 400;"> Perfil </span>
+
+        <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+            <span class="ms-5 p-0" style="font-weight: 400;"> Perfil </span>
         </div>   
         
          <div class="container-fluid mt-0">
                 <div class="row p-0">
-                    <div class="container-fluid d-flex flex-wrap p-0 m-0">
-        
-                        <div class="col-lg-4 col-md-4 col-sm-12 py-1" style="background-color: #e9ecef;">
-                            <div class="card">
-                                <div class="card-header">
-                                    Create profile
-                                </div>
-                                <div class="card-body">
-        
-                                    <% if (searchProfile.length === 0) {  %>
-                                        <!--:::::: crear profile ::::::-->
-                                        <!-- direccion de ruta en index.routes.js -->
-                                        <form action="/myaccount/profile" method="POST">
-        
-                                            <!-- creación de nombres y numero de documento -->
-                                            <div class="container d-flex justify-content-between p-0 my-2">
-            
-                                                <div class="form-group" style="width: 60%;">
-                                                    <input type="text" name="names" placeholder="Nombres" class="form-control" required>
-                                                </div>
-                                                <div class="form-group ms-1" style="width: 39%;">
-                                                    <input type="text" name="identification" placeholder="Doc. Identidad" class="form-control" title="Introduzca su número de identificación ejemplo: 10555478" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="9" required /> 
-                                                </div>
-            
-                                            </div>
+                    <div class="col-12 p-0">
+                        
+                        <div class="row p-0 m-0">
 
-                                            <!-- creación de fecha y genero -->
-                                            <div class="container d-flex p-0 my-2">
+                            <div class="col-lg-4 col-md-4 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Create profile
+                                    </div>
+                                    <div class="card-body">
             
-                                                <div class="form-group d-flex">
-                                                    <input type="date" name="dateborn" class="form-control" required>
-                                                </div>
-            
-                                                <div class="form-control d-flex ms-1">
-                                                    <div class="form-check  me-3">
-                                                        <input class="form-check-input" type="radio" name="gender"
-                                                            id="flexRadioDefault1" value="men" required>
-                                                        <label class="form-check-label" for="flexRadioDefault1">
-                                                            Masculino
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="gender"
-                                                            id="flexRadioDefault2" value="wom" required>
-                                                        <label class="form-check-label" for="flexRadioDefault2">
-                                                            Femenino
-                                                        </label>
-                                                    </div>
-                                                </div>
-            
-                                            </div>
-
-                                            <!-- creación de compañia y rif  -->
-                                            <div class="container d-flex justify-content-between p-0 my-2">
-            
-                                                <div class="form-group" style="width: 60%;">
-                                                    <input type="text" name="company" placeholder="Nombre de Empresa" class="form-control" title="Si posees una empresa puedes colocarla aqui, dará mayor seguridad a tus clientes potenciales" maxlength="30">
-                                                </div>
-                                                <div class="form-group ms-1" style="width: 39%;">
-                                                    <input type="text" name="companyRif" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
-                                                </div>
-            
-                                            </div>
-            
-                                          
-                                            <!-- creación de estados y ciudades/pueblos -->
-                                            <div class="container d-flex justify-content-between p-0 my-2">
-            
-                                                <div class="form-group" style="width: 50%;">
-                                                    <select name="states" id="estados" class="form-control" required>
-                                                        <option value="no_state" selected>Selecciona el Estado</option>
-                                                        <option value="Foraneo">Foraneo</option>
-                                                        <!-- los option se crean por medio de un script -->
-                                                    </select>
-                                                </div>
-                                                <div class="form-group ms-1" style="width: 49%;">
-                                                    <select name="cities" id="ciudades" class="form-control" required>
-                                                        <option value="no_state" selected>Selecciona tu Ciudad</option>
-                                                        <!-- los option se crean por medio de un script -->
-                                                    </select>
-                                                </div>
-                                                
-                                            </div>
-
-                                            <div class="container d-flex justify-content-between p-0 my-2">
-
-                                                <div class="form-group" style="width: 50%;">
-                                                    <input type="tel" name="phone" placeholder="Un número telefonico" class="form-control" maxlength="13" required>
-                                                </div>
-
-                                                <div class="form-group" style="width: 49%;">
-                                                    <input type="tel" name="phoneAlt" placeholder="Un número telefonico alt." class="form-control" maxlength="13">
-                                                </div>
-
-                                            </div>
-
-
-                                             <!-- creación de direccion completa -->
-                                             <div class="form-group my-2">
-                                                <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección." maxlength="100" required></textarea>
-                                             </div>
-                                                           
-                                            <!-- creación de mensaje de perfil -->
-                                            <div class="form-group my-2">
-                                               <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 carcateres."
-                                                maxlength="180" required></textarea>
-                                            </div>
-            
-                                            <!-- creación de redes sociales -->
-                                            <hr class="dropdown-divider">
-                                            <div class="input-group flex-nowrap">
-                                                <label for="" class="input-group-text anchorRRSS">Facebook @</label>
-                                                <input type="text" name="facebook" class="form-control" placeholder="Here your link"
-                                                    aria-describedby="addon-wrapping">
-                                            </div>
-                                            <div class="input-group flex-nowrap">
-                                                <label for="" class="input-group-text anchorRRSS">Instagram @</label>
-                                                <input type="text" name="instagram" class="form-control"
-                                                    placeholder="Here your link" aria-describedby="addon-wrapping">
-                                            </div>
-                                            <div class="input-group flex-nowrap">
-                                                <label for="" class="input-group-text anchorRRSS">YouTube @</label>
-                                                <input type="text" name="youtube" class="form-control" placeholder="Here your link"
-                                                    aria-describedby="addon-wrapping">
-                                            </div>
-                                            <div class="input-group flex-nowrap">
-                                                <label for="" class="input-group-text anchorRRSS">Tik-Tok @</label>
-                                                <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
-                                                    aria-describedby="addon-wrapping">
-                                            </div>
-                                            
-                                            <div class="form-group my-3">
-                                                <input type="submit" class="form-control btn btn-primary" value="Create">
-                                            </div>
-            
-                                        </form>
-                                    <% } else { %>
-                                        <% searchProfile.forEach( (ele)=> { %>
-
-                                        <!--:::::: editar profile ::::::-->
-
+                                        <% if (searchProfile.length === 0) {  %>
+                                            <!--:::::: crear profile ::::::-->
                                             <!-- direccion de ruta en index.routes.js -->
-                                            <form action="/myaccount/edit/<%= ele._id %>" method="POST">
-                                               
-
-                                               <!-- campos names e identification no podrá ser editado -->
-                                               <div class="container d-flex justify-content-between p-0 my-2">
+                                            <form action="/myaccount/profile" method="POST">
             
+                                                <!-- creación de nombres y numero de documento -->
+                                                <div class="container d-flex justify-content-between p-0 my-2">
+                
                                                     <div class="form-group" style="width: 60%;">
-                                                        <input type="text" name="names" placeholder="Nombres" class="form-control" value="<%= ele.names %>" disabled>
+                                                        <input type="text" name="names" placeholder="Nombres" class="form-control" required>
                                                     </div>
                                                     <div class="form-group ms-1" style="width: 39%;">
-                                                        <input type="text" name="identification" placeholder="15023658" class="form-control" value="<%= ele.identification %>" disabled /> 
+                                                        <input type="text" name="identification" placeholder="Doc. Identidad" class="form-control" title="Introduzca su número de identificación ejemplo: 10555478" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="9" required /> 
                                                     </div>
-            
-                                               </div>
+                
+                                                </div>
 
-                                               <!-- campos dateborn y gender no podrá ser editado -->
-                                               <div class="container d-flex p-0 my-2">
-                                                <% if (Dateborn) { %>
+                                                <!-- creación de fecha y genero -->
+                                                <div class="container d-flex p-0 my-2">
+                
                                                     <div class="form-group d-flex">
-                                                        <input type="text" class="form-control" value="<%= Dateborn %>" disabled>
+                                                        <input type="date" name="dateborn" class="form-control" required>
                                                     </div>
-                                                <% } %>
-
-                                                    <div class="form-control d-flex ms-1" style="background-color: #e9ecef;">
+                
+                                                    <div class="form-control d-flex ms-1">
                                                         <div class="form-check  me-3">
-                                                            <% if (ele.gender === 'men'){ %>
-                                                            <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="men" disabled checked>
-                                                            <% } else { %>    
-                                                            <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="men" disabled>
-                                                            <% }; %>    
+                                                            <input class="form-check-input" type="radio" name="gender"
+                                                                id="flexRadioDefault1" value="men" required>
                                                             <label class="form-check-label" for="flexRadioDefault1">
-                                                                Maculino
+                                                                Masculino
                                                             </label>
                                                         </div>
-                                                        <div class="form-check disabled" >
-                                                            <% if (ele.gender === 'wom'){ %>
-                                                            <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="wom" disabled checked>
-                                                            <% } else { %>
-                                                            <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="wom" disabled>
-                                                            <% }; %>     
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="gender"
+                                                                id="flexRadioDefault2" value="wom" required>
                                                             <label class="form-check-label" for="flexRadioDefault2">
                                                                 Femenino
                                                             </label>
                                                         </div>
                                                     </div>
+                
+                                                </div>
 
-                                               </div>    
-                                                    
-                                               <!-- campos company y companyRif -->
-                                               <div class="container d-flex justify-content-between p-0 my-2">
-            
-                                                        <div class="form-group" style="width: 60%;">
-                                                            <input type="text" name="company" value="<%= ele.company %>" placeholder="Nombre de Empresa" class="form-control"  maxlength="30">
-                                                        </div>
-                                                        <div class="form-group ms-1" style="width: 39%;">
-                                                            <input type="text" name="companyRif" value="<%= ele.companyRif %>" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
-                                                        </div>
-                    
-                                               </div>
-                                               
-                                               
-                                               <!-- edit de estados y ciudades/pueblos -->
-                                               <div class="container d-flex justify-content-between p-0 my-2">
-            
-                                                    <div class="form-group" style="width: 50%;">
-                                                        <select name="states" id="estadosEdit" class="form-control" required>
-                                                            <option value="<%= ele.states %>" selected><%= ele.states %></option>
-                                                            <option value="Foraneo">Foraneo</option>
-                                                            
-                                                        </select>
+                                                <!-- creación de compañia y rif  -->
+                                                <div class="container d-flex justify-content-between p-0 my-2">
+                
+                                                    <div class="form-group" style="width: 60%;">
+                                                        <input type="text" name="company" placeholder="Nombre de Empresa" class="form-control" title="Si posees una empresa puedes colocarla aqui, dará mayor seguridad a tus clientes potenciales" maxlength="30">
                                                     </div>
-                                                   
-                                                    <div class="form-group" style="width: 49%;">
-                                                        <select name="cities" id="ciudadesEdit" class="form-control" required>
-                                                            <option value="<%= ele.cities %>" selected><%= ele.cities %></option>
+                                                    <div class="form-group ms-1" style="width: 39%;">
+                                                        <input type="text" name="companyRif" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
+                                                    </div>
+                
+                                                </div>
+                
+                                            
+                                                <!-- creación de estados y ciudades/pueblos -->
+                                                <div class="container d-flex justify-content-between p-0 my-2">
+                
+                                                    <div class="form-group" style="width: 50%;">
+                                                        <select name="states" id="estados" class="form-control" required>
+                                                            <option value="no_state" selected>Selecciona el Estado</option>
+                                                            <option value="Foraneo">Foraneo</option>
                                                             <!-- los option se crean por medio de un script -->
                                                         </select>
                                                     </div>
-                                               </div>
-
-                                               <!-- edit phone and phoneAlt -->
-                                               <div class="container d-flex justify-content-between p-0 my-2">
-
-                                                    <div class="form-group" style="width: 50%;">
-                                                        <input type="tel" name="phone" placeholder="intro your phone" class="form-control" value="<%= ele.phone %>" maxlength="13" required>
+                                                    <div class="form-group ms-1" style="width: 49%;">
+                                                        <select name="cities" id="ciudades" class="form-control" required>
+                                                            <option value="no_state" selected>Selecciona tu Ciudad</option>
+                                                            <!-- los option se crean por medio de un script -->
+                                                        </select>
                                                     </div>
-                                                    <div class="form-group" style="width: 49%;">
-                                                        <input type="tel" name="phoneAlt" placeholder="intro your phone alter" class="form-control" value="<%= ele.phoneAlt %>" maxlength="13">
-                                                    </div>
-
-                                                </div>    
-
-                                                <!-- direccion completa -->
-                                                <div class="form-group my-2">
-                                                    <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección."
-                                                    maxlength="100" required><%= ele.address %></textarea>
+                                                    
                                                 </div>
 
-                                               <!-- mensaje de perfil --> 
-                                               <div class="form-group my-2">
-                                                    <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 caracteres."
-                                                     maxlength="180" required><%= ele.profileMessage %></textarea>
-                                               </div>
+                                                <div class="container d-flex justify-content-between p-0 my-2">
 
-                                               <!-- campos redes sociales -->
-                                               <hr class="dropdown-divider">
-                                               <div class="input-group flex-nowrap">
+                                                    <div class="form-group" style="width: 50%;">
+                                                        <input type="tel" name="phone" placeholder="Un número telefonico" class="form-control" maxlength="13" required>
+                                                    </div>
+
+                                                    <div class="form-group" style="width: 49%;">
+                                                        <input type="tel" name="phoneAlt" placeholder="Un número telefonico alt." class="form-control" maxlength="13">
+                                                    </div>
+
+                                                </div>
+
+
+                                                <!-- creación de direccion completa -->
+                                                <div class="form-group my-2">
+                                                    <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección." maxlength="100" required></textarea>
+                                                </div>
+                                                            
+                                                <!-- creación de mensaje de perfil -->
+                                                <div class="form-group my-2">
+                                                <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 carcateres."
+                                                    maxlength="180" required></textarea>
+                                                </div>
+                
+                                                <!-- creación de redes sociales -->
+                                                <hr class="dropdown-divider">
+                                                <div class="input-group flex-nowrap">
                                                     <label for="" class="input-group-text anchorRRSS">Facebook @</label>
                                                     <input type="text" name="facebook" class="form-control" placeholder="Here your link"
-                                                        value="<%= ele.facebook %>">
-                                               </div>
-                                               <div class="input-group flex-nowrap">
+                                                        aria-describedby="addon-wrapping">
+                                                </div>
+                                                <div class="input-group flex-nowrap">
                                                     <label for="" class="input-group-text anchorRRSS">Instagram @</label>
                                                     <input type="text" name="instagram" class="form-control"
-                                                        placeholder="Here your link" value="<%= ele.instagram %>">
+                                                        placeholder="Here your link" aria-describedby="addon-wrapping">
                                                 </div>
                                                 <div class="input-group flex-nowrap">
                                                     <label for="" class="input-group-text anchorRRSS">YouTube @</label>
                                                     <input type="text" name="youtube" class="form-control" placeholder="Here your link"
-                                                    value="<%= ele.youtube %>">
+                                                        aria-describedby="addon-wrapping">
                                                 </div>
                                                 <div class="input-group flex-nowrap">
                                                     <label for="" class="input-group-text anchorRRSS">Tik-Tok @</label>
                                                     <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
-                                                    value="<%= ele.tiktok %>">
+                                                        aria-describedby="addon-wrapping">
                                                 </div>
-                
-                
+                                                
                                                 <div class="form-group my-3">
-                                                   <input type="submit" class="form-control btn btn-secondary" value="Update"> 
-                                                    <!-- <a href="/myaccount/edit/:<%= ele._id %>">update</a> -->
+                                                    <input type="submit" class="form-control btn btn-primary" value="Create">
                                                 </div>
                 
                                             </form>
-                                        <% }) %>
-                                    <% }; %>
-        
-                                </div>
-                            </div>
+                                        <% } else { %>
+                                            <% searchProfile.forEach( (ele)=> { %>
 
-                            <% if (searchProfile.length !== 0) {  %>
-                            <!-- seccion de Palabras Clave -->
-                            <div class="card my-2">
-                                <div class="card-header">
-                                    Palabras Clave
-                                </div>
-                                <div class="card-body">
-                                   <!--  fetch post linea 940 -->
-                                        <div class="input-group my-1">
-                                            <span class="input-group-text" id="basic-addon1">#</span>
-                                            <input type="text" class="form-control" id="hashtags" placeholder="monopatin electrico" aria-label="Username" aria-describedby="basic-addon1">
-                                            <button class="btn btn-outline-secondary" type="button" id="btnHashtag">Añadir </button>
-                                        </div>
-                                        <div class="input-group my-1 border rounded-2" id="hashtagsStore">
-                                            
-                                            <!-- este elemento se creara de forma dinamica por medio de un script -->
-                                            <!-- <span class="alert-secondary m-1 py-1 ps-1 pe-4 rounded-3" style="position: relative;">monopatin <i class="bi bi-x" style="position: absolute; right: 5px; top: 6px;"></i></span> -->
-                                           
-                                        </div>
-                                        
-                                            <% if (msgHashtagExito){ %>
-                                                <div class="form-group my-1">
-                                                  
-                                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                            <strong><i class="bi bi-check-circle-fill me-2"></i> <%= msgHashtagExito %></strong> 
-                                                            <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                        </div>
+                                            <!--:::::: editar profile ::::::-->
+
+                                                <!-- direccion de ruta en index.routes.js -->
+                                                <form action="/myaccount/edit/<%= ele._id %>" method="POST">
                                                 
-                                                </div>    
-                                            <% }; %>
 
-                                            <% if (msgHashtagDenegado){ %>
-                                                <div class="form-group my-1">
-                                                   
-                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                            <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> <%= msgHashtagDenegado %></strong> 
-                                                            <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                        </div>
-                                                 
-                                                </div>      
-                                            <% }; %> 
-
-                                            <% if (msgHashtagDelete){ %>
-                                                <div class="form-group my-1">
-                                                   
-                                                        <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                                            <strong><i class="bi bi-check-circle-fill me-2"></i> <%= msgHashtagDelete %></strong> 
-                                                            <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                        </div>
-                                                 
-                                                </div>      
-                                            <% }; %>
-                                            
-                                            <% if (msgHashtagError) { %>
-                                                <div class="form-group my-1">
-                                                   
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                        <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> <%= msgHashtagError %></strong> 
-                                                        <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                    </div>
-                                             
-                                                </div>                           
-                                            <% }; %>
-                                            <div class="contentAlert">
-                                                <!-- aqui va un laerta cuando se supere la cantidad de palabras permitidas -->
-                                            </div>
-                                                 
-                                        <div class="form-group my-2">
-                                            <input type="button" value="Update" class="btn btn-primary form-control" id="btnSubmitHashtag">
-                                        </div>
-                                    <!-- fetch post  -->
-                                </div>
-                            </div>
-                            <!-- fin Palabras Clave -->
-                            <% }; %>
-
-                            <% if (token) { %>
-                                <div class="card my-2">
-                                    <div class="card-header">
-                                        Change the Password
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="/myaccount/change-password" method="POST">
-                                            <div class="input-group my-2">
-                                              <label for="" class="input-group-text">Token :</label>
-                                              <input type="text" class="form-control" name="token" style="letter-spacing: 10px; font-weight: bold; font-size: 18px;" maxlength="6" required>
-                                            </div>
-                                            <div class="form-group  ps-1">
-                                                <label for=""> <small>Token de seguridad lo encontraras en tu correo.</small></label>
-                                            </div>
-                                            <div class="input-group my-2">
-                                                <label for="" class="input-group-text">New Password :</label>
-                                                <input type="text" class="form-control" name="newPassword" maxlength="20" style="letter-spacing: 3px;" required>
-                                            </div>
-                                            <div class="form-group  ps-1">
-                                                <label for=""> <small> Password debe tener minimo 6 caracteres. </small></label>
-                                            </div>
-                                            <div class="form-group my-3">
-                                                <button type="submit" class="btn btn-success form-control">Change Password</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            <% } else { %>
-                                <div class="card my-2">
-                                    <div class="card-header">
-                                        Change the Password
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="/myaccount/new-password" method="POST">
-                                         
-                                            <div class="form-group border my-2">
-                                                <label for="">Para cambiar su Contraseña se requiere enviar un Token de seguridad a su email. Recomendamos tener su correo abierto antes de dar al botón "Enviar token". </label>
-                                            </div>
-                                            <div class="form-group my-3">
-                                                <button type="submit" class="btn btn-primary form-control">Enviar Token</button>
-                                            </div>
-
-                                        </form>
-                                    </div>
-                                </div>
-                            <% }; %>
-                        </div>
-        
-                        <div class="col-lg-8 col-md-8 col-sm-12 py-1" style="background-color: #e9ecef;">
-                            <div class="card">
-                                <div class="card-header">
-                                    My Profile
-                                </div>
-                                
-                                <div class="card-body">
-                                    <% if (searchProfile.length === 0) {  %>
-                                        <div class="container my-2 p-0 form-control border" style="position: relative; width: 100%; height: 110px;">
-                                            
-                                            <img src="/img/bannerDefaultNoProfile.png"  class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
-
-                                        </div>   
-                                    <% } else { %>
-
-                                        <% searchProfile.forEach( (ele)=> { %>
-                                            <% ele.bannerPerfil.forEach((elem)=>{ %>
-                                                    
-                                                <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: 130px;">
-                                        
-                                                    <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
-            
-                                                    <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 4px;">
-                                                        <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
-                                                      
-                                                        <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
-                                                        <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -100px;"><i class="bi bi-arrow-up-square"></i></button> <!-- segundo enviar y actualizar img -->
-                                              
-                                                    </form>
-                                                </div>    
-                                            <%  }) %>
-                                        
-                                    
-                                            <div class="container">
-                                                    <div class="containerAvatarProfileMessage d-flex justify-content-between mb-1" style="width: 100%;">
-                                                        <div class="containerAvatarUsername d-flex align-items-end" style="width: 30%">
-                                                            <form action="/myaccount/avatar" method="post" id="formAvatarProfile" enctype="multipart/form-data" class="d-flex align-items-end">
-                                             <% ele.avatarPerfil.forEach((ele)=>{ %>
-
-                                                <% if(ele.public_id == 'sin_data'){  %>                  
-                                                             
-                                                                    <img src="https://www.gravatar.com/avatar/<%= user.mailhash %>?d=identicon" class="imgPerfil">
-                                                                    <input type="file" name="fileImg" id="avatarFile" class="sinBody">
-                                                                    <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; width: auto;"><%= user.username %></span>
-                                                                    <input type="submit" id="avatarSubmit" class="sinBody">
-                                                <% } else { %>              
-                                                     
-                                                                    <img src="<%= ele.url %>" alt="avatar" style="width: 70px; border-radius: 50%;" class="imgPerfil">
-                                                                    <input type="file" name="fileImg" id="avatarFile" class="sinBody">
-                                                                    <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px;"><%= user.username %></span>
-                                                                    <input type="submit" id="avatarSubmit" class="sinBody">
-                                                <% }; %> 
-                                                    
-                                            <% }); %>                        
-                                                                    
-                                                            </form>    
-                                                        </div>
-                                                        <div class="containerProfileMessage ms-1" style="width: 80%; text-align: right;">
-                                                            <p><i><%= ele.profileMessage %></i></p>
-                                                        </div>
-                                                    </div>
-                                        <% }); %>
-
-                                    <% } %>        
+                                                <!-- campos names e identification no podrá ser editado -->
+                                                <div class="container d-flex justify-content-between p-0 my-2">
                 
-                                                <% if (searchProfile.length === 0) {  %>
-                
-                                                    <div class="row shadow p-2 m-0 bg-body rounded border">
-                                                        <div class="col-md-2 col-sm-8  d-flex justify-align-center justify-content-center"> <img src="/img/admiracion.png" style="width : 60px"> </div>
-                                                        <div class="col-md-10 col-sm-8 d-flex justify-align-center justify-content-center">
-                                                            <span class="m-2"> ¡Aún no te animas a crear tu perfil, vamos solo demora 1 min! </span>
+                                                        <div class="form-group" style="width: 60%;">
+                                                            <input type="text" name="names" placeholder="Nombres" class="form-control" value="<%= ele.names %>" disabled>
                                                         </div>
-                                                    </div>
-                                            
-                                                <% } else { %>
+                                                        <div class="form-group ms-1" style="width: 39%;">
+                                                            <input type="text" name="identification" placeholder="15023658" class="form-control" value="<%= ele.identification %>" disabled /> 
+                                                        </div>
+                
+                                                </div>
+
+                                                <!-- campos dateborn y gender no podrá ser editado -->
+                                                <div class="container d-flex p-0 my-2">
+                                                    <% if (Dateborn) { %>
+                                                        <div class="form-group d-flex">
+                                                            <input type="text" class="form-control" value="<%= Dateborn %>" disabled>
+                                                        </div>
+                                                    <% } %>
+
+                                                        <div class="form-control d-flex ms-1" style="background-color: #e9ecef;">
+                                                            <div class="form-check  me-3">
+                                                                <% if (ele.gender === 'men'){ %>
+                                                                <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="men" disabled checked>
+                                                                <% } else { %>    
+                                                                <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="men" disabled>
+                                                                <% }; %>    
+                                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                                    Maculino
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check disabled" >
+                                                                <% if (ele.gender === 'wom'){ %>
+                                                                <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="wom" disabled checked>
+                                                                <% } else { %>
+                                                                <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="wom" disabled>
+                                                                <% }; %>     
+                                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                                    Femenino
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                </div>    
                                                         
-                                                    <% searchProfile.forEach( (ele)=> { %>
-                                                        <div class="datesUser">
-                                                            <span class="me-1"><%= ele.names %></span><br>
-                                                            <!-- <span><%= ele.dateborn %></span> <br> -->
-                                                            <!-- <span>Genero: <%= ele.genero %></span> <br> -->
-                                                            <span class="me-1">Estado: <%= ele.states %></span>
-                                                            <span>Telefono: <%= ele.phone %></span> <br>
-
-                                                            <% if (ele.facebook) { %>
-                                                                <span class="me-3 "><i class="bi bi-facebook me-2"></i><%= ele.facebook %></span>
-                                                            <% } %>
-
-                                                            <% if (ele.instagram) { %>
-                                                                <span class="me-3 "><i class="bi bi-instagram me-2"></i><%= ele.instagram %></span>
-                                                            <% } %>
-
-                                                            <% if (ele.youtube) { %>
-                                                                <span class="me-3 "><i class="bi bi-youtube me-2"></i><%= ele.youtube %></span>
-                                                            <% } %>
-
-                                                            <% if (ele.tiktok) { %>
-                                                                <span class="me-3 "><i class="bi bi-tiktok me-2"></i> <%= ele.tiktok %></span>
-                                                            <% } %>     
+                                                <!-- campos company y companyRif -->
+                                                <div class="container d-flex justify-content-between p-0 my-2">
                 
+                                                            <div class="form-group" style="width: 60%;">
+                                                                <input type="text" name="company" value="<%= ele.company %>" placeholder="Nombre de Empresa" class="form-control"  maxlength="30">
+                                                            </div>
+                                                            <div class="form-group ms-1" style="width: 39%;">
+                                                                <input type="text" name="companyRif" value="<%= ele.companyRif %>" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
+                                                            </div>
+                        
+                                                </div>
+                                                
+                                                
+                                                <!-- edit de estados y ciudades/pueblos -->
+                                                <div class="container d-flex justify-content-between p-0 my-2">
+                
+                                                        <div class="form-group" style="width: 50%;">
+                                                            <select name="states" id="estadosEdit" class="form-control" required>
+                                                                <option value="<%= ele.states %>" selected><%= ele.states %></option>
+                                                                <option value="Foraneo">Foraneo</option>
                                                                 
+                                                            </select>
+                                                        </div>
+                                                    
+                                                        <div class="form-group" style="width: 49%;">
+                                                            <select name="cities" id="ciudadesEdit" class="form-control" required>
+                                                                <option value="<%= ele.cities %>" selected><%= ele.cities %></option>
+                                                                <!-- los option se crean por medio de un script -->
+                                                            </select>
+                                                        </div>
+                                                </div>
+
+                                                <!-- edit phone and phoneAlt -->
+                                                <div class="container d-flex justify-content-between p-0 my-2">
+
+                                                        <div class="form-group" style="width: 50%;">
+                                                            <input type="tel" name="phone" placeholder="intro your phone" class="form-control" value="<%= ele.phone %>" maxlength="13" required>
+                                                        </div>
+                                                        <div class="form-group" style="width: 49%;">
+                                                            <input type="tel" name="phoneAlt" placeholder="intro your phone alter" class="form-control" value="<%= ele.phoneAlt %>" maxlength="13">
                                                         </div>
 
-                                                        <div class="row updateBackgroundColor my-1">
-                                                            <div class="col-lg-8 col-md-10 rounded-3 d-flex flex-column p-2 align-items-center justify-content-between border" style="position: relative; height: auto;">
-                                                               
-                                                                <form action="/myaccount/bGColor" method="post" class="p-0 d-flex flex-column" style="width: 100%;">
-                                                                  
-                                                                        <div class="containerDetailsButtom my-0 d-flex justify-align-center" style="width: 100%; height: 31px;  position: relative;">
-                                                                            <span class="p-0">Text :</span>
-                                                                            <input type="radio" id="defaultText" name="typeText" value="#1a1a1a" class="mx-2"><label for="defaultText">Default</label>
-                                                                            <input type="radio" id="customText" name="typeText" value="customTex" class="mx-2"><label for="customText">Custom</label>
-                                                                            <input type="color" name="bGColorText" id="bgColorText" value="<%= ele.bGColorText %>" class="mx-3 rounded-2 sinBody">
-                                                                            <div class="showPint" style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid grey; position: absolute; right: 50px; top: 0; background-color:<%= ele.bGColorText %>"></div>
-                                                                        </div>
-                                                                        
-                                                                        <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;  position: relative;">
-                                                                            <span class="p-0">Topbar :</span>
-                                                                            <input type="radio" id="defaultTopbar" name="typeTopbar" value="#f8f9fa" class="mx-2"><label for="defaultTopbar">Default</label>
-                                                                            <input type="radio" id="customTopbar" name="typeTopbar" value="customTop" class="mx-2"><label for="customTopbar">Custom</label>
-                                                                            <input type="color" name="bGColorTopbar" id="bgColorTopbar" value="<%= ele.bGColorTopbar %>" class="mx-3 rounded-2 sinBody">
-                                                                            <div class="showPint" style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid grey; position: absolute; right: 50px; top: 0; background-color:<%= ele.bGColorTopbar %>"></div>
-                                                                        </div>
-                                                                        
-                                                                        <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;  position: relative;">
-                                                                            <span class="p-0">Workspace :</span>
-                                                                            
-                                                                            <input type="radio" id="defaultWorkspace" name="typeWorkspace" value="#ffffff" class="mx-2"><label for="defaultWorkspace">Default</label>
-                                                                            <input type="radio" id="customWorkspace" name="typeWorkspace" value="customWork" class="mx-2"><label for="customWorkspace">Custom</label>
-                                                                            <input type="color" name="bGColorWorkspace" id="bgColorWorkspace" value="<%= ele.bGColorWorkspace %>" class="mx-3 rounded-2 sinBody">
-                                                                            <div class="showPint" style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid grey; position: absolute; right: 50px; top: 0; background-color:<%= ele.bGColorWorkspace %>"></div>
-                                                                        </div>                                                                        
+                                                    </div>    
 
-                                                                        <button type="submit" class="btn btn-secondary btn-sm my-1">Aceptar</button>
-                                                                </form>
-                                                                
+                                                    <!-- direccion completa -->
+                                                    <div class="form-group my-2">
+                                                        <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección."
+                                                        maxlength="100" required><%= ele.address %></textarea>
+                                                    </div>
 
-                                                                <div class="containerSerach my-2  rounded" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                                    <div class="containerSearch my-0 d-flex">
-                                                                       <!--  cantidad de articulos para habilitar la opcion de busqueda -->
-                                                                        <% if(sumCount >= 11) { %>    
-                                                                            <label class="form-check-label p-0 labelFilter" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción"> Do you need a Search ? </label>
-                                                                            <div class="form-check form-switch ms-3">
-                                                                                                                              
-                                                                            <% if (ele.searchFilter === 'on' ){%>  
-                                                                              <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> <i class="bi bi-unlock ms-3"></i><span class="ms-1">(a search engine in your own store)</span>
-                                                                            <% } else { %>
-                                                                              <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> <i class="bi bi-unlock ms-3"></i><span class="ms-1">(a search engine in your own store)</span>
-                                                                            <% }; %>
-                                                                                
-                                                                            </div>
-                                                                        <% } else { %>
-                                                                            <label class="form-check-label p-0" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción"> Do you need a Search ? </label>
-                                                                            <div class="form-check form-switch ms-3">
-                                                                                <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-3"></i> <span class="ms-1">(a search engine in your own store)</span>                                                                        
-                                                                            </div>
-                                                                        <% }; %>        
-                                                                    </div>
-                                                                </div>
-                                                            
-                                                            </div> 
-                                                        </div>
-                
-                                                        <div class="row shadow p-2 my-2 bg-body rounded border">
-                                                            <div class="col-md-2 col-sm-8  d-flex justify-align-center justify-content-center"> <img src="/img/cheched.png" style="width : 50px; height: 50px;"> </div>
-                                                            <div class="col-md-10 col-sm-8 d-flex justify-align-center justify-content-center">
-                                                               <% if (user) {  %>
-                                                                <span class="m-2"> ¡ Perfil creado exitosamente, puedes editar cuando lo necesites ! <span><a href="/account/<%= user.username %>" class="text-dark"><i>mirar mi sitio...</i></a> </span>  </span>
-                                                                <% } %>                          
-                                                                
-                                                            </div> 
-                                                        </div>
-                
-                                                    <% }) %>
-                
+                                                <!-- mensaje de perfil --> 
+                                                <div class="form-group my-2">
+                                                        <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 caracteres."
+                                                        maxlength="180" required><%= ele.profileMessage %></textarea>
+                                                </div>
+
+                                                <!-- campos redes sociales -->
+                                                <hr class="dropdown-divider">
+                                                <div class="input-group flex-nowrap">
+                                                        <label for="" class="input-group-text anchorRRSS">Facebook @</label>
+                                                        <input type="text" name="facebook" class="form-control" placeholder="Here your link"
+                                                            value="<%= ele.facebook %>">
+                                                </div>
+                                                <div class="input-group flex-nowrap">
+                                                        <label for="" class="input-group-text anchorRRSS">Instagram @</label>
+                                                        <input type="text" name="instagram" class="form-control"
+                                                            placeholder="Here your link" value="<%= ele.instagram %>">
+                                                    </div>
+                                                    <div class="input-group flex-nowrap">
+                                                        <label for="" class="input-group-text anchorRRSS">YouTube @</label>
+                                                        <input type="text" name="youtube" class="form-control" placeholder="Here your link"
+                                                        value="<%= ele.youtube %>">
+                                                    </div>
+                                                    <div class="input-group flex-nowrap">
+                                                        <label for="" class="input-group-text anchorRRSS">Tik-Tok @</label>
+                                                        <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
+                                                        value="<%= ele.tiktok %>">
+                                                    </div>
+                    
+                    
+                                                    <div class="form-group my-3">
+                                                    <input type="submit" class="form-control btn btn-secondary" value="Update"> 
+                                                        <!-- <a href="/myaccount/edit/:<%= ele._id %>">update</a> -->
+                                                    </div>
+                    
+                                                </form>
+                                            <% }) %>
+                                        <% }; %>
+            
+                                    </div>
+                                </div>
+
+                                <% if (searchProfile.length !== 0) {  %>
+                                <!-- seccion de Palabras Clave -->
+                                <div class="card my-2">
+                                    <div class="card-header">
+                                        Palabras Clave
+                                    </div>
+                                    <div class="card-body">
+                                    <!--  fetch post linea 940 -->
+                                            <div class="input-group my-1">
+                                                <span class="input-group-text" id="basic-addon1">#</span>
+                                                <input type="text" class="form-control" id="hashtags" placeholder="monopatin electrico" aria-label="Username" aria-describedby="basic-addon1">
+                                                <button class="btn btn-outline-secondary" type="button" id="btnHashtag">Añadir </button>
+                                            </div>
+                                            <div class="input-group my-1 border rounded-2" id="hashtagsStore">
+                                                
+                                                <!-- este elemento se creara de forma dinamica por medio de un script -->
+                                                <!-- <span class="alert-secondary m-1 py-1 ps-1 pe-4 rounded-3" style="position: relative;">monopatin <i class="bi bi-x" style="position: absolute; right: 5px; top: 6px;"></i></span> -->
+                                            
+                                            </div>
+                                            
+                                                <% if (msgHashtagExito){ %>
+                                                    <div class="form-group my-1">
+                                                    
+                                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                                <strong><i class="bi bi-check-circle-fill me-2"></i> <%= msgHashtagExito %></strong> 
+                                                                <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
+                                                    
+                                                    </div>    
+                                                <% }; %>
+
+                                                <% if (msgHashtagDenegado){ %>
+                                                    <div class="form-group my-1">
+                                                    
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> <%= msgHashtagDenegado %></strong> 
+                                                                <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
+                                                    
+                                                    </div>      
+                                                <% }; %> 
+
+                                                <% if (msgHashtagDelete){ %>
+                                                    <div class="form-group my-1">
+                                                    
+                                                            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                                                <strong><i class="bi bi-check-circle-fill me-2"></i> <%= msgHashtagDelete %></strong> 
+                                                                <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
+                                                    
+                                                    </div>      
                                                 <% }; %>
                                                 
+                                                <% if (msgHashtagError) { %>
+                                                    <div class="form-group my-1">
+                                                    
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> <%= msgHashtagError %></strong> 
+                                                            <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                                                
+                                                    </div>                           
+                                                <% }; %>
+                                                <div class="contentAlert">
+                                                    <!-- aqui va un laerta cuando se supere la cantidad de palabras permitidas -->
+                                                </div>
+                                                    
+                                            <div class="form-group my-2">
+                                                <input type="button" value="Update" class="btn btn-primary form-control" id="btnSubmitHashtag">
                                             </div>
+                                        <!-- fetch post  -->
+                                    </div>
+                                </div>
+                                <!-- fin Palabras Clave -->
+                                <% }; %>
+
+                                <% if (token) { %>
+                                    <div class="card my-2">
+                                        <div class="card-header">
+                                            Cambiar Contraseña
+                                        </div>
+                                        <div class="card-body">
+                                            <form action="/myaccount/change-password" method="POST">
+                                                <div class="input-group my-2">
+                                                <label for="" class="input-group-text">Token :</label>
+                                                <input type="text" class="form-control" name="token" style="letter-spacing: 10px; font-weight: bold; font-size: 18px;" maxlength="6" required>
+                                                </div>
+                                                <div class="form-group  ps-1">
+                                                    <label for=""> <small>Token de seguridad lo encontraras en tu correo.</small></label>
+                                                </div>
+                                                <div class="input-group my-2">
+                                                    <label for="" class="input-group-text">New Password :</label>
+                                                    <input type="text" class="form-control" name="newPassword" maxlength="20" style="letter-spacing: 3px;" required>
+                                                </div>
+                                                <div class="form-group  ps-1">
+                                                    <label for=""> <small> Password debe tener minimo 6 caracteres. </small></label>
+                                                </div>
+                                                <div class="form-group my-3">
+                                                    <button type="submit" class="btn btn-success form-control">Change Password</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <% } else { %>
+                                    <div class="card my-2">
+                                        <div class="card-header">
+                                            Cambiar Contraseña
+                                        </div>
+                                        <div class="card-body">
+                                            <form action="/myaccount/new-password" method="POST">
+                                            
+                                                <div class="form-group border my-2">
+                                                    <label for="">Para cambiar su Contraseña se requiere enviar un Token de seguridad a su email. Recomendamos tener su correo abierto antes de dar al botón "Enviar token". </label>
+                                                </div>
+                                                <div class="form-group my-3">
+                                                    <button type="submit" class="btn btn-primary form-control">Enviar Token</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                <% }; %>
+                            </div>
+            
+                            <div class="col-lg-8 col-md-8 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
+                                <div class="card">
+                                    <div class="card-header">
+                                        My Profile
+                                    </div>
+                                    
+                                    <div class="card-body border">
+                                        <% if (searchProfile.length === 0) {  %>
+                                            <div class="container my-2 p-0 form-control border" style="position: relative; width: 100%; height: auto;">
+                                                
+                                                <img src="/img/bannerDefaultNoProfile.png"  class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
+
+                                            </div>   
+                                        <% } else { %>
+
+                                            <% searchProfile.forEach( (ele)=> { %>
+                                                <% ele.bannerPerfil.forEach((elem)=>{ %>
+                                                        
+                                                    <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
+                                            
+                                                        <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
+                
+                                                        <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 4px;">
+                                                            <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
+                                                        
+                                                            <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                            <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -100px;"><i class="bi bi-arrow-up-square"></i></button> <!-- segundo enviar y actualizar img -->
+                                                
+                                                        </form>
+                                                    </div>    
+                                                <%  }) %>
+                                            
+                                        
+                                                <div class="container-fluid px-0">
+                                                        <div class="container-fluid p-0 mx-0 d-flex justify-content-between mb-1" style="width: 100%;">
+                                                            <div class="containerAvatarUsername d-flex align-items-end" style="width: 30%">
+                                                                <form action="/myaccount/avatar" method="post" id="formAvatarProfile" enctype="multipart/form-data" class="d-flex align-items-end">
+                                                <% ele.avatarPerfil.forEach((ele)=>{ %>
+
+                                                    <% if(ele.public_id == 'sin_data'){  %>                  
+                                                                
+                                                                        <img src="https://www.gravatar.com/avatar/<%= user.mailhash %>?d=identicon" class="imgPerfil">
+                                                                        <input type="file" name="fileImg" id="avatarFile" class="sinBody">
+                                                                        <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; width: auto;"><%= user.username %></span>
+                                                                        <input type="submit" id="avatarSubmit" class="sinBody">
+                                                    <% } else { %>              
+                                                        
+                                                                        <img src="<%= ele.url %>" alt="avatar" style="width: 70px; border-radius: 50%;" class="imgPerfil">
+                                                                        <input type="file" name="fileImg" id="avatarFile" class="sinBody">
+                                                                        <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px;"><%= user.username %></span>
+                                                                        <input type="submit" id="avatarSubmit" class="sinBody">
+                                                    <% }; %> 
+                                                        
+                                                <% }); %>                        
+                                                                        
+                                                                </form>    
+                                                            </div>
+                                                            <div class="containerProfileMessage ms-1" style="width: 80%; text-align: right;">
+                                                                <p><i><%= ele.profileMessage %></i></p>
+                                                            </div>
+                                                        </div>
+                                            <% }); %>
+
+                                        <% } %>        
+                    
+                                                    <% if (searchProfile.length === 0) {  %>
+                    
+                                                        <div class="row shadow p-2 m-0 bg-body rounded">
+                                                            <div class="col-md-2 col-sm-8  d-flex justify-align-center justify-content-center"> <img src="/img/admiracion.png" style="width : 60px"> </div>
+                                                            <div class="col-md-10 col-sm-8 d-flex justify-align-center justify-content-center">
+                                                                <span class="m-2"> ¡Aún no te animas a crear tu perfil, vamos solo demora 1 min! </span>
+                                                            </div>
+                                                        </div>
+                                                
+                                                    <% } else { %>
+                                                            
+                                                        <% searchProfile.forEach( (ele)=> { %>
+                                                            <div class="datesUser">
+                                                                <span class="me-1"><%= ele.names %></span><br>
+                                                                <!-- <span><%= ele.dateborn %></span> <br> -->
+                                                                <!-- <span>Genero: <%= ele.genero %></span> <br> -->
+                                                                <span class="me-1">Estado: <%= ele.states %></span>
+                                                                <span>Telefono: <%= ele.phone %></span> <br>
+
+                                                                <% if (ele.facebook) { %>
+                                                                    <span class="me-3 "><i class="bi bi-facebook me-2"></i><%= ele.facebook %></span>
+                                                                <% } %>
+
+                                                                <% if (ele.instagram) { %>
+                                                                    <span class="me-3 "><i class="bi bi-instagram me-2"></i><%= ele.instagram %></span>
+                                                                <% } %>
+
+                                                                <% if (ele.youtube) { %>
+                                                                    <span class="me-3 "><i class="bi bi-youtube me-2"></i><%= ele.youtube %></span>
+                                                                <% } %>
+
+                                                                <% if (ele.tiktok) { %>
+                                                                    <span class="me-3 "><i class="bi bi-tiktok me-2"></i> <%= ele.tiktok %></span>
+                                                                <% } %>     
+                    
+                                                                    
+                                                            </div>
+
+                                                            <div class="row m-0 updateBackgroundColor my-1 overflow-auto w-100"  style="height: auto; overflow-x: scroll;">
+                                                                <div class="col-lg-10 col-md-10 col-sm-12 col-12 rounded-3 d-flex flex-column p-2 align-items-center justify-content-between overflow-auto w-100">
+                                                                
+                                                                    <form action="/myaccount/bGColor" method="post" class="p-0 d-flex flex-column  overflow-auto w-100">
+                                                                    
+                                                                            <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                                                <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= ele.bGColorText %>"></div>
+                                                                                <span class="p-0">Text :</span>
+                                                                                <input type="radio" id="defaultText" name="typeText" value="#1a1a1a" class="mx-2"><label for="defaultText">Default</label>
+                                                                                <input type="radio" id="customText" name="typeText" value="customTex" class="mx-2"><label for="customText">Custom</label>
+                                                                                <input type="color" name="bGColorText" id="bgColorText" value="<%= ele.bGColorText %>" class="ms-3 rounded-2 sinBody">
+                                                                            </div>
+                                                                            
+                                                                            <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                                                <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= ele.bGColorTopbar %>"></div>
+                                                                                <span class="p-0">Topbar :</span>
+                                                                                <input type="radio" id="defaultTopbar" name="typeTopbar" value="#f8f9fa" class="mx-2"><label for="defaultTopbar">Default</label>
+                                                                                <input type="radio" id="customTopbar" name="typeTopbar" value="customTop" class="mx-2"><label for="customTopbar">Custom</label>
+                                                                                <input type="color" name="bGColorTopbar" id="bgColorTopbar" value="<%= ele.bGColorTopbar %>" class="ms-3 rounded-2 sinBody">
+                                                                            </div>
+                                                                            
+                                                                            <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                                                <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= ele.bGColorWorkspace %>"></div>
+                                                                                <span class="p-0">Workspace :</span>
+                                                                                <input type="radio" id="defaultWorkspace" name="typeWorkspace" value="#ffffff" class="mx-2"><label for="defaultWorkspace">Default</label>
+                                                                                <input type="radio" id="customWorkspace" name="typeWorkspace" value="customWork" class="mx-2"><label for="customWorkspace">Custom</label>
+                                                                                <input type="color" name="bGColorWorkspace" id="bgColorWorkspace" value="<%= ele.bGColorWorkspace %>" class="ms-3 rounded-2 sinBody">
+                                                                            </div>                                                                        
+
+                                                                            <button type="submit" class="btn btn-secondary btn-sm my-1">Aceptar Cambios</button>
+                                                                    </form>
+                                                                    
+
+                                                                    <div class="containerSerach my-2  rounded" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                                        <div class="containerSearch my-0 d-flex flex-wrap">
+                                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
+                                                                            <% if(sumCount >= 11) { %>    
+                                                                                <label class="form-check-label p-0 labelFilter" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción"> Activar Buscador de Tienda :</label>
+                                                                                <div class="form-check form-switch">
+                                                                                                                                    
+                                                                                    <% if (ele.searchFilter === 'on' ){%>  
+                                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> <i class="bi bi-unlock"></i><span class="ms-1">(Motor de Busqueda)</span>
+                                                                                    <% } else { %>
+                                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> <i class="bi bi-unlock"></i><span class="ms-1">(Motor de Busqueda)</span>
+                                                                                    <% }; %>
+                                                                                    
+                                                                                </div>
+                                                                            <% } else { %>
+                                                                                <label class="form-check-label p-0" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción"> Activar Buscador de Tienda : </label>
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock"></i> <span class="ms-1">(Motor de Busqueda)</span>                                                                        
+                                                                                </div>
+                                                                            <% }; %>        
+                                                                        </div>
+                                                                    </div>
+                                                                
+                                                                </div> 
+                                                            </div>
+                    
+                                                            <div class="row shadow p-2 m-2 bg-body rounded border">
+                                                                <div class="col-md-2 col-sm-2  d-flex justify-align-center justify-content-center"> <img src="/img/cheched.png" style="width : 50px; height: 50px;"> </div>
+                                                                <div class="col-md-10 col-sm-10 d-flex justify-align-center justify-content-center">
+                                                                <% if (user) {  %>
+                                                                    <span class="m-2"> ¡ Perfil creado exitosamente, puedes editar cuando lo necesites ! <span><a href="/account/<%= user.username %>" class="text-dark"><i>mirar mi sitio...</i></a> </span>  </span>
+                                                                    <% } %>                          
+                                                                    
+                                                                </div> 
+                                                            </div>
+                    
+                                                        <% }) %>
+                    
+                                                    <% }; %>
+                                                    
+                                                </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                        </div>    
+
                     </div>
                 </div>
          </div>

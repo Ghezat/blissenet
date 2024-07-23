@@ -9,7 +9,7 @@ const modelInvoice = require('../models/invoice.js');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 
-
+const axios = require('axios');
 const fs = require('fs-extra');
 const {S3} = require('aws-sdk');
 
@@ -346,7 +346,6 @@ routes.post('/department/create/auctions', async(req,res)=>{
                     } else {
                         console.log("Archivos no subidos por ser muy pesados o no ser de tipo image")
                         await fs.unlink(element.path) // element es el archivo img y el .path tiene la direccion el metodo unlink del objet fs elimina el archivo de donde esta. 
-                        countFall ++;
                     }
                 }
 
@@ -785,7 +784,7 @@ routes.post('/department/create/auctions/add/video', async(req, res)=>{
                     if (err){
                         console.error("Error al subir un video", err);
                         req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
-                        res.redirect('/department/create/automotive');
+                        res.redirect('/department/create/auctions');
                     } else {
                         console.log("Video subido con exito", data);
         
@@ -910,39 +909,79 @@ routes.get('/department/create/auctions/del/video/auctions/:id', async(req, res)
 //ruta para agregar un (1) audio con try-catch   
 routes.post('/department/create/auctions/add/sound', async(req, res)=>{
     const boxSound = [];
+    const department = 'auctions';
     const TitleSelect =  req.session.titleSelect; //aqui tenemos el id del articulo.
     const element = req.files[0];
     console.log("Esto es TitleSelect", TitleSelect);
     console.log("Esto es element", element);
 
     try{
-        //6000000 bit = 6 MB para sonidos. sufiente para asegurar 1.5 minutos de explicacion breve
-        if (element.size <= 6000000  && element.mimetype.startsWith("audio/")){
+        //10000000 bit = 10 MB para sonidos. sufiente para asegurar 4 minutos de explicacion breve
+        if (element.size <= 10000000  && element.mimetype.startsWith("audio/")){
 
             console.log("un audio aqui aceptado----->", element)
           
-            const result = await cloudinary.uploader.upload(element.path, {resource_type: 'video', folder: 'auctionsSound'});
-            console.log("esto es result", result);
+            const folder = department; const ident = new Date().getTime();
+            const pathField = element.path; const extPart = pathField.split(".");
+            const ext = extPart[1];
 
-          
-            console.log("Todo salio chevere")
-            console.log("Aqui la respuesta de cloudinary del sonido enviado ----->",result);
-            const { url, public_id } = result
-                
-            console.log(`url : ${url} Public_Id : ${public_id} `)
-            boxSound.push( {url, public_id} );
-            //console.log("este es el path que tiene que ser eliminado:", element.path)
-            await fs.unlink(element.path) 
-            console.log("Esta sound se guardará")
-            console.log("Esto es boxSound -------->", boxSound);
-            const box = boxSound[0]; 
-            console.log("Esto es box -------->", box);
-                                                                    
-            const updateAuction = await modelAuction.findByIdAndUpdate(TitleSelect, { $push : {sound : box } });
-            console.log("Esto es updateAuction ---->",updateAuction);
-            req.session.audioUploaded = "Audio subido exitosamente."
+            //const fileContent = fs.readFileSync(pathField);
+            const fileContent = fs.createReadStream(pathField);
+            const key = `${folder}/${ident}.${ext}`;
+            
+            const params = {
+                Bucket : bucketName,
+                Key : key,
+                Body : fileContent,
+                ACL : 'public-read'
+            }
 
-            res.redirect('/department/create/auctions');        
+            s3.upload(params, (err, data)=>{
+                if (err){
+                    console.error("Error al subir un audio", err);
+                    req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+                    res.redirect('/department/create/auctions');
+                } else {
+                    console.log("Audio subido con exito", data);
+    
+                    //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.
+                    let format = ext;
+                    let url = `https://${bucketName}.${endpoint}/${key}`;
+                    let bytes = element.size;
+                    let public_id = key;
+                    
+                    console.log(`url : ${url} Public_Id : ${public_id} `)
+                    boxSound.push( {url, public_id} );
+
+                    const box = boxSound[0]; 
+                    //console.log("Esto es box -------->", box);
+
+                      
+                    async function saveDB(){
+
+                        //console.log("este es el path que tiene que ser eliminado:", element.path)
+                        await fs.unlink(element.path) 
+                            
+                        const updateAuction = await modelAuction.findByIdAndUpdate(TitleSelect, { $push : {sound : box } });
+                        console.log("Esto es updateAuction ---->",updateAuction);
+                        req.session.audioUploaded = "Audio subido exitosamente."
+            
+                        res.redirect('/department/create/auctions');
+
+                    }
+
+                    saveDB()
+                        .then(()=>{
+                            console.log("Se ha guardado en la base de datos. Audio Subido y Guardado en la DB");
+                        })
+                        .catch((err)=>{
+                            console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                        })
+
+
+                }
+            });
+                    
 
         } else {
             console.log("Archivos no subidos por ser muy pesados o no ser de tipo sonido")
@@ -1197,6 +1236,7 @@ cron.schedule('*/1 * * * *', async () => {
             //_______ condicion para el auctionDateClose _______
             //aqui al cerrar la subasta se procede a crear el buySell para tener todos los datos necesarios
             //si por alguna razon no se cerrara la susbasta, existira una herramienta administrativa que ejecutaria este proceso.
+            
             console.log("Escucha de Cierre de Subasta");
             console.log(":::: TNow === TClose ::::");
             console.log(`:::: ${TNow} === ${TClose} ::::`);
@@ -1243,7 +1283,66 @@ cron.schedule('*/1 * * * *', async () => {
                         const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
                         titleX = title; //aqui lo que hago es darle el valor de la costante title a la variable titleX que esta afuera y que requiero para poder crear mi correo.
                         const image = search.images[0].url;
-                        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
+                        //console.log("image ---->", image);
+
+                        let response;
+                        async function downloadImgToUpload(){
+                            response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+                            //console.log("response ---->", response); //un espaguitero grande
+                        }
+
+                        downloadImgToUpload()
+                            .then(()=>{
+                                    const epoch = new Date().getTime();
+                                    const folder = 'firstImgBuySell';
+                                    const pathField = image; const extPart = pathField.split(".");
+                                    const ext = extPart[4]; console.log("ext------->", ext)
+                                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+                
+                                    const key = `${folder}/${epoch}.${ext}`;
+                                    console.log("key -->", key);
+                                    let dImage;
+                                    
+                                    const params = { 
+                                    Bucket : bucketName,
+                                    Key : key,
+                                    Body : response.data,
+                                    ACL : 'public-read' 
+                                    };
+                                            
+                                    s3.putObject(params, function(err, data){
+                                    
+                                    if (err){
+                                        console.log('Error al subir un archivo', err);
+                                    } else {
+                                        console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                                
+                                        let url = `https://${bucketName}.${endpoint}/${key}`;    
+                                        let public_id = key;
+                                        dImage = {public_id, url};
+                                        saveDB()
+                                    }
+                                    
+                                    });
+                                    
+                                    async function saveDB(){
+
+                                        valueCommission = (bidAmount * 0.03);
+                                        let commission = valueCommission.toFixed(2); 
+                                        
+                                        const BuySell = new modelBuySell({ usernameSell : usernameSell, indexed,  usernameBuy: usernameBuy, department : department, title : title, title_id: titleOfAuction, tecnicalDescription, image : dImage, price : bidAmount, commission : commission });
+                                        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                                        //console.log('Aqui BuySell ---->', BuySell);
+                                        console.log("createBuysellAuction(+)")
+
+                                    }
+                                    
+                            })
+                            .catch((err)=>{
+                                console.log("ha habido un error en la compra de items", err);
+                            })        
+
+/*                         const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
                         //console.log("Aqui resultUpload ----->", resultUpload);
                         const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
                         const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
@@ -1256,7 +1355,7 @@ cron.schedule('*/1 * * * *', async () => {
                         const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         //console.log('Aqui BuySell ---->', BuySell);
 
-                        console.log("createBuysellAuction(+)")
+                        console.log("createBuysellAuction(+)") */
                         
                     }
 

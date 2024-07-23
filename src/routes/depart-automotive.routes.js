@@ -243,7 +243,6 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
                     } else {
                         console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
                         await fs.unlink(element.path); // element es el archivo de img y el .path tiene la direccion el metodo unlink del objet fs elimina el archivo de donde esta. 
-                        countFall ++;
                     }
                 }
                

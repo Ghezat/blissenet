@@ -389,7 +389,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
                     } else {
                         const result = await modelUser.findOne({ username: new RegExp( '^' + username + '$','i' ) });
                         console.log("Esto es result ---->", result);
-                        if (result.length !== 0) {
+                        if (result !== null) {
 
                             console.log("¡Este usuario existe! Debe buscar un nombre de usario unico.")
                             req.session.usernameExist = "¡Este nombre de username ya existe!"

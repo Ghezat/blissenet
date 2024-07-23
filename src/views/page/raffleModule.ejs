@@ -52,6 +52,7 @@
     margin: 1px;
 }
 
+
 @media screen and (min-width: 451px) and (max-width: 767px){
 
   .selectorContent{
@@ -123,198 +124,213 @@
             </div>
           
         </div>
-        <div class="row mx-0 d-flex justify-content-center pt-3 themaTextLight" style="background-color: rgba(233, 236, 239, 0.1)">
+
         
-          <div class="col-12 col-sm-12 col-md-4 col-lg-4 px-0" style="height: auto; border: 2px solid brown;">
-              <div class="content-fluid" style="background-color: brown; height: 30px;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Progreso</b> </span> </div> 
-              <div class="contentPercentdata d-flex justify-content-center align-itens-center" style="height: 100px;">
-                  <div class="d-flex align-items-center justify-content-center" style="width: 50%; height: 100%;">
-                     <span class="relation" style="height: auto; font-size: 32px;">  </span>
-                  </div>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 50%; height: 100%;">
-                     <span class="percent" style="height: auto; font-size: 40px;"> </span>
-                  </div>
-              </div>
-              
-          </div>
-          <div class="col-12 col-sm-12 col-md-7 col-lg-7 px-0" style="height: auto; border: 2px solid brown;">
-              <div class="content-fluid" style="background-color: brown; height: 30px;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Ticket Random</b> </span> </div>  
-              <div class="row mx-0 contentPercentdata" style="background-color: rgba(165, 42, 42, 0.8); height: 100px;">
+        <div class="row mx-0 d-flex justify-content-center contentPercentdata" style="height: auto;">
 
-                <div class="col-lg-3 px-0 d-flex justify-content-center align-itens-center" style="height: 100%;">
-                  <span class="randonFront" style="font-size: 50px; color: gold">  </span>
+              <div class="col-xl-5 col-lg-5 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column themaTextLight" style="height: 130px; border: 2px solid brown;">
+                
+                <div class="content-fluid" style="background-color: brown; height: 30px;">
+                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Progess</b> </span>
                 </div>
-                <div class="col-lg-9 px-0 d-flex flex-column bg-light" id="prizesObject" style="height: 100%; overflow-y: auto;">
-                  <!-- aqui el objeto PrizesObject (los premios y al lado los numeros ganadores cuando los tenga) -->
-                </div>  
-                 
-              </div>        
-          </div>
+                <div class="contentPercentdata d-flex justify-content-center align-itens-center" style="height: 100px;">
+                    <div class="d-flex align-items-center justify-content-center" style="width: 50%; height: 100%;">
+                       <span class="relation" style="height: auto; font-size: 32px;">  </span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center" style="width: 50%; height: 100%;">
+                       <span class="percent" style="height: auto; font-size: 40px;"> </span>
+                    </div>
+                </div>
+                
+              </div>
 
+              <div class="col-xl-3 col-lg-3 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column" style="background-color: rgba(165, 42, 42, 0.8); height: 130px; border: 2px solid brown;">
+                
+                <div class="content-fluid" style="background-color: brown; height: 30px;">
+                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Ticket Random</b> </span>
+                </div>
+                <span class="randonFront d-flex justify-content-center" style="font-size: 50px; color: gold">  </span>
+
+              </div>
+
+              <div class="col-xl-3 col-lg-3 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column" style="background-color: rgba(165, 42, 42, 0.8); height: 130px; border: 2px solid brown;">
+                
+                <div class="content-fluid" style="background-color: brown; height: 30px;">
+                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Prizes</b> </span>
+                </div>
+                <div class="container-fluid p-0 bg-light" id="prizesObject" style="overflow-y: auto; overflow-x: auto; width: 100%;">
+                  <!-- aqui el objeto PrizesObject (los premios y al lado los numeros ganadores cuando los tenga) -->
+                  
+                </div>
+                
+              </div>    
+                
         </div>
-        <div class="row mx-0 d-flex justify-content-center pt-3 pb-3 themaTextLight" style="background-color: rgba(233, 236, 239, 0.1); height: auto;" >
+       
+        <div class="row mx-0 d-flex justify-content-center mt-3 pb-3 themaTextLight" style="background-color: rgba(233, 236, 239, 0.1); height: auto;" >
         
          
-              <% if (search) { %>
+            <% if (search) { %>
 
-                  <% if (search.allTicketsTake == true) { %>
-                    <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0 border border-danger">
-                      <% let win = 0; %> <!-- creo un contador si termina con 1 o mas de 1 es un ganador-->
-                      <% let ticketWin = []; %>
-                      <% let rate = 0; %>
-                      <% search.PrizesObject.forEach((ele)=>{ %>
-                        <% if (ele.winUser == user.username ) { %>
-                          <% win = win + 1 %>
-                          <% ticketWin.push(ele.winTicket) %>
-                          <% if (ele.rate === null){ %>
-                            <% rate = rate + 1 %>
-                          <% }; %>    
-                        <% }; %>
-                        
-                      <% }) %>
+                <% if (search.allTicketsTake == true) { %>
+                  <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0 border border-danger">
+                    <% let win = 0; %> <!-- creo un contador si termina con 1 o mas de 1 es un ganador-->
+                    <% let ticketWin = []; %>
+                    <% let rate = 0; %>
+                    <% search.PrizesObject.forEach((ele)=>{ %>
+                      <% if (ele.winUser == user.username ) { %>
+                        <% win = win + 1 %>
+                        <% ticketWin.push(ele.winTicket) %>
+                        <% if (ele.rate === null){ %>
+                          <% rate = rate + 1 %>
+                        <% }; %>    
+                      <% }; %>
+                      
+                    <% }) %>
 
-                      <% if (win >= 1) { %>
-                        <% if (rate == 0  ){ %>
-                          <div class="row m-0">
+                    <% if (win >= 1) { %>
+                      <% if (rate == 0  ){ %>
+                        <div class="row m-0">
 
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0 border border-success alert-success" >
-                              <div class="p-0 d-flex align-items-center justify-content-center" style="height: auto;">
-                                <div class="alert m-0" style="width: 100%;">
-                                  <span><b class="me-1">(<%= user.username %>) <i class="bi bi-arrow-right-short"></i> Calificación enviada. </b> En cuanto todos los ganadores hayan calificado. Este sorteo podrá ser dado de baja por el Anfitrión.</span>
-                                </div>
-                              </div>  
-                            </div>
-
-                          </div>
-                        <% } else { %>
-                          <div class="row m-0">
-                            <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0 border border-danger">
-                              <div class="p-2 border border-success" style="height: auto;">
-
-                                <form action="/raffleModule/rate" method="post">
-                                  
-                                    <input name="username" id="username" type="hidden" value="<%= user.username %>"> 
-                                    <input name="IdRaffle" type="hidden" value="<%= search._id %>">
-                                    <p><b>La Suerte le ha sonreido <%= user.username %></b>.</p>
-
-                                    <div class="input-group my-1">
-                                        <span class="input-group-text" id="basic-addon1"> <i class="bi bi-ticket-perforated"></i> </span>
-                                        
-                                        <select name="winTicket" id="winTicketSelect" class="form-control">
-                                          <option value="select">Elegir</option>
-                                          
-                                        </select>
-                                        <input type="text" name="winPrize" id="winPrize" class="form-control" readonly>
-                                    </div>
-                                    <div class="input-group my-1">
-                                      <span class="input-group-text" id="basic-addon1"> <i class="bi bi-pencil"></i> </span>
-                                      <select name="rateSelect" id="rateSelect" class="form-control">
-                                        <option value="select">Elegir</option>
-                                        <option value="positivo">Positivo</option>
-                                        <option value="negativo">Negativo</option>
-                                      </select>
-                                      <button id="btnRate" class="btn btn-secondary form-control" disabled> Calificar </button>
-                                    </div>
-
-                                </form>
-
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0 border border-success alert-success" >
+                            <div class="p-0 d-flex align-items-center justify-content-center" style="height: auto;">
+                              <div class="alert m-0" style="width: 100%;">
+                                <span><b class="me-1">(<%= user.username %>) <i class="bi bi-arrow-right-short"></i> Calificación enviada. </b> En cuanto todos los ganadores hayan calificado. Este sorteo podrá ser dado de baja por el Anfitrión.</span>
                               </div>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-7 col-lg-7 d-flex align-items-center border border-danger alert-danger">
-                              <div class="p-2" style="height: auto;">
-                                <p class="m-0">Usted ha sido ganador con el Ticket <b><%= ticketWin %></b>. Ahora pongase encontacto con el Anfitrión, Luego de recibir su Premio, Puede calificar este Sorteo, eligiendo las opciones y dando clic en <b>Calificar</b>.</p>
-                              </div>
-                            </div>
+                            </div>  
                           </div>
-                        <% }; %>
-                       
-                      <% } else { %>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0 border border-info alert-info" >
-                          <div class="p-0 d-flex align-items-center justify-content-center" style="height: auto;">
-                            <div class="alert m-0" style="width: 100%;">
-                              <span> <b class="me-1">Este Sorteo ya se ha Celebrado.</b> En cuanto todos los ganadores hayan calificado este sorteo podrá ser dado de baja por el Anfitrión.</span>
-                            </div>
-                          </div>  
+
                         </div>
+                      <% } else { %>
+                        <div class="row m-0">
+                          <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0 border border-danger">
+                            <div class="p-2 border border-success" style="height: auto;">
 
-                      <% }; %>  
-                    </div>
+                              <form action="/raffleModule/rate" method="post">
+                                
+                                  <input name="username" id="username" type="hidden" value="<%= user.username %>"> 
+                                  <input name="IdRaffle" type="hidden" value="<%= search._id %>">
+                                  <p><b>La Suerte le ha sonreido <%= user.username %></b>.</p>
 
-                  <% } else { %>
-                    
-                        <% if (search.category === "Pago") { %>
-                          <div class="col-12 m-0 p-0 d-flex flex-wrap justify-content-center" style="height: auto;">
-                             <div class="row m-0 d-flex flex-wrap justify-content-center"> 
-                                <div class="col-12 col-sm-12 col-md-5 col-lg-5 px-0 border border-danger selectorContent" style="height: 100%; background-color: rgba(165, 42, 42, 0.8);">
-
-                                  <div class="content-fluid" style="background-color: brown; height: auto;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Datos de Pago</b> </span> </div>
-                                  <div class="contentPayData p-3" style="border:1px solid brown; height: auto;">
-                                    
-                                    <form action="/raffleModule/registerTicket/pay" method="post">
-                                        <div class="input-group my-1">
-                                            <input name="Id" type="hidden" value="<%= search._id %>">
-                                            <span class="input-group-text"> <i class="bi bi-ticket-perforated"></i></span>
-                                            <select name="NoTicket" id="selectTicket" class="form-control">
-                                              <option value="Select">Selet Ticket</option>
-                                              
-                                              <% if (ticketsTake) { %>
-                                                <% ticketsTake.forEach((ele, i)=>{ %>
-                                                  <% if (ele.Contestan === user.username) { %>
-                                                    <option value="<%= ele.No %>"><%= ele.No %></option>
-                                                  <% }; %>
-                                                <% }); %>
-                                              <% }; %>
+                                  <div class="input-group my-1">
+                                      <span class="input-group-text" id="basic-addon1"> <i class="bi bi-ticket-perforated"></i> </span>
+                                      
+                                      <select name="winTicket" id="winTicketSelect" class="form-control">
+                                        <option value="select">Elegir</option>
                                         
-                                            </select>
-                                            <span class="input-group-text"><i class="bi bi-bank"></i></span>
-                                            <input name="Ref" type="text" id="referTicket" class="form-control" maxlength="20" disabled>   
-                                            <span class="input-group-text"><i class="bi bi-plus-circle"></i></span>
-                                            
-                                        </div>
-                                        <div class="form-group mt-3 mb-2">
-                                            <input type="submit" value="Registrar Pago" id="btnRegister" class="form-control btn btn-secondary" disabled>
-                                        </div>
-                                    </form>
+                                      </select>
+                                      <input type="text" name="winPrize" id="winPrize" class="form-control" readonly>
+                                  </div>
+                                  <div class="input-group my-1">
+                                    <span class="input-group-text" id="basic-addon1"> <i class="bi bi-pencil"></i> </span>
+                                    <select name="rateSelect" id="rateSelect" class="form-control">
+                                      <option value="select">Elegir</option>
+                                      <option value="positivo">Positivo</option>
+                                      <option value="negativo">Negativo</option>
+                                    </select>
+                                    <button id="btnRate" class="btn btn-secondary form-control" disabled> Calificar </button>
+                                  </div>
 
-                                  </div>    
+                              </form>
+
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-12 col-md-7 col-lg-7 d-flex align-items-center border border-danger alert-danger">
+                            <div class="p-2" style="height: auto;">
+                              <p class="m-0">Usted ha sido ganador con el Ticket <b><%= ticketWin %></b>. Ahora pongase encontacto con el Anfitrión, Luego de recibir su Premio, Puede calificar este Sorteo, eligiendo las opciones y dando clic en <b>Calificar</b>.</p>
+                            </div>
+                          </div>
+                        </div>
+                      <% }; %>
+                     
+                    <% } else { %>
+                      <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0 border border-info alert-info" >
+                        <div class="p-0 d-flex align-items-center justify-content-center" style="height: auto;">
+                          <div class="alert m-0" style="width: 100%;">
+                            <span> <b class="me-1">Este Sorteo ya se ha Celebrado.</b> En cuanto todos los ganadores hayan calificado este sorteo podrá ser dado de baja por el Anfitrión.</span>
+                          </div>
+                        </div>  
+                      </div>
+
+                    <% }; %>  
+                  </div>
+
+                <% } else { %>
+                  
+                      <% if (search.category === "Pago") { %>
+                        <div class="col-12 m-0 p-0 d-flex flex-wrap justify-content-center" style="height: auto;">
+                           <div class="row m-0 d-flex flex-wrap justify-content-center"> 
+                              <div class="col-12 col-sm-12 col-md-5 col-lg-5 px-0 border border-danger selectorContent" style="height: 100%; background-color: rgba(165, 42, 42, 0.8);">
+
+                                <div class="content-fluid" style="background-color: brown; height: auto;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Datos de Pago</b> </span> </div>
+                                <div class="contentPayData p-3" style="border:1px solid brown; height: auto;">
+                                  
+                                  <form action="/raffleModule/registerTicket/pay" method="post">
+                                      <div class="input-group my-1">
+                                          <input name="Id" type="hidden" value="<%= search._id %>">
+                                          <span class="input-group-text"> <i class="bi bi-ticket-perforated"></i></span>
+                                          <select name="NoTicket" id="selectTicket" class="form-control">
+                                            <option value="Select">Selet Ticket</option>
+                                            
+                                            <% if (ticketsTake) { %>
+                                              <% ticketsTake.forEach((ele, i)=>{ %>
+                                                <% if (ele.Contestan === user.username) { %>
+                                                  <option value="<%= ele.No %>"><%= ele.No %></option>
+                                                <% }; %>
+                                              <% }); %>
+                                            <% }; %>
+                                      
+                                          </select>
+                                          <span class="input-group-text"><i class="bi bi-bank"></i></span>
+                                          <input name="Ref" type="text" id="referTicket" class="form-control" maxlength="20" disabled>   
+                                          <span class="input-group-text"><i class="bi bi-plus-circle"></i></span>
+                                          
+                                      </div>
+                                      <div class="form-group mt-3 mb-2">
+                                          <input type="submit" value="Registrar Pago" id="btnRegister" class="form-control btn btn-secondary" disabled>
+                                      </div>
+                                  </form>
+
+                                </div>    
+                                
+                              </div>
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-0 d-flex flex-column border border-danger infoContent" style="background-color: rgb(255, 227, 227); height: 100%;">
+                    
+                                <div class="content-fluid" style="background-color: brown; height: auto">
+                                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Información</b> </span>
+                                </div>
+                                <div class="content-fluid p-2 m-0 d-flex justify-content-center align-items-center" style="height: 80%; overflow-y: auto;">
+                    
+                                  <div class="alert-danger mt-0 py-2" style="height: auto !important;">
+                                    <p class="m-0"> Elige el ticket en la tabla de Distribución de Tickets, realiza el pago al anfitrión del Sorteo y regístralo en <b>'Datos de pago'</b> seleccionando el Ticket elegido y dando clic al botón azul. La información será verificada por el administrador del sorteo. Si el pago es efectivo, simplemente coloca la palabra 'efectivo'. En caso de depósito bancario, proporciona el número de confirmación o ref. completo. De esta forma, el anfitrión podrá verificar la información. </p>
+                                  </div>
                                   
                                 </div>
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-0 d-flex flex-column border border-danger infoContent" style="background-color: rgb(255, 227, 227); height: 100%;">
-                      
-                                  <div class="content-fluid" style="background-color: brown; height: auto">
-                                    <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Información</b> </span>
-                                  </div>
-                                  <div class="content-fluid p-2 m-0 d-flex justify-content-center align-items-center" style="height: 80%; overflow-y: auto;">
-                      
-                                    <div class="alert-danger mt-0 py-2" style="height: auto !important;">
-                                      <p class="m-0"> Elige el ticket en la tabla de Distribución de Tickets, realiza el pago al anfitrión del Sorteo y regístralo en <b>'Datos de pago'</b> seleccionando el Ticket elegido y dando clic al botón azul. La información será verificada por el administrador del sorteo. Si el pago es efectivo, simplemente coloca la palabra 'efectivo'. En caso de depósito bancario, proporciona el número de confirmación o ref. completo. De esta forma, el anfitrión podrá verificar la información. </p>
-                                    </div>
-                                    
-                                  </div>
-                      
-                                </div>
-                            </div>
-                          </div>  
-                        <% } else { %>
-                          <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0 border border-danger" style="background-color: rgb(255, 227, 227); height: 100%;">
-                
-                            <div class="content-fluid" style="background-color: brown; height: 20%;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Información</b> </span> </div>
-                            <div class="p-2  m-0 d-flex justify-content-center align-items-center" style="height: 80%; overflow-y: auto;">
-                
-                              <div class=" alert-danger my-2 p-2 rounded-2" style="border-left: 7px solid brown;">
-                                Por favor, elija un número de Ticket de la tabla de Distribución de Tickets. Es importante recordar que este sorteo es completamente <b>Gratuito</b> y cada participante solo podrá escoger un número una sola vez. Los eventos de sorteos constan de tres fases:  1. Distribución de Tickets, 2. Celebración del Evento (Generación del número ganador), 3. Cierre o culminación del Evento (Los ganadores, al calificar, cierran el evento).
+                    
                               </div>
-                              
-                            </div>
-                
                           </div>
-                        <% }; %>
+                        </div>  
+                      <% } else { %>
+                        <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0 border border-danger" style="background-color: rgb(255, 227, 227); height: 100%;">
+              
+                          <div class="content-fluid" style="background-color: brown; height: 20%;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Información</b> </span> </div>
+                          <div class="p-2  m-0 d-flex justify-content-center align-items-center" style="height: 80%; overflow-y: auto;">
+              
+                            <div class=" alert-danger my-2 p-2 rounded-2" style="border-left: 7px solid brown;">
+                              Por favor, elija un número de Ticket de la tabla de Distribución de Tickets. Es importante recordar que este sorteo es completamente <b>Gratuito</b> y cada participante solo podrá escoger un número una sola vez. Los eventos de sorteos constan de tres fases:  1. Distribución de Tickets, 2. Celebración del Evento (Generación del número ganador), 3. Cierre o culminación del Evento (Los ganadores, al calificar, cierran el evento).
+                            </div>
+                            
+                          </div>
+              
+                        </div>
+                      <% }; %>
 
-                  <% }; %>  
+                <% }; %>  
 
-              <% }; %>
+            <% }; %>
 
-        </div>
+        </div> 
+
             <%- include('../partials/footer.ejs') %>
 
         <% } else { %>
@@ -535,7 +551,7 @@ fetch('/raffleModule/data/', {
 
     //aqui colocamos los premios
     const prizesObject = document.getElementById('prizesObject'); //aqui este el elemento dodne inyectaremos los premios
-    
+        
 
     PrizesObject.forEach((element, i) => {
       let prize = element.Prize;
@@ -543,15 +559,20 @@ fetch('/raffleModule/data/', {
 
         if (winTicket !== null){
           prizesObject.innerHTML += `
-                                  <span class="alert-danger px-2 border-bottom border-danger" style="width: 100%;"><b>${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i></b> <span class="ms-2 dataTicketsUser"> </span> <b> <i class="bi bi-ticket-perforated me-1"></i>${winTicket}</b> </span>
+                                  <div class="alert-danger px-2 border-bottom border-danger" style="width: 100%;"><b>${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i></b> <span class="ms-2 dataTicketsUser"> </span> <b> <i class="bi bi-ticket-perforated me-1"></i>${winTicket}</b> </div>
                                   `
+    
+                           
         } else {
           prizesObject.innerHTML += `
-                                  <span class="alert-danger px-2 border-bottom border-danger" style="width: 100%;"><b>${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i></b> <span class="ms-2 dataTicketsUser"> </span>  </span>
+                                  <div class="alert-danger px-2 border-bottom border-danger" style="width: 100%;"><b>${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i></b> <span class="ms-2 dataTicketsUser"> </span>  </div>
                                   `
+               
         }
 
     });
+
+
         
 
     //este script funcionara cuando ya existan ganadores noimporta si es en el Sorteo Pago o Gratis

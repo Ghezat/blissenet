@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <%- include('../partials/head.ejs') %>
-    <title>Blissenet Buy&Sell</title>
+    <title>Blissenet Negotiation</title>
 </head>
 
 <!-- style="background-color: #e9ecef;" -->
@@ -13,12 +13,12 @@
     <%- include('../partials/navi-simple.ejs') %>
 
     <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgba(243, 238, 238, 0.9); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-        <p class="m-0 px-3">Buy&Sell-Body</p>
+        <p class="m-0 px-3">Negotiation-Body</p>
     </div>
    
     
-    <div class="contentBuy&sell pe-0 m-0">
-        <div class="row px-2 mx-0 d-flex justify-content-around" style="width: 100%; height: auto;">
+    <div class="contentBuy&sell pe-0 m-0" style="background-color: #e9ecef;">
+        <div class="row px-1 mx-0 d-flex justify-content-around" style="width: 100%; height: auto;">
             <div class="col-lg-5  my-4 p-0 rounded-1" style="height: 93%;">
             <% if (user) {  %>    
                 <% if (buySell) { %>
@@ -90,12 +90,12 @@
             </div>
             <!-- seccion del chat -->
             <div class="col-lg-6  my-4 p-0 rounded-1" style="height: 93%;">
-                <div class="ContainerMessage rounded-1 px-3" style="background-color: #dbdfe4; height: 96%;">
+                <div class="ContainerMessage rounded-1 px-2" style="background-color: #dbdfe4; height: 96%;">
             
-                    <div class="containerWritten p-2 border" style="width: 100%;">
+                    <div class="containerWritten p-1" style="width: 100%;">
                        
 
-                            <h6 class="text-decoration-underline mb-2">Hacer una pregunta al vendedor.</h6>
+                            <h6 class="text-decoration-underline my-2">Hacer una pregunta al vendedor.</h6>
                             <div class="containerTextButton d-flex justify-content-between" style="width: 100%;">
                                 <div class="form-group" style="width: 74%;">
                                     <% if (buySell.closedContact == true ){ %>
@@ -116,13 +116,11 @@
                                 </div>
                             </div>
 
-                       
                       
                     </div>
-                    <div class="card mx-2" style=" background-color: #dbdfe4; height: 80vh;">
-                        <div class="card-body d-flex flex-column justify-content-between" style="height: 100%; overflow-y: auto;">                           
+                    <div class="card" style=" background-color: #dbdfe4; height: 80vh;">
+                        <div class="card-body px-0 d-flex flex-column" style="height: 100%; overflow-y: auto;">                           
                             <div class="card my-1 showMessage border border-success" style="padding-right: 10px;">
-                                
                                 
                                 <% if (msg) { %>
                                     <% msg.forEach( (ele)=>{ %>

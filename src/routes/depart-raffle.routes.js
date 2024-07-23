@@ -12,7 +12,7 @@ const modelMessages = require('../models/messages.js');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 
-
+const axios = require('axios');
 const fs = require('fs-extra');
 const {S3} = require('aws-sdk');
 
@@ -28,7 +28,14 @@ const s3 = new S3({
     }
 });
 
+const cloudinary = require('cloudinary').v2;//esto no tendrá cambio
 
+cloudinary.config({
+    cloud_name : process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret : process.env.API_SECRET,
+    secure: true
+})
            
 routes.get('/department/create/raffle', async(req,res)=>{
     let countImpagos = 0;
@@ -153,12 +160,12 @@ routes.post('/department/create/raffle/selector', (req,res)=>{
 //esta es la ruta para crear un anuncio con try-catch
 routes.post('/department/create/raffle', async(req,res)=>{
     const boxImg = [];
+    const BOXTickets = [];
     const boxPrizesObject = [];
     const user = req.session.user
     console.log(user.username)
     const username = user.username; //aqui tengo el username 
     const department = 'raffle';
-
     const stateRaffle = await modelRaffle.find({username});
     console.log("stateRaffle", stateRaffle);
 
@@ -185,8 +192,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                 let hora = date.getHours();
                 let minu = date.getMinutes();
                 
-                const BOXTickets = [];
-                
+                                
                 if (minu <= 9){
                     dateStart = `${dia}-${mes}-${ani} ${hora}:0${minu}` 
                 } else {
@@ -200,9 +206,10 @@ routes.post('/department/create/raffle', async(req,res)=>{
                 let parseNumTickets = parseInt(numTickets);
                 let parsePrizes = parseInt(numberOfPrizes);
     
+                
                 for (let i = 1; i < parseNumTickets + 1; i++) {
                     let ticket = { "No" : i, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Verified" : false };
-                    BOXTickets.push(ticket)
+                    BOXTickets.push(ticket);
                 }
     
                 console.log("BOXTickets: ", BOXTickets)
@@ -243,8 +250,9 @@ routes.post('/department/create/raffle', async(req,res)=>{
                                 
                                 //console.log("Bucket :", bucketName); console.log("folder :", folder);
                                 //console.log("patchField :", pathField); console.log("ext", ext);
-                                
-                                uploadToS3 = async function (bucketName, folder, ident, pathField ){
+
+                                //bucketName, folder, ident, pathField --> Estos eran los prarametros que tenia
+                                uploadToS3 = async function (){
                                     
                                     const fileContent = fs.readFileSync(pathField);
                                     const key = `${folder}/${ident}.${ext}`;
@@ -277,13 +285,8 @@ routes.post('/department/create/raffle', async(req,res)=>{
                                             countSuccess ++;
                                             console.log( "countSuccess :", countSuccess );
         
-                                            async function deleteEleUpload(){
-                                                //console.log("este es el path que tiene que ser eliminado:", element.path)
-                                                fs.unlink(element.path)
-                                            }
-                                            
-                                            deleteEleUpload();
-        
+                                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                            fs.unlinkSync(element.path);                                                           
                                                 
                                         }
                                         
@@ -293,7 +296,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                                 }
         
                                 // invocamos la funcion uploadToS3 para subir las imaganes
-                                uploadToS3(bucketName, folder, ident, pathField)
+                                uploadToS3()
                                     .then(() => {
                                         console.log("Imagen subida al servidor digitalocean SPACES");
                                     })
@@ -305,7 +308,6 @@ routes.post('/department/create/raffle', async(req,res)=>{
                             } else {
                                 console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
                                 await fs.unlink(element.path); // element es el archivo de img y el .path tiene la direccion el metodo unlink del objet fs elimina el archivo de donde esta. 
-                                countFall ++;
                             }
 
                         }
@@ -369,7 +371,8 @@ routes.post('/department/create/raffle', async(req,res)=>{
 routes.post('/department/create/raffle/delete', async(req, res)=>{
     let boxMedia = [];
     let countFall = 0;
-    let countSuccess = 0;      
+    let countSuccess = 0; 
+    let countMedia = 0;     
     console.log("este es el id a deletear: ", req.body);
     const valor = req.body.titleToDelete
     console.log( "aqui en una variable", valor);
@@ -383,10 +386,11 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
             const PrizesObject = resultBD.PrizesObject
             let countTicket = 0;
             let countRate = 0;
+            
 
-            console.log("boxTickets", boxTickets);
-            console.log("esto se puede ver ???")
-            console.log("PrizesObject", PrizesObject);
+            //console.log("boxTickets", boxTickets);
+            //console.log("esto se puede ver ???")
+            //console.log("PrizesObject", PrizesObject);
 
             boxTickets.forEach( ticket => {
                 if (ticket.Take === true){
@@ -395,7 +399,7 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
             });
 
             PrizesObject.forEach( elePrize => {
-                console.log(elePrize.rate)
+                //console.log(elePrize.rate)
                 if ( elePrize.rate === null ){
                     countRate = countRate + 1;
                 }
@@ -428,7 +432,7 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                 for (let i = 0; i < boxMedia.length; i++) {
                     const public_id = boxMedia[i].public_id;
                     
-                    console.log("este es el public_id a eliminar : ", public_id);
+                    //console.log("este es el public_id a eliminar : ", public_id);
 
                     async function deleteMedias(public_id){
 
@@ -477,7 +481,7 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                 console.log("countRate -->", countRate)
                 if (countRate === 0){
                     console.log("Se puede Eliminar")
-                    console.log("Here this body for delete :", resultBD);
+                    //console.log("Here this body for delete :", resultBD);
                     const imagesToDelete = resultBD.images;
                     const videoToDelete = resultBD.video;
 
@@ -539,8 +543,8 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                     async function deleteDB(){
                         const deletingDoc = await modelRaffle.findByIdAndDelete(valor);
 
-                        req.session.deletePublication = "Publicación eliminada"
-                        res.redirect('/department/create/nautical')
+                        req.session.deletePublication = "Publicación eliminada";
+                        res.redirect('/department/create/raffle');
                     }   
         
                     
@@ -548,7 +552,7 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                 } else {
                     console.log("No se puede Eliminar")
                     req.session.deleteNoPublication = "Imposible Eliminar Publicación"
-                    res.redirect('/department/create/nautical') 
+                    res.redirect('/department/create/raffle') 
                 }
                
             }
@@ -557,7 +561,7 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
         
     }catch(error){
         req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
-        res.redirect('/department/create/raffle')
+        res.redirect('/department/create/raffle');
     }    
 
 });
@@ -1337,7 +1341,71 @@ cron.schedule('*/1 * * * *', async() => {
                             const raffle = await modelRaffle.findById(Id);
                             const PrizesObject =  raffle.PrizesObject;
                             const image = raffle.images[0].url;
-                            const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
+                            //console.log("image ---->", image);
+
+                            let response;
+                            async function downloadImgToUpload(){
+                                response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+                                //console.log("response ---->", response); //un espaguitero grande
+                            }
+
+                            downloadImgToUpload()
+                                .then(()=>{
+                                        const epoch = new Date().getTime();
+                                        const folder = 'firstImgRaffleHistory';
+                                        const pathField = image; const extPart = pathField.split(".");
+                                        const ext = extPart[4]; console.log("ext------->", ext)
+                                        //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+                    
+                                        const key = `${folder}/${epoch}.${ext}`;
+                                        console.log("key -->", key);
+                                        let dImage;
+                                        
+                                        const params = { 
+                                        Bucket : bucketName,
+                                        Key : key,
+                                        Body : response.data,
+                                        ACL : 'public-read' 
+                                        };
+                                                
+                                        s3.putObject(params, function(err, data){
+                                        
+                                            if (err){
+                                                console.log('Error al subir un archivo', err);
+                                            } else {
+                                                console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                                        
+                                                let url = `https://${bucketName}.${endpoint}/${key}`;    
+                                                let public_id = key;
+                                                dImage = {public_id, url};
+
+                                                async function saveDB(){ 
+                                                    const history = new modelRaffleHistory({ category, anfitrion : UserName, anfitrion_id, title_id : Id , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
+                                                    //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
+                                                    const historySave = await history.save(); //data salvada.
+                                                }
+
+                                                saveDB() //invocar funcion 
+                                                    .then(()=>{
+                                                        console.log('se guardo el historial del sorteo OK')
+                                                    })
+                                                    .catch((err)=>{
+                                                        console.log("XXXXXXXXXXXXXXXXXXXXXXX ERROR XXXXXXXXXXXXXXXXXXXXXXXX");
+                                                        console.log('XXXX  ha habido un error al guardar el historial XXXX', err);
+                                                    })
+                                            }
+                                        
+                                        });
+                                        
+
+                                        
+                                })
+                                .catch((err)=>{
+                                    console.log("ha habido un error en la descarga de la imagen raffle", err);
+                                })  
+
+
+/*                             const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
                             //console.log("Aqui resultUpload ----->", resultUpload);
                             const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
                             const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
@@ -1345,7 +1413,7 @@ cron.schedule('*/1 * * * *', async() => {
                 
                             const history = new modelRaffleHistory({ category, anfitrion : UserName, anfitrion_id, title_id : Id , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
                             //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
-                            const historySave = await history.save(); //data salvada. 
+                            const historySave = await history.save(); //data salvada.  */
                         }
                     
                         TicketWin() //:::invocacion de la primera Funcion TicketWin
@@ -1400,6 +1468,10 @@ cron.schedule('*/1 * * * *', async() => {
 
                     } else {
                         
+                        let countFall = 0;
+                        let countSuccess = 0; 
+                        let countMedia = 0;  
+
                         //funcion para enviar un correo al anfitrion de que su sorteo fue eliminado 
                         async function emailAnfitrion(){
                             console.log("emailAnfitrion() -> ejecutandose"); 
@@ -1477,16 +1549,68 @@ cron.schedule('*/1 * * * *', async() => {
                             const RaffleByDate = await modelRaffle.findById(Id);
 
                             const imagesToDelete = RaffleByDate.images;
-                            console.log("Here array to the images :", imagesToDelete); 
-                
-                            /* Aqui elimino las fotos de cloudinary */            
-                            for (let i = 0; i < imagesToDelete.length; i++) {
-                                const ele = imagesToDelete[i].public_id;
-                                const resultCludinary = await cloudinary.uploader.destroy(ele);        
+                            const videoToDelete = RaffleByDate.video;
+
+                            if (videoToDelete.length !==0){
+                                boxMedia = [...imagesToDelete, ...videoToDelete];
+                                countMedia = boxMedia.length;         
+                            } else {
+                                boxMedia = [...imagesToDelete];
+                                countMedia = boxMedia.length;
                             }
+
+                            //meter en un array fotos y video
+                            console.log("Here array to the boxMedia :", boxMedia); 
+                          
+                            for (let i = 0; i < boxMedia.length; i++) {
+                                const public_id = boxMedia[i].public_id;
+                                
+                                const params = {
+                                    Bucket : bucketName,
+                                    Key : public_id
+                                }
+                                s3.deleteObject(params, (err, data)=>{
+                                    if (err){
+                                        countFall ++;
+                                        console.error("Error al eliminar el archivo --->", err);
+                                    } else {
+                                        countSuccess ++;
+                                        console.log("Media eliminada con exito --->");
+                                    }
+                                }) 
+
+                            }    
+
+                            setInterval(reviewDelet, 3000);
+
+                            function reviewDelet(){
+            
+                                if (countMedia === (countSuccess + countFall)) {
+                                    
+                                    countMedia ++; //aseguramos con esto detener la funcion reviewUpload
+                                    clearInterval(reviewDelet); //detenemos la evaluacion
+                                    deleteDB()
+            
+                                }
+                            }   
+            
+                            async function deleteDB(){
+                                const deletingDoc = await modelRaffle.findByIdAndDelete(Id);                          
+                            } 
                 
-                            const deletingDoc = await modelRaffle.findByIdAndDelete(Id);
+                            deleteDB()
+                                .then(()=>{
+                                  console.log("Raffle eliminado satisfactoriamente, OK");
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha ocurrido un error, intente mas tarde.", err);
+                                   
+                                })
+                    
+       
                         }
+                
+                            
 
                         emailAnfitrion()
                             .then(()=>{
@@ -1508,6 +1632,7 @@ cron.schedule('*/1 * * * *', async() => {
                             .catch((error)=>{
                                 console.log("Ha habido un error emailAnfitrion()", error);
                             })
+
                     }
                     
                         

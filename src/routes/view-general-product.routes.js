@@ -19,6 +19,24 @@ const modelInvoice = require('../models/invoice.js');
 const modelMessages = require('../models/messages.js');
 
 const nodemailer = require('nodemailer');
+
+const axios = require('axios');
+const fs = require('fs-extra');
+const {S3} = require('aws-sdk');
+
+const endpoint = 'nyc3.digitaloceanspaces.com';
+const bucketName = 'bucket-blissve';
+
+const s3 = new S3({
+    endpoint,
+    region : 'us-east-1',
+    credentials : {
+        accessKeyId : process.env.ACCESS_KEY,
+        secretAccessKey : process.env.SECRET_KEY
+    }
+});
+
+
 const cloudinary = require('cloudinary').v2;//esto no tendrá cambio
 
 cloudinary.config({
@@ -847,8 +865,7 @@ routes.post('/raffleModule/data/', async(req, res)=>{
 
 //aqui tomamos un ticket sorteo Gratis 
 routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
-    //const { ObjectId } = require('mongodb');
-    
+        
     const user = req.session.user;
     const username = user.username;
     let searchProfile, resp;
@@ -864,7 +881,7 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
     if (searchProfile.length !==0){
 
         const { Id, NoTicket } = req.body; //Id es el id del raffle
-        console.log("Id :", Id);
+        console.log("Id :", Id); 
         console.log("NoTicket :", NoTicket);
         const Ticket = parseInt(NoTicket);
         console.log("Ticket :", typeof Ticket);
@@ -886,7 +903,7 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
 
         const search = await modelRaffle.findById(Id);
         const productId = search._id; //el id del articulo (Sorteo).
-        const depart = search.department; //aqui el depaartamento.
+        const depart = search.department; //aqui el departamento.
         const title = search.title; //aqui tengo el title
         const urlImageArticle = search.images[0].url 
         const category = search.category; //aqui la categoria
@@ -1150,6 +1167,71 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
                             const raffle = await modelRaffle.findById(productId);
                             const PrizesObject =  raffle.PrizesObject;
                             const image = raffle.images[0].url;
+                            //console.log("image ---->", image);
+
+                            let response;
+                            async function downloadImgToUpload(){
+                                response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+                                //console.log("response ---->", response); //un espaguitero grande
+                            }
+                            
+                            downloadImgToUpload()
+                                .then(()=>{
+                                        const epoch = new Date().getTime();
+                                        const folder = 'firstImgRaffleHistory';
+                                        const pathField = image; const extPart = pathField.split(".");
+                                        const ext = extPart[4]; console.log("ext------->", ext) //esto es para conseguir la extencion .png o jpg
+                                        //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+                    
+                                        const key = `${folder}/${epoch}.${ext}`;
+                                        console.log("key -->", key);
+                                        let dImage;
+                                        
+                                        const params = { 
+                                            Bucket : bucketName,
+                                            Key : key,
+                                            Body : response.data,
+                                            ACL : 'public-read' 
+                                        };
+                                                
+                                        s3.putObject(params, function(err, data){
+                                        
+                                            if (err){
+                                                console.log('Error al subir un archivo', err);
+                                            } else {
+                                                console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                                        
+                                                let url = `https://${bucketName}.${endpoint}/${key}`;    
+                                                let public_id = key;
+                                                dImage = {public_id, url};
+
+                                                async function saveDB(){ 
+                                                    const history = new modelRaffleHistory({ category, anfitrion : UserName, anfitrion_id, title_id : Id , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
+                                                    //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
+                                                    const historySave = await history.save(); //data salvada.
+                                                }
+
+                                                saveDB() //invocar funcion 
+                                                    .then(()=>{
+                                                        console.log('se guardo el historial del sorteo OK')
+                                                    })
+                                                    .catch((err)=>{
+                                                        console.log("XXXXXXXXXXXXXXXXXXXXXXX ERROR XXXXXXXXXXXXXXXXXXXXXXXX");
+                                                        console.log('XXXX  ha habido un error al guardar el historial XXXX', err);
+                                                    })
+                                            }
+                                        
+                                        });
+                                        
+
+                                        
+                                })
+                                .catch((err)=>{
+                                    console.log("ha habido un error en la descarga de la imagen raffle", err);
+                                })  
+
+/* 
+                           {     
                             const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
                             //console.log("Aqui resultUpload ----->", resultUpload);
                             const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
@@ -1158,7 +1240,11 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
                 
                             const history = new modelRaffleHistory({ category, anfitrion, anfitrion_id, title_id : productId, title, price, numTickets, PrizesObject, dateStart, image: dImage });
                             //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
-                            const historySave = await history.save(); //data salvada. 
+                            const historySave = await history.save(); //data salvada.
+                            }
+
+ */
+
                         };
                     
                         TicketWin() //:::invocacion de la primera Funcion TicketWin
@@ -1261,6 +1347,10 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
 
         }
 
+        //este es el patron del nacimiento de un ticket
+        //posee 7 propiedades con sus valores por default 
+        //estos objetos iran modificandose en el tiempo si es tomado por un usuario
+
         //"No" : 7,
         //"Contestan" : "",
         //"No_Serial" : 1708869455364,
@@ -1300,7 +1390,7 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
         //console.log("Aqui el profile de la cuenta del visitante -->", searchProfile);
     }
 
-    console.log("***********L e e r**********");
+    console.log("*********** L e e r **********");
     console.log("searchProfile -->", searchProfile);
     
     if (searchProfile.length !==0){
@@ -1319,6 +1409,7 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
         const anio = new Date().getFullYear();
         const hora = new Date().getHours();
         const minu = new Date().getMinutes();
+        
         let dateNow;
         if (minu <= 9){
             dateNow = `${dia}-${mes}-${anio} ${hora}:0${minu}`;

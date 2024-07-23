@@ -353,7 +353,7 @@
                             
                                 <a href="/terms" class=" text-decoration-none" style="color: #842029;">¿Hay aqui un Problema? <i class="bi bi-info-circle ms-2"></i></a>
                             
-                                <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="bi bi-pencil-fill" style="color: #842029;"></i></a>
+                                <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <i class="bi bi-chevron-down" style="color: #842029;"></i> </a>
                             
                             </p>
                         
@@ -483,8 +483,12 @@
                                     <% if (user.username !== search.username) { %>
                                         <!-- tercera condicion que el articulo no este pausado -->
                                         <% if (search.paused !== true  ) { %>
-                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" data-bs-toggle="modal" data-bs-target="#staticComprar">
+                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticComprar">
                                             Comprar
+                                        </button>
+                                        <button class="btn btn-primary form-control invisibleBtn mt-2" type="button" id="btnCreateLoading" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Comprando...
                                         </button>
                                         <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
                                         <hr>
@@ -526,8 +530,12 @@
                                     <% if (user.username !== search.username) { %>
                                         <!-- tercera condicion que el articulo no este pausado -->
                                         <% if (search.paused !== true  ) { %>
-                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" data-bs-toggle="modal" data-bs-target="#staticContactar">
+                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" id="btnContact" data-bs-toggle="modal" data-bs-target="#staticContactar">
                                             Contactar
+                                        </button>
+                                        <button class="btn btn-primary form-control invisibleBtn mt-2" type="button" id="btnContactLoading" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Contactando...
                                         </button>
                                         <% }  else { %>
                                         <button type="button" class="dataBuy btn btn-secondary mt-2 text-light form-control" disabled>
@@ -717,9 +725,10 @@
                                 <% if (depart == 'items' || depart == 'arts') { %>
                                     <span>Solo de a comprar si esta seguro de adquirir este producto.</span> <br> <hr>
                                     <p>Modo compra directa sin seguro</p>
-                                    <button type="button" class="btn btn-primary mt-2 text-light form-control">
+                                    <button type="button" class="btnBuy btn btn-primary mt-2 text-light form-control">
                                         Comprar
                                     </button>
+
                                     <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
                                     <hr>
                                     <p>Modo compra segura</p>                        
@@ -863,7 +872,7 @@
                                     <% if (user) { %>
                                         <% if (usernameSell){ %>
                                             <% if  (search) { %>
-                                            <a href="/buysell-one/direct/<%= user.username %>/<%= usernameSell %>/<%= search.department %>/<%= search._id %>"><button type="button" class="btn btn-primary buyDirect" data-bs-dismiss="modal">De acuerdo</button></a>
+                                            <a href="/buysell-one/direct/<%= user.username %>/<%= usernameSell %>/<%= search.department %>/<%= search._id %>"><button type="button" class="btn btn-primary contactDirect" data-bs-dismiss="modal">De acuerdo</button></a>
                                             <% }; %>    
                                         <% }; %>
                                     <% }; %>
@@ -2351,4 +2360,27 @@ btnReportar.addEventListener('click', ()=>{
 
 </script>
 
+<script>//con este script logro proteger y dar el spinnier en el boton de carga.
+
+    const btnCreate = document.getElementById('btnCreate');
+    const btnCreateLoading = document.getElementById('btnCreateLoading');
+    const buyDirect = document.querySelector('.buyDirect');
+
+    const btnContact = document.getElementById('btnContact');
+    const btnContactLoading = document.getElementById('btnContactLoading');
+    const contactDirect = document.querySelector('.contactDirect');
+
+    buyDirect.addEventListener('click', ()=>{
+        btnCreate.classList.add('invisibleBtn');
+        btnCreateLoading.classList.remove('invisibleBtn');
+    })
+
+    contactDirect.addEventListener('click', ()=>{
+        btnContact.classList.add('invisibleBtn');
+        btnContactLoading.classList.remove('invisibleBtn');
+    })
+
+           
+
+</script>
 
