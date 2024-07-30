@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Servicios y Precios</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        width: 100wh;
+    }
+    main{
+        width: 100%;
+        height: auto;
+    }
+
+    .theme{
+        cursor: pointer;
+    }
+
+    .close{
+        display: none;
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+
+</style>
+<body class="mainTheme">
+    <main>
+
+        <%- include('../partials/navi-simple.ejs') %>
+        <div class="container-fluid" style="height: max-content; background-color: #e9ecef;" >
+            <div class="row p-0 d-flex justify-content-center mx-0 my-0" style="width: 100%;">
+                <div class="col-11 col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 px-0">
+
+                    <h5 class="mt-5 mb-4 border-bottom border-secondary">Servicios y Precios</h5>
+
+                    <div class="container-fluid p-0 mb-4">
+                        <div class="alert alert-info" style="border-left: 5px solid rgb(33, 103, 150);">
+                            <p><span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> Importante :</span> Esta plataforma estará ofreciendo sus servicios de publicación de anuncios totalmente gratuitos. Aun asi deberá de registrar su pago usando la modalidad "Gratis" y enviarlo en cero (0) </p>
+                        </div>
+                    </div>
+                    
+                    <div class="container-Fluid p-0 mt-4 table-responsive">
+                        <table class="table table-hover border">
+
+                            <thead>
+                                <tr>
+                                    <th>Departamento</th><th>Segmento</th><th>img</th><th>video</th><th>audio</th><th>texto</th><th>Precio</th><th>Tiempo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>items</td><td>buy/sell</td><td>12</td><td>1</td><td>0</td><td>1500</td><td>5% Base al articulo</td><td>ilimitado</td>
+                                </tr>
+                                <tr>
+                                    <td>arts</td><td>buy/sell</td><td>12</td><td>1</td><td>0</td><td>1500</td><td>5% Base al articulo</td><td>ilimitado</td>
+                                </tr>
+                                <tr>    
+                                    <td>automotive</td><td>negociation</td><td>12</td><td>1</td><td>0</td><td>1500</td><td>$6 Pago unico</td><td>1 año</td>
+                                </tr>
+                                <tr>    
+                                    <td>airplanes</td><td>negociation</td><td>12</td><td>1</td><td>0</td><td>1500</td><td>$8 Pago unico</td><td>1 año</td>
+                                </tr>
+                                <tr>    
+                                    <td>nautical</td><td>negociation</td><td>12</td><td>1</td><td>0</td><td>1500</td><td>$8 Pago unico</td><td>1 año</td>
+                                </tr>
+                                <tr>    
+                                    <td>realstate</td><td>negociation</td><td>12</td><td>1</td><td>0</td><td>1500</td><td>$8 Pago unico</td><td>1 año</td>
+                                </tr>
+                                <tr>    
+                                    <td>service</td><td>negociation</td><td>6</td><td>1</td><td>0</td><td>1500</td><td>$0 Sin costo</td><td>1 año</td>
+                                </tr>
+                                <tr>    
+                                    <td>raffle</td><td>buy/sell</td><td>12</td><td>1</td><td>0</td><td>1500</td><td> <span class="me-2">$6 Gratis</span>|<span class="ms-2">$8 Pago</span> </td><td>ilimitado</td>
+                                </tr>
+                                <tr>    
+                                    <td>auctions</td><td>buy/sell</td><td>12</td><td>1</td><td>1</td><td>1500</td><td>3% Base al articulo</td><td>ilimitado</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+
+                    <div class="container-fluid my-5 p-0">
+                        <span class="title py-2 px-3 alert alert-light fw-bold" style="border-top-right-radius: 5px; border-top-left-radius: 5px;">Segmentos</span>
+                        <div class="alert alert-light m-0 box-shadow">
+                            <span class="fw-bold">compra/venta</span>
+                            <p>Este segmento comprende los departamentos donde el comprar es una responsabilidad y donde es posible calificar las partes (comprador y vendedor). Aqui la comisión es porcentual y la Factura aparece cuando la venta se ha ejecutado y calificado. De resto no tendrás facturas pendientes. </p>
+                            <br>
+                            <span class="fw-bold">negociación</span>
+                            <p>El segmento negociación comprende los departamentos donde no hay una responsabilidad real de compra solo se entra en una sala de negociación por interes del articulo o servicio. Aqui la Factura aparece al crearse el anuncio. Debes estar claro con las politicas de Blissenet ya que si decides eliminar el anuncio igual tendrias una Factura pendiente. </p>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid p-0 mb-5">
+                        <table class="table table-hover border box-shadow">
+                            <thead>
+                                <tr>
+                                    <th>Recurso</th><th>Peso</th><th>Formato</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>img</td><td>2 Mb Max.</td><td>jpg/png</td>
+                                </tr>
+                                <tr>
+                                    <td>video</td><td>50 Mb Max.</td><td>mp4</td>
+                                </tr>
+                                <tr>
+                                    <td>audio</td><td>10 Mb Max.</td><td>mp3</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div class="alert alert-light my-1 box-shadow">
+                        <span class="fw-bold">Carga max. de resurso en MB por anuncio</span>
+                        <p>En esta Tabla abajo presentada se detalla la carga maxima de peso por anuncio en mb. Recomandamos utilizar formatos jpg. </p>
+                    </div>
+
+                    <div class="container-fluid p-0 mb-5 table-responsive">
+                        <table class="table table-hover border box-shadow">
+                            <thead>
+                                <tr>
+                                    <th>Departamento</th><th>img</th><th>video</th><th>audio</th><th>Total Peso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>items</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td>74 mb</td>
+                                </tr>
+                                <tr>
+                                    <td>arts</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td>74 mb</td>
+                                </tr>
+                                <tr>    
+                                    <td>automotive</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td>74 mb</td>
+                                </tr>
+                                <tr>    
+                                    <td>airplanes</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td>74 mb</td>
+                                </tr>
+                                <tr>    
+                                    <td>nautical</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td>74 mb</td>
+                                </tr>
+                                <tr>    
+                                    <td>realstate</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td>74 mb</td>
+                                </tr>
+                                <tr>    
+                                    <td>service</td><td>6 x 2 <i class="bi bi-arrow-right-short"></i>(12)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td>62 mb</td>
+                                </tr>
+                                <tr>    
+                                    <td>raffle</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>0</td><td> 74 mb</span> 
+                                </tr>
+                                <tr>    
+                                    <td>auctions</td><td>12 x 2 <i class="bi bi-arrow-right-short"></i>(24)</td><td>1 x 50  <i class="bi bi-arrow-right-short"></i>(50)</td><td>1 x 10  <i class="bi bi-arrow-right-short"></i>(10)</td><td>84 mb</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    
+
+    </main>
+    <%- include('../partials/scripts.ejs') %>
+    <!--  este script controla el estado de los themas. -->
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+</body>    

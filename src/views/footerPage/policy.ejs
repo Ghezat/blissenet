@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Politicas de Uso</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        width: 100wh;
+    }
+    main{
+        width: 100%;
+        height: auto;
+    }
+
+    .theme{
+        cursor: pointer;
+    }
+
+    .close{
+        display: none;
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+
+</style>
+<body class="mainTheme">
+    <main>
+
+        <%- include('../partials/navi-simple.ejs') %>
+        <div class="container-fluid" style="height: max-content; background-color: #e9ecef;" >
+            <div class="row p-0 d-flex justify-content-center mx-0 my-0" style="width: 100%;">
+                <div class="col-11 col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 px-0 table-responsive">
+
+                    <h5 class="mt-5 mb-4 border-bottom border-secondary">Politicas de Uso</h5>
+
+                    <div class="container-fluid p-0 mb-4">
+                        <div class="alert alert-danger" style="border-left: 5px solid rgb(150, 33, 49);">
+                            <p><span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> Importante :</span> Al registarse acepta las Politicas de Uso abaja descritas.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="container-fluid my-5 p-0">
+                        
+                        <div class="alert alert-light m-0 box-shadow">
+                           
+                            <span class="fw-bold">1. Responsabilidad.</span>
+                            <p>Es completamente responsable de la creación y publicación de sus Anuncios. </p>
+                            <br>
+                            <span class="fw-bold">2. Limite máximo de Facturas sin pagar.</span>
+                            <p>Tiene un limite máximo de dos (2) Facturas sin pagar. Cuando tiene tres (3) Facturas, las Herramientas ADS y Raffle de desactivan y entra su cuenta en "Impagos" deberá pagar al menos una (1) Factura para volver a tener las Herrmientas de crear, editar, eliminar y difundir a seguidores. </p>
+                            <br>
+                            <span class="fw-bold">3. Eliminación de Anuncios del segmento Negociación.</span>
+                            <p>Sepa bien que al crear un Anuncio del Segmento "negociacion" (automotriz, nautico, aeronautico y realstate) este anuncio nace con una Factura que podrá ver en el apartado Facturas. La eliminació del Anuncio no elimina la Factura, esta quedará vigente hasta que sea procesada como pagada sin límite de tiempo. Las Facturas nunca vencen y puede pagarlas cuando usted lo decida.</p>
+                            <br>
+                            <span class="fw-bold">4. Baneo o Cancelación de Cuenta (Tienda).</span>
+                            <p>Si su Cuenta o Tienda, infringe en violación de los <a href="/terms" style="text-decoration: none;"> "Terminos y Condiciones" </a> podrá ser penalizado por una (1) o dos (2) semanas. En el caso de Tener varios Baneos la administración de Blissenet se reserva el derecho a dar de baja y cancelar su cuenta o tienda. </p>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    
+
+    </main>
+    <%- include('../partials/scripts.ejs') %>
+    <!--  este script controla el estado de los themas. -->
+    <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+</body>    

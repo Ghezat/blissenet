@@ -129,7 +129,8 @@
                         if (type == "delete"){
                             //esta direccion aqui abajo debemos cambiarla por la direccion real cuando este en el servidor
                             //('https://blissenet.com/myaccount/signup', '_self'); ---- el _self es para que abra en la misma ventana o se coporte como una actualizacion de ventana.
-                            window.open('http://localhost:1263/admin/','_self');
+                            //window.open('http://localhost:1263/admin/','_self'); --> desarrollo
+                            window.open('https://blissenet.com/admin/','_self'); // --> produccion
                         }
                         // resp: "Registro Eliminado",  type: "delete"
 

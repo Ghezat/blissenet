@@ -36,4 +36,38 @@ routes.get('/terms', async (req,res)=>{
 
 });
 
+routes.get('/servicePrice', async (req,res)=>{
+
+    const user = req.session.user;
+    const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
+    const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
+    let searchProfile;
+    
+    if (user){
+        //console.log("Esto es user._id ------>", user._id );
+        searchProfile = await modelProfile.find({ indexed : user._id });
+    }
+
+    res.render('footerPage/servicePrice', {user,searchProfile, countMessages, countNegotiationsBuySell });
+
+});
+
+
+routes.get('/policy', async (req,res)=>{
+
+    const user = req.session.user;
+    const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
+    const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
+    let searchProfile;
+    
+    if (user){
+        //console.log("Esto es user._id ------>", user._id );
+        searchProfile = await modelProfile.find({ indexed : user._id });
+    }
+
+    res.render('footerPage/policy', {user,searchProfile, countMessages, countNegotiationsBuySell });
+
+});
+
+
 module.exports = routes;
