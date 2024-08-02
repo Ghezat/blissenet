@@ -1523,7 +1523,7 @@ routes.post('/raffleModule/registerTicket/pay', async(req, res)=>{
     
 });
 
-////:::YES boton Si (el pago sera registrado como Si pagado)
+////:::YES boton Si (el pago será registrado como Si pagado)
 //aqui es donde un anfitrion de un sorteo pago verifica un pago de Tickect
 //Tambien se ejecuta una validacion del progreso de la toma y conformacion de Ticket con el fin de ejecutar el script de generacion de Tickets Ganadores.
 routes.get("/raffleModule/verifiedTicket/payYes/:id/:contestan/:NoTicket", async(req, res)=>{
@@ -1799,7 +1799,71 @@ routes.get("/raffleModule/verifiedTicket/payYes/:id/:contestan/:NoTicket", async
             const raffle = await modelRaffle.findById(productId);
             const PrizesObject =  raffle.PrizesObject;
             const image = raffle.images[0].url;
-            const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
+            //console.log("image ---->", image);
+
+            let response;
+            async function downloadImgToUpload(){
+                response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+                //console.log("response ---->", response); //un espaguitero grande
+            }
+            
+            downloadImgToUpload()
+                .then(()=>{
+                        const epoch = new Date().getTime();
+                        const folder = 'firstImgRaffleHistory';
+                        const pathField = image; const extPart = pathField.split(".");
+                        const ext = extPart[4]; console.log("ext------->", ext) //esto es para conseguir la extencion .png o jpg
+                        //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+    
+                        const key = `${folder}/${epoch}.${ext}`;
+                        console.log("key -->", key);
+                        let dImage;
+                        
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : response.data,
+                            ACL : 'public-read' 
+                        };
+                                
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                            } else {
+                                console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                        
+                                let url = `https://${bucketName}.${endpoint}/${key}`;    
+                                let public_id = key;
+                                dImage = {public_id, url};
+
+                                async function saveDB(){
+                                    const history = new modelRaffleHistory({ category, anfitrion, anfitrion_id, title_id : productId , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage }); 
+                                    //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
+                                    const historySave = await history.save(); //data salvada.
+                                }
+
+                                saveDB() //invocar funcion 
+                                    .then(()=>{
+                                        console.log('se guardo el historial del sorteo OK')
+                                    })
+                                    .catch((err)=>{
+                                        console.log("XXXXXXXXXXXXXXXXXXXXXXX ERROR XXXXXXXXXXXXXXXXXXXXXXXX");
+                                        console.log('XXXX  ha habido un error al guardar el historial XXXX', err);
+                                    })
+                            }
+                        
+                        });
+                        
+
+                        
+                })
+                .catch((err)=>{
+                    console.log("ha habido un error en la descarga de la imagen raffle", err);
+                })  
+
+//este bloque debe ser eliminado cuando sea probado.
+/*             const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
             //console.log("Aqui resultUpload ----->", resultUpload);
             const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
             const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
@@ -1807,7 +1871,7 @@ routes.get("/raffleModule/verifiedTicket/payYes/:id/:contestan/:NoTicket", async
 
             const history = new modelRaffleHistory({ category, anfitrion, anfitrion_id, title_id : productId , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
             //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
-            const historySave = await history.save(); //data salvada. 
+            const historySave = await history.save(); //data salvada.  */
         }
     
         TicketWin() //:::invocacion de la primera Funcion TicketWin

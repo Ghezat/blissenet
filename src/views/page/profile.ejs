@@ -107,6 +107,10 @@
             <%- include('../alert/bannerErrorCharge.ejs') %> 
          <% }; %>
          
+         <% if (withoutDefinedBanner){ %>
+            <%- include('../alert/withoutDefinedBanner.ejs') %> 
+         <% }; %>
+
          <% if (user) { %>
             
 

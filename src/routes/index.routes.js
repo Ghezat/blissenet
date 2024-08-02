@@ -1110,6 +1110,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
         const avatarErrorCharge = req.session.avatarErrorCharge;
         const bannerErrorSizeMimetype = req.session.bannerErrorSizeMimetype;
         const bannerErrorCharge = req.session.bannerErrorCharge;
+        const withoutDefinedBanner = req.session.withoutDefinedBanner;
 
         delete req.session.profSuccess;
         delete req.session.updateSuccess;
@@ -1125,6 +1126,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
         delete req.session.avatarErrorCharge;
         delete req.session.bannerErrorSizeMimetype;
         delete req.session.bannerErrorCharge;
+        delete req.session.withoutDefinedBanner;
  
         if (user !== undefined){  
             searchProfile = await modelProfile.find({ indexed : user._id });  
@@ -1164,13 +1166,13 @@ routes.get('/myaccount/profile', async (req,res)=>{
                 Dateborn = `${dia}/${mes}/${anio}`;
                 //console.log("Esto es Dateboard : ", Dateborn);
 
-                res.render('page/profile', {user, Dateborn, profSuccess, searchProfile, sumCount, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge });
+                res.render('page/profile', {user, Dateborn, profSuccess, searchProfile, sumCount, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner });
             } else {
-                res.render('page/profile', {user, profSuccess, searchProfile, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge});
+                res.render('page/profile', {user, profSuccess, searchProfile, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner });
             }
         } else {
             console.log("no existe usuario");
-            res.render('page/profile', {user, searchProfile, profSuccess, updateSuccess, token, changePasswSuccess,errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge });
+            res.render('page/profile', {user, searchProfile, profSuccess, updateSuccess, token, changePasswSuccess,errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner });
         }      
 
 });
@@ -1202,6 +1204,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
 
         } else {
             //NO hay banner default para darles a los usuarios, NO se puede crear el profile
+            req.session.withoutDefinedBanner = "Sin banner por defecto definido, comunicarse con la administración.";
             res.redirect('profile');
         }
 

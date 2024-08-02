@@ -157,7 +157,7 @@ routes.post('/department/create/raffle/selector', (req,res)=>{
     res.redirect('/department/create/raffle');
 });
              
-//esta es la ruta para crear un anuncio con try-catch
+//esta es la ruta para crear un anuncio de sorteo con try-catch
 routes.post('/department/create/raffle', async(req,res)=>{
     const boxImg = [];
     const BOXTickets = [];
@@ -1009,6 +1009,7 @@ routes.post('/department/create/raffle/edit', async(req, res)=>{
 
 
 cron.schedule('*/1 * * * *', async() => {
+    //este cron ejecuta tareas de verificacion y ejecucion de sorteo Pago y Gratis por igual
     console.log('************ Raffle ************')
     console.log('Escuchando cada minuto si hay sorteos por ejecutar de tipo byDate');   
     const searchRaffleByDate = await modelRaffle.find({ raffleClosingPolicy : 'byDate', allTicketsTake: false });
@@ -1020,7 +1021,7 @@ cron.schedule('*/1 * * * *', async() => {
     let dateNowData; //este es la fecha que requiere el message
     let ticketRandom = [];
     let updatePrizesObject; // esta variable se actualiza cuando la funcion messagesForWin() es ejecutada
-    // es un ibjeto que posee el numero ganador y el username a quien pertenece el ticket. este objeto ya actualizado lo usaremos en una funcion 
+    // es un objeto que posee el numero ganador y el username a quien pertenece el ticket. este objeto ya actualizado lo usaremos en una funcion 
     // llamada createAndSendEmails()
 
     const diaNow = dtNow.getDate();
@@ -1046,7 +1047,7 @@ cron.schedule('*/1 * * * *', async() => {
                 const depart = searchRaffleByDate[i].department; //aqui el departamento. 
                 const title = searchRaffleByDate[i].title; //aqui tengo el title
                 const urlImageArticle = searchRaffleByDate[i].images[0].url;
-                const category = searchRaffleByDate[i].category; //Pago
+                const category = searchRaffleByDate[i].category; //Pago o Gratis
                 const policy = searchRaffleByDate[i].raffleClosingPolicy; //politica de celebracion
                 const price = searchRaffleByDate[i].price //precio del ticket
                 const dateStart = searchRaffleByDate[i].dateStart; //aqui la fecha de creacion del sorteo ya formateada.

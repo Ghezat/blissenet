@@ -76,7 +76,7 @@ routes.get('/comments/:username', async(req, res)=>{
     
     //Armando la fecha de creacion de esta tienda
     const dia = Date.getDate();
-    const mes = Date.getMonth();
+    const mes = Date.getMonth() + 1;
     const year = Date.getFullYear();
     
     const fullDate = `${dia}-${mes}-${year}`;

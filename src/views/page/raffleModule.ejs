@@ -550,7 +550,7 @@ fetch('/raffleModule/data/', {
     setInterval( RAndom, 1000)
 
     //aqui colocamos los premios
-    const prizesObject = document.getElementById('prizesObject'); //aqui este el elemento dodne inyectaremos los premios
+    const prizesObject = document.getElementById('prizesObject'); //aqui este el elemento donde inyectaremos los premios
         
 
     PrizesObject.forEach((element, i) => {
@@ -559,13 +559,18 @@ fetch('/raffleModule/data/', {
 
         if (winTicket !== null){
           prizesObject.innerHTML += `
-                                  <div class="alert-danger px-2 border-bottom border-danger" style="width: 100%;"><b>${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i></b> <span class="ms-2 dataTicketsUser"> </span> <b> <i class="bi bi-ticket-perforated me-1"></i>${winTicket}</b> </div>
+                                  <div class="alert-danger px-2 border-bottom border-danger fw-bold" style="width: 100%; overflow : auto; white-space: nowrap">
+                                      <span style="display: inline-block"> ${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i> </span>
+                                      <span style="display: inline-block"> <i class="bi bi-ticket-perforated me-1"></i>${winTicket}</span>
+                                  </div>
                                   `
     
                            
         } else {
           prizesObject.innerHTML += `
-                                  <div class="alert-danger px-2 border-bottom border-danger" style="width: 100%;"><b>${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i></b> <span class="ms-2 dataTicketsUser"> </span>  </div>
+                                  <div class="alert-danger px-2 border-bottom border-danger fw-bold" style="width: 100%; overflow : auto; white-space: nowrap">
+                                     <span style="display: inline-block"> ${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i> </span>
+                                  </div>
                                   `
                
         }
@@ -712,4 +717,7 @@ fetch('/raffleModule/data/', {
   })
 
 </script>
-
+<!-- 
+esto sera eliminado
+<span style="display: inline-block" class="ms-2 dataTicketsUser"> </span>
+ --> 
