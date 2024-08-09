@@ -6,7 +6,6 @@
   const logoBlissenet = document.getElementById('logoBlissenet');
   const logoBlissenetCom = document.getElementById('logoBlissenet_com');
   const dropdownMenuLink = document.getElementById('dropdownMenuLink');
-  const storeIcon = document.querySelector('.storeIcon');
   const footerTheme = document.querySelector('.footerTheme');
   const themaTextLight = document.querySelectorAll('.themaTextLight'); //esta clase para que funcione debe tener en el style del html la clase .textLight
   const linkOptions = document.querySelectorAll('.linkOptions');
@@ -26,9 +25,6 @@
       logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetBlack.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
       dropdownMenuLink.innerHTML = '<i class="bi bi-palette"></i>'
       controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoSun.png" class="me-1"  style="width: 20px;"> Light</p>'
-      if (storeIcon){
-        storeIcon.style.cssText = "background-color : black; width: 140px"
-      }
       if (footerTheme){
         footerTheme.classList.remove('bg-dark', 'text-light');
         footerTheme.classList.add('bg-light', 'text-dark');
@@ -52,9 +48,7 @@
       logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetWhite.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
       dropdownMenuLink.innerHTML = '<i class="bi bi-palette text-light"></i>'
       controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;"> Dark</p>'
-      if (storeIcon){
-        storeIcon.style.cssText = "background-color : white; width: 140px"
-      }
+
       if (footerTheme){
         footerTheme.classList.add('bg-dark', 'text-light');
         footerTheme.classList.remove('bg-light', 'text-dark');
@@ -109,7 +103,6 @@
         console.log('ponemos todo dark')
        
         barrHorizontIcon.style.cssText = 'background-color : #1f2327;'
-        storeIcon.style.cssText = "background-color : white; width: 140px"
         arteGallery.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
         raffle.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
         aeronautica.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
@@ -151,8 +144,6 @@
         console.log('ponemos todo light')
    
         barrHorizontIcon.style.cssText = 'background-color : #b8bdc4;'
-       
-        storeIcon.style.cssText = "background-color : black; width: 140px"
         raffle.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
         arteGallery.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
         aeronautica.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"

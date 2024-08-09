@@ -45,7 +45,7 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const mail_master = process.env.mail_master;  //aqui esta el correo master-administrativo;
 
-//esta herramienta es para poder enviar las imagenes banenr a la nube de cloudinary
+
 cloudinary.config({
     cloud_name : process.env.CLOUD_NAME,
     api_key: process.env.API_KEY, 
@@ -53,7 +53,7 @@ cloudinary.config({
     secure: true
 })
 
-
+const axios = require('axios');
 const fs = require('fs-extra');
 const {S3} = require('aws-sdk');
 
@@ -3264,25 +3264,6 @@ routes.get('/admin/bannersFront/delete/:dir/:public', async (req, res)=>{
             }
         });
     
-/*
-        async function deleteBannerCloudy(){
-            const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
-            console.log("ya he eliminado la imagen de Cloudinary", resultDelete);
-        }
-
-        async function updateBannerDB(){
-            const updateDB = await modelBannerFront.updateOne({public_id: publicIdToDelete}, { $set : { "active" : false , "delete" : true, "url" : "", "public_id" : "" }});
-        }
-
-        deleteBannerCloudy()
-            .then(()=>{
-                updateBannerDB()
-                    .then(()=>{
-                        req.session.msgBannerDelete = 'Se ha eliminado el Banner satisfactoriamente.'
-                        res.redirect('/admin/bannersFront')
-                    })
-            })
-*/
 
     } catch (error) {
         console.log("------Error------")
@@ -3406,7 +3387,6 @@ routes.post('/admin/background/create', async (req,res)=>{
         
         const userAdmin = req.session.userAdmin;
         const adminName = userAdmin[0].adminName;
-        //{folder: 'Backgrounds'}  cloudinary
         console.log("*******Background******* ");
         console.log("Esto es lo que llega al backend desde la administracion actualizacion de background --->")
         console.log(req.body);
@@ -3429,60 +3409,50 @@ routes.post('/admin/background/create', async (req,res)=>{
                 
                     if (size <= 3000000 && mimetype.startsWith("image/")){
 
-                    const fileContent = fs.readFileSync(pathField);
-                    const key = `${folder}/${ident}.${ext}`;
-                    console.log("key -->", key);
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
 
-                    const params = { 
-                        Bucket : bucketName,
-                        Key : key,
-                        Body : fileContent,
-                        ACL : 'public-read' 
-                    };
-        
-                    s3.putObject(params, function(err, data){
-                    
-                        if (err){
-                            console.log('Error al subir un archivo', err);
-                        } else {
-                            console.log('La imagen fue subida, Exito', data);
-                            //ahora vamos a eliminar la imagen vieja;
-                            saveSingInDB()
-                                .then(()=>{
-                                    req.session.msgBackgroundSave = 'Se ha agregado un Background.';
-                                    res.redirect('/admin/bg-sign'); 
-                                })
-                                .catch((err)=>{
-                                    console.log("Ha ocurrido un error", err)
-                                })
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+            
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                //ahora vamos a eliminar la imagen vieja;
+                                saveSingInDB()
+                                    .then(()=>{
+                                        req.session.msgBackgroundSave = 'Se ha agregado un Background.';
+                                        res.redirect('/admin/bg-sign'); 
+                                    })
+                                    .catch((err)=>{
+                                        console.log("Ha ocurrido un error", err)
+                                    })
+                            }
+                            
+                        })   
+
+                        let url = `https://${bucketName}.${endpoint}/${key}`;    
+                        let public_id = key;
+
+                        async function saveSingInDB(){
+
+                            // eliminamos el archivo de upload
+                            await fs.unlink(path);
+
+                            console.log("Datos del Banner se guardarán en la base de datos");
+                            const background = new modelBackgroundSign({ active: false, typeBackground : type, codeBackground : epoch, url, public_id, adminName });
+                            const backgroundSave = await background.save();
                         }
                         
-                    })   
-
-                    let url = `https://${bucketName}.${endpoint}/${key}`;    
-                    let public_id = key;
-
-                    async function saveSingInDB(){
-
-                        // eliminamos el archivo de upload
-                        await fs.unlink(path);
-
-                        console.log("Datos del Banner se guardarán en la base de datos");
-                        const background = new modelBackgroundSign({ active: false, typeBackground : type, codeBackground : epoch, url, public_id, adminName });
-                        const backgroundSave = await background.save();
-                    }
                      
-                     
-/*                         const result = await cloudinary.uploader.upload(path, {folder: 'Backgrounds'});
-                        console.log("Esto es result de lo que viene de cloudinary ---->",result);
-                        const { url, public_id } = result;
-                        //elimino del server
-                        await fs.unlink(path);
-                        console.log("Datos del Banner se guardarán en la base de datos");
-                        const background = new modelBackgroundSign({ active: false, typeBackground : type, codeBackground : epoch, url, public_id, adminName });
-                        const backgroundSave = await background.save();
-                        req.session.msgBackgroundSave = 'Se ha agregado un Background sl Sign.';
-                        res.redirect('/admin/bg-sign'); */ 
                     }       
 
 
@@ -3811,25 +3781,6 @@ routes.get('/admin/background/delete/:dir/:public', async (req, res)=>{
             const updateDB = await modelBackgroundSign.deleteOne({public_id: publicToDelete});
         }
 
-/*
-        async function deleteBakgroundCloudy(){
-            const resultDelete = await cloudinary.uploader.destroy(publicIdToDelete);
-            console.log("ya he eliminado la imagen de Cloudinary", resultDelete);
-        }
-
-        async function updateBackgroundDB(){
-            const updateDB = await modelBackgroundSign.deleteOne({public_id: publicIdToDelete});
-        }
-
-        deleteBakgroundCloudy()
-            .then(()=>{
-                updateBackgroundDB()
-                    .then(()=>{
-                        //req.session.msgBannerDelete = 'Se ha eliminado el Banner satisfactoriamente.'
-                        res.redirect('/admin/bg-sign');
-                    })
-            })
-*/
 
     } catch (error) {
         console.log("------Error------")
@@ -4092,7 +4043,65 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
                     const indexed = searchIndexed[0].indexed;
 
                     let valueCommission = 0;
-                            
+
+                    let response;
+                    async function downloadImgToUpload(){
+                        response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+                        //console.log("response ---->", response); //un espaguitero grande
+                    }
+
+                    downloadImgToUpload()
+                        .then(()=>{
+                                const epoch = new Date().getTime();
+                                const folder = 'firstImgBuySell';
+                                const pathField = image; const extPart = pathField.split(".");
+                                const ext = extPart[4]; console.log("ext------->", ext)
+                                //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+            
+                                const key = `${folder}/${epoch}.${ext}`;
+                                console.log("key -->", key);
+                                let dImage;
+                                
+                                const params = { 
+                                    Bucket : bucketName,
+                                    Key : key,
+                                    Body : response.data,
+                                    ACL : 'public-read' 
+                                };
+                                        
+                                s3.putObject(params, function(err, data){
+                                
+                                if (err){
+                                    console.log('Error al subir un archivo', err);
+                                } else {
+                                    console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                            
+                                    let url = `https://${bucketName}.${endpoint}/${key}`;    
+                                    let public_id = key;
+                                    dImage = {public_id, url};
+                                    saveDB()
+                                }
+                                
+                                });
+                                
+                                async function saveDB(){
+
+                                    valueCommission = (bidAmount * 0.03);
+                                    let commission = valueCommission.toFixed(2); 
+                                    
+                                    const BuySell = new modelBuySell({ usernameSell : store, indexed,  usernameBuy: usernameBuy, department : department, title : title, title_id: titleOfAuction, tecnicalDescription, image : dImage, price : bidAmount, commission : commission });
+                                    const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                                    //console.log('Aqui BuySell ---->', BuySell);
+                                    console.log("createBuysellAuction(+)")
+
+                                }
+                                
+                        })
+                        .catch((err)=>{
+                            console.log("ha habido un error de cierre de Subasta", err);
+                        })
+                    //------- section to delete   
+                    /*                        
                     const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
                     //console.log("Aqui resultUpload ----->", resultUpload);
                     const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
@@ -4102,10 +4111,10 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
                     valueCommission = (bidAmount * 0.03);
                     let commission = valueCommission.toFixed(2); 
                     
-                    const BuySell = new modelBuySell({ usernameSell : store, indexed,  usernameBuy: usernameBuy, department : department, title : title, title_id: titleOfAuction, tecnicalDescription, image : dImage, price : bidAmount, commission : commission });
+                    const BuySell = new modelBuySell({ usernameSell : store, indexed,  usernameBuy, department, title, title_id: titleOfAuction, tecnicalDescription, image : dImage, price : bidAmount, commission });
                     const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                     //console.log('Aqui BuySell ---->', BuySell);
-                    
+                    */
                 }
 
                 //Creacion y envio de correo a (vendedor)    
@@ -4570,15 +4579,79 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
                 const raffle = await modelRaffle.findById(Id);
                 const PrizesObject =  raffle.PrizesObject;
                 const image = raffle.images[0].url;
+
+                let response;
+                async function downloadImgToUpload(){
+                    response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+                    //console.log("response ---->", response); //un espaguitero grande
+                }
+
+                downloadImgToUpload()
+                    .then(()=>{
+                            const epoch = new Date().getTime();
+                            const folder = 'firstImgRaffleHistory';
+                            const pathField = image; const extPart = pathField.split(".");
+                            const ext = extPart[4]; console.log("ext------->", ext)
+                            //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+        
+                            const key = `${folder}/${epoch}.${ext}`;
+                            console.log("key -->", key);
+                            let dImage;
+                            
+                            const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : response.data,
+                            ACL : 'public-read' 
+                            };
+                                    
+                            s3.putObject(params, function(err, data){
+                            
+                                if (err){
+                                    console.log('Error al subir un archivo', err);
+                                } else {
+                                    console.log('La imagen fue subida, Exitooooooooooooooo', data);
+                                            
+                                    let url = `https://${bucketName}.${endpoint}/${key}`;    
+                                    let public_id = key;
+                                    dImage = {public_id, url};
+
+                                    async function saveDB(){ 
+                                        const history = new modelRaffleHistory({ category, anfitrion : UserName, anfitrion_id, title_id : Id , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
+                                        //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
+                                        const historySave = await history.save(); //data salvada.
+                                    }
+
+                                    saveDB() //invocar funcion 
+                                        .then(()=>{
+                                            console.log('se guardo el historial del sorteo OK')
+                                        })
+                                        .catch((err)=>{
+                                            console.log("XXXXXXXXXXXXXXXXXXXXXXX ERROR XXXXXXXXXXXXXXXXXXXXXXXX");
+                                            console.log('XXXX  ha habido un error al guardar el historial XXXX', err);
+                                        })
+                                }
+                            
+                            });
+                            
+
+                            
+                    })
+                    .catch((err)=>{
+                        console.log("ha habido un error en la descarga de la imagen raffle", err);
+                    })  
+
+
+                //-- section to delete
+                /*
                 const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
                 //console.log("Aqui resultUpload ----->", resultUpload);
                 const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
                 const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-                //
 
                 const history = new modelRaffleHistory({ category, anfitrion : UserName, anfitrion_id, title_id : Id , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
                 //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
-                const historySave = await history.save(); //data salvada. 
+                const historySave = await history.save(); //data salvada.*/ 
             };
 
 
@@ -5401,7 +5474,8 @@ routes.post('/admin/process/reports', async(req, res)=>{
 
 });
              
-//esta es la ruta para tomar los reportes y poder luego ejecutar una accion que puede : Eliminar todo al ADS o Eiminar recursos de tipo Media. (videos e imaganes).
+//esta es la ruta para tomar los reportes y poder luego ejecutar una accion que puede ser
+// : Eliminar todo al ADS o Eiminar recursos de tipo Media. (videos e imaganes).
 routes.post('/admin/process/taking/reports', async (req,res)=>{
 
     console.log(req.body);
@@ -5599,7 +5673,7 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
     try {
         
         if (Action === 'deleteAll') {
-            //Se elimina todo el objetivo completo. 
+            //Se elimina todo el objeto completo. 
 
             if (Depart === 'airplanes'){
 
@@ -5607,21 +5681,46 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                 //console.log("Here this body for delete :", resultBD);
                 const imagesToDelete = resultBD.images;
                 const videoToDelete = resultBD.video;
-                console.log("Here all array to the images :", imagesToDelete);
+                let boxMedia;
+
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
 
                 async function deleteMedias(){
 
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -5631,20 +5730,18 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                     
                     //elimina una factura si existe  
                     const resultInvoice = await modelInvoice.find({title_id : IdTitle});
-                    console.log("Esto es resultInvoice", resultInvoice);
+                    //console.log("Esto es resultInvoice", resultInvoice);
                     if (resultInvoice.length !==0){
                         const deleteInvoice = await modelInvoice.deleteOne({title_id : IdTitle});
                     }
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()")
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);
+                    console.log("se ha ejecutado deletingDocInvoiceReport()")
                 }
                 
                 //req.session.adminDeletePublication = "Publicación eliminada"
@@ -5655,9 +5752,9 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch( (e)=> { console.error("Ha ocurrido un error, intente luego.",e)} );
+                            .catch( (e)=> { console.error("Ha ocurrido un error en deletingDocInvoiceReport()",e)} );
                     })
-                    .catch( (e)=>{ console.error("Ha ocurrido un error, intente luego.",e)} );
+                    .catch( (e)=>{ console.error("Ha ocurrido un error en deleteMedias()",e)} );
 
 
             } else if (Depart === 'arts'){
@@ -5666,20 +5763,46 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                 //console.log("Here this body for delete :", resultBD);
                 const imagesToDelete = resultBD.images;
                 const videoToDelete = resultBD.video;
-                console.log("Here all array to the images :", imagesToDelete);
+                let boxMedia;
+
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
 
                 async function deleteMedias(){
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -5689,21 +5812,18 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                     
                     //elimina una factura si existe  
                     const resultInvoice = await modelInvoice.find({title_id : IdTitle});
-                    console.log("Esto es resultInvoice", resultInvoice);
+                    //console.log("Esto es resultInvoice", resultInvoice);
                     if (resultInvoice.length !==0){
                         const deleteInvoice = await modelInvoice.deleteOne({title_id : IdTitle});
                     }
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()");
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);
-
+                    console.log("se ha ejecutado deletingDocInvoiceReport()");
                 }
                 
                 //req.session.adminDeletePublication = "Publicación eliminada"
@@ -5714,9 +5834,9 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> {console.error("Ha ocurrido un error, intente luego.", e)})
+                            .catch((e)=> {console.error("Ha ocurrido un error en deletingDocInvoiceReport().", e)})
                     })
-                    .catch((e)=> {console.error("Ha ocurrido un error, intente luego.", e)})
+                    .catch((e)=> {console.error("Ha ocurrido un error en deleteMedias().", e)})
                     
 
             } else if (Depart === 'service') {
@@ -5725,21 +5845,46 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                 console.log("Here this body for delete :", resultBD);
                 const imagesToDelete = resultBD.images;
                 const videoToDelete = resultBD.video;
-                console.log("Here all array to the images :", imagesToDelete);
+                let boxMedia;
 
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
 
                 async function deleteMedias(){
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -5755,13 +5900,12 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()")
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
+                    console.log("se ha ejecutado deletingDocInvoiceReport()")
+                 
                 }
 
                 
@@ -5773,9 +5917,9 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.log("Ha ocurrido un error, intente luego.", e))
+                            .catch((e)=> console.log("Ha ocurrido un error en deletingDocInvoiceReport().", e))
                     })
-                    .catch((e)=>{ console.error("Ha ocurrido un error, intente luego.", e)})
+                    .catch((e)=>{ console.error("Ha ocurrido un error en deleteMedias().", e)})
 
                 
                 
@@ -5785,21 +5929,46 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                 console.log("Here this body for delete :", resultBD);
                 const imagesToDelete = resultBD.images;
                 const videoToDelete = resultBD.video;
-                console.log("Here all array to the images :", imagesToDelete);
+                let boxMedia;
 
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
 
                 async function deleteMedias(){
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -5809,21 +5978,20 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                     
                     //elimina una factura si existe
                     const resultInvoice = await modelInvoice.find({title_id : IdTitle});
-                    console.log("Ver aqui el resultado de la busqueda de la factura");
-                    console.log(resultInvoice);
+                    //console.log("Ver aqui el resultado de la busqueda de la factura");
+                    //console.log(resultInvoice);
                     if (resultInvoice.length !==0){
                         const deleteInvoice = await modelInvoice.deleteOne({title_id : IdTitle});
                     }
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()")
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                     
+                    console.log("se ha ejecutado deletingDocInvoiceReport()");
+                         
                 }
 
                 
@@ -5835,32 +6003,56 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=>{ console.log("Ha ocurrido un error, intente luego.", e)})
+                            .catch((e)=>{ console.log("Ha ocurrido un error en deletingDocInvoiceReport().", e)})
                     })
-                    .catch((e)=> { console.log("Ha ocurrido un error, intente luego.", e)})
+                    .catch((e)=> { console.log("Ha ocurrido un error en deleteMedias().", e)})
 
             } else if (Depart === 'items'){
-
 
                 const resultBD = await modelItems.findById(IdTitle)
                 console.log("Here this body for delete :", resultBD);
                 const imagesToDelete = resultBD.images;
                 const videoToDelete = resultBD.video;
-                console.log("Here all array to the images :", imagesToDelete);
+                let boxMedia;
 
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
 
                 async function deleteMedias(){
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -5876,13 +6068,12 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()")
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                     
+                    console.log("se ha ejecutado deletingDocInvoiceReport()");
+                    
                 }
 
                 
@@ -5894,24 +6085,56 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> {console.error("Ha ocurrido un error, intente luego.", e)})
+                            .catch((e)=> {console.error("Ha ocurrido un error en deleteMedias().", e)})
                     })
-                    .catch((e)=> {console.error("Ha ocurrido un error, intente luego.",e)})            
+                    .catch((e)=> {console.error("Ha ocurrido un error en deletingDocInvoiceReport().",e)})            
 
             } else if (Depart === 'nautical'){
 
+                const resultBD = await modelNautical.findById(IdTitle)
+                console.log("Here this body for delete :", resultBD);
+                const imagesToDelete = resultBD.images;
+                const videoToDelete = resultBD.video;
+                let boxMedia;
+
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
+
                 async function deleteMedias(){
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -5927,17 +6150,14 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()")
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);
+                    console.log("se ha ejecutado deletingDocInvoiceReport()");
                                         
                 }
 
-                
                 //req.session.adminDeletePublication = "Publicación eliminada"
                 const messageSucces = { "note" : "Anuncio Eliminado, Invoice eliminado Si hay, Reporte ha sido actualizado"};
                 deleteMedias()
@@ -5946,25 +6166,58 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> {console.error("Ha ocurrido un error, intente luego.", e)} )
+                            .catch((e)=>{ console.log("Ha ocurrido un error en deletingDocInvoiceReport().", e)})
                     })
-                    .catch((e)=> {console.error("Ha ocurrido un error, intente luego.", e)} )            
+                    .catch((e)=> { console.log("Ha ocurrido un error en deleteMedias().", e)})
+
 
             } else if (Depart === 'realstate'){
         
 
+                const resultBD = await modelRealstate.findById(IdTitle)
+                console.log("Here this body for delete :", resultBD);
+                const imagesToDelete = resultBD.images;
+                const videoToDelete = resultBD.video;
+                let boxMedia;
+
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
+
                 async function deleteMedias(){
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -5980,13 +6233,12 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()")
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                     
+                    console.log("se ha ejecutado deletingDocInvoiceReport()");
+                   
                 }
 
                 
@@ -5996,28 +6248,61 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                     .then(()=>{
                         deletingDocInvoiceReport()
                             .then(()=>{
-
+                                res.json(messageSucces)
                             })
-                            .catch((e)=>{ console.error("Ha ocurrido un error, intente luego.", e)})
+                            .catch((e)=>{ console.log("Ha ocurrido un error en deletingDocInvoiceReport().", e)})
                     })
-                    .catch((e)=> { console.log("Ha ocurrido un error, intente luego", e)})        
+                    .catch((e)=> { console.log("Ha ocurrido un error en deleteMedias().", e)})       
 
                     
 
             } else if (Depart === 'auctions'){
 
+
+                const resultBD = await modelAuction.findById(IdTitle)
+                console.log("Here this body for delete :", resultBD);
+                const imagesToDelete = resultBD.images;
+                const videoToDelete = resultBD.video;
+                let boxMedia;
+
+                if (videoToDelete.length !=0){
+                    boxMedia = [...imagesToDelete, ...videoToDelete];
+                    countMedia = boxMedia.length;         
+                } else {
+                    boxMedia = [...imagesToDelete];
+                    countMedia = boxMedia.length;
+                }
+
+                console.log("Here all array to the images & video :", boxMedia);
+
                 async function deleteMedias(){
-                    /* Aqui elimino las fotos de cloudinary */
-                    for (let i = 0; i < imagesToDelete.length; i++) {
-                        const element = imagesToDelete[i];
-                        console.log("este es el public_id a eliminar : ",element.public_id);
-                        const resultCludinary = await cloudinary.uploader.destroy(element.public_id)        
+
+                    for (let i = 0; i < boxMedia.length; i++) {
+                        const public_id = boxMedia[i].public_id;
+                        
+                        console.log("este es el public_id a eliminar : ", public_id);
+
+                        async function deleteMedias(public_id){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : public_id
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    //countFall ++;
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    //countSuccess ++;
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+        
+                        deleteMedias(public_id)        
                     }
-                    /* Aqui elimino el video si hay de cloudinary */
-                    if (videoToDelete.length !==0 ){
-                        const video = videoToDelete[0].public_id;
-                        const resultCludinary = await cloudinary.uploader.destroy(video)
-                    }
+
                     console.log("se ha ejecutado deleteMedias()")
                 }
 
@@ -6033,13 +6318,11 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                     //actualiza el Report y los demas reportes que tengan el mismo "id_title" : "661422df5e8a27bacc5fb20a"
                     const resultReport = await modelReport.updateMany({id_title : IdTitle}, { process : true, action : "deleteAll", dateClose });
-                    console.log("se ha ejecutado deletingDocInvoiceReport()")
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                     
+                    console.log("se ha ejecutado deletingDocInvoiceReport()");
                 }
 
                 
@@ -6051,9 +6334,9 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> {console.error("Ha ocurrido un error, intente luego", e)})
+                            .catch((e)=>{ console.log("Ha ocurrido un error en deletingDocInvoiceReport().", e)})
                     })
-                    .catch((e)=> {console.error("Ha ocurrido un error, intente luego", e)})
+                    .catch((e)=> { console.log("Ha ocurrido un error en deleteMedias().", e)})  
 
             }
 
@@ -6064,7 +6347,8 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
 
                 async function deleteMediaDocReport(){
-
+                    console.log("******************** BoxMedia *********************");
+                    console.log("Ver BoxMedia", BoxMedia);
                     if (BoxMedia.length !==0){
                         for (let i = 0; i < BoxMedia.length; i++) {
                             const Type = BoxMedia[i].type;
@@ -6090,20 +6374,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);
 
                 }
                 
@@ -6112,13 +6411,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
                     })
-                    .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))            
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e))            
 
             } else if (Depart === 'arts'){
 
@@ -6150,20 +6449,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
 
                 }
                 
@@ -6172,13 +6486,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
                     })
-                    .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e)) 
                 
 
             } else if (Depart === 'service'){
@@ -6211,20 +6525,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
 
                 }
                 
@@ -6233,13 +6562,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
                     })
-                    .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))  
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e))
 
             } else if (Depart === 'automotive'){
 
@@ -6271,20 +6600,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
 
                 }
                 
@@ -6293,12 +6637,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))
-                    }) 
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
+                    })
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e))
 
             } else if (Depart === 'items'){
 
@@ -6330,20 +6675,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
 
                 }
                 
@@ -6352,13 +6712,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego", e))
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
                     })
-                    .catch((e)=> console.log("Ha ocurrido un error, intente luego", e)) 
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e))
 
             } else if (Depart === 'nautical'){
 
@@ -6390,20 +6750,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
 
                 }
                 
@@ -6412,13 +6787,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego.", e))
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
                     })
-                    .catch((e)=> console.error("Ha ocurrido un error, intente luego", e))
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e))
 
             } else if (Depart === 'realstate'){
 
@@ -6450,20 +6825,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
 
                 }
                 
@@ -6472,13 +6862,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego", e))
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
                     })
-                    .catch((e)=> console.error("Ha ocurrido un error, intente luego", e))
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e))
 
             } else if (Depart === 'auctions'){
 
@@ -6510,20 +6900,35 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 }    
 
-                async function deleteMediaCloudy(){
+                async function deleteMediaSpaces(){
 
-                    /* Aqui elimino las fotos de cloudinary */
+                    /* Aqui elimino las fotos de spaces */
                     for (let i = 0; i < BoxMedia.length; i++) {
                         const publicId = BoxMedia[i].publicId;
-                        console.log("este es el public_id a eliminar : ", publicId);
-                        const resultCloudinary = await cloudinary.uploader.destroy(publicId)
+                        console.log("este es el publicId a eliminar : ", publicId);
+
+                        async function deleteMedias(publicId){
+        
+                            const params = {
+                                Bucket : bucketName,
+                                Key : publicId
+                            }
+                            s3.deleteObject(params, (err, data)=>{
+                                if (err){
+                                    console.error("Error al eliminar el archivo --->", err);
+                                } else {
+                                    console.log("Media eliminada con exito --->");
+                                }
+                            })  
+                                
+                        }
+
+                        deleteMedias(publicId)
                     }
 
                     //enviar mensaje al usuario al que se le ha eliminado su anuncio por infringir reglas de uso.
                     const newMessage = new modelMessage( { typeNote: "notes", times: dateClose, username : adminName, question : Note, toCreatedArticleId: IdAnunciante,  ownerStore: Anunciante, depart: Depart, titleArticle: Title, productId : IdTitle } );
                     const saveMessage = await newMessage.save();
-                    console.log("*********************************************");
-                    console.log(saveMessage);                    
 
                 }
                 
@@ -6532,13 +6937,13 @@ routes.post('/admin/processing/taking/reports', async (req,res)=>{
 
                 deleteMediaDocReport()
                     .then(()=>{
-                        deleteMediaCloudy()
+                        deleteMediaSpaces()
                             .then(()=>{
                                 res.json(messageSucces)
                             })
-                            .catch((e)=> console.error("Ha ocurrido un error, intente luego", e))
+                            .catch((e)=> console.error("Ha ocurrido un error en deleteMediaSpaces().", e))
                     })
-                    .catch((e)=> console.error("Ha ocurrido un error, intente luego", e))            
+                    .catch((e)=> console.error("Ha ocurrido un error en deleteMediaDocReport().", e))           
             }
             
 

@@ -176,7 +176,7 @@
     
                                                 <div class="form-goup my-2">
                                                     <input type="text" name="title" placeholder="Coloque un titulo a su publicacion"
-                                                        class="form-control" maxlength="50" required>
+                                                        class="form-control" maxlength="40" required>
                                                 </div>
                                                 <div class="form-goup my-2">
                                                     <select name="category" class="form-control category nivel1" id="category" required>
@@ -187,6 +187,11 @@
                                                         <option value="Camiones y Gandolas">Camiones y Gandolas</option>
                                                         <option value="Maquinas Pesadas">Maquinas Pesadas</option>
                                                         <option value="Equipos Estacionarios">Equipos Estacionarios</option>
+                                                        <option value="Motos - Averiados">Motos - Averiados</option>
+                                                        <option value="Autos - Averiados">Carros y Camionetas - Averiados</option>
+                                                        <option value="Camiones - Averiados">Camiones y Gandolas - Averiados</option>
+                                                        <option value="Vehiculos de Transporte - Averiados">Vehiculos de Transporte - Averiados</option>
+
                                                     </select>
                                                 </div>
                                                 <div class="form-group d-flex my-2">
@@ -204,7 +209,7 @@
 
                                                 <div class="form-goup" id="tecDescrip"></div>
                                                 <div class="alert alert-warning mb-2">
-                                                    <span>Aprovecha estos caracteres para crear un anuncio impactante. ¡Buena suerte! </span>
+                                                    <span>Aprovecha estos carácteres para crear un anuncio impactante. ¡Buena suerte! </span>
                                                     <span class="ms-2 spnCharacterCount"> 1500 </span> 
                                                 </div>
                                                 <!-- Campo de entrada oculto -->
@@ -212,7 +217,7 @@
                                                       
                                                 <div class="card-header">Subir imagenes</div>
                                                 <div class="form-group d-flex justify-content-start my-2 border">
-                                                    <div class="add_photo me-2" id="add_photo">
+                                                    <div class="add_photo me-2" id="add_photo" title="Click para subir un max. de tres (3) imagenes">
                                                         <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
                                                     </div>
                                                     <span class="mx-2"> <small>Puede subir hasta tres (3) imagenes juntas, ¡ya luego puede colocar mas fotos.! </small></span>
@@ -286,7 +291,7 @@
                                                     <div class="contentElemetEdit close">
                                              
                                                         <div class="form-group d-flex my-2">
-                                                            <input type="text" name="title" id="titleEdit" class="form-control" placeholder="Titulo" maxlength="50" required>
+                                                            <input type="text" name="title" id="titleEdit" class="form-control" placeholder="Titulo" maxlength="40" required>
                                                         </div>
 
                                                         <div class="form-group d-flex my-2">
@@ -298,6 +303,11 @@
                                                                 <option value="Vehiculos de Transporte">Vehiculos de Transporte</option>
                                                                 <option value="Maquinas Pesadas">Maquinas Pesadas</option>
                                                                 <option value="Equipos Estacionarios">Equipos Estacionarios</option>
+                                                                <option value="Motos - Averiados">Motos - Averiados</option>
+                                                                <option value="Autos - Averiados">Carros y Camionetas - Averiados</option>
+                                                                <option value="Camiones - Averiados">Camiones y Gandolas - Averiados</option>
+                                                                <option value="Vehiculos de Transporte - Averiados">Vehiculos de Transporte - Averiados</option>
+        
                                                             </select>
                                                         </div>
 
@@ -316,7 +326,7 @@
                                                         <div class="form-goup" id="tecDescripEdit">
                                                         </div>
                                                         <div class="alert alert-warning mb-2">
-                                                            <span>Aprovecha estos caracteres para crear un anuncio impactante. ¡Buena suerte! </span>
+                                                            <span>Aprovecha estos carácteres para crear un anuncio impactante. ¡Buena suerte! </span>
                                                             <span class="ms-2 spnCharacterCountEdit"> 1500 </span> 
                                                         </div>            
                                                         <!-- Campo de entrada oculto -->
@@ -685,7 +695,7 @@
             let nivel2 = document.querySelectorAll ('.nivel2');
             /* data de todos los fabricantes de Motos, Carros y Camionetas, Tractores y Maquinas Pesadas, Camiones y Gandolas, Equipos Estacionarios*/
             let motos = ["Select it", "BMW", "Bera", "Honda", "Yamaha", "Kawasaki", "Suzuki", "Harly Davinson", "Otros..."]; 
-            let autos = ["Select it", "Acura", "Alpine", "Aston Martin", "Audi", "Bentley", "BMW", "Buick", "Bugatti", "Cadillac", "Citroën", "Chery", "Chevrolet", "Chrysler", "Daewoo", " Daihatsu", "Dodge", "Ferrari", "Ford", "Geely", "General Motors", "Great Wall", "Hyundai", "Infiniti", "Jac", "Jaguar", "Jeep", "JMC", "Kia", "Lamborghini", "Lancia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Luxgen", "Mazda", "Mercedez Benz", "Mercury", "Mitsubishi", "MG", "Morgan", "Nissan", "Niva" , "Opel", "Peugeot", "PGO", "Porche", "Range Rover", "Renault", "Rolls Royce", "Saic", "Seat", "SsangYong", "Toyota", "Volvo", "Wolswagen",  "otros..."]
+            let autos = ["Select it", "Acura", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "Bentley", "BMW", "Buick", "Bugatti", "Cadillac", "Citroën", "Chery", "Chevrolet", "Chrysler", "Daewoo", " Daihatsu", "Dodge", "Ferrari", "Ford", "Geely", "General Motors", "Great Wall", "Hyundai", "Infiniti", "Jac", "Jaguar", "Jeep", "JMC", "Kia", "Lamborghini", "Lancia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Luxgen", "Mazda", "Mercedez Benz", "Mercury", "Mitsubishi", "MG", "Morgan", "Nissan", "Niva" , "Opel", "Peugeot", "PGO", "Porche", "Range Rover", "Renault", "Rolls Royce", "Saic", "Seat", "SsangYong", "Toyota", "Volvo", "Wolswagen",  "otros..."]
             let transporte = ["Select it", "Ford", "Chevrolet", "Man", "Mercedez Benz", "Renault", "Scannia", "Toyota", "Volvo", "otros..."]
             let camiones = ["Select it", "Ford", "Chevrolet", "Man", "Mercedez Benz", "Renault", "Scannia", "Toyota", "Volvo", "otros..."]
             let tractores = ["Select it", "Caterpillar", "Case", "Challenger", "Deutz-Fahr", "Fendt", "Hitachi", "Jhon Deere", "Komatsu", "Kubota", "Landini", "Massey Ferguson", "Sany", "Terex", "Toyota", "XCMG", "Otros..."];
@@ -737,6 +747,34 @@
                     nivel2[0].innerHTML = "";
                     for (let i = 0; i < estacionarios.length; i++) {
                         const element = estacionarios[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                
+                } else if ( selected == "Motos - Averiados") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < motos.length; i++) {
+                        const element = motos[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }    
+
+                } else if ( selected == "Autos - Averiados") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < autos.length; i++) {
+                        const element = autos[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                    
+                } else if ( selected == "Camiones - Averiados") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < camiones.length; i++) {
+                        const element = camiones[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                    
+                } else if ( selected == "Vehiculos de Transporte - Averiados") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < transporte.length; i++) {
+                        const element = transporte[i];
                         nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
                     }    
 
@@ -791,7 +829,35 @@
                     for (let i = 0; i < estacionarios.length; i++) {
                         const element = estacionarios[i];
                         nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+
+                } else if ( selected == "Motos - Averiados") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < motos.length; i++) {
+                        const element = motos[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
                     }    
+                    
+                } else if ( selected == "Autos - Averiados") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < autos.length; i++) {
+                        const element = autos[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                    
+                } else if ( selected == "Camiones - Averiados") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < camiones.length; i++) {
+                        const element = camiones[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }
+                    
+                } else if ( selected == "Vehiculos de Transporte - Averiados") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < transporte.length; i++) {
+                        const element = transporte[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }     
 
                 } else {
                     nivel2[1].innerHTML = "";

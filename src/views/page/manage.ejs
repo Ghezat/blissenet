@@ -276,7 +276,7 @@
                             
                                                
                             <div class="containerValorTienda m-1">
-                                <span style="margin-left: 8px; margin-top: 10px;">Valoración de Tienda: <span class="fw-bold ms-1" id="pountrate"> <!-- Dinamic --> </span> <span class="fw-bold">/ 5</span> </span>
+                                <span style="margin-left: 8px; margin-top: 10px;">Valoración de Tienda: <span class="fw-bold ms-1" id="pountrate"> <!-- Dinamic --> </span>  </span>
                                 <div class="boxStar mx-2 border d-flex justify-content-center" style="margin-top: 10px;" >
                                   <!-- Dinamic -->
                                 </div>
@@ -877,7 +877,7 @@
       .then(response =>response.json() )
       .then( jsonx =>  { 
 
-        //console.log("recibiendo del backend ->", jsonx)
+          console.log("recibiendo del backend pountrate ->", jsonx)
           const boxRates = []; //aqui meto todas las calificaciones parseadas a numeros
           jsonx.forEach((ele)=>{
             const markStar = ele.markStar;
@@ -885,7 +885,7 @@
             boxRates.push(markstar)
           })
           console.log("boxRates", boxRates);
-          const ratesLength = boxRates.length;
+          let ratesLength = boxRates.length;
           //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
           let sumRate = 0;
           boxRates.forEach((ele)=>{
@@ -902,10 +902,24 @@
           console.log("pountRate", pountRate);
           console.log("pountRate", typeof pountRate)
 
+          //ratesLength = 1000; para pruebas
           if ( isNaN(pountRate)){
             pountrate.innerText = 0; // es una tienda nueva o sin calificacion alguna.
           } else {
-            pountrate.innerText = pountRate; //eje. 4.5
+            
+            console.log("Verrr esto ratesLength-->", ratesLength);
+            if (ratesLength <= 999){
+              pountrate.innerHTML = `${pountRate}/5 <spam style="font-size:12px">(${ratesLength})</spam>`; //eje. 4.5 (16)
+            } else if (ratesLength >= 1000 && ratesLength <= 999999 ){
+              const reduccion = (ratesLength / 1000)
+              const result = reduccion.toFixed(2);
+              pountrate.innerHTML = `${pountRate}/5 <spam style="font-size:12px">(${result}K)</spam>`; 
+            } else if (ratesLength >= 1000000 && ratesLength <= 999999999 ){
+              const reduccion = (ratesLength / 1000000)
+              const result = reduccion.toFixed(2);
+              pountrate.innerHTML = `${pountRate}/5 <spam style="font-size:12px">(${result}M)</spam>`; 
+            }
+            
           }
            
           if (isNaN (pountRate)){

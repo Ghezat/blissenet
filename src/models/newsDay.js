@@ -13,7 +13,7 @@ const newsDaySchema = new Schema({
     adminName : { type : String }, //aqui el admin que agrega le newsDay.
     simplifiedDate : { type : String }, //fecha simplicada. que se requiere en el Front.
     endPublic : { type : String }, //este campo almacena la fecha en que va a terminar la publicacion y podria ser eliminada.
-    delete : { type : Boolean, default : false } //campo que determina si se ha elimando el public en Cloudinary.
+    delete : { type : Boolean, default : false } //campo que determina si se ha elimando el public en Spaces.
 
 },{
     timestamps : true

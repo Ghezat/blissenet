@@ -11,7 +11,7 @@ const bannerSchema = new Schema({
     sorting : { type : Number }, //aqui el numero de orden a futuro puede ser de utilidad para su ordenamiento.
     adminName : { type : String }, //aqui el admin que agrego los banner.
     endPublic : { type : String }, //este campo almacena la fecha en que va a terminar la publicacion y podria ser eliminada.
-    delete : { type : Boolean, default : false } //campo que determina si se ha elimando el public en Cloudinary.
+    delete : { type : Boolean, default : false } //campo que determina si se ha elimando el public en Spaces.
 },{
     timestamps : true
 });

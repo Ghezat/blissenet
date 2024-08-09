@@ -85,7 +85,13 @@
                                           </div>
                                           <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: #e9ecef; border: 1px solid rgb(128, 128, 128, 0.5);">
                                             <p style="text-align: justify; line-height: 18px; font-style: italic;">
-                                              <%= ele.CommentBuy %>
+                                              
+                                              <% if (ele.CommentBuy.length <= 1){ %>
+                                                <i>¡sin comentarios!</i> 
+                                              <% } else { %>
+                                                <%= ele.CommentBuy %>
+                                              <% }; %>
+                                              
                                             </p>
                                           </div>
                                           
@@ -139,7 +145,13 @@
                                   </div>
                                   <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: #e9ecef; border: 1px solid rgb(128, 128, 128, 0.5);">
                                     <p style="text-align: justify; line-height: 18px; font-style: italic;">
-                                      <%= ele.CommentSeller %>
+                                      
+                                      <% if (ele.CommentSeller.length <= 1){ %>
+                                        <i>¡sin comentarios!</i> 
+                                      <% } else { %>
+                                        <%= ele.CommentSeller %>
+                                      <% }; %>
+
                                     </p>
                                   </div>
                                   

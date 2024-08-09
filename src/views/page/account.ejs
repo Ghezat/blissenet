@@ -1223,7 +1223,7 @@
           boxRates.push(markstar)
         })
         console.log("boxRates", boxRates);
-        const ratesLength = boxRates.length;
+        let ratesLength = boxRates.length;
         //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
         let sumRate = 0;
         boxRates.forEach((ele)=>{
@@ -1238,13 +1238,27 @@
         const pountRate = pount.toFixed(1); 
         console.log("pountRate", pountRate)
 
+        //ratesLength = 2458965; para probar
         if ( isNaN(pountRate)){
           pountCalif.innerHTML = `0 <i class="bi bi-star-fill"></i>`;
-          pountCount.innerHTML = `0 Calf.`
+          pountCount.innerHTML = `(0)`
         } else {
           pountCalif.innerHTML = `${pountRate} <i class="bi bi-star-fill"></i>`;
-          pountCount.innerHTML = `${ratesLength} Calf.`
+          
+          //pountCount.innerHTML = `(${ratesLength})`
+          if (ratesLength <= 999){
+              pountCount.innerHTML = `<spam style="font-size:13px">(${ratesLength})</spam>`;
+            } else if (ratesLength >= 1000 && ratesLength <= 999999 ){
+              const reduccion = (ratesLength / 1000)
+              const result = reduccion.toFixed(2);
+              pountCount.innerHTML = `<spam style="font-size:13px">(${result}K)</spam>`; 
+            } else if (ratesLength >= 1000000 && ratesLength <= 999999999 ){
+              const reduccion = (ratesLength / 1000000)
+              const result = reduccion.toFixed(2);
+              pountCount.innerHTML = `<spam style="font-size:13px">(${result}M)</spam>`; 
+            }
         }
+
 
 
       

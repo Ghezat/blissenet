@@ -89,7 +89,6 @@
                                         <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
                                         <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
                                          
-                                        
                                       </div>
                                       <div class="containerRatingComment d-flex" style="width: 38%;">
                                           <div class="containerRating d-flex align-items-center justify-content-center p-3">
@@ -107,7 +106,13 @@
                                           </div>
                                           <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: #e9ecef; border: 1px solid rgb(128, 128, 128, 0.5);">
                                             <p style="text-align: justify; line-height: 18px; font-style: italic;">
-                                              <%= ele.CommentSeller %>
+                                              
+                                              <% if (ele.CommentSeller.length <= 1){ %>
+                                                <i>¡sin comentarios!</i> 
+                                              <% } else { %>
+                                                <%= ele.CommentSeller %>
+                                              <% }; %>
+
                                             </p>
                                           </div>
                                           

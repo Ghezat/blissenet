@@ -1339,23 +1339,9 @@ cron.schedule('*/1 * * * *', async () => {
                                     
                             })
                             .catch((err)=>{
-                                console.log("ha habido un error en la compra de items", err);
+                                console.log("ha habido un error de cierre de Subasta", err);
                             })        
 
-/*                         const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-                        //console.log("Aqui resultUpload ----->", resultUpload);
-                        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-                        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-                        //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-                                    
-                        valueCommission = (bidAmount * 0.03);
-                        let commission = valueCommission.toFixed(2); 
-                        
-                        const BuySell = new modelBuySell({ usernameSell : usernameSell, indexed,  usernameBuy: usernameBuy, department : department, title : title, title_id: titleOfAuction, tecnicalDescription, image : dImage, price : bidAmount, commission : commission });
-                        const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-                        //console.log('Aqui BuySell ---->', BuySell);
-
-                        console.log("createBuysellAuction(+)") */
                         
                     }
 

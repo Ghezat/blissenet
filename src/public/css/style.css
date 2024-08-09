@@ -101,6 +101,14 @@ main{
     object-fit:contain;
 }
 
+.add_photo{
+  transition: 0.5s background-color ease;
+}
+
+.add_photo:hover{
+  outline: 2px dotted red;
+  background-color: rgb(212, 78, 78);
+}
 
 .add_photo{
     cursor: pointer;

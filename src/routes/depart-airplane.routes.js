@@ -307,7 +307,7 @@ routes.post('/department/create/aeronaves/delete', async(req, res)=>{
             //console.log("Here all array to the images :", imagesToDelete);
             //console.log("Here all array to the video :", videoToDelete);
 
-            //abajo en este if else fusiono ambos arreglos images y video en boxMedia para usar solo un for.
+            //abajo en este if else fusiona ambos arreglos images y video en boxMedia para usar solo un for.
             if (videoToDelete.length !=0){
                 boxMedia = [...imagesToDelete, ...videoToDelete];
                 countMedia = boxMedia.length;         

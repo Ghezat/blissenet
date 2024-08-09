@@ -106,6 +106,7 @@
           barrHorizontIcon.style.cssText = 'background-color : #1f2327;';
           frame.style.cssText = 'border: 2px solid #1f2327;';
           viewCollection.style.cssText = 'background-color : #262a2f;';
+          tiendas.style.cssText ="border: 1px solid #383c41; border-radius : 50%;";
           raffle.style.cssText ="border: 1px solid #383c41; border-radius : 50%;";
           arteGallery.style.cssText ="border: 1px solid #383c41; border-radius : 50%;";
           aeronautica.style.cssText ="border: 1px solid #383c41; border-radius : 50%;";
@@ -150,6 +151,7 @@
           barrHorizontIcon.style.cssText = 'background-color : #b8bdc4;';
           frame.style.cssText = 'border: 2px solid #b8bdc4;';
           viewCollection.style.cssText = 'background-color : #f9f9f9;';
+          tiendas.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;";
           raffle.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;";
           arteGallery.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;";
           aeronautica.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;";
@@ -168,12 +170,14 @@
 
 
    </script>
+
    <script>
     //declarar todas las constantes necesarias
     let estadoColorsIcon;
       
     const checkColor = document.querySelector('.checkColor');
     const colorIcons = document.querySelector('.ico-colors');
+    const tiendas = document.querySelector('.tiendas');
     const raffle = document.querySelector('.raffle');
     const arteGallery = document.querySelector('.arteGallery');
     const aeronautica = document.querySelector('.aeronautica');
@@ -293,6 +297,7 @@
       if (iconLupaAux){
         iconLupaAux.style.cssText = 'color : #f39a9a;';
       }
+
       raffle.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
       arteGallery.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
       aeronautica.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
