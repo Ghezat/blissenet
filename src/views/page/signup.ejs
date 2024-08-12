@@ -35,8 +35,8 @@
     <div class="container-fluid">    
     <% }; %>
 
-        <div class="row d-flex justify-content-end mx-3 mt-4">
-            <div class="col-lg-4 col-md-5 col-sm-10 col-12">
+    <div class="row d-flex justify-content-end mt-4">
+        <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 col-12">
                 <div class="card formTransp mt-4 rounded-2 shadow">
                     <div class="card-header d-flex justify-content-between">
                         <span><i class="bi bi-journal-check mx-1"></i> Register</span>
@@ -46,7 +46,7 @@
         
                         <form action="/myaccount/signup" method="POST" id="signup">
                             <div class="form-group my-2">
-                                <input type="text" name="username" placeholder="Su username (6 a 18 caracteres)" class="form-control"  minlength="6" maxlength="18" autocomplete="off" required>
+                                <input type="text" name="username" placeholder="Su username o nombre de tienda" class="form-control"  minlength="6" maxlength="18" autocomplete="off" required>
                             </div>
                             <div class="form-group my-2">
                                 <input type="email" name="email" placeholder="Su email (example@mail.com)" class="form-control" style="text-transform:lowercase;" autocomplete="off" required>
@@ -62,7 +62,7 @@
                                 <input class="form-check-input" type="checkbox" value="" id="CheckRegister">
                                 <label class="form-check-label" for="CheckRegister">
                                     <small>
-                                        Acepto los <a href="/terms">Terminos</a> y <a href="/policy">Politicas</a>
+                                        Acepto los <a href="/terms">Términos</a> y <a href="/policy">Politicas</a>
                                         aqui declarados.
                                     </small>
                                 </label>

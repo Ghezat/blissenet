@@ -805,11 +805,11 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
               console.log("Compra ejecutada satisfactoriamente")
             })
             .catch((error)=>{
-              console.log("Ha ocurrido un error", error);
+              console.log("Ha ocurrido un error en departEject()", error);
             })
         })
         .catch((error)=>{
-          console.log("Ha ocurrido un error", error);
+          console.log("Ha ocurrido un error en searchData()", error);
         })
 
   
