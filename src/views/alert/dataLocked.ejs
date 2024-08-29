@@ -1,0 +1,13 @@
+<div class="container-fluid successBannerFront my-2 d-flex justify-content-center">
+    <div class="alert alert-light alert-dismissible fade show successBannerSon" role="alert">
+        <strong> <i class="bi bi-exclamation-triangle me-2"></i>Usuario:  <%= dataLocked.username %> ha sido baneado el dia <%= dataLocked.date %> por la cantidad de <%= dataLocked.ban %> dias. </strong> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+
+<!-- const dataLocked = {username, date, ban} -->
+<!-- este objeto que envio a memoria cache tiene tres datos con tres valores que se deben leer asi. -->
+<!-- const dataLocked = {useranme : username, date: date, ban : ban} -->
+<!-- username = username del perfil; -->
+<!-- date = fecha en que fue bloqueado el usuario dd-dd-aaaa; -->
+<!-- ban = cantidad de dias de penalizacion  o undefined 3, 7, 14, 30 o undefined. si es undefined significa que la cuenta no se esbloqueara jamas a menos que se haga de forma mecanica. -->

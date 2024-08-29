@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet - Stopped</title>
+</head>
+<style>
+    body {
+        background-color: white;
+    }
+
+    .close{
+        display: none;
+    }
+
+</style>
+<body>
+    <main>
+        <%- include('../partials/navi-admin.ejs') %>
+     
+
+        <% if (userAdmin) { %> 
+               
+            
+            <div class="containerPlace">
+                    <div class="container-fluid d-flex justify-content-end p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                        <span class=" me-5 p-0" style="color:gray; font-weight: 500;">Stopped Users</span>
+                    </div>
+            </div>
+
+            
+            <div class="containerBanners">
+                    <div class="row m-0 p-0">
+                        <div class="col-lg-4 p-0">
+                            
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                         Block users 
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body px-0">
+                                            <div class="containerAddBanner p-0">
+                                                <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                                
+                                                    <div class="card-body my-2">
+                                                        
+                                                            
+                                                        <div class="card-header">Search Users</div>
+                                                        
+            
+                                                        <div class="input-group my-2">
+                                                            
+                                                            <input type="search" class="form-control" id="Search" name="users" placeholder="username">
+                                                            <button class="form-control btn-outline-success" id="searchButton"> Search <i class="bi bi-search ms-1"></i> </button>
+            
+                                                        </div> 
+            
+                                                        <div class="input-group">
+            
+                                                            <span class="input-group-text">username</span>
+                                                            <select name="user_select" id="selectorUsers" class="form-control" >
+                                                            <!-- options dinamicas -->
+                                                            </select>
+            
+                                                        </div>
+            
+                                                        <hr>
+            
+                                                        <div class="input-group my-2">
+                                                            <span class="input-group-text">username</span>
+                                                            <input type="text" class="form-control" id="userFinded" name="userFinded" readonly>
+                                                        </div>
+            
+                                                        <div class="input-group my-2">
+                                                            <span class="input-group-text">id</span>
+                                                            <input type="text" class="form-control" id="idUserFinded" name="idUserFinded" readonly>
+                                                        </div>
+            
+                                                        <div class="input-group my-2">
+                                                            <span class="input-group-text">Time Block</span>
+                                                            <select name="bann" id="ban" class="form-control">
+                                                                <option value="3">3 dias</option>
+                                                                <option value="7">7 dias</option>
+                                                                <option value="14">14 dias</option>
+                                                                <option value="30">30 dias</option>
+                                                                <option value="undefined">Indefinido</option>
+                                                            </select>
+                                                        </div>
+            
+                                                        <div class="form-group">
+                                                            <textarea id="resume" class="form-control" placeholder="Aqui el resumen de la causa" maxlength="100" rows="2" required></textarea>
+                                                        </div>
+            
+            
+                                                        <div class="input-group my-3">
+                                                            <input type="button" class="form-control btn btn-danger" id="btnBan" value="Bannear">
+                                                        </div>
+                                                        
+                                                        
+                                                    </div>
+            
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>                
+                                </div>    
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                         Unlock users 
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body px-0">
+                                            <div class="accordion-body px-0">
+                                                <div class="containerAddBanner p-0">
+                                                    <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                                    
+                                                        <div class="card-body my-2">
+                                                                                                                            
+                                                            <div class="card-header">Search Users</div>
+                                                                        
+                                                            <div class="input-group my-2">
+                                                                
+                                                                <input type="search" class="form-control" id="SearchBlock" name="users" placeholder="username">
+                                                                <button class="form-control btn-outline-success" id="searchButtonBlock"> Search <i class="bi bi-search ms-1"></i> </button>
+                
+                                                            </div> 
+                
+                                                            <div class="input-group">
+                
+                                                                <span class="input-group-text">username</span>
+                                                                <select name="user_select" id="selectorUsersBlock" class="form-control" >
+                                                                <!-- options dinamicas -->
+                                                                </select>
+                
+                                                            </div>
+                
+                                                            <hr>
+                
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text">username</span>
+                                                                <input type="text" class="form-control" id="userFindedBlock" name="userFinded" readonly>
+                                                            </div>
+                
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text">id</span>
+                                                                <input type="text" class="form-control" id="idUserFindedBlock" name="idUserFinded" readonly>
+                                                            </div>
+                
+                
+                                                            <div class="input-group my-3"> 
+                                                                <input type="button" class="form-control btn btn-success" id="btnBanBlock" value="Desbloquear">
+                                                            </div>
+                                                                     
+                                                            
+                                                        </div>
+                
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-8 p-0">
+                            <div class="containerGeneralBanner p-0">
+                                <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                    
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs">
+
+                                            <li class="nav-item">
+                                                <a class="nav-link lockedUser active" style="cursor: pointer;">Locked Users</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link see" style="cursor: pointer;">Actions</a>
+                                            </li>
+                                    
+                                        </ul>
+                                    </div>
+
+                                    <div class="containerLockedUser">
+
+                                        <% if (stoppedUser.length !==0 ) { %>
+                                            <!-- stoppedUser(indexed, username, ban, admin, resume) -->
+                                            <div class="containerCardHeaderAllLockedUser">
+                                                <div class="card-header">
+                                                    All locked users
+                                                </div>
+                                                <div class="containerTableAllLockedUser m-3">
+                                                    <table class="table table-hover">
+
+                                                        <thead>
+                                                            <tr>
+                                                                <th>id</th><th>username</th><th>stopped</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+        
+                                                            <% stoppedUser.forEach((ele)=>{ %>  
+        
+                                                                <tr>
+                                                                    <td><%= ele._id %></td><td><%= ele.username %></td><td><i class="bi bi-lock-fill"></i></td>
+                                                                </tr>
+        
+                                                            <% }); %>
+                                                            
+                                                        </tbody>
+                            
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        
+                                        <% } else { %>
+
+                                            <div class="alert alert-success m-3">No hay usuarios baneados </span>
+
+                                        <% }; %>    
+                                                
+                                    </div>
+                                    <div class="containerSee close">
+                                       <div class="card">
+                                            <div class="card-header">
+                                                See user locked
+                                            </div>
+                                            <div class="card-body">
+
+                                                <div class="containerSearch">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">user</span>
+                                                        <input class="form-control" placeholder="Coloque el usuario aqui." type="search" id="searchLocked">
+                                                        <button class="form-control btn btn-success" id="btnLocked"> Search <i class="bi bi-search ms-1"></i> </button>
+                                                    </div> 
+                                                </div>    
+
+                                                <div class="containerTable table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>username</th><th>date</th><th>admin-locked</th><th>admin-unlocked</th><th>resume</th><th>ban</th><th>status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="tbodyList">
+                                                            <!-- dimanico -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                       </div>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            
+        <% } else { %>
+
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+                <%- include('../partials/adminNoLogin.ejs') %>
+            
+            </div>
+            
+        <% }; %>    
+       
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+
+</body>
+</html>
+
+
+<script>
+
+    const Search = document.getElementById('Search'); 
+    const searchButton = document.getElementById('searchButton');
+    const selectorUsers = document.getElementById('selectorUsers');
+
+    const userFinded = document.getElementById('userFinded');
+    const idUserFinded = document.getElementById('idUserFinded');
+    const ban = document.getElementById('ban');
+    const resume = document.getElementById('resume');
+    const btnBann = document.getElementById('btnBan');
+    
+    searchButton.addEventListener('click', ()=>{
+        SearchUser = Search.value;
+
+        if (SearchUser.length !==0){
+
+            console.log("SearchUser", SearchUser) 
+            selectorUsers.innerHTML = ""; //aqui limpiamos el select
+
+            const datos = {
+                user : SearchUser
+            };
+
+                fetch('/admin/stopped-search', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>{ 
+                    //console.log("Estos son los usuarios que vienen", jsonx)
+            
+                    selectorUsers.innerHTML = `<option value="no_user"> Select it </option>`;
+                    jsonx.forEach(ele => {
+                        //console.log("username", ele.username);
+                        const username = ele.username;
+                        selectorUsers.innerHTML += `<option value=${username}> ${username} </option>`;
+
+                    });
+
+                    
+                    // ejecutar una accion si se elige un susuario de este lista de opciones
+                    selectorUsers.addEventListener('change', ()=>{
+                        //console.log("hemos elegido", selectorUsers.value);
+                        const userSelected = selectorUsers.value;
+                        //console.log("aqui tenemos el objeto jsonx", jsonx);
+                        
+                        if (userSelected !== "no_user"){
+
+                            jsonx.forEach((ele)=>{
+                                const username = ele.username;
+                                const idUsername = ele._id;
+
+                                if (userSelected ==  username){
+                                    //console.log("username", username);
+                                    //console.log("id", idUsername);
+                                    userFinded.value = `${username}`;
+                                    idUserFinded.value = `${idUsername}`;
+                                }
+                            })
+
+                        } else {
+                            userFinded.value = "";
+                            idUserFinded.value = "";
+                        }
+
+
+                    })
+                
+                })
+                .catch( err => console.log(err));
+            
+        } else {
+            console.log("busqueda vacia");
+            selectorUsers.innerHTML = ""; //limpiamos todo
+            userFinded.value = "";
+            idUserFinded.value = "";
+        }
+                
+    });
+
+    //con informacion en los input se procede a enviar la informacion para bannear
+    btnBann.addEventListener('click', ()=>{
+        const Resume = resume.value;
+        const Ban = ban.value;
+        const IdUserFinded = idUserFinded.value; 
+        const UserFinded = userFinded.value;
+
+        console.log("UserFinded :", UserFinded);
+        console.log("IdUserFinded :", IdUserFinded);
+        console.log("Ban :", Ban);
+        console.log("Resume :", Resume);
+                
+        const datos = {
+            user : UserFinded,
+            id : IdUserFinded,
+            ban : Ban,
+            resume : Resume
+        };
+
+        fetch('/admin/stopped-ban', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log(jsonx)
+            location.reload();
+            // al llegar la respuesta de haberse hecho el ban debe recargarse la pagina.
+        })
+        .catch( err => console.log(err));
+
+
+    });
+    
+    
+
+</script>
+
+<script>
+    const SearchBlock = document.getElementById('SearchBlock');
+    const searchButtonBlock = document.getElementById('searchButtonBlock');
+    const selectorUsersBlock = document.getElementById('selectorUsersBlock');
+    
+    const userFindedBlock = document.getElementById('userFindedBlock');
+    const idUserFindedBlock = document.getElementById('idUserFindedBlock');
+    const btnBanBlock = document.getElementById('btnBanBlock');
+
+    searchButtonBlock.addEventListener('click', ()=>{
+        SearchUser = SearchBlock.value;
+
+        if (SearchUser.length !==0){
+
+            console.log("SearchUser", SearchUser) 
+            selectorUsersBlock.innerHTML = ""; //aqui limpiamos el select
+
+            const datos = {
+                user : SearchUser
+            };
+
+                fetch('/admin/stopped-search-block', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>{ 
+                    //console.log("Estos son los usuarios que vienen", jsonx)
+            
+                    selectorUsersBlock.innerHTML = `<option value="no_user"> Select it </option>`;
+                    jsonx.forEach(ele => {
+                        //console.log("username", ele.username);
+                        const username = ele.username;
+                        selectorUsersBlock.innerHTML += `<option value=${username}> ${username} </option>`;
+
+                    });
+
+                    
+                    // ejecutar una accion si se elige un susuario de este lista de opciones
+                    selectorUsersBlock.addEventListener('change', ()=>{
+                        //console.log("hemos elegido", selectorUsers.value);
+                        const userSelected = selectorUsersBlock.value;
+                        //console.log("aqui tenemos el objeto jsonx", jsonx);
+                        
+                        if (userSelected !== "no_user"){
+
+                            jsonx.forEach((ele)=>{
+                                console.log("objeto user select -->", ele);
+                                const username = ele.username;
+                                const idUsername = ele._id;
+
+                                if (userSelected ==  username){
+                                    //console.log("username", username);
+                                    //console.log("id", idUsername);
+                                    userFindedBlock.value = `${username}`;
+                                    idUserFindedBlock.value = `${idUsername}`;
+                      
+                                }
+                            })
+
+                        } else {
+                            userFindedBlock.value = "";
+                            idUserFindedBlock.value = "";
+                        }
+
+
+                    })
+                
+                })
+                .catch( err => console.log(err));
+            
+        } else {
+            console.log("busqueda vacia");
+            selectorUsersBlock.innerHTML = ""; //limpiamos todo
+            userFindedBlock.value = "";
+            idUserFindedBlock.value = "";
+            userFindedBlock.value = "";
+        }
+                
+    });
+
+    //con informacion en los input block se procede a enviar la informacion para desbloquear
+    btnBanBlock.addEventListener('click', ()=>{
+        const IdUserFinded = idUserFindedBlock.value; 
+        const UserFinded = userFindedBlock.value;
+
+        console.log("UserFinded :", UserFinded);
+        console.log("IdUserFinded :", IdUserFinded); //indexed que seria el id del la coleccion user
+
+                
+        const datos = {
+            user : UserFinded,
+            id : IdUserFinded
+        };
+
+        
+        fetch('/admin/stopped-ban-unlock', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log(jsonx)
+            location.reload();
+            // al llegar la respuesta de haberse hecho el ban debe recargarse la pagina.
+        })
+        .catch( err => console.log(err));
+        
+
+    });
+    
+    
+</script>
+
+<script>
+    //selector de pestañas
+    const lockedUser = document.querySelector('.lockedUser');
+    const see = document.querySelector('.see');
+
+    const containerLockedUser = document.querySelector('.containerLockedUser');
+    const containerSee = document.querySelector('.containerSee');
+
+    lockedUser.addEventListener('click', ()=>{
+        lockedUser.classList.add('active');
+        see.classList.remove('active');
+
+        containerLockedUser.classList.remove('close');
+        containerSee.classList.add('close');
+    });
+
+    see.addEventListener('click', ()=>{
+        lockedUser.classList.remove('active');
+        see.classList.add('active');
+
+        containerLockedUser.classList.add('close');
+        containerSee.classList.remove('close');
+    });
+
+</script>
+
+<script>
+    const searchLocked = document.getElementById('searchLocked'); 
+    const btnLocked = document.getElementById('btnLocked');
+    const tbodyList = document.querySelector('.tbodyList');
+
+    btnLocked.addEventListener('click', ()=>{
+        const search = searchLocked.value;
+        console.log("search :", search);
+        tbodyList.innerHTML = ""; //aqui limpiamos el tbody para no se concatene; 
+
+        const dato = {
+            user : search
+        };
+
+        fetch('/admin/stopped-search-block-list', {
+
+            method: "post",
+            body: JSON.stringify(dato),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                console.log("esto recibo de list", jsonx)
+                console.log(jsonx.length);
+                jsonx.forEach((ele)=>{
+                    const username = ele.username;
+                    const date = new Date(ele.createdAt); const dia = date.getDate(); const mes = date.getMonth() +1; const anio = date.getFullYear(); 
+                    const dateLock = `${dia}-${mes}-${anio}`;
+                    const adminLocked = ele.adminLocked; const adminUnlocked = ele.adminUnlocked;
+                    const resume = ele.resume; const ban = ele.ban; const status = ele.status;
+
+                                                               
+                    if (status == "locked"){
+                        tbodyList.innerHTML += `<tr>
+                                                <td> ${username}</td><td>${dateLock}</td><td>${adminLocked}</td><td>${adminUnlocked}</td><td>${resume}</td><td>${ban}</td><td><i class="bi bi-lock-fill"></i></td>
+                                            </tr>`
+                    } else {
+                        tbodyList.innerHTML += `<tr>
+                                                <td> ${username}</td><td>${dateLock}</td><td>${adminLocked}</td><td>${adminUnlocked}</td><td>${resume}</td><td>${ban}</td><td><i class="bi bi-unlock-fill"></i></td>
+                                            </tr>`
+                    }
+
+                });
+
+
+            })
+            .catch( err => console.log(err));
+        });
+
+</script>

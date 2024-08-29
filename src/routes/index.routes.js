@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
+const modelStopped = require('../models/stoppedUser.js');
 const modelMessages = require('../models/messages.js');
 const modelBuySell = require('../models/buySell.js');
 const modelNegotiation = require('..//models/negotiations.js');
@@ -52,10 +53,18 @@ const s3 = new S3({
 
 
 routes.get('/', async(req, res)=>{
-    const user = req.session.user;
+    
     let username;
+
+    const user = req.session.user;
     const success = req.session.success;
-    delete req.session.success
+    const stopped = req.session.stopped; //"Su cuenta ha sido baneada por infringir nuestras normas.";
+    const dataLocked = req.session.dataLocked // {username, date, ban}; envo estos tres datos para especificar el username cantidad de dias y la fecga de bloqueo
+
+    delete req.session.success;
+    delete req.session.stopped;
+    delete req.session.dataLocked;
+    
     let searchProfile;
     const boxResult = [];
         
@@ -90,22 +99,22 @@ routes.get('/', async(req, res)=>{
   
     const searchOneBuy = await modelBuySell.find({  $and : [{usernameBuy : username},{CommentSeller : 'no_comment'}] });
     if (searchOneBuy){
-    searchBuy.push(...searchOneBuy);
+        searchBuy.push(...searchOneBuy);
     }
 
     const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, {CommentBuy : 'no_comment'}] });
     if (searchOneSell){
-    searchSell.push(...searchOneSell);
+        searchSell.push(...searchOneSell);
     }
 
     const searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username }, { closedContact : false }]} );
     if (searchTwoBuy){
-    searchBuy.push(...searchTwoBuy);
+        searchBuy.push(...searchTwoBuy);
     }
 
     const searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username }, { closedContact : false }]} );
     if (searchTwoSell){
-    searchSell.push(...searchTwoSell);
+        searchSell.push(...searchTwoSell);
     }
 
     const countNegotiationsBuySell = (searchBuy.length + searchSell.length);
@@ -113,7 +122,7 @@ routes.get('/', async(req, res)=>{
     //Nota: La liena de arriba es la session que guarda la cantidad de negociacione sy buySell que tiene el usuario.
     console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
 
-    res.render('page/home', {user, success, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay})
+    res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay})
 });
 
 
@@ -298,7 +307,9 @@ routes.post('/myaccount/signin', async(req,res)=>{
 
         if (search){
             console.log("esto es search es: ", search)
+            let id = search._id;
             let hashPassword = search.password;
+            let Stopped = search.stopped;
 
             async function hashing(){
                 const compares = await bcrypt.compare(password, hashPassword);
@@ -306,12 +317,28 @@ routes.post('/myaccount/signin', async(req,res)=>{
 
                 if (compares == true) {
 
-                    //console.log("password acertado, bienvenido")
-                    req.session.success = "Bienvenido a Blissenet.com. ¡Tu red de mercado!";
-            
-                    const user = search
-                    req.session.user = user
-                    res.redirect('/')
+                    if (Stopped == false){
+
+                        //console.log("password acertado, bienvenido")
+                        req.session.success = "Bienvenido a Blissenet.com. ¡Tu red de mercado!";
+                        const user = search
+                        req.session.user = user
+                        res.redirect('/')
+
+                    } else {
+
+                        const stoppedUser = await modelStopped.find( {indexed : id, status : 'locked'} );
+                        console.log("Aqui informacion del bloqueo ->", stoppedUser); const stopped = stoppedUser[0];
+                        const username = stopped.username; const ban = stopped.ban; const dates = new Date(stopped.createdAt);
+                        const dia = dates.getDate(); const mes = dates.getMonth()+1; const anio = dates.getFullYear();
+                        const date = `${dia}-${mes}-${anio}`;
+                        req.session.dataLocked = {username, ban, date};
+                        console.log('username' , username); console.log('ban' , ban); console.log('date' , date);
+                        req.session.stopped = "Su cuenta ha sido baneada por infringir nuestras normas.";
+                        res.redirect('/')
+
+                    }
+
     
                 } else {
                     console.log("Password Errado")
@@ -365,10 +392,14 @@ routes.post('/myaccount/signup', async(req,res)=>{
 
     const {username, email, password, confirmPassword, token} = req.body
     const emailLower = email.toLowerCase();//transformo en minisculas el correo
-    const mailhash = hash.MD5(emailLower) 
+    const mailhash = hash.MD5(emailLower); let usernameParse; // esta variable guarda el nombre parseado sin espacios en blanco. 
 
-    if (username.length > 5 && username.length <= 18 ){
-        // el username debe ser minimo 6 y maximo 18 
+    usernameParse = username.replace(/\s+/g, ''); // Quitamos todos los espacios.
+    console.log("usernameParse", usernameParse);
+    
+   
+    if (usernameParse.length > 5 && usernameParse.length <= 20 ){
+        // el username debe ser minimo 6 y maximo 20 
         if (password == confirmPassword) {
             //console.log('password concuerda con la confirmacion')
             //consulta en la base de datos del campo email
@@ -387,7 +418,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
                         req.session.passMaxLength = "El campo no puede estar vacio o contener menos de seis (6) caracteres."
                         res.redirect('/myaccount/signup')
                     } else {
-                        const result = await modelUser.findOne({ username: new RegExp( '^' + username + '$','i' ) });
+                        const result = await modelUser.findOne({ username: new RegExp( '^' + usernameParse + '$','i' ) });
                         console.log("Esto es result ---->", result);
                         if (result !== null) {
 
@@ -425,7 +456,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
                             }
 
                             async function createUser(){
-                                const newUser = new modelUser({username, email: emailLower , password : hashPassword, mailhash, token: newToken});
+                                const newUser = new modelUser({username: usernameParse, email: emailLower , password : hashPassword, mailhash, token: newToken});
                                 const saveUser = await newUser.save();
                                 console.log(saveUser);
                             }
@@ -484,7 +515,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
                                             sendToken()
                                                 .then(()=>{
                                                     req.session.mailSent =  "Token enviado al correo para validación, 90 segundos para su confirmación.";
-                                                    req.session.datauser = {username, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
+                                                    req.session.datauser = {usernameParse, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
                                                     res.redirect('/myaccount/signup-emailverify')
                                                 })
                                                 .catch((error)=>{
@@ -515,7 +546,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
 
     } else {
         console.log('No cumple con la condicion de carcateres su usuario');
-        req.session.usernameErr = "¡Su username debe tener entre 6 y 18 caracteres!"
+        req.session.usernameErr = "¡Su username debe tener entre 6 y 20 caracteres!"
         res.redirect('/myaccount/signup')
     }    
 
@@ -1111,6 +1142,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
         const bannerErrorSizeMimetype = req.session.bannerErrorSizeMimetype;
         const bannerErrorCharge = req.session.bannerErrorCharge;
         const withoutDefinedBanner = req.session.withoutDefinedBanner;
+        const bannerDefaultRestart = req.session.bannerDefaultRestart;
 
         delete req.session.profSuccess;
         delete req.session.updateSuccess;
@@ -1127,6 +1159,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
         delete req.session.bannerErrorSizeMimetype;
         delete req.session.bannerErrorCharge;
         delete req.session.withoutDefinedBanner;
+        delete req.session.bannerDefaultRestart;
  
         if (user !== undefined){  
             searchProfile = await modelProfile.find({ indexed : user._id });  
@@ -1166,9 +1199,9 @@ routes.get('/myaccount/profile', async (req,res)=>{
                 Dateborn = `${dia}/${mes}/${anio}`;
                 //console.log("Esto es Dateboard : ", Dateborn);
 
-                res.render('page/profile', {user, Dateborn, profSuccess, searchProfile, sumCount, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner });
+                res.render('page/profile', {user, Dateborn, profSuccess, searchProfile, sumCount, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, bannerDefaultRestart });
             } else {
-                res.render('page/profile', {user, profSuccess, searchProfile, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner });
+                res.render('page/profile', {user, profSuccess, searchProfile, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, bannerDefaultRestart });
             }
         } else {
             console.log("no existe usuario");
@@ -1190,7 +1223,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
         if (searchBanner.length !== 0){
             //tenemos banner default para darles a los usuarios, se puede crear el profile
             const bannerDefault_url = searchBanner[0].url;           
-            console.log("bannerDefault_url ->", bannerDefault_url); //https://bucket-blissve.nyc3.digitaloceanspaces.com/bannerUserDefault/bannerDefault.png
+            console.log("bannerDefault_url ->", bannerDefault_url); //https://bucket-blissve.nyc3.digitaloceanspaces.com/bannerUserDefault/bannerDefault.jpg
 
             const boxObjetBanner = [{ url : bannerDefault_url , public_id : "sin_data" }];
             const boxObjetAvatar = [{ url : "" , public_id : "sin_data" }];
@@ -1258,13 +1291,13 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
                             
                             ele.bannerPerfil.forEach( (element)=>{
                                 if (element.public_id == "sin_data") {
-                                    console.log("Es primera vez que cambia el banner")
+                                    //console.log("Es primera vez que cambia el banner")
                                     first()
                                 
                                 } else {
                                     const publidIdentificado = element.public_id;
-                                    console.log("el public_id identificado es ----->",publidIdentificado)
-                                    console.log("Esta banner ya ha sido cambiado otras veces!")
+                                    //console.log("el public_id identificado es ----->",publidIdentificado);
+                                    //console.log("Esta banner ya ha sido cambiado otras veces!");
                                     some(publidIdentificado)
                                 }
 
@@ -1312,11 +1345,11 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
                                                     
                                             saveDB()
                                                 .then(()=>{
-                                                    console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                                    //console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
                                                     res.redirect('profile');
                                                 })
                                                 .catch((err)=>{
-                                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                                    //console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
                                                     res.redirect('profile');
                                                 })
                     
@@ -1364,7 +1397,7 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
                                                 await fs.unlink(fileBanner.path); 
                                                                                  
                                                 const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
-                                                console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                                //console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
                                             }
 
                                             async function deleteBannerOld(){
@@ -1389,11 +1422,11 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
                                                     
                                             saveDB()
                                                 .then(()=>{
-                                                    console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                                   // console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
                                                     deleteBannerOld();
                                                 })
                                                 .catch((err)=>{
-                                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                                    //console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
                                                     res.redirect('profile');
                                                 })
                     
@@ -1410,7 +1443,7 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
                     }
                     
                 } else {
-                    console.log("Supera el maximo peso de 3 MB o el archivo no es de tipo image");
+                    //console.log("Supera el maximo peso de 3 MB o el archivo no es de tipo image");
                     req.session.bannerErrorSizeMimetype = 'Supera el maximo peso de 3 MB o el archivo no es de tipo image.';
                     res.redirect('/myaccount/profile');
                 }    
@@ -1425,6 +1458,58 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
         }    
        
 });
+
+/* ruta para reestablecer el banner por defecto */
+routes.get('/myaccount/bannerDefault', async(req, res)=>{
+
+    try {
+
+        const user = req.session.user;
+        const userId = user._id;
+
+        const searchBanner = await modelBannerDefault.find();
+        const bannerDefault_url = searchBanner[0].url;    
+
+        const search_public_id =  await modelProfile.find({indexed : userId });   
+        const banner = search_public_id[0].bannerPerfil;
+        const public_id = banner[0].public_id;
+        //console.log("**********Banner a eliminar***********");
+        //console.log("Este es el banner", banner);
+        //console.log("Este es el public_id", public_id);
+
+             
+        //console.log("bannerDefault_url ->", bannerDefault_url); //https://bucket-blissve.nyc3.digitaloceanspaces.com/bannerUserDefault/bannerDefault.jpg
+        const boxObjetBanner = [{ url : bannerDefault_url , public_id : "sin_data" }];
+
+        //primero guardamos el nuevo banner
+        const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxObjetBanner});
+        //console.log("aqui el resultado de la actualizacion --->",updatesProfile);
+
+        //luego eliminamos el banner viejo customizado
+        const params = {
+            Bucket : bucketName,
+            Key : public_id
+        }
+        s3.deleteObject(params, (err, data)=>{
+            if (err){
+                console.error("Error al eliminar el archivo", err);
+            } else {
+                console.log("Archivo eliminado con exito", data);
+                req.session.bannerDefaultRestart = 'Se ha restablecido el banner por defecto';
+                res.redirect('/myaccount/profile');
+            }
+        }); 
+
+
+    } catch (error) {
+
+        req.session.bannerErrorCharge = 'Ha habido un problema con la carga de archivo. Intente luego.';
+        res.redirect('/myaccount/profile');
+
+    }
+   
+
+})
 
 /* recibir el avatar desde profile al backend */ 
 routes.post('/myaccount/avatar', async (req, res)=>{

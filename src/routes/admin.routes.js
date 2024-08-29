@@ -2,6 +2,7 @@ const { Router } = require('express');
 const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
+const modelStopped = require('../models/stoppedUser.js');
  
 const modelArtes = require('../models/artes.js');
 const modelAirplane = require('../models/airplane.js');
@@ -4738,6 +4739,126 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
 });
 
 
+//ruta para banner de forma temporal o definitiva a usuarios que violen las reglas
+routes.get('/admin/stopped', async (req, res)=>{
+    const userAdmin = req.session.userAdmin;
+
+    if (userAdmin){
+
+        const stoppedUser = await modelUser.find({ stopped : true });
+        console.log("stoppedUser", stoppedUser);
+        //const users = await modelUser.find({stopped : false});
+        res.render('admin/stopped', ({ userAdmin, stoppedUser }));
+
+    } else {
+        res.render('admin/stopped', ({userAdmin}));
+    }
+
+});
+
+//ruta para buscar a usuarios que violen las reglas
+routes.post('/admin/stopped-search', async (req, res)=>{
+    const userAdmin = req.session.userAdmin;
+    const {user} = req.body;
+    console.log("ver", user);
+    //ahora hay que hacer una busqueda en la base de datos y con capacidad de aproximacion sin distincion de mayusculas y minisculas.
+
+    
+    if (userAdmin){
+
+        //const stoppedUser = await modelUser.find( {stopped : true} );
+        const users = await modelUser.find( {$and: [{stopped : false}, {username:  { $regex : user, $options: "i" } }] });
+        
+        res.json(users);
+
+    } 
+
+
+});
+
+//ruta para buscar a usuarios que violen las reglas
+routes.post('/admin/stopped-search-block', async (req, res)=>{
+    const userAdmin = req.session.userAdmin;
+    const {user} = req.body;
+    //ahora hay que hacer una busqueda en la base de datos y con capacidad de aproximacion sin distincion de mayusculas y minisculas.
+    
+    if (userAdmin){
+
+        //const stoppedUser = await modelUser.find( {stopped : true} );
+
+        const users = await modelUser.find( {$and: [{stopped : true}, {username:  { $regex : user, $options: "i" } }] });
+        
+        res.json(users);
+
+    } 
+
+});
+
+
+//ruta para bannear de forma temporal o definitiva a usuarios que violen las reglas
+routes.post('/admin/stopped-ban', async (req, res)=>{
+
+    const userAdmin = req.session.userAdmin;
+    const admin = userAdmin[0].adminName;
+    const {user, id, ban, resume} = req.body;
+    console.log('******* stopped-ban ******* ')
+    console.log("ver", user, id, ban, resume);
+    console.log("admin", admin);
+   
+
+    if (userAdmin){
+        
+        const stopped = new modelStopped({indexed : id, username: user, ban, adminLocked : admin, resume});
+        const stoppedSave = await stopped.save();
+        
+        const findUserAndStopped = await modelUser.findByIdAndUpdate(id, {stopped : true});       
+        const response = { response : true };
+        res.json(response);
+
+    }
+      
+
+});
+
+//ruta para desbloquear un usuario bloqueado
+routes.post('/admin/stopped-ban-unlock', async (req, res)=>{
+
+    const userAdmin = req.session.userAdmin;
+    const admin = userAdmin[0].adminName;
+    const { user, id } = req.body;
+    console.log('******* stopped-ban-unlock ******* ')
+    console.log("ver", user, id);
+    console.log("admin", admin);
+
+    const stopped =  await modelStopped.updateOne({indexed : id}, { adminUnlocked : admin, status : "unlocked" });
+
+    const findUserAndStopped = await modelUser.findByIdAndUpdate(id, {stopped : false});       
+    const response = { response : true };
+
+    res.json(response);
+
+});
+
+routes.post('/admin/stopped-search-block-list', async (req, res)=>{
+    const userAdmin = req.session.userAdmin;
+    const {user} = req.body;
+    //ahora hay que hacer una busqueda en la base de datos y con capacidad de aproximacion sin distincion de mayusculas y minisculas.
+    
+    if (userAdmin){
+
+        //const stoppedUser = await modelUser.find( {stopped : true} );
+
+        const users = await modelUser.find( {$and: [{stopped : true}, {username:  user} ]} );
+
+        const stopped =  await modelStopped.find({username : user});
+
+        console.log("Esto es stopped de /admin/stopped-search-block-list", stopped);
+        res.json(stopped);
+
+    } 
+});
+
+
 //:::::::::::   Controlador de user-admin  :::::::::::
 
 //rutas para llegar al contolador de administradores y poder bloquear o desbloquear.
@@ -7608,8 +7729,99 @@ routes.get('/admin/cronoTask/croneDeleteUpload', async(req, res)=>{
                 res.json({type : "Error", msg: "Error al Ejecutar Crono-DeleteUpload"});
             })
     
-})
+});
 
+routes.get('/admin/cronoTask/croneUnlockedUsers', async(req, res)=>{
+
+    console.log("---------------------- CRON-O-LETRINA -----------------------")
+    console.log("Tarea ejecutada mecanicamente para desbloquear a los usuarios baneados");
+    const dateNow = new Date();
+    const timeNow = dateNow.getTime(); console.log("timeNow -->", timeNow);
+
+    let currentDay;
+    let croneUnlockedUsers;
+    const hora = dateNow.getHours(); const minu = dateNow.getMinutes();
+    const Dia = dateNow.getDate();
+    const Mes = dateNow.getMonth() +1;
+    const Anio = dateNow.getFullYear();
+
+    currentDay = `${Dia}-${Mes}-${Anio}`;
+    croneUnlockedUsers = `${Dia}-${Mes}-${Anio} ${hora}:${minu}`;
+
+    const stopped =  await modelStopped.find( { $and : [{status : "locked" }, {ban : { $ne: "undefined" } }]} );
+    console.log("bloqueados por revisar");
+    console.log("stopped ---->", stopped);
+    stopped.forEach((ele)=>{
+        console.log("username -->", ele.username);
+        const indexed = ele.indexed;
+        const ban = parseInt(ele.ban); //number 7, 14, 30
+        const dateLocked = ele.createdAt;
+        const dateLockedMilisegundos = dateLocked.getTime();
+        const diasEnMilisegundos = ban * 24*60*60*1000;
+        //console.log("dateLockedMilisegundos", dateLockedMilisegundos);
+        //console.log("diasEnMilisegundos", diasEnMilisegundos);
+        const dateUnlockedMilisegundos = dateLockedMilisegundos + diasEnMilisegundos;
+        //console.log("dateUnlockedMilisegundos --->", dateUnlockedMilisegundos);
+        //console.log(`${dateUnlockedMilisegundos} >= ${timeNow}`);
+                  
+        if (dateUnlockedMilisegundos <= timeNow){
+            console.log("procedemos a desbloquear al usuario baneado");
+            async function unlockedStopped(){
+                const unlockedUser =  await modelStopped.findOneAndUpdate({indexed}, {status : 'unlocked'});    
+            }
+
+            async function unlockedUser(){
+                const users = await modelUser.findByIdAndUpdate(indexed , {stopped : false});
+            }
+            
+
+            unlockedStopped()
+                .then(()=>{
+                    unlockedUser()
+                        .then(()=>{
+                            console.log("Proceso de desbloqueo realizado OK");       
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en unlockedUser()", error);
+                            res.json({type : "Error", msg: "Error al Ejecutar Crono-UnlockedUsers"});
+                        })
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error en unlockedStooped()", error);
+                    res.json({type : "Error", msg: "Error al Ejecutar Crono-UnlockedUsers"});
+                })
+            
+        } 
+        
+    });
+
+    async function updateCrono(){
+
+        const searchCrono = await modelCrono.find( {cronoDate : currentDay} );
+        console.log("searchCrono ->", searchCrono);
+
+        if ( searchCrono.length !==0 ){
+
+            const updatecrono = await modelCrono.findOneAndUpdate({cronoDate : currentDay}, {  $set: {croneUnlockedUsers} });
+
+        } else {
+            const updatecrono = new modelCrono({ cronoDate: currentDay, croneUnlockedUsers });
+            const cronoSave = await updatecrono.save();
+        }
+
+    }
+
+    updateCrono()
+        .then(()=>{
+            console.log("updateCrono() OK");
+            res.json({type : "Ok", msg: "Crono-UnlockedUsers Ejecutado"});
+        })
+        .catch((error)=>{
+            console.log("Ha habido un error en updateCrono()", error);
+            res.json({type : "Error", msg: "Error al Ejecutar Crono-UnlockedUsers"});
+        })
+
+});
 
 //************ Crone Task **************/
 // croneDeleteADS, croneDeleteAdmin, croneDeleteUsers, croneUpdateRate  ---->DATABASE
@@ -7918,7 +8130,7 @@ cron.schedule('30 3 * * * ', async()=>{
 
     currentDay = `${Dia}-${Mes}-${Anio}`;
     croneDeleteADS = `${Dia}-${Mes}-${Anio} ${hora}:${minu}`;
-    //modelAirplane, modelAutomotive, modelRealstate, modelNautical
+    //modelAirplane, modelAutomotive, modelRealstate, modelNautical, modelService
     //db.users.find({"emailVerify" : false}).pretty();
     // const ahoraUnix = Math.floor(ahora / 1000);
 
@@ -8223,6 +8435,99 @@ cron.schedule('40 3 * * * ', async()=>{
         .catch((error)=>{
             console.log("Ha habido un error en cleanUpload()", error);
             res.json({type : "Error", msg: "Error al Ejecutar Crono-DeleteUpload"});
+        })
+
+});
+
+//croneDeleteAdmin    
+cron.schedule('50 3 * * * ', async()=>{
+
+    console.log("---------------------- CRON-O-LETRINA -----------------------")
+    console.log("Tarea ejecutada a las 3:50 AM para desbloquear a los usuarios baneados");
+    const dateNow = new Date();
+    const timeNow = dateNow.getTime(); console.log("timeNow -->", timeNow);
+
+    let currentDay;
+    let croneUnlockedUsers;
+    const hora = dateNow.getHours(); const minu = dateNow.getMinutes();
+    const Dia = dateNow.getDate();
+    const Mes = dateNow.getMonth() +1;
+    const Anio = dateNow.getFullYear();
+
+    currentDay = `${Dia}-${Mes}-${Anio}`;
+    croneUnlockedUsers = `${Dia}-${Mes}-${Anio} ${hora}:${minu}`;
+
+    const stopped =  await modelStopped.find( { $and : [{status : "locked" }, {ban : { $ne: "undefined" } }]} );
+    console.log("bloqueados por revisar");
+    console.log("stopped ---->", stopped);
+    stopped.forEach((ele)=>{
+        console.log("username -->", ele.username);
+        const indexed = ele.indexed;
+        const ban = parseInt(ele.ban); //number 7, 14, 30
+        const dateLocked = ele.createdAt;
+        const dateLockedMilisegundos = dateLocked.getTime();
+        const diasEnMilisegundos = ban * 24*60*60*1000;
+        //console.log("dateLockedMilisegundos", dateLockedMilisegundos);
+        //console.log("diasEnMilisegundos", diasEnMilisegundos);
+        const dateUnlockedMilisegundos = dateLockedMilisegundos + diasEnMilisegundos;
+        //console.log("dateUnlockedMilisegundos --->", dateUnlockedMilisegundos);
+        //console.log(`${dateUnlockedMilisegundos} >= ${timeNow}`);
+                  
+        if (dateUnlockedMilisegundos <= timeNow){
+            console.log("procedemos a desbloquear al usuario baneado");
+            async function unlockedStopped(){
+                const unlockedUser =  await modelStopped.findOneAndUpdate({indexed}, {status : 'unlocked'});    
+            }
+
+            async function unlockedUser(){
+                const users = await modelUser.findByIdAndUpdate(indexed , {stopped : false});
+            }
+            
+
+            unlockedStopped()
+                .then(()=>{
+                    unlockedUser()
+                        .then(()=>{
+                            console.log("Proceso de desbloqueo realizado OK");       
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en unlockedUser()", error);
+                            res.json({type : "Error", msg: "Error al Ejecutar Crono-UnlockedUsers"});
+                        })
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error en unlockedStooped()", error);
+                    res.json({type : "Error", msg: "Error al Ejecutar Crono-UnlockedUsers"});
+                })
+            
+        } 
+        
+    });
+
+    async function updateCrono(){
+
+        const searchCrono = await modelCrono.find( {cronoDate : currentDay} );
+        console.log("searchCrono ->", searchCrono);
+
+        if ( searchCrono.length !==0 ){
+
+            const updatecrono = await modelCrono.findOneAndUpdate({cronoDate : currentDay}, {  $set: {croneUnlockedUsers} });
+
+        } else {
+            const updatecrono = new modelCrono({ cronoDate: currentDay, croneUnlockedUsers });
+            const cronoSave = await updatecrono.save();
+        }
+
+    }
+
+    updateCrono()
+        .then(()=>{
+            console.log("updateCrono() OK");
+            res.json({type : "Ok", msg: "Crono-UnlockedUsers Ejecutado"});
+        })
+        .catch((error)=>{
+            console.log("Ha habido un error en updateCrono()", error);
+            res.json({type : "Error", msg: "Error al Ejecutar Crono-UnlockedUsers"});
         })
 
 });

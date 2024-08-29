@@ -62,84 +62,83 @@
                             
                             <div class="accordion" id="accordionExample">
                                 <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Create Banner
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body px-0">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Create Banner
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body px-0">
 
-                                        <div class="containerAddBanner p-0">
-                                            <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
-                                            
-                                                <div class="card-body my-2">
-                                                    <form action="/admin/banner/create" method="POST" id="formCreate" enctype="multipart/form-data"
-                                                                    accept=".jpg, .jpeg, .png">
-                        
-                                                                    <div class="card-header">+ Add to Banner</div>
-                                                                    <% if (userAdmin) { %>
-                                                                    <div class="input-group my-2">
-                                                                        <span class="input-group-text">Type Banner</span>
-                                                                        <select class="form-control" name="typeBanner" id="seletType">
-                                                                            <option value="admin">Admin</option>
-                                                                            <option value="customer">Customer</option>
-                                                                        </select>
-                                                                    </div> 
-                                                                    <div class="input-group my-2">
-                                                                        <span class="input-group-text">N. Invoice</span>
-                                                                        <input class="form-control nInvoice" type="text" name="nInvoice" placeholder="Intro N. de Invoice" readonly>
-                                                                        <button type="button" class="input-group-text btn btn-secondary btnSearch" disabled><i class="bi bi-search"></i></button>
-                                                                    </div>
-                                                                    <div class="input-group my-2">
-                                                                        <span class="input-group-text">Customer name</span>
-                                                                        <input class="form-control customerName" type="text" name="customerName" placeholder="Customer Names" readonly>
-                                                                    </div>
-                                                                    <div class="input-group my-2">
-                                                                        <span class="input-group-text">Time in days</span>
-                                                                        <input class="form-control timeInDays" type="number" name="timeDays" placeholder="Time in Days" readonly>
-                                                                    </div> 
-                                                                    <div class="input-group my-2">
-                                                                        <span class="input-group-text">End Public</span>
-                                                                        <input class="form-control endPublic" type="text" name="endPublic" placeholder="End Public" readonly>
-                                                                    </div>
-                                                                    <div class="form-group d-flex justify-content-start my-2 border">
-                                                                        <div class="add_photo me-1" id="add_photo">
-                                                                            <span><img src="/img/addPhoto.png" class="my-2 mx-1" style="width: 60px;"></span>
+                                            <div class="containerAddBanner p-0">
+                                                <div class="card px-0" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                                
+                                                    <div class="card-body my-2">
+                                                        <form action="/admin/banner/create" method="POST" id="formCreate" enctype="multipart/form-data"
+                                                                        accept=".jpg, .jpeg, .png">
+                            
+                                                                        <div class="card-header">+ Add to Banner</div>
+                                                                        <% if (userAdmin) { %>
+                                                                        <div class="input-group my-2">
+                                                                            <span class="input-group-text">Type Banner</span>
+                                                                            <select class="form-control" name="typeBanner" id="seletType">
+                                                                                <option value="admin">Admin</option>
+                                                                                <option value="customer">Customer</option>
+                                                                            </select>
+                                                                        </div> 
+                                                                        <div class="input-group my-2">
+                                                                            <span class="input-group-text">N. Invoice</span>
+                                                                            <input class="form-control nInvoice" type="text" name="nInvoice" placeholder="Intro N. de Invoice" readonly>
+                                                                            <button type="button" class="input-group-text btn btn-secondary btnSearch" disabled><i class="bi bi-search"></i></button>
                                                                         </div>
-                                                                        <span class="mx-1"> <small>
-                                                                                        <ul class="my-1 mx-4 p-0 text-secondary">
-                                                                                                <li>un Banner con formato JPG.</li>
-                                                                                                <li>Peso max. 3 MB.</li>
-                                                                                                <li>Resolución 1600p x 400p.</li>
-                                                                                        </ul> 
-                                                                                            </small> </span>
-                                                                        <input type="file" name=fileImg class="inpFile form-control" required>
-                                                                    </div>
-                                                                    <div class="form-group d-flex justify-content-center my-2 border" id="newShowBanner">
-                                                                        <!-- contenedor con img dinamica -->
+                                                                        <div class="input-group my-2">
+                                                                            <span class="input-group-text">Customer name</span>
+                                                                            <input class="form-control customerName" type="text" name="customerName" placeholder="Customer Names" readonly>
+                                                                        </div>
+                                                                        <div class="input-group my-2">
+                                                                            <span class="input-group-text">Time in days</span>
+                                                                            <input class="form-control timeInDays" type="number" name="timeDays" placeholder="Time in Days" readonly>
+                                                                        </div> 
+                                                                        <div class="input-group my-2">
+                                                                            <span class="input-group-text">End Public</span>
+                                                                            <input class="form-control endPublic" type="text" name="endPublic" placeholder="End Public" readonly>
+                                                                        </div>
+                                                                        <div class="form-group d-flex justify-content-start my-2 border">
+                                                                            <div class="add_photo me-1" id="add_photo">
+                                                                                <span><img src="/img/addPhoto.png" class="my-2 mx-1" style="width: 60px;"></span>
+                                                                            </div>
+                                                                            <span class="mx-1"> <small>
+                                                                                            <ul class="my-1 mx-4 p-0 text-secondary">
+                                                                                                    <li>un Banner con formato JPG.</li>
+                                                                                                    <li>Peso max. 3 MB.</li>
+                                                                                                    <li>Resolución 1600p x 400p.</li>
+                                                                                            </ul> 
+                                                                                                </small> </span>
+                                                                            <input type="file" name=fileImg class="inpFile form-control" required>
+                                                                        </div>
+                                                                        <div class="form-group d-flex justify-content-center my-2 border" id="newShowBanner">
+                                                                            <!-- contenedor con img dinamica -->
 
-                                                                    </div>
-                                                                    <% }; %>               
-                                
-                                                                    <div class="form-group my-2">
-                                                                        <button type="submit" class="btn btn-primary form-control my-3" id="btnCreate"> Add New Banner </button>
-                                                                        <button class="btn btn-primary form-control invisibleBtn my-3" type="button" id="btnCreateLoading" disabled>
-                                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                                            Uploading...
-                                                                        </button>
-                                                                    </div>
-                        
-                                                    </form>
+                                                                        </div>
+                                                                        <% }; %>               
+                                    
+                                                                        <div class="form-group my-2">
+                                                                            <button type="submit" class="btn btn-primary form-control my-3" id="btnCreate"> Add New Banner </button>
+                                                                            <button class="btn btn-primary form-control invisibleBtn my-3" type="button" id="btnCreateLoading" disabled>
+                                                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                                Uploading...
+                                                                            </button>
+                                                                        </div>
+                            
+                                                        </form>
+                                                    </div>
+
                                                 </div>
-
                                             </div>
-                                        </div>
 
+                                        </div>
                                     </div>
                                 </div>
-                                </div>
-                            
                             
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo">

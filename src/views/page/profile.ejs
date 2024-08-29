@@ -13,6 +13,16 @@
     transition: 1s all ease;
 }
 
+.containerBanner:hover{
+    #bannerUppload{
+        opacity: 1;
+    }
+
+    #bannerUpploadDefault{
+        opacity: 1;
+    }
+}
+
 #bannerUppload{
     width: 40px;
     height: 40px;
@@ -21,11 +31,16 @@
     opacity: 0;
     transition: 1s all ease;
 }
-.containerBanner:hover{
-    #bannerUppload{
-        opacity: 1;
-    }
+
+#bannerUpploadDefault{
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    transition: 1s all ease;
 }
+
 
 .imgPerfil{
     width: 55px;
@@ -110,6 +125,11 @@
          <% if (withoutDefinedBanner){ %>
             <%- include('../alert/withoutDefinedBanner.ejs') %> 
          <% }; %>
+
+         <% if (bannerDefaultRestart){ %>
+            <%- include('../alert/bannerDefaultRestart.ejs') %> 
+         <% }; %>
+         
 
          <% if (user) { %>
             
@@ -543,19 +563,66 @@
 
                                             <% searchProfile.forEach( (ele)=> { %>
                                                 <% ele.bannerPerfil.forEach((elem)=>{ %>
-                                                        
-                                                    <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
+                                                    
+                                                    <!-- public_id : "sin_data" -->
+                                                    <% if (elem.public_id === "sin_data") { %>
+                                                        <!-- opcion banner default -->
+
+                                                        <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
                                             
-                                                        <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
+                                                            <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
                 
-                                                        <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 4px;">
-                                                            <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
-                                                        
-                                                            <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
-                                                            <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -100px;"><i class="bi bi-arrow-up-square"></i></button> <!-- segundo enviar y actualizar img -->
                                                 
-                                                        </form>
-                                                    </div>    
+                                                            <div class="containerChargerBanner" style="width: 100%; position: absolute; bottom: 4px;">
+                                                                <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end">
+                                                                    <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
+                                                                
+                                                                    <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                                    <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -100px;"><i class="bi bi-arrow-up-square"></i></button> <!-- segundo enviar y actualizar img -->
+                                                                </form>
+                                                            </div>
+
+
+    
+                                                        </div>
+
+                                                    <% } else { %>
+                                                        <!-- opcion banner customizado -->
+
+                                                        <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
+                                            
+                                                            <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
+                
+                                                            <div class="containerChargerBanner d-flex justify-content-between" style="width: 100%; height: 44px; position: absolute; bottom: 3px;">
+                                                                
+
+                                                                <!-- opcion subir banner default -->
+    
+                                                                <div class="containerUploadBannerDefault d-flex justify-content-start" style= "display : inline; width:100px; position: relative;">
+                                                                    <a href="/myaccount/bannerDefault" class="d-flex justify-content-center align-items-center" id="bannerUpploadDefault" title="Restaurar Banner por Defecto" style="position: absolute; left: 5px; color: black">
+                                                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                                                    </a>
+                                                                </div>
+
+
+                                                                <!-- opcion subir banner customizado -->
+                                                                <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end" style= "display : inline; width:100px; position: relative;" >
+                                                                    <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
+                                                                
+                                                                    <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner" style="position: absolute; right: 5px;"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                                    <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -150px;"></button> <!-- segundo enviar y actualizar img -->
+                                                                </form>
+
+
+
+                                                            </div>      
+
+    
+                                                        </div>
+                                                        
+                                                    <% }; %>
+
+
                                                 <%  }) %>
                                             
                                         
@@ -753,8 +820,8 @@
             }
 
             
-        </script> 
-
+        </script>
+        
         <!-- para cambiar el avatar -->
         <script>
 

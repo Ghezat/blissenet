@@ -59,6 +59,9 @@
                             <tr>
                                 <td>Crono-DeleteUpload </td> <td>03:40 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td> <%= searchCrono[0].croneDeleteUpload %></td><td> <button class="btn btn-success btn-sm" id="btnDeleteUpload"> Ejecutar</button> </td> 
                             </tr>
+                            <tr> 
+                                <td>Crono-UnlockedUsers </td> <td>03:50 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td> <%= searchCrono[0].croneUnlockedUsers %></td><td> <button class="btn btn-success btn-sm" id="btnUnlockedUsers"> Ejecutar</button> </td>
+                            </tr>
                          </tbody>
                      <% } else { %>
                         <tbody>
@@ -77,7 +80,10 @@
                             <tr>
                                 <td>Crono-DeleteUpload </td> <td>03:40 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td>No update</td><td> <button class="btn btn-success btn-sm" id="btnDeleteUpload"> Ejecutar</button> </td> 
                             </tr>
-                            </tbody>
+                            <tr> 
+                                <td>Crono-UnlockedUsers </td> <td>03:50 <div class="spinner-border spinner-border-sm ms-2" role="status"> </div> </td> <td>No update</td><td> <button class="btn btn-success btn-sm" id="btnUnlockedUsers"> Ejecutar</button> </td>
+                            </tr>
+                        </tbody>
                      <% } %>   
                     </table>                
                 </div>
@@ -103,6 +109,7 @@
                                     <p> <strong>Crono-DeleteAdms:</strong> Proceso que elimina todos los admins que no pudieron verificar su cuenta. </p>
                                     <p> <strong>Crono-DeleteADS:</strong> Proceso que elimina los anuncios (Aeroplano, Automotriz, Nautico, Realstate, Servicios) que han pasado un año publicado. </p>
                                     <p> <strong>Crono-DeleteUpload:</strong> Proceso que elimina los archivos de imagenes "Que el servidor no ha podido eliminar por diversas razones" de la carpeta upload del servidor. </p>
+                                    <p> <strong>Crono-UnlockedUsers:</strong> Proceso que evalua los usuarios baneados, al cumplir el tiempo de penalización el usuario es desbloqueado. </p>
                                 </div>
                                 
                             </div>        
@@ -139,6 +146,7 @@
     const btnDeleteAdmin = document.getElementById('btnDeleteAdmin');
     const btnDeleteADS = document.getElementById('btnDeleteADS');
     const btnDeleteUpload = document.getElementById('btnDeleteUpload');
+    const btnUnlockedUsers = document.getElementById('btnUnlockedUsers');
 
     const cronoAlert = document.querySelector('.crono-alert');
 
@@ -300,6 +308,35 @@
         .catch( err => console.log(err));
     });
 
+    btnUnlockedUsers.addEventListener('click', ()=>{
+        fetch("/admin/cronoTask/croneUnlockedUsers", {
+            method: "GET",
+            headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => 
+            {
+                const type = jsonx.type;
+                const msg = jsonx.msg;
+
+                console.log(`type: ${type}`);
+                console.log(`msg: ${msg}`);
+
+                if (type == "Ok"){
+                    cronoAlert.innerHTML += `<div class="alert alert-success alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                } else {
+                    cronoAlert.innerHTML += `<div class="alert alert-danger alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
+                                                <strong class="me-1"><i class="bi bi-x-circle-fill me-2"></i> ${msg} </strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`
+                }
+            
+            })
+        .catch( err => console.log(err));
+    });
 
 </script>
 

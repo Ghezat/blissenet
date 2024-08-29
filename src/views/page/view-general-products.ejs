@@ -493,7 +493,12 @@
                                         <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
                                         <hr>
                                         <p>Modo compra segura</p>                        
-                                        <button class="btn btn-info mt-2 text-light form-control">Compra segura  <i class="bi bi-shield-check mx-2"></i> </button>
+                                        <button class="btn btn-info mt-2 text-light form-control" data-bs-toggle="modal" data-bs-target="#staticCompraSegura">
+                                            Compra segura  
+                                            <i class="bi bi-shield-check mx-2"></i>
+                                        </button>
+                                        <!-- el modal de este boton esta en la linea 863 -->
+                                        
                                         <% }  else { %>
                                         <button type="button" class="dataBuy btn btn-secondary mt-2 text-light form-control" disabled>
                                             Paused Article 
@@ -850,6 +855,28 @@
                                             <% }; %>    
                                         <% }; %>
                                     <% }; %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Compra Segura -->
+                    <div class="modal fade" id="staticCompraSegura" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticCompraSeguraLabel" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="staticCompraSeguraLabel">Compra Segura (en desarrollo)</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <span>Este botón estará inactivo temporalmente, ya que estamos trabajando en el modulo de Compra Segura. Este sistema
+                                        actuará como arbitro entre compradores y vendedores, garantizando que ambas partes obtengan lo que les corresponde:
+                                        el comprador recibirá su mercancía y el vendedor su pago.
+                                    </span>
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 </div>
                             </div>
                         </div>
@@ -1481,7 +1508,7 @@ const DataFetch = fetch('/extraer')
  
 const from = document.querySelector('.from');
 const storeUsername = store.childNodes[2].value;
-//console.log("Esto es storeUsername aqui ----------->", storeUsername);
+console.log("Esto es storeUsername aqui ----------->", storeUsername);
 
 let datoStore = {
     store : storeUsername
@@ -1489,7 +1516,7 @@ let datoStore = {
   
   //console.log("datoStore ---->", datoStore)
   
-  
+ 
    fetch("/date", {
                 method: "post",
                 body: JSON.stringify(datoStore),
