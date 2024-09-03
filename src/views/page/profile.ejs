@@ -125,14 +125,13 @@
          <% if (withoutDefinedBanner){ %>
             <%- include('../alert/withoutDefinedBanner.ejs') %> 
          <% }; %>
-
-         <% if (bannerDefaultRestart){ %>
-            <%- include('../alert/bannerDefaultRestart.ejs') %> 
-         <% }; %>
          
 
          <% if (user) { %>
-            
+
+            <% if (bannerDefaultRestart){ %>
+                <%- include('../alert/bannerDefaultRestart.ejs') %> 
+             <% }; %>
 
         <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
             <span class="ms-5 p-0" style="font-weight: 400;"> Perfil </span>
@@ -1250,7 +1249,7 @@
             const qr = new QRious({
                 element: canvas, //en el contenedor donde ira.
                 value: url, // informacion que codificara.
-                size: 150 // Tamaño del código QR
+                size: 180 // Tamaño del código QR
             });
 
             html2canvas(contentQR).then(canvas =>{
