@@ -729,7 +729,7 @@
                                                                     </form>
                                                                     
 
-                                                                    <div class="containerSerach my-2  rounded" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                                    <div class="containerSearch my-2  rounded" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
                                                                         <div class="containerSearch my-0 d-flex flex-wrap">
                                                                         <!--  cantidad de articulos para habilitar la opcion de busqueda -->
                                                                             <% if(sumCount >= 11) { %>    
@@ -751,9 +751,27 @@
                                                                             <% }; %>        
                                                                         </div>
                                                                     </div>
+
+                                                                    
+                                                                    <div class="containerAD-QR my-2 rounded" style="width: 100%;">
+                                                                        <div class="containerADQR my-0 form-group">
+                                                                            Descarga tu Anuncio de tienda virtual y colocalo en un lugar visible. 
+                                                                            <button class="btn btn-outline-secondary btn-sm my-1 form-control" id="adQR"> Descarga  <i class="bi bi-qr-code mx-2"></i> </button>                                                                      
+                                                                            <input type="hidden" value="<%= user.username %>" id="urlStore">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="contentQR border border-secondary d-flex flex-column">
+                                                                        <canvas class="close" id="qr-canvas">  
+                                                                        </canvas>
+                                                                        
+                                                                        <span class="alert-secondary close" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                                                    </div>
+                                                                    
                                                                 
                                                                 </div> 
                                                             </div>
+
+
                     
                                                             <div class="row shadow p-2 m-2 bg-body rounded border">
                                                                 <div class="col-md-2 col-sm-2  d-flex justify-align-center justify-content-center"> <img src="/img/cheched.png" style="width : 50px; height: 50px;"> </div>
@@ -791,6 +809,10 @@
     </main>
         <%- include('../partials/scripts.ejs') %>
         <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
         <!-- para cambiar el banner -->
         <script>
@@ -1205,6 +1227,53 @@
             
 
                             
+    </script>
+
+    <script>
+        const contentQR = document.querySelector('.contentQR');
+        const adQR = document.getElementById('adQR');
+        const urlStore = document.getElementById('urlStore');
+        const canvas = document.getElementById('qr-canvas');
+        const pieQR = document.getElementById('pieQR');
+        
+
+        adQR.addEventListener('click', ()=>{
+
+
+            const store = urlStore.value;
+            const url = `https://blissenet.com/account/${store}`;
+            console.log("url", url);
+            
+            canvas.classList.remove('close');
+            pieQR.classList.remove('close');
+
+            const qr = new QRious({
+                element: canvas, //en el contenedor donde ira.
+                value: url, // informacion que codificara.
+                size: 150 // Tamaño del código QR
+            });
+
+            html2canvas(contentQR).then(canvas =>{
+                
+                console.log("canvas", canvas);
+                const imgData = canvas.toDataURL("image/png"); //esta constante posee ahora una imagen;
+
+                //crear enlace temporal
+                //la razon de crear un enlace subyace en que cuando una etiqueta a en su atributo href no tiene una direccion donde redirigir en asumo que debe descargar.
+                //por esta razon se usa un elemento o etiqueta <a>
+                const link = document.createElement('a'); // aqui creo un elemento <a> de html
+                link.href = imgData;
+
+                //nombre del archivo que se descargara
+                link.download = 'EnlaceQR.png';
+                
+                //simular un clic en el enlace para iniciar descarga
+                link.click();
+        
+            });
+
+        })
+            
     </script>
 
 
