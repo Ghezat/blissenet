@@ -352,7 +352,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-  <script>
+<script>
 
    //aqui colocaremos el script del Top 50 Store
    const Top50Stores = document.querySelector('.Top50Stores');
@@ -363,7 +363,7 @@
         })
         .then(response =>response.json() )
         .then( top50Store => {
-            console.log('top50Store', top50Store);
+            //console.log('top50Store', top50Store);
           if (top50Store.length !==0){
               for (let i = 0; i < top50Store.length; i++) {
                   const ele = top50Store[i];
@@ -390,9 +390,9 @@
         })
         .catch( err => console.log(err));
 
-  </script>
+</script>
 
-  <script>
+<script>
 
     const ctx = document.getElementById('myChart');
     const contentBarArts = document.querySelector('.contentBarArts');
@@ -412,7 +412,7 @@
     })
       .then(respPercent =>respPercent.json() )
       .then( jsonP => {
-        console.log("esto es percent --->", jsonP)
+        //console.log("esto es percent --->", jsonP)
   
             const arte = jsonP[0].arte;
             const aero = jsonP[1].aeronautico;
@@ -450,10 +450,10 @@
       })
       .catch(err => console.log(err))
   
-  </script>
+</script>
 
  
- <script>
+<script>
   const contentGallery = document.querySelector('.gallery');
   const moreViewADS = document.getElementById('moreViewADS');
   const newADS = document.getElementById('newADS'); 
@@ -489,9 +489,9 @@
       .catch(err => console.log(err))     
 
 
- </script>
+</script>
 
- <script>
+<script>
 
   const galleryMoreView = document.querySelector('.galleryMoreView');
 
@@ -520,7 +520,7 @@
       .catch(err => console.log(err))
 
   
- </script>
+</script>
 
 
 <!-- <style>
@@ -552,40 +552,6 @@
   } 
   
 </style> -->
-
-<script>
-  //contola el js del footer
-  const mainMail = document.querySelector('.mainMail');
-  const emaiHidden = document.getElementById('emaiHidden'); 
-  const spnEmail = document.querySelector('.spnEmail');
-  
-  
-  const msgSaveMail = document.querySelector('.msgSaveMail');//contendor oculto importante que dice que se ha guardaddo en portapales
-  
-  mainMail.addEventListener('click', copiar);
-
-  function copiar(){
-             
-      let email = spnEmail.textContent;
-      navigator.clipboard.writeText(email)
-          .then(() => {
-               //efecto de poner y quitar el alert
-              msgSaveMail.classList.remove('close');
-              setTimeout(hideMsg, 3000);
-          })
-          .catch(err =>{
-              msgSaveMail.innerHTML += `<div class="alert-danger py-1 px-2 "> 
-                                          <span>No guardado</span>  
-                                        </div>` 
-          })
-
-      function hideMsg(){
-          msgSaveMail.classList.add('close');
-      }
-      
-  }
-</script>
-
 
 </body>
 
