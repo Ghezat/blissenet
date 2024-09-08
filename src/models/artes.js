@@ -16,6 +16,7 @@ const SchemaArtes = new Schema({
     offer : { type: Boolean, default: false },
     onlyOneAvailable : { type: Boolean, default: false },
     bestProduct : { type: Boolean, default: false },
+    delivery : { type: Boolean, default: false },
     state_province : { type: String },
     view : { type : Number, default : 0 }, //aqui tenemos la cantidad de vistas que tiene este producto.
     spread : { type : Object, default : { spreading : false, time : null } }, //este campo es para identificar si se ha hecho la accion de "Difundir entre sus seguidores". 

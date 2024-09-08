@@ -23,6 +23,7 @@ routes.get('/account/:account', async (req,res)=>{
     const account  = req.params.account;
     console.log("este es el account a visitar o tienda",account)
     const boxPublisher = [];
+    let newBox;
     const user = req.session.user;
     console.log("este es el usuario visitante--->", user);
     const countMessages = req.session.countMessages
@@ -144,7 +145,6 @@ routes.get('/account/:account', async (req,res)=>{
                     //console.log("Esto es el valor de x : ", X );
                     //aqui el nuevo arreglo por default 
                     newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-    
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
@@ -156,7 +156,7 @@ routes.get('/account/:account', async (req,res)=>{
                       
                     newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                      //        6    + 0  / 6 = 1 //aqui no hace falta el Math.ceil ya que siempre se dividira entre el mismo numero, siempre dara "1" 
-                    pagina = (limit + X) / limit; //perfecto
+                     pagina = (limit + X) / limit; //perfecto
                     //console.log("pagina :  ", pagina);
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
@@ -1134,6 +1134,53 @@ routes.post('/account/only-one-available', async (req, res)=>{
     
     res.json(boxInfo);
 });
+
+routes.post('/account/delivery', async (req, res)=>{
+    const boxInfo = []
+    console.log("hemos llegado a setting/delivery")
+    console.log(req.body)
+    const { depart, id } = req.body;
+
+    if (depart === 'items'){
+        const result = await modelItems.findById(id);
+        const Delivery = result.delivery;
+        console.log("Esto es Delivery", Delivery);
+
+        if (Delivery === false){
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { delivery : true });
+            boxInfo.push(resultSearch);
+            //console.log('esto es resultSearch', resultSearch );
+            console.log('esto es boxInfo------->', boxInfo); 
+        }else {
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { delivery : false });
+            boxInfo.push(resultSearch);
+            //console.log('esto es resultSearch', resultSearch );
+            console.log('esto es boxInfo------->', boxInfo);  
+        }
+        
+    } else if ( depart === "arts"){
+        const result = await modelArtes.findById(id);
+        const Delivery = result.delivery;
+
+        if (Delivery === false){
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { delivery : true });
+            boxInfo.push(resultSearch);
+            //console.log('esto es resultSearch', resultSearch );
+            //console.log('esto es boxInfo------->', boxInfo);   
+        }else {
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { delivery : false });
+            boxInfo.push(resultSearch);
+            //console.log('esto es resultSearch', resultSearch );
+            //console.log('esto es boxInfo------->', boxInfo);  
+        }
+        
+    }    
+
+    
+    res.json(boxInfo);
+});
+
+ 
 
 //Sección de manejo de Raffles --------------------------------------------
             

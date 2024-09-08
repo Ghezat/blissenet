@@ -582,7 +582,13 @@
                                     <div class="containerPrice d-flex justify-content-between px-2">
                                       <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
                                       </p>
-                                      <div class="containerDosIconos d-flex">
+                                      <div class="containerTresIconos d-flex">
+                          
+                                        <div class="containerDelivery">
+                                          <% if (ele.delivery === true) {%>
+                                            <i class="bi bi-truck me-1"></i>
+                                          <% }; %>  
+                                        </div>
                                         <div class="containerOnlyOneAvailable">
                                           <% if (ele.onlyOneAvailable === true) {%>
                                             <i class="bi bi-1-square-fill me-1"></i>
@@ -622,7 +628,13 @@
                                         <p class="m-0 px-1 border border-dark rounded-pill">
                                             $ <%= ele.price %>
                                         </p>
-                                        <div class="containerDosIconos d-flex">
+                                        <div class="containerTresIconos d-flex">
+
+                                          <div class="containerDelivery">
+                                            <% if (ele.delivery === true) {%>
+                                              <i class="bi bi-truck me-1"></i>
+                                            <% }; %>  
+                                          </div>
                                           <div class="containerOnlyOneAvailable">
                                             <% if (ele.onlyOneAvailable === true) {%>
                                               <i class="bi bi-1-square-fill me-1"></i>

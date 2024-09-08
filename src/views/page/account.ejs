@@ -562,21 +562,28 @@
                                           <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
                                             data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
 
-                                            <!-- esto es el icono para acceder a las herramientas de offer, bestProduct & onlyOneAvailable -->
+                                            <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable & Delivery -->
                                             <% if (user) { %>
 
                                                 <% if (user.username === eleStore.username) { %>
                                                       
                                                   <% if (ele.department !== 'raffle' ){ %>
-                                                      <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
-                                                        <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
-                                                                                              
-                                                        <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2">
-                                                          <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
-                                                          <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                          <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
-                                                        </ul>
-                                                      </div>
+
+                                                        <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
+                                                          <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                
+                                                          <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
+                                                            <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
+                                                            <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                            <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
+                                                            <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
+                                                              <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                            <%  } else { %>
+                                                              <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                            <% } %>  
+                                                          </ul>
+                                                        </div>
+
                                                   <% }; %>
                                                       
                                                 <% }; %>
@@ -635,7 +642,13 @@
                                                       <div class="containerPrice d-flex justify-content-between px-2">
                                                         <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
                                                         </p>
-                                                        <div class="containerDosIconos d-flex">
+                                                        <div class="containerTresIconos d-flex">
+                                                          
+                                                          <div class="containerDelivery">
+                                                            <% if (ele.delivery === true) {%>
+                                                              <i class="bi bi-truck me-1"></i>
+                                                            <% }; %>  
+                                                          </div>     
                                                           <div class="containerOnlyOneAvailable">
                                                             <% if (ele.onlyOneAvailable === true) {%>
                                                               <i class="bi bi-1-square-fill me-1"></i>
@@ -650,7 +663,7 @@
                                                       </div>
               
                                                     </div>
-                                                  
+                                                    
                 
                                                 </div>
                                         </div>
@@ -675,7 +688,13 @@
                                                           <p class="m-0 px-1 border border-dark rounded-pill">
                                                             $ <%= ele.price %>
                                                           </p>
-                                                          <div class="containerDosIconos d-flex">
+                                                          <div class="containerTresIconos d-flex">
+
+                                                            <div class="containerDelivery">
+                                                              <% if (ele.delivery === true) {%>
+                                                                <i class="bi bi-truck me-1"></i>
+                                                              <% }; %>  
+                                                            </div>
                                                             <div class="containerOnlyOneAvailable">
                                                               <% if (ele.onlyOneAvailable === true) {%>
                                                                 <i class="bi bi-1-square-fill me-1"></i>
@@ -690,7 +709,7 @@
                                                         </div>
                 
                                                       </div>
-                                                        
+                                                      
                                                     </div>
                                         </div>  
                                         <% }; %>
@@ -1471,6 +1490,61 @@
    };
    
 </script>
+
+<script>
+  //este es el controlador de los delivery
+   const delivery = document.querySelectorAll('.delivery');
+   const containerDelivery = document.querySelectorAll('.containerDelivery');
+   console.log("------- containerDelivery ---------", containerDelivery);
+  
+
+   for (let i = 0; i < delivery.length; i++) {
+     const element = delivery[i];
+     element.addEventListener('click', () => {
+       console.log("Esto es i -->", i);
+       //console.log(element.childNodes)
+       console.log("depart ---->",element.childNodes[1].value);
+       console.log("id ---->",element.childNodes[3].value);
+       
+       const depart = element.childNodes[1].value;
+       const id = element.childNodes[3].value;
+       
+       const datos = {
+           depart: depart,
+           id: id
+         }
+ 
+         fetch('/account/delivery', {
+ 
+           method: "post",
+           body: JSON.stringify(datos),
+           headers: { "content-type": "application/json" }
+ 
+         })
+           .then(response => response.json())
+           .then(jsonx => {
+             
+             console.log("Esto es jsonx--->",jsonx);
+             const ID = jsonx[0]._id;
+             const Delivery = jsonx[0].delivery;
+             console.log("Esto es ID ---->", ID);
+             console.log("Esto es Delivery ---->", Delivery);
+ 
+             if ( Delivery === false ){
+                containerDelivery[i].innerHTML = '<i class="bi bi-truck me-1"></i>'
+             } else {        
+                containerDelivery[i].innerHTML = '';
+             }
+ 
+           })
+           .catch(err => console.log(err));
+   
+   
+     });
+   
+   };
+   
+ </script>
 
 
 <% }; %>
