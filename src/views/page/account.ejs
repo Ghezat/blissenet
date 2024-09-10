@@ -248,7 +248,7 @@
     }
 
     .containerShare{
-      right: 5px;
+      right: 3px;
     }
 
     footer{
@@ -363,23 +363,24 @@
 
                                   <div class="dropdown d-flex justify-content-start" style="position: relative;">
 
-                                   <span  class="mx-1 shareToggle" style="cursor: pointer;"><i class="bi bi-share me-1"></i> Compartir</span> 
+                                  <span  class="mx-1 shareToggle" style="cursor: pointer; user-select: none;"><i class="bi bi-share me-1"></i> Compartir</span> 
                                           
-                                   <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 25px;" >
-                                    <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
-                                    <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
-                                    <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
-                                      <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i>
-                                      <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
-                                    </div>
-                                    </div>
-                                   <input type="hidden" id="linkToShare" value="https://blissenet.com/account/<%= ele.username %>">
+                                  <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 25px;" >
+                                        <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
+                                        <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
+                                        <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
+                                          <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i>
+                                          <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
+                                        </div>
+                                        <button class="btn btn-dark mx-2" id="btnQR" style="border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
+                                  </div>
+                                  <input type="hidden" id="linkToShare" value="https://blissenet.com/account/<%= ele.username %>">
 
                                   </div>
 
                                 <% if (boxPublisher) { %>
-                                    <span class="mx-1" style="font-size: 16px;"><i class="bi bi-bag-plus me-1"></i> Anuncios: <%= boxPublisher.length %> </span>
+                                    <span class="mx-1" style="font-size: 16px; user-select: none"><i class="bi bi-bag-plus me-1"></i> Anuncios: <%= boxPublisher.length %> </span>
                                 <% }; %>
                             <% }) %>
                         <% }; %>
@@ -567,6 +568,26 @@
                               </div>
                               <div class="modal-footer">
                                   <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnSendStar">Enviar Calificación</button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- Modal codigo QR -->
+                    <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
+                      <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body d-flex justify-content-center align-items-center my-3">
+                                  <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
+                                    <canvas id="qr-canvas">  
+                                    </canvas>
+                                    
+                                    <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -926,6 +947,7 @@
         <% }; %>
 
   </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
 
@@ -1580,12 +1602,19 @@
   const btnClicBoard = document.getElementById('btnClicBoard');
   const btnClicBoardCheck = document.getElementById('btnClicBoardCheck');
   const linkToShare = document.getElementById('linkToShare'); //374 linea
+  const btnQR = document.getElementById('btnQR');
+  const canvas = document.getElementById('qr-canvas');
   
 
   shareToggle.addEventListener('click', ()=>{
     containerShare.classList.toggle('invisible')
   })
 
+  shareToggle.addEventListener('touchend', ()=>{
+    containerShare.classList.toggle('invisible')
+  }); // Para dispositivos táctiles
+
+  //copiar link de tienda en el portapapeles
   btnClicBoard.addEventListener('click', ()=>{
     const storeToShare = linkToShare.value;
     navigator.clipboard.writeText(storeToShare)
@@ -1607,9 +1636,22 @@
     
   })
 
+  //fabricar Codigo QR
+  btnQR.addEventListener('click', ()=>{
+
+    const store = linkToShare.value;
+    const url = `${store}`;
+    console.log("url", url);
+
+    const qr = new QRious({
+        element: canvas, //en el contenedor donde ira.
+        value: url, // informacion que codificara.
+        size: 200 // calidad del codigo
+  });
+
+  })
 
  </script>
-
 
 <% }; %>
 
