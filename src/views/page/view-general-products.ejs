@@ -91,6 +91,14 @@
         padding: 0;
     }
 
+    @media screen and (min-width: 290px) and (max-width: 499px ){
+      .containerShare{
+        /* esto pertenece al modulo de comapartir */
+        right: 3px;
+    }
+
+    }
+
 
 </style>
 <body class="mainTheme">
@@ -140,7 +148,7 @@
     
   
 
-    <div class="row border border-light m-0" style="width: 100%;">
+    <div class="row border border-ligth m-0" style="width: 100%;">
        <!--  ::::: productId ::::: -->
         <% if (productId) { %>
             <input type="hidden" value="<%= productId %>" id="productId">
@@ -935,6 +943,26 @@
                         </div>
                     </div>
 
+                    <!-- Modal codigo QR -->
+                    <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-center align-items-center my-3">
+                                    <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
+                                        <canvas id="qr-canvas">  
+                                        </canvas>
+                                        
+                                        <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card p-2 mt-2">
                         <div class="card-body d-flex flex-column">
                             <% if (depart == 'items' || depart == 'arts' || depart == 'auctions' || depart == 'raffle') { %>
@@ -963,8 +991,30 @@
                                         <p class="mb-1"> Creacion de Tienda  <i class="bi bi-calendar2-week mx-1"></i><span class="from"></span> </p>
                                     <% if (search) { %>
                                         <p class="mb-1"> Comentarios de sus clientes  <a href="/comments/<%= search.username%>"> Aquí</a></p>
-                                        <span class="me-2">Visitar Tienda...</span>
-                                        <a href="/account/<%= search.username %>" class="text-light store" style="text-decoration: none;"><span class="bg-secondary px-1 rounded-2"><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a>
+                                        <p class="mb-2 me-2">Visitar Tienda... <a href="/account/<%= search.username %>" class="text-light store" style="text-decoration: none;"><span class="bg-secondary px-1 rounded-2"><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a></p>
+                                            
+                                        <div class="mb-1 d-flex justify-content-start alert-secondary rounded-2 shareToggle p-1 shadow-sm" style="position: relative; cursor: pointer;">
+
+                                            <span style="user-select: none;"> Compartir este anuncio  <i class="bi bi-share ms-1"></i></span> 
+                                             
+                                            <% if (depart) { %>
+                                               
+                                                <% if (productId) { %>
+                                                <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 25px; right: 0px" >
+                                                    <a href="https://api.whatsapp.com/send?text=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
+                                                    <a href="https://t.me/share/url?url=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
+                                                    <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
+                                                        <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i>
+                                                        <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
+                                                    </div>
+                                                    <button class="btn btn-dark mx-2" id="btnQR" style="border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
+                                                </div> 
+                                                <input type="hidden" id="linkToShare" value="https://blissenet.com/product/<%= depart %>/<%= productId %>">
+                                                <% }; %>    
+                                            <% }; %>
+                                        </div>
+
                                     <% }; %>
                                 </div>
                         </div>
@@ -1103,7 +1153,7 @@
 
         <% }; %>   <!-- ::::Aqui cierro el search:::: -->   
     </div>
-    <div class="row  m-0" style="background-color: rgb(233, 236, 239, 0.1); width: 100%;">
+    <div class="row m-0" style="background-color: rgb(233, 236, 239, 0.1); width: 100%;">
         <div class="col-lg-12 p-2">
             <div class="contenExt rounded-3 themaTextLight">
                 <div class="contenInt">
@@ -1166,6 +1216,7 @@
   </main>
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- con este script cconectamos este HTML al servidor socket     -->         
   <script src="/socket.io/socket.io.js" charset="utf-8"></script>
 </body>
@@ -2408,6 +2459,66 @@ btnReportar.addEventListener('click', ()=>{
     })
 
            
+
+</script>
+
+<script>
+
+<!-- script para controlar todo el modulo de compartir -->
+
+  const shareToggle = document.querySelector('.shareToggle');
+  const containerShare = document.querySelector('.containerShare');
+  const btnClicBoard = document.getElementById('btnClicBoard');
+  const btnClicBoardCheck = document.getElementById('btnClicBoardCheck');
+  const linkToShare = document.getElementById('linkToShare'); //374 linea
+  const btnQR = document.getElementById('btnQR');
+  const canvas = document.getElementById('qr-canvas');
+  
+
+  shareToggle.addEventListener('click', ()=>{
+    containerShare.classList.toggle('invisible')
+  })
+
+  shareToggle.addEventListener('touchend', ()=>{
+    containerShare.classList.toggle('invisible')
+  }); // Para dispositivos táctiles
+
+  //copiar link de tienda en el portapapeles
+  btnClicBoard.addEventListener('click', ()=>{
+    const storeToShare = linkToShare.value;
+    navigator.clipboard.writeText(storeToShare)
+      .then(function(){
+       
+        btnClicBoard.classList.add('invisible');
+        btnClicBoardCheck.classList.remove('invisible');
+        setTimeout(clipboardDone, 1000)
+        
+        function clipboardDone(){
+          btnClicBoardCheck.classList.add('invisible');
+          btnClicBoard.classList.remove('invisible');
+        }
+
+      })
+      .catch(function(error){
+        alert("error al copiar" + e);
+      })
+    
+  })
+
+  //fabricar Codigo QR
+  btnQR.addEventListener('click', ()=>{
+
+    const store = linkToShare.value;
+    const url = `${store}`;
+    console.log("url", url);
+
+    const qr = new QRious({
+        element: canvas, //en el contenedor donde ira.
+        value: url, // informacion que codificara.
+        size: 200 // calidad del codigo
+  });
+
+  })
 
 </script>
 
