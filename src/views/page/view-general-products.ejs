@@ -991,16 +991,17 @@
                                         <p class="mb-1"> Creacion de Tienda  <i class="bi bi-calendar2-week mx-1"></i><span class="from"></span> </p>
                                     <% if (search) { %>
                                         <p class="mb-1"> Comentarios de sus clientes  <a href="/comments/<%= search.username%>"> Aquí</a></p>
-                                        <p class="mb-2 me-2">Visitar Tienda... <a href="/account/<%= search.username %>" class="text-light store" style="text-decoration: none;"><span class="bg-secondary px-1 rounded-2"><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a></p>
+                                        <p class="mb-3 me-2">Visitar Tienda... <a href="/account/<%= search.username %>" class="text-light store" style="text-decoration: none;"><span class="bg-secondary px-1 rounded-2"><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a></p>
                                             
-                                        <div class="mb-1 d-flex justify-content-start alert-secondary rounded-2 shareToggle p-1 shadow-sm" style="position: relative; cursor: pointer;">
+                                        <div class="form-group" style="position: relative; cursor: pointer;">
 
-                                            <span style="user-select: none;"> Compartir este anuncio  <i class="bi bi-share ms-1"></i></span> 
+                                            <button class="btn btn-secondary form-control shareToggle"> Compartir este anuncio  <i class="bi bi-share ms-1"></i> </button>
+                                            <!-- <span style="user-select: none;"> Compartir este anuncio  <i class="bi bi-share ms-1"></i></span>  -->
                                              
                                             <% if (depart) { %>
                                                
                                                 <% if (productId) { %>
-                                                <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 25px; right: 0px" >
+                                                <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: -120px; right: -10px" >
                                                     <a href="https://api.whatsapp.com/send?text=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
                                                     <a href="https://t.me/share/url?url=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
                                                     <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
@@ -2478,10 +2479,6 @@ btnReportar.addEventListener('click', ()=>{
   shareToggle.addEventListener('click', ()=>{
     containerShare.classList.toggle('invisible')
   })
-
-  shareToggle.addEventListener('touchend', ()=>{
-    containerShare.classList.toggle('invisible')
-  }); // Para dispositivos táctiles
 
   //copiar link de tienda en el portapapeles
   btnClicBoard.addEventListener('click', ()=>{

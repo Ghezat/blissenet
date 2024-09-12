@@ -24,8 +24,13 @@ app.use(express.urlencoded({ extended : false }));
 app.use(session({
     secret: 'mySecret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000 //dia 
+    }
 }));
+
+//**maxAge**: Especifica la duración de la cookie en milisegundos. En tu caso, `24 * 60 * 60 * 1000` es el cálculo para un día (24 horas), donde multiplicas 24 horas por 60 minutos por 60 segundos y luego por 1000 para convertir a milisegundos.
  
 app.use(methodOverride('_method'));
 const storage =  multer.diskStorage({
