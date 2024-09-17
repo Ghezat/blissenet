@@ -212,7 +212,7 @@ routes.post('/department/create/items', async(req,res)=>{
                                     console.log( "countSuccess :", countSuccess );
 
                                     async function deleteEleUpload(){
-                                        //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                        console.log("este es el path que tiene que ser eliminado:", element.path);
                                         fs.unlink(element.path)
                                     }
                                     

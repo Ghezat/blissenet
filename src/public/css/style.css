@@ -160,6 +160,10 @@ main{
 }
 
 /* ///// footerCSS \\\\\ */
+.cursor-pointer{
+  cursor: pointer;
+}
+
 .close{
   display: none;
   

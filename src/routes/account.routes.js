@@ -1334,28 +1334,36 @@ routes.post('/account/storeRate', async(req, res)=>{
 
     console.log("Estamos llegando con estos datos al backend");
     console.log("/account/storeRate");
-    const {store, logeado, markStar} = req.body;
-    console.log(`store: ${store} logeado: ${logeado} markStar: ${markStar}`);
+    const {store, logeado, markStar, comment} = req.body;
+    console.log(`store: ${store} logeado: ${logeado} markStar: ${markStar} comment: ${comment}`);
     
     if (store !== logeado){
 
         //primero obtener el nombre de la tienda que se esta calificando;
         const searchStoreName = await modelUser.findById(store);
         const storeName = searchStoreName.username;
+        console.log("nombre de tienda ->", storeName);
 
-        //segundo buscamos todas las calificaciones de esta tienda para luego buscar si el logeado ha calificado
+        //segundo debemos capturar los datos de user que esta calificando.(avatar, username):
+        const searchProfile = await modelProfile.find({indexed : logeado});
+        console.log("searchProfile de logeado ---->", searchProfile);
+        const { username , avatarPerfil, mailhash } = searchProfile[0];
+        console.log("Ver datos importantes -->", username, avatarPerfil, mailhash);
+        const dataLogeado = { username, avatarPerfil, mailhash };
+
+        //tercero buscamos todas las calificaciones de esta tienda para luego buscar si el logeado ha calificado
         const searchStore = await modelStoreRate.find({store, logeado});
-        console.log("searchStore ->", searchStore)
+        console.log("searchStore ->", searchStore);
 
         if (searchStore.length !==0 ){
             
             console.log("esta persona a calificado esta tienda");
-            const updateRate = await modelStoreRate.updateOne({store, logeado}, {markStar});
+            const updateRate = await modelStoreRate.updateOne({store, logeado}, {markStar, comment, dataLogeado});
             console.log("ya hemos actualizado", updateRate);
 
         } else {
             console.log("esta persona No a calificado esta tienda");
-            const newRate = new modelStoreRate({ store, logeado, markStar, storeName });
+            const newRate = new modelStoreRate({ store, logeado, markStar, comment, storeName, dataLogeado });
             const newRateSave = await newRate.save();
             console.log("Ya ha calificado ", newRateSave);
         }
@@ -1365,13 +1373,65 @@ routes.post('/account/storeRate', async(req, res)=>{
 
 });
 
+
+
 routes.post('/account/pountRate', async(req, res)=>{
     console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
     console.log("account/pountRate");
-    const {storeName} = req.body;
+    const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
     
     const rateStore = await modelStoreRate.find({storeName});
     //console.log("searchStore x storeName --->", searchStore)
+    res.json(rateStore);
+})
+
+routes.post('/account/pountRate/star-1', async(req, res)=>{
+    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
+    console.log("account/pountRate/start-1");
+    const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
+    
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '1'}]} );
+    console.log("rateStore --->", rateStore)
+    res.json(rateStore);
+})
+              
+routes.post('/account/pountRate/star-2', async(req, res)=>{
+    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
+    console.log("account/pountRate/star-2");
+    const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
+    
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '2'}]} );
+    console.log("rateStore --->", rateStore)
+    res.json(rateStore);
+})
+
+routes.post('/account/pountRate/star-3', async(req, res)=>{
+    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
+    console.log("account/pountRate/start-3");
+    const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
+    
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '3'}]} );
+    console.log("rateStore --->", rateStore)
+    res.json(rateStore);
+})
+
+routes.post('/account/pountRate/star-4', async(req, res)=>{
+    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
+    console.log("account/pountRate/start-4");
+    const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
+    
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '4'}]} );
+    console.log("rateStore --->", rateStore)
+    res.json(rateStore);
+})
+
+routes.post('/account/pountRate/star-5', async(req, res)=>{
+    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
+    console.log("account/pountRate/start-5");
+    const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
+    
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '5'}]} );
+    console.log("rateStore --->", rateStore)
     res.json(rateStore);
 })
 
