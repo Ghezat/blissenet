@@ -672,8 +672,8 @@
                     .then(response => response.json())
                     .then((jsondata) =>
                      {
-                      console.log(jsondata)
-                      console.log("Aqui la data", jsondata.data);
+                      //console.log(jsondata)
+                      //console.log("Aqui la data", jsondata.data);
                       const Data = jsondata.data;
                       const labels= [];
                       const data = [];
@@ -688,9 +688,9 @@
                         const viewX = element.view;
                         view.push(viewX);
                       }
-                      console.log(labels);
-                      console.log(data);
-                      console.log(view);
+                      //console.log(labels);
+                      //console.log(data);
+                      //console.log(view);
                       
 
     const chartData = {labels,data};
@@ -757,7 +757,7 @@
             headers: { "Content-Type" : "applications/json"}
         })
       .then(response => response.json())
-      .then(json =>{ console.log("Esto es la obtencion de Record & Trust",json)
+      .then(json =>{ //console.log("Esto es la obtencion de Record & Trust",json)
 
         const ScoreBuyer = json[0];
         const ScoreSeller = json[1];
@@ -772,8 +772,8 @@
         let sellerPositivo = TrustSeller.positive + raffleData.countRafflePositivo;  
         let sellerNegativo = TrustSeller.negative + raffleData.countRaffleNegativo;
 
-        console.log("Esto es trustSeller", TrustSeller);
-        console.log("Esto es trustBuyer", TrustBuyer);
+        //console.log("Esto es trustSeller", TrustSeller);
+        //console.log("Esto es trustBuyer", TrustBuyer);
         trustSellPositive.innerText = sellerPositivo;
         trustSellNeutral.innerText = TrustSeller.neutral;
         trustSellNegative.innerText = sellerNegativo;
@@ -792,8 +792,8 @@
         const tasaTrustBuy = ((TrustBuyer.positive * 100) / totalOperationBuyer).toFixed(0);
 
 
-        console.log("tasaTrustSell-------->", tasaTrustSell);
-        console.log("tasaTrustBuy-------->", tasaTrustBuy);
+        //console.log("tasaTrustSell-------->", tasaTrustSell);
+        //console.log("tasaTrustBuy-------->", tasaTrustBuy);
 
         if ( isNaN(tasaTrustBuy) ){
           porcentTrustBuyer.innerText = `0 %`;
@@ -811,27 +811,27 @@
         //console.log("buyerCount-------->", sellerCount); 
         //:::::: Esto es la condicional de nivel de Vendedor ::::::
         if ( sellerCount <= 9 ){ // de 0 a 9
-        console.log("Estas en el nivel Carbon como comprador");
+        //console.log("Estas en el nivel Carbon como comprador");
         ratingSeller.innerText = "Carbon";
           
         } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
-        console.log("Estas en el nivel Hierro como comprador");
+        //console.log("Estas en el nivel Hierro como comprador");
         ratingSeller.innerText = "Hierro";
 
         } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
-        console.log("Estas en el nivel Bronce como comprador");
+        //console.log("Estas en el nivel Bronce como comprador");
         ratingSeller.innerText = "Bronce";
 
         } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
-        console.log("Estas en el nivel Plata como comprador");
+        //console.log("Estas en el nivel Plata como comprador");
         ratingSeller.innerText = "Plata";
 
         } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
-        console.log("Estas en el nivel Oro como comprador");
+        //console.log("Estas en el nivel Oro como comprador");
         ratingSeller.innerText = "Oro";
 
         } else if ( sellerCount >= 200 ){
-        console.log("Estas en el nivel Diamante como comprador");
+        //console.log("Estas en el nivel Diamante como comprador");
         ratingSeller.innerText = "Diamante";
         }
 
@@ -839,27 +839,27 @@
 
         //:::::: Esto es la condicional de nivel de Comprador ::::::
         if ( buyerCount <= 9 ){ // de 0 a 9
-        console.log("Estas en el nivel Carbon como comprador");
+        //console.log("Estas en el nivel Carbon como comprador");
         ratingBuyer.innerText = "Carbon";
           
         } else if ( buyerCount <= 19 && buyerCount >= 10 ){ //de 10 a 19 
-        console.log("Estas en el nivel Hierro como comprador");
+        //console.log("Estas en el nivel Hierro como comprador");
         ratingBuyer.innerText = "Hierro";
 
         } else if ( buyerCount <= 49 && buyerCount >= 20 ){ // de 20 a 49 
-        console.log("Estas en el nivel Bronce como comprador");
+        //console.log("Estas en el nivel Bronce como comprador");
         ratingBuyer.innerText = "Bronce";
 
         } else if ( buyerCount <= 99 && buyerCount >= 50 ){ // de 50 a 99
-        console.log("Estas en el nivel Plata como comprador");
+        //console.log("Estas en el nivel Plata como comprador");
         ratingBuyer.innerText = "Plata";
 
         } else if ( buyerCount <= 199 && buyerCount >= 100 ){ // de 100 a 199
-        console.log("Estas en el nivel Oro como comprador");
+        //console.log("Estas en el nivel Oro como comprador");
         ratingBuyer.innerText = "Oro";
 
         } else if ( buyerCount >= 200 ){
-        console.log("Estas en el nivel Diamante como comprador");
+        //console.log("Estas en el nivel Diamante como comprador");
         ratingBuyer.innerText = "Diamante";
         }
         
@@ -969,13 +969,13 @@
     btnXCloseViewRate.addEventListener('click', ()=>{
       containerFasciVisto.classList.remove('closed');
       containerViewRate.classList.add('closed');
-      console.log(containerViewRate.classList.contains('closed'))
+      //console.log(containerViewRate.classList.contains('closed'))
     })
 
     btnCloseViewRate.addEventListener('click', ()=>{
       containerFasciVisto.classList.remove('closed');
       containerViewRate.classList.add('closed');
-      console.log(containerViewRate.classList.contains('closed'))
+      //console.log(containerViewRate.classList.contains('closed'))
     })   
 
 
@@ -985,7 +985,7 @@
   <script>
     const nameStore = document.getElementById('nameStore');
     const Store = nameStore.value;
-    console.log("Store >", Store);
+    //console.log("Store >", Store);
 
     const pountrate = document.getElementById('pountrate');
     const boxStar = document.querySelector('.boxStar'); //280
@@ -1020,14 +1020,14 @@
       .then(response =>response.json() )
       .then( jsonx =>  { 
 
-          console.log("recibiendo del backend pountrate ->", jsonx)
+          //console.log("recibiendo del backend pountrate ->", jsonx)
           const boxRates = []; //aqui meto todas las calificaciones parseadas a numeros
           jsonx.forEach((ele)=>{
             const markStar = ele.markStar;
             const markstar = parseInt(markStar);
             boxRates.push(markstar)
           })
-          console.log("boxRates", boxRates);
+          //console.log("boxRates", boxRates);
           let ratesLength = boxRates.length;
           //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
           let sumRate = 0;
@@ -1049,23 +1049,23 @@
             } 
           })
 
-          console.log("Con estos datos armo las barras de progrso de las estrellas.")
-          console.log( `sumStar1 :${sumStar1} sumStar2 :${sumStar2} sumStar3 :${sumStar3} sumStar4 :${sumStar4} sumStar5 :${sumStar5}` );
-          console.log("ratesLength: ", ratesLength);
-          console.log("------------------------------------------------------")
+          //console.log("Con estos datos armo las barras de progrso de las estrellas.")
+          //console.log( `sumStar1 :${sumStar1} sumStar2 :${sumStar2} sumStar3 :${sumStar3} sumStar4 :${sumStar4} sumStar5 :${sumStar5}` );
+          //console.log("ratesLength: ", ratesLength);
+          //console.log("------------------------------------------------------")
           const boxCountStart = [sumStar1, sumStar2, sumStar3, sumStar4, sumStar5];
           boxCountStart.forEach((ele)=>{
             let resultPercent = ((ele * 100) / ratesLength).toFixed(1);
             boxPercent.push(resultPercent);
           })
-          console.log("boxPercent --->", boxPercent);
+          //console.log("boxPercent --->", boxPercent);
           //   1* ,   2* ,    3* ,    4* ,    5*
           //['0.0', '40.0', '20.0', '20.0', '20.0']
 
           for (let i = 0; i < boxPercent.length; i++) {
             const ele = boxPercent[i];
-            console.log("verrrrrrr aqui", i);
-            console.log(`barStar${i + 1} valor : ${ele} `);
+            //console.log("verrrrrrr aqui", i);
+            //console.log(`barStar${i + 1} valor : ${ele} `);
             const x = i + 1;
             if (x == 1){
               barStar1.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
@@ -1084,15 +1084,14 @@
           
 
 
-
-          console.log("sumRate", sumRate);
-          console.log("ratesLength", ratesLength);
+          //console.log("sumRate", sumRate);
+          //console.log("ratesLength", ratesLength);
           const pount = (sumRate / ratesLength);
           let pountRate; 
           pountRate = parseFloat( pount.toFixed(1)); 
-          console.log("pountRate", pountRate);
-          console.log("ratesLength", ratesLength);
-          console.log("pountRate", typeof pountRate)
+          //console.log("pountRate", pountRate);
+          //console.log("ratesLength", ratesLength);
+          //console.log("pountRate", typeof pountRate)
           //boxstarView, puntrateView, countrateView
           pountrateView.innerText = pountRate; //esto muestra la calificacion en la vista dodne estan todas las calificaciones
           countrateView.innerText = ratesLength; //esto muestra la cantidad de calificaciones y opiniones.
@@ -1102,7 +1101,7 @@
             pountrate.innerText = 0; // es una tienda nueva o sin calificacion alguna.
           } else {
             
-            console.log("Verrr esto ratesLength-->", ratesLength);
+            //console.log("Verrr esto ratesLength-->", ratesLength);
             if (ratesLength <= 999){
               pountrate.innerHTML = `${pountRate}/5 <spam style="font-size:12px">(${ratesLength})</spam>`; //eje. 4.5 (16)
             } else if (ratesLength >= 1000 && ratesLength <= 999999 ){
@@ -1339,7 +1338,7 @@
     const btnRate3 = document.querySelector('.btnRate3');
     const btnRate2 = document.querySelector('.btnRate2');
     const btnRate1 = document.querySelector('.btnRate1');
-    console.log("Store >", Store);
+    //console.log("Store >", Store);
 
 
       const rateAll = {
@@ -1356,20 +1355,20 @@
       .then(response =>response.json() )
       .then( jsonx =>  { 
           
-          console.log("Con estos datos armare la lista de las calificaciones", jsonx);
+          //console.log("Con estos datos armare la lista de las calificaciones", jsonx);
 
           jsonx.forEach((ele)=>{
 
-              console.log("dataLogeado ->", ele.dataLogeado);
+              //console.log("dataLogeado ->", ele.dataLogeado);
               const dataLogeado = ele.dataLogeado;
               const username = dataLogeado.username;
               const mailhash = dataLogeado.mailhash;
               const avatarPerfil = dataLogeado.avatarPerfil;
-              console.log("avatarPerfil >", avatarPerfil);
-              console.log("markStar ->", ele.markStar);
+              //console.log("avatarPerfil >", avatarPerfil);
+              //console.log("markStar ->", ele.markStar);
               const markstar = ele.markStar;
-              console.log("markstar -->", markstar) 
-              console.log("comment ->", ele.comment);
+              //console.log("markstar -->", markstar) 
+              //console.log("comment ->", ele.comment);
               let comment;
               comment = ele.comment;
 
@@ -1566,7 +1565,7 @@
             .then(response =>response.json() )
             .then( jsonx =>  { 
               
-              console.log("consolta 1 star -> ", jsonx)
+              //console.log("consolta 1 star -> ", jsonx)
               bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
               jsonx.forEach((ele)=>{
                 
@@ -1586,7 +1585,7 @@
                 let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
                 const fecha = `${dia}-${mes}-${anio}`;
 
-                console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+                //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
 
                 if (avatarPerfil[0].public_id === 'sin_data'){
                       //carece de avatar customizado usar el hashmail
@@ -1649,7 +1648,7 @@
           .then(response =>response.json() )
           .then( jsonx =>  {
             
-            console.log("consolta 2 star -> ", jsonx)
+            //console.log("consolta 2 star -> ", jsonx)
             bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
             jsonx.forEach((ele)=>{
               
@@ -1669,7 +1668,7 @@
               let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
               const fecha = `${dia}-${mes}-${anio}`;              
 
-              console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
 
               
               if (avatarPerfil[0].public_id === 'sin_data'){
@@ -1730,7 +1729,7 @@
           .then(response =>response.json() )
           .then( jsonx =>  {
             
-            console.log("consolta 3 star -> ", jsonx)
+            //console.log("consolta 3 star -> ", jsonx)
             bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
             jsonx.forEach((ele)=>{
               
@@ -1750,7 +1749,7 @@
               let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
               const fecha = `${dia}-${mes}-${anio}`;              
 
-              console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
 
               
               if (avatarPerfil[0].public_id === 'sin_data'){
@@ -1810,7 +1809,7 @@
           .then(response =>response.json() )
           .then( jsonx =>  {
             
-            console.log("consolta 4 star -> ", jsonx)
+            //console.log("consolta 4 star -> ", jsonx)
             bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
             jsonx.forEach((ele)=>{
               
@@ -1830,7 +1829,7 @@
               let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
               const fecha = `${dia}-${mes}-${anio}`;              
 
-              console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
 
               
               if (avatarPerfil[0].public_id === 'sin_data'){
@@ -1890,7 +1889,7 @@
           .then(response =>response.json() )
           .then( jsonx =>  {
             
-            console.log("consolta 5 star -> ", jsonx)
+            //console.log("consolta 5 star -> ", jsonx)
             bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
             jsonx.forEach((ele)=>{
               
@@ -1910,7 +1909,7 @@
               let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
               const fecha = `${dia}-${mes}-${anio}`;              
 
-              console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
 
               
               if (avatarPerfil[0].public_id === 'sin_data'){
@@ -1970,7 +1969,7 @@
           .then(response =>response.json() )
           .then( jsonx =>  {
             
-            console.log("consolta All star -> ", jsonx)
+            //console.log("consolta All star -> ", jsonx)
             bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
             jsonx.forEach((ele)=>{
                                    
@@ -1991,7 +1990,7 @@
               let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
               const fecha = `${dia}-${mes}-${anio}`;              
 
-              console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
 
               if (avatarPerfil[0].public_id === 'sin_data'){
               console.log("avatarPerfil[0] ", avatarPerfil[0]); 

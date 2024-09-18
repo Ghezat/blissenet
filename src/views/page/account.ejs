@@ -106,7 +106,7 @@
 
   .closed {
     display: none;
-    border: 2px dotted violet;
+
   }
 
   .containerIconSetting{
@@ -170,6 +170,11 @@
 
     .contentClean:hover{
       background-color: rgba(165, 42, 42, 0.8);
+    }
+
+    .textLight{
+      /* trabaja en conjunto con themaTextLight */
+      color: white;
     }
     
    /*  Media queries */
@@ -329,6 +334,9 @@
                               </i>
                               <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
                             </div>
+
+                            <!-- esta data es para usarla abajo en un script para poder enviar un fecth con el nombre de la tienda. -->
+                            <input type="hidden" value="<%= storeProfile[0].username %>" id="nameStore"> 
                             <% }; %>
                           </div>
 
@@ -339,6 +347,7 @@
               </div>
             <% storeProfile.forEach( (ele)=> { %> <!-- este es el foreach de colores -->
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
+
                 <!-- bloque Topbar -->
                 <div class="TopbarMain p-1 d-flex justify-content-between px-4 shadow "
                   style="background-color: <%= ele.bGColorTopbar%> ; color: <%= ele.bGColorText %>; position: relative; z-index: 110;">
@@ -437,292 +446,279 @@
 
                 </div> <!-- aqui cierra el bloque Topbar--> 
                 <% storeProfile.forEach((eleStore)=>{ %>
-                <!-- bloque Workspace -->
-                <div class="WorkspaceMain d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= eleStore.bGColorWorkspace %>; position: relative;">
 
-                      <a name="workSpace"></a>
+                <div class="containerWorkSpace">
+                  <!-- bloque Workspace -->
+                  <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= eleStore.bGColorWorkspace %>; position: relative;">
 
-                      <!-- Este bloque es para acceder a un buscador dentro de la misma tienda, será una opcion del profile -->
-                      <% if (eleStore.searchFilter === 'on' ){%>
-                      <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>; z-index : 100">
+                        <a name="workSpace"></a>
 
-                          <div class="container-fluid">
-                              <div class="container" style="width: 50%;">
-                                <form action="/account/search" method="post" class="d-flex">
-                                  <input type="hidden" name="store" value="<%= eleStore.username %>">
-                                  <input class="form-control me-2" type="text" name="search" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search">
-                                  <button class="btn" type="submit" style="color:<%= eleStore.bGColorText %>; border : 1px solid <%= eleStore.bGColorText %>">Search</button>
-                                </form>
-                              </div>
-                          </div>
-                      
-                      </div>
-                      <% }; %>
+                        <!-- Este bloque es para acceder a un buscador dentro de la misma tienda, será una opcion del profile -->
+                        <% if (eleStore.searchFilter === 'on' ){%>
+                        <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>; z-index : 100">
 
-                      <a href="#workSpace" class="anclaWorspace text-dark">
-                        <div class="nailUpp px-3 mb-2" style="background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>;">
-                          <i class="bi bi-chevron-down Heading"></i>
-                        </div>  
-                      </a>
+                            <div class="container-fluid">
+                                <div class="container" style="width: 50%;">
+                                  <form action="/account/search" method="post" class="d-flex">
+                                    <input type="hidden" name="store" value="<%= eleStore.username %>">
+                                    <input class="form-control me-2" type="text" name="search" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search">
+                                    <button class="btn" type="submit" style="color:<%= eleStore.bGColorText %>; border : 1px solid <%= eleStore.bGColorText %>">Search</button>
+                                  </form>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <% }; %>
 
-                     <div class="containerScoreTrustMain" style="position: fixed; right: 0; top: 120px; z-index : 1">
-                        <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column shadow" 
-                         style="background-color: #fcfcfc; width: 70px; height: 300px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
-                          <div class="containerScore border-bottom d-flex flex-column justify-content-center align-items-center p-1" style="height: 40%; width: 100%;">
-                            <p class="level m-0" style="font-size: 13px;"></p>
-                            <div class="imgLevel"></div>
-                            <p class="scoreLevel m-0"></p>
-                          </div>
-                          <div class="containerTrust border-top d-flex flex-column justify-content-center align-items-center" style="height: 40%; width: 100%;">
-                            <p class="m-0">Trust</p>
-                            <i class="bi bi-shield-check my-2" style="font-size: 1.4rem;"></i>
-                            <p class="trustLevel m-0"></p>
-                          </div>
+                        <a href="#workSpace" class="anclaWorspace text-dark">
+                          <div class="nailUpp px-3 mb-2" style="background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>;">
+                            <i class="bi bi-chevron-down Heading"></i>
+                          </div>  
+                        </a>
 
-                          <% if (user) { %>
-                            <% if (user.username === Account[0].username ) { %>
-                              
-                              <% if (raffle_Id) { %>
+                      <div class="containerScoreTrustMain" style="position: fixed; right: 0; top: 120px; z-index : 1">
+                          <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column shadow" 
+                          style="background-color: #fcfcfc; width: 70px; height: 300px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                            <div class="containerScore border-bottom d-flex flex-column justify-content-center align-items-center p-1" style="height: 40%; width: 100%;">
+                              <p class="level m-0" style="font-size: 13px;"></p>
+                              <div class="imgLevel"></div>
+                              <p class="scoreLevel m-0"></p>
+                            </div>
+                            <div class="containerTrust border-top d-flex flex-column justify-content-center align-items-center" style="height: 40%; width: 100%;">
+                              <p class="m-0">Trust</p>
+                              <i class="bi bi-shield-check my-2" style="font-size: 1.4rem;"></i>
+                              <p class="trustLevel m-0"></p>
+                            </div>
 
-                                <% if ( raffle_Id !== undefined ) { %>
-                                  <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: #8DB600; height: 20%; width: 100%;">
-                                    <a href="/raffleModule-admin/<%= raffle_Id %>" style="color: black"><i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i></a>
+                            <% if (user) { %>
+                              <% if (user.username === Account[0].username ) { %>
+                                
+                                <% if (raffle_Id) { %>
+
+                                  <% if ( raffle_Id !== undefined ) { %>
+                                    <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: #8DB600; height: 20%; width: 100%;">
+                                      <a href="/raffleModule-admin/<%= raffle_Id %>" style="color: black"><i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i></a>
+                                    </div>
+                                  <% }; %>
+                                    
+                                <% } else { %>
+                                  <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
+                                    <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
                                   </div>
-                                <% }; %>
-                                  
-                              <% } else { %>
+                                <% }; %> 
+
+                              <% } else { %>  
                                 <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
                                   <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
                                 </div>
-                              <% }; %> 
-
-                            <% } else { %>  
+                              <% }; %>
+                              
+                            <% } else { %>
                               <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
                                 <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
                               </div>
-                            <% }; %>
-                            
-                          <% } else { %>
-                            <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
-                              <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
-                            </div>
-                          <% }; %> 
+                            <% }; %> 
 
-                          <% if (user) { %>
-                            
-                                <% if (user.username == Account[0].username) { %> <!-- el usuario logeado es el mismo dueño de la tienda -->
+                            <% if (user) { %>
+                              
+                                  <% if (user.username == Account[0].username) { %> <!-- el usuario logeado es el mismo dueño de la tienda -->
 
-                                  <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
-                                    <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                                  </div> 
+                                    <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
+                                      <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                                    </div> 
 
-                                <% } else { %>
+                                  <% } else { %>
 
-                                      <% if (boxPublisher.length !==0) { %>  <!-- tiene al menos un articulo -->
-                                        <div class="containRate border-top d-flex flex-column align-items-center justify-content-center cursor-pointer" style="background-color:  #9dc90e; height: 20%; width: 100%; border-bottom-left-radius: 5px;" data-bs-toggle="modal" data-bs-target="#staticRate">
-                                          <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                                        </div>
-                                      <% } else { %>
-                                        <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
-                                          <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                                        </div> 
-                                      <% }; %>
+                                        <% if (boxPublisher.length !==0) { %>  <!-- tiene al menos un articulo -->
+                                          <div class="containRate border-top d-flex flex-column align-items-center justify-content-center cursor-pointer" style="background-color:  #9dc90e; height: 20%; width: 100%; border-bottom-left-radius: 5px;" data-bs-toggle="modal" data-bs-target="#staticOption">
+                                            <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                                          </div>
 
-                                <% }; %>  
-                                
-                          <% } else { %>
-                            
-                            <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
-                              <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                            </div> 
 
-                          <% }; %>  
 
-                         
-                        </div>
-                     </div>
+                                        <% } else { %>
+                                          <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
+                                            <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                                          </div> 
+                                        <% }; %>
 
-                    <!-- Modal de Calicacion de Tienda -->
-                    <div class="modal fade" id="staticRate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticComprarLabel" aria-hidden="true">
+                                  <% }; %>  
+                                  
+                            <% } else { %>
+                              
+                              <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
+                                <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
+                              </div> 
+
+                            <% }; %>  
+
+                          
+                          </div>
+                      </div>
+
+
+                      <!-- Option Rate -->
+                      <div class="modal fade" id="staticOption" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticOptionRate" aria-hidden="true">
                         <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                  <h5 class="modal-title" id="staticComprarLabel">Calificar esta Tienda</h5>
+                                  <h5 class="modal-title" id="staticComprarLabel">Opciones </h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body">
-                                  <p> Puedes calificar esta tienda cada vez que quieras. ¡Dejale saber tu puntuacion!</p>
-
-                                  <div class="contentToolStart d-flex border">
-                                    <div class="contentClean">
-                                      <i class="bi bi-eraser mx-2" style="font-size: 1.4rem; cursor: pointer;"></i></i>
-                                    </div>
-                                    <div class="containRateStar d-flex justify-content-center border" style="width: 100%;">
-                                      <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                      <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                      <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                      <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                      <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i> 
-                                    </div> 
+                                <div class="modal-body d-flex justify-content-around align-items-center my-3">
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center">
+                                    <img src="/img/rate-makeRate.png" alt="" class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticRate" style="width: 80px;" data-bs-dismiss="modal" aria-label="Close">
+                                    <span class="mt-2">Dejar Calificación</span>
                                   </div>
-                                  <div class="contentComment my-2 form-group">
-                                    <input type="text" class="form-control comment" placeholder="¡Deje aqui su comentario!">
-                                  </div>
-
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center" id="viewRateStore">
+                                    <img src="/img/rate-viewRate.png" alt="" class="cursor-pointer"  style="width: 80px;" data-bs-dismiss="modal" aria-label="Close">
+                                    <span class="mt-2">Ver Calificaciones</span>
+                                  </div>                                                          
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnSendStar" disabled>Enviar Calificación</button>
+                                <div class="containerMessage">
+                                  <hr>
+                                  <p class="mx-4">Es importante para la comunidad tu calificación y opinión sobre esta tienda. Deja saber al resto que tan confiable o bueno es el servicio de esta tienda.</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                      </div>
 
-                    <!-- Modal codigo QR -->
-                    <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
-                      <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                          <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body d-flex justify-content-center align-items-center my-3">
-                                  <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
-                                    <canvas id="qr-canvas">  
-                                    </canvas>
-                                    
-                                    <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                      <!-- Modal de Calicacion de Tienda -->
+                      <div class="modal fade" id="staticRate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticComprarLabel" aria-hidden="true">
+                          <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="staticComprarLabel">Calificar esta Tienda</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p> Puedes calificar esta tienda cada vez que quieras. ¡Dejale saber tu puntuacion!</p>
+
+                                    <div class="contentToolStart d-flex border">
+                                      <div class="contentClean">
+                                        <i class="bi bi-eraser mx-2" style="font-size: 1.4rem; cursor: pointer;"></i></i>
+                                      </div>
+                                      <div class="containRateStar d-flex justify-content-center border" style="width: 100%;">
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i> 
+                                      </div> 
+                                    </div>
+                                    <div class="contentComment my-2 form-group">
+                                      <input type="text" class="form-control comment" placeholder="¡Deje aqui su comentario!">
+                                    </div>
+
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnSendStar" disabled>Enviar Calificación</button>
                                   </div>
                               </div>
                           </div>
                       </div>
-                    </div>
 
-                                              
-                    <div class="Workspace" style="width: 96%;">
+                      <!-- Modal codigo QR -->
+                      <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-center align-items-center my-3">
+                                    <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
+                                      <canvas id="qr-canvas">  
+                                      </canvas>
+                                      
+                                      <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
 
-                          <% if (newBox.length !==0) {%>
-                            <div class="containerCard d-flex flex-wrap justify-content-start p-3" style="width: 100%;">
+                                                
+                      <div class="Workspace" style="width: 96%;">
 
-                              <% newBox.forEach( (ele, i)=>{ %>
+                            <% if (newBox.length !==0) {%>
+                              <div class="containerCard d-flex flex-wrap justify-content-start p-3" style="width: 100%;">
 
-                                <div class="card m-2 p-0 shadow cardPublished">
+                                <% newBox.forEach( (ele, i)=>{ %>
 
-                                  <div class="card-body d-flex flex-column p-0">
+                                  <div class="card m-2 p-0 shadow cardPublished">
 
-                                      <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
-                                        <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
+                                    <div class="card-body d-flex flex-column p-0">
 
-                                          <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
-                                            data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
+                                        <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
+                                          <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
 
-                                            <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable & Delivery -->
-                                            <% if (user) { %>
+                                            <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
+                                              data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
 
-                                                <% if (user.username === eleStore.username) { %>
-                                                      
-                                                  <% if (ele.department !== 'raffle' ){ %>
+                                              <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable & Delivery -->
+                                              <% if (user) { %>
 
-                                                        <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
-                                                          <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
-                                                                                                
-                                                          <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
-                                                            <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
-                                                            <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                            <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
-                                                            <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
-                                                              <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                            <%  } else { %>
-                                                              <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                            <% } %>  
-                                                          </ul>
-                                                        </div>
+                                                  <% if (user.username === eleStore.username) { %>
+                                                        
+                                                    <% if (ele.department !== 'raffle' ){ %>
 
+                                                          <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
+                                                            <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                  
+                                                            <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
+                                                              <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
+                                                              <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                              <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
+                                                              <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
+                                                                <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                              <%  } else { %>
+                                                                <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                              <% } %>  
+                                                            </ul>
+                                                          </div>
+
+                                                    <% }; %>
+                                                        
                                                   <% }; %>
-                                                      
-                                                <% }; %>
-                              
-                                            <% }; %>  
-                                            
-                                            <div class="carousel-inner" style="width: 100%; height: 220px;  z-index: 1;">
-                                              <div class="carousel-item active">
-                                                <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
-                                              </div>
-                                              <% for (let x=1; x < ele.images.length; x++) { %>
-                                                <% const element=ele.images[x] %>
-                                                  <div class="carousel-item">
-                                                    <img src="<%= element.url %>" class="d-block w-100"
-                                                      style="  width: 100%; height: 100%; object-fit: cover;">
-                                                  </div>
-
-                                              <% }; %>
-                                            </div>
-
-                                            <button class="carousel-control-prev" type="button"
-                                              data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
-                                              <span class="carousel-control-prev-icon"></span>
-                                              <span class="visually-hidden">Previous</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button"
-                                              data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
-                                              <span class="carousel-control-next-icon"></span>
-                                              <span class="visually-hidden">Next</span>
-                                            </button>
-                                          </div>
-                              
-                                      </div>
-
-                                      <hr class="m-0">
-
-                                      <!-- esta parte va a cambiar cuando sea oferta -->
-                                      <% if (ele.department !== 'raffle') { %>
-                                        <% if (ele.offer === false) { %>
-                                        <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
-                                                <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-              
-                                                    <div class="containerTitleFavorite d-flex justify-content-between">
-                                                      <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
-                                                        style="text-decoration: none;">
-                                                        <%= ele.title %>
-                                                      </a>                                            
-                                                    
-                                                      <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                                    </div>
-                
-                                                    <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                                    
-                                                    <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
-              
-                                                      <div class="containerPrice d-flex justify-content-between px-2">
-                                                        <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
-                                                        </p>
-                                                        <div class="containerTresIconos d-flex">
-                                                          
-                                                          <div class="containerDelivery">
-                                                            <% if (ele.delivery === true) {%>
-                                                              <i class="bi bi-truck me-1"></i>
-                                                            <% }; %>  
-                                                          </div>     
-                                                          <div class="containerOnlyOneAvailable">
-                                                            <% if (ele.onlyOneAvailable === true) {%>
-                                                              <i class="bi bi-1-square-fill me-1"></i>
-                                                            <% }; %>  
-                                                          </div>
-                                                          <div class="containBestProduct">
-                                                            <% if (ele.bestProduct === true) {%>
-                                                              <i class="bi bi-award"></i>
-                                                            <% }; %>  
-                                                          </div>
-                                                        </div>
-                                                      </div>
-              
-                                                    </div>
-                                                    
-                
+                                
+                                              <% }; %>  
+                                              
+                                              <div class="carousel-inner" style="width: 100%; height: 220px;  z-index: 1;">
+                                                <div class="carousel-item active">
+                                                  <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
                                                 </div>
+                                                <% for (let x=1; x < ele.images.length; x++) { %>
+                                                  <% const element=ele.images[x] %>
+                                                    <div class="carousel-item">
+                                                      <img src="<%= element.url %>" class="d-block w-100"
+                                                        style="  width: 100%; height: 100%; object-fit: cover;">
+                                                    </div>
+
+                                                <% }; %>
+                                              </div>
+
+                                              <button class="carousel-control-prev" type="button"
+                                                data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                              </button>
+                                              <button class="carousel-control-next" type="button"
+                                                data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon"></span>
+                                                <span class="visually-hidden">Next</span>
+                                              </button>
+                                            </div>
+                                
                                         </div>
-                                        <% } else { %>
-                                        <div class="boxDetail" style="height: 120px; position: relative; background-color: #fcda57;">
-                                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+
+                                        <hr class="m-0">
+
+                                        <!-- esta parte va a cambiar cuando sea oferta -->
+                                        <% if (ele.department !== 'raffle') { %>
+                                          <% if (ele.offer === false) { %>
+                                          <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                                  <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
                 
                                                       <div class="containerTitleFavorite d-flex justify-content-between">
                                                         <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
@@ -732,22 +728,21 @@
                                                       
                                                         <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
                                                       </div>
-              
+                  
                                                       <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                                          
-                                                      <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                                                      
+                                                      <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
                 
                                                         <div class="containerPrice d-flex justify-content-between px-2">
-                                                          <p class="m-0 px-1 border border-dark rounded-pill">
-                                                            $ <%= ele.price %>
+                                                          <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
                                                           </p>
                                                           <div class="containerTresIconos d-flex">
-
+                                                            
                                                             <div class="containerDelivery">
                                                               <% if (ele.delivery === true) {%>
                                                                 <i class="bi bi-truck me-1"></i>
                                                               <% }; %>  
-                                                            </div>
+                                                            </div>     
                                                             <div class="containerOnlyOneAvailable">
                                                               <% if (ele.onlyOneAvailable === true) {%>
                                                                 <i class="bi bi-1-square-fill me-1"></i>
@@ -763,129 +758,264 @@
                 
                                                       </div>
                                                       
-                                                    </div>
-                                        </div>  
-                                        <% }; %>
-                                      <% } else { %>
-                                        <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
-                                          <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-        
-                                              <div class="containerTitleFavorite d-flex justify-content-between">
-                                                <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
-                                                  style="text-decoration: none;">
-                                                  <%= ele.title %>
-                                                </a>                                            
-                                              
-                                                <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                              </div>
-          
-                                              <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                                    
-                                              <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                  
+                                                  </div>
+                                          </div>
+                                          <% } else { %>
+                                          <div class="boxDetail" style="height: 120px; position: relative; background-color: #fcda57;">
+                                                      <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                  
+                                                        <div class="containerTitleFavorite d-flex justify-content-between">
+                                                          <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                                            style="text-decoration: none;">
+                                                            <%= ele.title %>
+                                                          </a>                                            
+                                                        
+                                                          <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                        </div>
                 
-                                                <div class="containerPrice d-flex justify-content-between px-2">
-                                                  <p class="m-0 px-1 border border-dark rounded-pill">
-                                                    $ <%= ele.price %>
-                                                  </p>
-                                                  <div class="containerTickets">
-                                                    <div class="containerIconCategory">
-                                                      <% if (ele.category == 'Gratis' ) {%>
-                                                      <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
-                                                        <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
-                                                      </span>
-                                                      <% } else { %>
-                                                      <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
-                                                        <i class="bi bi-ticket-fill" style="color: brown;"></i>
-                                                      </span>
-                                                      <% }; %>  
+                                                        <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                                            
+                                                        <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                  
+                                                          <div class="containerPrice d-flex justify-content-between px-2">
+                                                            <p class="m-0 px-1 border border-dark rounded-pill">
+                                                              $ <%= ele.price %>
+                                                            </p>
+                                                            <div class="containerTresIconos d-flex">
+
+                                                              <div class="containerDelivery">
+                                                                <% if (ele.delivery === true) {%>
+                                                                  <i class="bi bi-truck me-1"></i>
+                                                                <% }; %>  
+                                                              </div>
+                                                              <div class="containerOnlyOneAvailable">
+                                                                <% if (ele.onlyOneAvailable === true) {%>
+                                                                  <i class="bi bi-1-square-fill me-1"></i>
+                                                                <% }; %>  
+                                                              </div>
+                                                              <div class="containBestProduct">
+                                                                <% if (ele.bestProduct === true) {%>
+                                                                  <i class="bi bi-award"></i>
+                                                                <% }; %>  
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                  
+                                                        </div>
+                                                        
+                                                      </div>
+                                          </div>  
+                                          <% }; %>
+                                        <% } else { %>
+                                          <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                            <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+          
+                                                <div class="containerTitleFavorite d-flex justify-content-between">
+                                                  <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                                    style="text-decoration: none;">
+                                                    <%= ele.title %>
+                                                  </a>                                            
+                                                
+                                                  <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                </div>
+            
+                                                <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                                      
+                                                <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                  
+                                                  <div class="containerPrice d-flex justify-content-between px-2">
+                                                    <p class="m-0 px-1 border border-dark rounded-pill">
+                                                      $ <%= ele.price %>
+                                                    </p>
+                                                    <div class="containerTickets">
+                                                      <div class="containerIconCategory">
+                                                        <% if (ele.category == 'Gratis' ) {%>
+                                                        <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                          <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
+                                                        </span>
+                                                        <% } else { %>
+                                                        <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                          <i class="bi bi-ticket-fill" style="color: brown;"></i>
+                                                        </span>
+                                                        <% }; %>  
+                                                      </div>
                                                     </div>
                                                   </div>
+          
                                                 </div>
-        
-                                              </div>
-                                            
+                                              
+                                            </div>
                                           </div>
-                                        </div>
-                                      <% }; %>  
+                                        <% }; %>  
+
+                                    </div>
 
                                   </div>
 
-                                </div>
+                                <% }); %>
 
-                              <% }); %>
+                              </div>
 
-                            </div>
-
-                            <div class="paginate d-flex justify-content-end align-items-center mt-2" style="position: relative; z-index : 120 !important">
-                              <nav aria-label="...">
-                                <ul class="pagination  m-0">
-                                  <% if (paginate) { %>
-      
-                                    <% if ( paginate.pagina == 1 ) { %>
-                                    <li class="page-item disabled">
-                                      <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
-                                    </li>
-                                    <% } else { %>
-                                      <li class="page-item">
+                              <div class="paginate d-flex justify-content-end align-items-center mt-2" style="position: relative; z-index : 120 !important">
+                                <nav aria-label="...">
+                                  <ul class="pagination  m-0">
+                                    <% if (paginate) { %>
+        
+                                      <% if ( paginate.pagina == 1 ) { %>
+                                      <li class="page-item disabled">
                                         <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                      </li>
+                                      <% } else { %>
+                                        <li class="page-item">
+                                          <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                        </li>  
+                                      <% }; %>  
+        
+                                      <% if ( paginate.pagina == 1 ) { %>
+                                      <li class="page-item prev disabled">
+                                        <a class="page-link" href="?paginate=prev"> Prev</a>
+                                      </li>
+                                      <% } else { %>
+                                      <li class="page-item prev">
+                                        <a class="page-link" href="?paginate=prev"> Prev </a>
                                       </li>  
-                                    <% }; %>  
-      
-                                    <% if ( paginate.pagina == 1 ) { %>
-                                    <li class="page-item prev disabled">
-                                      <a class="page-link" href="?paginate=prev"> Prev</a>
-                                    </li>
-                                    <% } else { %>
-                                    <li class="page-item prev">
-                                      <a class="page-link" href="?paginate=prev"> Prev </a>
-                                    </li>  
+                                      <% }; %>
+                                      <li class="page-item active">
+                                        <span class="page-link pagina"><%= paginate.pagina %></span>
+                                      </li>
+                                      <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                                      <li class="page-item next disabled">
+                                        <a class="page-link" href="?paginate=next"> Next</i></a>
+                                      </li>
+                                      <% } else { %>
+                                      <li class="page-item next">
+                                        <a class="page-link" href="?paginate=next"> Next</i> </a>
+                                      </li>  
+                                      <% }; %>
+        
+                                      <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                                      <li class="page-item disabled">
+                                        <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                                      </li>
+                                      <% } else { %>
+                                      <li class="page-item">
+                                        <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                                      </li>  
+                                      <% }; %>  
+        
                                     <% }; %>
-                                    <li class="page-item active">
-                                      <span class="page-link pagina"><%= paginate.pagina %></span>
-                                    </li>
-                                    <% if ( paginate.pagina == paginate.totalPagina ) { %>
-                                    <li class="page-item next disabled">
-                                      <a class="page-link" href="?paginate=next"> Next</i></a>
-                                    </li>
-                                    <% } else { %>
-                                    <li class="page-item next">
-                                      <a class="page-link" href="?paginate=next"> Next</i> </a>
-                                    </li>  
-                                    <% }; %>
-      
-                                    <% if ( paginate.pagina == paginate.totalPagina ) { %>
-                                    <li class="page-item disabled">
-                                      <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
-                                    </li>
-                                    <% } else { %>
-                                    <li class="page-item">
-                                      <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
-                                    </li>  
-                                    <% }; %>  
-      
-                                  <% }; %>
-                                </ul>
-                              </nav>
-                            </div>
-                          <% } else { %>
+                                  </ul>
+                                </nav>
+                              </div>
+                            <% } else { %>
 
-                            <div class="ContainerMessage rounded-1 p-2" style="background-color: #dbdfe4; width: 90%; margin-top: 80px; margin-bottom: 80px;">
-                                  <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
-                                      <div class="containerMessage m-2">
-                                          <span style="font-size: 18px;">¡Esta tienda no tiene productos ni servicios que mostrar!<i class="bi bi-emoji-frown ms-3"></i></span>
-                                      </div>
-                                  </div>
-                            </div>
+                              <div class="ContainerMessage rounded-1 p-2" style="background-color: #dbdfe4; width: 90%; margin-top: 80px; margin-bottom: 80px;">
+                                    <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                                        <div class="containerMessage m-2">
+                                            <span style="font-size: 18px;">¡Esta tienda no tiene productos ni servicios que mostrar!<i class="bi bi-emoji-frown ms-3"></i></span>
+                                        </div>
+                                    </div>
+                              </div>
 
-                          <% }; %>
+                            <% }; %>
+                            
+                      </div>
+
+                  </div>
+                </div> 
+                
+                <div class="containerViewRatesStore closed border" style="background-color: white;">
+                  <div class="containert">
+                    <div class="modal-header" style="background-color: white;">
+                      <h6 class="modal-title">Ver Calificaciones y Opiniones</h6>
+                      <i class="bi bi-x-lg cursor-pointer" id= "btnXCloseViewRate"></i>
+                    </div>
+                    
+                    <div class="row m-0 bodyAnalisi d-flex justify-content-between">
+
+                      <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6 p-0 containerPoint d-flex flex-column justify-content-center align-items-center px-2">
                           
+                          <p class="pountrateView p-0 mb-1" style="font-size: 40px;"> <!-- 4.8 --> </p>
+                          <div class="boxstarView"> <!-- ***** --> </div>
+                          <p class="countrateView"> <!-- 56 --> </p>
+
+                      </div>
+
+                      <div class="col-xl-9 col-lg-9 col-md-6 col-sm-6 p-0 containerRatePercentBar px-3">
+                                                                 
+                            <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                              <span class="p-0 ms-2" style="width: 10%;"> <small class="m-0"> 5 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                              <div class="progress py-1 mt-1" id="barStar5" style="width: 90%;">
+                                <!-- dinamico -->
+                              </div>
+
+                            </div>
+
+                            <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 4 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                              <div class="progress py-1 mt-1" id="barStar4" style="width: 90%;">
+                                <!-- dinamico -->
+                              </div>
+
+                            </div>
+
+                            <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 3 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                              <div class="progress py-1 mt-1" id="barStar3" style="width: 90%;">
+                                <!-- dinamico -->
+                              </div>
+
+                            </div>
+
+                            <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 2 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                              <div class="progress py-1 mt-1" id="barStar2" style="width: 90%;">
+                                <!-- dinamico -->
+                              </div>
+
+                            </div>
+
+                            <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 1 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                              <div class="progress py-1 mt-1" id="barStar1" style="width: 90%;">
+                                <!-- dinamico -->
+                              </div>
+
+                            </div>
+                          
+                      </div>
+                      
+                    </div>
+                    <div class="row m-0 my-3">
+                      <div class="col-12 d-flex py-2" style="overflow-x: auto;">
+                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRateAll" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">Todos <i class="bi bi-star ms-1"></i> </span> </button>
+                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate5" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">5 <i class="bi bi-star ms-1"></i> </span> </button>
+                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate4" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">4 <i class="bi bi-star ms-1"></i> </span> </button>
+                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate3" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">3 <i class="bi bi-star ms-1"></i> </span> </button>
+                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate2" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">2 <i class="bi bi-star ms-1"></i> </span> </button>
+                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate1" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">1 <i class="bi bi-star ms-1"></i> </span> </button>
+                      </div>
                     </div>
 
+                    <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
+                      <!-- dinamico -->
+                    </div>
+                    
+
+                    <div class="bodyFooter d-flex justify-content-end my-2">
+                        <button type="button" class="btn btn-success btnCloseViewRate m-2">Cerrar Calificaciones</button>
+                    </div>
+                  </div>
                 </div>
                 
                 <!-- cierre de storeProfile -->   
                   
-
               </div>
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
                 <div class="contetAntFooter" style="height: 50px; background-color:<%= eleStore.bGColorWorkspace %>;"></div>
@@ -1414,6 +1544,1087 @@
   })
 
 </script>
+
+<script>
+  const viewRateStore = document.getElementById('viewRateStore');
+  const containerWorkSpace = document.querySelector('.containerWorkSpace');
+  const containerViewRatesStore = document.querySelector('.containerViewRatesStore');
+  const btnXCloseViewRate = document.getElementById('btnXCloseViewRate'); //icono x para cerrar
+  const btnCloseViewRate = document.querySelector('.btnCloseViewRate'); //boton verde para cerrar
+
+  viewRateStore.addEventListener('click', ()=>{
+    containerWorkSpace.classList.add('closed');
+    containerViewRatesStore.classList.remove('closed');
+  })
+
+  btnXCloseViewRate.addEventListener('click', ()=>{
+    containerWorkSpace.classList.remove('closed');
+    containerViewRatesStore.classList.add('closed');
+
+  })
+
+  btnCloseViewRate.addEventListener('click', ()=>{
+    containerWorkSpace.classList.remove('closed');
+    containerViewRatesStore.classList.add('closed');
+
+  })
+  
+
+
+</script>
+
+  <!-- script que crea la media de las calificaciones -->
+  <script>
+
+    console.log("Store >", Store);
+
+    const pountrate = document.getElementById('pountrate');
+    const boxStar = document.querySelector('.boxStar'); 
+    const messagevalue = document.querySelector('.containerMessagevalue'); 
+
+    const barStar5 = document.getElementById('barStar5'); //elementos donde incertara la barra de progreso
+    const barStar4 = document.getElementById('barStar4'); //elementos donde incertara la barra de progreso
+    const barStar3 = document.getElementById('barStar3'); //elementos donde incertara la barra de progreso
+    const barStar2 = document.getElementById('barStar2'); //elementos donde incertara la barra de progreso
+    const barStar1 = document.getElementById('barStar1'); //elementos donde incertara la barra de progreso
+
+    const pountrateView = document.querySelector('.pountrateView');
+    const boxstarView = document.querySelector('.boxstarView'); //boxstarView, puntrateView, countrateView
+    const countrateView = document.querySelector('.countrateView');
+    let sumStar1= 0; sumStar2= 0; sumStar3= 0; sumStar4= 0; sumStar5= 0; //variables que recojeran los datos para luego sacar el porcentaje.
+    let percent1, percent2, percent3, percent4, percent5; //pocentajes por estrellas.
+    let boxPercent = [];
+
+    // script para conocer la calificacion de esta tienda
+    
+      const data = {
+        storeName : Store
+      };
+
+      fetch('/account/pountRate', {
+
+      method: "post",
+      body: JSON.stringify(data),
+      headers: {"content-type" : "application/json"}
+
+      })
+      .then(response =>response.json() )
+      .then( jsonx =>  { 
+
+          //console.log("recibiendo del backend pountrate ->", jsonx)
+          const boxRates = []; //aqui meto todas las calificaciones parseadas a numeros
+          jsonx.forEach((ele)=>{
+            const markStar = ele.markStar;
+            const markstar = parseInt(markStar);
+            boxRates.push(markstar)
+          })
+          //console.log("boxRates", boxRates);
+          let ratesLength = boxRates.length;
+          //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
+          let sumRate = 0;
+          boxRates.forEach((ele)=>{
+            const stars = ele
+            //console.log("stars >", stars)
+            sumRate = sumRate + stars; 
+
+            if (ele == 1){
+              sumStar1 ++;
+            } else if (ele ==2){
+              sumStar2 ++;
+            } else if (ele ==3){
+              sumStar3 ++;
+            } else if (ele ==4){
+              sumStar4 ++;
+            } else if (ele ==5){
+              sumStar5 ++;
+            } 
+          })
+
+          //console.log("Con estos datos armo las barras de progrso de las estrellas.")
+          //console.log( `sumStar1 :${sumStar1} sumStar2 :${sumStar2} sumStar3 :${sumStar3} sumStar4 :${sumStar4} sumStar5 :${sumStar5}` );
+          //console.log("ratesLength: ", ratesLength);
+          //console.log("------------------------------------------------------")
+          const boxCountStart = [sumStar1, sumStar2, sumStar3, sumStar4, sumStar5];
+          boxCountStart.forEach((ele)=>{
+            let resultPercent = ((ele * 100) / ratesLength).toFixed(1);
+            boxPercent.push(resultPercent);
+          })
+          //console.log("boxPercent --->", boxPercent);
+          //   1* ,   2* ,    3* ,    4* ,    5*
+          //['0.0', '40.0', '20.0', '20.0', '20.0']
+
+          for (let i = 0; i < boxPercent.length; i++) {
+            const ele = boxPercent[i];
+            //console.log("verrrrrrr aqui", i);
+            //console.log(`barStar${i + 1} valor : ${ele} `);
+            const x = i + 1;
+            if (x == 1){
+              barStar1.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 2) {
+              barStar2.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 3) {
+              barStar3.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 4) {
+              barStar4.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 5) {
+              barStar5.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            }
+                      
+            /* `barStar${i}`.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` */
+          }
+          
+
+          //console.log("sumRate", sumRate);
+          //console.log("ratesLength", ratesLength);
+          const pount = (sumRate / ratesLength);
+          let pountRate; 
+          pountRate = parseFloat( pount.toFixed(1)); 
+          //console.log("pountRate", pountRate);
+          //console.log("ratesLength", ratesLength);
+          //console.log("pountRate", typeof pountRate)
+          //boxstarView, puntrateView, countrateView
+          pountrateView.innerText = pountRate; //esto muestra la calificacion en la vista dodne estan todas las calificaciones
+          countrateView.innerText = ratesLength; //esto muestra la cantidad de calificaciones y opiniones.   
+
+          if (isNaN (pountRate)){
+
+            boxstarView.innerHTML = ` <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `                    
+
+          } else if (pountRate == 0 ){
+
+            boxstarView.innerHTML  = `<i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `                            
+
+          } else if (pountRate > 0 && pountRate < 1){
+
+            boxstarView.innerHTML = ` <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `                      
+                 
+          } else if (pountRate == 1 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `                                            
+                            
+          } else if (pountRate > 1 && pountRate < 2){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `                      
+                     
+          } else if (pountRate == 2){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                     <i class="bi bi-star mx-1"></i>
+                                    `                                  
+
+          } else if (pountRate > 2 && pountRate < 3){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      `                                  
+          } else if (pountRate == 3 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                     `                                   
+
+          } else if (pountRate > 3 && pountRate < 4){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-half"></i>
+                                      <i class="bi bi-star"></i>
+                                      `                                  
+
+          } else if (pountRate == 4 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      `                                    
+
+          } else if (pountRate > 4 && pountRate < 5){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      `                                  
+
+          } else if (pountRate == 5){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      `                                  
+          } 
+
+
+        
+        })
+      .catch( err => console.log(err));
+    
+
+  </script>
+
+  <script>
+    const bodyRates = document.getElementById('bodyRates');
+
+    const btnRateAll = document.querySelector('.btnRateAll');
+    const btnRate5 = document.querySelector('.btnRate5');
+    const btnRate4 = document.querySelector('.btnRate4');
+    const btnRate3 = document.querySelector('.btnRate3');
+    const btnRate2 = document.querySelector('.btnRate2');
+    const btnRate1 = document.querySelector('.btnRate1');
+
+
+      const rateAll = {
+        storeName : Store
+      };
+
+      fetch('/account/pountRate', {
+
+        method: "post",
+        body: JSON.stringify(rateAll),
+        headers: {"content-type" : "application/json"}
+
+      })
+      .then(response =>response.json() )
+      .then( jsonx =>  { 
+          
+          //console.log("Con estos datos armare la lista de las calificaciones", jsonx);
+
+          jsonx.forEach((ele)=>{
+
+              //console.log("dataLogeado ->", ele.dataLogeado);
+              const dataLogeado = ele.dataLogeado;
+              const username = dataLogeado.username;
+              const mailhash = dataLogeado.mailhash;
+              const avatarPerfil = dataLogeado.avatarPerfil;
+              //console.log("avatarPerfil >", avatarPerfil);
+              //console.log("markStar ->", ele.markStar);
+              const markstar = ele.markStar;
+              //console.log("markstar -->", markstar) 
+              //console.log("comment ->", ele.comment);
+              let comment;
+              comment = ele.comment;
+
+
+              if (comment === ""){
+                comment = "¡Sin comentarios!"
+              } 
+
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;
+
+
+                  if (avatarPerfil[0].public_id === 'sin_data'){
+                      
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star"></i> </span>
+                                                                        <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>               
+                                        `
+                      }   
+
+                  } else {
+ 
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                  
+                      }
+ 
+                  }            
+
+ 
+          })
+
+
+        })
+      .catch((error)=>{
+        console.log("Ha habido un problema con la carga de calificaciones")
+      })
+
+  
+        //filtrar por 1 estrellas
+        btnRate1.addEventListener('click', ()=>{
+
+            const rate = {
+              storeName : Store
+            };
+
+            fetch('/account/pountRate/star-1', {
+
+              method: "post",
+              body: JSON.stringify(rate),
+              headers: {"content-type" : "application/json"}
+
+              })
+            .then(response =>response.json() )
+            .then( jsonx =>  { 
+              
+              //console.log("consolta 1 star -> ", jsonx)
+              bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
+              jsonx.forEach((ele)=>{
+                
+                const dataLogeado = ele.dataLogeado;
+                const avatarPerfil = dataLogeado.avatarPerfil;
+                const mailhash = dataLogeado.mailhash;
+                const username = dataLogeado.username;
+
+                let comment;
+                comment = ele.comment;
+
+                if (comment === ""){
+                  comment = "¡Sin comentarios!"
+                }
+
+                const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+                let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+                const fecha = `${dia}-${mes}-${anio}`;
+
+                //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+
+                if (avatarPerfil[0].public_id === 'sin_data'){
+                      //carece de avatar customizado usar el hashmail
+                      bodyRates.innerHTML += `
+                                  <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                    <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                    <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i> </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                    </p>
+                                    <p class="mb-1"> <span> ${comment} </span> </p>
+                                  </div>               
+                                  `
+
+                } else {
+                  bodyRates.innerHTML += `
+                                  <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                    <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                    <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i> </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                    </p>
+                                    <p class="mb-1"> <span> ${comment} </span> </p>
+                                  </div>           
+                                  `   
+                }  
+
+              })
+               
+
+            })
+            .catch((err)=>{ console.log(err) }); 
+          
+
+
+            
+        }) 
+
+        //filtrar por 2 estrellas
+        btnRate2.addEventListener('click', ()=>{
+
+          const rate = {
+            storeName : Store
+          };
+          
+          fetch('/account/pountRate/star-2', {
+
+            method: "post",
+            body: JSON.stringify(rate),
+            headers: {"content-type" : "application/json"}
+
+            })
+          .then(response =>response.json() )
+          .then( jsonx =>  {
+            
+            //console.log("consolta 2 star -> ", jsonx)
+            bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
+            jsonx.forEach((ele)=>{
+              
+              const dataLogeado = ele.dataLogeado;
+              const avatarPerfil = dataLogeado.avatarPerfil;
+              const mailhash = dataLogeado.mailhash;
+              const username = dataLogeado.username;
+
+              let comment;
+              comment = ele.comment;
+
+              if (comment === ""){
+                comment = "¡Sin comentarios!"
+              }
+
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;              
+
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+
+              
+              if (avatarPerfil[0].public_id === 'sin_data'){
+                    //carece de avatar customizado usar el hashmail
+                    bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star"></i>
+                                                          <i class="bi bi-star"></i>
+                                                          <i class="bi bi-star"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span> 
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>               
+                                `
+
+              } else {
+                bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star"></i>
+                                                          <i class="bi bi-star"></i>
+                                                          <i class="bi bi-star"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span>
+
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>           
+                                `   
+              }  
+
+            })
+            
+
+           })
+          .catch((err)=>{ console.log(err) }); 
+        
+        }) 
+  
+        //filtrar por 3 estrellas
+        btnRate3.addEventListener('click', ()=>{
+
+          const rate = {
+            storeName : Store
+          };
+
+          fetch('/account/pountRate/star-3', {
+
+            method: "post",
+            body: JSON.stringify(rate),
+            headers: {"content-type" : "application/json"}
+
+            })
+          .then(response =>response.json() )
+          .then( jsonx =>  {
+            
+            //console.log("consolta 3 star -> ", jsonx)
+            bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
+            jsonx.forEach((ele)=>{
+              
+              const dataLogeado = ele.dataLogeado;
+              const avatarPerfil = dataLogeado.avatarPerfil;
+              const mailhash = dataLogeado.mailhash;
+              const username = dataLogeado.username;
+
+              let comment;
+              comment = ele.comment;
+
+              if (comment === ""){
+                comment = "¡Sin comentarios!"
+              }
+
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;              
+
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+
+              
+              if (avatarPerfil[0].public_id === 'sin_data'){
+                    //carece de avatar customizado usar el hashmail
+                    bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star"></i>
+                                                          <i class="bi bi-star"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span> 
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>               
+                                `
+
+              } else {
+                bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star"></i>
+                                                          <i class="bi bi-star"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span>
+
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>           
+                                `   
+              }  
+
+            })
+
+          })
+          .catch((err)=>{ console.log(err) }); 
+
+        }) 
+
+        //filtrar por 4 estrellas
+        btnRate4.addEventListener('click', ()=>{
+
+          const rate = {
+            storeName : Store
+          };
+
+          fetch('/account/pountRate/star-4', {
+
+            method: "post",
+            body: JSON.stringify(rate),
+            headers: {"content-type" : "application/json"}
+
+            })
+          .then(response =>response.json() )
+          .then( jsonx =>  {
+            
+            //console.log("consolta 4 star -> ", jsonx)
+            bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
+            jsonx.forEach((ele)=>{
+              
+              const dataLogeado = ele.dataLogeado;
+              const avatarPerfil = dataLogeado.avatarPerfil;
+              const mailhash = dataLogeado.mailhash;
+              const username = dataLogeado.username;
+
+              let comment;
+              comment = ele.comment;
+
+              if (comment === ""){
+                comment = "¡Sin comentarios!"
+              }
+
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;              
+
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+
+              
+              if (avatarPerfil[0].public_id === 'sin_data'){
+                    //carece de avatar customizado usar el hashmail
+                    bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span> 
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>               
+                                `
+
+              } else {
+                bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span>
+
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>           
+                                `   
+              }  
+
+            })
+
+          })
+          .catch((err)=>{ console.log(err) }); 
+
+        }) 
+
+        //filtrar por 5 estrellas
+        btnRate5.addEventListener('click', ()=>{
+
+          const rate = {
+            storeName : Store
+          };
+
+          fetch('/account/pountRate/star-5', {
+
+            method: "post",
+            body: JSON.stringify(rate),
+            headers: {"content-type" : "application/json"}
+
+            })
+          .then(response =>response.json() )
+          .then( jsonx =>  {
+            
+            //console.log("consulta 5 star -> ", jsonx)
+            bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
+            jsonx.forEach((ele)=>{
+              
+              const dataLogeado = ele.dataLogeado;
+              const avatarPerfil = dataLogeado.avatarPerfil;
+              const mailhash = dataLogeado.mailhash;
+              const username = dataLogeado.username;
+
+              let comment;
+              comment = ele.comment;
+
+              if (comment === ""){
+                comment = "¡Sin comentarios!"
+              }
+
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;              
+
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+
+              
+              if (avatarPerfil[0].public_id === 'sin_data'){
+                    //carece de avatar customizado usar el hashmail
+                    bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span> 
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>               
+                                `
+
+              } else {
+                bodyRates.innerHTML += `
+                                <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                  <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                  <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i>
+                                                          <i class="bi bi-star-fill"></i> </span>
+                                                          <span class="ms-2"> ${fecha} </span>
+
+                                  </p>
+                                  <p class="mb-1"> <span> ${comment} </span> </p>
+                                </div>           
+                                `   
+              }  
+
+            })
+
+          })
+          .catch((err)=>{ console.log(err) }); 
+
+        }) 
+
+        //filtrar por All estrellas
+        btnRateAll.addEventListener('click', ()=>{
+
+          const rate = {
+            storeName : Store
+          };
+
+          fetch('/account/pountRate', {
+
+            method: "post",
+            body: JSON.stringify(rate),
+            headers: {"content-type" : "application/json"}
+
+            })
+          .then(response =>response.json() )
+          .then( jsonx =>  {
+            
+            //console.log("consolta All star -> ", jsonx)
+            bodyRates.innerHTML = ""; //limpiamos todo antes de colocar los nuevos elementos.
+            jsonx.forEach((ele)=>{
+                                   
+              const markstar = ele.markStar;
+              const dataLogeado = ele.dataLogeado;
+              const avatarPerfil = dataLogeado.avatarPerfil;
+              const mailhash = dataLogeado.mailhash;
+              const username = dataLogeado.username;
+
+              let comment;
+              comment = ele.comment;
+
+              if (comment === ""){
+                comment = "¡Sin comentarios!"
+              }
+
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;              
+
+              //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
+
+              if (avatarPerfil[0].public_id === 'sin_data'){
+              console.log("avatarPerfil[0] ", avatarPerfil[0]); 
+              console.log("markstar ", markstar);       
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                        <i class="bi bi-star"></i> </span>
+                                                                        <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>               
+                                        `
+                      }   
+
+                  } else {
+ 
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span> <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i>
+                                                                  <i class="bi bi-star-fill"></i> </span>
+                                                                  <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                  
+                      }
+ 
+                  }                
+              
+  
+
+
+            })
+
+          })
+          .catch((err)=>{ console.log(err) }); 
+
+        }) 
+
+
+        
+  </script>
 
 
 <% if ( user !== undefined ) { %>
