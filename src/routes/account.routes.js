@@ -1376,62 +1376,56 @@ routes.post('/account/storeRate', async(req, res)=>{
 
 
 routes.post('/account/pountRate', async(req, res)=>{
-    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
-    console.log("account/pountRate");
+    //console.log("account/pountRate");
     const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
     
-    const rateStore = await modelStoreRate.find({storeName});
+    const rateStore = await modelStoreRate.find({storeName}).sort({updatedAt : -1});
     //console.log("searchStore x storeName --->", searchStore)
     res.json(rateStore);
 })
 
 routes.post('/account/pountRate/star-1', async(req, res)=>{
-    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
-    console.log("account/pountRate/start-1");
+    //console.log("account/pountRate/start-1");
     const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
     
-    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '1'}]} );
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '1'}]} ).sort({updatedAt : -1});
     console.log("rateStore --->", rateStore)
     res.json(rateStore);
 })
               
 routes.post('/account/pountRate/star-2', async(req, res)=>{
-    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
-    console.log("account/pountRate/star-2");
+    //console.log("account/pountRate/star-2");
     const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
     
-    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '2'}]} );
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '2'}]} ).sort({updatedAt : -1});
     console.log("rateStore --->", rateStore)
     res.json(rateStore);
 })
 
 routes.post('/account/pountRate/star-3', async(req, res)=>{
-    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
-    console.log("account/pountRate/start-3");
+    //console.log("account/pountRate/start-3");
     const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
     
-    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '3'}]} );
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '3'}]} ).sort({updatedAt : -1});
     console.log("rateStore --->", rateStore)
     res.json(rateStore);
 })
 
 routes.post('/account/pountRate/star-4', async(req, res)=>{
-    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
-    console.log("account/pountRate/start-4");
+    //console.log("account/pountRate/start-4");
     const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
     
-    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '4'}]} );
-    console.log("rateStore --->", rateStore)
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '4'}]} ).sort({updatedAt : -1});
+    //console.log("rateStore --->", rateStore)
     res.json(rateStore);
 })
 
 routes.post('/account/pountRate/star-5', async(req, res)=>{
-    console.log("  ''''''''''''''' AQUI '''''''''''''''''' ");
-    console.log("account/pountRate/start-5");
+    //console.log("account/pountRate/start-5");
     const {storeName} = req.body; // esto debe ser modificado y buscado por id y no por nombre de tienda.
     
-    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '5'}]} );
-    console.log("rateStore --->", rateStore)
+    const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '5'}]} ).sort({updatedAt : -1});
+    //console.log("rateStore --->", rateStore)
     res.json(rateStore);
 })
 

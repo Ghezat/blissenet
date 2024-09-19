@@ -447,6 +447,91 @@
                 </div> <!-- aqui cierra el bloque Topbar--> 
                 <% storeProfile.forEach((eleStore)=>{ %>
 
+
+                  <!-- importante que estos modales esten aqui afuera del contenedor containerWorkSpace -->
+                      <!-- Modal codigo QR -->
+                      <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-center align-items-center my-3">
+                                    <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
+                                      <canvas id="qr-canvas">  
+                                      </canvas>
+                                      
+                                      <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <!-- Option Rate -->
+                      <div class="modal fade" id="staticOption" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticOptionRate" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">Opciones de Calificación</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center my-3">
+
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticRate" data-bs-dismiss="modal" aria-label="Close">
+                                    <img src="/img/rate-makeRate.png" alt="" style="width: 80px;">
+                                    <span class="mt-2">Dejar Calificación</span>
+                                  </div>
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="viewRateStore" data-bs-dismiss="modal" aria-label="Close"> 
+                                    <img src="/img/rate-viewRate.png" alt=""  style="width: 80px;">
+                                    <span class="mt-2">Ver Calificaciones</span>
+                                  </div> 
+
+                                </div>
+                                <div class="containerMessage">
+                                  <hr>
+                                  <p class="mx-4">Es importante para la comunidad tu calificación y opinión sobre esta tienda. Deja saber al resto que tan confiable o bueno es el servicio de esta tienda.</p>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <!-- Modal de Calificacion de Tienda -->
+                      <div class="modal fade" id="staticRate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticComprarLabel" aria-hidden="true">
+                          <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="staticComprarLabel">Calificar esta Tienda</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p> Puedes calificar esta tienda cada vez que quieras. ¡Dejanos saber tu Calificación y Opinión!</p>
+
+                                    <div class="contentToolStart d-flex border">
+                                      <div class="contentClean">
+                                        <i class="bi bi-eraser mx-2" style="font-size: 1.4rem; cursor: pointer;"></i></i>
+                                      </div>
+                                      <div class="containRateStar d-flex justify-content-center border" style="width: 100%;">
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
+                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i> 
+                                      </div> 
+                                    </div>
+                                    <div class="contentComment my-2 form-group">
+                                      <textarea class="form-control comment" placeholder="¡Deje aqui su comentario!. Max 400 caracteres." cols="2" maxlength="400"></textarea>
+                                    </div>
+
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnSendStar" disabled>Enviar Calificación</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>                      
+
                 <div class="containerWorkSpace">
                   <!-- bloque Workspace -->
                   <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= eleStore.bGColorWorkspace %>; position: relative;">
@@ -554,88 +639,6 @@
 
                           
                           </div>
-                      </div>
-
-
-                      <!-- Option Rate -->
-                      <div class="modal fade" id="staticOption" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticOptionRate" aria-hidden="true">
-                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="staticComprarLabel">Opciones </h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body d-flex justify-content-around align-items-center my-3">
-                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center">
-                                    <img src="/img/rate-makeRate.png" alt="" class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticRate" style="width: 80px;" data-bs-dismiss="modal" aria-label="Close">
-                                    <span class="mt-2">Dejar Calificación</span>
-                                  </div>
-                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center" id="viewRateStore">
-                                    <img src="/img/rate-viewRate.png" alt="" class="cursor-pointer"  style="width: 80px;" data-bs-dismiss="modal" aria-label="Close">
-                                    <span class="mt-2">Ver Calificaciones</span>
-                                  </div>                                                          
-                                </div>
-                                <div class="containerMessage">
-                                  <hr>
-                                  <p class="mx-4">Es importante para la comunidad tu calificación y opinión sobre esta tienda. Deja saber al resto que tan confiable o bueno es el servicio de esta tienda.</p>
-                                </div>
-                            </div>
-                        </div>
-                      </div>
-
-                      <!-- Modal de Calicacion de Tienda -->
-                      <div class="modal fade" id="staticRate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticComprarLabel" aria-hidden="true">
-                          <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="staticComprarLabel">Calificar esta Tienda</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <p> Puedes calificar esta tienda cada vez que quieras. ¡Dejale saber tu puntuacion!</p>
-
-                                    <div class="contentToolStart d-flex border">
-                                      <div class="contentClean">
-                                        <i class="bi bi-eraser mx-2" style="font-size: 1.4rem; cursor: pointer;"></i></i>
-                                      </div>
-                                      <div class="containRateStar d-flex justify-content-center border" style="width: 100%;">
-                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i>
-                                        <i class="starE bi bi-star mx-2" style="font-size: 1.4rem; cursor: pointer;"></i> 
-                                      </div> 
-                                    </div>
-                                    <div class="contentComment my-2 form-group">
-                                      <input type="text" class="form-control comment" placeholder="¡Deje aqui su comentario!">
-                                    </div>
-
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnSendStar" disabled>Enviar Calificación</button>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-
-                      <!-- Modal codigo QR -->
-                      <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
-                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body d-flex justify-content-center align-items-center my-3">
-                                    <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
-                                      <canvas id="qr-canvas">  
-                                      </canvas>
-                                      
-                                      <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                       </div>
 
                                                 
