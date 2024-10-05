@@ -1,0 +1,21 @@
+    <!-- Esto es el div que posee el icono que activa el modal, este div posee dos clases cursor-pointer e info-icon el ultimo es una clase que posee un efeto de pulse puedes verlo en el css. Lo hemo usado en el perfil mirar.-->
+    <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticTypeInfo"> <i class="bi bi-info-circle mx-1"></i> </div>
+    
+    <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTypeInfo" -->
+    <div class="modal fade" id="staticTypeInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelX" aria-hidden="true">
+        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabelX">Titulo de la info</h5>
+                    <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                </div>
+                <div class="modal-body">
+                    <p>Aqui colcoas la informacion que necesites dar</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>

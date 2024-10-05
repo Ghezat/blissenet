@@ -140,7 +140,7 @@ routes.post('/department/create/aeronaves/selector', (req,res)=>{
 routes.post('/department/create/aeronaves', async(req,res, next)=>{
     const boxImg = [];
     const user = req.session.user
-    console.log(user.username)
+    //console.log(user.username);
     const username = user.username; //aqui tengo el username;
     const department = 'airplanes'; 
     const commission = 8; //esto es un precio tasado a dolares luego se convertira en la moneda de curso legal.  

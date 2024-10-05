@@ -26,7 +26,7 @@ const SchemaRaffle = new Schema({
     stock : { type: Boolean, default: true },
     favorite : { type : Number, default : 0 }, //Datos para el Fascinometro: conocer cuantas personas han agregado este articulo y tener metricas de este dato.
     allTicketsTake : { type : Boolean, default : false }, //esto es lo que determina si un sorteo sea celebrado. Importante ya que de esto depende un cambio en el Front para que los ganadores puedan calificar en la Tabla de Tickets.
-    user_id : { type: String }, //id del creador o anfitrion del sorteo.
+    user_id : { type: String }, //aqui guardamos el id del user del usuario que publica el anuncio(indexed).
     username : { type : String }, //este es el username del creador igual al de la coleccion user y profile.
     notes : { type : Object, default: [] } //aqui es donde se guardan las notas creadas por el anfitrion de la publicación.
 }, {

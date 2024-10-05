@@ -6,7 +6,7 @@ const messageSchema = new Schema({
     titleArticle : { type : String}, //el titulo del articulo en cuestion.
     urlImageArticle : { type : String}, //la primera imagen del articulo.
     objeAvatar : { type : Object }, //este campo solo es para cuando sea de tipo "spread"
-    userId : { type : String}, //el Id del que hace la pregunta. 
+    userId : { type : String}, //el Id del que hace la pregunta. (indexed)
     username : { type : String}, //el username del que hace la pregunta.
     question : { type : String}, //la pregunta.
     toCreatedArticleId : { type : String}, //el id del creador del articulo dato extraido de cada coleccion de departamentos. "Quien recibe la pregunte"

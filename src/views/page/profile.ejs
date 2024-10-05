@@ -173,20 +173,20 @@
                                                     <div class="form-group d-flex">
                                                         <input type="date" name="dateborn" class="form-control" required>
                                                     </div>
-                
-                                                    <div class="form-control d-flex ms-1">
-                                                        <div class="form-check  me-3">
+                                                        
+                                                    <div class="form-control d-flex ms-1 py-0 ps-3 pe-2">
+                                                        <div class="form-check me-3 d-flex align-items-center m-0">
                                                             <input class="form-check-input" type="radio" name="gender"
                                                                 id="flexRadioDefault1" value="men" required>
                                                             <label class="form-check-label" for="flexRadioDefault1">
-                                                                Masculino
+                                                                <img src="/img/menPerfil.png" alt="" style="width: 30px;">
                                                             </label>
                                                         </div>
-                                                        <div class="form-check">
+                                                        <div class="form-check d-flex align-items-center m-0">
                                                             <input class="form-check-input" type="radio" name="gender"
                                                                 id="flexRadioDefault2" value="wom" required>
                                                             <label class="form-check-label" for="flexRadioDefault2">
-                                                                Femenino
+                                                                <img src="/img/womPerfil.png" alt="" style="width: 30px;">
                                                             </label>
                                                         </div>
                                                     </div>
@@ -250,22 +250,22 @@
                                                 <!-- creación de redes sociales -->
                                                 <hr class="dropdown-divider">
                                                 <div class="input-group flex-nowrap">
-                                                    <label for="" class="input-group-text anchorRRSS">Facebook @</label>
+                                                    <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-facebook"></i> </label>
                                                     <input type="text" name="facebook" class="form-control" placeholder="Here your link"
                                                         aria-describedby="addon-wrapping">
                                                 </div>
                                                 <div class="input-group flex-nowrap">
-                                                    <label for="" class="input-group-text anchorRRSS">Instagram @</label>
+                                                    <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-instagram"></i> </label>
                                                     <input type="text" name="instagram" class="form-control"
                                                         placeholder="Here your link" aria-describedby="addon-wrapping">
                                                 </div>
                                                 <div class="input-group flex-nowrap">
-                                                    <label for="" class="input-group-text anchorRRSS">YouTube @</label>
+                                                    <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-youtube"></i> </label>
                                                     <input type="text" name="youtube" class="form-control" placeholder="Here your link"
                                                         aria-describedby="addon-wrapping">
                                                 </div>
                                                 <div class="input-group flex-nowrap">
-                                                    <label for="" class="input-group-text anchorRRSS">Tik-Tok @</label>
+                                                    <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-tiktok"></i> </label>
                                                     <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
                                                         aria-describedby="addon-wrapping">
                                                 </div>
@@ -304,25 +304,25 @@
                                                         </div>
                                                     <% } %>
 
-                                                        <div class="form-control d-flex ms-1" style="background-color: #e9ecef;">
-                                                            <div class="form-check  me-3">
+                                                        <div class="form-control d-flex ms-1 py-0 ps-3 pe-2" style="background-color: #e9ecef;">
+                                                            <div class="form-check me-3 d-flex align-items-center m-0">
                                                                 <% if (ele.gender === 'men'){ %>
                                                                 <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="men" disabled checked>
                                                                 <% } else { %>    
                                                                 <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="men" disabled>
                                                                 <% }; %>    
-                                                                <label class="form-check-label" for="flexRadioDefault1">
-                                                                    Maculino
+                                                                <label class="form-check-label ms-3" for="flexRadioDefault1">
+                                                                    <img src="/img/menPerfil.png" alt="" style="width: 30px;">
                                                                 </label>
                                                             </div>
-                                                            <div class="form-check disabled" >
+                                                            <div class="form-check d-flex align-items-center m-0" >
                                                                 <% if (ele.gender === 'wom'){ %>
                                                                 <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="wom" disabled checked>
                                                                 <% } else { %>
                                                                 <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="wom" disabled>
                                                                 <% }; %>     
-                                                                <label class="form-check-label" for="flexRadioDefault2">
-                                                                    Femenino
+                                                                <label class="form-check-label ms-3" for="flexRadioDefault2">
+                                                                    <img src="/img/womPerfil.png" alt="" style="width: 30px;">
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -388,22 +388,22 @@
                                                 <!-- campos redes sociales -->
                                                 <hr class="dropdown-divider">
                                                 <div class="input-group flex-nowrap">
-                                                        <label for="" class="input-group-text anchorRRSS">Facebook @</label>
+                                                        <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-facebook"></i> </label>
                                                         <input type="text" name="facebook" class="form-control" placeholder="Here your link"
                                                             value="<%= ele.facebook %>">
                                                 </div>
                                                 <div class="input-group flex-nowrap">
-                                                        <label for="" class="input-group-text anchorRRSS">Instagram @</label>
+                                                        <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-instagram"></i> </label>
                                                         <input type="text" name="instagram" class="form-control"
                                                             placeholder="Here your link" value="<%= ele.instagram %>">
                                                     </div>
                                                     <div class="input-group flex-nowrap">
-                                                        <label for="" class="input-group-text anchorRRSS">YouTube @</label>
+                                                        <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-youtube"></i> </label>
                                                         <input type="text" name="youtube" class="form-control" placeholder="Here your link"
                                                         value="<%= ele.youtube %>">
                                                     </div>
                                                     <div class="input-group flex-nowrap">
-                                                        <label for="" class="input-group-text anchorRRSS">Tik-Tok @</label>
+                                                        <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-tiktok"></i> </label>
                                                         <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
                                                         value="<%= ele.tiktok %>">
                                                     </div>
@@ -421,11 +421,50 @@
                                     </div>
                                 </div>
 
+                                <!-- seccion nombre de tienda -->
+                                
+                                <% const username = user.username %>
+                                <% const indexed = user._id %> <!-- esto es igual al id user -->
+                                    
+                                <div class="card my-2">
+                                        <div class="card-header d-flex justify-content-between">                                
+                                            Cambiar Nombre de Cuenta  <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangeUsername"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                        </div>
+                                        <div class="card-body">
+                                        <!--  fetch post linea 940 -->
+                                                <div class="input-group my-1">
+                                                    <span class="input-group-text" id="statusName"> <i class="bi bi-lock"></i> </span>
+                                                    <input type="text" class="form-control" id="username" value="<%= username %>" readonly>
+                                                    <input type="hidden"  id="indexed" value="<%= indexed %>">
+                                                    <button class="btn btn-outline-secondary" type="button" id="unlockUsername"> Editar </button>
+                                                </div>
+                                                <div class="input-group my-1">
+                                                    <span class="input-group-text"> <i class="bi bi-person"></i> </span>
+                                                    <input type="text" class="form-control" id="newName" placeholder="Nuevo nombre" maxlength="20" disabled>
+                                                </div>
+                                                <div class="input-group my-1">
+                                                    <span class="input-group-text"> <i class="bi bi-key"></i> </span>
+                                                    <input type="text" class="form-control" id="passwordKey" placeholder="Contraseña" maxlength="20" disabled>
+                                                </div>
+
+                                                <div class="alert my-2 border p-0" id="alertEditName">
+                                                    <!-- alertas dinamicos -->
+                                                </div>
+                                                        
+                                                <div class="form-group my-3">
+                                                    <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnChangeUsername" disabled>
+                                                </div> 
+                                            <!-- fetch post  -->
+                                        </div>
+                                </div>
+                                
+                                <!-- fin nombre de tienda -->
+
                                 <% if (searchProfile.length !== 0) {  %>
                                 <!-- seccion de Palabras Clave -->
                                 <div class="card my-2">
-                                    <div class="card-header">
-                                        Palabras Clave
+                                    <div class="card-header d-flex justify-content-between">
+                                        Palabras Clave <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticWordClave"> <i class="bi bi-info-circle mx-1"></i> </div>
                                     </div>
                                     <div class="card-body">
                                     <!--  fetch post linea 940 -->
@@ -499,8 +538,8 @@
 
                                 <% if (token) { %>
                                     <div class="card my-2">
-                                        <div class="card-header">
-                                            Cambiar Contraseña
+                                        <div class="card-header d-flex justify-content-between">
+                                            Cambiar Contraseña <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangePassw"> <i class="bi bi-info-circle mx-1"></i> </div>
                                         </div>
                                         <div class="card-body">
                                             <form action="/myaccount/change-password" method="POST">
@@ -512,22 +551,22 @@
                                                     <label for=""> <small>Token de seguridad lo encontraras en tu correo.</small></label>
                                                 </div>
                                                 <div class="input-group my-2">
-                                                    <label for="" class="input-group-text">New Password :</label>
+                                                    <label for="" class="input-group-text">Nueva Contraseña :</label>
                                                     <input type="text" class="form-control" name="newPassword" maxlength="20" style="letter-spacing: 3px;" required>
                                                 </div>
                                                 <div class="form-group  ps-1">
-                                                    <label for=""> <small> Password debe tener minimo 6 caracteres. </small></label>
+                                                    <label for=""> <small> Contraseña debe tener mínimo 6 caracteres. </small></label>
                                                 </div>
                                                 <div class="form-group my-3">
-                                                    <button type="submit" class="btn btn-success form-control">Change Password</button>
+                                                    <button type="submit" class="btn btn-primary form-control">Cambiar Contraseña</button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                 <% } else { %>
                                     <div class="card my-2">
-                                        <div class="card-header">
-                                            Cambiar Contraseña
+                                        <div class="card-header d-flex justify-content-between">
+                                            Cambiar Contraseña <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangePassw"> <i class="bi bi-info-circle mx-1"></i> </div>
                                         </div>
                                         <div class="card-body">
                                             <form action="/myaccount/new-password" method="POST">
@@ -544,6 +583,72 @@
                                     </div>
                                 <% }; %>
                             </div>
+
+                            <!-- aqui estaran todos los modales informativos -->
+                            <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticChangeUsername" -->
+                            <div class="modal fade" id="staticChangeUsername" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelX" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelX">Cambiar nombre de Cuenta</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p> Por temas de seguridad solo podrás editar el nombre de tu Cuenta o Tienda mientras cumplas con estos requisitos.</p>
+                                            <ul>
+                                                <li>No haber tenido negociación ni compra alguna. </li>
+                                                <li>No poseer anuncios.</li>
+                                            </ul>
+                                            <p>Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Editar </span> para saber si tu cuenta admite esta edición. Introduce el nuevo nombre que quieres y finalmente da clic a <span class="fw-bold text-primary">Actualizar</span>. </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Modal de Palabras clave --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticWordClave" -->
+                            <div class="modal fade" id="staticWordClave" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelY" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelY">Palabras Clave</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p> Puedes agregar hasta 6 palabras clave para que aparezca tu tienda si llegan a buscar usando estas palabras magicas.</p>
+
+                                            <p> Agrega la palabra clave <span class="fw-bold">Sin usar el #</span> y luego Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Añadir </span> repite esta acción hasta tener todas las palabras que deseas y finalmente da clic en <span class="fw-bold text-primary">Actualizar</span>. </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- Modal de cambiar contraseña --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticChangePassw" -->
+                            <div class="modal fade" id="staticChangePassw" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelZ" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Cambiar Contraseña</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Cambiar contraseña de al botón <span class="fw-bold text-primary">Enviar Token </span> vaya a su correo y recupere el token (Número de 6 digitos) vuelva a la misma sección y coloque el número copiado, debajo la Nueva Contraseña y por ultimo clic en <span class="fw-bold text-primary">Cambiar Contraseña</span>. </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
             
                             <div class="col-lg-8 col-md-8 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
                                 <div class="card">
@@ -970,8 +1075,9 @@
 
         </script>
 
-        <!-- peticion para carga de estados y ciudades de un pais -->
-        <script>
+    <!-- peticion para carga de estados y ciudades de un pais -->
+
+    <script>
         //este script lo desarrolle al cumplir los 9 meses exactamente de desarrollo de este proyecto.
 
         const estados = document.getElementById('estados');
@@ -1095,7 +1201,123 @@
         
           
 
-        </script>
+    </script>
+
+    <!-- Script para cambiar username -->
+
+    <script>
+        const btnChangeUsername = document.getElementById('btnChangeUsername');
+        const unlockUsername = document.getElementById('unlockUsername');//boton editar
+        const indexed = document.getElementById('indexed');
+        const username = document.getElementById('username');
+        const statusName = document.getElementById('statusName');
+        const newName = document.getElementById('newName');
+        const passwordKey = document.getElementById('passwordKey');
+        const alertEditName = document.getElementById('alertEditName');
+
+        unlockUsername.addEventListener('click', ()=>{
+            const data = {
+                indexed : indexed.value,
+                username : username.value
+            }
+
+            //console.log("Data para cambio de nombre", data);
+            
+            fetch('/myaccount/change-review', {
+
+                method: "post",
+                body: JSON.stringify(data),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>{ 
+                    console.log("Esto llega del backend change username -->", jsonx);
+                    const edit = jsonx.edit; const msg = jsonx.msg; const code = jsonx.code; const note = jsonx.note;
+                    console.log("edit", edit); console.log("msg", msg); console.log("code", code); console.log("note", note);
+                    if (edit === true){
+                        console.log("estamos aqui en ", edit);
+                        statusName.innerHTML = `<i class="bi bi-unlock"></i>`;
+                        newName.removeAttribute('disabled');
+                        newName.focus();
+                        passwordKey.removeAttribute('disabled');
+                        btnChangeUsername.removeAttribute('disabled');
+                        alertEditName.innerHTML = `<div class="alert-success p-2">
+                                                        <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
+                                                   </div>`
+
+                        //Ahora que tenemos las colecciones que se deben cambiar enviamos un fecth post al backend
+                        //con el nombre que queremos. 
+                        btnChangeUsername.addEventListener('click', ()=>{
+                            alertEditName.innerHTML = "";
+                            const NewName = newName.value;
+                            const data = {
+                                indexed : indexed.value,
+                                username : username.value,
+                                newName : NewName,
+                                password : passwordKey.value, 
+                                code : code
+                            }
+
+                            console.log("Esto es la informacion que enviaremos al backend", data);
+                            //enviamos el fetch con los datos
+                            fetch('/myaccount/change-username', {
+
+                                method: "post",
+                                body: JSON.stringify(data),
+                                headers: {"content-type" : "application/json"}
+
+                                })
+                                .then(response =>response.json() )
+                                .then( jsonx => {
+                                    
+                                    console.log(jsonx)
+                                    const edit = jsonx.edit; const msg = jsonx.msg;
+
+                                    if (edit === true){
+                                        unlockUsername.setAttribute('disabled', "");
+                                        newName.setAttribute('disabled', "");
+                                        passwordKey.setAttribute('disabled', "");
+                                        btnChangeUsername.setAttribute('disabled', "");
+                                        alertEditName.innerHTML = ` <div class="alert-success p-2">
+                                                                        <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
+                                                                    </div>
+                                                                    <div class="alert-success p-2">
+                                                                        <i class="bi bi-door-closed-fill mx-1"></i> Cierre Session y vuelva a entrar... 
+                                                                    </div>
+                                                                    `                           
+
+
+                                    } else {
+                                        unlockUsername.setAttribute('disabled', "");
+                                        alertEditName.innerHTML = ` <div class="alert-danger p-2">
+                                                                        <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
+                                                                    </div>`
+                                    }
+
+
+                                })
+                                .catch( err => console.log(err));
+
+                            })                            
+
+
+                    } else {
+                        console.log("estamos aqui en ", edit);
+                        alertEditName.innerHTML = `<div class="alert-danger p-2">
+                                                        <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
+                                                   </div>`
+
+                    }
+
+                 })
+                .catch( err => console.log(err));
+
+        })
+
+
+    </script>    
+
 
         <!-- script para crear palabras clave en tienda -->
     <script>

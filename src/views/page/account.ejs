@@ -479,10 +479,15 @@
                                 </div>
                                 <div class="modal-body d-flex justify-content-around align-items-center my-3">
 
+                                <% if (searchProfile) { %>  
+                                  <% if (searchProfile.length !== 0) { %>
                                   <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticRate" data-bs-dismiss="modal" aria-label="Close">
                                     <img src="/img/rate-makeRate.png" alt="" style="width: 80px;">
                                     <span class="mt-2">Dejar Calificación</span>
                                   </div>
+                                  <% } %>
+                                <% } %>  
+
                                   <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="viewRateStore" data-bs-dismiss="modal" aria-label="Close"> 
                                     <img src="/img/rate-viewRate.png" alt=""  style="width: 80px;">
                                     <span class="mt-2">Ver Calificaciones</span>
