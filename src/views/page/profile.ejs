@@ -145,13 +145,13 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
                                 <div class="card">
-                                    <div class="card-header">
-                                        Crear perfil
+                                    <div class="card-header d-flex justify-content-between">
+                                        Crear perfil <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCreateEditPerfil"> <i class="bi bi-info-circle mx-1"></i> </div>
                                     </div>
                                     <div class="card-body">
             
                                         <% if (searchProfile.length === 0) {  %>
-                                            <!--:::::: crear profile ::::::-->
+                                            <!--:::::: Crear Profile ::::::-->
                                             <!-- direccion de ruta en index.routes.js -->
                                             <form action="/myaccount/profile" method="POST">
             
@@ -194,17 +194,26 @@
                                                 </div>
 
                                                 <!-- creación de compañia y rif  -->
-                                                <div class="container d-flex justify-content-between p-0 my-2">
-                
-                                                    <div class="form-group" style="width: 60%;">
-                                                        <input type="text" name="company" placeholder="Nombre de Empresa" class="form-control" title="Si posees una empresa puedes colocarla aqui, dará mayor seguridad a tus clientes potenciales" maxlength="30">
+                                                <div class="my-2">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="text-secondary">Opcional</span>
+                                                        <hr style="flex-grow: 1; margin-left: 10px;">
                                                     </div>
-                                                    <div class="form-group ms-1" style="width: 39%;">
-                                                        <input type="text" name="companyRif" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
+                                                    <div class="container d-flex justify-content-between p-0">
+                    
+                                                        <div class="form-group" style="width: 60%;">
+                                                            <input type="text" name="company" placeholder="Nombre de Empresa" class="form-control" title="Si posees una empresa puedes colocarla aqui, dará mayor seguridad a tus clientes potenciales" maxlength="30">
+                                                        </div>
+                                                        <div class="form-group ms-1" style="width: 39%;">
+                                                            <input type="text" name="companyRif" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
+                                                        </div>
+                    
                                                     </div>
-                
+                                                    <div style="display: flex; align-items: center;">
+                                                        <hr style="flex-grow: 1; margin-left: 10px;">
+                                                    </div>
                                                 </div>
-                                            
+
                                                 <!-- creación de estados y ciudades/pueblos -->
                                                 <div class="container d-flex justify-content-between p-0 my-2">
                 
@@ -276,12 +285,11 @@
                 
                                             </form>
                                         <% } else { %>
+                                            <!--:::::: Editar Profile ::::::-->
                                             <% searchProfile.forEach( (ele)=> { %>
 
-                                            <!--:::::: editar profile ::::::-->
-
-                                                <!-- direccion de ruta en index.routes.js -->
-                                                <form action="/myaccount/edit/<%= ele._id %>" method="POST">
+                                            <!-- direccion de ruta en index.routes.js -->
+                                            <form action="/myaccount/edit/<%= ele._id %>" method="POST">
                                                 
 
                                                 <!-- campos names e identification no podrá ser editado -->
@@ -330,17 +338,25 @@
                                                 </div>    
                                                         
                                                 <!-- campos company y companyRif -->
-                                                <div class="container d-flex justify-content-between p-0 my-2">
-                
-                                                            <div class="form-group" style="width: 60%;">
-                                                                <input type="text" name="company" value="<%= ele.company %>" placeholder="Nombre de Empresa" class="form-control"  maxlength="30">
-                                                            </div>
-                                                            <div class="form-group ms-1" style="width: 39%;">
-                                                                <input type="text" name="companyRif" value="<%= ele.companyRif %>" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
-                                                            </div>
-                        
+                                                <div class="my-2">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="text-secondary">Opcional</span>
+                                                        <hr style="flex-grow: 1; margin-left: 10px;">
+                                                    </div>    
+                                                    <div class="container d-flex justify-content-between p-0">
+                                                        
+                                                                <div class="form-group" style="width: 60%;">
+                                                                    <input type="text" name="company" value="<%= ele.company %>" placeholder="Nombre de Empresa" class="form-control"  maxlength="30">
+                                                                </div>
+                                                                <div class="form-group ms-1" style="width: 39%;">
+                                                                    <input type="text" name="companyRif" value="<%= ele.companyRif %>" placeholder="Rif de la empresa" class="form-control" title="Example: 403084691" maxlength="12">
+                                                                </div>
+                            
+                                                    </div>
+                                                    <div style="display: flex; align-items: center;">
+                                                        <hr style="flex-grow: 1; margin-left: 10px;">
+                                                    </div>
                                                 </div>
-                                                
                                                 
                                                 <!-- edit de estados y ciudades/pueblos -->
                                                 <div class="container d-flex justify-content-between p-0 my-2">
@@ -414,7 +430,7 @@
                                                         <!-- <a href="/myaccount/edit/:<%= ele._id %>">update</a> -->
                                                     </div>
                     
-                                                </form>
+                                            </form>
                                             <% }) %>
                                         <% }; %>
             
@@ -528,7 +544,7 @@
                                                 </div>
                                                     
                                             <div class="form-group my-2">
-                                                <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnSubmitHashtag">
+                                                <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnSubmitHashtag" disabled>
                                             </div>
                                         <!-- fetch post  -->
                                     </div>
@@ -536,6 +552,7 @@
                                 <!-- fin Palabras Clave -->
                                 <% }; %>
 
+                                <!-- cambio de contraseña -->
                                 <% if (token) { %>
                                     <div class="card my-2">
                                         <div class="card-header d-flex justify-content-between">
@@ -585,6 +602,35 @@
                             </div>
 
                             <!-- aqui estaran todos los modales informativos -->
+
+                            <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticChangeUsername" -->
+                            <div class="modal fade" id="staticCreateEditPerfil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelR" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelR">Crear/Editar Perfil</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p> Crear un perfil en Blissenet.com te permite destacarte en nuestra plataforma comercial. Con tu tienda virtual, podrás personalizar y configurar tu espacio para exhibir tus anuncios de manera atractiva. Ten en cuenta que solo las cuentas con perfil pueden crear anuncios. Los datos de la empresa y el RIF son opcionales.</p>
+                                            
+                                            <p> Además, podrás editar tu perfil en cualquier momento, excepto por el nombre, documento de identidad, fecha de nacimiento y género. </p>
+                                            
+                                            <div style="display: flex; align-items: center;">
+                                                <span class="text-primary fw-bold">Aviso Importante</span>
+                                                <hr style="flex-grow: 1; margin-left: 10px;">
+                                            </div>
+
+                                            <p>Esta información es de carácter administrativo y no será visible para la comunidad. Se utilizará exclusivamente para generar tus facturas y recibos relacionados con la creación de anuncios y/o ventas. Agradecemos tu comprensión.</p>   
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticChangeUsername" -->
                             <div class="modal fade" id="staticChangeUsername" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelX" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
@@ -619,9 +665,9 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p> Puedes agregar hasta 6 palabras clave para que aparezca tu tienda si llegan a buscar usando estas palabras magicas.</p>
+                                            <p>" <span class="fw-bold"> ¡Añade hasta 9 palabras clave! </span> Así, tu tienda aparecerá cuando los usuarios busquen con esos términos. ¡Haz que te encuentren fácilmente!"</p>
 
-                                            <p> Agrega la palabra clave <span class="fw-bold">Sin usar el #</span> y luego Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Añadir </span> repite esta acción hasta tener todas las palabras que deseas y finalmente da clic en <span class="fw-bold text-primary">Actualizar</span>. </p>
+                                            <p> Agrega la palabra clave <span class="fw-bold">sin usar el #</span> y luego utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Añadir </span> repite esta acción hasta tener todas las palabras que deseas y finalmente da clic en <span class="fw-bold text-primary">Actualizar</span>. </p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
@@ -1339,10 +1385,10 @@
         })
         .then(response =>response.json() )
         .then( jsonx => {
-            console.log("extraemos el objeto para saber que hay en el hastags del usuario")
+            //console.log("extraemos el objeto para saber que hay en el hastags del usuario")
             //console.log(jsonx.hashtags);
             const tagsReceive = jsonx.hashtags;
-            console.log(tagsReceive);
+            //console.log(tagsReceive);
             if (tagsReceive.length !==0){
 
                 boxHashtag = tagsReceive //aqui tenemos las etiquetas disponibles.
@@ -1363,11 +1409,11 @@
 
         btnHashtag.addEventListener('click', ()=>{
             const newHashtag =  hashtags.value;
-            console.log("newHashtag :",newHashtag)
+            //console.log("newHashtag :",newHashtag)
             if (newHashtag.length !== 0){
 
-                console.log("boxHashtag cantidad de elementos : ",boxHashtag.length)
-                if (boxHashtag.length <=5 ){
+                //console.log("boxHashtag cantidad de elementos antes de incertar el nuevo hastags : ",boxHashtag.length)
+                if (boxHashtag.length <=8 ){ //esta es la cantidad maxima de palabras clave 8 antes de meter uno mas ya que el limite son 9.
                     boxHashtag.push(newHashtag);
                    
                     hashtagsStore.innerHTML += `
@@ -1376,17 +1422,15 @@
                 
                     hashtags.value = ""; //limpiamos el input
                     hashtags.focus(); //enviamos el focus
+                    btnSubmitHashtag.removeAttribute('disabled'); // activar el boton actualizar.
+                    //console.log("boxHashtag", boxHashtag);// perfecto
 
-                    console.log("boxHashtag", boxHashtag);// perfecto
-
-                     
-                  
-
+                                     
 
                 } else {
                     contentAlert.innerHTML = `<div class="form-group my-1">
                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                        <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> Solo puede agregar seis (6) Palabras Clave en su sitio.</strong> 
+                                                        <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> Solo puede agregar nueve (9) Palabras Clave en su sitio.</strong> 
                                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                     </div>
                                               </div>
@@ -1400,7 +1444,7 @@
 
         btnSubmitHashtag.addEventListener('click', ()=>{
 
-            console.log(" cantidad de elementos de boxHashtag : ",boxHashtag.length)
+            //console.log(" cantidad de elementos de boxHashtag : ",boxHashtag.length)
             if (boxHashtag.length !== 0){
 
                     const datos = {
@@ -1418,7 +1462,7 @@
                         .then( jsonx => {
                             
                             //type : 'Exito/Denegado'
-                            console.log(jsonx);
+                            //console.log(jsonx);
 
                             location.reload();
 

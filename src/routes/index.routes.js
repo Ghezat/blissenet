@@ -2143,7 +2143,7 @@ routes.post('/myaccount/palabras-clave', async(req, res)=>{
                 console.log("Esto es lo que llega del front boxHashtags :",boxHashtags);
                 //const updateProfile =  await modelProfile.findOneAndUpdate({indexed : userId},{ $unset: { "hashtags" : ""}} );
 
-                if (boxHashtags.length <= 6){
+                if (boxHashtags.length <= 9){
                     //const updatesProfile =  await modelProfile.findOneAndUpdate({indexed : userId},{ $unset: { "hashtags" : ""}} );
                     await modelProfile.findOneAndUpdate( {indexed : userId} , {$set : {hashtags : boxHashtags}} );
                     req.session.msgHashtagExito = 'Ha agregado con exito Palabra(s) Clave.';
@@ -2151,9 +2151,9 @@ routes.post('/myaccount/palabras-clave', async(req, res)=>{
                     res.json(msgObje);
 
                 }else {
-                    console.log("solo puede tener 6 etiquetas en su tienda");
-                    req.session.msgHashtagDenegado = 'Solo puede agregar seis (6) Palabras Clave en su sitio.';
-                    const msgObje = { msg : 'Solo puede agregar seis (6) Palabras Clave en su sitio.' , type : 'Denegado'};
+                    console.log("solo puede tener 9 etiquetas en su tienda");
+                    req.session.msgHashtagDenegado = 'Solo puede agregar seis (9) Palabras Clave en su sitio.';
+                    const msgObje = { msg : 'Solo puede agregar seis (9) Palabras Clave en su sitio.' , type : 'Denegado'};
                     res.json(msgObje);
 
                 }
