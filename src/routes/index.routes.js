@@ -1144,6 +1144,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
         const bannerErrorCharge = req.session.bannerErrorCharge;
         const withoutDefinedBanner = req.session.withoutDefinedBanner;
         const bannerDefaultRestart = req.session.bannerDefaultRestart;
+        const catchError = req.session.catchError; //'Ha ocurrido un error, intente en unos minutos.';
 
         delete req.session.profSuccess;
         delete req.session.updateSuccess;
@@ -1161,6 +1162,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
         delete req.session.bannerErrorCharge;
         delete req.session.withoutDefinedBanner;
         delete req.session.bannerDefaultRestart;
+        delete req.session.catchError;
  
         if (user !== undefined){  
             searchProfile = await modelProfile.find({ indexed : indexed });  
@@ -1205,25 +1207,25 @@ routes.get('/myaccount/profile', async (req,res)=>{
                 Dateborn = `${dia}/${mes}/${anio}`;
                 //console.log("Esto es Dateboard : ", Dateborn);
 
-                res.render('page/profile', {user, Dateborn, profSuccess, searchProfile, sumCount, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, bannerDefaultRestart });
+                res.render('page/profile', {user, Dateborn, profSuccess, searchProfile, sumCount, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, bannerDefaultRestart, catchError });
             } else {
-                res.render('page/profile', {user, profSuccess, searchProfile, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, bannerDefaultRestart });
+                res.render('page/profile', {user, profSuccess, searchProfile, updateSuccess, token, changePasswSuccess, errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, bannerDefaultRestart, catchError });
             }
         } else {
             console.log("no existe usuario");
-            res.render('page/profile', {user, searchProfile, profSuccess, updateSuccess, token, changePasswSuccess,errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner });
+            res.render('page/profile', {user, searchProfile, profSuccess, updateSuccess, token, changePasswSuccess,errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, catchError });
         }      
 
 });
 
 routes.post('/myaccount/profile', async (req, res)=>{
 
-    const user = req.session.user;
-    console.log(req.body);      
-    const {names, identification, dateborn, gender, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
-
     try{
-    
+
+        const user = req.session.user;
+        console.log(req.body);      
+        const {names, identification, dateborn, gender, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
+        let messageProfile;
         const searchBanner = await modelBannerDefault.find();
 
         if (searchBanner.length !== 0){
@@ -1233,47 +1235,77 @@ routes.post('/myaccount/profile', async (req, res)=>{
 
             const boxObjetBanner = [{ url : bannerDefault_url , public_id : "sin_data" }];
             const boxObjetAvatar = [{ url : "" , public_id : "sin_data" }];
-                                                               
-            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, states, cities,  phone,  phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+                        
+            if (!profileMessage || profileMessage.trim() === ""){
+                //si no coloca nada en mensaje de tienda este debe guardar ¡Sin descripción...!
+                messageProfile = "¡Sin descripción...!"
+            } else {
+                //pero si coloca alguna informacion esta se asinga a esta variable;
+                messageProfile = profileMessage;
+            }
+
+            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, states, cities,  phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
             const saveProfile =  await newProfile.save();
             console.log("esto es lo que se registro en la DB ----->",saveProfile);
             req.session.profSuccess = '¡ Perfil creado satifactoriamente !'
             
-            res.redirect('profile');
+            res.redirect('/myaccount/profile');
 
         } else {
             //NO hay banner default para darles a los usuarios, NO se puede crear el profile
             req.session.withoutDefinedBanner = "Sin banner por defecto definido, comunicarse con la administración.";
-            res.redirect('profile');
+            res.redirect('/myaccount/profile');
         }
 
 
     }catch(error){
 
-        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
-        res.redirect('/admin/bannerDefault');
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/myaccount/profile');
 
     }
 
 });
            
 routes.post('/myaccount/edit/:id', async (req, res)=>{
-    //const user = req.session.user;
-    const ID = req.params.id;
-    console.log("aqui el parametro", ID);
-    const { company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
-    const result = await modelProfile.findById(ID);
+
+    try {
+
+        //const user = req.session.user;
+        const ID = req.params.id;
+        console.log("aqui el parametro", ID);
+        const {names, identification, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
+        let messageProfile;
+        const result = await modelProfile.findById(ID);
         
-    if (result) {
-        const updates = await modelProfile.findByIdAndUpdate(ID, { company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok})
-        req.session.updateSuccess = "Su perfil ha sido actualizado satisfactoriamente";
-    } 
-        
-    res.redirect('/myaccount/profile');
+        if (!profileMessage || profileMessage.trim() === ""){
+            //si no coloca nada en mensaje de tienda este debe guardar ¡Sin descripción...!
+            messageProfile = "¡Sin descripción...!"
+        } else {
+            //pero si coloca alguna informacion esta se asinga a esta variable;
+            messageProfile = profileMessage;
+        }
+
+        if (result) { 
+            const updates = await modelProfile.findByIdAndUpdate(ID, { names, identification, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok})
+            req.session.updateSuccess = "Su perfil ha sido actualizado satisfactoriamente";
+        } 
+            
+        res.redirect('/myaccount/profile');
+
+    } catch (error) {
+
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/myaccount/profile');
+    }
+
 });
 
 /* recibir un banner desde el front */
 routes.post('/myaccount/banner', async (req, res, next)=>{
+
+    try {
+
         const user = req.session.user;
         const userId = user._id;
         console.log("este es el id del usuario en cuestion --->", userId);
@@ -1282,186 +1314,183 @@ routes.post('/myaccount/banner', async (req, res, next)=>{
         const boxImg = [];
         const fileBanner = req.files[0];
         console.log("Este es el banner que esta llegando al backend ----->",fileBanner)
-
         
-        try {
-            
-            if (fileBanner !== undefined ){ //esta condicion evalua si el usuario a cargado una foto. sino hay cargado estara en el valor undefined
+        if (fileBanner !== undefined ){ //esta condicion evalua si el usuario a cargado una foto. sino hay cargado estara en el valor undefined
 
-                if (fileBanner.size <= 3000000  &&  fileBanner.mimetype.startsWith("image/")){
+            if (fileBanner.size <= 3000000  &&  fileBanner.mimetype.startsWith("image/")){
 
-                    if (profile.length !== 0 ){
-                    
-                        for (let i = 0; i < profile.length; i++) {
-                            const ele = profile[i];
+                if (profile.length !== 0 ){
+                
+                    for (let i = 0; i < profile.length; i++) {
+                        const ele = profile[i];
+                        
+                        ele.bannerPerfil.forEach( (element)=>{
+                            if (element.public_id == "sin_data") {
+                                //console.log("Es primera vez que cambia el banner")
+                                first()
                             
-                            ele.bannerPerfil.forEach( (element)=>{
-                                if (element.public_id == "sin_data") {
-                                    //console.log("Es primera vez que cambia el banner")
-                                    first()
-                                
-                                } else {
-                                    const publidIdentificado = element.public_id;
-                                    //console.log("el public_id identificado es ----->",publidIdentificado);
-                                    //console.log("Esta banner ya ha sido cambiado otras veces!");
-                                    some(publidIdentificado)
-                                }
+                            } else {
+                                const publidIdentificado = element.public_id;
+                                //console.log("el public_id identificado es ----->",publidIdentificado);
+                                //console.log("Esta banner ya ha sido cambiado otras veces!");
+                                some(publidIdentificado)
+                            }
 
-                                async  function first(){
+                            async  function first(){
 
-                                    const folder = 'bannerProfile'; const ident = new Date().getTime();
-                                    const pathField = fileBanner.path; const extPart = pathField.split(".");
-                                    const ext = extPart[1];
-                                    
-                                    //console.log("Bucket :", bucketName);console.log("folder :", folder);
-                                    //console.log("patchField :", pathField);console.log("ext", ext);
+                                const folder = 'bannerProfile'; const ident = new Date().getTime();
+                                const pathField = fileBanner.path; const extPart = pathField.split(".");
+                                const ext = extPart[1];
                                 
-                                    const fileContent = fs.readFileSync(pathField);
-                                    const key = `${folder}/${ident}.${ext}`;
-                                    console.log("key -->", key);
-                    
-                                    const params = { 
-                                        Bucket : bucketName,
-                                        Key : key,
-                                        Body : fileContent,
-                                        ACL : 'public-read' 
-                                    };
-                    
-                                    s3.putObject(params, function(err, data){
-                                    
-                                        if (err){
-                                            console.log('Error al subir un archivo', err);
-                                        } else {
-                                            console.log('La imagen fue subida, Exito', data);
-                                            
-                                            //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
-                                            let url = `https://${bucketName}.${endpoint}/${key}`;
-                                            let public_id = key;
-                                            
-                                            boxImg.push({url, public_id});
-                    
-                                            async function saveDB(){
-                                                //console.log("este es el path que tiene que ser eliminado:", element.path)
-                                                await fs.unlink(fileBanner.path); 
-                                                                                 
-                                                const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
-                                                console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
-                                            }
-                    
-                                                    
-                                            saveDB()
-                                                .then(()=>{
-                                                    //console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
-                                                    res.redirect('profile');
-                                                })
-                                                .catch((err)=>{
-                                                    //console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
-                                                    res.redirect('profile');
-                                                })
-                    
-                                        }
+                                //console.log("Bucket :", bucketName);console.log("folder :", folder);
+                                //console.log("patchField :", pathField);console.log("ext", ext);
+                            
+                                const fileContent = fs.readFileSync(pathField);
+                                const key = `${folder}/${ident}.${ext}`;
+                                console.log("key -->", key);
+                
+                                const params = { 
+                                    Bucket : bucketName,
+                                    Key : key,
+                                    Body : fileContent,
+                                    ACL : 'public-read' 
+                                };
+                
+                                s3.putObject(params, function(err, data){
+                                
+                                    if (err){
+                                        console.log('Error al subir un archivo', err);
+                                    } else {
+                                        console.log('La imagen fue subida, Exito', data);
                                         
-                                    });
-
-                                }
-
-                                async  function some(publidIdentificado){
-
-                                    const folder = 'bannerProfile'; const ident = new Date().getTime();
-                                    const pathField = fileBanner.path; const extPart = pathField.split(".");
-                                    const ext = extPart[1];
+                                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                                        let public_id = key;
+                                        
+                                        boxImg.push({url, public_id});
+                
+                                        async function saveDB(){
+                                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                            await fs.unlink(fileBanner.path); 
+                                                                                
+                                            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
+                                            console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                        }
+                
+                                                
+                                        saveDB()
+                                            .then(()=>{
+                                                //console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                                res.redirect('profile');
+                                            })
+                                            .catch((err)=>{
+                                                //console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                                res.redirect('profile');
+                                            })
+                
+                                    }
                                     
-                                    //console.log("Bucket :", bucketName);console.log("folder :", folder);
-                                    //console.log("patchField :", pathField);console.log("ext", ext);
+                                });
+
+                            }
+
+                            async  function some(publidIdentificado){
+
+                                const folder = 'bannerProfile'; const ident = new Date().getTime();
+                                const pathField = fileBanner.path; const extPart = pathField.split(".");
+                                const ext = extPart[1];
                                 
-                                    const fileContent = fs.readFileSync(pathField);
-                                    const key = `${folder}/${ident}.${ext}`;
-                                    console.log("key -->", key);
-                    
-                                    const params = { 
-                                        Bucket : bucketName,
-                                        Key : key,
-                                        Body : fileContent,
-                                        ACL : 'public-read' 
-                                    };
-                    
-                                    s3.putObject(params, function(err, data){
-                                    
-                                        if (err){
-                                            console.log('Error al subir un archivo', err);
-                                        } else {
-                                            console.log('La imagen fue subida, Exito', data);
-                                            
-                                            //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
-                                            let url = `https://${bucketName}.${endpoint}/${key}`;
-                                            let public_id = key;
-                                            
-                                            boxImg.push({url, public_id});
-                    
-                                            async function saveDB(){
-                                                //console.log("este es el path que tiene que ser eliminado:", element.path)
-                                                await fs.unlink(fileBanner.path); 
-                                                                                 
-                                                const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
-                                                //console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                //console.log("Bucket :", bucketName);console.log("folder :", folder);
+                                //console.log("patchField :", pathField);console.log("ext", ext);
+                            
+                                const fileContent = fs.readFileSync(pathField);
+                                const key = `${folder}/${ident}.${ext}`;
+                                console.log("key -->", key);
+                
+                                const params = { 
+                                    Bucket : bucketName,
+                                    Key : key,
+                                    Body : fileContent,
+                                    ACL : 'public-read' 
+                                };
+                
+                                s3.putObject(params, function(err, data){
+                                
+                                    if (err){
+                                        console.log('Error al subir un archivo', err);
+                                    } else {
+                                        console.log('La imagen fue subida, Exito', data);
+                                        
+                                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                                        let public_id = key;
+                                        
+                                        boxImg.push({url, public_id});
+                
+                                        async function saveDB(){
+                                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                            await fs.unlink(fileBanner.path); 
+                                                                                
+                                            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bannerPerfil : boxImg});
+                                            //console.log("aqui el resultado de la actualizacion --->",updatesProfile);                 
+                                        }
+
+                                        async function deleteBannerOld(){
+
+                                            //publidIdentificado es el public_id que debemos eliminar 
+
+                                            const params = {
+                                                Bucket : bucketName,
+                                                Key : publidIdentificado
                                             }
-
-                                            async function deleteBannerOld(){
-
-                                                //publidIdentificado es el public_id que debemos eliminar 
-
-                                                const params = {
-                                                    Bucket : bucketName,
-                                                    Key : publidIdentificado
+                                            s3.deleteObject(params, (err, data)=>{
+                                                if (err){
+                                                    console.error("Error al eliminar el archivo", err);
+                                                    res.redirect('profile');
+                                                } else {
+                                                    console.log("Archivo eliminado con exito");
+                                                    res.redirect('profile');
                                                 }
-                                                s3.deleteObject(params, (err, data)=>{
-                                                    if (err){
-                                                        console.error("Error al eliminar el archivo", err);
-                                                        res.redirect('profile');
-                                                    } else {
-                                                        console.log("Archivo eliminado con exito");
-                                                        res.redirect('profile');
-                                                    }
-                                                });
-                                            }
-                    
-                                                    
-                                            saveDB()
-                                                .then(()=>{
-                                                   // console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
-                                                    deleteBannerOld();
-                                                })
-                                                .catch((err)=>{
-                                                    //console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
-                                                    res.redirect('profile');
-                                                })
-                    
+                                            });
                                         }
-                                        
-                                    });
+                
+                                                
+                                        saveDB()
+                                            .then(()=>{
+                                                // console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                                deleteBannerOld();
+                                            })
+                                            .catch((err)=>{
+                                                //console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                                res.redirect('profile');
+                                            })
+                
+                                    }
+                                    
+                                });
 
-                                }
+                            }
 
-                            })          
-                        
-                        }
-                        
+                        })          
+                    
                     }
                     
-                } else {
-                    //console.log("Supera el maximo peso de 3 MB o el archivo no es de tipo image");
-                    req.session.bannerErrorSizeMimetype = 'Supera el maximo peso de 3 MB o el archivo no es de tipo image.';
-                    res.redirect('/myaccount/profile');
-                }    
-
+                }
+                
             } else {
-                res.redirect('/myaccount/profile');
-            }
+                //console.log("Supera el maximo peso de 3 MB o el archivo no es de tipo image");
+                req.session.bannerErrorSizeMimetype = 'Supera el maximo peso de 3 MB o el archivo no es de tipo image.';
+                res.redirect('profile');
+            }    
 
-        } catch (error) {
-            req.session.bannerErrorCharge = 'Ha habido un problema con la carga de archivo. Intente luego.';
-            res.redirect('/myaccount/profile');
-        }    
+        } else {
+            res.redirect('profile');
+        }
+
+    } catch (error) {
+        req.session.bannerErrorCharge = 'Ha habido un problema con la carga de archivo. Intente luego.';
+        res.redirect('/myaccount/profile');
+    }    
        
 });
 
@@ -1502,7 +1531,7 @@ routes.get('/myaccount/bannerDefault', async(req, res)=>{
             } else {
                 console.log("Archivo eliminado con exito", data);
                 req.session.bannerDefaultRestart = 'Se ha restablecido el banner por defecto';
-                res.redirect('/myaccount/profile');
+                res.redirect('profile');
             }
         }); 
 
@@ -1513,22 +1542,22 @@ routes.get('/myaccount/bannerDefault', async(req, res)=>{
         res.redirect('/myaccount/profile');
 
     }
-   
 
 })
 
 /* recibir el avatar desde profile al backend */ 
 routes.post('/myaccount/avatar', async (req, res)=>{
-        const user = req.session.user;
-        const userId = user._id;
-        console.log("este es el id del usuario en cuestion --->", userId);
-        const profile = await modelProfile.find({ indexed : userId }); 
-        //console.log("muestrame el perfil del usuario ----->",  profile );
-        const boxImg = [];
-        const fileAvatar = req.files[0];
-        console.log("Este es el fileAvatar que esta llegando al backend ----->",fileAvatar)
-            
+
         try {
+
+            const user = req.session.user;
+            const userId = user._id;
+            console.log("este es el id del usuario en cuestion --->", userId);
+            const profile = await modelProfile.find({ indexed : userId }); 
+            //console.log("muestrame el perfil del usuario ----->",  profile );
+            const boxImg = [];
+            const fileAvatar = req.files[0];
+            console.log("Este es el fileAvatar que esta llegando al backend ----->",fileAvatar)            
       
             if (fileAvatar !== undefined ){ //esta condicion evalua si el usuario a cargado una foto. sino hay cargado estara en el valor undefined
                 console.log("Se ha cargado un avatar");
@@ -1699,13 +1728,13 @@ routes.post('/myaccount/avatar', async (req, res)=>{
                 } else {
                     console.log("Supera el maximo peso de 3 MB o el archivo no es de tipo image");
                     req.session.avatarErrorSizeMimetype = 'Supera el maximo peso de 3 MB o el archivo no es de tipo image.';
-                    res.redirect('/myaccount/profile')
+                    res.redirect('profile')
                 }    
 
                 
             } else {
                 console.log("NO se ha cargado un avatar");
-                res.redirect('/myaccount/profile');
+                res.redirect('profile');
             }
             
         } catch (error) {
@@ -1717,16 +1746,17 @@ routes.post('/myaccount/avatar', async (req, res)=>{
 
 /* recibir el backgroundColor del Text desde el profile al backend */
 routes.post('/myaccount/bGColor', async(req, res)=>{
-    const user = req.session.user;
-    const userId = user._id;
-    const datos = req.body
-    const {bGColorText, bGColorTopbar, bGColorWorkspace , typeText, typeTopbar, typeWorkspace} = req.body;
-
-    console.log("este es el user ------->", user );
-    console.log("Este es el objeto datos ------------------>", datos);
 
     try {
         
+        const user = req.session.user;
+        const userId = user._id;
+        const datos = req.body
+        const {bGColorText, bGColorTopbar, bGColorWorkspace , typeText, typeTopbar, typeWorkspace} = req.body;
+    
+        console.log("este es el user ------->", user );
+        console.log("Este es el objeto datos ------------------>", datos);
+
         if (typeText !== 'customTex' && typeTopbar !== 'customTop' && typeWorkspace !== 'customWork') {
             console.log("Todos los bgColor estan por defecto");
             const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText : typeText, bGColorTopbar : typeTopbar, bGColorWorkspace : typeWorkspace }); 
@@ -1762,82 +1792,143 @@ routes.post('/myaccount/bGColor', async(req, res)=>{
         }
         
     } catch (error) {
-        req.session.avatarErrorCharge = 'Ha habido un problema con la carga de archivo. Intente luego.';
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
         res.redirect('/myaccount/profile');
     }    
    
-    /* const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText, bGColorTopbar, bGColorWorkspace }); 
-    console.log("updates realizado ------>",  updatesProfile ); */
         
 });
 
 routes.post('/myaccount/filter-search', async(req, res)=>{
-    const user = req.session.user;
-    console.log('Has enviado un dato de colocacion de un buscador en la tienda')
-    console.log(req.body);
-    const searchFilter = req.body.searchFilter;
 
     try {
+
+        const user = req.session.user;
+        console.log('Has enviado un dato de colocacion de un buscador en la tienda')
+        console.log(req.body);
+        const searchFilter = req.body.searchFilter;
         
         const updateProfile = await modelProfile.findOneAndUpdate( {username : user.username}, { searchFilter : searchFilter} );
     
+        res.json(searchFilter);
+
     } catch (error) {
-        req.session.avatarErrorCharge = 'Ha habido un problema con la carga de archivo. Intente luego.';
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
         res.redirect('/myaccount/profile');
     }
 
-    res.json(searchFilter);
+    
 });
 
 // aqui es donde podemos editar el nombre del username mientras cumpla con los requerimentos.
 // No poseer anuncios ni haya hecho ninguna compra o negociacion .
 routes.post('/myaccount/change-review', async(req, res)=>{
-    console.log("-----change review------");
-    console.log(req.body);
-    const { indexed, username } = req.body;
-    let sumCount =  0;
 
-    console.log("indexed :", indexed); //el indexed es el id del user en la coleccion profile y en los departamentos el indexed esta en el campo "user_id" 
-    console.log("username :", username);
+    try{
 
-    //primero vemos si posee un perfil
-    const searchProfile = await modelProfile.find({indexed});// buscamos en la collecion perfil.
-    console.log("Primera consulta searchProfile");
-    console.log("searchProfile", searchProfile);
+        console.log("-----change review------");
+        console.log(req.body);
+        const { indexed, username } = req.body;
+        let sumCount =  0;
 
-    if ( searchProfile.length !==0 ){
-        console.log("Esta cuenta posee perfil");
-        //el user tiene perfil, se debe verificar si tiene anuncio, si posee anuncio no podra ser editado. si este no posee anuncio se procede a verificar si tiene alguna negociacion o buySell si no tiene se procede
-        //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
-        const countAir = await modelAirplane.find({ user_id : indexed }).count();
-        sumCount = sumCount + countAir; 
-        const countArt = await modelArtes.find({ user_id : indexed }).count();
-        sumCount = sumCount + countArt; 
-        const countIte = await modelItems.find({ user_id : indexed }).count();
-        sumCount = sumCount + countIte; 
-        const countAut = await modelAutomotive.find({ user_id : indexed }).count();
-        sumCount = sumCount + countAut; 
-        const countRea = await modelRealstate.find({ user_id : indexed }).count();
-        sumCount = sumCount + countRea; 
-        const countNau = await modelNautical.find({ user_id : indexed }).count();
-        sumCount = sumCount + countNau; 
-        const countSer = await modelService.find({ user_id : indexed }).count();
-        sumCount = sumCount + countSer;
-        const countAuc = await modelAuction.find({ user_id : indexed }).count();
-        sumCount = sumCount + countAuc;
-        const countRaf = await modelRaffle.find({ user_id : indexed }).count();
-        sumCount = sumCount + countRaf;
+        console.log("indexed :", indexed); //el indexed es el id del user en la coleccion profile y en los departamentos el indexed esta en el campo "user_id" 
+        console.log("username :", username);
 
-        console.log("Esta tienda tiene actualmente esta cantidad de anuncion ----->", sumCount);
+        //primero vemos si posee un perfil
+        const searchProfile = await modelProfile.find({indexed});// buscamos en la collecion perfil.
+        console.log("Primera consulta searchProfile");
+        console.log("searchProfile", searchProfile);
+
+        if ( searchProfile.length !==0 ){
+            console.log("Esta cuenta posee perfil");
+            //el user tiene perfil, se debe verificar si tiene anuncio, si posee anuncio no podra ser editado. si este no posee anuncio se procede a verificar si tiene alguna negociacion o buySell si no tiene se procede
+            //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
+            const countAir = await modelAirplane.find({ user_id : indexed }).count();
+            sumCount = sumCount + countAir; 
+            const countArt = await modelArtes.find({ user_id : indexed }).count();
+            sumCount = sumCount + countArt; 
+            const countIte = await modelItems.find({ user_id : indexed }).count();
+            sumCount = sumCount + countIte; 
+            const countAut = await modelAutomotive.find({ user_id : indexed }).count();
+            sumCount = sumCount + countAut; 
+            const countRea = await modelRealstate.find({ user_id : indexed }).count();
+            sumCount = sumCount + countRea; 
+            const countNau = await modelNautical.find({ user_id : indexed }).count();
+            sumCount = sumCount + countNau; 
+            const countSer = await modelService.find({ user_id : indexed }).count();
+            sumCount = sumCount + countSer;
+            const countAuc = await modelAuction.find({ user_id : indexed }).count();
+            sumCount = sumCount + countAuc;
+            const countRaf = await modelRaffle.find({ user_id : indexed }).count();
+            sumCount = sumCount + countRaf;
+
+            console.log("Esta tienda tiene actualmente esta cantidad de anuncion ----->", sumCount);
 
 
-        if (sumCount !==0){
-            //esta cuenta con pèrfil ya tiene anuncios creados no puede editar el username.
-            console.log("Esta cuenta posee anuncios creados, no puede editar el username");
-            const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario posee anuncios por lo tanto No es posible cambiar su username." };
-            res.json(status); 
-        }else {
-            //esta cuenta con perfil no tiene anuncios puede pasar a la siguiente verificacion negociacion y compra/venta.
+            if (sumCount !==0){
+                //esta cuenta con pèrfil ya tiene anuncios creados no puede editar el username.
+                console.log("Esta cuenta posee anuncios creados, no puede editar el username");
+                const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario posee anuncios por lo tanto No es posible cambiar su username." };
+                res.json(status); 
+            }else {
+                //esta cuenta con perfil no tiene anuncios puede pasar a la siguiente verificacion negociacion y compra/venta.
+                const negotiationCount = await modelNegotiation.find({usernameBuy : username}).count();
+                const buySellCount = await modelBuySell.find({usernameBuy : username}).count();
+                console.log(`negotiationCount-> ${negotiationCount}    buySellCount-> ${buySellCount}`);
+                console.log(`typeof negotiationCount-> ${typeof negotiationCount}   typeof buySellCount-> ${typeof buySellCount}`);
+                if (negotiationCount === 0 && buySellCount === 0 ){
+                    //como no tiene negociacion o compras lo que se ejcuta es la verificacion de preguntas y calificaciones.
+                    const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
+                    if ( searchMessageCount !==0 ){
+                        // este user ha hecho preguntas.
+                        // verificamos si ha realizado calificacion y opinion
+                        const searchStoreRate = await modelStoreRate.find({logeado : indexed});
+                        if (searchStoreRate.length !==0){
+                            console.log("Hemos llegado a la ultima condicion y verificacion");
+                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras. Ha hecho preguntas y ha calificado");
+                            console.log("searcStoreRate", searchStoreRate);
+                            const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages_storeRate", note : "Este usuario requiere editar la coleccion user, profile, messages y storeRate" };
+                            res.json(status);
+                        } else {
+                            console.log("Hemos llegado a la ultima condicion y verificacion");
+                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras. solo ha hecho preguntas y NO ha calificado");
+                            console.log("searcStoreRate", searchStoreRate);
+                            const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages", note : "Este usuario requiere editar la coleccion user, profile y messages" };
+                            res.json(status);
+                        }
+                        
+                    } else {
+                        // este user NO ha hecho preguntas.
+                        // verificamos si ha realizado calificacion y opinion
+                        const searchStoreRate = await modelStoreRate.find({logeado : indexed});
+                        if (searchStoreRate.length !==0){
+                            console.log("Hemos llegado a la ultima condicion y verificacion");
+                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas solo ha calificado");
+                            console.log("searcStoreRate", searchStoreRate);
+                            const status = { edit : true, msg : "Edite su Username", code : "user_profile_storeRate", note : "Este usuario requiere editar la coleccion user, profile y storeRate" };
+                            res.json(status);
+
+                        } else {
+                            console.log("Hemos llegado a la ultima condicion y verificacion");
+                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas y NO ha calificado");
+                            console.log("searcStoreRate", searchStoreRate);
+                            const status = { edit : true, msg : "Edite su Username", code : "user_profile", note : "Este usuario requiere editar la coleccion user y profile" };
+                            res.json(status);
+
+                        }
+                    }
+        
+                } else {
+                    console.log("esta cuenta posee negociacion o compras realizadas, no puede editar el username");
+                    const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado compras por lo tanto No es posible cambiar su username." };
+                    res.json(status);
+                } 
+            }
+            
+        } else {
+            //el user no tiene perfil, es de suponer que no puede crear anuncios asi que directamente se evalua si ha realizado alguna compra o negociacion?
+            // y si este ha realizado alguna compra o negocicion no puede editar pero si por el contrario no posee, en este caso se evala si ha realizado alguna pregunta y calificación.     
+            console.log("Esta cuenta NO posee perfil");
             const negotiationCount = await modelNegotiation.find({usernameBuy : username}).count();
             const buySellCount = await modelBuySell.find({usernameBuy : username}).count();
             console.log(`negotiationCount-> ${negotiationCount}    buySellCount-> ${buySellCount}`);
@@ -1847,420 +1938,401 @@ routes.post('/myaccount/change-review', async(req, res)=>{
                 const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
                 if ( searchMessageCount !==0 ){
                     // este user ha hecho preguntas.
-                    // verificamos si ha realizado calificacion y opinion
-                    const searchStoreRate = await modelStoreRate.find({logeado : indexed});
-                    if (searchStoreRate.length !==0){
-                        console.log("Hemos llegado a la ultima condicion y verificacion");
-                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras. Ha hecho preguntas y ha calificado");
-                        console.log("searcStoreRate", searchStoreRate);
-                        const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages_storeRate", note : "Este usuario requiere editar la coleccion user, profile, messages y storeRate" };
-                        res.json(status);
-                    } else {
-                        console.log("Hemos llegado a la ultima condicion y verificacion");
-                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras. solo ha hecho preguntas y NO ha calificado");
-                        console.log("searcStoreRate", searchStoreRate);
-                        const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages", note : "Este usuario requiere editar la coleccion user, profile y messages" };
-                        res.json(status);
-                    }
+                    // los usarios sin perfil No pueden calificar
+                    console.log("Hemos llegado a la ultima condicion y verificacion");
+                    console.log("Este usuario NO posee perfil, NO posee negocion NI compras. solo ha hecho preguntas");
+                    const status = { edit : true, msg : "Edite su Username", code : "user_messages", note : "Este usuario requiere editar la coleccion user y messages" };
+                    res.json(status);
                     
                 } else {
                     // este user NO ha hecho preguntas.
-                    // verificamos si ha realizado calificacion y opinion
-                    const searchStoreRate = await modelStoreRate.find({logeado : indexed});
-                    if (searchStoreRate.length !==0){
-                        console.log("Hemos llegado a la ultima condicion y verificacion");
-                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas solo ha calificado");
-                        console.log("searcStoreRate", searchStoreRate);
-                        const status = { edit : true, msg : "Edite su Username", code : "user_profile_storeRate", note : "Este usuario requiere editar la coleccion user, profile y storeRate" };
-                        res.json(status);
+                    // los usarios sin perfil No pueden calificar
+                    console.log("Hemos llegado a la ultima condicion y verificacion");
+                    console.log("Este usuario NO posee perfil, NO posee negocio NI compras, NO ha hecho preguntas");
+                    const status = { edit : true, msg : "Edite su Username", code : "user", note : "Este usuario requiere editar la coleccion user" };
+                    res.json(status);
 
-                    } else {
-                        console.log("Hemos llegado a la ultima condicion y verificacion");
-                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas y NO ha calificado");
-                        console.log("searcStoreRate", searchStoreRate);
-                        const status = { edit : true, msg : "Edite su Username", code : "user_profile", note : "Este usuario requiere editar la coleccion user y profile" };
-                        res.json(status);
-
-                    }
                 }
-    
+
             } else {
                 console.log("esta cuenta posee negociacion o compras realizadas, no puede editar el username");
                 const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado compras por lo tanto No es posible cambiar su username." };
                 res.json(status);
             } 
+
         }
-        
-    } else {
-        //el user no tiene perfil, es de suponer que no puede crear anuncios asi que directamente se evalua si ha realizado alguna compra o negociacion?
-        // y si este ha realizado alguna compra o negocicion no puede editar pero si por el contrario no posee, en este caso se evala si ha realizado alguna pregunta y calificación.     
-        console.log("Esta cuenta NO posee perfil");
-        const negotiationCount = await modelNegotiation.find({usernameBuy : username}).count();
-        const buySellCount = await modelBuySell.find({usernameBuy : username}).count();
-        console.log(`negotiationCount-> ${negotiationCount}    buySellCount-> ${buySellCount}`);
-        console.log(`typeof negotiationCount-> ${typeof negotiationCount}   typeof buySellCount-> ${typeof buySellCount}`);
-        if (negotiationCount === 0 && buySellCount === 0 ){
-            //como no tiene negociacion o compras lo que se ejcuta es la verificacion de preguntas y calificaciones.
-            const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
-            if ( searchMessageCount !==0 ){
-                // este user ha hecho preguntas.
-                // los usarios sin perfil No pueden calificar
-                console.log("Hemos llegado a la ultima condicion y verificacion");
-                console.log("Este usuario NO posee perfil, NO posee negocion NI compras. solo ha hecho preguntas");
-                const status = { edit : true, msg : "Edite su Username", code : "user_messages", note : "Este usuario requiere editar la coleccion user y messages" };
-                res.json(status);
-                
-            } else {
-                // este user NO ha hecho preguntas.
-                // los usarios sin perfil No pueden calificar
-                console.log("Hemos llegado a la ultima condicion y verificacion");
-                console.log("Este usuario NO posee perfil, NO posee negocio NI compras, NO ha hecho preguntas");
-                const status = { edit : true, msg : "Edite su Username", code : "user", note : "Este usuario requiere editar la coleccion user" };
-                res.json(status);
 
-            }
-
-        } else {
-            console.log("esta cuenta posee negociacion o compras realizadas, no puede editar el username");
-            const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado compras por lo tanto No es posible cambiar su username." };
-            res.json(status);
-        } 
-
+    } catch (error) {
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/myaccount/profile');
     }
-
 
 });
 
 //Ruta para cambiar el nombre de la tienda 
 routes.post('/myaccount/change-username', async(req, res)=>{
 
-    console.log("-----change username------");
-    console.log(req.body);
-    const { indexed, username, newName, code, password } = req.body;
-    console.log("indexed", indexed); console.log("username", username); console.log("newName", newName); console.log("code", code); console.log("password", password);
+    try{
+        console.log("-----change username------");
+        console.log(req.body);
+        const { indexed, username, newName, code, password } = req.body;
+        console.log("indexed", indexed); console.log("username", username); console.log("newName", newName); console.log("code", code); console.log("password", password);
 
-    //hacemos una busqueda en la coleccion user para revisar si el newName ya existe
-    const searchNewName = await modelUser.find({username : newName});
-    console.log("searchNewName--->", searchNewName);
+        //hacemos una busqueda en la coleccion user para revisar si el newName ya existe
+        const searchNewName = await modelUser.find({username : newName});
+        console.log("searchNewName--->", searchNewName);
 
-    //Conjunto de funciones que estaran activas para su ejecucion.
-    async function editUser(){
-        const editUser = await modelUser.updateOne({ _id : indexed}, { $set : {username : newName} });
-    }
+        //Conjunto de funciones que estaran activas para su ejecucion.
+        async function editUser(){
+            const editUser = await modelUser.updateOne({ _id : indexed}, { $set : {username : newName} });
+        }
 
-    async function editProfile(){
-        const editProfile =  await modelProfile.updateOne({indexed : indexed}, { $set : {username : newName} });
-    }
-    
-    async function editMessages(){
-        const editMessages = await modelMessages.updateMany({userId : indexed }, { $set : {username : newName} });
-    }
-    
-    async function editStoreRate(){
-        const editStoreRate = await modelStoreRate.updateMany({logeado : indexed}, { $set: {'dataLogeado.username' : newName} });
-    }
+        async function editProfile(){
+            const editProfile =  await modelProfile.updateOne({indexed : indexed}, { $set : {username : newName} });
+        }
+        
+        async function editMessages(){
+            const editMessages = await modelMessages.updateMany({userId : indexed }, { $set : {username : newName} });
+        }
+        
+        async function editStoreRate(){
+            const editStoreRate = await modelStoreRate.updateMany({logeado : indexed}, { $set: {'dataLogeado.username' : newName} });
+        }
 
-    const searchUser = await modelUser.findOne({_id : indexed});
-    console.log("searchUser ->", searchUser);
-    const hashPassword = searchUser.password;
+        const searchUser = await modelUser.findOne({_id : indexed});
+        console.log("searchUser ->", searchUser);
+        const hashPassword = searchUser.password;
 
-    async function hashing(){
-        const compares = await bcrypt.compare(password, hashPassword);
-        console.log("resul de la comparacion--->",compares)
+        async function hashing(){
+            const compares = await bcrypt.compare(password, hashPassword);
+            console.log("resul de la comparacion--->",compares)
 
-        if (compares === true) {
-    
-            //vamos a comprobar que el nuevo nombre no este siendo usado.
-            if (searchNewName.length === 0){
+            if (compares === true) {
+        
+                //vamos a comprobar que el nuevo nombre no este siendo usado.
+                if (searchNewName.length === 0){
 
-                if ( code === 'user_profile_messages_storeRate' ){
-                    console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                    if ( code === 'user_profile_messages_storeRate' ){
+                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
 
-                    editUser()
-                        .then(()=>{
-                            editProfile()
-                                .then(()=>{
-                                    editMessages()
-                                        .then(()=>{
-                                            editStoreRate()
-                                                .then(()=>{
-                                                    res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                                })
-                                                .catch((error)=>{
-                                                    console.log("Ha habido un error en editStoreRate", error);
-                                                })
-                                        })
-                                        .catch((error)=>{
-                                            console.log("Ha habido un error en editMessages", error);
-                                        })
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error en editProfile", error);
-                                })
-                        })
-                        .catch((error)=>{
-                            console.log("Ha habido un error en editUser", error);
-                        })
+                        editUser()
+                            .then(()=>{
+                                editProfile()
+                                    .then(()=>{
+                                        editMessages()
+                                            .then(()=>{
+                                                editStoreRate()
+                                                    .then(()=>{
+                                                        res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                    })
+                                                    .catch((error)=>{
+                                                        console.log("Ha habido un error en editStoreRate", error);
+                                                    })
+                                            })
+                                            .catch((error)=>{
+                                                console.log("Ha habido un error en editMessages", error);
+                                            })
+                                    })
+                                    .catch((error)=>{
+                                        console.log("Ha habido un error en editProfile", error);
+                                    })
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error en editUser", error);
+                            })
 
 
-                } else if ( code === 'user_profile_messages') {
-                    console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                    } else if ( code === 'user_profile_messages') {
+                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
 
-                    editUser()
-                        .then(()=>{
-                            editProfile()
-                                .then(()=>{
-                                    editMessages()
+                        editUser()
+                            .then(()=>{
+                                editProfile()
+                                    .then(()=>{
+                                        editMessages()
+                                            .then(()=>{
+                                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                            })
+                                            .catch((error)=>{
+                                                console.log("Ha habido un error en editMessages", error);
+                                            })
+                                    })
+                                    .catch((error)=>{
+                                        console.log("Ha habido un error en editProfile", error);
+                                    })
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error en editUser", error);
+                            })
+
+                    } else if ( code === 'user_profile_storeRate' ) {
+                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+
+                        editUser()
+                            .then(()=>{
+                                editProfile()
+                                    .then(()=>{
+                                        editStoreRate()
                                         .then(()=>{
                                             res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
                                         })
                                         .catch((error)=>{
-                                            console.log("Ha habido un error en editMessages", error);
+                                            console.log("Ha habido un error en editStoreRate", error);
                                         })
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error en editProfile", error);
-                                })
-                        })
-                        .catch((error)=>{
-                            console.log("Ha habido un error en editUser", error);
-                        })
+                                    })
+                                    .catch((error)=>{
+                                        console.log("Ha habido un error en editProfile", error);
+                                    })
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error en editUser", error);
+                            })        
 
-                } else if ( code === 'user_profile_storeRate' ) {
-                    console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                    } else if ( code === 'user_profile' ) {
+                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
 
-                    editUser()
-                        .then(()=>{
-                            editProfile()
-                                .then(()=>{
-                                    editStoreRate()
+                        editUser()
+                            .then(()=>{
+                                editProfile()
                                     .then(()=>{
                                         res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
                                     })
                                     .catch((error)=>{
-                                        console.log("Ha habido un error en editStoreRate", error);
+                                        console.log("Ha habido un error en editProfile", error);
                                     })
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error en editProfile", error);
-                                })
-                        })
-                        .catch((error)=>{
-                            console.log("Ha habido un error en editUser", error);
-                        })        
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error en editUser", error);
+                            })        
 
-                } else if ( code === 'user_profile' ) {
-                    console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                    } else if ( code === 'user_messages' ) {
+                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
 
-                    editUser()
-                        .then(()=>{
-                            editProfile()
-                                .then(()=>{
-                                    res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error en editProfile", error);
-                                })
-                        })
-                        .catch((error)=>{
-                            console.log("Ha habido un error en editUser", error);
-                        })        
+                        editUser()
+                            .then(()=>{
+                                editMessages()
+                                    .then(()=>{
+                                        res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                    })
+                                    .catch((error)=>{
+                                        console.log("Ha habido un error en editMessages", error);
+                                    })
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error en editUser", error);
+                            }) 
 
-                } else if ( code === 'user_messages' ) {
-                    console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                    } else if ( code === 'user' ){
+                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
 
-                    editUser()
-                        .then(()=>{
-                            editMessages()
-                                .then(()=>{
-                                    res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error en editMessages", error);
-                                })
-                        })
-                        .catch((error)=>{
-                            console.log("Ha habido un error en editUser", error);
-                        }) 
+                        editUser()
+                            .then(()=>{
+                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error en editUser", error);
+                            })         
 
-                } else if ( code === 'user' ){
-                    console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                    }
 
-                    editUser()
-                        .then(()=>{
-                            res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                        })
-                        .catch((error)=>{
-                            console.log("Ha habido un error en editUser", error);
-                        })         
-
-                }
+                } else {
+                    console.log('Nuevo username ya esta en uso');
+                    const status = { edit : false, msg : "Username ocupado", code : "denegado", note : "Nuevo Username ya en uso" };
+                    res.json(status);
+                }    
 
             } else {
-                console.log('Nuevo username ya esta en uso');
-                const status = { edit : false, msg : "Username ocupado", code : "denegado", note : "Nuevo Username ya en uso" };
+                console.log('Password Erroneo, no puede cambiar el username');
+                const status = { edit : false, msg : "Contraseña Errada", code : "denegado", note : "Contraseña errada." };
                 res.json(status);
             }    
 
-        } else {
-            console.log('Password Erroneo, no puede cambiar el username');
-            const status = { edit : false, msg : "Contraseña Errada", code : "denegado", note : "Contraseña errada." };
-            res.json(status);
-        }    
+        }
+        
+        hashing()
 
-    }
-    
-    hashing()
+    } catch (error) {
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/myaccount/profile');
+    }        
 
 });
 
 
 //ruta para consultar el campo hashtags de un usuario
 routes.get('/myaccount/palabras-clave', async(req, res)=>{
-    const user = req.session.user;
-    
-    if (user){
-        const userId = user._id;
-        const searchProfile =  await modelProfile.findOne({indexed : userId});
-        res.json(searchProfile);
-    }
+
+    try {
+        const user = req.session.user;
+        
+        if (user){
+            const userId = user._id;
+            const searchProfile =  await modelProfile.findOne({indexed : userId});
+            res.json(searchProfile);
+        }
+
+    } catch (error) {
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/myaccount/profile');
+    }        
 
 });
 
 //ruta para agregar palabras clave en el campo hashtags de un usuario
 routes.post('/myaccount/palabras-clave', async(req, res)=>{
-    const user = req.session.user;
-    const userId = user._id;
 
-    if (user){
-        console.log(":::: Estamos en la ruta de *palabras-claves* ::::");
-        console.log("Esto es el id del user :", userId);
-        //console.log(req.body);
+    try{
+        const user = req.session.user;
+        const userId = user._id;
 
-        try{
-                const boxHashtags = req.body.boxHashtags;
-            
-                console.log("Esto es lo que llega del front boxHashtags :",boxHashtags);
-                //const updateProfile =  await modelProfile.findOneAndUpdate({indexed : userId},{ $unset: { "hashtags" : ""}} );
+        if (user){
+            console.log(":::: Estamos en la ruta de *palabras-claves* ::::");
+            console.log("Esto es el id del user :", userId);
+            //console.log(req.body);
 
-                if (boxHashtags.length <= 9){
-                    //const updatesProfile =  await modelProfile.findOneAndUpdate({indexed : userId},{ $unset: { "hashtags" : ""}} );
-                    await modelProfile.findOneAndUpdate( {indexed : userId} , {$set : {hashtags : boxHashtags}} );
-                    req.session.msgHashtagExito = 'Ha agregado con exito Palabra(s) Clave.';
-                    const msgObje = { msg : 'Ha agregado con exito Palabra(s) Clave.' , type : 'Exito'};
-                    res.json(msgObje);
+            try{
+                    const boxHashtags = req.body.boxHashtags;
+                
+                    console.log("Esto es lo que llega del front boxHashtags :",boxHashtags);
+                    //const updateProfile =  await modelProfile.findOneAndUpdate({indexed : userId},{ $unset: { "hashtags" : ""}} );
 
-                }else {
-                    console.log("solo puede tener 9 etiquetas en su tienda");
-                    req.session.msgHashtagDenegado = 'Solo puede agregar seis (9) Palabras Clave en su sitio.';
-                    const msgObje = { msg : 'Solo puede agregar seis (9) Palabras Clave en su sitio.' , type : 'Denegado'};
-                    res.json(msgObje);
+                    if (boxHashtags.length <= 9){
+                        //const updatesProfile =  await modelProfile.findOneAndUpdate({indexed : userId},{ $unset: { "hashtags" : ""}} );
+                        await modelProfile.findOneAndUpdate( {indexed : userId} , {$set : {hashtags : boxHashtags}} );
+                        req.session.msgHashtagExito = 'Ha agregado con exito Palabra(s) Clave.';
+                        const msgObje = { msg : 'Ha agregado con exito Palabra(s) Clave.' , type : 'Exito'};
+                        res.json(msgObje);
 
-                }
+                    }else {
+                        console.log("solo puede tener 9 etiquetas en su tienda");
+                        req.session.msgHashtagDenegado = 'Solo puede agregar seis (9) Palabras Clave en su sitio.';
+                        const msgObje = { msg : 'Solo puede agregar seis (9) Palabras Clave en su sitio.' , type : 'Denegado'};
+                        res.json(msgObje);
 
-        }catch(error){
-            req.session.msgHashtagError = 'Ha ocurrido un error, intente en unos minutos.';
-            const msgObje = { msg : 'Ha ocurrido un error, intente en unos minutos.' , type : 'Error'};
-            res.json(msgObje);
-        } 
-    } else {
+                    }
+
+            }catch(error){
+                req.session.msgHashtagError = 'Ha ocurrido un error, intente en unos minutos.';
+                const msgObje = { msg : 'Ha ocurrido un error, intente en unos minutos.' , type : 'Error'};
+                res.json(msgObje);
+            } 
+        } else {
+            res.redirect('/myaccount/profile');
+        }
+
+    } catch (error) {
+        req.session.msgHashtagError = 'Ha ocurrido un error. Intente en unos minutos.';
         res.redirect('/myaccount/profile');
-    }           
+    }                   
 
 });
 
 routes.get('/myaccount/palabras-clave/delete/:i', async(req, res)=>{
-    const user = req.session.user;
-    const userId = user._id;
-    const eleDelete = req.params.i;
-    console.log("He llegado a la ruta :  /myaccount/palabras-clave/delete");
-   
-    const searchProfile =  await modelProfile.findOne({indexed : userId});
 
-        try{
+    try{
 
+        const user = req.session.user;
+        const userId = user._id;
+        const eleDelete = req.params.i;
+        console.log("He llegado a la ruta :  /myaccount/palabras-clave/delete");
+        
+        const searchProfile =  await modelProfile.findOne({indexed : userId});
 
-            if (searchProfile){
-                const boxHasthtags = searchProfile.hashtags;
-                console.log("boxHasthtags :", boxHasthtags);
-                
-                boxHasthtags.splice(eleDelete, 1);
-                console.log("Esto es boxHasthtags :", boxHasthtags);
-
-                await modelProfile.findOneAndUpdate( {indexed : userId} , {$set : {hashtags : boxHasthtags}} );
-                req.session.msgHashtagDelete = 'Se ha eliminado una Palabra Clave.';
-                res.redirect('/myaccount/profile');
-            }
+        if (searchProfile){
+            const boxHasthtags = searchProfile.hashtags;
+            console.log("boxHasthtags :", boxHasthtags);
             
-        }catch(error){
-            req.session.msgHashtagError = 'Ha ocurrido un error. Intente en unos minutos.';
+            boxHasthtags.splice(eleDelete, 1);
+            console.log("Esto es boxHasthtags :", boxHasthtags);
+
+            await modelProfile.findOneAndUpdate( {indexed : userId} , {$set : {hashtags : boxHasthtags}} );
+            req.session.msgHashtagDelete = 'Se ha eliminado una Palabra Clave.';
             res.redirect('/myaccount/profile');
-        }    
+        }
+        
+    }catch(error){
+        req.session.msgHashtagError = 'Ha ocurrido un error. Intente en unos minutos.';
+        res.redirect('/myaccount/profile');
+    }    
 
 });
     
 /* esta es la ruta de la seccion de creacion de todos los departamentos "donde estan los iconos" */
 routes.get('/department/create', async (req, res)=>{
-    const user = req.session.user;
-    const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
-    const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    let username, searchProfile, noExistProfile;
+    try{
+        const user = req.session.user;
+        const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    console.log(":::: Cantidad de mensajes que tiene este usuario :::: ->", countMessages);    
-    console.log(":::: Esto es la cantidad de negotiationsBuySell :::: ->", countNegotiationsBuySell);
+        let username, searchProfile, noExistProfile;
 
-    if (user){
-        username = user.username
-        searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        console.log(":::: Cantidad de mensajes que tiene este usuario :::: ->", countMessages);    
+        console.log(":::: Esto es la cantidad de negotiationsBuySell :::: ->", countNegotiationsBuySell);
 
-        if (searchProfile.length === 0){
-            req.session.noProfile = `¡Hola ${username}! Detente un momento : primero debes crear tu perfil para poder publicar.`
-            noExistProfile = req.session.noProfile;
-            delete req.session.noProfile;
-        }
+        if (user){
+            username = user.username
+            searchProfile = await modelProfile.find({ indexed : user._id });
+            console.log("Aqui el profile de la cuenta", searchProfile);
 
+            if (searchProfile.length === 0){
+                req.session.noProfile = `¡Hola ${username}! Detente un momento : primero debes crear tu perfil para poder publicar.`
+                noExistProfile = req.session.noProfile;
+                delete req.session.noProfile;
+            }
+
+        } 
+        
+        res.render('page/department', {user, searchProfile, noExistProfile, countMessages, countNegotiationsBuySell});
+
+    } catch (error) {
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/myaccount/profile');
     } 
-    
-    res.render('page/department', {user, searchProfile, noExistProfile, countMessages, countNegotiationsBuySell});
+
 });
 
 /* esta es la ruta de la seccion de creacion de todos los departamentos "donde estan los iconos" */
 routes.get('/department/raffle', async (req, res)=>{
-    const user = req.session.user;
-    const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
-    const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    let username, searchProfile;
+    try{
+        const user = req.session.user;
+        const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    console.log(":::: Cantidad de mensajes que tiene este usuario :::: ->", countMessages);    
-    console.log(":::: Esto es la cantidad de negotiationsBuySell :::: ->", countNegotiationsBuySell);
+        let username, searchProfile;
 
-    if (user){
-        username = user.username
-        searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-    } 
-    
-    res.render('page/raffle', {user, searchProfile, countMessages, countNegotiationsBuySell});
+        console.log(":::: Cantidad de mensajes que tiene este usuario :::: ->", countMessages);    
+        console.log(":::: Esto es la cantidad de negotiationsBuySell :::: ->", countNegotiationsBuySell);
+
+        if (user){
+            username = user.username
+            searchProfile = await modelProfile.find({ indexed : user._id });
+            console.log("Aqui el profile de la cuenta", searchProfile);
+        } 
+        
+        res.render('page/raffle', {user, searchProfile, countMessages, countNegotiationsBuySell});
+
+    } catch (error) {
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+        res.redirect('/myaccount/profile');
+    }         
 });
 
     
-
-    routes.get('/myaccount/logout', (req, res) => {
-        if (req.session) {
-          req.session.destroy(err => {
-            if (err) {
-              res.status(400).send('Unable to log out')
-            } else {
-              res.redirect('/')
-            }
-          });
+routes.get('/myaccount/logout', (req, res) => {
+    if (req.session) {
+        req.session.destroy(err => {
+        if (err) {
+            res.status(400).send('Unable to log out')
         } else {
-          res.redirect('/')
+            res.redirect('/')
         }
-      });
+        });
+    } else {
+        res.redirect('/')
+    }
+    });
 
 module.exports = routes
 

@@ -125,6 +125,12 @@
          <% if (withoutDefinedBanner){ %>
             <%- include('../alert/withoutDefinedBanner.ejs') %> 
          <% }; %>
+
+         <% if (catchError){ %>
+            <%- include('../alert/catchError.ejs') %> 
+         <% }; %>
+
+         
          
 
          <% if (user) { %>
@@ -144,15 +150,15 @@
                         <div class="row p-0 m-0">
 
                             <div class="col-lg-4 col-md-4 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
-                                <div class="card">
-                                    <div class="card-header d-flex justify-content-between">
-                                        Crear perfil <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCreateEditPerfil"> <i class="bi bi-info-circle mx-1"></i> </div>
-                                    </div>
-                                    <div class="card-body">
-            
-                                        <% if (searchProfile.length === 0) {  %>
-                                            <!--:::::: Crear Profile ::::::-->
-                                            <!-- direccion de ruta en index.routes.js -->
+                                                
+                                <% if (searchProfile.length === 0) {  %>
+                                    <!--:::::: Crear Profile ::::::-->
+                                    <!-- direccion de ruta en index.routes.js -->
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between">
+                                            Crear perfil <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCreatePerfil"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                        </div>    
+                                        <div class="card-body">
                                             <form action="/myaccount/profile" method="POST">
             
                                                 <!-- creación de nombres y numero de documento -->
@@ -178,14 +184,14 @@
                                                         <div class="form-check me-3 d-flex align-items-center m-0">
                                                             <input class="form-check-input" type="radio" name="gender"
                                                                 id="flexRadioDefault1" value="men" required>
-                                                            <label class="form-check-label" for="flexRadioDefault1">
+                                                            <label class="form-check-label ms-3" for="flexRadioDefault1">
                                                                 <img src="/img/menPerfil.png" alt="" style="width: 30px;">
                                                             </label>
                                                         </div>
                                                         <div class="form-check d-flex align-items-center m-0">
                                                             <input class="form-check-input" type="radio" name="gender"
                                                                 id="flexRadioDefault2" value="wom" required>
-                                                            <label class="form-check-label" for="flexRadioDefault2">
+                                                            <label class="form-check-label ms-3" for="flexRadioDefault2">
                                                                 <img src="/img/womPerfil.png" alt="" style="width: 30px;">
                                                             </label>
                                                         </div>
@@ -253,7 +259,7 @@
                                                 <!-- creación de mensaje de perfil -->
                                                 <div class="form-group my-2">
                                                 <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 carcateres."
-                                                    maxlength="180" required></textarea>
+                                                    maxlength="180"></textarea>
                                                 </div>
                 
                                                 <!-- creación de redes sociales -->
@@ -284,11 +290,18 @@
                                                 </div>
                 
                                             </form>
-                                        <% } else { %>
-                                            <!--:::::: Editar Profile ::::::-->
-                                            <% searchProfile.forEach( (ele)=> { %>
+                                        </div>
+                                    </div>        
+                                <% } else { %>
+                                    <!--:::::: Editar Profile ::::::-->
+                                    <% searchProfile.forEach( (ele)=> { %>
 
-                                            <!-- direccion de ruta en index.routes.js -->
+                                    <!-- direccion de ruta en index.routes.js -->
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between">
+                                            Edit perfil <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticEditPerfil"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                        </div> 
+                                        <div class="card-body">
                                             <form action="/myaccount/edit/<%= ele._id %>" method="POST">
                                                 
 
@@ -296,10 +309,10 @@
                                                 <div class="container d-flex justify-content-between p-0 my-2">
                 
                                                         <div class="form-group" style="width: 60%;">
-                                                            <input type="text" name="names" placeholder="Nombres" class="form-control" value="<%= ele.names %>" disabled>
+                                                            <input type="text" name="names" placeholder="Nombres" class="form-control" value="<%= ele.names %>">
                                                         </div>
                                                         <div class="form-group ms-1" style="width: 39%;">
-                                                            <input type="text" name="identification" placeholder="15023658" class="form-control" value="<%= ele.identification %>" disabled /> 
+                                                            <input type="text" name="identification" placeholder="15023658" class="form-control" value="<%= ele.identification %>"> 
                                                         </div>
                 
                                                 </div>
@@ -392,13 +405,13 @@
                                                     <!-- direccion completa -->
                                                     <div class="form-group my-2">
                                                         <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección."
-                                                        maxlength="100" required><%= ele.address %></textarea>
+                                                        maxlength="100"><%= ele.address %></textarea>
                                                     </div>
 
                                                 <!-- mensaje de perfil --> 
                                                 <div class="form-group my-2">
                                                         <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 caracteres."
-                                                        maxlength="180" required><%= ele.profileMessage %></textarea>
+                                                        maxlength="180"><%= ele.profileMessage %></textarea>
                                                 </div>
 
                                                 <!-- campos redes sociales -->
@@ -431,11 +444,12 @@
                                                     </div>
                     
                                             </form>
-                                            <% }) %>
-                                        <% }; %>
+                                        </div>
+                                    </div>         
+                                    <% }) %>
+                                <% }; %>
             
-                                    </div>
-                                </div>
+                                
 
                                 <!-- seccion nombre de tienda -->
                                 
@@ -603,19 +617,47 @@
 
                             <!-- aqui estaran todos los modales informativos -->
 
-                            <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticChangeUsername" -->
-                            <div class="modal fade" id="staticCreateEditPerfil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelR" aria-hidden="true">
+                            <!-- Modal crear perfil --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCreatePerfil" -->
+                            <div class="modal fade" id="staticCreatePerfil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelP" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content">
 
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelR">Crear/Editar Perfil</h5>
+                                            <h5 class="modal-title" id="staticBackdropLabelP">Crear Perfil</h5>
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p> Crear un perfil en Blissenet.com te permite destacarte en nuestra plataforma comercial. Con tu tienda virtual, podrás personalizar y configurar tu espacio para exhibir tus anuncios de manera atractiva. Ten en cuenta que solo las cuentas con perfil pueden crear anuncios. Los datos de la empresa y el RIF son opcionales.</p>
+                                            <p> Crear un perfil en Blissenet.com te permite destacarte en nuestra plataforma comercial. Con tu tienda virtual, podrás personalizar y configurar tu espacio para exhibir tus anuncios de manera atractiva. Ten en cuenta que solo las cuentas con perfil pueden crear anuncios. Los datos de la empresa, RIF y Redes Sociales son opcionales.</p>
                                             
-                                            <p> Además, podrás editar tu perfil en cualquier momento, excepto por el nombre, documento de identidad, fecha de nacimiento y género. </p>
+                                            <p> Además, podrás editar tu perfil en cualquier momento, excepto por tu fecha de nacimiento y género. </p>
+                                            
+                                            <div style="display: flex; align-items: center;">
+                                                <span class="text-primary fw-bold">Aviso Importante</span>
+                                                <hr style="flex-grow: 1; margin-left: 10px;">
+                                            </div>
+
+                                            <p>Esta información es de carácter administrativo y no será visible para la comunidad. Se utilizará exclusivamente para generar tus facturas y recibos relacionados con la creación de anuncios y/o ventas. Agradecemos tu comprensión.</p>   
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+
+                            <!-- Modal edit perfil --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticEditPerfil" -->
+                            <div class="modal fade" id="staticEditPerfil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelR" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelR">Editar Perfil</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p> Has creado tu perfil en Blissenet.com Felicidades. Te recordamos que estos datos no serán visibles por la comunidad, tu información esta a buen resgurado. </p>
+                                            
+                                            <p> Además, podrás editar tu perfil en cualquier momento, excepto por tu fecha de nacimiento y género. </p>
                                             
                                             <div style="display: flex; align-items: center;">
                                                 <span class="text-primary fw-bold">Aviso Importante</span>
@@ -665,7 +707,7 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p>" <span class="fw-bold"> ¡Añade hasta 9 palabras clave! </span> Así, tu tienda aparecerá cuando los usuarios busquen con esos términos. ¡Haz que te encuentren fácilmente!"</p>
+                                            <p>" <span class="fw-bold"> ¡Añade hasta 9 palabras clave! </span> Así, tu tienda aparecerá cuando los usuarios busquen con esos términos en <span class="fw-bold">Tiendas</span>. ¡Haz que te encuentren fácilmente!"</p>
 
                                             <p> Agrega la palabra clave <span class="fw-bold">sin usar el #</span> y luego utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Añadir </span> repite esta acción hasta tener todas las palabras que deseas y finalmente da clic en <span class="fw-bold text-primary">Actualizar</span>. </p>
                                         </div>
@@ -694,8 +736,8 @@
                                     </div>
                                 </div>
                             </div> 
-
             
+
                             <div class="col-lg-8 col-md-8 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
                                 <div class="card">
                                     <div class="card-header">
@@ -1424,7 +1466,6 @@
                     hashtags.focus(); //enviamos el focus
                     btnSubmitHashtag.removeAttribute('disabled'); // activar el boton actualizar.
                     //console.log("boxHashtag", boxHashtag);// perfecto
-
                                      
 
                 } else {
