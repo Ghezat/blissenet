@@ -9,10 +9,6 @@
       document.getElementById("forgotten").submit(); //este id es el id del formulario, cuando reciba la respuesta de google recatchar este envia el formulario.
   }
 
-  function onSubmitSignin(token) {
-      let response = grecaptcha.getResponse();
-      document.getElementById("signin").submit();
-  }
 
   function onSubmitSignup(token) {
       let response = grecaptcha.getResponse();

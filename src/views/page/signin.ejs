@@ -3,6 +3,8 @@
 <head>
     <%- include('../partials/head.ejs') %>
     <title>Blissenet Signin</title>
+    <!-- Aquí es donde añades el script de reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="mainTheme">
 
@@ -52,11 +54,11 @@
                             <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
                                 <label for="" class="mx-1"> <small>¡Upp olvidade mi Password! <a href="/myaccount/signin-forgottenpassw" class="text-dark ms-2 fw-bold"> Clic here</a> </small></label>
                             </div>
+                            <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
                             <div class="form-group my-3">                                      
-                                <button class="g-recaptcha form-control btn btn-dark" 
-                                data-sitekey="6LccKFYlAAAAAKiLwTw_Xz2l7_Qm_6PTe7_RyEG0" 
-                                data-callback='onSubmitSignin' 
-                                data-action='submit'>
+                                <button class="g-recaptcha form-control btn btn-dark" id="btnLogin"
+                                    data-sitekey="6LccKFYlAAAAAKiLwTw_Xz2l7_Qm_6PTe7_RyEG0"
+                                    data-action='login' data-callback='onSubmitSignin'>
                                 Login
                                 </button>
                             </div>    
@@ -79,6 +81,45 @@
 </body>
 </html>
 
+
+<!--
+Diferentes acciones dependiendo de la interaccion que este ejecutando.
+Esto es mportante para google reCAPTCHA
+data-action='login'
+data-action='register'
+data-action='forgot_password'
+-->
+
+<script>
+    // ir a la pagina > google.com/recaptcha/about/
+    // acceder a V3 Admin Console  (hacer esto con la cuenta de google scorpinosred@gmail.com)
+    TokenRecaptacha = document.getElementById('recaptchaResponse');
+    const btnLogin = document.getElementById('btnLogin');
+
+
+    btnLogin.addEventListener('click', onSubmitSignin)
+
+
+    async function onSubmitSignin() {
+        let response = grecaptcha.getResponse();
+        //console.log(typeof response);
+        //console.log(response.length );
+        //cuando tenemos el token de reCAPTCHA es cuando lo agregamos en el input hidden
+        // y de esta forma sabemso que todo llegara junto para ser validado en el servidor
+        //y tambien llega una sola vez. 
+        if (response.length !==0){
+            TokenRecaptacha.value = response;
+            console.log("response -->", response);
+            document.getElementById("signin").submit();
+            console.log("enviando al backend");
+        }
+        
+        
+    }
+
+
+</script>
+
 <script>
     window.addEventListener('load', ()=>{
         const clientUser = document.getElementById('client_user');
@@ -88,3 +129,4 @@
         clientPassw.value= "";
     })
 </script>
+

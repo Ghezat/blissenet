@@ -24,6 +24,7 @@ const modelBannerDefault = require('../models/bannerUserDefault.js');
 const modelBackgroundSign = require('../models/backgroundSign.js');
 const modelStoreRate = require('../models/storeRate.js');
 
+const fetch = require('node-fetch'); //ver: 2.6.1 ultima dependencia instalada. 
 const bcrypt = require('bcryptjs');
 
 
@@ -303,9 +304,37 @@ routes.get('/myaccount/signin', async (req,res)=>{
 });
 
 routes.post('/myaccount/signin', async(req,res)=>{
-    const {email, password } = req.body;
+    const {email, password, recaptchaResponse} = req.body;
+    console.log(`email : ${email} password : ${password} recaptchaResponse : ${recaptchaResponse}`)
     const search = await modelUser.findOne({ email : email, emailVerify : true });
+    const secretKey = "6LccKFYlAAAAAG48hyi4xBbeRMYMXfwMI7BdA7MV"; // -->Esto es la Clave Secreta que va aqui en el servidor
+    //data-sitekey="6LccKFYlAAAAAKiLwTw_Xz2l7_Qm_6PTe7_RyEG0"  --->Esto es la Clave de Sitio esta en el front
+    //Para saber mas ir al fronted page/signis.ejs 
+    //La interaccion de ambas claves es fundamental para lograr enviar el token a la api de google reCAPTCHA.
+    //console.log("secretKey -->", secretKey);
 
+    
+    const datos = {
+        secret : secretKey,
+        response : recaptchaResponse
+    };
+  
+    fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+  
+    })
+    .then(response =>response.json() )
+    .then( jsonx => {
+        console.log("--------------reCAPTCHA-------------------");
+        console.log("enviando feth a google reCAPTCHA");
+        console.log(jsonx)
+    
+    })
+    .catch( err => console.log(err));
+
+    /*
         if (search){
             console.log("esto es search es: ", search)
             let id = search._id;
@@ -356,6 +385,7 @@ routes.post('/myaccount/signin', async(req,res)=>{
             req.session.userError = "Usuario no existe, vuelva a intoducir el correo con que registro su cuenta";
             res.redirect('/myaccount/signin');
         }
+    */        
 
 });
 

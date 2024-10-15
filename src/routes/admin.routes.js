@@ -32,7 +32,6 @@ const modelMessage = require('../models/messages.js');
 const modelReport = require('../models/report.js');
 const modelCrono = require('../models/croneTask.js');
 
-//const fetch = require('node-fetch');
 const fetch = require('node-fetch'); //ver: 2.6.1 ultima dependencia instalada. 
 
 const cron = require('node-cron');
