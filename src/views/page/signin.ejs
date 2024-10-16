@@ -3,8 +3,7 @@
 <head>
     <%- include('../partials/head.ejs') %>
     <title>Blissenet Signin</title>
-    <!-- Aquí es donde añades el script de reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 <body class="mainTheme">
 
@@ -27,7 +26,15 @@
     <% if (donePasswSuccess) { %>
         <%- include('../alert/donePasswSuccess.ejs') %>
     <% }; %>
+
+    <% if (recaptchaFail) { %>
+        <%- include('../alert/recaptchaFail.ejs') %>
+    <% }; %>
         
+    <% if (seeBot) { %>
+        <%- include('../alert/seeBot.ejs') %>
+    <% }; %>
+    
 
     <% if (signIn.length !==0 ) { %>
     <div class="container-fluid" style="background-size: cover; background-image: url('<%= signIn[0].url %>'); height: 100%;" >
@@ -41,6 +48,7 @@
                     <div class="card-header">
                         <i class="bi bi-door-open mx-1"></i> Login
                     </div>
+                    <% if (!seeBotObjec) {%>
                     <div class="card-body p-4 border-top border-dark">
                         <form action="/myaccount/signin" method="POST" id="signin">
                             <div class="form-group my-2">
@@ -55,12 +63,19 @@
                                 <label for="" class="mx-1"> <small>¡Upp olvidade mi Password! <a href="/myaccount/signin-forgottenpassw" class="text-dark ms-2 fw-bold"> Clic here</a> </small></label>
                             </div>
                             <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
-                            <div class="form-group my-3">                                      
+                            <div class="form-group my-3">
+                                
                                 <button class="g-recaptcha form-control btn btn-dark" id="btnLogin"
                                     data-sitekey="6LccKFYlAAAAAKiLwTw_Xz2l7_Qm_6PTe7_RyEG0"
                                     data-action='login' data-callback='onSubmitSignin'>
                                 Login
+                                </button> 
+                                
+                                <button class="form-control btn btn-dark close" id="btnLoginDisabled" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    login ...
                                 </button>
+
                             </div>    
                             <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
                                 <label for="" class=" mx-1"><small> No tengo una cuenta. <a href="/myaccount/signup" class="text-danger ms-2 fw-bold">¡Registarme!</a> </small> </label>
@@ -68,6 +83,35 @@
                             
                         </form>
                     </div>
+                    <% } else { %>
+                    <div class="card-body p-4 border-top border-dark">
+                        <form>
+                            <div class="form-group my-2">
+                                <input type="email" name="email" placeholder="Su email" class="form-control"
+                                    id="client_user" autocomplete="off" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="password" name="password" placeholder="Su contraseña" class="form-control"
+                                    id="client_passw" autocomplete="off" style="letter-spacing: 3px;" maxlength="20" required>
+                            </div>
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class="mx-1"> <small>¡Upp olvidade mi Password! Clic here</a> </small></label>
+                            </div>
+                            
+                            <div class="form-group my-3">
+                                
+                            <button class="form-control btn btn-secondary" disabled>
+                            Login Block
+                            </button>   
+
+                            </div>    
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class=" mx-1"><small> No tengo una cuenta. <a class="text-danger ms-2 fw-bold">¡Registarme!</a> </small> </label>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    <% }; %>    
                 </div>
             </div>
         </div>
@@ -95,6 +139,7 @@ data-action='forgot_password'
     // acceder a V3 Admin Console  (hacer esto con la cuenta de google scorpinosred@gmail.com)
     TokenRecaptacha = document.getElementById('recaptchaResponse');
     const btnLogin = document.getElementById('btnLogin');
+    const btnLoginDisabled = document.getElementById('btnLoginDisabled');
 
 
     btnLogin.addEventListener('click', onSubmitSignin)
@@ -109,9 +154,12 @@ data-action='forgot_password'
         //y tambien llega una sola vez. 
         if (response.length !==0){
             TokenRecaptacha.value = response;
-            console.log("response -->", response);
+            //console.log("response -->", response);
+            btnLogin.classList.add('close');
+            btnLoginDisabled.classList.remove('close');
+
             document.getElementById("signin").submit();
-            console.log("enviando al backend");
+            //console.log("enviando al backend");
         }
         
         
@@ -130,3 +178,63 @@ data-action='forgot_password'
     })
 </script>
 
+<!-- 
+Nota sobre reCAPTCHA de Google
+pasos para integrarlo en el proyecto
+1. tener la api del front para pedir el token, este caso le tenemos en el partial/head 
+
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+2. en el front se usa dentro de un buttom como lo puedes apreciar arriba    
+
+    <button class="g-recaptcha form-control btn btn-dark" id="btnLogin"
+        data-sitekey="6LccKFYlAAAAAKiLwTw_Xz2l7_Qm_6PTe7_RyEG0"
+        data-action='login' data-callback='onSubmitSignin'>
+        Login
+    </button> 
+
+    aqui debes tener en data-sitekey la clave del sitio que te provee tu cuenta de google reCAPTCHA
+    Esto viene con una clave de secreta que estara en el servidor. 
+
+3. en el servidor se hace una peticion de validacion a la api de google reCAPTCHA para Validar   
+
+    fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: "post",
+        body: new URLSearchParams(datos),
+        headers: {"content-type" : "application/x-www-form-urlencoded"}
+
+    })
+    .then(response =>response.json() )
+    .then( jsonx => {
+
+        //console.log(jsonx);
+        const success = jsonx.success;
+        const score = jsonx.score;
+        //const score = 0.4; para test
+        console.log(`success -> ${success} | score -> ${score}`);
+
+        if (success === true){
+            if (score >= 0.5){
+                console.log("Es un humano");
+                //aqui todo el resto del proceso
+            } else {
+                console.log("Es un bot");
+            } 
+        else {
+            console.log("La verificacion de recaptcha ha fallado");
+        }  
+    })
+    .catch( err => console.log(err)); 
+    
+    4. debes tener en cuenta que el objeto que recibes de google reCAPTCHA es un objeto
+        { success: true, score: 0.9 } entre otros datos.
+
+        el score es el rango de respuesta que identifica a un humano de un bot. 
+        1 es humano
+        0.5 intermedio (no sabemos que es)
+        0 es un bot
+
+        teniendo este rango claro todo lo que sea igual o menor a 0.5 es un bot.
+        
+-->

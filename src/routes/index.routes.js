@@ -285,17 +285,23 @@ routes.get('/myaccount/signin', async (req,res)=>{
     const userError = req.session.userError;
     const registered = req.session.registered; //¡Se ha registrado exitosamente!
     const donePasswSuccess = req.session.donePasswSuccess; //"Cambio exitoso de Contraseña.";
+    const seeBot = req.session.seeBot; //"Espero te hayas divertido con Blissenet.com";
+    const recaptchaFail = req.session.recaptchaFail; //"La verificacion de reCAPTCHA ha Fallado";
+    const seeBotObjec = req.session.seeBotObjec; // { "message" : "Hemos detectado un posible ataque", "score" : score };
 
     delete req.session.passwError;
     delete req.session.userError;
     delete req.session.registered;
     delete req.session.donePasswSuccess;
+    delete req.session.seeBot;
+    delete req.session.recaptchaFail;
+    delete req.session.seeBotObjec;
 
     if (user === undefined){
         //lo que obtiene esta const es un array con un objeto que posee la imagen de fondo del signIn.
         const signIn = await modelBackgroundSign.find( {active : true, typeBackground : "SignIn"} );
         console.log("Esto es signIn", signIn);
-        res.render('page/signin', {user, signIn, passwError, userError, registered, donePasswSuccess});
+        res.render('page/signin', {user, signIn, passwError, userError, registered, donePasswSuccess, recaptchaFail, seeBot, seeBotObjec});
     } else {
         //console.log("ya estas logeado");
         res.redirect('/');
@@ -305,7 +311,7 @@ routes.get('/myaccount/signin', async (req,res)=>{
 
 routes.post('/myaccount/signin', async(req,res)=>{
     const {email, password, recaptchaResponse} = req.body;
-    console.log(`email : ${email} password : ${password} recaptchaResponse : ${recaptchaResponse}`)
+    //console.log(`email : ${email} password : ${password} recaptchaResponse : ${recaptchaResponse}`)
     const search = await modelUser.findOne({ email : email, emailVerify : true });
     const secretKey = "6LccKFYlAAAAAG48hyi4xBbeRMYMXfwMI7BdA7MV"; // -->Esto es la Clave Secreta que va aqui en el servidor
     //data-sitekey="6LccKFYlAAAAAKiLwTw_Xz2l7_Qm_6PTe7_RyEG0"  --->Esto es la Clave de Sitio esta en el front
@@ -313,79 +319,99 @@ routes.post('/myaccount/signin', async(req,res)=>{
     //La interaccion de ambas claves es fundamental para lograr enviar el token a la api de google reCAPTCHA.
     //console.log("secretKey -->", secretKey);
 
-    
     const datos = {
         secret : secretKey,
         response : recaptchaResponse
     };
-  
+
+    //console.log("Esto es datos ->", datos);
+
+           
     fetch('https://www.google.com/recaptcha/api/siteverify', {
         method: "post",
-        body: JSON.stringify(datos),
-        headers: {"content-type" : "application/json"}
+        body: new URLSearchParams(datos),
+        headers: {"content-type" : "application/x-www-form-urlencoded"}
   
     })
     .then(response =>response.json() )
     .then( jsonx => {
-        console.log("--------------reCAPTCHA-------------------");
-        console.log("enviando feth a google reCAPTCHA");
-        console.log(jsonx)
-    
-    })
-    .catch( err => console.log(err));
+        //console.log("--------------reCAPTCHA-------------------");
+        //console.log("enviando feth a google reCAPTCHA");
+        //console.log(jsonx);
+        const success = jsonx.success;
+        const score = jsonx.score;
+        //const score = 0.4; para test
+        console.log(`success -> ${success} | score -> ${score}`);
 
-    /*
-        if (search){
-            console.log("esto es search es: ", search)
-            let id = search._id;
-            let hashPassword = search.password;
-            let Stopped = search.stopped;
+        if (success === true){
+            if (score >= 0.5){
+                console.log("Es un humano");
 
-            async function hashing(){
-                const compares = await bcrypt.compare(password, hashPassword);
-                console.log("resul de la compracion--->",compares)
-
-                if (compares == true) {
-
-                    if (Stopped == false){
-
-                        //console.log("password acertado, bienvenido")
-                        req.session.success = "Bienvenido a Blissenet.com. ¡Tu red de mercado!";
-                        const user = search
-                        req.session.user = user
-                        res.redirect('/')
-
-                    } else {
-
-                        const stoppedUser = await modelStopped.find( {indexed : id, status : 'locked'} );
-                        console.log("Aqui informacion del bloqueo ->", stoppedUser); const stopped = stoppedUser[0];
-                        const username = stopped.username; const ban = stopped.ban; const dates = new Date(stopped.createdAt);
-                        const dia = dates.getDate(); const mes = dates.getMonth()+1; const anio = dates.getFullYear();
-                        const date = `${dia}-${mes}-${anio}`;
-                        req.session.dataLocked = {username, ban, date};
-                        console.log('username' , username); console.log('ban' , ban); console.log('date' , date);
-                        req.session.stopped = "Su cuenta ha sido baneada por infringir nuestras normas.";
-                        res.redirect('/')
-
-                    }
-
-    
-                } else {
-                    console.log("Password Errado")
-                    req.session.passwError = "Password Errado";
-                    res.redirect('/myaccount/signin');
-                }
-            }
-
-            hashing()
-
+                if (search){
+                    console.log("esto es search es: ", search)
+                    let id = search._id;
+                    let hashPassword = search.password;
+                    let Stopped = search.stopped;
+        
+                    async function hashing(){
+                        const compares = await bcrypt.compare(password, hashPassword);
+                        console.log("resul de la compracion--->",compares)
+        
+                        if (compares == true) {
+        
+                            if (Stopped == false){
+        
+                                //console.log("password acertado, bienvenido")
+                                req.session.success = "Bienvenido a Blissenet.com. ¡Tu red de mercado!";
+                                const user = search
+                                req.session.user = user
+                                res.redirect('/')
+        
+                            } else {
+        
+                                const stoppedUser = await modelStopped.find( {indexed : id, status : 'locked'} );
+                                console.log("Aqui informacion del bloqueo ->", stoppedUser); const stopped = stoppedUser[0];
+                                const username = stopped.username; const ban = stopped.ban; const dates = new Date(stopped.createdAt);
+                                const dia = dates.getDate(); const mes = dates.getMonth()+1; const anio = dates.getFullYear();
+                                const date = `${dia}-${mes}-${anio}`;
+                                req.session.dataLocked = {username, ban, date};
+                                console.log('username' , username); console.log('ban' , ban); console.log('date' , date);
+                                req.session.stopped = "Su cuenta ha sido baneada por infringir nuestras normas.";
+                                res.redirect('/')
+        
+                            }
+        
             
+                        } else {
+                            console.log("Password Errado")
+                            req.session.passwError = "Password Errado";
+                            res.redirect('/myaccount/signin');
+                        }
+                    }
+        
+                    hashing()
+        
+                    
+                } else {
+                    console.log("usuario no existe")
+                    req.session.userError = "Usuario no existe, vuelva a intoducir el correo con que registro su cuenta";
+                    res.redirect('/myaccount/signin');
+                }   
+                                 
+            } else {
+                req.session.seeBotObjec = { "message" : "Hemos detectado un posible ataque", "score" : score };
+                req.session.seeBot = "Hemos detectado un comportamiento inusual en Blissenet.com";
+                res.redirect('/myaccount/signin');
+                console.log("Eres un fucking bot");
+            }    
         } else {
-            console.log("usuario no existe")
-            req.session.userError = "Usuario no existe, vuelva a intoducir el correo con que registro su cuenta";
+            req.session.recaptchaFail = "La verificacion de reCAPTCHA ha Fallado";
             res.redirect('/myaccount/signin');
+            console.log("La verificacion de reCAPTCHA ha Fallado");
         }
-    */        
+
+    })
+    .catch( err => console.log(err));       
 
 });
 
@@ -397,18 +423,25 @@ routes.get('/myaccount/signup', async (req,res)=>{
     const passMaxLength = req.session.passMaxLength;
     const usernameExist = req.session.usernameExist;
     const usernameErr = req.session.usernameErr;
+    const seeBot = req.session.seeBot; //"Espero te hayas divertido con Blissenet.com";
+    const recaptchaFail = req.session.recaptchaFail; //"La verificacion de reCAPTCHA ha Fallado";
+    const seeBotObjec = req.session.seeBotObjec; // { "message" : "Hemos detectado un posible ataque", "score" : score };
+
 
     delete req.session.email;
     delete req.session.passwNoMatch;
     delete req.session.passMaxLength;
     delete req.session.usernameExist;
-    delete req.session.usernameErr
+    delete req.session.usernameErr;
+    delete req.session.seeBot;
+    delete req.session.recaptchaFail;
+    delete req.session.seeBotObjec;
 
     if (user === undefined){
 
         //lo que obtiene esta const es un array con un objeto que posee la imagen de fondo del signUp.
         const signUp = await modelBackgroundSign.find({active : true, typeBackground : "SignUp"});
-        res.render('page/signup', {user, signUp,  mailExist, passwNoMatch, passMaxLength, usernameExist, usernameErr});
+        res.render('page/signup', {user, signUp,  mailExist, passwNoMatch, passMaxLength, usernameExist, usernameErr, recaptchaFail, seeBot, seeBotObjec});
 
     } else {
         //console.log("estas logeado no tienes acceso a este apartado");
@@ -419,169 +452,218 @@ routes.get('/myaccount/signup', async (req,res)=>{
 })                                                                
 
 routes.post('/myaccount/signup', async(req,res)=>{
+    
+    const secretKey = "6LfVgFYlAAAAAGPSo7nb1KZ48cJN-DH-SSRAJ2c2"; // -->Esto es la Clave Secreta que va aqui en el servidor
+    //data-sitekey="6LfVgFYlAAAAAAdKk3Ksy7jHovwp6rK90s5kmNOK"  --->Esto es la Clave de Sitio esta en el front
+    
     //tomamos los datos del formulario y se guardan en constantes
-
-    const {username, email, password, confirmPassword, token} = req.body
+    const {username, email, password, confirmPassword, token, recaptchaResponse} = req.body
+    //console.log(`username : ${username}, email : ${email}, password : ${password}, confirmPassword : ${confirmPassword}, token : ${token} recaptchaResponse : ${recaptchaResponse}`)
     const emailLower = email.toLowerCase();//transformo en minisculas el correo
     const mailhash = hash.MD5(emailLower); let usernameParse; // esta variable guarda el nombre parseado sin espacios en blanco. 
 
+    //consulta en la base de datos del campo email
+    const search = await modelUser.findOne({email})    
     usernameParse = username.replace(/\s+/g, ''); // Quitamos todos los espacios.
     console.log("usernameParse", usernameParse);
     
+    const result = await modelUser.findOne({ username: new RegExp( '^' + usernameParse + '$','i' ) });
+
+    const datos = {
+        secret : secretKey,
+        response : recaptchaResponse
+    };
+
+    //console.log("Esto es datos ->", datos);
+
+           
+    fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: "post",
+        body: new URLSearchParams(datos),
+        headers: {"content-type" : "application/x-www-form-urlencoded"}
+  
+    })
+    .then(response =>response.json() )
+    .then( jsonx => {
+        //console.log("--------------reCAPTCHA-------------------");
+        //console.log("enviando feth a google reCAPTCHA");
+        //console.log(jsonx);
+        const success = jsonx.success;
+        const score = jsonx.score;
+        //const score = 0.4; //para test
+        console.log(`success -> ${success} | score -> ${score}`);
+
+
+        if (success === true){
+            if (score >= 0.5){
+                console.log("Es un humano");    
    
-    if (usernameParse.length > 5 && usernameParse.length <= 20 ){
-        // el username debe ser minimo 6 y maximo 20 
-        if (password == confirmPassword) {
-            //console.log('password concuerda con la confirmacion')
-            //consulta en la base de datos del campo email
-            const search = await modelUser.findOne({email})
-            //si existe tendremos un objeto sino tendremos un valor null
-            //console.log(search);
-            if (search) {
-                //console.log('correo ya existe')
-                req.session.email = "Este email ya esta registrado";
-                res.redirect('/myaccount/signup')
-            } else {
+                if (usernameParse.length > 5 && usernameParse.length <= 20 ){
+                    // el username debe ser minimo 6 y maximo 20 
+                    if (password == confirmPassword) {
+                        //console.log('password concuerda con la confirmacion')
 
-                
-                    if (password == null || password.length <= 6 ) {
-                        //console.log("no sean tramposo mete un dato que te estoy pillando");
-                        req.session.passMaxLength = "El campo no puede estar vacio o contener menos de seis (6) caracteres."
-                        res.redirect('/myaccount/signup')
-                    } else {
-                        const result = await modelUser.findOne({ username: new RegExp( '^' + usernameParse + '$','i' ) });
-                        console.log("Esto es result ---->", result);
-                        if (result !== null) {
-
-                            console.log("¡Este usuario existe! Debe buscar un nombre de usario unico.")
-                            req.session.usernameExist = "¡Este nombre de username ya existe!"
+                        //si existe tendremos un objeto sino tendremos un valor null
+                        //console.log(search);
+                        if (search) {
+                            //console.log('correo ya existe')
+                            req.session.email = "Este email ya esta registrado";
                             res.redirect('/myaccount/signup');
-
                         } else {
-                            console.log("ha pasado todos los criterios y pasa a la segunda fase de registro");
+
                             
-                            let hashPassword, newTN, newToken;
+                                if (password == null || password.length <= 6 ) {
+                                    //console.log("no sean tramposo mete un dato que te estoy pillando");
+                                    req.session.passMaxLength = "El campo no puede estar vacio o contener menos de seis (6) caracteres."
+                                    res.redirect('/myaccount/signup')
+                                } else {
+                                    //const result = await modelUser.findOne({ username: new RegExp( '^' + usernameParse + '$','i' ) });
+                                    console.log("Esto es result ---->", result);
+                                    if (result !== null) {
 
-                            async function hashing(){
-                                hashPassword = await bcrypt.hash(password, 6);
-                                console.log("password--->", password);
-                                console.log("Este es el hash del password--->",hashPassword);
-                                /* const compares = await bcrypt.compare(password, hashPassword);
-                                console.log("resul de la compracion--->",compares)*/
-                                //crear un token random de 6 caracteres
+                                        console.log("¡Este usuario existe! Debe buscar un nombre de usario unico.")
+                                        req.session.usernameExist = "¡Este nombre de username ya existe!"
+                                        res.redirect('/myaccount/signup');
 
-                                createNewToken()
-                                function createNewToken(){
-                                    let ran = Math.random();
-                                    let random = Math.ceil(ran * 1000000);
-                                    newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 6;
-                                }    
-
-                                while(newTN.length < 6){
-                                    createNewToken()
-                                } 
-
-                                newToken = `${newTN}`;
-                                console.log("newToken", newToken);
-
-                            }
-
-                            async function createUser(){
-                                const newUser = new modelUser({username: usernameParse, email: emailLower , password : hashPassword, mailhash, token: newToken});
-                                const saveUser = await newUser.save();
-                                console.log(saveUser);
-                            }
-
-                            async function sendToken(){
-                                
-                                
-                                /* detalle del correo a enviar */
-                                const message = "Confirmar Correo Electronico."
-                                const contentHtml = `
-                                <h2 style="color: black">Token Enviado Para Validar Cuenta. </h2>
-                                <ul> 
-                                    <li> cuenta : ${email} </li> 
-                                    <li> asunto : ${message} </li>
-                                <ul>
-                                <h2> ${newToken} </h2>
-                                `
-
-                                //enviar correo
-                                //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
-                                const emailMessage = {
-                                    from: "Blissenet<sistemve@blissenet.com>", //remitente
-                                    to: email,
-                                    subject: "Ya casi esta lista su cuenta - Blissenet", //objeto
-                                    text: message,
-                                    html: contentHtml
-                                };
-
-                                //añadir las credenciales
-                                const transport = nodemailer.createTransport({
-                                    host: "mail.blissenet.com",
-                                    port: 465,
-                                    auth: {
-                                        user: "sistemve@blissenet.com",
-                                        pass: process.env.pass_sistemve
-                                    }
-                                });
-
-                                transport.sendMail(emailMessage, (error, info) => {
-                                    if (error) {
-                                        console.log("Error enviando email")
-                                        console.log(error.message)
                                     } else {
-                                        console.log("Email enviado")
+                                        console.log("ha pasado todos los criterios y pasa a la segunda fase de registro");
+                                        
+                                        let hashPassword, newTN, newToken;
+
+                                        async function hashing(){
+                                            hashPassword = await bcrypt.hash(password, 6);
+                                            console.log("password--->", password);
+                                            console.log("Este es el hash del password--->",hashPassword);
+                                            /* const compares = await bcrypt.compare(password, hashPassword);
+                                            console.log("resul de la compracion--->",compares)*/
+                                            //crear un token random de 6 caracteres
+
+                                            createNewToken()
+                                            function createNewToken(){
+                                                let ran = Math.random();
+                                                let random = Math.ceil(ran * 1000000);
+                                                newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 6;
+                                            }    
+
+                                            while(newTN.length < 6){
+                                                createNewToken()
+                                            } 
+
+                                            newToken = `${newTN}`;
+                                            console.log("newToken", newToken);
+
+                                        }
+
+                                        async function createUser(){
+                                            const newUser = new modelUser({username: usernameParse, email: emailLower , password : hashPassword, mailhash, token: newToken});
+                                            const saveUser = await newUser.save();
+                                            console.log(saveUser);
+                                        }
+
+                                        async function sendToken(){
+                                            
+                                            
+                                            // detalle del correo a enviar 
+                                            const message = "Confirmar Correo Electronico."
+                                            const contentHtml = `
+                                            <h2 style="color: black">Token Enviado Para Validar Cuenta. </h2>
+                                            <ul> 
+                                                <li> cuenta : ${email} </li> 
+                                                <li> asunto : ${message} </li>
+                                            <ul>
+                                            <h2> ${newToken} </h2>
+                                            `
+
+                                            //enviar correo
+                                            //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
+                                            const emailMessage = {
+                                                from: "Blissenet<sistemve@blissenet.com>", //remitente
+                                                to: email,
+                                                subject: "Ya casi esta lista su cuenta - Blissenet", //objeto
+                                                text: message,
+                                                html: contentHtml
+                                            };
+
+                                            //añadir las credenciales
+                                            const transport = nodemailer.createTransport({
+                                                host: "mail.blissenet.com",
+                                                port: 465,
+                                                auth: {
+                                                    user: "sistemve@blissenet.com",
+                                                    pass: process.env.pass_sistemve
+                                                }
+                                            });
+
+                                            transport.sendMail(emailMessage, (error, info) => {
+                                                if (error) {
+                                                    console.log("Error enviando email")
+                                                    console.log(error.message)
+                                                } else {
+                                                    console.log("Email enviado")
+                                                }
+                                            }) 
+
+
+                                        }
+                                        
+
+                                        hashing()
+                                            .then(()=>{
+                                                createUser()
+                                                    .then(()=>{
+                                                        sendToken()
+                                                            .then(()=>{
+                                                                req.session.mailSent =  "Token enviado al correo para validación, 90 segundos para su confirmación.";
+                                                                req.session.datauser = {usernameParse, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
+                                                                res.redirect('/myaccount/signup-emailverify')
+                                                            })
+                                                            .catch((error)=>{
+                                                                console.log("Ha habido un error en sendToken", error);
+                                                            })
+
+                                                    })
+                                                    .catch((error)=>{
+                                                        console.log("Ha habido un error en createUser()", error);
+                                                    })
+                                                
+                                            })
+                                            .catch((error)=>{
+                                                console.log("Ha habido un error em hashing()", error);
+                                            })
+
                                     }
-                                }) 
-
-
-                            }
-                            
-
-                            hashing()
-                                .then(()=>{
-                                    createUser()
-                                        .then(()=>{
-                                            sendToken()
-                                                .then(()=>{
-                                                    req.session.mailSent =  "Token enviado al correo para validación, 90 segundos para su confirmación.";
-                                                    req.session.datauser = {usernameParse, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
-                                                    res.redirect('/myaccount/signup-emailverify')
-                                                })
-                                                .catch((error)=>{
-                                                    console.log("Ha habido un error en sendToken", error);
-                                                })
-
-                                        })
-                                        .catch((error)=>{
-                                            console.log("Ha habido un error en createUser()", error);
-                                        })
-                                    
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error em hashing()", error);
-                                })
+                                        
+                                }
 
                         }
-                            
+
+                    } else {
+                        console.log('password no concuerda con la confirmacion')
+                        req.session.passwNoMatch = "¡Error en confirmacion de password, vuelva a intentar!"
+                        res.redirect('/myaccount/signup')
                     }
 
-            }
+                } else {
+                    console.log('No cumple con la condicion de carcateres su usuario');
+                    req.session.usernameErr = "¡Su username debe tener entre 6 y 20 caracteres!"
+                    res.redirect('/myaccount/signup')
+                }    
 
+            } else {
+                req.session.seeBotObjec = { "message" : "Hemos detectado un posible ataque", "score" : score };
+                req.session.seeBot = "Hemos detectado un comportamiento inusual en Blissenet.com";
+                res.redirect('/myaccount/signup');
+                console.log("Eres un fucking bot");
+            }    
         } else {
-            console.log('password no concuerda con la confirmacion')
-            req.session.passwNoMatch = "¡Error en confirmacion de password, vuelva a intentar!"
-            res.redirect('/myaccount/signup')
+            req.session.recaptchaFail = "La verificacion de reCAPTCHA ha Fallado";
+            res.redirect('/myaccount/signup');
+            console.log("La verificacion de reCAPTCHA ha Fallado");
         }
-
-    } else {
-        console.log('No cumple con la condicion de carcateres su usuario');
-        req.session.usernameErr = "¡Su username debe tener entre 6 y 20 caracteres!"
-        res.redirect('/myaccount/signup')
-    }    
-
     
+    })
+    .catch( err => console.log(err)); 
+
 });
 
 routes.get('/myaccount/signup-emailverify', async(req,res)=>{
@@ -732,11 +814,21 @@ routes.get('/myaccount/signin-forgottenpassw', async(req,res)=> {
     console.log("Estamos en signin-forgottenpassw");
     console.log("user ->", user);
 
+    
+    const seeBot = req.session.seeBot; //"Espero te hayas divertido con Blissenet.com";
+    const recaptchaFail = req.session.recaptchaFail; //"La verificacion de reCAPTCHA ha Fallado";
+    const seeBotObjec = req.session.seeBotObjec; // { "message" : "Hemos detectado un posible ataque", "score" : score };
+
+    delete req.session.seeBot;
+    delete req.session.recaptchaFail;
+    delete req.session.seeBotObjec;
+
+
     if (user === undefined){
         //lo que obtiene esta const es un array con un objeto que posee la imagen de fondo del signIn.
         const signIn = await modelBackgroundSign.find( {active : true, typeBackground : "SignIn"} );
         console.log("Esto es signIn", signIn );
-        res.render('page/signin-forgottenpassw', {user, signIn})
+        res.render('page/signin-forgottenpassw', {user, signIn, recaptchaFail, seeBot, seeBotObjec})
     } else {
         //console.log("ya estas logeado");
         res.redirect('/');
@@ -745,118 +837,169 @@ routes.get('/myaccount/signin-forgottenpassw', async(req,res)=> {
 });
 
 routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
-    const {email} = req.body
+       
+    const secretKey = "6LfhgFIlAAAAAD_tlCj6EsY60pqaWNWJmAnNIi-7"; // -->Esto es la Clave Secreta que va aqui en el servidor
+    //   data-sitekey="6LfhgFIlAAAAAODB3P24Ea32aXgbqEHb3iVJGrJP"  --->Esto es la Clave de Sitio esta en el front
+    
+    const {email, recaptchaResponse} = req.body
     const emailSearch = await modelUser.findOne({ email })
     let newToken, newTN; 
     
-    console.log("email -->", email);
-    console.log("emailSearch --->", emailSearch);
+    //console.log("emailSearch --->", emailSearch);
+    //console.log( `email {email} | recaptchaResponse {recaptchaResponse}`);
 
-    if (emailSearch) {
-        console.log( `mail encontrado ${emailSearch.email}` );
-
-        async function createToken(){
-            createNewToken()
-            function createNewToken(){
-                let ran = Math.random();
-                let random = Math.ceil(ran * 1000000);
-                newTN = random.toString(); //este estrin de numeros tiene que ser de 6 caracteres.;
-            }    
-
-            while(newTN.length < 6){
-                createNewToken()
-            } 
-
-            newToken = `${newTN}`;
-            //console.log("newToken", newToken);
-
-        }
-
-        async function editToken(){
-            //actualizamos el campo token en la Base de datos.
-            console.log( "su nuevo Token es : ", newToken );
-            const edit = await modelUser.updateOne({email}, {token : newToken})
-                                                                        
-            console.log(edit);
-        }
-
-        async function sendToken(){
-            //enviamos al correo el nuevo token a usar
-            const message = "Confirmación de Cuenta."
-            const contentHtml = `
-            <h2 style="color: black"> Restableciendo Contraseña. </h2>
-            <ul> 
-                <li> cuenta : ${email} </li> 
-                <li> asunto : ${message} </li>
-            <ul>
-            <h2> ${newToken} </h2>
-            <p> <b> Estimado usuario, </b> Si usted no ha solicitado restablecer su Contraseña, deje este correo sin efecto.</p>
-            `
-
-            //enviar correo
-            //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
-            const emailMessage = {
-                from: "Blissenet<sistemve@blissenet.com>", //remitente
-                to: email,
-                subject: "🔑 Hemos recibido su petición de reset de password - Blissenet", //objeto
-                text: message,
-                html: contentHtml
-            };
-
-            //añadir las credenciales
-            const transport = nodemailer.createTransport({
-                host: "mail.blissenet.com",
-                port: 465,
-                auth: {
-                    user: "sistemve@blissenet.com",
-                    pass: process.env.pass_sistemve
-                }
-            });
-
-            transport.sendMail(emailMessage, (error, info) => {
-                if (error) {
-                    console.log("Error enviando email")
-                    console.log(error.message)
-                } else {
-                    console.log("Email enviado")
-                    
-                }
-            }) 
-        
-        }
-
-        createToken()
-            .then(()=>{
-                editToken()
-                    .then(()=>{
-                        sendToken()
-                            .then(()=>{
-                                req.session.email = {email : email};
-                                console.log("proceso de restauracion por olvido de contraseña OK");
-                                req.session.tokenForgottenPassw = "¡Token enviado al email para restauración de Contraseña!"
-                                res.redirect('/myaccount/signin-forgottenpasswToken');
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error sendToken", error);
-                            })
-                    })
-                    .catch((error)=>{
-                        console.log("Ha habido un error editToken()", error);
-                    })
-            })
-            .catch((error)=>{
-                console.log("Ha habido un error createToken()", error);
-            })
-
-
-
-        
-    } else {
-        console.log( "mail no found");
-        res.redirect('/myaccount/signin-forgottenpassw',) 
+    const datos = {
+        secret : secretKey,
+        response : recaptchaResponse
     };
 
-               
+    //console.log("Esto es datos ->", datos);
+
+           
+    fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: "post",
+        body: new URLSearchParams(datos),
+        headers: {"content-type" : "application/x-www-form-urlencoded"}
+  
+    })
+    .then(response =>response.json() )
+    .then( jsonx => {    
+     
+        //console.log("--------------reCAPTCHA-------------------");
+        //console.log("enviando feth a google reCAPTCHA");
+        //console.log(jsonx);
+        const success = jsonx.success;
+        const score = jsonx.score;
+        //const score = 0.4; //para test
+        console.log(`success -> ${success} | score -> ${score}`);
+
+
+        if (success === true){
+            if (score >= 0.5){
+                console.log("Es un humano");  
+
+     
+                if (emailSearch) {
+                    console.log( `mail encontrado ${emailSearch.email}` );
+
+                    async function createToken(){
+                        createNewToken()
+                        function createNewToken(){
+                            let ran = Math.random();
+                            let random = Math.ceil(ran * 1000000);
+                            newTN = random.toString(); //este estrin de numeros tiene que ser de 6 caracteres.;
+                        }    
+
+                        while(newTN.length < 6){
+                            createNewToken()
+                        } 
+
+                        newToken = `${newTN}`;
+                        //console.log("newToken", newToken);
+
+                    }
+
+                    async function editToken(){
+                        //actualizamos el campo token en la Base de datos.
+                        console.log( "su nuevo Token es : ", newToken );
+                        const edit = await modelUser.updateOne({email}, {token : newToken})
+                                                                                    
+                        console.log(edit);
+                    }
+
+                    async function sendToken(){
+                        //enviamos al correo el nuevo token a usar
+                        const message = "Confirmación de Cuenta."
+                        const contentHtml = `
+                        <h2 style="color: black"> Restableciendo Contraseña. </h2>
+                        <ul> 
+                            <li> cuenta : ${email} </li> 
+                            <li> asunto : ${message} </li>
+                        <ul>
+                        <h2> ${newToken} </h2>
+                        <p> <b> Estimado usuario, </b> Si usted no ha solicitado restablecer su Contraseña, deje este correo sin efecto.</p>
+                        `
+
+                        //enviar correo
+                        //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
+                        const emailMessage = {
+                            from: "Blissenet<sistemve@blissenet.com>", //remitente
+                            to: email,
+                            subject: "🔑 Hemos recibido su petición de reset de password - Blissenet", //objeto
+                            text: message,
+                            html: contentHtml
+                        };
+
+                        //añadir las credenciales
+                        const transport = nodemailer.createTransport({
+                            host: "mail.blissenet.com",
+                            port: 465,
+                            auth: {
+                                user: "sistemve@blissenet.com",
+                                pass: process.env.pass_sistemve
+                            }
+                        });
+
+                        transport.sendMail(emailMessage, (error, info) => {
+                            if (error) {
+                                console.log("Error enviando email")
+                                console.log(error.message)
+                            } else {
+                                console.log("Email enviado")
+                                
+                            }
+                        }) 
+                    
+                    }
+
+                    createToken()
+                        .then(()=>{
+                            editToken()
+                                .then(()=>{
+                                    sendToken()
+                                        .then(()=>{
+                                            req.session.email = {email : email};
+                                            console.log("proceso de restauracion por olvido de contraseña OK");
+                                            req.session.tokenForgottenPassw = "¡Token enviado al email para restauración de Contraseña!"
+                                            res.redirect('/myaccount/signin-forgottenpasswToken');
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error sendToken", error);
+                                        })
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error editToken()", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error createToken()", error);
+                        })
+
+
+
+                    
+                } else {
+                    console.log( "mail no found");
+                    res.redirect('/myaccount/signin-forgottenpassw'); 
+                };
+
+    
+
+            } else {
+                req.session.seeBotObjec = { "message" : "Hemos detectado un posible ataque", "score" : score };
+                req.session.seeBot = "Hemos detectado un comportamiento inusual en Blissenet.com";
+                res.redirect('/myaccount/signin-forgottenpassw');
+                console.log("Eres un fucking bot");
+            }    
+        } else {
+            req.session.recaptchaFail = "La verificacion de reCAPTCHA ha Fallado";
+            res.redirect('/myaccount/signin-forgottenpassw');
+            console.log("La verificacion de reCAPTCHA ha Fallado");
+        }
+
+    })
+    .catch( err => console.log(err));         
+
 });
 
 routes.get('/myaccount/signin-forgottenpasswToken', async(req, res)=>{

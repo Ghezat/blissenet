@@ -9,6 +9,13 @@
 
     <%- include('../partials/navi-simple.ejs') %>   
     
+    <% if (recaptchaFail) { %>
+        <%- include('../alert/recaptchaFail.ejs') %>
+    <% }; %>
+        
+    <% if (seeBot) { %>
+        <%- include('../alert/seeBot.ejs') %>
+    <% }; %>
 
     <% if (signIn.length !==0 ) { %>
     <div class="container-fluid" style="background-size: cover; background-image: url('<%= signIn[0].url %>'); height: 100%;" >
@@ -23,6 +30,8 @@
                     <div class="card-header d-flex justify-content-between">
                     <span>Reset Password</span> <i class="bi bi-1-square me-1"></i>
                     </div>
+
+                    <% if (!seeBotObjec) {%>
                     <div class="card-body">
 
                         <form action="/myaccount/signin-forgottenpassw" method="POST" id="forgotten">
@@ -35,23 +44,55 @@
                                 <label for="" class=" mx-1">Verifique que sea su email antes de dar al boton.</label>
                             </div>
                             
-
-                            <div class="form-group my-2">
-                                <button class="g-recaptcha form-control btn btn-dark" 
+                            <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
+                            <div class="form-group my-3">
+                                <button class="g-recaptcha form-control btn btn-dark"  id="btnForgot"
                                     data-sitekey="6LfhgFIlAAAAAODB3P24Ea32aXgbqEHb3iVJGrJP" 
                                     data-callback='forgottenpassw' 
-                                    data-action='submit'>
-                                    Send  Token
+                                    data-action='forgot_password'>
+                                    Send Token
+                                </button>
+
+                                <button class="form-control btn btn-dark close" id="btnForgotDisabled" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Send Token ...
                                 </button>
                             </div>
 
                             <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
-                                <label for="" class=" mx-1"><small> Volver a Login <a href="/myaccount/signin" class="text-danger ms-2 fw-bold">¡Clic aquí!</a> </small> </label>
+                                <label for="" class="mx-1"><small> Volver a Login <a href="/myaccount/signin" class="text-danger ms-2 fw-bold">¡Clic aquí!</a> </small> </label>
                             </div>
 
                         </form>
 
                     </div>
+                    <% } else { %>
+                        <div class="card-body">
+
+                            <form>
+                                <div class="form-group my-2">
+                                    <input type="email" name="email" placeholder="Enter your email" class="form-control"
+                                    autocomplete="off"  disabled>
+                                </div>
+                            
+                                <div class="form-group my-3 p-1 bg-light rounded-2 text-dark">
+                                    <label for="" class=" mx-1">Verifique que sea su email antes de dar al boton.</label>
+                                </div>
+                                
+                                <div class="form-group my-3">
+                                    <button class="form-control btn btn-secondary" disabled> 
+                                        Send Token Block
+                                    </button>
+                                </div>
+    
+                                <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                    <label for="" class="mx-1"><small> Volver a Login <a href="/myaccount/signin" class="text-danger ms-2 fw-bold">¡Clic aquí!</a> </small> </label>
+                                </div>
+    
+                            </form>
+    
+                        </div>                        
+                    <% }; %>     
                 </div>
             </div>
         </div>
@@ -64,5 +105,44 @@
     </main>
 </body>
 </html>
+<!--
+Diferentes acciones dependiendo de la interaccion que este ejecutando.
+Esto es mportante para google reCAPTCHA
+data-action='login'
+data-action='register'
+data-action='forgot_password'
+-->
+
+<script>
+    // ir a la pagina > google.com/recaptcha/about/
+    // acceder a V3 Admin Console  (hacer esto con la cuenta de google scorpinosred@gmail.com)
+    TokenRecaptacha = document.getElementById('recaptchaResponse');
+    const btnForgot = document.getElementById('btnForgot');
+    const btnForgotDisabled = document.getElementById('btnForgotDisabled');
 
 
+    btnForgot.addEventListener('click', forgottenpassw)
+
+
+    async function forgottenpassw() {
+        let response = grecaptcha.getResponse();
+        //console.log(typeof response);
+        //console.log(response.length );
+        //cuando tenemos el token de reCAPTCHA es cuando lo agregamos en el input hidden
+        // y de esta forma sabemso que todo llegara junto para ser validado en el servidor
+        //y tambien llega una sola vez. 
+        if (response.length !==0){
+            TokenRecaptacha.value = response;
+            //console.log("response -->", response);
+
+            btnForgot.classList.add('close');
+            btnForgotDisabled.classList.remove('close');
+            document.getElementById("forgotten").submit();
+            console.log("enviando al backend");
+        }
+        
+        
+    }
+
+
+</script>

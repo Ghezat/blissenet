@@ -3,6 +3,7 @@
 <head>
     <%- include('../partials/head.ejs') %>
     <title>Blissenet Signup</title>
+
 </head>
 <body class="mainTheme">
     <main>
@@ -28,6 +29,13 @@
         <%- include('../alert/usernameErr.ejs') %>
     <% }; %>
     
+    <% if (recaptchaFail) { %>
+        <%- include('../alert/recaptchaFail.ejs') %>
+    <% }; %>
+        
+    <% if (seeBot) { %>
+        <%- include('../alert/seeBot.ejs') %>
+    <% }; %>    
 
     <% if (signUp.length !==0) { %>
     <div class="container-fluid" style="background-size: cover; background-image: url('<%= signUp[0].url %>'); height: 100%;" >
@@ -42,6 +50,7 @@
                         <span><i class="bi bi-journal-check mx-1"></i> Register</span>
                         <span><i class="bi bi-1-square me-1"></i></span>
                     </div>
+                    <% if (!seeBotObjec) {%>
                     <div class="card-body p-4 border-top border-dark">
         
                         <form action="/myaccount/signup" method="POST" id="signup">
@@ -68,21 +77,27 @@
                                 </label>
                             </div>
 
+                            <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
                             <input type="hidden" name="token">
-                            <div class="form-group my-3">  
-                                <div class="form-group mt-3">
-                                    <button class="form-control btn btn-dark" id="btnRegisterDisabled" disabled>
-                                        Register <i class="bi bi-lock ms-1"></i>
-                                    </button>
+                            <div class="form-group my-3 mt-3">  
 
-                                    <button class="g-recaptcha form-control btn btn-dark close" id="btnRegister" 
-                                        data-sitekey="6LfVgFYlAAAAAAdKk3Ksy7jHovwp6rK90s5kmNOK" 
-                                        data-callback='onSubmitSignup' 
-                                        data-action='submit'>
-                                        
+                                <button class="form-control btn btn-dark" id="btnRegisterLock" disabled>
+                                    Register <i class="bi bi-lock ms-1"></i>
+                                </button>
+
+                                <button class="g-recaptcha form-control btn btn-dark close" id="btnRegister" 
+                                    data-sitekey="6LfVgFYlAAAAAAdKk3Ksy7jHovwp6rK90s5kmNOK" 
+                                    data-callback='onSubmitSignup' 
+                                    data-action='register'>
+                                    
                                     Register <i class="bi bi-unlock ms-1"></i>
-                                    </button>
-                                </div>
+                                </button>
+
+                                <button class="form-control btn btn-dark close" id="btnRegisterDisabled" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Register ...
+                                </button>
+                                
                             </div>
 
                             <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
@@ -91,6 +106,50 @@
                         </form>
         
                     </div>
+                    <% } else { %>
+                    <div class="card-body p-4 border-top border-dark">    
+
+                        <form>
+                            <div class="form-group my-2">
+                                <input type="text" name="username" placeholder="Su username o nombre de tienda" class="form-control"  minlength="6" maxlength="20" autocomplete="off" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="email" name="email" placeholder="Su email (example@mail.com)" class="form-control" style="text-transform:lowercase;" autocomplete="off" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="password" name="password" placeholder="Su contraseña" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off"  required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="password" name="confirmPassword" placeholder="Confirme contraseña" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off" required>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="CheckRegister">
+                                <label class="form-check-label" for="CheckRegister">
+                                    <small>
+                                        Acepto los <a href="/terms">Términos</a> y <a href="/policy">Politicas</a>
+                                        aqui declarados.
+                                    </small>
+                                </label>
+                            </div>
+
+                            <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
+                            <input type="hidden" name="token">
+                            <div class="form-group my-3 mt-3">  
+
+                                <button class="form-control btn btn-secondary" disabled>
+                                    Register Block <i class="bi bi-lock ms-1"></i>
+                                </button>
+                                
+                            </div>
+
+                            <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
+                                <label for="" class=" mx-1"><small> Tengo una cuenta. <a href="#" class="text-danger ms-2 fw-bold">¡Logearme!</a> </small> </label>
+                            </div>    
+                        </form>
+
+                    </div>    
+                    <% }; %>    
                 </div>
             </div>
         </div>
@@ -105,10 +164,55 @@
 </html>
 
 
+<!--
+Diferentes acciones dependiendo de la interaccion que este ejecutando.
+Esto es mportante para google reCAPTCHA
+data-action='login'
+data-action='register'
+data-action='forgot_password'
+-->
+
+<script>
+    // ir a la pagina > google.com/recaptcha/about/
+    // acceder a V3 Admin Console  (hacer esto con la cuenta de google scorpinosred@gmail.com)
+    TokenRecaptacha = document.getElementById('recaptchaResponse');
+    const btnRegister = document.getElementById('btnRegister');
+
+
+    btnRegister.addEventListener('click', onSubmitSignup)
+
+
+    async function onSubmitSignup() {
+        //primero bloqueamos para que solo puedan darle una sola vez al boton
+        //desactivamos el boton
+        let response = grecaptcha.getResponse();
+        //console.log(typeof response);
+        //console.log(response.length );
+        //cuando tenemos el token de reCAPTCHA es cuando lo agregamos en el input hidden
+        // y de esta forma sabemso que todo llegara junto para ser validado en el servidor
+        //y tambien llega una sola vez. 
+        if (response.length !==0){
+            TokenRecaptacha.value = response;
+            //console.log("response -->", response);
+
+            btnRegister.classList.add('close'); //oculto el boton de registro activo
+            btnRegisterLock.classList.add('close');//ocultar el boton registro lock
+            btnRegisterDisabled.classList.remove('close');//aparece el boton bloqueado que tiene el spinner
+
+            document.getElementById("signup").submit(); //enviamos el formulario al servidor.
+            //console.log("enviando al backend");
+        }
+        
+        
+    }
+
+
+</script>
+
+
 <script>
     let CheckRegister = document.getElementById('CheckRegister');
-    let btnRegisterDisabled = document.getElementById('btnRegisterDisabled');
-    let btnRegister = document.getElementById('btnRegister');
+    let btnRegisterLock = document.getElementById('btnRegisterLock');
 
     
     CheckRegister.addEventListener('change', ()=>{
@@ -117,11 +221,11 @@
         console.log(CheckRegister.checked)
         if (checKED === true){
             console.log("esta marcado")
-            btnRegisterDisabled.classList.add('close');
+            btnRegisterLock.classList.add('close');
             btnRegister.classList.remove('close');
         } else {
             console.log("NO esta marcado")
-            btnRegisterDisabled.classList.remove('close');
+            btnRegisterLock.classList.remove('close');
             btnRegister.classList.add('close');
         }
     })
