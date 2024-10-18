@@ -2,6 +2,13 @@
 <html lang="en">
 
 <head>
+    <meta property= "og:title" content="<%= storeProfile[0].username %>">
+    <meta property= "og:description" content="Visita mi tienda en Blissenet.com">
+    <meta property= "og:image" content="<%= searchBanner[0].url %>">
+    <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile[0].username %>">
+    <!-- <label for=""><%= searchBanner[0].url %></label> -->
+    <!-- <label for=""><%= storeProfile[0].username %></label> -->
+    
     <%- include('../partials/head.ejs') %>
     <title>Blissenet Account</title>
 </head>
@@ -373,9 +380,9 @@
 
                                   <div class="d-flex justify-content-start" style="position: relative;">
 
-                                    <span  class="mx-1 shareToggle" style="cursor: pointer; user-select: none;"><i class="bi bi-share me-1"></i> Compartir</span> 
+                                    <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0;  "> <i class="bi bi-share me-1"></i>  Compartir </button> 
                                             
-                                    <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 25px;" >
+                                    <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 45px;" >
                                           <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
                                           <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
                                           <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
@@ -457,12 +464,14 @@
                                   <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body d-flex justify-content-center align-items-center my-3">
-                                    <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
-                                      <canvas id="qr-canvas">  
+                                <div class="modal-body d-flex justify-content-center align-items-center py-5" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(102,0,255,1) 100%);">
+                                    <div class="contentQR d-flex flex-column my-2" style="position: relative; max-width: 320px;">
+                                      <canvas id="qr-canvas" class="rounded-3 mt-2">  
+                                    
                                       </canvas>
+                                      <img src="/img/logoSuperiorQR.png" class="shadow" alt="" style="position: absolute; top: -35px; right: 70px; width: 60px;"> 
                                       
-                                      <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -1102,9 +1111,9 @@
     let btnClose;
  
     containerStar.addEventListener('click', ()=>{
-        console.log("le has dado click a este boton");
-        console.log("Estos son los dato---->1 ", starData.childNodes[1].value );
-        console.log("Estos son los dato---->3 ", starData.childNodes[3].value );
+        //console.log("le has dado click a este boton");
+        //console.log("Estos son los dato---->1 ", starData.childNodes[1].value );
+        //console.log("Estos son los dato---->3 ", starData.childNodes[3].value );
 
         efecto()
         setInterval(normalStart, 2000)
@@ -1213,14 +1222,14 @@
   const yearCurrent = document.querySelector('.yearCurrent'); 
   
   const Store = store.childNodes[1].value;
-  console.log("Esto es Store ----------->",Store);
+  //console.log("Esto es Store ----------->",Store);
   
   
   let dato = {
     store : Store
   }
   
-  console.log("Esto es dato ---->",dato)
+  //console.log("Esto es dato ---->",dato)
   
   fetch("/record-trust", {
                 method: "post",
@@ -1342,15 +1351,15 @@
 
   stars.forEach((star, index)=>{
     star.addEventListener('click', ()=>{
-      console.log(`se ha marcado la estrella -> ${index + 1}`)
+      //console.log(`se ha marcado la estrella -> ${index + 1}`)
       markStar = `${index + 1}`;
       stars.forEach((s, i)=>{
         if (i <= index){
           s.classList.add('bi-star-fill');
           s.classList.remove('bi-star');
-          console.log("markStar", markStar);
+          //console.log("markStar", markStar);
           if (markStar !==0  ){
-            console.log("Se activa el boton de calificacion");
+            //console.log("Se activa el boton de calificacion");
             btnSendStar.removeAttribute('disabled');
           } 
         }
@@ -1362,9 +1371,9 @@
         s.classList.remove('bi-star-fill');
         s.classList.add('bi-star');
         markStar = 0;
-        console.log("markStar *****", markStar);
+        //console.log("markStar *****", markStar);
         if ( markStar == 0  ){
-            console.log("Se activa el boton de calificacion");
+            //console.log("Se activa el boton de calificacion");
             btnSendStar.setAttribute('disabled', '');
           }
         
@@ -1376,13 +1385,13 @@
   })
 
   eraser.addEventListener('click', ()=>{
-      console.log("esamos dando click al borrador")
+      //console.log("estamos dando click al borrador")
       stars.forEach((s)=>{
         s.classList.remove('bi-star-fill');
         s.classList.add('bi-star');
         markStar = 0;
-        console.log("markStar ---->", markStar);
-        console.log("desactivamos el boton");
+        //console.log("markStar ---->", markStar);
+        //console.log("desactivamos el boton");
         btnSendStar.setAttribute('disabled', '');
       })
   })
@@ -1407,7 +1416,7 @@
 
     })
       .then(response =>response.json() )
-      .then( jsonx => console.log(jsonx))
+      .then( jsonx => console.log (jsonx) )
       .catch( err => console.log(err));
 
 
@@ -1508,12 +1517,7 @@
     containerShare.classList.toggle('invisible')
   })
 
-  //touchstart(al darle un toque con el dedo)
-  //touchstart(al soltar el dedo)
-  shareToggle.addEventListener('touchend', ()=>{
-    containerShare.classList.toggle('invisible')
-  }); // Para dispositivos táctiles
-
+ 
   //copiar link de tienda en el portapapeles
   btnClicBoard.addEventListener('click', ()=>{
     const storeToShare = linkToShare.value;
@@ -1546,8 +1550,9 @@
     const qr = new QRious({
         element: canvas, //en el contenedor donde ira.
         value: url, // informacion que codificara.
-        size: 200 // calidad del codigo
-  });
+        size: 200, // calidad del codigo
+        foreground: '#9200ff' // Establece el color violeta
+    });
 
   })
 
@@ -2464,8 +2469,8 @@
               //console.log(`|-> avatarPerfil : ${avatarPerfil} mailhash : ${mailhash} username : ${username}`)
 
               if (avatarPerfil[0].public_id === 'sin_data'){
-              console.log("avatarPerfil[0] ", avatarPerfil[0]); 
-              console.log("markstar ", markstar);       
+              //console.log("avatarPerfil[0] ", avatarPerfil[0]); 
+              //console.log("markstar ", markstar);       
                       if (markstar == 1){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
