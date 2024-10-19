@@ -956,15 +956,15 @@
                         <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body d-flex justify-content-center align-items-center my-3">
-                                    <div class="contentQR border border-secondary d-flex flex-column" style="max-width: 320px;">
-                                        <canvas id="qr-canvas">  
-                                        </canvas>
-                                        
-                                        <span class="alert-secondary" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                <div class="modal-body d-flex justify-content-center align-items-center py-5" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(102,0,255,1) 100%);">
+                                    <div class="contentQR d-flex flex-column my-2" style="position: relative; max-width: 320px;">
+                                      <canvas id="qr-canvas" class="rounded-3 mt-2 p-3" style="background-color: white;">  
+                                         <!-- Aqui va el codigo QR dinamico -->
+                                      </canvas>
+                                      <img src="/img/logoSuperiorQR.png" class="shadow" alt="" style="position: absolute; top: -33px; right: 87px; width: 60px;"> 
                                     </div>
                                 </div>
                             </div>
@@ -2577,8 +2577,9 @@ btnReportar.addEventListener('click', ()=>{
     const qr = new QRious({
         element: canvas, //en el contenedor donde ira.
         value: url, // informacion que codificara.
-        size: 200 // calidad del codigo
-  });
+        size: 200, // calidad del codigo
+        foreground: '#9200ff' // Establece el color violeta
+    });
 
   })
 

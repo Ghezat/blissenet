@@ -75,6 +75,80 @@
     padding: 2px;
 }
 
+.ContentParaDescargarEnPerfil{
+    display: flex;
+    justify-content: center;
+
+    position: relative;
+}
+
+.paraDescargarEnPerfil{
+    width: 450px;
+}
+
+#qr-canvas{
+        position: absolute;
+        top: 225px;
+        z-index: 200;
+        width: 165px;
+    }
+
+.urlTiendaEnPerfilParaDescargar{
+    position: absolute;
+    top: 170px;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    z-index: 200;
+}    
+
+.usernameEnPerfilParaDescargar{
+    position: absolute;
+    top: 450px;
+    font-size: 24px;
+    font-weight: bold;
+    z-index: 200;
+
+}    
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+.ContentParaDescargarEnPerfil{
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+    .paraDescargarEnPerfil{
+        width: 290px;
+    }
+
+    #qr-canvas{
+        position: absolute;
+        top: 145px;
+        z-index: 200;
+        width: 105px;
+    }
+
+    .urlTiendaEnPerfilParaDescargar{
+        position: absolute;
+        top: 110px;
+        font-size: 11px;
+        font-weight: bold;
+        color: white;
+        z-index: 200;
+    } 
+
+    .usernameEnPerfilParaDescargar{
+        position: absolute;
+        top: 290px;
+        font-size: 18px;
+        font-weight: bold;
+        z-index: 200;
+
+    } 
+}
+
 </style>
 
 <body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
@@ -948,22 +1022,40 @@
                                                                     <div class="containerAD-QR my-2 rounded" style="width: 100%;">
                                                                         <div class="containerADQR my-0 form-group">
                                                                             Descarga tu Anuncio de tienda virtual y colocalo en un lugar visible. 
-                                                                            <button class="btn btn-outline-secondary btn-sm my-1 form-control" id="adQR"> Descarga  <i class="bi bi-qr-code mx-2"></i> </button>                                                                      
+                                                                            <button class="btn btn-secondary btn-sm my-1 form-control" id="adQR"> <i class="bi bi-card-heading mx-2" style="font-size: larger;"></i> Ver Tarjeta  </button>                                                                      
                                                                             <input type="hidden" value="<%= user.username %>" id="urlStore">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="contentQR border border-secondary d-flex flex-column">
-                                                                        <canvas class="close" id="qr-canvas">  
-                                                                        </canvas>
-                                                                        
-                                                                        <span class="alert-secondary close" id="pieQR"><img src="/img/favicon.png" alt="" class="mx-2"> Blissenet.com</span>
+                                                                    <div class="contentMainQR close" style="width: 100%; background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgb(75, 60, 97) 100%);">
+                                                                        <div class="contentQR d-flex justify-content-center pb-2 closed" style="width: 100%;">
+
+                                                                            <div class="ContentParaDescargarEnPerfil shadow">
+                                                                                <img src="/img/paraDescargarEnPerfil.png" alt="" class="paraDescargarEnPerfil">
+                                                                                <canvas class="close" id="qr-canvas"> 
+                                                                                    <!-- dinamico --> 
+                                                                                </canvas>
+                                                                                <span class="urlTiendaEnPerfilParaDescargar">
+                                                                                    <!-- dinamico -->
+                                                                                </span>
+                                                                                <span class="usernameEnPerfilParaDescargar">
+                                                                                    <!-- dinamico -->
+                                                                                </span>
+                                                                            
+                                                                            </div>
+    
+                                                                            
+                                                                        </div>
+
+                                                                        <div class="contentButton form-group p-2">
+                                                                            <button class="form-control btn btn-primary" id="downloadCard"> <i class="bi bi-card-heading mx-2" style="font-size: larger;"></i>  Descargar Tarjeta  </button>
+                                                                        </div>
                                                                     </div>
+
+
                                                                     
                                                                 
                                                                 </div> 
                                                             </div>
-
-
                     
                                                             <div class="row shadow p-2 m-2 bg-body rounded border">
                                                                 <div class="col-md-2 col-sm-2  d-flex justify-align-center justify-content-center"> <img src="/img/cheched.png" style="width : 50px; height: 50px;"> </div>
@@ -1536,11 +1628,14 @@
     </script>
 
     <script>
-        const contentQR = document.querySelector('.contentQR');
+        const contentMainQR = document.querySelector('.contentMainQR');
+        const contentQR = document.querySelector('.contentQR'); //container que debe verse
         const adQR = document.getElementById('adQR');
         const urlStore = document.getElementById('urlStore');
         const canvas = document.getElementById('qr-canvas');
-        const pieQR = document.getElementById('pieQR');
+        const urlTiendaEnPerfilParaDescargar = document.querySelector('.urlTiendaEnPerfilParaDescargar');
+        const usernameEnPerfilParaDescargar = document.querySelector('.usernameEnPerfilParaDescargar');
+        const downloadCard = document.getElementById('downloadCard');
         
 
         adQR.addEventListener('click', ()=>{
@@ -1551,13 +1646,22 @@
             console.log("url", url);
             
             canvas.classList.remove('close');
-            pieQR.classList.remove('close');
 
             const qr = new QRious({
                 element: canvas, //en el contenedor donde ira.
                 value: url, // informacion que codificara.
-                size: 180 // Tamaño del código QR
+                size: 200 // calidad del código QR
             });
+
+
+            urlTiendaEnPerfilParaDescargar.innerText = `https://blissenet.com/account/${store}`
+            usernameEnPerfilParaDescargar.innerText = store;
+            contentMainQR.classList.toggle('close');
+
+            
+        })
+
+        downloadCard.addEventListener('click', ()=>{
 
             html2canvas(contentQR).then(canvas =>{
                 

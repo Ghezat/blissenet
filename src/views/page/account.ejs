@@ -8,6 +8,11 @@
     <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile[0].username %>">
     <!-- <label for=""><%= searchBanner[0].url %></label> -->
     <!-- <label for=""><%= storeProfile[0].username %></label> -->
+    <!-- Metadatos para Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= storeProfile[0].username %>">
+    <meta name="twitter:description" content="Visita mi tienda en Blissenet.com">
+    <meta name="twitter:image" content="<%= searchBanner[0].url %>">
     
     <%- include('../partials/head.ejs') %>
     <title>Blissenet Account</title>
@@ -380,7 +385,7 @@
 
                                   <div class="d-flex justify-content-start" style="position: relative;">
 
-                                    <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0;  "> <i class="bi bi-share me-1"></i>  Compartir </button> 
+                                    <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit"> <i class="bi bi-share me-1"></i>  Compartir </button> 
                                             
                                     <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 45px;" >
                                           <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
@@ -450,7 +455,7 @@
                         <% }); %>
                       <% }; %>
                     </div> 
-
+        
                 </div> <!-- aqui cierra el bloque Topbar--> 
                 <% storeProfile.forEach((eleStore)=>{ %>
 
@@ -464,14 +469,13 @@
                                   <h5 class="modal-title" id="staticComprarLabel">Codigo QR</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
+                                
                                 <div class="modal-body d-flex justify-content-center align-items-center py-5" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(102,0,255,1) 100%);">
                                     <div class="contentQR d-flex flex-column my-2" style="position: relative; max-width: 320px;">
                                       <canvas id="qr-canvas" class="rounded-3 mt-2">  
-                                    
+                                        <!-- Aqui va el codigo QR dinamico -->
                                       </canvas>
                                       <img src="/img/logoSuperiorQR.png" class="shadow" alt="" style="position: absolute; top: -35px; right: 70px; width: 60px;"> 
-                                      
-                                      
                                     </div>
                                 </div>
                             </div>
@@ -1511,10 +1515,20 @@
   const linkToShare = document.getElementById('linkToShare'); //374 linea
   const btnQR = document.getElementById('btnQR');
   const canvas = document.getElementById('qr-canvas');
+
+  const containerMainRRSS = document.querySelector('.containerMainRRSS');
   
 
   shareToggle.addEventListener('click', ()=>{
     containerShare.classList.toggle('invisible')
+    
+    const shareActive = containerShare.classList.contains('invisible');
+    //console.log("shareActive -->", shareActive);
+    if (shareActive === false){
+      containerMainRRSS.classList.add('invisible');
+    } else {
+      containerMainRRSS.classList.remove('invisible');
+    }
   })
 
  
