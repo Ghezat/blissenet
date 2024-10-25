@@ -67,14 +67,16 @@
                                 <input type="password" name="confirmPassword" placeholder="Confirme contraseña" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off" required>
                             </div>
 
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="CheckRegister">
-                                <label class="form-check-label" for="CheckRegister">
-                                    <small>
-                                        Acepto los <a href="/terms">Términos</a> y <a href="/policy">Politicas</a>
-                                        aqui declarados.
-                                    </small>
-                                </label>
+                            <div class="form-check rounded-1" style="background-color: rgba(0, 0, 0, 0.6);">
+                                <div class="form-group mx-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="CheckRegister">
+                                    <label class="form-check-label" for="CheckRegister">
+                                        <small style="user-select: none;">
+                                            Acepto los <a href="/terms">Términos</a> y <a href="/policy">Politicas</a>
+                                            aqui declarados.
+                                        </small>
+                                    </label>
+                                </div>
                             </div>
 
                             <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
@@ -123,26 +125,25 @@
                                 <input type="password" name="confirmPassword" placeholder="Confirme contraseña" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off" required>
                             </div>
 
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="CheckRegister">
-                                <label class="form-check-label" for="CheckRegister">
-                                    <small>
-                                        Acepto los <a href="/terms">Términos</a> y <a href="/policy">Politicas</a>
-                                        aqui declarados.
-                                    </small>
-                                </label>
+                            <div class="form-check border border-secondary rounded-1" style="background-color: rgba(0, 0, 0, 0.6);">
+                                <div class="form-group mx-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="CheckRegister" style="margin-left: -14px;">
+                                    <label class="form-check-label ms-2" for="CheckRegister">
+                                        <small>
+                                            Acepto los <a href="/terms">Términos</a> y <a href="/policy">Politicas</a>
+                                            aqui declarados.
+                                        </small>
+                                    </label>
+                                </div>
                             </div>
 
-                            <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
-                            <input type="hidden" name="token">
-                            <div class="form-group my-3 mt-3">  
 
-                                <button class="form-control btn btn-secondary" disabled>
-                                    Register Block <i class="bi bi-lock ms-1"></i>
-                                </button>
+
+                            <button class="form-control btn btn-secondary" disabled>
+                                Register Block <i class="bi bi-lock ms-1"></i>
+                            </button>
                                 
-                            </div>
-
+                           
                             <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
                                 <label for="" class=" mx-1"><small> Tengo una cuenta. <a href="#" class="text-danger ms-2 fw-bold">¡Logearme!</a> </small> </label>
                             </div>    

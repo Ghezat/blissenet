@@ -9,7 +9,6 @@
     const tableStyle = document.querySelector('.tableStyle');//se usa cuando solo hay una tabla en el html y se usa en una tabla
     const tableBox = document.querySelectorAll('.tableBox');//se usara cuando hay mas de una table en un HTML igual su uso es en una tabla
     const bodyTheme = document.querySelectorAll('.bodyTheme');
-    const dropdownMenuLink = document.getElementById('dropdownMenuLink');
     const themaTextLight = document.querySelectorAll('.themaTextLight'); //esta clase para que funcione debe tener en el style del html la clase .textLight
     const linkOptions = document.querySelectorAll('.linkOptions');
 
@@ -31,8 +30,7 @@
         if (tableStyle){
           tableStyle.classList.remove('table-dark');
         }
-        dropdownMenuLink.innerHTML = '<i class="bi bi-palette"></i>'
-        controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoSun.png" class="me-1"  style="width: 20px;"> Light</p>'
+        controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'
         tableBox.forEach((ele)=>{
           ele.classList.remove('table-dark');
         })
@@ -66,8 +64,7 @@
         if (tableStyle){
           tableStyle.classList.add('table-dark');
         }
-        dropdownMenuLink.innerHTML = '<i class="bi bi-palette text-light"></i>'
-        controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;"> Dark</p>'
+        controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
         tableBox.forEach((ele, i)=>{
           ele.classList.add('table-dark');
         })
@@ -112,8 +109,7 @@
       if (tableStyle){
          tableStyle.classList.add('table-dark');
       }
-      dropdownMenuLink.innerHTML = '<i class="bi bi-palette text-light"></i>'
-      controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;"> Dark</p>'
+      controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
       tableBox.forEach((ele, i)=>{
           ele.classList.add('table-dark');
       })
@@ -152,8 +148,7 @@
       if (tableStyle){
           tableStyle.classList.remove('table-dark');
       }
-      dropdownMenuLink.innerHTML = '<i class="bi bi-palette"></i>'
-      controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoSun.png" class="me-1"  style="width: 20px;"> Light</p>'
+      controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'
       tableBox.forEach((ele, i)=>{
           ele.classList.remove('table-dark');
       })

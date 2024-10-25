@@ -1,551 +1,132 @@
 <script>
-
+ 
   let estadoColorHead;
   const controlHead = document.querySelector('.controlHead');
   const navHead = document.getElementById('navHead');
   const logoBlissenet = document.getElementById('logoBlissenet');
   const logoBlissenetCom = document.getElementById('logoBlissenet_com');
-  const dropdownMenuLink = document.getElementById('dropdownMenuLink');
   const footerTheme = document.querySelector('.footerTheme');
   const themaTextLight = document.querySelectorAll('.themaTextLight'); //esta clase para que funcione debe tener en el style del html la clase .textLight
   const linkOptions = document.querySelectorAll('.linkOptions');
 
   hColor()
   
-
   function hColor(){
     
-    estadoColorsHead = localStorage.getItem("estadoHead");
+    let estadoColorsHead = localStorage.getItem("estadoHead");
+    console.log("estadoColorsHead ----------->", estadoColorsHead);
 
-    console.log("valor de estadoHead", estadoColorsHead)
-    if (estadoColorsHead === 'light'){
-      navHead.style.backgroundColor = "#f9f9f9";
-      navHead.classList.add('navbar-light');
-      logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
-      logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
-      dropdownMenuLink.innerHTML = '<i class="bi bi-palette"></i>'
-      controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoSun.png" class="me-1"  style="width: 20px;"> Light</p>'
-      if (footerTheme){
-        footerTheme.classList.remove('bg-dark', 'text-light');
-        footerTheme.classList.add('bg-light', 'text-dark');
-      }
-      if (themaTextLight){
-          themaTextLight.forEach((ele)=>{
-            ele.classList.remove("textLight")
-          })
-      }
-      if (linkOptions){
-          linkOptions.forEach((ele)=>{
-            ele.style.color = "black";
-          })
-      }
+
+    console.log("valor de estadoColorsHead", estadoColorsHead);
+    if (estadoColorsHead === 'light' || estadoColorsHead === null ){
+        localStorage.setItem("estadoHead", "light"); //pode fecto se configura como light desde el principio
+        navHead.style.backgroundColor = "#f9f9f9"; //color muy claro en el navegador
+        navHead.classList.add('navbar-light');
+        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
+        logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
+        controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'
+        if (footerTheme){
+          footerTheme.classList.remove('bg-dark', 'text-light');
+          footerTheme.classList.add('bg-light', 'text-dark');
+        }
+        if (themaTextLight){
+            themaTextLight.forEach((ele)=>{
+              ele.classList.remove("textLight")
+            })
+        }
+        if (linkOptions){
+            linkOptions.forEach((ele)=>{
+              ele.style.color = "black";
+            })
+        }
       
   
     } else {
-      navHead.style.backgroundColor = "rgb(27, 27, 27)";
-      navHead.classList.add('navbar-dark');
-      logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
-      logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
-      dropdownMenuLink.innerHTML = '<i class="bi bi-palette text-light"></i>'
-      controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;"> Dark</p>'
-
-      if (footerTheme){
-        footerTheme.classList.add('bg-dark', 'text-light');
-        footerTheme.classList.remove('bg-light', 'text-dark');
-      }
-      if (themaTextLight){
-          themaTextLight.forEach((ele)=>{
-            ele.classList.add("textLight")
-          })
-      }
-      if (linkOptions){
-          linkOptions.forEach((ele)=>{
-            ele.style.color = "white";
-          })
-      }
+        navHead.style.backgroundColor = "rgb(27, 27, 27)";
+        navHead.classList.add('navbar-dark');
+        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
+        logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
+        controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
+        if (footerTheme){
+          footerTheme.classList.add('bg-dark', 'text-light');
+          footerTheme.classList.remove('bg-light', 'text-dark');
+        }
+        if (themaTextLight){
+            themaTextLight.forEach((ele)=>{
+              ele.classList.add("textLight")
+            })
+        }
+        if (linkOptions){
+            linkOptions.forEach((ele)=>{
+              ele.style.color = "white";
+            })
+        }
         
     }
 
   }
 
 
-  controlHead.addEventListener('click', ()=>{
-
-   estadoColorHead = localStorage.getItem("estadoHead");
-
-   if (estadoColorHead === "light"){
-    console.log("el estado es light y debo cambiarlo a dark ");
-    navHead.style.backgroundColor = "rgb(27, 27, 27)";
-    navHead.classList.add('navbar-dark');
-    navHead.classList.remove('navbar-light');
-    logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
-    logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
-    dropdownMenuLink.innerHTML = '<i class="bi bi-palette text-light"></i>'
-    controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;"> Dark</p>'
-    if (footerTheme){
-        footerTheme.classList.add('bg-dark', 'text-light');
-        footerTheme.classList.remove('bg-light', 'text-dark');
-    }
-    if (themaTextLight){
-          themaTextLight.forEach((ele)=>{
-            ele.classList.add("textLight")
-          })
-    }
-    if (linkOptions){
-          linkOptions.forEach((ele)=>{
-            ele.style.color = "white";
-          })
-    }  
-
-    localStorage.setItem("estadoHead", "dark" );
-    estadoTheme = localStorage.getItem('theme');
-    if (estadoTheme === ''){
-        console.log('ponemos todo dark')
-       
-        barrHorizontIcon.style.cssText = 'background-color : #1f2327;'
-        arteGallery.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        raffle.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        aeronautica.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        articulo.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        automotriz.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        bienesraices.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        nautico.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        servicio.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-        subasta.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-      }
-    
-   } else {
-    console.log("el estado es dark y debo cambiarlo a light ");
-    navHead.style.backgroundColor = "#f9f9f9";
-    navHead.classList.add('navbar-light');
-    navHead.classList.remove('navbar-dark');
-    logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span>`;
-    logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
-    dropdownMenuLink.innerHTML = '<i class="bi bi-palette"></i>'
-    controlHead.innerHTML = '<p class="m-0"><img src="/img/iconoSun.png" class="me-1"  style="width: 20px;"> Light</p>'
-    if (footerTheme){
-        footerTheme.classList.remove('bg-dark', 'text-light');
-        footerTheme.classList.add('bg-light', 'text-dark');
-    }
-    if (themaTextLight){
-          themaTextLight.forEach((ele)=>{
-            ele.classList.remove("textLight")
-          })
-    }
-    if (linkOptions){
-          linkOptions.forEach((ele)=>{
-            ele.style.color = "black";
-          })
-    }  
-
-    localStorage.setItem("estadoHead", "light" )
-    estadoTheme = localStorage.getItem('theme');
-    if (estadoTheme === ''){
-        console.log('ponemos todo light')
-   
-        barrHorizontIcon.style.cssText = 'background-color : #b8bdc4;'
-        raffle.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        arteGallery.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        aeronautica.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        articulo.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        automotriz.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        bienesraices.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        nautico.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        servicio.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-        subasta.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-      }        
-   }
-
-   console.log("el estado es", estadoColorHead);
-
-  });
-
-
- </script>
-<script>
- //declarar todas las constantes necesarias
- let estadoColorsIcon;
-   
- const checkColor = document.querySelector('.checkColor');
- const colorIcons = document.querySelector('.ico-colors');
- const raffle = document.querySelector('.raffle');
- const arteGallery = document.querySelector('.arteGallery');
- const aeronautica = document.querySelector('.aeronautica');
- const articulo = document.querySelector('.articulo');
- const automotriz = document.querySelector('.automotriz');
- const bienesraices = document.querySelector('.bienesraices');
- const nautico = document.querySelector('.nautico');
- const servicio = document.querySelector('.servicio');
- const subasta = document.querySelector('.subasta');
-
- icolor()
-
- function icolor(){
-   estadoColorsIcon = localStorage.getItem("estadoIcolor");
-
-   console.log("valor de estadoColorsIcon", estadoColorsIcon)
-   if (estadoColorsIcon == 'white'){
-     raffle.innerHTML = '<img src="/img/ico-raffleW.png" class="m-0 rounded-pill" style="width: 40px; height: 40px">'
-     arteGallery.innerHTML = '<img src="/img/ico-arteGalleryW.png" class="m-0 rounded-pill" style="width: 40px; height: 40px">'
-     aeronautica.innerHTML = '<img src="/img/ico-aeronauticaW.png" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     articulo.innerHTML = '<img src="/img/ico-articuloW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     automotriz.innerHTML = '<img src="/img/ico-automotrizW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     bienesraices.innerHTML = '<img src="/img/ico-bienesRaicesW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     nautico.innerHTML = '<img src="/img/ico-nauticoW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     servicio.innerHTML = '<img src="/img/ico-servicioW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     subasta.innerHTML = '<img src="/img/ico-subastaW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     checkColor.innerHTML = ''
-   } else {
-     raffle.innerHTML = '<img src="/img/ico-raffleC.png" class=" m-0 rounded-pill" style="width: 40px; height: 40px">'
-     arteGallery.innerHTML = '<img src="/img/ico-arteGalleryC.png" class=" m-0 rounded-pill" style="width: 40px; height: 40px">'
-     aeronautica.innerHTML = '<img src="/img/ico-aeronauticaC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     articulo.innerHTML = '<img src="/img/ico-articuloC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     automotriz.innerHTML = '<img src="/img/ico-automotrizC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     bienesraices.innerHTML = '<img src="/img/ico-bienesRaicesC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     nautico.innerHTML = '<img src="/img/ico-nauticoC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     servicio.innerHTML = '<img src="/img/ico-servicioC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     subasta.innerHTML = '<img src="/img/ico-subastaC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     checkColor.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-   }
-
- }
- 
- 
- colorIcons.addEventListener('click', ()=>{
-
-   estadoColorsIcon = localStorage.getItem("estadoIcolor");
-
-   if (estadoColorsIcon === "white"){
-     //console.log("el estado es white y debo cambiarlo a colors ");
-     raffle.innerHTML = '<img src="/img/ico-raffleC.png" class=" m-0 rounded-pill" style="width: 40px; height: 40px">'
-     arteGallery.innerHTML = '<img src="/img/ico-arteGalleryC.png" class=" m-0 rounded-pill" style="width: 40px; height: 40px">'
-     aeronautica.innerHTML = '<img src="/img/ico-aeronauticaC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     articulo.innerHTML = '<img src="/img/ico-articuloC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     automotriz.innerHTML = '<img src="/img/ico-automotrizC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     bienesraices.innerHTML = '<img src="/img/ico-bienesRaicesC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     nautico.innerHTML = '<img src="/img/ico-nauticoC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     servicio.innerHTML = '<img src="/img/ico-servicioC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     subasta.innerHTML = '<img src="/img/ico-subastaC.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     checkColor.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     localStorage.setItem("estadoIcolor", "colors" );
-
-   } else {
-     //console.log("el estado es colors y debo cambiarlo a white ");
-     raffle.innerHTML = '<img src="/img/ico-raffleW.png" class="m-0 rounded-pill" style="width: 40px; height: 40px">'
-     arteGallery.innerHTML = '<img src="/img/ico-arteGalleryW.png" class="m-0 rounded-pill" style="width: 40px; height: 40px">'
-     aeronautica.innerHTML = '<img src="/img/ico-aeronauticaW.png" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     articulo.innerHTML = '<img src="/img/ico-articuloW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     automotriz.innerHTML = '<img src="/img/ico-automotrizW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     bienesraices.innerHTML = '<img src="/img/ico-bienesRaicesW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     nautico.innerHTML = '<img src="/img/ico-nauticoW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     servicio.innerHTML = '<img src="/img/ico-servicioW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     subasta.innerHTML = '<img src="/img/ico-subastaW.png" alt="" class="m-0 rounded-pill shadow" style="width: 40px; height: 40px">'
-     checkColor.innerHTML = ''
-     localStorage.setItem("estadoIcolor", "white" )        
-    
-   }
-
-    console.log("el estado es", estadoColorsIcon);
+controlHead.addEventListener('click', ()=>{
 
   
- });
+  let estadoColorsHead = localStorage.getItem("estadoHead");
+  console.log("estadoColorsHead ------------->", estadoColorsHead);
 
- 
-</script>
-<script>
- //theme brick
-
- const controlBrick = document.querySelector('.controlBrick');
-
- controlBrick.addEventListener('click', ()=>{
-    const estadoTheme = localStorage.getItem('theme');
-    if (estadoTheme === 'brick'){
-     localStorage.setItem("theme", "");
-     location.reload();
-    } else {
-     
-     barrHorizontIcon.style.cssText = 'background-color : #a12020;';
-     raffle.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     arteGallery.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     aeronautica.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     articulo.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     automotriz.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     bienesraices.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     nautico.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     servicio.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     subasta.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     checkBrick.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     checkSummer.innerHTML = ''
-     checkLemon.innerHTML = ''
-     checkSky.innerHTML = ''
-     checkOctopus.innerHTML = ''
-     localStorage.setItem("theme", "brick");
-    }
- });
-
-</script>
-<script>
- //theme lemon
-
- const controlLemon = document.querySelector('.controlLemon');
-
- controlLemon.addEventListener('click', ()=>{
-    const estadoTheme = localStorage.getItem('theme');
-    if (estadoTheme === 'lemon'){
-     localStorage.setItem("theme", "");
-     location.reload();
-    } else {
+  if (estadoColorsHead === "light"){
+      localStorage.setItem("estadoHead", "dark" );
+      console.log("el estado es light y debo cambiarlo a dark ");
+      navHead.style.backgroundColor = "rgb(27, 27, 27)";
+      navHead.classList.add('navbar-dark');
+      navHead.classList.remove('navbar-light');
+      logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
+      logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
+      controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
+      
+      if (footerTheme){
+          footerTheme.classList.add('bg-dark', 'text-light');
+          footerTheme.classList.remove('bg-light', 'text-dark');
+      }
+      if (themaTextLight){
+            themaTextLight.forEach((ele)=>{
+              ele.classList.add("textLight")
+            })
+      }
+      if (linkOptions){
+            linkOptions.forEach((ele)=>{
+              ele.style.color = "white";
+            })
+      }  
     
-     barrHorizontIcon.style.cssText = 'background-color : #49a120;'
-     raffle.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     arteGallery.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     aeronautica.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     articulo.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     automotriz.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     bienesraices.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     nautico.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     servicio.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     subasta.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     checkLemon.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     checkBrick.innerHTML = ''
-     checkSummer.innerHTML = ''
-     checkSky.innerHTML = ''
-     checkOctopus.innerHTML = ''
-     localStorage.setItem("theme", "lemon");
-    }
- });
+  } else {
+      console.log("el estado es dark y debo cambiarlo a light ");
+      localStorage.setItem("estadoHead", "light" )
+      navHead.style.backgroundColor = "#f9f9f9";
+      navHead.classList.add('navbar-light');
+      navHead.classList.remove('navbar-dark');
+      logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span>`;
+      logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
+      controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'
+      if (footerTheme){
+          footerTheme.classList.remove('bg-dark', 'text-light');
+          footerTheme.classList.add('bg-light', 'text-dark');
+      }
+      if (themaTextLight){
+            themaTextLight.forEach((ele)=>{
+              ele.classList.remove("textLight")
+            })
+      }
+      if (linkOptions){
+            linkOptions.forEach((ele)=>{
+              ele.style.color = "black";
+            })
+      }  
+
+  }
+  
+
+
+});
 
 </script>
-<script>
- //theme sky
 
- const controlSky = document.querySelector('.controlSky');
-
- controlSky.addEventListener('click', ()=>{
-    const estadoTheme = localStorage.getItem('theme');
-    if (estadoTheme === 'sky'){
-     localStorage.setItem("theme", "");
-     location.reload();
-    } else {
-     
-     barrHorizontIcon.style.cssText = 'background-color : #014dae;'
-     //arteGallery.style.border ="1px solid #113f7a";
-     raffle.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     arteGallery.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     aeronautica.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     articulo.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     automotriz.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     bienesraices.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     nautico.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     servicio.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     subasta.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     checkSky.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     checkBrick.innerHTML = ''
-     checkSummer.innerHTML = ''
-     checkLemon.innerHTML = ''
-     checkOctopus.innerHTML = ''
-     localStorage.setItem("theme", "sky");
-    }
- });
-
-</script>
-<script>
- //theme Octupus
-
- const controlOctopus = document.querySelector('.controlOctopus');
-
- controlOctopus.addEventListener('click', ()=>{
-    const estadoTheme = localStorage.getItem('theme');
-    if (estadoTheme === 'octopus'){
-     localStorage.setItem("theme", "");
-     location.reload();
-    } else {
-    
-     barrHorizontIcon.style.cssText = 'background-color : #4c2882;'
-     raffle.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     arteGallery.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     aeronautica.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     articulo.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     automotriz.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     bienesraices.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     nautico.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     servicio.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     subasta.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     checkOctopus.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     checkBrick.innerHTML = ''
-     checkSummer.innerHTML = ''
-     checkLemon.innerHTML = ''
-     checkSky.innerHTML = ''
-     localStorage.setItem("theme", "octopus");
-    }
-    
- });
-
-</script>
-<script>
- //theme Summer
-
- const controlSummer = document.querySelector('.controlSummer');
-
- controlSummer.addEventListener('click', ()=>{
- const estadoTheme = localStorage.getItem('theme');
-    if (estadoTheme === 'summer'){
-     localStorage.setItem("theme", "");
-     location.reload();
-    } else {
-    
-     barrHorizontIcon.style.cssText = 'background-color : #f0c51e;'
-     //arteGallery.style.border ="1px solid #7b5e21";
-     raffle.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     arteGallery.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     aeronautica.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     articulo.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     automotriz.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     bienesraices.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     nautico.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     servicio.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     subasta.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     checkSummer.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     checkBrick.innerHTML = ''
-     checkLemon.innerHTML = ''
-     checkSky.innerHTML = ''
-     checkOctopus.innerHTML = ''
-     localStorage.setItem("theme", "summer");
-    }
- });
-
-</script>
-<script>
- //actualizar estados de themas
-
-
- const barrHorizontIcon = document.querySelector('.barrHorizontIcon');
- const checkBrick = document.querySelector('.checkBrick');
- const checkSummer = document.querySelector('.checkSummer');
- const checkLemon = document.querySelector('.checkLemon');
- const checkSky = document.querySelector('.checkSky');
- const checkOctopus = document.querySelector('.checkOctopus');
-
- theme()
-
- function theme(){
-   const themes = localStorage.getItem('theme');
-
-   if (themes === 'brick'){
-     console.log('el theme es brick')
-     barrHorizontIcon.style.cssText = 'background-color : #a12020;';
-     raffle.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     arteGallery.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     aeronautica.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     articulo.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     automotriz.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     bienesraices.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     nautico.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     servicio.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     subasta.style.cssText ="border: 1px solid #7e0707; border-radius : 50%";
-     checkBrick.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     
-
-   } else if (themes === 'summer') {
-     console.log('el theme es summer')
-     barrHorizontIcon.style.cssText = 'background-color : #f0c51e;'
-     //arteGallery.style.border ="1px solid #7b5e21";
-     raffle.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     arteGallery.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     aeronautica.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     articulo.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     automotriz.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     bienesraices.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     nautico.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     servicio.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     subasta.style.cssText ="border: 1px solid #b67c00; border-radius : 50%";
-     checkSummer.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     
-     
-   } else if (themes === 'lemon') {
-     console.log('el theme es lemon')
-     barrHorizontIcon.style.cssText = 'background-color : #49a120;'
-     raffle.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     arteGallery.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     aeronautica.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     articulo.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     automotriz.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     bienesraices.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     nautico.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     servicio.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     subasta.style.cssText ="border: 1px solid #0a680a; border-radius : 50%";
-     checkLemon.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     
-     
-   } else if (themes === 'sky'){
-     console.log('el theme es sky')
-     barrHorizontIcon.style.cssText = 'background-color : #014dae;'
-     //arteGallery.style.border ="1px solid #113f7a";
-     raffle.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     arteGallery.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     aeronautica.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     articulo.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     automotriz.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     bienesraices.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     nautico.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     servicio.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     subasta.style.cssText ="border: 1px solid #03326f; border-radius : 50%;"
-     checkSky.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-     
-
-   } else if (themes === 'octopus'){
-     console.log('el theme es octopus')
-     barrHorizontIcon.style.cssText = 'background-color : #4c2882;'
-     raffle.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     arteGallery.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     aeronautica.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     articulo.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     automotriz.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     bienesraices.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     nautico.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     servicio.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     subasta.style.cssText ="border: 1px solid #341268; border-radius : 50%;"
-     checkOctopus.innerHTML = '<i class="bi bi-check2 me-3"></i>'
-
-
-   } else if (themes === ''){
-     console.log('el theme es libre y toma el que existe en estadoHead');
-     estadoHead = localStorage.getItem('estadoHead');
-     console.log("esto es el valor de estadoHead", estadoHead);
-
-     if (estadoHead === 'light' && themes ===''){
-       
-       iconLupa.style.cssText = 'color : #545c67'
-       btnSearcher.style.cssText = 'background-color : #b8bdc4; border: none; height: 100%; width: 70px;'
-       barrHorizontIcon.style.cssText = 'background-color : #b8bdc4;'
-       raffle.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       arteGallery.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       aeronautica.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       articulo.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       automotriz.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       bienesraices.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       nautico.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       servicio.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       subasta.style.cssText ="border: 1px solid #f9f9f9; border-radius : 50%;"
-       
-     } else if (estadoHead === 'dark' && themes ===''){
-       
-       iconLupa.style.cssText = 'color : #d5d5d5'
-       btnSearcher.style.cssText = 'background-color : #262a2f; border: none; height: 100%; width: 70px;'
-       barrHorizontIcon.style.cssText = 'background-color : #1f2327;'
-       raffle.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       arteGallery.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       aeronautica.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       articulo.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       automotriz.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       bienesraices.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       nautico.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       servicio.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       subasta.style.cssText ="border: 1px solid #383c41; border-radius : 50%;"
-       
-     }
-   }
-   
- }
-
-</script>

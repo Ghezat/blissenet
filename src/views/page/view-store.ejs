@@ -153,25 +153,7 @@
                 <!-- themes & session -->
                 <div class="contentThemesSesion me-3 d-flex align-items-center">
                   <!-- themes -->
-                  <div class="dropdown mx-4 themes">
-
-                      <a class="text-decoration-none text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                      </a>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-
-                        <li style="cursor: pointer;"><a class="dropdown-item controlHead"></a></li>
-                        <li> <hr></li>
-                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlBrick"><img src="/img/iconoBrick.png" class="me-1" style="width: 20px;">   Brick</a><span class="checkBrick"></span></li>
-                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSummer" href="#"> <img src="/img/iconoSummer.png" class="me-1"  style="width: 20px;">Summer</a><span class="checkSummer"></span></li>
-                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlLemon" href="#"> <img src="/img/iconoLemon.png" class="me-1"  style="width: 20px;"> Lemon</a><span class="checkLemon"></span></li>
-                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSky" href="#"> <img src="/img/iconoSky.png" class="me-1"  style="width: 20px;"> Sky</a><span class="checkSky"></span></li>
-                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlOctopus" href="#"> <img src="/img/iconoOctopus.png" class="me-1"  style="width: 20px;"> Octopus</a><span class="checkOctopus"></span></li>
-                        <li> <hr></li>
-                        <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item ico-colors"><img src="/img/iconoColorIcons.png" class="me-1"  style="width: 20px;"> Color icons</a><span class="checkColor"></span> </li>
-                        
-                      </ul>
-
-                  </div>
+                  <span class="controlHead"> <!-- icon sun and moon dinamics  --> </span>
 
                   <!-- session -->
                   <div class="dropdown mx-4 login">
@@ -362,14 +344,17 @@
                                         
                         <div class="input-group">
                           <% if (cacheSearch) { %>
-                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="<%= cacheSearch %>">
+                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="<%= cacheSearch %>" style="border: 1px solid #f0c51e; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
                           <% } else if (cacheHashtag) { %>
-                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="#<%= cacheHashtag %>">
+                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="#<%= cacheHashtag %>" style="border: 1px solid #f0c51e; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
                           <% } else { %>
-                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId"  placeholder="Buscando Tienda...?">
+                            <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId"  placeholder="Buscando Tienda...?" style="border: 1px solid #f0c51e; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
                           <% }; %>  
 
-                          <button class="btnSearcherClass btnEFECT" type="submit" id="btnSearcher"><i class="bi bi-search" id="iconLupa" style="color: #f39a9a;"></i></button></button>
+
+                          <button class="btnSearcherClass btnEFECT" type="submit" id="btnSearcher" style="background: #f0c51e; border: none; height: 100%; width: 70px; width: 70px; height: 100%;border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                            <i class="bi bi-search" id="iconLupa" style="color: rgb(58, 58, 58);"></i>
+                          </button>
                         </div>
 
                       </div><!-- border: none; height: 100%; width: 70px; border-left: 1px solid rgb(196, 196, 196, 0.5); -->
@@ -387,7 +372,7 @@
     </nav>
 
     <div class="row rowWidth SectionPublish">
-      <div class="col-lg-3 col-md-3 col-sm-12 bg-light p-0 p-1 OptionsBar bg-dark frame">
+      <div class="col-lg-3 col-md-3 col-sm-12 bg-light p-0 p-1 OptionsBar bg-dark" style="border: 2px solid #f0c51e;">
         
         <div class="card mx-0 border border-info cardResultSearch"  style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; ">
           <div class="card-header d-flex justify-content-between"><span>Colección de Tiendas</span> <i class="bi bi-shop-window" style="font-size: 20px;"></i> </div>
@@ -493,22 +478,22 @@
 
       </div>
       <div class="col-lg-9 col-md-9 col-sm-12 p-0">
-
-        <div class="barrHorizontIcon p-0 m-0 d-flex flex-wrap border-bottom border-dark" style="width: 100%;">
+        <div class="barrHorizontIcon px-0 py-1 m-0 d-flex flex-wrap border-bottom border-secondary shadow-sm" style="width: 100%; background: #f0c51e;">
           <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto;">
-            <a href="/view-raffles" class="text-decoration-none mx-4 p-0 raffle" title="Sorteos" style="width: 40px; height: 40px;"></a>
-            <a href="/view-artes" class="text-decoration-none mx-4 p-0 arteGallery" title="Galeria de Arte" style="width: 40px; height: 40px;"></a>
-            <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 aeronautica" title="Aeronáuticos" style="width: 40px; height: 40px;"> </a>
-            <a href="/view-items" class="text-decoration-none mx-4 p-0 articulo" title="Articulos" style="width: 40px; height: 40px;"></a>
-            <a href="/view-automotive" class="text-decoration-none mx-4 p-0 automotriz" title="Automotriz" style="width: 40px; height: 40px;"></a> 
-            <a href="/view-realstate" class="text-decoration-none mx-4 p-0 bienesraices" title="Bienes Raíces" style="width: 40px; height: 40px;"></a>
-            <a href="/view-nautical" class="text-decoration-none mx-4 p-0 nautico" title="Náuticos" style="width: 40px; height: 40px;"></a>
-            <a href="/view-services" class="text-decoration-none mx-4 p-0 servicio" title="Servicios" style="width: 40px; height: 40px;"></a>
-            <a href="/view-auction" class="text-decoration-none mx-4 p-0 subasta" title="Subastas" style="width: 40px; height: 40px;"></a>
+            <a href="/view-raffles" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-raffleW.png" alt="" title="Sorteos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-artes" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-arteGalleryW.png" alt="" title="Artes" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-aeronauticaW.png" alt="" title="Aeronáuticos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-items" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-articuloW.png" alt="" title="Articulos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-automotive" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-automotrizW.png" alt="" title="Automotriz" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-realstate" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-bienesRaicesW.png" alt="" title="Bienes Raices" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-nautical" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-nauticoW.png" alt="" title="Náuticos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-services" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-servicioW.png" alt="" title="Servicios" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+            <a href="/view-auction" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-subastaW.png" alt="" title="Subastas" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
           </ul>
         </div>
         
-        <div class="viewCollection" style= "height: 100%;">
+        <div class="viewCollection" style="height: auto; background: #fff5cb;">
+       
               <div class="containAlert" style="position: sticky; z-index: 100; top: 0px;" > <!-- bloque dinamico --> </div>
             
               <% if (cardArticleStore.docs.length !==0 ) {%>
@@ -564,7 +549,7 @@
                   </div>
               <% }; %>
 
-              <div class="contentPagination border-bottom border-secondary" style="height: 100%;">
+              <div class="contentPagination border-bottom" style="height: 100%;">
 
                 <% if (cardArticleStore) { %>
                 

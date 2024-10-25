@@ -148,6 +148,10 @@ main{
   width: 80px;
 }
 
+.viewCollection{
+  justify-content: center !important;
+}
+
 /* ---- efecto de sobra en los buscadores */
 
 .btnEFECT{
@@ -282,6 +286,8 @@ color: blueviolet;
   }
 
   .viewCollection{
+    height: 100%;
+    background-color: #fff5cb;
     justify-content: center !important;
   
   }
@@ -353,6 +359,8 @@ color: blueviolet;
   }
 
   .viewCollection{
+    height: 100%;
+    background-color: #fff5cb;
     justify-content: center !important;
   
   }

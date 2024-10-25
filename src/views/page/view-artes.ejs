@@ -100,25 +100,7 @@
 
           <div class="contentThemesSesion me-4 d-flex">
               <!-- themes -->
-              <div class="dropdown ms-4 me-2 themes">
-
-                <a class="text-decoration-none text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-
-                  <li style="cursor: pointer;"><a class="dropdown-item controlHead"></a></li>
-                  <li> <hr></li>
-                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlBrick"><img src="/img/iconoBrick.png" class="me-1" style="width: 20px;">   Brick</a><span class="checkBrick"></span></li>
-                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSummer" href="#"> <img src="/img/iconoSummer.png" class="me-1"  style="width: 20px;">Summer</a><span class="checkSummer"></span></li>
-                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlLemon" href="#"> <img src="/img/iconoLemon.png" class="me-1"  style="width: 20px;"> Lemon</a><span class="checkLemon"></span></li>
-                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlSky" href="#"> <img src="/img/iconoSky.png" class="me-1"  style="width: 20px;"> Sky</a><span class="checkSky"></span></li>
-                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item controlOctopus" href="#"> <img src="/img/iconoOctopus.png" class="me-1"  style="width: 20px;"> Octopus</a><span class="checkOctopus"></span></li>
-                  <li> <hr></li>
-                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item ico-colors"><img src="/img/iconoColorIcons.png" class="me-1"  style="width: 20px;"> Color icons</a><span class="checkColor"></span> </li>
-                  
-                </ul>
-
-              </div>
+              <span class="controlHead cursor-pointer"> <!-- icon sun and moon dinamics  --> </span>
 
               <!-- session -->
               <div class="dropdown ms-4 me-2 login">
@@ -161,13 +143,14 @@
 
               <div class="contentSearch d-flex p-0" style="width: 100%; height: 100%;">
                 <% if (searcherCache) { %> 
-                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="<%= searcherCache %>" aria-label="Search">
+                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="<%= searcherCache %>" aria-label="Search" style="border: 1px solid #f0c51e; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
                 <% } else { %>
-                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" placeholder="Busqueda por Titulo..." aria-label="Search">
+                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" placeholder="Busqueda por Titulo..." aria-label="Search" style="border: 1px solid #f0c51e; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
                 <% }; %> 
-                <button class="btnEFECT" type="submit" id="btnSearcher" style="width: 70px; height: 100%; border-left: 5px solid black ;border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
-                  <i class="bi bi-search" id="iconLupa" style="color: #f39a9a;"></i>
+                <button class="btnEFECT" type="submit" id="btnSearcher" style="background: #f0c51e; border: none; height: 100%; width: 70px; width: 70px; height: 100%;border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                  <i class="bi bi-search" id="iconLupa" style="color: rgb(58, 58, 58);"></i>
                 </button>
+                
               </div>
 
           </div>
@@ -233,9 +216,9 @@
                   
               <% if (user) { %>
                 <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                  <li><a class="dropdown-item" href="/department/create">Herramienta ADS</a></li>
+                  <li><a class="dropdown-item" href="/department/create">Const. Anuncios</a></li>
                 <% if (searchProfile.length !==0 ) { %>
-                  <li><a class="dropdown-item" href="/department/raffle">Herramienta Raffle</a></li>  
+                  <li><a class="dropdown-item" href="/department/raffle">Const. Sorteos</a></li>  
                   <li><a class="dropdown-item" href="/my-ads">Mis Anuncios</a></li>
                   <li><a class="dropdown-item" href="/my-invoices">Facturas</a></li>
                 <% }; %>
@@ -288,10 +271,10 @@
   </nav>
 
   <div class="row rowWidth SectionPublish"> 
-    <div class="col-lg-3 col-md-3 col-sm-12 bg-light p-0 p-1 OptionsBar bg-dark frame">
+    <div class="col-lg-3 col-md-3 col-sm-12 bg-light p-0 p-1 OptionsBar bg-dark" style="border: 2px solid #f0c51e;">
       
       <div class="card mx-0 border border-info cardResultSearch"  style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; ">
-        <div class="card-header d-flex justify-content-between"><span>Galeria de Arte</span> <img src="/img/ico-arteGalleryW.png" alt="" class=" mx-2 rounded-pill" style="width: 35px;"></div>
+        <div class="card-header d-flex justify-content-between align-items-center py-2"><span>Galeria de Arte</span> <img src="/img/ico-arteGalleryG.png" alt="" class=" mx-2 rounded-pill" style="width: 35px;"></div>
         <div class="card-body">
 
           <% if (searcherCache) { %>
@@ -491,8 +474,8 @@
                 </div>
 
                 <div class="form-group my-3">
-                  <button class="form-control btnEFECT" type="submit" id="btnSearcherAuxiliar" style="width: 100%; height: 100%;">
-                    <i class="bi bi-search" id="iconLupaAuxiliar" style="color: #f39a9a;"></i>
+                  <button class="form-control btnEFECT" type="submit" id="btnSearcherAuxiliar" style="width: 100%; height: 100%; background-color : #f0c51e; border: none; height: 100%; width: 100%;">
+                    <i class="bi bi-search" id="iconLupaAuxiliar" style="font-size: larger; color: rgb(58, 58, 58);"></i>
                   </button>
                 </div>
 
@@ -504,20 +487,20 @@
     </div>
 
     <div class="col-lg-9 col-md-9 col-sm-12 p-0">
-       <div class="barrHorizontIcon p-0 m-0 d-flex flex-wrap border-bottom border-dark" style="width: 100%;">
-          <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto;">
-            <a href="/view-raffles" class="text-decoration-none mx-4 p-0 raffle" title="Sorteos" style="width: 40px; height: 40px;"></a>
-            <a href="/view-artes" class="text-decoration-none mx-4 p-0 arteGallery border-bottom" title="Galeria de Arte" style="width: 40px; height: 40px;"></a>
-            <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 aeronautica" title="Aeronáuticos" style="width: 40px; height: 40px;"> </a>
-            <a href="/view-items" class="text-decoration-none mx-4 p-0 articulo" title="Articulos" style="width: 40px; height: 40px;"></a>
-            <a href="/view-automotive" class="text-decoration-none mx-4 p-0 automotriz" title="Automotriz" style="width: 40px; height: 40px;"></a> 
-            <a href="/view-realstate" class="text-decoration-none mx-4 p-0 bienesraices" title="Bienes Raíces" style="width: 40px; height: 40px;"></a>
-            <a href="/view-nautical" class="text-decoration-none mx-4 p-0 nautico" title="Náuticos" style="width: 40px; height: 40px;"></a>
-            <a href="/view-services" class="text-decoration-none mx-4 p-0 servicio" title="Servicios" style="width: 40px; height: 40px;"></a>
-            <a href="/view-auction" class="text-decoration-none mx-4 p-0 subasta" title="Subastas" style="width: 40px; height: 40px;"></a>
-          </ul>
+      <div class="barrHorizontIcon px-0 py-1 m-0 d-flex flex-wrap border-bottom border-secondary shadow-sm" style="width: 100%; background: #f0c51e;">
+        <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto;">
+          <a href="/view-raffles" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-raffleW.png" alt="" title="Sorteos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="#" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-arteGalleryG.png" alt="" title="Artes" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-aeronauticaW.png" alt="" title="Aeronáuticos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-items" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-articuloW.png" alt="" title="Articulos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-automotive" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-automotrizW.png" alt="" title="Automotriz" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-realstate" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-bienesRaicesW.png" alt="" title="Bienes Raices" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-nautical" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-nauticoW.png" alt="" title="Náuticos" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-services" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-servicioW.png" alt="" title="Servicios" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-auction" class="text-decoration-none mx-4 p-0 rounded-pill" style="background-color : #f0c51e;"><img src="/img/ico-subastaW.png" alt="" title="Subastas" class="rounded-pill storeIcon border border-light shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+        </ul>
        </div>
-       <div class="viewCollection" style="height: 100vh;">
+       <div class="viewCollection" style="height: auto; background: #fff5cb;">
             
           <% if (cardArticleArts.docs.length !==0 ) {%>
               <div class="contentAll d-flex flex-wrap justify-content-start p-3">
@@ -664,7 +647,7 @@
           <% }; %>
               
          
-          <div class="contentPagination border-bottom border-secondary" style="height: 100%;">
+          <div class="contentPagination border-bottom" style="height: 100%;">
 
             <% if (cardArticleArts) { %>
              
