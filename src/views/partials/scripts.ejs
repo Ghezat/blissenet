@@ -82,3 +82,24 @@
  
 </script>
 
+<script>
+    //carga de sonido efecto en iconos
+  
+    document.addEventListener("DOMContentLoaded", () => {
+    const iconEfect = document.querySelectorAll('.iconEfect');
+    const efectSoundIcon = document.getElementById('efectIcon');
+    
+      iconEfect.forEach((ele) => {
+          ele.addEventListener('click', () => {
+              console.log("Hiciste clic en el icono");
+              efectSoundIcon.currentTime = 0; // Reiniciamos el sonido
+              efectSoundIcon.play().catch(error => {
+                  console.error("Error al reproducir el sonido:", error);
+              });
+          });
+      });
+      
+  });
+  </script>
+
+

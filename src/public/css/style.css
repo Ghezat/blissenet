@@ -25,6 +25,17 @@ main{
   src: url("/fonts/Dream MMA.ttf");
 }
 
+ 
+.iconEfect{
+  border: 1px solid white;
+  transition: 0.5s border ease;
+  user-select: none;
+}
+
+.iconEfect:hover{
+  border: 1px solid rgb(73, 73, 73);
+}
+
 .bordering{
     border: 2px dotted violet;
 }

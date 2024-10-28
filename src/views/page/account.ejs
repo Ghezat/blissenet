@@ -6,13 +6,13 @@
     <meta property= "og:description" content="Visita mi tienda en Blissenet.com">
     <meta property= "og:image" content="<%= searchBanner[0].url %>">
     <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile[0].username %>">
-    <!-- <label for=""><%= searchBanner[0].url %></label> -->
-    <!-- <label for=""><%= storeProfile[0].username %></label> -->
+
     <!-- Metadatos para Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= storeProfile[0].username %>">
     <meta name="twitter:description" content="Visita mi tienda en Blissenet.com">
     <meta name="twitter:image" content="<%= searchBanner[0].url %>">
+    <meta name="twitter:url" content="https://blissenet.com/account/<%= storeProfile[0].username %>">
     
     <%- include('../partials/head.ejs') %>
     <title>Blissenet Account</title>
@@ -1192,10 +1192,6 @@
             }, 3000);
 
           }
-
-
-          
-
 
           function efecto() {
             starData.classList.remove('bi-bookmark-check');

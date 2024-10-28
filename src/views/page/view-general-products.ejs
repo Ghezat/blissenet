@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta property= "og:title" content="<%= search.title %>">
+    <meta property= "og:description" content="Por tan solo $<%= search.price %>">
+    <meta property= "og:image" content="<%= search.images[0].url %>">
+    <meta property="og:url" content="https://blissenet.com/product/<%= search.department %><%= search._id %>">
+
+    <!-- Metadatos para Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= search.title %>">
+    <meta name="twitter:description" content="Por tan solo $<%= search.price %>">
+    <meta name="twitter:image" content="<%= search.images[0].url %>">
+    <meta name="twitter:url" content="https://blissenet.com/product/<%= search.department %><%= search._id %>">
+
     <%- include('../partials/head.ejs') %>       
     <title>Blissenet  View-General-Product</title>
 </head>
@@ -350,8 +362,24 @@
                 <!-- tarjeta de precio y anunciante -->
                 <div class="card my-2 p-2">
                     <div class="card-body">
-                        <span class="bg-warning px-1 rounded-2" style="font-size: 18px;" >Precio: $<%= search.price %></span> <br> <hr>
-                        <span class="me-1"> Anunciante :</span> <span class="bgSecondary-light px-1 rounded-1 text-light "><%= search.username %></span><br>
+
+                        <p class="bg-warning px-1 py-1 rounded-2" style="font-size: 18px; clip-path: polygon(0% 0%, 75% 0%, 82% 50%, 75% 100%, 0% 100%);">Precio: <i class="bi bi-currency-dollar"></i><%= search.price %></p> <hr>
+                    <% if (user) {  %>        
+                        <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                            <label class="form-check-label" for="flexCheckChecked" style="user-select: none;">
+                              Selecciona para Comparar
+                            </label>
+                        </div>
+                        <p class="me-1 my-1 favoriteProduct" style="user-select: none;"> <i class="bi bi-heart me-1 linkHeart cursor-pointer"></i> Articulo como Favorito  <input type="hidden" value="<%= search.department %>"><input type="hidden" value="<%= search._id %>"> </p>
+                        <p class="me-1 mt-1 mb-3 favoriteStore" style="user-select: none;"> <i class="bi bi-bookmark-check me-1 starData cursor-pointer"></i> Seguir esta Tienda  <!-- usuario que esta logeado --><input type="hidden" value="<%= user._id %>">   <!-- id del usuario del anuncio --><input type="hidden" value="<%= search.user_id %>">  </p>
+                      
+                    <% } else { %>
+                        <div class="alert alert-light alert-dismissible fade show p-0" role="alert">
+                            <strong class="me-2"> <i class="bi bi-check-circle-fill me-2"></i> Para una mejor experiencia inicia sessión <a href="/myaccount/signin">aquí.</a> </strong>
+                           
+                        </div>
+                    <% }; %>    
+                        <p> <span class="bg-dark ps-1 pe-5 py-2 rounded-2 text-light" style="  clip-path: polygon(0% 0%, 75% 0%, 84% 50%, 75% 100%, 0% 100%);"><i class="bi bi-shop-window me-2"></i><%= search.username %></p>
                     </div>
                 </div>
 
@@ -439,7 +467,7 @@
                         </div>  
                       
 
-                        <%};%>
+                        <% }; %>
                     
             </div>
        
@@ -2260,9 +2288,13 @@ let datoStore = {
 const btnReportar = document.querySelector('.btnReportar');
 const formReportar = document.getElementById('formReportar'); 
 
-btnReportar.addEventListener('click', ()=>{
-    formReportar.classList.toggle('close');
-});
+if (btnReportar){
+
+    btnReportar.addEventListener('click', ()=>{
+        formReportar.classList.toggle('close');
+    });
+
+}
 
 </script>
 
@@ -2514,16 +2546,19 @@ btnReportar.addEventListener('click', ()=>{
     const btnContactLoading = document.getElementById('btnContactLoading');
     const contactDirect = document.querySelector('.contactDirect');
 
-    buyDirect.addEventListener('click', ()=>{
-        btnCreate.classList.add('invisibleBtn');
-        btnCreateLoading.classList.remove('invisibleBtn');
-    })
+    if (buyDirect){
+        buyDirect.addEventListener('click', ()=>{
+            btnCreate.classList.add('invisibleBtn');
+            btnCreateLoading.classList.remove('invisibleBtn');
+        })
+    }
 
-    contactDirect.addEventListener('click', ()=>{
-        btnContact.classList.add('invisibleBtn');
-        btnContactLoading.classList.remove('invisibleBtn');
-    })
-
+    if (contactDirect){
+        contactDirect.addEventListener('click', ()=>{
+            btnContact.classList.add('invisibleBtn');
+            btnContactLoading.classList.remove('invisibleBtn');
+        })
+    }
            
 
 </script>
@@ -2585,3 +2620,99 @@ btnReportar.addEventListener('click', ()=>{
 
 </script>
 
+<% if ( user !== undefined ) { %>
+    <script>
+
+        const favoriteProduct = document.querySelector('.favoriteProduct');
+        const linkHeart = document.querySelector('.linkHeart')
+        favoriteProduct.addEventListener('click', ()=>{
+          
+          efecto()
+          setInterval( normalHeart, 2000)
+          console.log("favoriteProduct --->", favoriteProduct.childNodes)
+          //console.log("depart --->",favoriteProduct.childNodes[3].value)
+          //console.log("id --->",favoriteProduct.childNodes[4].value)
+          const depart = favoriteProduct.childNodes[3].value;
+          const id = favoriteProduct.childNodes[4].value;
+
+          const datos = {
+            depart : depart,
+            id : id
+          }
+          console.log("Esto es datos ---->", datos);
+
+          fetch('/myfavorites', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+          })
+            .then(response =>response.json() )
+            .then( jsonx => console.log(jsonx))
+            .catch( err => console.log(err));
+
+        })
+      
+
+        function efecto(){
+            linkHeart.classList.remove('bi-heart');
+            linkHeart.classList.add('bi-heart-fill')
+        }
+
+        function normalHeart(){
+            linkHeart.classList.remove('bi-heart-fill');
+            linkHeart.classList.add('bi-heart')
+        }
+
+
+
+    </script>
+
+<script>
+
+    const favoriteStore = document.querySelector('.favoriteStore');
+    const starData = document.querySelector('.starData');
+ 
+    favoriteStore.addEventListener('click', ()=>{
+        console.log("favoriteStore.chilnodes---> ", favoriteStore.childNodes )
+
+        const user = favoriteStore.childNodes[4].value; //usuario que esta logeado
+        const userTienda = favoriteStore.childNodes[7].value; //usuario dueño de la tienda
+      
+        const datos = {
+            user : user,
+            userOfStore : userTienda
+        };
+
+        console.log("datos favoriteStore--->", datos);
+         
+        efecto()
+        setInterval( normalBookmark, 2000)
+
+        fetch('/account/myfavorite-stores', {
+
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: {"content-type" : "application/json"}
+
+          })
+          .then(response =>response.json() )
+          .then( jsonx => jsonx)
+          .catch( err => console.log(err));
+
+
+        function efecto(){            
+            starData.classList.remove('bi-bookmark-check');
+            starData.classList.add('bi-bookmark-check-fill')
+        }
+
+        function normalBookmark(){ 
+            starData.classList.remove('bi-bookmark-check-fill');
+            starData.classList.add('bi-bookmark-check')
+        }
+
+    })         
+
+</script>
+    <% } %>

@@ -127,6 +127,24 @@ routes.get('/', async(req, res)=>{
     res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay})
 });
 
+routes.get('/alertNotProfile', async (req, res)=>{
+
+    try{
+
+        if (req.session.user){
+            const user = req.session.user;
+            const userId = user._id;
+            //console.log("este es el id del usuario en cuestion --->", userId);
+            const profile = await modelProfile.find({ indexed : userId }); 
+            //console.log("muestrame el perfil del usuario ----->",  profile );
+            res.json({profile})
+        }
+
+    } catch (error){
+        console.log("ha ocurrido un error", error)
+    }
+
+});
 
 //top 50 de tiendas mas vistas.
 routes.get('/mosaico-store-view', async (req,res)=>{
