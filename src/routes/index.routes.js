@@ -201,7 +201,6 @@ routes.get('/mosaico', async (req,res)=>{
 
 });
 
-
 //mosaico de los artiulos y servicios mas vistos 
 routes.get('/mosaico-more-view', async (req,res)=>{
     const boxResult = [];
@@ -294,7 +293,6 @@ routes.get('/percent', async (req,res)=>{
     res.json(percentResult);
 
 });
-
 
 routes.get('/myaccount/signin', async (req,res)=>{
     const user = req.session.user;

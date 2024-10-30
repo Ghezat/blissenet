@@ -233,7 +233,7 @@
                                             Crear perfil <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCreatePerfil"> <i class="bi bi-info-circle mx-1"></i> </div>
                                         </div>    
                                         <div class="card-body">
-                                            <form action="/myaccount/profile" method="POST">
+                                            <form action="/myaccount/profile" method="POST" id="formCreatePerfil">
             
                                                 <!-- creación de nombres y numero de documento -->
                                                 <div class="container d-flex justify-content-between p-0 my-2">
@@ -360,7 +360,12 @@
                                                 </div>
                                                 
                                                 <div class="form-group my-3">
-                                                    <input type="submit" class="form-control btn btn-primary" value="Crear Perfil">
+                                                    <input type="submit" class="form-control btn btn-primary" id="btnCreateProfile" value="Crear Perfil">
+                                                    
+                                                    <button class="form-control btn btn-primary close" type="button" id="btnCreateLoading" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Creando Perfil ...
+                                                    </button>
                                                 </div>
                 
                                             </form>
@@ -376,7 +381,7 @@
                                             Editar perfil <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticEditPerfil"> <i class="bi bi-info-circle mx-1"></i> </div>
                                         </div> 
                                         <div class="card-body">
-                                            <form action="/myaccount/edit/<%= ele._id %>" method="POST">
+                                            <form action="/myaccount/edit/<%= ele._id %>" method="POST" id="formEditePerfil">
                                                 
 
                                                 <!-- campos names e identification no podrá ser editado -->
@@ -474,13 +479,13 @@
                                                             <input type="tel" name="phoneAlt" placeholder="intro your phone alter" class="form-control" value="<%= ele.phoneAlt %>" maxlength="14">
                                                         </div>
 
-                                                    </div>    
+                                                </div>    
 
-                                                    <!-- direccion completa -->
-                                                    <div class="form-group my-2">
-                                                        <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección."
-                                                        maxlength="100"><%= ele.address %></textarea>
-                                                    </div>
+                                                <!-- direccion completa -->
+                                                <div class="form-group my-2">
+                                                    <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección."
+                                                    maxlength="100"><%= ele.address %></textarea>
+                                                </div>
 
                                                 <!-- mensaje de perfil --> 
                                                 <div class="form-group my-2">
@@ -499,23 +504,28 @@
                                                         <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-instagram"></i> </label>
                                                         <input type="text" name="instagram" class="form-control"
                                                             placeholder="Here your link" value="<%= ele.instagram %>">
-                                                    </div>
-                                                    <div class="input-group flex-nowrap">
+                                                </div>
+                                                <div class="input-group flex-nowrap">
                                                         <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-youtube"></i> </label>
                                                         <input type="text" name="youtube" class="form-control" placeholder="Here your link"
                                                         value="<%= ele.youtube %>">
-                                                    </div>
-                                                    <div class="input-group flex-nowrap">
+                                                </div>
+                                                <div class="input-group flex-nowrap">
                                                         <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-tiktok"></i> </label>
                                                         <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
                                                         value="<%= ele.tiktok %>">
-                                                    </div>
+                                                </div>
                     
                     
-                                                    <div class="form-group my-3">
-                                                    <input type="submit" class="form-control btn btn-secondary" value="Editar Perfil"> 
+                                                <div class="form-group my-3">
+                                                    <input type="submit" class="form-control btn btn-secondary" id="btnEditProfile" value="Editar Perfil"> 
                                                         <!-- <a href="/myaccount/edit/:<%= ele._id %>">update</a> -->
-                                                    </div>
+                                                    
+                                                    <button class="form-control btn btn-secondary close" type="button" id="btnEditingLoading" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Editando Perfil ...
+                                                    </button>        
+                                                </div> 
                     
                                             </form>
                                         </div>
@@ -1098,6 +1108,50 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+
+        <script>
+            /* bloquear botones de crear perfil al darle click para evitar duplicacion de perfiles */
+
+            let formCreateProfile = document.getElementById('formCreatePerfil');
+            let btnCreateProfile = document.getElementById('btnCreateProfile');
+            let btnCreateLoading = document.getElementById('btnCreateLoading');
+
+            let formEditePerfil = document.getElementById('formEditePerfil');
+            let btnEditProfile = document.getElementById('btnEditProfile');
+            let btnEditingLoading = document.getElementById('btnEditingLoading');
+
+            //crear perfil seguridad para evitar duplicacion y efecto spinin
+            if (formCreateProfile){
+                formCreateProfile.addEventListener('submit', (e)=>{
+                    e.preventDefault();
+                    console.log("Enviando datos al backend")
+                    btnCreateLoading.classList.remove('close');
+                    btnCreateProfile.classList.add('close');
+                    function enviarPerfil(){
+                        e.target.submit()
+                    }
+
+                    setTimeout(enviarPerfil, 3000)
+                })
+            }   
+            
+            //edit perfil seguridad para evitar varios reenvio del los cambios evitar saturar el servidor y efecto spinin
+            if (formEditePerfil){
+                formEditePerfil.addEventListener('submit', (e)=>{
+                    e.preventDefault();
+                    console.log("Enviando datos al backend")
+                    btnEditingLoading.classList.remove('close');
+                    btnEditProfile.classList.add('close');
+                    function enviarPerfil(){
+                        e.target.submit()
+                    }
+
+                    setTimeout(enviarPerfil, 3000)
+                })
+            }
+
+
+        </script>
         <!-- para cambiar el banner -->
         <script>
    
