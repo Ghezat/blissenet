@@ -424,7 +424,7 @@
                                         <% if (Automotive.length !==0) { %>
     
                                             <select name="title" id="selectTitle" class="form-control mx-1">
-                                                <option value="">select it</option>
+                                                <option value="">Elegir Anuncio</option>
                                                 <% Automotive.forEach((ele)=> { %>
     
                                                     <option value="<%= ele._id %>">
@@ -436,12 +436,12 @@
     
                                         <% } else { %>
                                                 <select name="title" id="" class="form-control">
-                                                    <option value="no_data"> sin publicacion</option>
+                                                    <option value="no_data">sin publicacion</option>
                                                 </select>
                                         <% } %>
     
                                                 <input type="Submit" class="btn btn-primary form-control mx-1"
-                                                value="Select">
+                                                value="Mostrar Anuncio">
     
                                     </div>
                                 </form>

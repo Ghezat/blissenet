@@ -92,6 +92,7 @@ app.use(require('./routes/admin.routes.js'));
 
 //static file
 app.use(express.static(path.join(__dirname,'public/')));
+app.use(express.static(path.join(__dirname)));
 
 
 //manejador de error 404

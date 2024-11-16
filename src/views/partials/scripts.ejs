@@ -102,4 +102,17 @@
   });
   </script>
 
+  <script>
+    //detector cuando no hay coneccion a internet
+    window.addEventListener('offline', ()=>{
+        console.log("Se ha ido el internet, Mostrar una pagina secilla pero agradable")
+    })
+
+    window.addEventListener('online', ()=>{
+        console.log("ha vuelto el internet, Hacer un location.reload()")
+        location.reload
+    })
+    
+  </script>
+
 
