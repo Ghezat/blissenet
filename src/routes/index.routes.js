@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
+const modelBankUser = require('../models/bankUser.js');
 const modelStopped = require('../models/stoppedUser.js');
 const modelMessages = require('../models/messages.js');
 const modelBuySell = require('../models/buySell.js');
@@ -1486,6 +1487,69 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
 
         req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
         res.redirect('/myaccount/profile');
+    }
+
+});
+
+routes.get('/myaccount/bank', async (req, res)=> {
+    //esta ruta es para obtener toda la informacion nacaria del usuario,
+    //es solicitada al entrar en profile de forma automatica. es necesario que esta informacion la tenga cargada en la seccion "bancaria".
+    const user = req.session.user;
+    const Id = user._id; 
+    console.log('--------------------OJO----------------------');
+    console.log("Estamos aqui --->get  /myaccount/bank");
+    console.log("Este es el user que esta loegado", user);
+    console.log("Este es el Id ---->", Id);
+    const searchProfile = await modelProfile.find({indexed : Id});
+    const IdProfile = searchProfile[0]._id;
+    console.log("IdProfile :", IdProfile)
+    
+    if (searchProfile){
+        //console.log("searchProfile ---->", searchProfile);
+        const searchBankUser = await modelBankUser.find({ indexed : IdProfile });
+        //console.log("Estos son los datos bancarios del usuario", searchBankUser);
+        res.json({"data" : searchBankUser});
+    }
+        
+});
+
+routes.post('/myaccount/bank', async (req, res)=>{
+    //esto es el endpoint donde se crea o edita las cuentas bancarias de los usuarios.
+    //const ID = req.params.id;
+    //console.log("aqui el parametro", ID);//esto es el id del model perfil de usuario.
+    console.log("Estamos aqui --->post  /myaccount/bank");
+    //console.log(req.body);
+    const {iDProfile, bankPagoMovil, codPagoMovil, docPagoMovil, telePagoMovil, bankPagoTransf, codPagoTransf, accountNumberTransf, toNameTransf, docPagoTransf } = req.body;
+    
+    const searchProfile = await modelProfile.findById(iDProfile);
+    const username = searchProfile.username;
+    console.log( "---ver---" );
+    console.log(iDProfile, bankPagoMovil, codPagoMovil, docPagoMovil, telePagoMovil, bankPagoTransf, codPagoTransf, accountNumberTransf, toNameTransf, docPagoTransf)
+    const PagoMovil = {bankPagoMovil, codPagoMovil, docPagoMovil, telePagoMovil} 
+    const TransfBank = {bankPagoTransf, codPagoTransf, accountNumberTransf, toNameTransf, docPagoTransf}
+    
+    if (searchProfile){
+        console.log("************ bankUser ************");
+        console.log("Este usuario tiene perfil creado.");
+        const searchBankUser = await modelBankUser.find({indexed : iDProfile});
+
+        if (searchBankUser.length !==0){
+            //como existe datos bancarios editamos
+            console.log("como existe datos bancarios editamos");
+            console.log("searchBankUser -->", searchBankUser);
+            const editBankUser = await modelBankUser.findOneAndUpdate({indexed : iDProfile}, {pagoMovil : PagoMovil, transfBank : TransfBank});
+
+            res.json({ "response" : "edited" });
+        } else {
+            //no existe datos bancarios, creamos data del banco al usuario
+            console.log("no existe datos bancarios, creamos data del banco al usuario");
+            const newBankUser = new modelBankUser ({ indexed : iDProfile, username, pagoMovil : PagoMovil, transfBank : TransfBank  });
+            console.log("newBankUser", newBankUser);
+            const saveNewBankUser =  await newBankUser.save();
+            
+            res.json({ "response" : "created" });
+        }
+
     }
 
 });

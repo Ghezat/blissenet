@@ -35,7 +35,6 @@ const modelCrono = require('../models/croneTask.js');
 const fetch = require('node-fetch'); //ver: 2.6.1 ultima dependencia instalada. 
 
 const cron = require('node-cron');
-const puppeteer = require('puppeteer');
 const pdfMake = require('pdfmake');
 const bcrypt = require('bcryptjs');
 const cloudinary = require('cloudinary').v2;//esto no tendrá cambio

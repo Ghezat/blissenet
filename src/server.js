@@ -18,15 +18,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 //middleware
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended : false }));
+
 app.use(session({
     secret: 'mySecret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000 //dia 
+        maxAge: (24 * 60 * 60 * 1000) * 90, // 90 días de tiempo de duracion del login
+        //httpOnly: true, // No accesible desde JavaScript
+        //secure: true // Solo se envía por HTTPS
     }
 }));
 

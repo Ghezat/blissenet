@@ -22,12 +22,12 @@
     "nodemailer": "^6.9.1",
     "object-hash": "^3.0.0",
     "pdfmake": "^0.2.7",
-    "puppeteer": "^21.5.0",
     "socket.io": "^4.7.3",
+    "uuid": "^7.0.3",
     "venezuela": "^2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.14.9"
+    "nodemon": "^3.1.7"
   },
   "name": "blissenet",
   "version": "1.0.3",
