@@ -6,12 +6,20 @@
 
     <meta property="og:title" content="<%= search.title %>">
     <meta property="og:type" content="product">
+    <% if (user) { %>
     <meta property="og:description" content="Por tan solo $<%= search.price %> y Compartido por <%= user.username %>">
+    <% } else { %>
+    <meta property="og:description" content="Por tan solo $<%= search.price %>">
+    <% } %>    
     <meta property="og:image" content="<%= search.images[0].url %>">
     <meta property="og:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>">    
     <meta name= "twitter:card" content="summary_large_image">
     <meta name= "twitter:title" content="<%= search.title %>">
+    <% if (user) { %>
     <meta name= "twitter:description" content="Por tan solo $<%= search.price %> y Compartido por <%= user.username %>">
+    <% } else { %>
+    <meta name= "twitter:description" content="Por tan solo $<%= search.price %>">
+    <% } %>
     <meta name= "twitter:image" content="<%= search.images[0].url %>">
     <meta name= "twitter:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>">
      
