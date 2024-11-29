@@ -182,7 +182,7 @@ routes.get('/my-invoices/invoicePDF/:id', async (req, res)=>{
     var docDefinition = {
         watermark: { text: 'Cancelado', color: 'gray', opacity: 0.2, bold: true, italics: false },
         content: [
-            { text: 'Blisnet Multimarket', fontSize: 17, italics: true, lineHeight:1},
+            { text: 'Blissenet Multimarket', fontSize: 17, italics: true, lineHeight:1},
             {
                 style: 'columnStyle',
                 table: {
@@ -406,9 +406,9 @@ routes.get('/my-invoices/receiptPDF/:id', async (req, res)=>{
     const dateFormat = `${dia}-${mes}-${anio}`;
 
     var docDefinition = {
-        watermark: { text: 'Blisnet Multimarket', color: 'gray', opacity: 0.2, bold: true, italics: false },
+        watermark: { text: 'Blissnet Multimarket', color: 'gray', opacity: 0.2, bold: true, italics: false },
         content: [
-            { text: 'Blisnet Multimarket', fontSize: 17, italics: true, lineHeight:1},
+            { text: 'Blissnet Multimarket', fontSize: 17, italics: true, lineHeight:1},
             {
                 style: 'columnStyle',
                 table: {
