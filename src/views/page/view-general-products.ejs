@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <%- include('../partials/head.ejs') %>       
     <title>Blissenet  View-General-Product</title>
-    
-    <meta property="og:site_name" content="Blissenet" />
-    <meta property="og:title" content="<%= search.title %>" />
-    <meta property="og:description" content="Por tan solo $<%= search.price %> y Compartido por <%= user.username %>" />
-    <meta property="og:image" content="<%= search.images[0].url %>" />
-    <meta property="og:url" content="https://blissenet.com/product/<%= search.department %><%= search._id %>" />
 
-    <!-- Metadatos para Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="<%= search.title %>" />
-    <meta name="twitter:description" content="Por tan solo $<%= search.price %> y Compartido por <%= user.username %>" />
-    <meta name="twitter:image" content="<%= search.images[0].url %>" />
-    <meta name="twitter:url" content="https://blissenet.com/product/<%= search.department %><%= search._id %>" />
+    <meta property="og:title" content="<%= search.title %>" >
+    <meta property="og:description" content="Por tan solo $<%= search.price %> y Compartido por <%= user.username %>">
+    <meta property="og:image" content="<%= search.images[0].url %>">
+    <meta property="og:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>">    
+    <meta name= "twitter:card" content="summary_large_image">
+    <meta name= "twitter:title" content="<%= search.title %>">
+    <meta name= "twitter:description" content="Por tan solo $<%= search.price %> y Compartido por <%= user.username %>">
+    <meta name= "twitter:image" content="<%= search.images[0].url %>">
+    <meta name= "twitter:url" content="https://blissenet.com/product/<%= search.department %><%= search._id %>">
      
-
+    <%- include('../partials/head.ejs') %>       
+    
 </head>
 <style>
     .bgSecondary-light{
@@ -121,7 +119,6 @@
 
 </style>
 <body class="mainTheme">
-
 
   <main>
     <%- include('../partials/navi-simple.ejs') %>
