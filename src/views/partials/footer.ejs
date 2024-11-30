@@ -60,12 +60,26 @@
     <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-sm-12 d-flex justify-content-center my-2">
 
         <div class="f-right d-flex flex-column px-2 justify-content-start align-items-start">
-            <div class="markBlisnet">
-                <span id="logoBlissenet_com"></span> </span>
+            <div class="markBlisnet rounded-2 px-0 py-1" style="position: relative;">
+                <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit">  <span id="logoBlissenet_com"> </span> <i class="bi bi-share me-1"></i>  </button>   
+            
+                <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 45px; left: -28px;" >
+                    <a href="https://api.whatsapp.com/send?text=https://blissenet.com" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
+                    <a href="https://t.me/share/url?url=https://blissenet.com" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
+                    <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
+                      <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i>
+                      <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
+                    </div>
+                    
+              </div>
+              <input type="hidden" id="linkToShare" value="https://blissenet.com/">                    
             </div>
+            
+
             <div class="detailFound d-flex justify-content-start align-items-center" style="width: 100%;">
                 <div class="contenNameyears d-flex flex-column">
-                    <span style="font-size: 17px; letter-spacing: 3px;  ">Venezuela [VE]</span>
+                    <span style="font-size: 17px; letter-spacing: 3px;">Venezuela [VE]</span>
                     <span style="font-size: 15px;letter-spacing: 2px;">Versión  <span class="px-2 rounded-2 alert-secondary">proto</span> </span>
                     <span style="font-size: 18px;">2024 - 2024</span>
                     
@@ -77,3 +91,50 @@
     </div>
 
 </div>
+
+
+                                        
+<!-- script para controlar todo el modulo de compartir -->
+<script>
+    const shareToggle = document.querySelector('.shareToggle');
+    const containerShare = document.querySelector('.containerShare');
+    const btnClicBoard = document.getElementById('btnClicBoard');
+    const btnClicBoardCheck = document.getElementById('btnClicBoardCheck');
+    const linkToShare = document.getElementById('linkToShare'); //374 linea
+    const btnQR = document.getElementById('btnQR');
+    const canvas = document.getElementById('qr-canvas');
+  
+  
+    shareToggle.addEventListener('click', ()=>{
+      containerShare.classList.toggle('invisible')
+      
+      const shareActive = containerShare.classList.contains('invisible');
+      //console.log("shareActive -->", shareActive);
+
+    })
+  
+   
+    //copiar link de tienda en el portapapeles
+    btnClicBoard.addEventListener('click', ()=>{
+      const storeToShare = linkToShare.value;
+      navigator.clipboard.writeText(storeToShare)
+        .then(function(){
+         
+          btnClicBoard.classList.add('invisible');
+          btnClicBoardCheck.classList.remove('invisible');
+          setTimeout(clipboardDone, 1000)
+          
+          function clipboardDone(){
+            btnClicBoardCheck.classList.add('invisible');
+            btnClicBoard.classList.remove('invisible');
+          }
+  
+        })
+        .catch(function(error){
+          alert("error al copiar" + e);
+        })
+      
+    })
+  
+  
+  </script>

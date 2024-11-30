@@ -176,7 +176,7 @@
                                  <tr>  
                                 
                                      <td><img src="<%= ele.images[0].url %>"class="border"  style="width: 45px; height: 45px; object-fit: contain;" > </td>
-                                     <td><%= ele.title %></td>
+                                     <td> <a href="/product/<%= ele.department %>/<%= ele._id %>"><%= ele.title %></a> </td> 
                                      <td><%= ele.department %></td>
                                      <td><%= ele.price %></td>
                                      <td><span class="me-2"><i class="bi bi-heart"></i></span> <%= ele.favorite%></td>
@@ -253,7 +253,6 @@
                   <% }; %>  
               </div>
               
-
               <div class="row m-0 contentAnalisys d-flex closed p-0 flex-wrap bodyTheme">
                   <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 col-xxl-3 mt-3 p-0">
 

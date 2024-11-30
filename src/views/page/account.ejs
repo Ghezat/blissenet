@@ -702,17 +702,21 @@
                                                         
                                                   <% }; %>
                                 
-                                              <% }; %>  
+                                              <% }; %>
+                                            
                                               
                                               <div class="carousel-inner" style="width: 100%; height: 220px;  z-index: 1;">
                                                 <div class="carousel-item active">
-                                                  <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
-                                                </div>
+                                                  <a href="/product/<%= ele.department %>/<%= ele._id %>"> 
+                                                    <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
+                                                  </a>
+                                                 </div>
                                                 <% for (let x=1; x < ele.images.length; x++) { %>
                                                   <% const element=ele.images[x] %>
                                                     <div class="carousel-item">
-                                                      <img src="<%= element.url %>" class="d-block w-100"
+                                                      <a href="/product/<%= ele.department %>/<%= ele._id %>"> <img src="<%= element.url %>" class="d-block w-100"
                                                         style="  width: 100%; height: 100%; object-fit: cover;">
+                                                      </a>
                                                     </div>
 
                                                 <% }; %>

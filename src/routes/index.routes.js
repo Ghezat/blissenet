@@ -1528,18 +1528,27 @@ routes.post('/myaccount/bank', async (req, res)=>{
     const PagoMovil = {bankPagoMovil, codPagoMovil, docPagoMovil, telePagoMovil} 
     const TransfBank = {bankPagoTransf, codPagoTransf, accountNumberTransf, toNameTransf, docPagoTransf}
     
+    
+
     if (searchProfile){
         console.log("************ bankUser ************");
         console.log("Este usuario tiene perfil creado.");
         const searchBankUser = await modelBankUser.find({indexed : iDProfile});
 
         if (searchBankUser.length !==0){
-            //como existe datos bancarios editamos
-            console.log("como existe datos bancarios editamos");
-            console.log("searchBankUser -->", searchBankUser);
-            const editBankUser = await modelBankUser.findOneAndUpdate({indexed : iDProfile}, {pagoMovil : PagoMovil, transfBank : TransfBank});
 
-            res.json({ "response" : "edited" });
+            if (codPagoMovil ==="" && codPagoTransf ===""){
+                const editBankUser = await modelBankUser.findOneAndDelete({indexed : iDProfile});
+                
+                res.json({ "response" : "deleting" });
+            } else {    
+                //como existe datos bancarios editamos
+                console.log("como existe datos bancarios editamos");
+                console.log("searchBankUser -->", searchBankUser);
+                const editBankUser = await modelBankUser.findOneAndUpdate({indexed : iDProfile}, {pagoMovil : PagoMovil, transfBank : TransfBank});
+
+                res.json({ "response" : "edited" });
+            }
         } else {
             //no existe datos bancarios, creamos data del banco al usuario
             console.log("no existe datos bancarios, creamos data del banco al usuario");

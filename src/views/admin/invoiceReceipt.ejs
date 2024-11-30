@@ -257,7 +257,7 @@ btnReportInv.addEventListener("click", () => {
       // Cuando se resuelva la promesa traerá el canvas
       // Crear un elemento <a>
       //let enlace = document.createElement('a');
-      //enlace.download = `Politania-Report ${epoch}.png`;
+      //enlace.download = `Blissenet-Report ${epoch}.png`;
       // Convertir la imagen a Base64
       //enlace.href = canvas.toDataURL();
       //imagen Base64 en variable image
@@ -282,7 +282,7 @@ btnReportInv.addEventListener("click", () => {
         
             var docDefinition = { 
                 content: [ 
-                    { text: "Politania Webcommer", lineHeight: 1, margin: [5, 0] },
+                    { text: "Blissenet Webcommer", lineHeight: 1, margin: [5, 0] },
                     { text: fullDate, style: 'dates' },
                     { text: companyD, style: 'companyStyle'},
                     { text: companyAddress, style: 'companyStyle', lineHeight: 2},
@@ -303,7 +303,7 @@ btnReportInv.addEventListener("click", () => {
 
             };
       
-        pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+        pdfMake.createPdf(docDefinition).download(`Blissenet_${epoch}`);
 
         })
         .catch( err => console.log(err));
@@ -337,7 +337,7 @@ btnReportRec.addEventListener("click", ()=> {
         
             var docDefinition = { 
                 content: [ 
-                    { text: "Politania Webcommer", lineHeight: 1, margin: [5, 0] },
+                    { text: "Blissenet Webcommer", lineHeight: 1, margin: [5, 0] },
                     { text: fullDate, style: 'dates' },
                     { text: companyD, style: 'companyStyle'},
                     { text: companyAddress, style: 'companyStyle', lineHeight: 2},
@@ -358,7 +358,7 @@ btnReportRec.addEventListener("click", ()=> {
 
             };
       
-        pdfMake.createPdf(docDefinition).download(`Politania_${epoch}`);
+        pdfMake.createPdf(docDefinition).download(`Blissenet_${epoch}`);
 
         })
         .catch( err => console.log(err));

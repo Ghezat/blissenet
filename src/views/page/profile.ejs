@@ -562,7 +562,6 @@
                                                             
                                                             <div class="form-group" style="width: 80%;">
                                                                 <select id="selectBankPagoMovil" class="form-control">
-                                                                    <option value="">Selecciona un Banco</option>
                                                                     <!-- option dinamicos -->                                              
                                                                 </select>
                                                             </div>
@@ -597,7 +596,7 @@
                                                             
                                                             <div class="form-group" style="width: 80%;">
                                                                 <select  id="selectBankTransf" class="form-control">
-                                                                    <option value="">Selecciona un Banco</option>
+                                                                    
                                                                         <!-- option dinamicos -->                                              
                                                                 </select>
                                                             </div>
@@ -636,6 +635,10 @@
                                                         </div>
                                                         <div class="alert alert-primary close" id="alertEditedBank">
                                                             <i class="bi bi-check-circle-fill me-2"></i> Datos Bancarios editados. 
+                                                        </div>
+                                                        
+                                                        <div class="alert alert-danger close" id="alertDeletedBank">
+                                                            <i class="bi bi-check-circle-fill me-2"></i> Datos Bancarios eliminados. 
                                                         </div>
                                                     </div>
                         
@@ -1350,8 +1353,9 @@
             const accountNumberTransf_Id = document.getElementById('accountNumberTransf_Id');
             const toNameTransf_Id = document.getElementById('toNameTransf_Id');
             const docTransf_Id = document.getElementById('docTransf_Id');    
-
-            const allBank = [   {code : "0102", bank : "BANCO DE VENEZUELA S.A. BANCO UNIVERSAL"},
+            
+            const allBank = [   {code : "", bank : "Selecciona un Banco"},
+                                {code : "0102", bank : "BANCO DE VENEZUELA S.A. BANCO UNIVERSAL"},
                                 {code : "0104", bank : "VENEZOLANO DE CREDITO, S.A. BANCO UNIVERSAL"},
                                 {code : "0105", bank : "MERCANTIL BANCO UNIVERSAL"},
                                 {code : "0108", bank : "BANCO PROVINCIAL S.A. BANCO UNIVERSAL"},
@@ -1391,15 +1395,22 @@
             
                 const bankSelected = selectBankTransf.value;
                 console.log("bankSelected ---------->", bankSelected)
+                
                 allBank.forEach((ele)=>{
                     //console.log("ele --->", ele);
                     const code = ele.code;
                     const bank = ele.bank;
                     //console.log(bank, code);
                      if (bankSelected === bank){
-                        console.log("bankSelected ", bankSelected)
+                        //console.log("bankSelected ", bankSelected)
                         codBankTrans.value = code;
-                     }   
+                        if (code === ""){
+                            docTransf_Id.value ="";
+                            toNameTransf_Id.value ="";
+                            accountNumberTransf_Id.value ="";
+                        }
+                     } 
+                     
 
                 })
                  
@@ -1415,8 +1426,13 @@
                     const bank = ele.bank;
                     //console.log(bank, code);
                      if (bankSelected === bank){
-                        console.log("bankSelected ", bankSelected)
+                        //console.log("bankSelected ", bankSelected)
                         codBankPagoMovil.value = code;
+                        if (code === ""){
+                            //console.log("borrar todo")
+                            docPagoMovil_Id.value = "";
+                            telePagoMovil_Id.value = "";
+                        }
                      }   
 
                 })
@@ -1517,50 +1533,60 @@
                 //console.log(`bankT : ${bankT} codeT : ${codeT} accountNumberT : ${accountNumberT} toNameT : ${toNameT} docT : ${docT}`)
 
                 const datos = {
-                    iDProfile,
-                    bankPagoMovil : bankPM,
-                    codPagoMovil : codePM,
-                    docPagoMovil : docuPM,
-                    telePagoMovil : telePM,
-                    bankPagoTransf : bankT,
-                    codPagoTransf : codeT,
-                    accountNumberTransf : accountNumberT,
-                    toNameTransf : toNameT,
-                    docPagoTransf : docT    
-                };
+                        iDProfile,
+                        bankPagoMovil : bankPM,
+                        codPagoMovil : codePM,
+                        docPagoMovil : docuPM,
+                        telePagoMovil : telePM,
+                        bankPagoTransf : bankT,
+                        codPagoTransf : codeT,
+                        accountNumberTransf : accountNumberT,
+                        toNameTransf : toNameT,
+                        docPagoTransf : docT    
+                    };
 
-                fetch('/myaccount/bank', {
+                    fetch('/myaccount/bank', {
 
-                method: "post",
-                body: JSON.stringify(datos),
-                headers: {"content-type" : "application/json"}
+                    method: "post",
+                    body: JSON.stringify(datos),
+                    headers: {"content-type" : "application/json"}
 
-                })
-                .then(response =>response.json() )
-                .then( jsonx => { 
-                    
-                    //console.log("Aqui el response del backend ->", jsonx);
-                    const response = jsonx.response;
-
-                    btnEditBank.classList.remove('close');
-                    btnEditingBankLoading.classList.add('close');
-
-                    if (response === "created"){
-                        alertCreatedBank.classList.remove('close');
-                        setInterval(() => {
-                            alertCreatedBank.classList.add('close');
-                        }, 3000);
-                        
-                    } else {
-                        alertEditedBank.classList.remove('close');
-                        setInterval(() => {
-                            alertEditedBank.classList.add('close');
-                        }, 3000);
-                    }
-                    
-                   
                     })
-                .catch( err => console.log(err));
+                    .then(response =>response.json() )
+                    .then( jsonx => { 
+                        
+                        //console.log("Aqui el response del backend ->", jsonx);
+                        const response = jsonx.response;
+
+                        btnEditBank.classList.remove('close');
+                        btnEditingBankLoading.classList.add('close');
+
+                        if (response === "created"){
+                            alertCreatedBank.classList.remove('close');
+                            setInterval(() => {
+                                alertCreatedBank.classList.add('close');
+                            }, 3000);
+                            
+                        } else if (response === "edited") {
+                            alertEditedBank.classList.remove('close');
+                            setInterval(() => {
+                                alertEditedBank.classList.add('close');
+                            }, 3000); 
+
+                        } else {
+                            alertDeletedBank.classList.remove('close');
+                            setInterval(() => {
+                                alertDeletedBank.classList.add('close');
+                            }, 3000); 
+
+                        }
+                        
+                    
+                        })
+                    .catch( err => console.log(err));
+
+                
+                    
 
             })
 

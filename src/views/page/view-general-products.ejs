@@ -2056,239 +2056,244 @@ let datoStore = {
 
         window.addEventListener('load', ()=>{
             console.log("Proceso al cargar pagina");
-            const departHidd = departHidden.value;
-            const idHidd = idHidden.value;
+
+            //si existe este objeto entonces el script se ejecuta.
+            if (departHidden){
+
+                const departHidd = departHidden.value;
+                const idHidd = idHidden.value;
         
-            const datos = {
-                id : idHidd,
-                depart : departHidd,
-            };
+                const datos = {
+                    id : idHidd,
+                    depart : departHidd,
+                };
 
-            console.log("Esto es datos:", datos);
+                console.log("Esto es datos:", datos);
 
-            fetch('/express-notes-extraer', {
+                fetch('/express-notes-extraer', {
 
-            method: "post",
-            body: JSON.stringify(datos),
-            headers: {"content-type" : "application/json"}
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
 
-            })
-            .then(response =>response.json() )
-            .then( jsonx =>{ 
-                console.log('************** O J O *****************');
-                console.log("esto es recibido desde /express-notes-extraer : ");
-                console.log(jsonx);
-                const allNotes = jsonx.reverse()
-                const longNotes = allNotes.length; //esto es la cantidad de elementos que posee el array allNotes.
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>{ 
+                    console.log('************** O J O *****************');
+                    console.log("esto es recibido desde /express-notes-extraer : ");
+                    console.log(jsonx);
+                    const allNotes = jsonx.reverse()
+                    const longNotes = allNotes.length; //esto es la cantidad de elementos que posee el array allNotes.
+                    
+
+                    if (showNotes){
+                        //esta es la muestra de notas del anfitrion
+                    
+                        function generarNotes(){
                 
+                            return new Promise ( function (resolve, reject ){ 
 
-                if (showNotes){
-                    //esta es la muestra de notas del anfitrion
-                   
-                    function generarNotes(){
-            
-                        return new Promise ( function (resolve, reject ){ 
+                                allNotes.forEach((ele, i)=>{
 
-                            allNotes.forEach((ele, i)=>{
+                                    if (ele.color === "dark"){
+                                        showNotes.innerHTML +=`
+                                                                <div class="card note mb-1">
+                                                                                    <div class="card-body alert-dark" style="position: relative;">
+                                                                                        <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
+                                                                                        <p class="m-0">${ele.nota}</p>
+                                                                                    </div>
+                                                                </div>
+                                                                `
+                                    } else if (ele.color === "primary"){
+                                        showNotes.innerHTML +=`
+                                                                <div class="card note mb-1">
+                                                                                    <div class="card-body alert-primary" style="position: relative;">
+                                                                                        <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
+                                                                                        <p class="m-0">${ele.nota}</p>
+                                                                                    </div>
+                                                                </div>
+                                                                `
 
-                                if (ele.color === "dark"){
-                                    showNotes.innerHTML +=`
-                                                            <div class="card note mb-1">
-                                                                                <div class="card-body alert-dark" style="position: relative;">
-                                                                                    <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
-                                                                                    <p class="m-0">${ele.nota}</p>
-                                                                                </div>
-                                                            </div>
-                                                            `
-                                } else if (ele.color === "primary"){
-                                    showNotes.innerHTML +=`
-                                                            <div class="card note mb-1">
-                                                                                <div class="card-body alert-primary" style="position: relative;">
-                                                                                    <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
-                                                                                    <p class="m-0">${ele.nota}</p>
-                                                                                </div>
-                                                            </div>
-                                                            `
+                                    } else if (ele.color === "success"){
+                                        showNotes.innerHTML +=`
+                                                                <div class="card note mb-1">
+                                                                                    <div class="card-body alert-success" style="position: relative;">
+                                                                                        <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
+                                                                                        <p class="m-0">${ele.nota}</p>
+                                                                                    </div>
+                                                                </div>
+                                                                `
 
-                                } else if (ele.color === "success"){
-                                    showNotes.innerHTML +=`
-                                                            <div class="card note mb-1">
-                                                                                <div class="card-body alert-success" style="position: relative;">
-                                                                                    <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
-                                                                                    <p class="m-0">${ele.nota}</p>
-                                                                                </div>
-                                                            </div>
-                                                            `
+                                    }  else if (ele.color === "info"){
+                                        showNotes.innerHTML +=`
+                                                                <div class="card note mb-1">
+                                                                                    <div class="card-body alert-info" style="position: relative;">
+                                                                                        <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
+                                                                                        <p class="m-0">${ele.nota}</p>
+                                                                                    </div>
+                                                                </div>
+                                                                `
 
-                                }  else if (ele.color === "info"){
-                                    showNotes.innerHTML +=`
-                                                            <div class="card note mb-1">
-                                                                                <div class="card-body alert-info" style="position: relative;">
-                                                                                    <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
-                                                                                    <p class="m-0">${ele.nota}</p>
-                                                                                </div>
-                                                            </div>
-                                                            `
+                                    } else if (ele.color === "warning"){
+                                        showNotes.innerHTML +=`
+                                                                <div class="card note mb-1">
+                                                                                    <div class="card-body alert-warning" style="position: relative;">
+                                                                                        <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
+                                                                                        <p class="m-0">${ele.nota}</p>
+                                                                                    </div>
+                                                                </div>
+                                                                `
 
-                                } else if (ele.color === "warning"){
-                                    showNotes.innerHTML +=`
-                                                            <div class="card note mb-1">
-                                                                                <div class="card-body alert-warning" style="position: relative;">
-                                                                                    <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
-                                                                                    <p class="m-0">${ele.nota}</p>
-                                                                                </div>
-                                                            </div>
-                                                            `
+                                    } else if (ele.color === "danger"){
+                                        showNotes.innerHTML +=`
+                                                                <div class="card note mb-1">
+                                                                                    <div class="card-body alert-danger" style="position: relative;">
+                                                                                        <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
+                                                                                        <p class="m-0">${ele.nota}</p>
+                                                                                    </div>
+                                                                </div>
+                                                                `
 
-                                } else if (ele.color === "danger"){
-                                    showNotes.innerHTML +=`
-                                                            <div class="card note mb-1">
-                                                                                <div class="card-body alert-danger" style="position: relative;">
-                                                                                    <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
-                                                                                    <p class="m-0">${ele.nota}</p>
-                                                                                </div>
-                                                            </div>
-                                                            `
+                                    } else {
+                                        showNotes.innerHTML +=`
+                                                                <div class="card note mb-1">
+                                                                                    <div class="card-body alert-light" style="position: relative;">
+                                                                                        <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
+                                                                                        <p class="m-0">${ele.nota}</p>
+                                                                                    </div>
+                                                                </div>
+                                                                `
 
-                                } else {
-                                    showNotes.innerHTML +=`
-                                                            <div class="card note mb-1">
-                                                                                <div class="card-body alert-light" style="position: relative;">
-                                                                                    <span class="deleteNote" style="position: absolute; right: 0px; top: 11px;"><i class="bi bi-x"></i> <input type="hidden" value="${ele.idNota}"><input type="hidden" value="${ele.depart}"> </span>
-                                                                                    <p class="m-0">${ele.nota}</p>
-                                                                                </div>
-                                                            </div>
-                                                            `
+                                    }
+                                    
+                                    if (i === longNotes - 1){
+                                        console.log("i : ", i);
+                                        console.log("longNotes : ", longNotes);
+                                        resolve();
+                                    }
 
-                                }
-                                
-                                if (i === longNotes - 1){
-                                    console.log("i : ", i);
-                                    console.log("longNotes : ", longNotes);
-                                    resolve();
-                                }
+                                });
 
                             });
 
-                        });
+                        }    
+                    
+                        function generarTagDeleteNotes(){
+                            console.log("*********** funcion eliminar Nota**********");
+                            const deleteNote = document.querySelectorAll('.deleteNote');
+                            console.log("deleteNote :", deleteNote);
+                            deleteNote.forEach((ele, i)=>{
+                                ele.addEventListener('click', ()=>{
+                                    //ahora vamos a crear un dato para enviar al servidor y eliminar la nota deseada.
+                                    //alert(`hola me quieres eliminar ?`);
+                                    console.log("Hijos idNota a eliminar :", ele.childNodes);
+                                    const idHidd = idHidden.value;
+                                    const idNota = parseInt(ele.childNodes[2].value);
+                                    const depart = ele.childNodes[3].value;
+                                    
+                                    const datos = {
+                                        id : idHidd,
+                                        idNota : idNota,
+                                        depart : depart
+                                    };
 
-                    }    
-                
-                    function generarTagDeleteNotes(){
-                        console.log("*********** funcion eliminar Nota**********");
-                        const deleteNote = document.querySelectorAll('.deleteNote');
-                        console.log("deleteNote :", deleteNote);
-                        deleteNote.forEach((ele, i)=>{
-                            ele.addEventListener('click', ()=>{
-                                //ahora vamos a crear un dato para enviar al servidor y eliminar la nota deseada.
-                                //alert(`hola me quieres eliminar ?`);
-                                console.log("Hijos idNota a eliminar :", ele.childNodes);
-                                const idHidd = idHidden.value;
-                                const idNota = parseInt(ele.childNodes[2].value);
-                                const depart = ele.childNodes[3].value;
+                                    console.log("Estos son los datos que envio al backend para ser eliminado")
+
+                                    fetch('/express-notes-deleting', {
+
+                                    method: "post",
+                                    body: JSON.stringify(datos),
+                                    headers: {"content-type" : "application/json"}
+
+                                    })
+                                    .then(response =>response.json() )
+                                    .then( jsonx => {
+                                        console.log("Esto es lo que viene de haber eliminado una nota");
+                                        socket.emit('delete:Note', { 'obje' : jsonx });
+                                        console.log(jsonx)
+                                        //location.reload();
+                                    })
+                                    .catch( err => console.log(err));
+
+                                })
                                 
-                                const datos = {
-                                    id : idHidd,
-                                    idNota : idNota,
-                                    depart : depart
-                                };
-
-                                console.log("Estos son los datos que envio al backend para ser eliminado")
-
-                                fetch('/express-notes-deleting', {
-
-                                method: "post",
-                                body: JSON.stringify(datos),
-                                headers: {"content-type" : "application/json"}
-
-                                })
-                                .then(response =>response.json() )
-                                .then( jsonx => {
-                                    console.log("Esto es lo que viene de haber eliminado una nota");
-                                    socket.emit('delete:Note', { 'obje' : jsonx });
-                                    console.log(jsonx)
-                                    //location.reload();
-                                })
-                                .catch( err => console.log(err));
-
                             })
-                            
-                        })
+                        }
+                        
+                        generarNotes().then(generarTagDeleteNotes());
+
                     }
                     
-                    generarNotes().then(generarTagDeleteNotes());
+                    if (showNotesSpectadores) {
+                        //Notas para los espectadores con o sin user
+                        allNotes.forEach((ele, i)=>{
 
+                            if (ele.color === "dark"){
+                                showNotesSpectadores.innerHTML +=`
+                                                        <div class="card note mb-1">
+                                                                            <div class="card-body alert-dark" style="position: relative;">
+                                                                                <p class="m-0">${ele.nota}</p>
+                                                                            </div>
+                                                        </div>
+                                                        `
+                            } else if (ele.color === "primary"){
+                                showNotesSpectadores.innerHTML +=`
+                                                        <div class="card note mb-1">
+                                                                            <div class="card-body alert-primary" style="position: relative;">
+                                                                                <p class="m-0">${ele.nota}</p>
+                                                                            </div>
+                                                        </div>
+                                                        `
+                            } else if (ele.color === "success"){
+                                showNotesSpectadores.innerHTML +=`
+                                                        <div class="card note mb-1">
+                                                                            <div class="card-body alert-success" style="position: relative;">
+                                                                                <p class="m-0">${ele.nota}</p>
+                                                                            </div>
+                                                        </div>
+                                                        `
+                            }  else if (ele.color === "info"){
+                                showNotesSpectadores.innerHTML +=`
+                                                        <div class="card note mb-1">
+                                                                            <div class="card-body alert-info" style="position: relative;">
+                                                                                <p class="m-0">${ele.nota}</p>
+                                                                            </div>
+                                                        </div>
+                                                        `
+                            } else if (ele.color ==="warning"){
+                                showNotesSpectadores.innerHTML +=`
+                                                        <div class="card note mb-1">
+                                                                            <div class="card-body alert-warning" style="position: relative;">
+                                                                                <p class="m-0">${ele.nota}</p>
+                                                                            </div>
+                                                        </div>
+                                                        `
+                            } else if (ele.color === "danger"){
+                                showNotesSpectadores.innerHTML +=`
+                                                        <div class="card note mb-1">
+                                                                            <div class="card-body alert-danger" style="position: relative;">
+                                                                                <p class="m-0">${ele.nota}</p>
+                                                                            </div>
+                                                        </div>
+                                                        `
+                            } else {
+                                showNotesSpectadores.innerHTML +=`
+                                                        <div class="card note mb-1">
+                                                                            <div class="card-body alert-light" style="position: relative;">
+                                                                                <p class="m-0">${ele.nota}</p>
+                                                                            </div>
+                                                        </div>
+                                                        `
+
+                            }       
+
+                        });
+
+                    }   
+                })
+                .catch( err => console.log(err)); 
                 }
-                
-                if (showNotesSpectadores) {
-                    //Notas para los espectadores con o sin user
-                    allNotes.forEach((ele, i)=>{
-
-                        if (ele.color === "dark"){
-                            showNotesSpectadores.innerHTML +=`
-                                                    <div class="card note mb-1">
-                                                                        <div class="card-body alert-dark" style="position: relative;">
-                                                                            <p class="m-0">${ele.nota}</p>
-                                                                        </div>
-                                                    </div>
-                                                    `
-                        } else if (ele.color === "primary"){
-                            showNotesSpectadores.innerHTML +=`
-                                                    <div class="card note mb-1">
-                                                                        <div class="card-body alert-primary" style="position: relative;">
-                                                                            <p class="m-0">${ele.nota}</p>
-                                                                        </div>
-                                                    </div>
-                                                    `
-                        } else if (ele.color === "success"){
-                            showNotesSpectadores.innerHTML +=`
-                                                    <div class="card note mb-1">
-                                                                        <div class="card-body alert-success" style="position: relative;">
-                                                                            <p class="m-0">${ele.nota}</p>
-                                                                        </div>
-                                                    </div>
-                                                    `
-                        }  else if (ele.color === "info"){
-                            showNotesSpectadores.innerHTML +=`
-                                                    <div class="card note mb-1">
-                                                                        <div class="card-body alert-info" style="position: relative;">
-                                                                            <p class="m-0">${ele.nota}</p>
-                                                                        </div>
-                                                    </div>
-                                                    `
-                        } else if (ele.color ==="warning"){
-                            showNotesSpectadores.innerHTML +=`
-                                                    <div class="card note mb-1">
-                                                                        <div class="card-body alert-warning" style="position: relative;">
-                                                                            <p class="m-0">${ele.nota}</p>
-                                                                        </div>
-                                                    </div>
-                                                    `
-                        } else if (ele.color === "danger"){
-                            showNotesSpectadores.innerHTML +=`
-                                                    <div class="card note mb-1">
-                                                                        <div class="card-body alert-danger" style="position: relative;">
-                                                                            <p class="m-0">${ele.nota}</p>
-                                                                        </div>
-                                                    </div>
-                                                    `
-                        } else {
-                            showNotesSpectadores.innerHTML +=`
-                                                    <div class="card note mb-1">
-                                                                        <div class="card-body alert-light" style="position: relative;">
-                                                                            <p class="m-0">${ele.nota}</p>
-                                                                        </div>
-                                                    </div>
-                                                    `
-
-                        }       
-
-                    });
-
-                }   
-            })
-            .catch( err => console.log(err)); 
-            
+                        
 
         });
         
