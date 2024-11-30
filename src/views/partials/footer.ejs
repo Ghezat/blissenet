@@ -73,7 +73,7 @@
                     </div>
                     
               </div>
-              <input type="hidden" id="linkToShare" value="https://blissenet.com/">                    
+                             
             </div>
             
 
@@ -100,10 +100,7 @@
     const containerShare = document.querySelector('.containerShare');
     const btnClicBoard = document.getElementById('btnClicBoard');
     const btnClicBoardCheck = document.getElementById('btnClicBoardCheck');
-    const linkToShare = document.getElementById('linkToShare'); //374 linea
-    const btnQR = document.getElementById('btnQR');
-    const canvas = document.getElementById('qr-canvas');
-  
+ 
   
     shareToggle.addEventListener('click', ()=>{
       containerShare.classList.toggle('invisible')
@@ -116,7 +113,7 @@
    
     //copiar link de tienda en el portapapeles
     btnClicBoard.addEventListener('click', ()=>{
-      const storeToShare = linkToShare.value;
+      const storeToShare = "https://blissenet.com";
       navigator.clipboard.writeText(storeToShare)
         .then(function(){
          
