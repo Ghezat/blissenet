@@ -139,14 +139,13 @@ routes.post('/department/create/items/selector', (req,res)=>{
 
 //esta es la ruta para crear un anuncio con try-catch
 routes.post('/department/create/items', async(req,res)=>{
-    const boxImg = [];
-    const user = req.session.user
-    console.log(user.username)
-    const username = user.username; //aqui tengo el username
-    const department = 'items';     
-
 
     try{
+        const boxImg = [];
+        const user = req.session.user
+        console.log(user.username)
+        const username = user.username; //aqui tengo el username
+        const department = 'items';     
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
         console.log("Aqui el estado --->",searchProfile[0].states)
@@ -170,14 +169,15 @@ routes.post('/department/create/items', async(req,res)=>{
 
                         countImgAcept ++;
                         console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
-
+                        console.log("Esto es i ---->", i);
+                        
                         const folder = department; const ident = new Date().getTime();
                         const pathField = element.path; const extPart = pathField.split(".");
                         const ext = extPart[1];
-                        
+                 
                         //console.log("Bucket :", bucketName); console.log("folder :", folder);
                         //console.log("patchField :", pathField); console.log("ext", ext);
-                        
+                        const 
                         uploadToS3 = async function (bucketName, folder, ident, pathField ){
                             
                             const fileContent = fs.readFileSync(pathField);
@@ -210,14 +210,8 @@ routes.post('/department/create/items', async(req,res)=>{
 
                                     countSuccess ++;
                                     console.log( "countSuccess :", countSuccess );
-
-                                    async function deleteEleUpload(){
-                                        console.log("este es el path que tiene que ser eliminado:", element.path);
-                                        fs.unlink(element.path)
-                                    }
-                                    
-                                    deleteEleUpload();
-
+                                    boxPathToDelete.push(pathField);
+ 
                                         
                                 }
                                 
@@ -226,7 +220,7 @@ routes.post('/department/create/items', async(req,res)=>{
 
                         }
 
-                        // invocamos la funcion uploadToS3 para subir las imaganes
+                        // invocamos la funcion uploadToS3 para subir las imagenes
                         uploadToS3(bucketName, folder, ident, pathField)
                             .then(() => {
                                 console.log("Imagen subida al servidor digitalocean SPACES");
@@ -234,7 +228,8 @@ routes.post('/department/create/items', async(req,res)=>{
                             .catch((err) => {
                                 console.log("Ha habido un error al subir las fotos:", err);
                             });
-                      
+                                              
+
                         
                     } else {
                        console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
@@ -249,9 +244,12 @@ routes.post('/department/create/items', async(req,res)=>{
                     if (countImgAcept === (countSuccess + countFall)) {
                         countImgAcept ++; //aseguramos con esto detener la funcion reviewUpload
                         clearInterval(reviewUpload); //detenemos la evaluacion
-                        createAD();
+                  
+                            createAD();
+
                     }
                 }         
+
                 
                 async function createAD(){
 
@@ -262,6 +260,8 @@ routes.post('/department/create/items', async(req,res)=>{
                     req.session.uploadPublication = "¡Su publicación se ha subido exitosamente!"
                     res.redirect('/department/create/items'); //todo ha salido bien
                 }  
+
+ 
 
             } else {
                 console.log("ha sobrepasado la cantidad de imagenes, puede subir un maximo de 3 imagenes");
@@ -280,14 +280,16 @@ routes.post('/department/create/items', async(req,res)=>{
 
 //ruta para eliminar un objeto "anuncio" con try-catch
 routes.post('/department/create/items/delete', async(req, res)=>{
-    let boxMedia = [];
-    let countFall = 0;
-    let countSuccess = 0;
-    console.log("este es el id a deletear: ", req.body);
-    const valor = req.body.titleToDelete
-    console.log( "aqui en una variable", valor);
 
     try{
+        let boxMedia = [];
+        //let countFall = 0;
+        //let countSuccess = 0;
+        console.log("este es el id a deletear: ", req.body);
+        const valor = req.body.titleToDelete
+        console.log( "aqui en una variable", valor);
+
+   
         if (valor !== 'no_data') {
             const resultBD = await modelItems.findById(valor)
             console.log("Here this body for delete :", resultBD);
@@ -306,14 +308,15 @@ routes.post('/department/create/items/delete', async(req, res)=>{
                 countMedia = boxMedia.length;
             }
 
-            //console.log("Esto es boxMedia", boxMedia);
-            //console.log("Esto es countMedia", countMedia);
+            console.log("Esto es boxMedia", boxMedia);
+            console.log("Esto es countMedia", countMedia);
 
             
             for (let i = 0; i < boxMedia.length; i++) {
                 const public_id = boxMedia[i].public_id;
                 
                 console.log("este es el public_id a eliminar : ", public_id);
+                deleteMedias(public_id) //arrancamos el destructor de medias
 
                 async function deleteMedias(public_id){
 
@@ -323,32 +326,29 @@ routes.post('/department/create/items/delete', async(req, res)=>{
                     }
                     s3.deleteObject(params, (err, data)=>{
                         if (err){
-                            countFall ++;
+                            //countFall ++;
                             console.error("Error al eliminar el archivo --->", err);
                         } else {
-                            countSuccess ++;
+                            //countSuccess ++;
                             console.log("Media eliminada con exito --->", data);
                         }
                     })  
                         
                 }
 
-                deleteMedias(public_id)
                     
             }         
-            
-            setInterval(reviewDelet, 3000);
+            //al terminar de correr el for de destructor procedemos a eliminar el documento de la DB.
 
-            function reviewDelet(){
-
-                if (countMedia === (countSuccess + countFall)) {
-                    
-                    countMedia ++; //aseguramos con esto detener la funcion reviewUpload
-                    clearInterval(reviewDelet); //detenemos la evaluacion
-                    deleteDB()
-
-                }
-            }         
+            setTimeout(async() => {
+                console.log("Se ha activado el deleteDB(), revisar si se han eliminado todas las medias")
+                    try {
+                        await deleteDB()
+                    } catch (error) {
+                        console.log("Este es el error que sale cuando se elimina el documento en la DB", error)
+                    }
+                
+            }, 4000);
             
             async function deleteDB(){
                 const deletingDoc = await modelItems.findByIdAndDelete(valor);
