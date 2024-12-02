@@ -90,7 +90,7 @@ routes.get('/department/create/raffle', async(req,res)=>{
         //console.log('Esto es BuySell ---->', BuySell);
 
         boxImpagos.push( ...Contacts, ...BuySell );
-        console.log("Esto es boxImpagos ::::::>", boxImpagos);
+        //console.log("Esto es boxImpagos ::::::>", boxImpagos);
         countImpagos = boxImpagos.length;
     
         console.log("Esto es la cantidad de impagos que posee el usuario --->", countImpagos);
@@ -280,13 +280,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                                             let public_id = key;
                                             
                                             console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                                            boxImg.push( {url, public_id, bytes, format} );
-        
-                                            countSuccess ++;
-                                            console.log( "countSuccess :", countSuccess );
-        
-                                            //console.log("este es el path que tiene que ser eliminado:", element.path)
-                                            fs.unlinkSync(element.path);                                                           
+                                            boxImg.push( {url, public_id, bytes, format} );                                                       
                                                 
                                         }
                                         
@@ -369,15 +363,17 @@ routes.post('/department/create/raffle', async(req,res)=>{
 
 //ruta para eliminar un objeto "anuncio" con try-catch
 routes.post('/department/create/raffle/delete', async(req, res)=>{
-    let boxMedia = [];
-    let countFall = 0;
-    let countSuccess = 0; 
-    let countMedia = 0;     
-    console.log("este es el id a deletear: ", req.body);
-    const valor = req.body.titleToDelete
-    console.log( "aqui en una variable", valor);
-
+   
     try{
+        let boxMedia = [];
+        //let countFall = 0;
+        //let countSuccess = 0; 
+        let countMedia = 0;     
+        console.log("este es el id a deletear: ", req.body);
+        const valor = req.body.titleToDelete
+        console.log( "aqui en una variable", valor);
+
+   
         if (valor !== 'no_data' ) {
             const resultBD = await modelRaffle.findById(valor)
 
@@ -433,6 +429,7 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                     const public_id = boxMedia[i].public_id;
                     
                     //console.log("este es el public_id a eliminar : ", public_id);
+                    deleteMedias(public_id)
 
                     async function deleteMedias(public_id){
 
@@ -442,32 +439,26 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                         }
                         s3.deleteObject(params, (err, data)=>{
                             if (err){
-                                countFall ++;
                                 console.error("Error al eliminar el archivo --->", err);
                             } else {
-                                countSuccess ++;
                                 console.log("Media eliminada con exito --->", data);
                             }
                         })  
                             
                     }
-
-                    deleteMedias(public_id)
                         
                 } 
+                //al terminar de correr el for de destructor procedemos a eliminar el documento de la DB.
 
-                setInterval(reviewDelet, 3000);
-
-                function reviewDelet(){
-
-                    if (countMedia === (countSuccess + countFall)) {
-                        
-                        countMedia ++; //aseguramos con esto detener la funcion reviewUpload
-                        clearInterval(reviewDelet); //detenemos la evaluacion
-                        deleteDB()
-
-                    }
-                }   
+                setTimeout(async() => {
+                    console.log("Se ha activado el deleteDB(), revisar si se han eliminado todas las medias")
+                        try {
+                            await deleteDB()
+                        } catch (error) {
+                            console.log("Este es el error que sale cuando se elimina el documento en la DB", error)
+                        }
+                    
+                }, 4000); 
 
                 async function deleteDB(){
                     const deletingDoc = await modelRaffle.findByIdAndDelete(valor);
@@ -504,6 +495,7 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                         const public_id = boxMedia[i].public_id;
                         
                         console.log("este es el public_id a eliminar : ", public_id);
+                        deleteMedias(public_id)
 
                         async function deleteMedias(public_id){
 
@@ -513,32 +505,26 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                             }
                             s3.deleteObject(params, (err, data)=>{
                                 if (err){
-                                    countFall ++;
                                     console.error("Error al eliminar el archivo --->", err);
                                 } else {
-                                    countSuccess ++;
                                     console.log("Media eliminada con exito --->", data);
                                 }
                             })  
                                 
                         }
-
-                        deleteMedias(public_id)
                             
                     } 
+                    //al terminar de correr el for de destructor procedemos a eliminar el documento de la DB.
 
-                    setInterval(reviewDelet, 3000);
-
-                    function reviewDelet(){
-
-                        if (countMedia === (countSuccess + countFall)) {
-                            
-                            countMedia ++; //aseguramos con esto detener la funcion reviewUpload
-                            clearInterval(reviewDelet); //detenemos la evaluacion
-                            deleteDB()
-
-                        }
-                    }   
+                    setTimeout(async() => {
+                        console.log("Se ha activado el deleteDB(), revisar si se han eliminado todas las medias")
+                            try {
+                                await deleteDB()
+                            } catch (error) {
+                                console.log("Este es el error que sale cuando se elimina el documento en la DB", error)
+                            }
+                        
+                    }, 4000); 
 
                     async function deleteDB(){
                         const deletingDoc = await modelRaffle.findByIdAndDelete(valor);

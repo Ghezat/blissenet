@@ -69,7 +69,7 @@ routes.get('/department/create/realstate', async(req,res)=>{
         //console.log('Esto es BuySell ---->', BuySell);
     
         boxImpagos.push( ...Contacts, ...BuySell );
-        console.log("Esto es boxImpagos ::::::>", boxImpagos);
+        //console.log("Esto es boxImpagos ::::::>", boxImpagos);
         countImpagos = boxImpagos.length;
     
         console.log("Esto es la cantidad de impagos que posee el usuario --->", countImpagos);
@@ -138,15 +138,15 @@ routes.post('/department/create/realstate/selector', (req,res)=>{
 
 //esta es la ruta para crear un anuncio con try-catch
 routes.post('/department/create/realstate', async(req,res, next)=>{
-    const boxImg = [];
-    const user = req.session.user
-    console.log(user.username)
-    const username = user.username; //aqui tengo el username;
-    const department = 'realstate'; 
-    const commission = 8; //esto es un precio tasado a dolares luego se convertira en la moneda de curso legal.  
-
 
     try{
+        const boxImg = [];
+        const user = req.session.user
+        console.log(user.username)
+        const username = user.username; //aqui tengo el username;
+        const department = 'realstate'; 
+        const commission = 8; //esto es un precio tasado a dolares luego se convertira en la moneda de curso legal.  
+
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
         console.log("Aqui el estado --->",searchProfile[0].states);
@@ -209,15 +209,7 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
                                         boxImg.push( {url, public_id, bytes, format} );
     
                                         countSuccess ++;
-                                        console.log( "countSuccess :", countSuccess );
-    
-                                        async function deleteEleUpload(){
-                                            //console.log("este es el path que tiene que ser eliminado:", element.path)
-                                            fs.unlink(element.path)
-                                        }
-                                        
-                                        deleteEleUpload();
-    
+                                        console.log( "countSuccess :", countSuccess );    
                                             
                                     }
                                     
@@ -290,14 +282,14 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
             
 //ruta para eliminar un objeto "anuncio" con try-catch
 routes.post('/department/create/realstate/delete', async(req, res)=>{
-    let boxMedia = [];
-    let countFall = 0;
-    let countSuccess = 0;
-    console.log("este es el id a deletear: ", req.body);
-    const valor = req.body.titleToDelete
-    console.log( "aqui en una variable", valor);
 
     try{
+        let boxMedia = [];
+        console.log("este es el id a deletear: ", req.body);
+        const valor = req.body.titleToDelete
+        console.log( "aqui en una variable", valor);
+
+  
         if (valor !== 'no_data') {
             const resultBD = await modelRealstate.findById(valor)
             console.log("Here this body for delete :", resultBD);
@@ -324,6 +316,7 @@ routes.post('/department/create/realstate/delete', async(req, res)=>{
                 const public_id = boxMedia[i].public_id;
                 
                 console.log("este es el public_id a eliminar : ", public_id);
+                deleteMedias(public_id)
 
                 async function deleteMedias(public_id){
 
@@ -333,32 +326,28 @@ routes.post('/department/create/realstate/delete', async(req, res)=>{
                     }
                     s3.deleteObject(params, (err, data)=>{
                         if (err){
-                            countFall ++;
+                            //countFall ++;
                             console.error("Error al eliminar el archivo --->", err);
                         } else {
-                            countSuccess ++;
+                            //countSuccess ++;
                             console.log("Media eliminada con exito --->", data);
                         }
                     })  
                         
                 }
-
-                deleteMedias(public_id)
                     
             }         
-            
-            setInterval(reviewDelet, 3000);
+            //al terminar de correr el for de destructor procedemos a eliminar el documento de la DB.
 
-            function reviewDelet(){
-
-                if (countMedia === (countSuccess + countFall)) {
-                    
-                    countMedia ++; //aseguramos con esto detener la funcion reviewUpload
-                    clearInterval(reviewDelet); //detenemos la evaluacion
-                    deleteDB()
-
-                }
-            }         
+            setTimeout(async() => {
+                console.log("Se ha activado el deleteDB(), revisar si se han eliminado todas las medias")
+                    try {
+                        await deleteDB()
+                    } catch (error) {
+                        console.log("Este es el error que sale cuando se elimina el documento en la DB", error)
+                    }
+                
+            }, 4000);     
             
             async function deleteDB(){
                 const deletingDoc = await modelRealstate.findByIdAndDelete(valor);

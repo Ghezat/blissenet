@@ -30,7 +30,7 @@
     "nodemon": "^3.1.7"
   },
   "name": "blissenet",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
