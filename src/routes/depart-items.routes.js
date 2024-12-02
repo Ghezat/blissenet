@@ -210,9 +210,7 @@ routes.post('/department/create/items', async(req,res)=>{
 
                                     countSuccess ++;
                                     console.log( "countSuccess :", countSuccess );
-                                    boxPathToDelete.push(pathField);
- 
-                                        
+                                                        
                                 }
                                 
                             });
