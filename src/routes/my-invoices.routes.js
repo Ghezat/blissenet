@@ -12,16 +12,27 @@ const modelDocumentReceipt = require('../models/documentReceipt.js');
 const user = require('../models/user.js');
 
 //:::::PDFMake:::::
+//ruta absoluta /home/blissenet/repositories/blissenet/src/public/fonts/Roboto-Italic.ttf'
+const fontPath = '/home/blissenet/repositories/blissenet/' //src/public/fonts/Roboto-Italic.ttf';
 
 let fonts = {
 	Roboto: {
-		normal: 'src/public/fonts/Roboto-Regular.ttf',
+		normal: `${fontPath}src/public/fonts/Roboto-Regular.ttf`,
+		bold: `${fontPath}src/public/fonts/Roboto-Medium.ttf`,
+		italics: `${fontPath}src/public/fonts/Roboto-Italic.ttf`,
+		bolditalics: `${fontPath}src/public/fonts/Roboto-MediumItalic.ttf`
+	}
+};
+
+//desarrollo
+/* let fonts = {
+	Roboto: {
+		normal: `${fontPath}/src/public/fonts/Roboto-Regular.ttf`,
 		bold: 'src/public/fonts/Roboto-Medium.ttf',
 		italics: 'src/public/fonts/Roboto-Italic.ttf',
 		bolditalics: 'src/public/fonts/Roboto-MediumItalic.ttf'
 	}
-};
-
+}; */
 
 const PdfPrinter = require('pdfmake'); 
 const printer = new PdfPrinter(fonts);
@@ -406,9 +417,9 @@ routes.get('/my-invoices/receiptPDF/:id', async (req, res)=>{
     const dateFormat = `${dia}-${mes}-${anio}`;
 
     var docDefinition = {
-        watermark: { text: 'Blissnet Multimarket', color: 'gray', opacity: 0.2, bold: true, italics: false },
+        watermark: { text: 'Blissenet Multimarket', color: 'gray', opacity: 0.2, bold: true, italics: false },
         content: [
-            { text: 'Blissnet Multimarket', fontSize: 17, italics: true, lineHeight:1},
+            { text: 'Blissenet Multimarket', fontSize: 17, italics: true, lineHeight:1},
             {
                 style: 'columnStyle',
                 table: {
