@@ -360,20 +360,6 @@ routes.get('/product/:depart/:id', async(req, res)=>{
     } else if ( depart == 'auctions'){
         const depart = 'auctions';
         //capturo los req.session creados para emitir mensajes en el view-general-product en el depart = "auctions";
-        const bidHighAccepted = req.session.bidHighAccepted;
-        const bidErrorDate = req.session.bidErrorDate; // "No es posible participar en esta Subasta, Ya se ha Cerrado";
-        const bidErrorSistem = req.session.bidErrorSistem; //"Ha habido un error, intente luego."
-        const bidFirstLowDenied = req.session.bidFirstLowDenied; 
-        const bidLowDenied  = req.session.bidLowDenied;
-        const bidDenied = req.session.bidDenied;
-
-        delete req.session.bidHighAccepted;
-        delete req.session.bidErrorDate;
-        delete req.session.bidErrorSistem;
-        delete req.session.bidFirstLowDenied;
-        delete req.session.bidLowDenied;
-        delete req.session.bidDenied;
-
         //console.log('este producto es del departamento service asi que buscamos en la coleccion service')
         const search = await modelAuction.findById(productId);
 
@@ -400,7 +386,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             //console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
 
             //console.log(":::::: Esto es search ::::::" , search);
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, bidLowDenied, bidHighAccepted, bidDenied, bidErrorDate, bidErrorSistem, bidFirstLowDenied, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
         } else {
                              
             res.render('page/unknown-auction', {user, searchProfile, countMessages, countNegotiationsBuySell});
@@ -577,6 +563,26 @@ routes.post('/message', async(req, res)=>{
 //res.json({questions})
 });
 
+//aqui extraemos todas las pujas de las subastas.
+routes.post('/express-bid-extraer', async(req, res)=>{
+    try {
+        let searchBids;
+        const { id } = req.body;
+        //console.log("Esto es el id de la Subasta >>>>>>>>>>>>>", id);
+    
+        const searchAuctions = await modelAuction.findById(id);
+        //console.log("searchAuctions ///////////////////////>>>>>>>>>>>>>>>>", searchAuctions)
+        searchBids = searchAuctions.participants;
+        console.log("searchBids ///////////////////////>>>>>>>>>>>>>>>>", searchBids);
+
+        res.json({searchBids});
+    } catch (error) {
+        console.log("Ha habdo un error de carga de data, vuelva a intentarlo luego")
+    }
+
+});
+
+
 //Esta es la direccion donde llega las solicitudes de puja . !importante
 routes.post('/bidatauction', async(req, res)=>{
     
@@ -600,10 +606,11 @@ routes.post('/bidatauction', async(req, res)=>{
         let dateClose = parseInt(dateCloseSt);
         let horaCloseTime = DateClose[1]; //14:10; esto hay que convertirlo en numero quedando asi 1410; 1335>1410 no
         let horaCloseTimeSplit = horaCloseTime.split(":"); //array separado por :
-        console.log("horaCloseTimeSplit", horaCloseTimeSplit);
+        //console.log("horaCloseTimeSplit", horaCloseTimeSplit);
         let horaClose =  horaCloseTimeSplit[0] + horaCloseTimeSplit[1];
         let horaCl = parseInt(horaCloseTimeSplit[0]);
         let minuCl = parseInt(horaCloseTimeSplit[1]);
+        let updateBids;
         
         let timeCloseSt;
         if (minuCl <= 9){
@@ -614,20 +621,20 @@ routes.post('/bidatauction', async(req, res)=>{
         
         const timeClose = parseInt(timeCloseSt); // debe ser numerico
 
-        console.log("timeClose typeof", typeof timeClose);
-        console.log("timeClose", timeClose);//perfecto
+        //console.log("timeClose typeof", typeof timeClose);
+        //console.log("timeClose", timeClose);//perfecto
     
 
-        console.log("mirar este objeto con atencion, necesito obtener la fecha de cierre para armar un TClose");
-        console.log("searchAuction", searchAuction);
+        //console.log("mirar este objeto con atencion, necesito obtener la fecha de cierre para armar un TClose");
+        //console.log("searchAuction", searchAuction);
 
         if (searchAuction !== null){
 
-            console.log("Esto es searchAuction ---->",searchAuction);
+            //console.log("Esto es searchAuction ---->",searchAuction);
             const participants = searchAuction.participants;
             const priceInitial = searchAuction.price;
-            console.log("Esto es participants", participants );
-            console.log("Esto es priceInitial", priceInitial );
+            //console.log("Esto es participants", participants );
+            //console.log("Esto es priceInitial", priceInitial );
         
             const date = new Date();
             const diaNow = date.getDate();
@@ -640,7 +647,7 @@ routes.post('/bidatauction', async(req, res)=>{
 
             let dateNowSt = `${diaNow}${mesNow}${anioNow}`; //1552024
             let dateNow = parseInt(dateNowSt); //ahora es numerico y pude ser comprobado como tal;
-            console.log("dateNow", dateNow);
+            //console.log("dateNow", dateNow);
             let fechaNow;
             if ( minut <= 9 ){
                 fechaNow = `${hours}0${minut}`; //1215 string
@@ -648,7 +655,7 @@ routes.post('/bidatauction', async(req, res)=>{
                 fechaNow = `${hours}${minut}`; //1215 string
             }
             let timeNow = parseInt(fechaNow); //ahora es number y puede ser comprobado;
-            console.log("timeNow", timeNow);
+            //console.log("timeNow", timeNow);
             //timeNow 2129 < timeClose 120
             //dateNow 2552024 < dateClose NaN
 
@@ -667,124 +674,182 @@ routes.post('/bidatauction', async(req, res)=>{
             }
             
             const objectBid = {bidUser, bidAmountF, Time};
-            console.log(`timeNow ${timeNow} < timeClose ${timeClose}`);
-            console.log(`dateNow ${dateNow} < dateClose ${dateClose}`);
+            //console.log(`timeNow ${timeNow} < timeClose ${timeClose}`);
+            //console.log(`dateNow ${dateNow} < dateClose ${dateClose}`);
             //timeNow = 1712  timeClose =  1410
             if (dateNow < dateClose ){
-                console.log("Se puede ejecutar la segunda comprobacion")
+                //console.log("Se puede ejecutar la segunda comprobacion")
                 
-                //segunda  verificion si el array participants tiene elementos.
+                //segunda  verificion el array participants NO tiene elementos.
                 if (participants.length === 0){
-                    console.log("no hay nada");
+                    //console.log(" ////// No hay participantes ////////");
                     //buscamos el precio establecido por el anunciante.
                     
                     if (bidAmountF > priceInitial){
+                        
                         pushBid = await modelAuction.findByIdAndUpdate(bidIDProduct, { $push :{participants : objectBid} });
+                        updateBids = await modelAuction.findById(bidIDProduct);
+                    
+                        const participantsBid = updateBids.participants
+                        const msj = '¡Tiene el mejor precio!';
+                        const type = 2;
+                        const objetBid = {participantsBid, msj, type};
+                        res.json(objetBid);
+
                     } else {
-                        req.session.bidFirstLowDenied = "Su licitación debe superar el precio ofertado por el anunciante."
+                        
+                        const msj = 'Debe ser mayor al premio mínimo.';
+                        const type = 1;
+                        const objetBid = {msj, type};
+                        res.json(objetBid);
                     }
             
+                 //segunda  verificion el array participants Si tiene elementos.    
                 } else {
-                    console.log(" ////// hay elementos ////////");
+                    //console.log(" ////// Si hay participantes ////////");
                     //buscamos el ultimo elemento del array para verificar el precio final.
                     const lastParticipants = participants[participants.length - 1];
-                    console.log("::::::: Esto es lastParticipants :::::::", lastParticipants);
+                    //console.log("::::::: Esto es lastParticipants :::::::", lastParticipants);
                     const bidUserLast = lastParticipants.bidUser;
                     const bidAmountLast  = lastParticipants.bidAmountF;
             
-                    console.log("MIrar aqui -------->");
-                    console.log("Esto es user --->", user.username);
-                    console.log("Esto es bidUserLast --->", bidUserLast);
-                    console.log("Esto es bidAmountLast --->", bidAmountLast);
-                    console.log("Esto es bidAmountF --->", bidAmountF);
+                    //console.log("MIrar aqui -------->");
+                    //console.log("Esto es user --->", user.username);
+                    //console.log("Esto es bidUserLast --->", bidUserLast);
+                    //console.log("Esto es bidAmountLast --->", bidAmountLast);
+                    //console.log("Esto es bidAmountF --->", bidAmountF);
             
                     if (user.username !== bidUserLast){
                         //el usuario es diferente al ultimo que ha pujado
                         if ( bidAmountF > bidAmountLast){
-                            console.log("como es mayor podemos aceptar la licitacion");
+                            
+                            //console.log("como es mayor podemos aceptar la licitacion");
                             pushBid = await modelAuction.findByIdAndUpdate(bidIDProduct, { $push :{participants : objectBid} });
-                            req.session.bidHighAccepted = "Licitación aceptada, ¡tiene usted el mejor precio!"
+                            updateBids = await modelAuction.findById(bidIDProduct);
+                            
+                            const participantsBid = updateBids.participants
+                            const msj = '¡Tiene el mejor precio!';
+                            const type = 2;
+                            const objetBid = {participantsBid, msj, type};
+                            res.json(objetBid);
                         } else {
-                            console.log("es menor No podemos aceptar la licitacion");
-                            req.session.bidLowDenied = "Licitacion es menor que el ultimo precio."
+                            //console.log("es menor No podemos aceptar la licitacion");
+                            const msj = 'Debe ser mayor al ultimo precio.';
+                            const type = 1;
+                            const objetBid = {msj, type};
+                            res.json(objetBid);
                         }
                     } else {
+
                         //el usuario es EL MISMO que licito la ultima vez
-                        console.log("LO SIENTO YA USTED LICITO EN LA SUBASTA")
-                        req.session.bidDenied = "Usted ya ha participado, ¡debe esperar que otro mejore su precio!"
+                        //console.log("LO SIENTO YA USTED LICITO EN LA SUBASTA")
+                        const msj = 'Usted ya ha participado.';
+                        const type = 1;
+                        const objetBid = {msj, type};
+                        res.json(objetBid);
                     }
                     
                 } 
-        
-                res.json({pushBid});
+
 
             } else if (dateNow === dateClose) {
                 if (timeNow < timeClose){
-                    console.log("Se puede ejecutar la segunda comprobacion")
+                    //console.log("Se puede ejecutar la segunda comprobacion")
                 
                     //segunda  verificion si el array participants tiene elementos.
                     if (participants.length === 0){
-                        console.log("no hay nada");
+                        //console.log(" ////// no hay participantes ////////");
                         //buscamos el precio establecido por el anunciante.
                         
                         if (bidAmountF > priceInitial){
                             pushBid = await modelAuction.findByIdAndUpdate(bidIDProduct, { $push :{participants : objectBid} });
+                            updateBids = await modelAuction.findById(bidIDProduct);
+                            
+                            const participantsBid = updateBids.participants
+                            const msj = '¡Tiene el mejor precio!';
+                            const type = 2;
+                            const objetBid = {participantsBid, msj, type};
+                            res.json(objetBid);
                         } else {
-                            req.session.bidFirstLowDenied = "Su licitación debe superar el precio ofertado por el anunciante."
+                            
+                            const msj = 'Debe ser mayor al premio mínimo.';
+                            const type = 1;
+                            const objetBid = {msj, type};
+                            res.json(objetBid);
                         }
                 
                     } else {
-                        console.log(" ////// hay elementos ////////");
+                        //console.log(" ////// si hay participantes ////////");
                         //buscamos el ultimo elemento del array para verificar el precio final.
                         const lastParticipants = participants[participants.length - 1];
-                        console.log("::::::: Esto es lastParticipants :::::::", lastParticipants);
+                        //console.log("::::::: Esto es lastParticipants :::::::", lastParticipants);
                         const bidUserLast = lastParticipants.bidUser;
                         const bidAmountLast  = lastParticipants.bidAmountF;
                 
-                        console.log("MIrar aqui -------->");
-                        console.log("Esto es user --->", user.username);
-                        console.log("Esto es bidUserLast --->", bidUserLast);
-                        console.log("Esto es bidAmountLast --->", bidAmountLast);
-                        console.log("Esto es bidAmountF --->", bidAmountF);
+                        //console.log("MIrar aqui -------->");
+                        //console.log("Esto es user --->", user.username);
+                        //console.log("Esto es bidUserLast --->", bidUserLast);
+                        //console.log("Esto es bidAmountLast --->", bidAmountLast);
+                        //console.log("Esto es bidAmountF --->", bidAmountF);
                 
                         if (user.username !== bidUserLast){
                             //el usuario es diferente al ultimo que ha pujado
                             if ( bidAmountF > bidAmountLast){
-                                console.log("como es mayor podemos aceptar la licitacion");
+                                //console.log("como es mayor podemos aceptar la licitacion");
                                 pushBid = await modelAuction.findByIdAndUpdate(bidIDProduct, { $push :{participants : objectBid} });
-                                req.session.bidHighAccepted = "Licitación aceptada, ¡tiene usted el mejor precio!"
+                                updateBids = await modelAuction.findById(bidIDProduct);
+                                
+                                const participantsBid = updateBids.participants
+                                const msj = '¡Tiene el mejor precio!';
+                                const type = 2;
+                                const objetBid = {participantsBid, msj, type};
+                                res.json(objetBid);
+
                             } else {
-                                console.log("es menor No podemos aceptar la licitacion");
-                                req.session.bidLowDenied = "Licitacion es menor que el ultimo precio."
+                                //console.log("es menor No podemos aceptar la licitacion");
+                                const msj = 'Debe ser mayor al ultimo precio.';
+                                const type = 1;
+                                const objetBid = {msj, type};
+                                res.json(objetBid);
                             }
                         } else {
                             //el usuario es EL MISMO que licito la ultima vez
-                            console.log("LO SIENTO YA USTED LICITO EN LA SUBASTA")
-                            req.session.bidDenied = "Usted ya ha participado, ¡debe esperar que otro mejore su precio!"
+                            //console.log("LO SIENTO YA USTED LICITO EN LA SUBASTA")
+                            const msj = 'Usted ya ha participado.';
+                            const type = 1;
+                            const objetBid = {msj, type};
+                            res.json(objetBid);
                         }
                         
                     } 
-            
-                    res.json({pushBid});
+
+                    //type : 0 >>> json de error.
+                    //type : 1 >>> json de solo msj.
+                    //type : 2 >>> jsonde  participantsBid y msj.
 
                 } else {
-                    console.log("No es posible participar en esta Subasta, Ya se ha Cerrado");
-                    req.session.bidErrorDate = "No es posible participar en esta Subasta, Ya se ha Cerrado";
-                    res.json({pushBid});
+                    //console.log("No es posible participar en esta Subasta, Ya se ha Cerrado");
+                    const msj = '¡Esta Subasta ha cerrado!';
+                    const type = 1;
+                    const objetBid = {msj, type};
+                    res.json(objetBid);
                 }
 
             } else {
-                console.log("No es posible participar en esta Subasta, Ya se ha Cerrado");
-                req.session.bidErrorDate = "No es posible participar en esta Subasta, Ya se ha Cerrado";
-                res.json({pushBid});
-
+                //console.log("No es posible participar en esta Subasta, Ya se ha Cerrado");
+                const msj = '¡Esta Subasta ha cerrado!';
+                const type = 1;
+                const objetBid = {msj, type};
+                res.json(objetBid);
             }
 
         }
         
     } catch (error) {
-        req.session.bidErrorSistem = "Ha habido un error, intente luego."
-        res.json({pushBid});
+        const msj = '¡Ha habido un error, intente luego!'
+        const type = 0;
+        const objetBid = {msj, type};
+        res.json(objetBid);
     }    
     
 });

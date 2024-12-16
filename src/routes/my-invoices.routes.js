@@ -13,8 +13,8 @@ const user = require('../models/user.js');
 
 //:::::PDFMake:::::
 //ruta absoluta /home/blissenet/repositories/blissenet/src/public/fonts/Roboto-Italic.ttf'
-const fontPath = '/home/blissenet/repositories/blissenet/' //src/public/fonts/Roboto-Italic.ttf';
-
+const fontPath = '/home/blissenet/repositories/blissenet/' //solo para version produccion';
+//produccion version 
 let fonts = {
 	Roboto: {
 		normal: `${fontPath}src/public/fonts/Roboto-Regular.ttf`,
@@ -24,15 +24,16 @@ let fonts = {
 	}
 };
 
-//desarrollo
+//desarrollo version
 /* let fonts = {
 	Roboto: {
-		normal: `${fontPath}/src/public/fonts/Roboto-Regular.ttf`,
+		normal: `src/public/fonts/Roboto-Regular.ttf`,
 		bold: 'src/public/fonts/Roboto-Medium.ttf',
 		italics: 'src/public/fonts/Roboto-Italic.ttf',
 		bolditalics: 'src/public/fonts/Roboto-MediumItalic.ttf'
 	}
 }; */
+// tener en cuenta que estos dos objetos fonts sirven cada uno en el contexto que se va a usar. 
 
 const PdfPrinter = require('pdfmake'); 
 const printer = new PdfPrinter(fonts);

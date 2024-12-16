@@ -142,37 +142,11 @@
     <% }; %> 
 
    
-    <% if (depart === "auctions") { %>
-        <!-- estos son los mensajes referentes al depart auction "Subasta" -->
-
-        <% if (bidFirstLowDenied) { %>
-            <%- include('../alert/bidFirstLowDenied.ejs') %>
-        <% }; %>
-
-        <% if (bidLowDenied) { %>
-            <%- include('../alert/bidLowDenied.ejs') %>
-        <% }; %>
-        
-        <% if (bidErrorDate) { %>
-            <%- include('../alert/bidErrorDate.ejs') %>
-        <% }; %>
-        
-        <% if (bidErrorSistem) { %>
-            <%- include('../alert/bidErrorSistem.ejs') %>
-        <% }; %>
-
-        <% if (bidDenied) { %>
-            <%- include('../alert/bidDenied.ejs') %>
-        <% }; %>
-
-        <% if (bidHighAccepted) { %>
-            <%- include('../alert/bidHighAccepted.ejs') %>
-        <% }; %>
-        
-
-    <% }; %>
     
-  
+    <!-- audios disponibles para diferentes acciones -->        
+    <!-- <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> -->
+    <audio src="/sound/Note-efect.mp3" id="efectSoundNewBid"></audio>
+    <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> 
 
     <div class="row border border-ligth m-0" style="width: 100%;">
        <!--  ::::: productId ::::: -->
@@ -620,7 +594,7 @@
                                                 </div>
                                             <% } else { %>
                                                 <% if (user.username !== search.username) { %>
-                                                    <!-- El usuario es diferente del anunciante puede participar en la subasta -->
+                                                    <!-- El usuario es diferente al Anfitrion puede participar en la subasta -->
                                                     <div class="card bid p-0">
                                                         <div class="card-body p-2">
                                                             <div class="card-header form-group mb-1 d-flex justify-content-between px-1" style="border: none;" >
@@ -650,53 +624,23 @@
                                                                 <input type="number" class="form-control bidAmount" style="width: 56%;">
                                                                 <button class="btn btn-success btnBID" class="form-control" style="width: 40%;">Bid</button>
                                                             </div>
+                                                            <div class="contMSJ mt-2">
+                                                                <!-- alertas dinamicos -->                                                              
+                                                            </div>
                                                             <hr>
-                                                            <div class="containetBid border" style="max-height: 40vh; overflow-y: auto;">
-                                                                <table class="table p-0">
-                                                                <% const Participants = search.participants %>
-                                                                <% const Parti = Participants.reverse() %>                                                            
-                                                                <% for (let i = 0; i < Parti.length ; i ++) { %>
-                                                                
-                                                                    <% const ele = Parti[i] %>
-                                                                        <% if (ele == Parti[0] ){ %>
-                                                                            
-                                                                            <tr class="alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;">  
-                                                                                <% if (ele.bidUser.length >3) { %>
-                                                                                    <% const acortado = ele.bidUser.substring(0, 6) + "***"; %> 
-                                                                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= acortado %>  </td>
-                                                                                <% } else { %>
-                                                                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= ele.bidUser %>  </td>
-                                                                                <% } %> 
-                                                                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"><%= ele.bidAmountF %> </span> </td>
-                                                                                <td class="border d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"><%= ele.Time %> </span> </td> 
-                                                                            </tr>
+                                                            <div class="containerBid border" style="max-height: 40vh; overflow-y: auto;">
+                                                               
+                                                                <table class="table p-0 tableBids">
+                                                                    <!-- datos creados dinamicamente -->
+                                                                </table>    
 
-
-                                                                        <% } else { %>
-                                                                        
-                                                                            <tr style="width: 100%;">
-                                                                                <% if (ele.bidUser.length >3) { %>
-                                                                                    <% const acortado = ele.bidUser.substring(0, 6) + "***"; %> 
-                                                                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= acortado %>  </td>
-                                                                                <% } else { %>
-                                                                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= ele.bidUser %>  </td>
-                                                                                <% } %>    
-                                                                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"><%= ele.bidAmountF %> </span> </td>
-                                                                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"><%= ele.Time %> </span> </td> 
-                                                                            </tr>
-
-                                                                        <% }; %>      
-                                                                
-                                                                <% }; %>
-
-                                                                </table>        
                                                             </div>
                                                                                        
                                                             <!-- <span class="alert alert-success p-0">tonygamed  54</span> <br> -->
                                                         </div>
                                                     </div>
                                                 <% } else { %>
-                                                    <!-- El usuario anunciante No puede participar en la subasta solo ver -->    
+                                                    <!-- El usuario Anfitrion No puede participar en la subasta solo ver -->    
                                                     <div class="card bid p-0">
                                                         <div class="card-body p-2">
                                                                 <div class="card-header form-group mb-1 d-flex justify-content-between px-1" style="border: none;" >
@@ -726,43 +670,8 @@
                                                                 <hr>
 
                                                                 <div class="containetBid border" style="max-height: 40vh; overflow-y: auto;">
-                                                                    <table class="table p-0">
-                                                                    <% const Participants = search.participants %>
-                                                                    <% const Parti = Participants.reverse() %>                                                            
-                                                                    <% for (let i = 0; i < Parti.length ; i ++) { %>
-                                                                    
-                                                                            <% const ele = Parti[i] %>
-                                                                            <% if (ele == Parti[0] ){ %>
-                                                                                
-                                                                                <tr class="alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;">  
-                                                                                    <% if (ele.bidUser.length >3) { %>
-                                                                                        <% const acortado = ele.bidUser.substring(0, 6) + "***"; %> 
-                                                                                        <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= acortado %>  </td>
-                                                                                    <% } else { %>
-                                                                                        <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= ele.bidUser %>  </td>
-                                                                                    <% } %> 
-                                                                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"><%= ele.bidAmountF %> </span> </td>
-                                                                                    <td class="border d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"><%= ele.Time %> </span> </td> 
-                                                                                </tr>
-    
-    
-                                                                            <% } else { %>
-                                                                            
-                                                                                <tr style="width: 100%;">
-                                                                                    <% if (ele.bidUser.length >3) { %>
-                                                                                        <% const acortado = ele.bidUser.substring(0, 6) + "***"; %> 
-                                                                                        <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= acortado %>  </td>
-                                                                                    <% } else { %>
-                                                                                        <td style="border: none; padding: 0; margin: 0; width: 20px">  <%= ele.bidUser %>  </td>
-                                                                                    <% } %>    
-                                                                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"><%= ele.bidAmountF %> </span> </td>
-                                                                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"><%= ele.Time %> </span> </td> 
-                                                                                </tr>
-    
-                                                                            <% }; %>      
-                                                                    
-                                                                        <% }; %>
-    
+                                                                    <table class="table p-0 tableBids">
+                                                                       <!-- datos creados dinamicamente -->    
                                                                     </table>        
                                                                 </div>    
                                                         </div>
@@ -772,7 +681,7 @@
                                             <% }; %>    
                                             
                                         <% }  else { %>
-                                            <span>¡Este Subasta esta pausada!</span> <br> <hr>
+                                            <span>¡Esta Subasta esta pausada!</span> <br> <hr>
                                             <button type="button" class="btn btn-secondary mt-2 text-light form-control" disabled>
                                                 Paused Auction 
                                             </button>
@@ -844,31 +753,9 @@
                                                         </div>
                                                         <hr>
                                                         
-                                                        <table class="table p-0">
-                                                                                                                         
-                                                            <% for (let i = 0; i < search.participants.length ; i ++) { %>
-                                                             
-                                                                <% const ele = search.participants[i] %>
-                                                                    <% if (i < search.participants.length -1 ){ %>
-                                                                        
-                                                                        <tr> 
-                                                                            <td style="border: none; padding: 0; margin: 0; ">  <span class="my-0 px-1 py-0"><%= ele.bidUser %> </span> </td>
-                                                                            <td style="border: none; padding: 0; margin: 0; ">  <span class="my-0 px-1 py-0"><%= ele.bidAmountF %> </span> </td>
-                                                                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0; ">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"><%= ele.Time %> </span> </td> 
-                                                                        </tr>
-                                                                    <% } else { %>
-                                                                       
-                                                                        <tr class="alert alert-success rounded-1 px-0 pb-1 border mb-1"> 
-                                                                            <td style="border: none; padding: 0; margin: 0;">  <p class="my-0 px-1 py-0"><%= ele.bidUser %> </span> </td>
-                                                                            <td style="border: none; padding: 0; margin: 0;">  <p class="my-0 px-1 py-0"><%= ele.bidAmountF %> </span> </td>
-                                                                            <td class="border d-flex justify-content-end" style="border: none; padding: 0; margin: 0; ">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"><%= ele.Time %> </span> </td> 
-                                                                        </tr>
-
-                                                                    <% }; %>      
-                                                            
-                                                            <% }; %>
-
-                                                            </table>    
+                                                        <table class="table p-0 tableBids">
+                                                            <!-- datos creados dinamicamente -->    
+                                                         </table>  
 
                                                 </div>
                                             </div>
@@ -1081,7 +968,8 @@
                                             </div> 
                                             <div class="form-group">
                                                 <div class="contentTextNote" style="position: relative;">
-                                                    <input type="text" class="form-control my-1 pe-5" id="textMessage" maxlength="200">
+                                                    <!-- <input type="text" class="form-control my-1 pe-5" id="textMessage" maxlength="250"> viejo elemento-->
+                                                    <textarea id="textMessage"  maxlength="250" class="form-control my-1 pe-5"> </textarea>
                                                     <% if (search) { %> <!-- datos ocultos importantes -->
                                                     <input type="hidden" value="<%= search._id %>" id="idHidden"><!-- este input oculto guarda el id de la subasta y que necesito como dato --> 
                                                     <input type="hidden" value="<%= search.department %>" id="departHidden"><!-- este input oculto guarda el depart que necesito como dato  -->
@@ -1587,7 +1475,7 @@ const DataFetch = fetch('/extraer')
               .then(response => response.json())
               .then(json =>{
                 
-                console.log("Esto es json record-trust--->",json)
+                //console.log("Esto es json record-trust--->",json)
 
                 const raffleHistory = json[0]; 
                 const sellerPositive = json[1].count;
@@ -1595,8 +1483,8 @@ const DataFetch = fetch('/extraer')
   
                 let sellerCount = sellerPositive + raffleHistory.countRafflePositivo;
                 //console.log("estamos en consola de navegador")
-                console.log("esto es sellerCount---->", sellerCount);
-                console.log("Esto es sellerTrust---->", sellerTrust);
+                //console.log("esto es sellerCount---->", sellerCount);
+                //console.log("Esto es sellerTrust---->", sellerTrust);
 
                 //aqui sacamos los datos de Ventas y Nivel.
 
@@ -1663,7 +1551,7 @@ const DataFetch = fetch('/extraer')
  
 const from = document.querySelector('.from');
 const storeUsername = store.childNodes[2].value;
-console.log("Esto es storeUsername aqui ----------->", storeUsername);
+//console.log("Esto es storeUsername aqui ----------->", storeUsername);
 
 let datoStore = {
     store : storeUsername
@@ -1697,6 +1585,7 @@ let datoStore = {
 </script>
 
 <script>
+    
     //Este es el script para realizar la solicitud de puja en la subasta
     const bidUser = document.querySelector('.bidUser'); //usuario data
     const bidAmount = document.querySelector('.bidAmount'); //monto que desea ofrecer data
@@ -1708,7 +1597,7 @@ let datoStore = {
 
         btnBID.addEventListener('click', ()=>{
 
-        //data obtenido en la linea 351
+        //data obtenida en el bloque 648
         const dataBid = {
             bidUser : bidUser.value,
             bidAmount : bidAmount.value,
@@ -1724,7 +1613,11 @@ let datoStore = {
             })
          .then(response => response.json())
          .then(jsonBid =>{ console.log(">>>>> Esto es jsonBid <<<<<", jsonBid)
-                    location.reload();
+
+                    
+                    socket.emit('creacion:Bid', { 'objetBid' : jsonBid  });
+                    //aqui es donde se debe enviar la data nueva al socket
+                    //el socket recibe y emite al view general product para armar con un escucha la tabla de la puja
              })
             .catch(err => console.log(err));
 
@@ -1773,11 +1666,11 @@ let datoStore = {
                 active = cronoAsta.searchAuction.active;
                 biddingTime = cronoAsta.searchAuction.biddingTime;
                
-                console.log("date :", date); //fecha y hora actual enviado desde el servidor
-                console.log("active :", active ); //estado del atributo active
-                console.log("auctionDate :", auctionDate); //fecha y hora de inicio de subasta
-                console.log("auctionDateClose :", auctionDateClose); //fecha y hora de cierre de subasta
-                console.log("biddingTime :", biddingTime); //cantidad de horas que dura la subasta
+                //console.log("date :", date); //fecha y hora actual enviado desde el servidor
+                //console.log("active :", active ); //estado del atributo active
+                //console.log("auctionDate :", auctionDate); //fecha y hora de inicio de subasta
+                //console.log("auctionDateClose :", auctionDateClose); //fecha y hora de cierre de subasta
+                //console.log("biddingTime :", biddingTime); //cantidad de horas que dura la subasta
 
                 const biddingMinutes = (biddingTime * 60);
                 dateInicio.innerHTML = `<span class="me-2"> ${auctionDate} </span>`  //Sala Iniciada ****
@@ -1787,8 +1680,8 @@ let datoStore = {
 
                 function calcularTime(){
                     // --- Bloque de codigo para calcular la cantidad de minutos que quedan para cerrar la Sala ---
-                    console.log("**************************ver************************")
-                    console.log("ESTO es date ------------------>", date);
+                    //console.log("**************************ver************************")
+                    //console.log("ESTO es date ------------------>", date);
                     const diaActual = date.getDate(); const mesActual = date.getMonth() +1; const yearActual = date.getFullYear()
                     const horaActual = date.getHours(); const minuActual = date.getMinutes();
                     let dateNow, timeNow;
@@ -1819,7 +1712,7 @@ let datoStore = {
                     
 
 
-                    console.log(auctionDateClose)
+                    //console.log(auctionDateClose)
                     const auctionCloseSplit = auctionDateClose.split(" ");
                     let fechaClose = auctionCloseSplit[0]; let HoraClose = auctionCloseSplit[1];
                     let fechaCloseSplit = fechaClose.split("-"); 
@@ -1856,16 +1749,16 @@ let datoStore = {
 
                     
                     let dateFinish = `${dateClose}T${timeClose}:00`;                   
-                    console.log("dateFinish", dateFinish);
+                    //console.log("dateFinish", dateFinish);
                     let DateFinish = new Date(dateFinish);
-                    console.log("DateFinish",  DateFinish);
+                    //console.log("DateFinish",  DateFinish);
 
-                    console.log("Local", Local);
+                    //console.log("Local", Local);
 
                     let diferenciaMs = DateFinish - Local;
-                    console.log("diferenciaMs", diferenciaMs);
+                    //console.log("diferenciaMs", diferenciaMs);
                     less = Math.floor(diferenciaMs / 60000); // 60000 => 1 min
-                    console.log("less", less); 
+                    //console.log("less", less); 
                     
                     // ya aqui poseo dateNow y timeNow;
                     console.log("****Fecha actual del servidor*****", dateNow);
@@ -1935,7 +1828,7 @@ let datoStore = {
         const emoji = emojis[i];
         emoji.addEventListener('click', ()=>{
             emojiClick = emoji.childNodes[0];
-            console.log(emojiClick);
+            //console.log(emojiClick);
             textMessage.value += emojiClick.textContent;    
         })
    }
@@ -1972,7 +1865,7 @@ let datoStore = {
         const color= colorCube[i];
         color.addEventListener('click', ()=>{
             const colorAlert = color.childNodes[1];
-            console.log("color : ", colorAlert.value);
+            //console.log("color : ", colorAlert.value);
             const colorSelectedValue = colorAlert.value;
             colorAlertSelected.value = colorSelectedValue;
           
@@ -2020,13 +1913,13 @@ let datoStore = {
             if (noteCreate.length > 1){
 
                 const datos = {
-                    id : idHidd,
-                    depart : departHidd,
+                    id : idHidd, //este input oculto guarda el id de la subasta y que necesito como dato
+                    depart : departHidd, //este input oculto guarda el departamento
                     nota : noteCreate,
                     color : color
                 };
 
-                console.log("Esto es datos:", datos);
+                //console.log("Esto es datos:", datos);
                 textMessage.value = ""; //aqui limpio el input de creacion de notas
                 textMessage.focus();
                 fetch('/express-notes', {
@@ -2041,7 +1934,6 @@ let datoStore = {
                     console.log("esto es recibido desde /express-notes : ");
                     socket.emit('creacion:Note', { 'obje' : jsonx });
                     console.log(jsonx);
-                    //location.reload()
                 
                 })
                 .catch( err => console.log(err)); 
@@ -2055,7 +1947,7 @@ let datoStore = {
     //esta sección captura las notas de una subasta al cargar la pagina
 
         window.addEventListener('load', ()=>{
-            console.log("Proceso al cargar pagina");
+            //console.log("Proceso al cargar pagina");
 
             //si existe este objeto entonces el script se ejecuta.
             if (departHidden){
@@ -2298,27 +2190,228 @@ let datoStore = {
         });
         
 </script>
-
 <script>
-const btnReportar = document.querySelector('.btnReportar');
-const formReportar = document.getElementById('formReportar'); 
+    //escucha para actualizar las pujas de las subastas desde el Socket
+    const tableBids = document.querySelector('.tableBids');
+    const contMSJ = document.querySelector('.contMSJ') //contenedor de alertas
+    const efectSoundNewBid = document.getElementById('efectSoundNewBid');
 
-if (btnReportar){
+    socket.on('refresh:bid', (data)=>{
+        console.log(":::::::::::::Socket Escuchando *refresh:bid* ::::::::::");
+        console.log("Esto es data objeto enviado desde el Servidor Socket ---->", data);
+        console.log("LLegando del Socket XXXXXX---->", data);
+        console.log("Si llega este objeto es una buena noticia porque llegara a todos los que esten conectados")
+        const objetBid = data.objetBid
+        console.log("VERRRRRRRRRRR ---->", objetBid);
 
-    btnReportar.addEventListener('click', ()=>{
-        formReportar.classList.toggle('close');
-    });
+        const type = objetBid.type; //este datos se usara para saber cuando hay o no participantsBid que actualizar
+        const bidObject = objetBid.participantsBid;
+        const msj = objetBid.msj;
 
-}
+        console.log("Esto es type---->", type);
+        if (type === 2){ //type 2 es que tiene participantsBid y msj; 
+            
+            console.log("bidObject >>>>>>>>>", typeof bidObject);
+            console.log("*****msj***** >>>". msj);
+        
+            const bids = bidObject;
+            console.log("Que es bids >>>", typeof bids);
+            const bidsSort = bids.reverse(); //lo ordeno en el orden que debe ser mostrado
+            console.log("Estamos trabajando aqui en este script 13 de Diciembre")
+            
+        
+            //existe bidObject y msj
 
+            console.log("Esto son todos los bids ordenados --->", bidsSort);
+            console.log("Esto es el mensaje que viene del backend --->", msj);
+            //ahora es momento de renderizar la tabla donde se ve las pujas
+
+            tableBids.innerHTML = "" //aqui limpiamos todo para que no se concatene.
+            efectSoundNewBid.currentTime = 0; //Reiniciamos el sonido
+            efectSoundNewBid.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
+
+            contMSJ.innerHTML  = `<div class="p-2 alert alert-success">  <i class="bi bi-check-circle-fill me-2"></i>  ${msj}
+                                        <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                  </div>`
+            console.log("*****msj***** >>>", msj);
+            const close = document.querySelector('.btn-close');
+
+            setTimeout(() => {
+                close.click() 
+            }, 4000);
+
+            bidsSort.forEach((ele, i)=>{
+                const bidUser = ele.bidUser;
+                const acortado = bidUser.substring(0, 6) + "***";
+                const bidAmountF = ele.bidAmountF;
+                const time = ele.Time;
+
+                
+                if (i === 0){
+
+                    if (bidUser.length >3){
+                        tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                        <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                        <tr>
+                        `
+                    } else {
+                        tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                        <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                        <tr>
+                        `
+                    }
+                        
+                } else {
+
+                    if (bidUser.length >3){
+                        tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                        <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                        <tr>
+                        `
+                    } else {
+                        tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                        <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                        <tr>
+                        `
+                    }
+
+                }
+            })
+
+        } else {
+            //solo existe msj
+            efectSoundNewBid.currentTime = 0; //Reiniciamos el sonido
+            efectSoundNewBid.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });            
+            contMSJ.innerHTML  = `<div class="p-2 alert alert-danger"> <i class="bi bi-x-circle-fill me-2"></i>  ${msj}
+                                        <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                  </div>`
+            console.log("*****msj***** >>>", msj);
+            const close = document.querySelector('.btn-close');
+
+            setTimeout(() => {
+                close.click() 
+            }, 4000);
+        }
+
+
+
+    })
+    
+
+
+    //esta sección captura las pujas de una subasta al cargar la pagina
+
+    window.addEventListener('load', ()=>{
+            //console.log("Proceso al cargar pagina");
+
+            //si existe este objeto entonces el script se ejecuta.
+            if (departHidden){
+
+                const departHidd = departHidden.value;
+                const idHidd = idHidden.value;
+        
+                const dato = {
+                    id : idHidd //este input oculto guarda el id de la subasta y que necesito como dato
+                };
+
+                console.log("Esto es datos:", dato);
+
+                fetch('/express-bid-extraer', {
+
+                method: "post",
+                body: JSON.stringify(dato),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>{ 
+                    console.log('************** O J O *****************');
+                    console.log("esto es recibido desde /express-bid-extraer : ");
+                    const bidObject = jsonx.searchBids;
+                    const bidsSort = bidObject.reverse(); //lo ordeno en el orden que debe ser mostrado
+                    console.log("Esto es bidsSort >>>>>>>>>>><<", bidsSort);
+
+                    tableBids.innerHTML = "" //aqui limpiamos todo para que no se concatene.
+                    bidsSort.forEach((ele, i)=>{
+                        const bidUser = ele.bidUser;
+                        const acortado = bidUser.substring(0, 6) + "***";
+                        const bidAmountF = ele.bidAmountF;
+                        const time = ele.Time;
+
+                        
+                        if (i === 0){
+
+                            if (bidUser.length >3){
+                                tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                               
+                                <tr>
+                                `
+                            } else {
+                                tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                                
+                                <tr>
+                                `
+                            }
+                                
+                        } else {
+
+                            if (bidUser.length >3){
+                                tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>  
+                                <tr>
+                                `
+                            } else {
+                                tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                                <tr>
+                                `
+                            }
+
+                        }
+                    })
+
+
+
+                    })
+                .catch((error)=>{
+                    consooe.log("Ha habido un error", error)
+                })
+            }    
+
+        });        
 </script>
+
 
 <script>
     //escucha para actualizar el evento de emision de creacion de nota de subasta
     socket.emit('messaje:prueba', "Esto es un mensaje de prueba GREGORIOM");
+    const efectSoundNewNote = document.getElementById('efectSoundNewNote');
     
     socket.on('refresh:note', (data)=>{
         console.log(":::::::::::::xxxxxxxxx::::::::::");
+        console.log(":::::::::::::Socket Escuchando *refresh:note* ::::::::::");
         const departHidd = departHidden.value;
         const idHidd = idHidden.value;
         console.log("depart :", departHidd );
@@ -2330,12 +2423,17 @@ if (btnReportar){
         const longNotes = allNotes.length; //esto es la cantidad de elementos que posee el array allNotes.
 
         //******************************************************
+        console.log("Ver estas notas allNotes ordenadas ya");
         console.log("Esto es allNotes", allNotes);
-        console.log("Esto es longNotes", longNotes);
 
         if (showNotes) {
             //esta es la muestra de notas del anfitrion
-            showNotes.innerHTML = "";
+            showNotes.innerHTML = ""; //limpiamos las antiguas para que no se concatene
+            //aqui hacer sonar el sonido de llegada de notas.
+            efectSoundNewNote.currentTime = 0; // Reiniciamos el sonido
+            efectSoundNewNote.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
             function generarNewNotes() {
 
                 return new Promise(function (resolve, reject) {
@@ -2470,7 +2568,13 @@ if (btnReportar){
         }
 
         if (showNotesSpectadores) {
-            //Notas para los espectadores con o sin user
+            //esta es la muestra de notas de los espectadores
+            showNotesSpectadores.innerHTML = ""; //limpiamos las antiguas para que no se concatene
+            efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
+            efectSoundNewNote.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
+
             allNotes.forEach((ele, i) => {
 
                 if (ele.color === "dark") {
@@ -2550,6 +2654,20 @@ if (btnReportar){
     });  */
 
 </script>
+
+<script>
+    const btnReportar = document.querySelector('.btnReportar');
+    const formReportar = document.getElementById('formReportar'); 
+    
+    if (btnReportar){
+    
+        btnReportar.addEventListener('click', ()=>{
+            formReportar.classList.toggle('close');
+        });
+    
+    }
+    
+    </script>
 
 <script>//con este script logro proteger y dar el spinnier en el boton de carga.
 

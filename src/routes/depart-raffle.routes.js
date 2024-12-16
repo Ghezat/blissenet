@@ -280,7 +280,10 @@ routes.post('/department/create/raffle', async(req,res)=>{
                                             let public_id = key;
                                             
                                             console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                                            boxImg.push( {url, public_id, bytes, format} );                                                       
+                                            boxImg.push( {url, public_id, bytes, format} ); 
+                                            
+                                            countSuccess ++;
+                                            console.log( "countSuccess :", countSuccess );
                                                 
                                         }
                                         
@@ -289,7 +292,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
         
                                 }
         
-                                // invocamos la funcion uploadToS3 para subir las imaganes
+                                // invocamos la funcion uploadToS3 para subir las imagenes
                                 uploadToS3()
                                     .then(() => {
                                         console.log("Imagen subida al servidor digitalocean SPACES");
@@ -315,6 +318,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                                 clearInterval(reviewUpload); //detenemos la evaluacion
                                 createAD();
                             }
+
                         }         
                         
                         async function createAD(){
@@ -324,7 +328,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                             //console.log(RaffleSave);                    
 
                             req.session.uploadPublication = "¡Su publicación se ha subido exitosamente!"
-                            res.redirect('/department/create/raffle');
+                            res.redirect('/department/create/raffle'); //todo ha salido bien
                             
                         }                 
 

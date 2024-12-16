@@ -46,7 +46,7 @@
       <div class="containerNav"><p class="m-0 ps-5">Facturas</p></div>
       <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-secondary active" id="btnPay">Pagar</button>
-        <button type="button" class="btn btn-secondary" id="btnPaid">Pagado</button>
+        <button type="button" class="btn btn-secondary" id="btnPaid">Pago</button>
         <button type="button" class="btn btn-secondary" id="btnInvoices">Doc.</button>
       </div>
     </div>
@@ -84,7 +84,7 @@
                       </div>  
 
                       <% } else { %>
-                        <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                        <div class="ContainerMessage rounded-1 p-2 mx-2 border" style="background-color: #dbdfe4;">
                             <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
                                 <div class="containerMessage m-2">
                                     <span style="font-size: 18px;">¡No tienes facturas pendientes!<i class="bi bi-emoji-frown ms-3"></i></span>
@@ -212,8 +212,8 @@
           
         </div>
     </div>
-    <div class="contentPaid closed my-4 px-5">
-        <div class="row d-flex justify-content-center mt-0 pb-4" style="width: 100%; height: 150vh; overflow-y: auto;">
+    <div class="contentPaid closed my-4">
+        <div class="row d-flex justify-content-center mt-0 pb-4 mx-0" style="width: 100%; height: 150vh; overflow-y: auto;">
           
           <div class="col-lg-11 mt-0 mb-4 p-0">
 
@@ -230,7 +230,7 @@
                           <tr>
 
                               <td><%= ele._id %></td><td><%= ele.title %></td><td><%= ele.department %></td><td>$ <%= ele.price %></td><td>$ <%= ele.commission %> </td><td style="background-color: rgba(160, 158, 158, 0.1);"> Bs. <%= ele.montoPay%></td>
-                              <td class="d-flex justify-content-center bg-success">Paid <i class="bi bi-stack ms-1"></i></td>
+                              <td style="background-color: rgba(77, 241, 112, 0.3);">Paid <i class="bi bi-stack ms-1"></i></td>
                             
                           </tr>
                       <% }); %>
@@ -240,7 +240,7 @@
                 </table>
             </div>    
             <% } else { %>
-              <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+              <div class="ContainerMessage rounded-1 p-2 mx-2 border" style="background-color: #dbdfe4;">
                   <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
                       <div class="containerMessage m-2">
                           <span style="font-size: 18px;">¡No tienes facturas pagas aún!<i class="bi bi-emoji-frown ms-3"></i></span>
@@ -254,9 +254,9 @@
 
         </div>
     </div>
-    <div class="contentInvoices closed mb-4 px-5" style="height: 50%;">
+    <div class="contentInvoices closed mb-4" style="height: 50%;">
      
-      <div class="row m-0 d-flex justify-content-center my-4 p-0" style="width: 100%;"> 
+      <div class="row d-flex justify-content-center my-4 p-0 mx-0" style="width: 100%;"> 
           <ul class="nav nav-tabs col-lg-11 mt-2">
 
           <li class="nav-item">
@@ -267,7 +267,7 @@
           </li>
       
           </ul>
-
+                                  
           <div class="boxInvoices col-lg-11 mt-2">
 
             <% if (boxDocumentInvoice.length !== 0) { %> 
@@ -283,8 +283,8 @@
                         <tr>
 
                             <td><%= ele.orderID %></td><td><%= ele.numberInvoice %></td> <td><%= ele.title %></td><td><%= ele.typeService %></td><td><%= ele.taxFree %></td><td><%= ele.taxesAmount %> </td><td style="background-color: rgba(160, 158, 158, 0.1);"> Bs. <%= ele.totalAmount %></td>
-                            <td class="d-flex justify-content-center">
-                              <a href="/my-invoices/invoicePDF/<%= ele._id %>">  <span class="alert alert-danger p-1 m-0"><i class="bi bi-filetype-pdf"></i></span></a> 
+                            <td style="background-color: rgba(245, 81, 81, 0.3);">
+                              <a href="/my-invoices/invoicePDF/<%= ele._id %>">  <span class="alert alert-danger p-1 mx-2"><i class="bi bi-filetype-pdf"></i></span></a> 
                             </td>
                           
                         </tr>
@@ -320,8 +320,8 @@
                         <tr>
 
                             <td><%= ele.orderID %></td><td><%= ele.numberReceipt %></td> <td><%= ele.title %></td><td><%= ele.typeService %></td><td><%= ele.amount %></td><td><%= ele.taxesAmount %> </td><td style="background-color: rgba(160, 158, 158, 0.1);"> Bs. <%= ele.totalAmount %></td>
-                            <td class="d-flex justify-content-center">
-                              <a href="/my-invoices/receiptPDF/<%= ele._id %>"> <span class="alert alert-danger p-1 m-0"><i class="bi bi-filetype-pdf"></i></span>  </a> 
+                            <td style="background-color: rgba(245, 81, 81, 0.3);">
+                              <a href="/my-invoices/receiptPDF/<%= ele._id %>"> <span class="alert alert-danger p-1 mx-2"><i class="bi bi-filetype-pdf"></i></span>  </a> 
                             </td>
                           
                         </tr>

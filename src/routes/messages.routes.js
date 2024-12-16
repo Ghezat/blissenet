@@ -140,7 +140,6 @@ routes.post('/express-notes', async(req, res)=>{
             const searchNotes = searchAuctions.notes;
             console.log("Esto es searchNotes :". searchNotes);
                     
-            //io.emit('nuevaNota:creada', { notaObj : newNote }); //aqui emito la nueva nota creada al servidor.
             res.json(searchNotes);
         }
 
@@ -151,7 +150,6 @@ routes.post('/express-notes', async(req, res)=>{
             const searchNotes = searchRaffle.notes;
             console.log("Esto es searchNotes :". searchNotes);
                     
-            //io.emit('nuevaNota:creada', { notaObj : newNote }); //aqui emito la nueva nota creada al servidor.
             res.json(searchNotes);
         }
 
@@ -163,6 +161,7 @@ routes.post('/express-notes', async(req, res)=>{
     
 
 });
+
 
 //ruta para extraer las notas de un anuncio. 
 routes.post('/express-notes-extraer', async(req, res)=>{
