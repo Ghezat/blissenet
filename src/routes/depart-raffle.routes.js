@@ -186,11 +186,8 @@ routes.post('/department/create/raffle', async(req,res)=>{
 
                 let dateStart;
                 const date = new Date();
-                let dia = date.getDate();
-                let mes = date.getMonth() + 1;
-                let ani = date.getFullYear();
-                let hora = date.getHours();
-                let minu = date.getMinutes();
+                let dia = date.getDate(); let mes = date.getMonth() + 1; let ani = date.getFullYear();
+                let hora = date.getHours(); let minu = date.getMinutes();
                 
                                 
                 if (minu <= 9){

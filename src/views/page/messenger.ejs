@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <%- include('../partials/head.ejs') %>
-    <title>Blissenet Inbox</title>
+    <title>Blissenet Notificaciones</title>
 </head>
 <style>
     .blockRed{
@@ -51,7 +51,7 @@
     <% if (user) { %>
   
         <div class="container-fluid d-flex justify-content-between p-1" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-            <div class="containerNav themaTextLight"><p class="m-0 ps-5">Mensajeria</p></div>
+            <div class="containerNav themaTextLight"><p class="m-0 ps-5">Notificaciones</p></div>
             <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-secondary active" id="btnInbox">Entrantes</button>
                 <button type="button" class="btn btn-secondary" id="btnOutbox">Salientes</button>
@@ -61,16 +61,16 @@
         <div class="contentInbox">
             <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
 
-                <div class="col-lg-10 my-4 p-0">
+                <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-11 my-4 p-0">
 
                       <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(56, 61, 66, 0.2);">
                          <div class="containerMessage d-flex flex-column p-2 themaTextLight">
                             <div class="containerMain d-flex flex-column">
                                     <!-- mensajes que llegan al messenger -->
-                                     <% if (searchMessageInbox.length !== 0 ) { %>
+                                    <% if (searchMessageInbox.length !== 0 ) { %>
                                         <% searchMessageInbox.forEach((ele)=>{ %>
     
-                                              <% if (ele.typeNote === "notes") { %>
+                                            <% if (ele.typeNote === "notes") { %>
                                                 <div class="bodyTheme">
 
                                                     <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
@@ -96,7 +96,7 @@
                                                     <hr class="m-1">     
                                                 </div>
 
-                                              <% } else if (ele.typeNote === "spread") {  %>  
+                                            <% } else if (ele.typeNote === "spread") {  %>  
                                                 <div class="bodyTheme">
 
                                                     <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
@@ -127,7 +127,41 @@
                                                     <hr class="m-1">     
                                                 </div>
                                                 
-                                              <% } else { %>
+                                            <% } else if (ele.typeNote === "followMe") {  %>  
+                                                <div class="bodyTheme">
+
+                                                    <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
+                                                    <div class="containerImgTitle d-flex justify-content-between">
+  
+                                                        <div class="contentImgTitle d-flex flex-column">
+                                                            <div class="contentImgTitle d-flex">
+                                                                <% if (ele.objeAvatar.avatar ==="") { %>
+                                                                    <div> <img src="https://www.gravatar.com/avatar/<%= ele.objeAvatar.avatarDefault %>?d=identicon" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                                   
+                                                                <% } else { %>
+                                                                    <div> <img src="<%= ele.objeAvatar.avatar %>" style="width: 50px;" class="me-4 rounded-1"></div> 
+                                                                <% }; %>        
+                                                                 
+                                                                <div class="d-flex align-items-end"> <a href="/account/<%= ele.username %> "> <p class="m-0" style="font-size: 18px;"> <%= ele.username %></p> </a> </div>
+                                                            </div>
+
+                                                            <div>  <p style="font-size: 18px;"> <%= ele.question %> </p> </div>
+                                                        </div>
+                                                        <div class="contentView">
+                                                            <% if (ele.answer === 'waiting'){  %>
+                                                                <a href="/myaccount/messenger/view/<%= ele._id %>"><button class="btn btn-success btn-sm">Visto</button></a>
+                                                            <% }; %>    
+                                                        </div>
+                                            
+                                                    </div>
+                                                    
+
+                                                    <hr class="m-1">     
+                                                </div>
+                                                
+
+                                                
+                                            <% } else { %>
                                                 <div class="bodyTheme">
                                                     <form action="/myaccount/messenger/response" method="post">
 
@@ -155,11 +189,11 @@
                                             
                                         <% }); %>
                                       
-                                     <% } else {  %>
-                                      <div class="containerMessage m-2 ">
-                                          <span style="font-size: 18px;">¡No hay mensajes aqui!<i class="bi bi-emoji-frown ms-3"></i></span>
+                                    <% } else {  %>
+                                      <div class="containerMessage">
+                                          <span style="font-size: 16px;">¡No hay notificaciones entrantes! <i class="bi bi-emoji-frown ms-3"></i></span>
                                       </div>
-                                     <% }; %> 
+                                    <% }; %> 
   
                             </div>
                          </div>
@@ -173,7 +207,7 @@
         <div class="contentOutbox closed">
             <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
 
-                <div class="col-lg-10 my-4 p-0">
+                <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-11 my-4 p-0">
 
                     <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(56, 61, 66, 0.2);">
                         <div class="containerMessage d-flex flex-column p-2 themaTextLight">
@@ -217,7 +251,11 @@
                                     <% }); %>    
                                 
                                 <% } else { %>
-                                    <span>Outbox limpio...</span>
+
+                                    <div class="containerMessage">
+                                        <span style="font-size: 16px;">¡No hay notificaciones salientes!<i class="bi bi-emoji-frown ms-3"></i></span>
+                                    </div>
+                                   
                                 <% } %>    
                             
                             </div>
@@ -226,6 +264,7 @@
                     </div>
                 
                 </div>
+                
             </div>
         </div>
 
@@ -234,7 +273,7 @@
     
             <%- include('../partials/noLogin.ejs') %>
         
-          </div>    
+        </div>    
     <% }; %>     
 
   </main>

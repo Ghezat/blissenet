@@ -5,9 +5,9 @@ const messageSchema = new Schema({
     times : { type : String}, //fecha y hora en el momento exacto en que se crea la pregunta.
     titleArticle : { type : String}, //el titulo del articulo en cuestion.
     urlImageArticle : { type : String}, //la primera imagen del articulo.
-    objeAvatar : { type : Object }, //este campo solo es para cuando sea de tipo "spread"
-    userId : { type : String}, //el Id del que hace la pregunta. (indexed)
-    username : { type : String}, //el username del que hace la pregunta.
+    objeAvatar : { type : Object }, //este campo solo es para cuando sea de tipo "spread" y "followMe"
+    userId : { type : String}, //el Id del que hace la pregunta. (indexed) --->esto es el _id de la colleccion users.
+    username : { type : String}, //el username del que hace la pregunta o el que esta siguiendo a otra cuenta
     question : { type : String}, //la pregunta.
     toCreatedArticleId : { type : String}, //el id del creador del articulo dato extraido de cada coleccion de departamentos. "Quien recibe la pregunte"
     ownerStore  : { type : String}, // este es el username del creador del anuncio. "Quien recibe la pregunte"
@@ -22,14 +22,72 @@ const messageSchema = new Schema({
 module.exports = model('messageModel', messageSchema, 'messages');
 
 /*
-  typeNote: 'spread',
-  times: '20-05-2024 15:26',
-  titleArticle: 'Toyota Corolla 2019',
-  username: 'dianac4',
-  question: 'dianac4 te invita a que veas su nuevo anuncio publicado.',
-  toCreatedArticleId: '646351222014b4ac4ff46982',
-  ownerStore: 'indira18',
-  productId: new ObjectId("66437eeebc71fcf9686f4476"),
-  depart: 'automotive',
-  answer: 'waiting',
-  view: false,*/
+{
+        "_id" : ObjectId("6762be50442add8421dd2b58"),
+        "typeNote" : "spread",
+        "times" : "18-012-2024 8:21",
+        "titleArticle" : "Reloj Casio F-91w",
+        "objeAvatar" : {
+                "avatar" : "https://bucket-blissve.nyc3.digitaloceanspaces.com/avatar/1728753862992.png",
+                "avatarDefault" : "dd7ee795a010fe7953f74ba1547055ad"
+        },
+        "username" : "develop-test1",
+        "question" : "develop-test1 te invita a que veas su nuevo anuncio publicado.",
+        "toCreatedArticleId" : "66ec3ad3ceacc8a916d29e59",
+        "ownerStore" : "birmaR",
+        "productId" : ObjectId("66abd80fb6d7f5e26757ee3a"),
+        "depart" : "items",
+        "answer" : "waiting",
+        "view" : false,
+        "createdAt" : ISODate("2024-12-18T12:21:36.788Z"),
+        "updatedAt" : ISODate("2024-12-18T12:21:36.788Z"),
+        "__v" : 0
+}
+
+  /*
+  {
+    _id: new ObjectId("6762c34e11d3b469dcc5ef72"),
+    typeNote: 'followMe',
+    times: '18-12-2024 8:42',
+    objeAvatar: {
+      avatar: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/avatar/1726757947514.png',
+      avatarDefault: '6e7bff71ade70c69f47b754cdea22cd5'
+    },
+    username: 'birmaR',
+    question: '¡Hola! birmaR te está siguiendo. Visítala y descubre si te interesa seguirla también',
+    toCreatedArticleId: '66ba334e0e5f1becbefdb4d5',
+    ownerStore: 'rogelio',
+    answer: 'waiting',
+    view: false,
+    createdAt: 2024-12-18T12:42:54.304Z,
+    updatedAt: 2024-12-18T12:42:54.304Z,
+    __v: 0
+  }
+,
+  {
+    _id: new ObjectId("676454224b77d89722e94ffc"),
+    typeNote: 'messages',
+    times: '19-12-2024 13:13',
+    titleArticle: 'Mitsubishi Eclipse 1994',
+    urlImageArticle: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/automotive/1733162031952.jpg',
+    userId: '66ec3ad3ceacc8a916d29e59',
+    username: 'birmaR',
+    question: 'Esta disponible este auto?',
+    toCreatedArticleId: '66ac0281a3afb22ac770d5f2',
+    ownerStore: 'develop-test2',
+    productId: new ObjectId("674df4377241dec217597315"),
+    depart: 'automotive',
+    answer: 'waiting',
+    view: false,
+    createdAt: 2024-12-19T17:13:06.132Z,
+    updatedAt: 2024-12-19T17:13:06.132Z,
+    __v: 0
+  } 
+*/
+
+//tipos de notas
+
+//1. spread
+//2. followMe
+//3. note
+//4. messages

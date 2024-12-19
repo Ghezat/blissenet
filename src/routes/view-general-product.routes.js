@@ -423,19 +423,12 @@ routes.post('/message', async(req, res)=>{
     const productId = dataI.productId;
 
     const date = new Date();
-    let dia = date.getDate(); 
-    let mes = date.getMonth() + 1;
-    let anio = date.getFullYear();
-    let hora = date.getHours();
-    let minu = date.getMinutes();
+    let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+    let hora = date.getHours(); let minu = date.getMinutes();
 
-    let times;
-
-    if (minu < 10){
-        times = `${dia}-${mes}-${anio} ${hora}:0${minu}`;
-    }else {
-        times = `${dia}-${mes}-${anio} ${hora}:${minu}`;
-    }
+    let mesFormatted = String(mes).padStart(2, '0');
+    let minuFormatted = String(minu).padStart(2, '0');
+    const times = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
 
     //console.log(times)
     if (depart == 'raffle'){

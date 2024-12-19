@@ -84,11 +84,11 @@ routes.get('/myaccount/messenger/view/:id', async(req, res)=>{
 
     const result = await modelMessages.findById(idMessage);
     console.log("Esto es result message", result);
-    if (result.typeNote === "notes" || result.typeNote === "spread" ){ 
+    if (result.typeNote === "notes" || result.typeNote === "spread" || result.typeNote === "followMe"){ 
         
         const change = await modelMessages.findByIdAndUpdate(idMessage, { view : true, answer : 'process' } );
 
-    } else {
+    } else { //result.typeNote === "message"
 
         const change = await modelMessages.findByIdAndUpdate(idMessage, { view : true } );
 

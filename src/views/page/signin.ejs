@@ -56,9 +56,10 @@
                                 <input type="email" name="email" placeholder="Su email" class="form-control"
                                   id="client_user" autocomplete="off" required>
                             </div>
-                            <div class="form-group my-2">
+                            <div class="form-group my-2" style="position: relative;">
                                 <input type="password" name="password" placeholder="Su contraseña" class="form-control"
-                                 id="client_passw" autocomplete="off" style="letter-spacing: 3px;" maxlength="20" required>
+                                 id="client_passw" autocomplete="off" maxlength="20" required style="letter-spacing: 3px;">
+                                 <i class="bi bi-eye-slash text-dark cursor-pointer" id="toggleSeePassw" style="position: absolute; right: 10px; top: 6px;"></i>
                             </div>
                             <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
                                 <p class="mx-1 mb-0"> <small>¡Upp olvidade mi Password! <a href="/myaccount/signin-forgottenpassw" class="text-dark ms-2 fw-bold"> Clic here</a> </small></p>
@@ -126,6 +127,31 @@
     </main>
 </body>
 </html>
+
+
+<script>
+    //toggle de visibilidad de password
+    const togglePassword = document.getElementById('toggleSeePassw');
+    const passwordInput = document.getElementById('client_passw')
+
+    togglePassword.addEventListener('click', () => {
+        // Cambiar el tipo de input entre 'password' y 'text'
+        
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        //console.log("Que type es >>", type);
+        if (type == "text"){
+            togglePassword.classList.remove('bi-eye-slash')
+            togglePassword.classList.add('bi-eye')
+        } else {
+            togglePassword.classList.remove('bi-eye')
+            togglePassword.classList.add('bi-eye-slash')
+        }
+
+        
+    });
+</script>
+
 
 
 <!--

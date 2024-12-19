@@ -60,11 +60,12 @@
                             <div class="form-group my-2">
                                 <input type="email" name="email" placeholder="Su email (example@mail.com)" class="form-control" style="text-transform:lowercase;" autocomplete="off" required>
                             </div>
-                            <div class="form-group my-2">
-                                <input type="password" name="password" placeholder="Su contraseña" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off"  required>
+                            <div class="form-group my-2" style="position: relative;">
+                                <input type="password" name="password" placeholder="Su contraseña" id="client_passw1" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off"  required>
+                                <i class="bi bi-eye-slash text-dark cursor-pointer" id="toggleSeePassw" style="position: absolute; right: 10px; top: 6px;"></i>
                             </div>
                             <div class="form-group my-2">
-                                <input type="password" name="confirmPassword" placeholder="Confirme contraseña" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off" required>
+                                <input type="password" name="confirmPassword" placeholder="Confirme contraseña" id="client_passw2" class="form-control"  minlength="6" maxlength="20" style="letter-spacing: 3px;" autocomplete="off" required>
                             </div>
 
                             <div class="form-check rounded-1" style="background-color: rgba(0, 0, 0, 0.6);">
@@ -163,6 +164,37 @@
     </main>
 </body>
 </html>
+
+<script>
+    //toggle de visibilidad de password
+    const togglePassword = document.getElementById('toggleSeePassw');
+    const passwordInput1 = document.getElementById('client_passw1');
+    const passwordInput2 = document.getElementById('client_passw2')
+
+  
+    togglePassword.addEventListener('click', () => {
+    // Cambiar el tipo de input entre 'password' y 'text'
+    
+    const type1 = passwordInput1.getAttribute('type') === 'password' ? 'text' : 'password';
+    const type2 = passwordInput2.getAttribute('type') === 'password' ? 'text' : 'password';
+
+    // Cambia el atributo correctamente
+    passwordInput1.setAttribute('type', type1);
+    passwordInput2.setAttribute('type', type2); // Asegúrate de cambiar también el segundo input
+
+    //console.log("Que type es >>", type1);
+    
+    if (type1 === "text") {
+        togglePassword.classList.remove('bi-eye-slash');
+        togglePassword.classList.add('bi-eye');
+    } else {
+        togglePassword.classList.remove('bi-eye');
+        togglePassword.classList.add('bi-eye-slash');
+    }
+});
+
+
+</script>
 
 
 <!--
