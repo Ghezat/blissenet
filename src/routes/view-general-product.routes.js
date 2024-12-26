@@ -37,14 +37,14 @@ const s3 = new S3({
 });
 
 
-const cloudinary = require('cloudinary').v2;//esto no tendrá cambio
-
+//const cloudinary = require('cloudinary').v2;//esto no tendrá cambio
+/*
 cloudinary.config({
     cloud_name : process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
     api_secret : process.env.API_SECRET,
     secure: true
-})
+}) */
 
 routes.get('/product/:depart/:id', async(req, res)=>{
     const user = req.session.user;
@@ -387,12 +387,37 @@ routes.get('/product/:depart/:id', async(req, res)=>{
 
             //console.log(":::::: Esto es search ::::::" , search);
             res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
-        } else {
-                             
+        } else {            
             res.render('page/unknown-auction', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
         
 
+    }
+
+
+});
+
+//esta ruta funciona como un observador periodico que verifica si aun existe la subasta
+//en caso contrario renderizar la pagina unknown-auction 
+routes.post('/product/auctions/exist', async (req, res)=>{
+
+    try {
+        console.log(req.body);
+        const {id} = req.body;
+        //console.log("Estamos llegando a /product/auctions/exist");
+        const search = await modelAuction.findById(id);
+        //console.log("Esto es search >>>>", search);
+    
+        if (!search){
+            //cuando la subasta sea eliminada envia esto al fronted 
+            res.json({ response : "delete"});
+        } else {
+            res.json({ response : "exist"});
+        } 
+        
+        
+    } catch (error){
+        console.log("Ha habido un error", error)
     }
 
 
@@ -626,7 +651,7 @@ routes.post('/bidatauction', async(req, res)=>{
             //console.log("Esto es searchAuction ---->",searchAuction);
             const participants = searchAuction.participants;
             const priceInitial = searchAuction.price;
-            //console.log("Esto es participants", participants );
+            console.log("Esto es participants", participants );
             //console.log("Esto es priceInitial", priceInitial );
         
             const date = new Date();
@@ -675,7 +700,7 @@ routes.post('/bidatauction', async(req, res)=>{
                 
                 //segunda  verificion el array participants NO tiene elementos.
                 if (participants.length === 0){
-                    //console.log(" ////// No hay participantes ////////");
+                    console.log(" ////// No hay participantes ////////");
                     //buscamos el precio establecido por el anunciante.
                     
                     if (bidAmountF > priceInitial){

@@ -622,7 +622,9 @@
                                                                 <input type="hidden" class="bidDepartment" value="<%= search.department %>">
                                                                 <input type="hidden" class="bidIDProduct" value="<%= search._id %>">
                                                                 <input type="number" class="form-control bidAmount" style="width: 56%;">
-                                                                <button class="btn btn-success btnBID" class="form-control" style="width: 40%;">Bid</button>
+                                                                <button class="btn btn-success btnBID"  style="width: 40%;">Bid</button>
+                                                                <button class="btn btn-success btnBID_Disabled close" style="width: 40%;" disabled>Bid <i class="bi bi-lock ms-1"></i></button> 
+
                                                             </div>
                                                             <div class="contMSJ mt-2">
                                                                 <!-- alertas dinamicos -->                                                              
@@ -639,7 +641,7 @@
                                                             <!-- <span class="alert alert-success p-0">tonygamed  54</span> <br> -->
                                                         </div>
                                                     </div>
-                                                <% } else { %>
+                                                <% } else  { %>
                                                     <!-- El usuario Anfitrion No puede participar en la subasta solo ver -->    
                                                     <div class="card bid p-0">
                                                         <div class="card-body p-2">
@@ -667,10 +669,12 @@
                                                                     <input type="number" class="form-control" style="width: 56%;" disabled>
                                                                     <button class="btn btn-secondary" class="form-control" style="width: 40%;">Bid</button>
                                                                 </div>
+                                                                <div class="contMSJOwn mt-2">
+                                                                    <!-- alertas dinamicos -->                                                              
+                                                                </div>
                                                                 <hr>
-
                                                                 <div class="containetBid border" style="max-height: 40vh; overflow-y: auto;">
-                                                                    <table class="table p-0 tableBids">
+                                                                    <table class="table p-0 tableBidsOwn">
                                                                        <!-- datos creados dinamicamente -->    
                                                                     </table>        
                                                                 </div>    
@@ -688,7 +692,7 @@
                                         <% }; %>                                        
                                   
                                 <% }; %>            
-                           <% } else { %>
+                            <% } else { %>
                             <!-- esto es si no hay un usuario logeado -->
                                 <% if (depart == 'items' || depart == 'arts') { %>
                                     <span>Solo de a comprar si esta seguro de adquirir este producto.</span> <br> <hr>
@@ -753,7 +757,7 @@
                                                         </div>
                                                         <hr>
                                                         
-                                                        <table class="table p-0 tableBids">
+                                                        <table class="table p-0 tableBidsNoLogin">
                                                             <!-- datos creados dinamicamente -->    
                                                          </table>  
 
@@ -767,7 +771,7 @@
                                         </button>
                                     <% }; %>   
                                 <% }; %>
-                           <% } %>     
+                            <% } %>     
                                                                 
 
                         </div>
@@ -924,7 +928,7 @@
                                         <p class="mb-1"> Creacion de Tienda  <i class="bi bi-calendar2-week mx-1"></i><span class="from"></span> </p>
                                     <% if (search) { %>
                                         <p class="mb-1"> Comentarios de sus clientes  <a href="/comments/<%= search.username%>"> Aquí</a></p>
-                                        <p class="mb-3 me-2">Visitar Tienda... <a href="/account/<%= search.username %>" class="text-light store" style="text-decoration: none;"><span class="bg-secondary px-1 rounded-2"><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a></p>
+                                        <p class="mb-3 me-2">Visitar Tienda... <a href="/account/<%= search.username %>" class="store text-light" style="text-decoration: none;"><span class="bg-secondary p-1 border rounded-3"><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a></p>
                                             
                                         <div class="form-group" style="position: relative; cursor: pointer;">
 
@@ -1592,41 +1596,121 @@ let datoStore = {
     const bidDepartment = document.querySelector('.bidDepartment'); //department data
     const bidIDProduct = document.querySelector('.bidIDProduct'); //id del producto data
     const btnBID = document.querySelector('.btnBID');
+    const btnBID_Disabled = document.querySelector('.btnBID_Disabled');
+
 
     if (btnBID){
 
         btnBID.addEventListener('click', ()=>{
 
-        //data obtenida en el bloque 648
-        const dataBid = {
-            bidUser : bidUser.value,
-            bidAmount : bidAmount.value,
-            bidDepartment : bidDepartment. value,
-            bidIDProduct : bidIDProduct. value
-        }
-        console.log("Esto es dataBid", dataBid)
+            const bidAmountExist = bidAmount.value;
+            console.log("bidAmountExist --->", bidAmountExist)
+            if (bidAmountExist !== "" && bidAmountExist > 0){
+                console.log("Va para el servidor")
 
-        fetch("/bidatauction", {
-             method: "POST",
-             body : JSON.stringify(dataBid),
-             headers: { "Content-Type" : "application/json"}
-            })
-         .then(response => response.json())
-         .then(jsonBid =>{ console.log(">>>>> Esto es jsonBid <<<<<", jsonBid)
-
+                btnBID_Disabled.classList.remove('close');
+                btnBID.classList.add('close');
                     
-                    socket.emit('creacion:Bid', { 'objetBid' : jsonBid  });
-                    //aqui es donde se debe enviar la data nueva al socket
-                    //el socket recibe y emite al view general product para armar con un escucha la tabla de la puja
-             })
-            .catch(err => console.log(err));
+                //data obtenida en el bloque 648
+                const dataBid = {
+                    bidUser : bidUser.value,
+                    bidAmount : bidAmount.value,
+                    bidDepartment : bidDepartment.value,
+                    bidIDProduct : bidIDProduct.value
+                }
+                console.log("Esto es dataBid", dataBid)
+
+                fetch("/bidatauction", {
+                    method: "POST",
+                    body : JSON.stringify(dataBid),
+                    headers: { "Content-Type" : "application/json"}
+                })
+                .then(response => response.json())
+                .then(jsonBid =>{ 
+                        console.log(">>>>>>>>>>>><<<<<<<<<<", jsonBid)
+                        console.log(">>>>>>>>>-OJO-<<<<<<<<", jsonBid)
+                        console.log(">>>>> Esto es jsonBid <<<<<", jsonBid);
+                        //{msj: 'Debe ser mayor al ultimo precio.', type: 1}
+                        const type = jsonBid.type;
+                        console.log("Esto es type ", type );
+                        console.log("type es", typeof type );
+
+                        if (type === 2){
+                            socket.emit('creacion:Bid', { 'objetBid' : jsonBid  });    
+                        } else {
+                            socket.emit('error:Bid', { 'objetBid' : jsonBid  });
+                        }
+                    
+                        //aqui es donde se debe enviar la data nueva al socket
+                        //el socket recibe y emite al view general product para armar con un escucha la tabla de la puja
+                        // Ahora vamos de liberar el boton tras pasar 10 segundos
+                        setTimeout(() => {
+                            btnBID_Disabled.classList.add('close');
+                            btnBID.classList.remove('close');
+                        }, 5000);
+                    
+
+            })
+                .catch(err => console.log(err));
+
+            } else {
+                console.log("NO va para el servidor")
+            }
+
 
         });
+
+
+
+
+
+
+
+
 
     }
 
   
     //Nota: El endpoint /bidatauction esta en la ruta view-general-product.routes
+</script>
+
+<script>
+    //consulta periodica cada minuto para evaluar si esta subasta aun existe
+    //const bidIDProduct = document.querySelector('.bidIDProduct'); //id del producto data ya declarado arriba
+
+    const datoId = {
+            id : idHidden.value
+        };
+
+        setInterval(() => {
+            console.log("Esto es datoId de la subasta verrr aqui", datoId)
+
+            fetch('/product/auctions/exist', {
+
+            method: "post",
+            body: JSON.stringify(datoId),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                
+                console.log("Esto es la respuesta de si existe la subasta ->", jsonx);
+                const response  = jsonx.response;
+                console.log("Esto es response ------>", response);
+                console.log("response es de tipo ------>", typeof response);
+                
+                if (response === 'delete' ){
+                    location.reload()
+                }
+            
+            })
+            .catch( err => console.log(err));
+
+        }, 60000);
+
+
+
 </script>
 
 <script>
@@ -2193,7 +2277,11 @@ let datoStore = {
 <script>
     //escucha para actualizar las pujas de las subastas desde el Socket
     const tableBids = document.querySelector('.tableBids');
-    const contMSJ = document.querySelector('.contMSJ') //contenedor de alertas
+    const tableBidsOwn = document.querySelector('.tableBidsOwn');
+    const tableBidsNoLogin = document.querySelector('.tableBidsNoLogin');
+
+    const contMSJ = document.querySelector('.contMSJ') //contenedor de alertas de participantes
+    const contMSJOwn = document.querySelector('.contMSJOwn') //contenedor de alertas del anfitrion
     const efectSoundNewBid = document.getElementById('efectSoundNewBid');
 
     socket.on('refresh:bid', (data)=>{
@@ -2209,16 +2297,16 @@ let datoStore = {
         const msj = objetBid.msj;
 
         console.log("Esto es type---->", type);
-        if (type === 2){ //type 2 es que tiene participantsBid y msj; 
-            
+        if (type === 2){ //type 2 es que tiene participantsBid y msj;            
+
             console.log("bidObject >>>>>>>>>", typeof bidObject);
             console.log("*****msj***** >>>". msj);
         
             const bids = bidObject;
             console.log("Que es bids >>>", typeof bids);
             const bidsSort = bids.reverse(); //lo ordeno en el orden que debe ser mostrado
-            console.log("Estamos trabajando aqui en este script 13 de Diciembre")
-            
+            //console.log("Estamos trabajando aqui en este script 13 de Diciembre")
+            console.log("Estamos trabajando aqui en este script 24 de Diciembre")
         
             //existe bidObject y msj
 
@@ -2226,15 +2314,37 @@ let datoStore = {
             console.log("Esto es el mensaje que viene del backend --->", msj);
             //ahora es momento de renderizar la tabla donde se ve las pujas
 
-            tableBids.innerHTML = "" //aqui limpiamos todo para que no se concatene.
+            if (tableBids){
+                tableBids.innerHTML = ""; //aqui limpiamos todo para que no se concatene.
+            }
+            
+            if (tableBidsOwn){
+                tableBidsOwn.innerHTML = ""; //aqui limpiamos todo para que no se concatene.
+            }
+            
+            if (tableBidsNoLogin){
+                tableBidsNoLogin.innerHTML = ""; //aqui limpiamos todo para que no se concatene.
+            }
+            
+
             efectSoundNewBid.currentTime = 0; //Reiniciamos el sonido
             efectSoundNewBid.play().catch(error => {
                 console.error("Error al reproducir el sonido:", error);
             });
 
-            contMSJ.innerHTML  = `<div class="p-2 alert alert-success">  <i class="bi bi-check-circle-fill me-2"></i>  ${msj}
-                                        <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                  </div>`
+            if (contMSJ){
+                contMSJ.innerHTML  = `<div class="p-2 alert alert-success">  <i class="bi bi-check-circle-fill me-2"></i>  ${msj}
+                                            <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                     </div>`
+            }
+
+            if (contMSJOwn){
+                contMSJOwn.innerHTML  = `<div class="p-2 alert alert-success">  <i class="bi bi-check-circle-fill me-2"></i>  ${msj}
+                                            <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                       </div>` 
+            }
+                    
+
             console.log("*****msj***** >>>", msj);
             const close = document.querySelector('.btn-close');
 
@@ -2249,40 +2359,116 @@ let datoStore = {
                 const time = ele.Time;
 
                 
-                if (i === 0){
+                if (i === 0){ //este es el primero o mejor oferta de la puja aparece remarcado en ver
 
                     if (bidUser.length >3){
-                        tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
-                        <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
-                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
-                        <tr>
-                        `
+                            
+                        if (tableBids){
+                            tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                            <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                            <tr>`
+                        }  
+                        
+                        if (tableBidsOwn){
+                            tableBidsOwn.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                            <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                            <tr>`
+                        }        
+                        
+                        if (tableBidsNoLogin){
+                            tableBidsNoLogin.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                            <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                            <tr>`
+                        }               
+
                     } else {
-                        tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
-                        <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
-                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
-                        <tr>
-                        `
+
+                        if (tableBids){
+                            tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                            <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                            <tr>`
+                        }        
+                            
+                        if (tableBidsOwn){
+                            tableBidsOwn.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                            <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                            <tr>`
+                        }   
+
+                        if (tableBidsNoLogin){
+                            tableBidsNoLogin.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                            <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                            <tr>`
+                        }            
+
                     }
                         
                 } else {
 
                     if (bidUser.length >3){
-                        tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
-                        <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
-                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
-                        <tr>
-                        `
+                        
+                        if (tableBids){
+                            tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                            <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                            <tr>`
+                        }        
+
+                        if (tableBidsOwn){
+                            tableBidsOwn.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                            <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                            <tr>` 
+                        }
+                        
+                        if (tableBidsNoLogin){
+                            tableBidsNoLogin.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                            <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                            <tr>`
+                        }             
+
                     } else {
-                        tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
-                        <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
-                        <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                        <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
-                        <tr>
-                        `
+                        
+                        if(tableBids){
+                            tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                            <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                            <tr>`
+                        }
+                        
+                        if(tableBidsOwn){
+                            tableBidsOwn.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                            <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                            <tr>`
+                        }        
+
+                        if(tableBidsNoLogin){
+                            tableBidsNoLogin.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                            <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                            <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                            <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                            <tr>`
+                        }            
+                                
                     }
 
                 }
@@ -2290,13 +2476,26 @@ let datoStore = {
 
         } else {
             //solo existe msj
+            //type : 0 y 1 solo hay mensaje
+
             efectSoundNewBid.currentTime = 0; //Reiniciamos el sonido
             efectSoundNewBid.play().catch(error => {
                 console.error("Error al reproducir el sonido:", error);
-            });            
-            contMSJ.innerHTML  = `<div class="p-2 alert alert-danger"> <i class="bi bi-x-circle-fill me-2"></i>  ${msj}
+            });   
+            
+            if (contMSJ){
+                contMSJ.innerHTML  = `<div class="p-2 alert alert-danger"> <i class="bi bi-x-circle-fill me-2"></i>  ${msj}
                                         <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
                                   </div>`
+            }
+
+            if (contMSJOwn){
+                contMSJOwn.innerHTML  = `<div class="p-2 alert alert-danger"> <i class="bi bi-x-circle-fill me-2"></i>  ${msj}
+                                        <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                  </div>`
+            }
+
+
             console.log("*****msj***** >>>", msj);
             const close = document.querySelector('.btn-close');
 
@@ -2343,50 +2542,141 @@ let datoStore = {
                     const bidsSort = bidObject.reverse(); //lo ordeno en el orden que debe ser mostrado
                     console.log("Esto es bidsSort >>>>>>>>>>><<", bidsSort);
 
-                    tableBids.innerHTML = "" //aqui limpiamos todo para que no se concatene.
+                    if (tableBids){
+                        console.log('tableBids tag-->', tableBids);
+                        tableBids.innerHTML = ""; //aqui limpiamos todo para que no se concatene.
+                    }
+                    
+                    if (tableBidsOwn){
+                        console.log('tableBidsOwn tag-->', tableBidsOwn);
+                        tableBidsOwn.innerHTML = ""; //aqui limpiamos todo para que no se concatene.
+                    }
+                                       
+                    if (tableBidsNoLogin){
+                        console.log('tableBidsNoLogin tag-->', tableBidsNoLogin);
+                        tableBidsNoLogin.innerHTML = ""; //aqui limpiamos todo para que no se concatene.
+                    }
+
                     bidsSort.forEach((ele, i)=>{
                         const bidUser = ele.bidUser;
                         const acortado = bidUser.substring(0, 6) + "***";
                         const bidAmountF = ele.bidAmountF;
                         const time = ele.Time;
-
                         
                         if (i === 0){
 
                             if (bidUser.length >3){
-                                tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
-                                <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
-                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
-                               
-                                <tr>
-                                `
-                            } else {
-                                tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
-                                <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
-                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+
+                                if (tableBids){
+                                    tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                                    <tr>`
+                                }   
+
+                                if (tableBidsOwn){
+
+                                    tableBidsOwn.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                                    <tr>`
+                                }            
+
+                                if (tableBidsNoLogin){
                                 
-                                <tr>
-                                `
+                                    tableBidsNoLogin.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td> 
+                                    <tr>`
+                                }        
+
+
+                            } else {
+
+                    
+                                if (tableBids){
+                                    tableBids.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>                                
+                                    <tr>`
+                                }        
+
+                                if (tableBidsOwn){
+                                    tableBidsOwn.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>                                
+                                    <tr>`
+                                }        
+
+                                if (tableBidsNoLogin){
+                                    tableBidsNoLogin.innerHTML += ` <tr class= "alert alert-success rounded-1 px-0 pb-1 border mb-1" style="width: 100%;"> 
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>                                
+                                    <tr>`
+                                }            
+    
                             }
                                 
                         } else {
 
                             if (bidUser.length >3){
-                                tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
-                                <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
-                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>  
-                                <tr>
-                                `
+
+                                if (tableBids){
+                                    tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>  
+                                    <tr>`
+                                }         
+
+                                if (tableBidsOwn){
+                                    tableBidsOwn.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>  
+                                    <tr>`
+                                }        
+
+                                if (tableBidsNoLogin){
+                                    tableBidsNoLogin.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px"> ${acortado}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>  
+                                    <tr>`
+                                }            
+
                             } else {
-                                tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
-                                <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
-                                <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
-                                <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
-                                <tr>
-                                `
+                                    
+                                if (tableBids){
+                                    tableBids.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                                    <tr>`
+                                }        
+
+                                if (tableBidsOwn){
+                                    tableBidsOwn.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                                    <tr>`
+                                }
+                                
+                                if (tableBidsNoLogin){
+                                    tableBidsNoLogin.innerHTML += `<tr style="border-top: 2px solid white; width: 100%;">
+                                    <td style="border: none; padding: 0; margin: 0; width: 20px">  ${bidUser}  </td>
+                                    <td style="border: none; padding: 0; margin: 0;">  <span class="my-0 ps-4 py-0"> ${bidAmountF}</span> </td>
+                                    <td class="d-flex justify-content-end" style="border: none; padding: 0; margin: 0;">  <span class="my-0 bg-dark rounded-pill text-light px-1" style="font-size: 13px;"> ${time} </span> </td>
+                                    <tr>`    
+                                }        
+
                             }
 
                         }

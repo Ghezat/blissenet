@@ -109,15 +109,17 @@
     font-weight: bold;
     z-index: 200;
 
-}    
+}
+
 
 @media screen and (min-width: 290px) and (max-width: 499px ){
 
-.ContentParaDescargarEnPerfil{
-    display: flex;
-    justify-content: center;
-    position: relative;
-}
+
+    .ContentParaDescargarEnPerfil{
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
 
     .paraDescargarEnPerfil{
         width: 290px;
@@ -981,131 +983,223 @@
                                     </div>
                                 </div>
                             </div> 
-            
+                           
+
+                            <!-- Modal Buscador en Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
+                            <div class="modal fade" id="staticCheckSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelH2">Buscador en tu Tienda</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><span class="fw-bold text-primary">Agrega un buscador a tu Tienda </span>
+                                                "¡Presentamos nuestro nuevo buscador! Provee a tus clientes de esta poderosa herramienta de busqueda para que puedan conseguir
+                                                 rapidamente lo que buscan."
+                                            </p>
+                                            <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios</b>  </span> </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- Modal Carrito de Compra --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy" -->
+                            <div class="modal fade" id="staticSuicheCarBuy" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH3" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelH3">Carrito de Compra</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><span class="fw-bold text-primary">Agrega un carrito de Compra</span>
+                                                "¡Explora nuestra herramienta Carrito de Compra! Agrega fácilmente productos y realiza tu pedido de manera rápida y segura.
+                                                 Ofrecele a tus clientes una experiencia de compra cómoda y eficiente."
+                                            </p>
+                                            <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios de Items</b>  </span> </p>
+                                            <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                             
+                            
+                            <!-- Modal Gestor ADS --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy" -->
+                            <div class="modal fade" id="staticSuicheGestorADS" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelH4">Gestor de Anuncios</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><span class="fw-bold text-primary">Agrega el Gestor de Anuncios</span>
+                                                "Edita múltiples anuncios de forma rápida y sencilla. Visualiza un listado y actualiza diferentes campos al mismo tiempo como titulo, precio y existencia, ideal para tiendas con decenas de artículos."
+                                            </p>
+                                            <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios</b>  </span> </p>
+                                            <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                             
+                            
+                            <!-- Modal Agenda CRM --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy" -->
+                            <div class="modal fade" id="staticSuicheCRM" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelH4">Agenda CRM</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><span class="fw-bold text-primary">Agrega la Agenda CRM</span>
+                                                "¡Presentamos nuestra Agenda CRM! Organiza y gestiona tus contactos de manera eficiente con nuestro <b>Customer Relationship Management o Gestión de Relación con los Clientes</b>. Mantén un seguimiento de tus interacciones y mejora tus relaciones con los clientes, todo en un solo lugar."
+                                            </p>
+                                            <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>1 Anuncio</b>  </span> </p>
+                                            <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
 
                             <div class="col-lg-8 col-md-8 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
-                                <div class="card">
-                                    <div class="card-header">
-                                        Mi Perfil
-                                    </div>
                                     
-                                    <div class="card-body border">
+                                    
                                         <% if (searchProfile.length === 0) {  %> <!-- cuenta sin perfil -->
-                                            <div class="container my-2 p-0 form-control border" style="position: relative; width: 100%; height: auto;">
-                                                
-                                                <img src="/img/bannerDefaultNoProfile.png"  class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
-
-                                            </div>   
-                                        <% } else { %> <!-- cuenta con perfil -->
-
-                                            <% searchProfile.forEach( (ele)=> { %>
-                                                <% ele.bannerPerfil.forEach((elem)=>{ %>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Sin Perfil
+                                            </div>    
+                                            <div class="card-body border">    
+                                                <div class="container my-2 p-0 form-control border" style="position: relative; width: 100%; height: auto;">
                                                     
-                                                    <!-- public_id : "sin_data" -->
-                                                    <% if (elem.public_id === "sin_data") { %>
-                                                        <!-- opcion banner default -->
+                                                    <img src="/img/bannerDefaultNoProfile.png"  class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
 
-                                                        <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
-                                            
-                                                            <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
-                
+                                                </div>
                                                 
-                                                            <div class="containerChargerBanner" style="width: 100%; position: absolute; bottom: 4px;">
-                                                                <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end">
-                                                                    <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
-                                                                
-                                                                    <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
-                                                                    <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -100px;"><i class="bi bi-arrow-up-square"></i></button> <!-- segundo enviar y actualizar img -->
-                                                                </form>
-                                                            </div>
+                                                <div class="row shadow p-2 m-0 bg-body rounded sinPerfil">
+                                                    <div class="col-md-2 col-sm-8  d-flex justify-align-center justify-content-center"> <img src="/img/admiracion.png" style="width : 60px"> </div>
+                                                    <div class="col-md-10 col-sm-8 d-flex justify-align-center justify-content-center">
+                                                        <span class="m-2"> ¡Aún no te animas a crear tu perfil, vamos solo demora 1 min! </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>          
+                                        <% } else { %> <!-- cuenta con perfil -->
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Mi Perfil
+                                            </div>    
+                                            <div class="card-body border">    
+                                                <% searchProfile.forEach( (ele)=> { %>
+                                                    <% ele.bannerPerfil.forEach((elem)=>{ %>
+                                                        
+                                                        <!-- public_id : "sin_data" -->
+                                                        <% if (elem.public_id === "sin_data") { %>
+                                                            <!-- opcion banner default -->
 
-
-    
-                                                        </div>
-
-                                                    <% } else { %>
-                                                        <!-- opcion banner customizado -->
-
-                                                        <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
-                                            
-                                                            <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
-                
-                                                            <div class="containerChargerBanner d-flex justify-content-between" style="width: 100%; height: 44px; position: absolute; bottom: 3px;">
-                                                                
-
-                                                                <!-- opcion subir banner default -->
-                                                                <div class="containerUploadBannerDefault d-flex justify-content-start" style= "display : inline; width:100px; position: relative;">
-                                                                    <a href="/myaccount/bannerDefault" class="d-flex justify-content-center align-items-center" id="bannerUpploadDefault" title="Restaurar Banner por Defecto" style="position: absolute; left: 5px; color: black">
-                                                                        <i class="bi bi-arrow-counterclockwise"></i>
-                                                                    </a>
+                                                            <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
+                                                
+                                                                <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
+                    
+                                                    
+                                                                <div class="containerChargerBanner" style="width: 100%; position: absolute; bottom: 4px;">
+                                                                    <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end">
+                                                                        <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
+                                                                    
+                                                                        <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                                        <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -100px;"><i class="bi bi-arrow-up-square"></i></button> <!-- segundo enviar y actualizar img -->
+                                                                    </form>
                                                                 </div>
 
 
-                                                                <!-- opcion subir banner customizado -->
-                                                                <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end" style= "display : inline; width:100px; position: relative;" >
-                                                                    <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
-                                                                
-                                                                    <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner" style="position: absolute; right: 5px;"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
-                                                                    <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -150px;"></button> <!-- segundo enviar y actualizar img -->
-                                                                </form>
-
-
-
-                                                            </div>      
-
-    
-                                                        </div>
-                                                        
-                                                    <% }; %>
-
-
-                                                <%  }) %>
-                                            
-                                        
-                                                <div class="container-fluid px-0">
-                                                        <div class="container-fluid p-0 mx-0 d-flex justify-content-between mb-1" style="width: 100%; background-color:<%= ele.bGColorTopbar %>">
-                                                            <div class="containerAvatarUsername d-flex align-items-end" style="width: 30%">
-                                                                <form action="/myaccount/avatar" method="post" id="formAvatarProfile" enctype="multipart/form-data" class="d-flex align-items-end">
-                                                <% ele.avatarPerfil.forEach((eleAvatar)=>{ %>
-
-                                                    <% if(eleAvatar.public_id == 'sin_data'){  %>                  
-                                                                
-                                                                        <img src="https://www.gravatar.com/avatar/<%= user.mailhash %>?d=identicon" class="imgPerfil">
-                                                                        <input type="file" name="fileImg" id="avatarFile" class="sinBody">
-                                                                        <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; width: auto; color: <%= ele.bGColorText %>;"><%= user.username %></span>
-                                                                        <input type="submit" id="avatarSubmit" class="sinBody">
-                                                    <% } else { %>              
-                                                        
-                                                                        <img src="<%= eleAvatar.url %>" alt="avatar" style="width: 70px; border-radius: 50%;" class="imgPerfil">
-                                                                        <input type="file" name="fileImg" id="avatarFile" class="sinBody">
-                                                                        <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; color: <%= ele.bGColorText %>;"><%= user.username %></span>
-                                                                        <input type="submit" id="avatarSubmit" class="sinBody">
-                                                    <% }; %> 
-                                                        
-                                                <% }); %>                        
-                                                                        
-                                                                </form>    
+        
                                                             </div>
-                                                            <div class="containerProfileMessage ms-1" style="width: 80%; text-align: right;">
-                                                                <p style="color: <%= ele.bGColorText %>;"><i><%= ele.profileMessage %></i></p>
-                                                            </div>
-                                                        </div>
-                                            <% }); %>
 
-                                        <% } %>        
-                    
-                                                    <% if (searchProfile.length === 0) {  %>
-                    
-                                                        <div class="row shadow p-2 m-0 bg-body rounded">
-                                                            <div class="col-md-2 col-sm-8  d-flex justify-align-center justify-content-center"> <img src="/img/admiracion.png" style="width : 60px"> </div>
-                                                            <div class="col-md-10 col-sm-8 d-flex justify-align-center justify-content-center">
-                                                                <span class="m-2"> ¡Aún no te animas a crear tu perfil, vamos solo demora 1 min! </span>
-                                                            </div>
-                                                        </div>
+                                                        <% } else { %>
+                                                            <!-- opcion banner customizado -->
+
+                                                            <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
                                                 
-                                                    <% } else { %>
+                                                                <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
+                    
+                                                                <div class="containerChargerBanner d-flex justify-content-between" style="width: 100%; height: 44px; position: absolute; bottom: 3px;">
+                                                                    
+
+                                                                    <!-- opcion subir banner default -->
+                                                                    <div class="containerUploadBannerDefault d-flex justify-content-start" style= "display : inline; width:100px; position: relative;">
+                                                                        <a href="/myaccount/bannerDefault" class="d-flex justify-content-center align-items-center" id="bannerUpploadDefault" title="Restaurar Banner por Defecto" style="position: absolute; left: 5px; color: black">
+                                                                            <i class="bi bi-arrow-counterclockwise"></i>
+                                                                        </a>
+                                                                    </div>
+
+
+                                                                    <!-- opcion subir banner customizado -->
+                                                                    <form action="/myaccount/banner" method="post" id="formBannerProfile" enctype="multipart/form-data" class=" d-flex justify-content-end" style= "display : inline; width:100px; position: relative;" >
+                                                                        <input type="file" name="fileImg" id="bannerFile" class="invisible"> <!-- file de carga de img -->
+                                                                    
+                                                                        <button type="button" class="btn btn-transparent me-1" id="bannerUppload" title="Aqui puedes cambiar el banner" style="position: absolute; right: 5px;"><i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                                        <button type="submit" class="btn btn-transparent" id="bannerSubmit" style="visibility: hidden; position: absolute; top: -150px;"></button> <!-- segundo enviar y actualizar img -->
+                                                                    </form>
+
+
+
+                                                                </div>      
+
+        
+                                                            </div>
                                                             
-                                                        <% searchProfile.forEach( (ele)=> { %>
+                                                        <% }; %>
+
+
+                                                    <%  }) %>
+                                                
+                                            
+                                                    <div class="container-fluid px-0">
+                                                            <div class="container-fluid p-0 mx-0 d-flex justify-content-between mb-1" style="width: 100%; background-color:<%= ele.bGColorTopbar %>">
+                                                                <div class="containerAvatarUsername d-flex align-items-end" style="width: 30%">
+                                                                    <form action="/myaccount/avatar" method="post" id="formAvatarProfile" enctype="multipart/form-data" class="d-flex align-items-end">
+                                                    <% ele.avatarPerfil.forEach((eleAvatar)=>{ %>
+
+                                                        <% if(eleAvatar.public_id == 'sin_data'){  %>                  
+                                                                    
+                                                                            <img src="https://www.gravatar.com/avatar/<%= user.mailhash %>?d=identicon" class="imgPerfil">
+                                                                            <input type="file" name="fileImg" id="avatarFile" class="sinBody">
+                                                                            <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; width: auto; color: <%= ele.bGColorText %>;"><%= user.username %></span>
+                                                                            <input type="submit" id="avatarSubmit" class="sinBody">
+                                                        <% } else { %>              
+                                                            
+                                                                            <img src="<%= eleAvatar.url %>" alt="avatar" style="width: 70px; border-radius: 50%;" class="imgPerfil">
+                                                                            <input type="file" name="fileImg" id="avatarFile" class="sinBody">
+                                                                            <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; color: <%= ele.bGColorText %>;"><%= user.username %></span>
+                                                                            <input type="submit" id="avatarSubmit" class="sinBody">
+                                                        <% }; %> 
+                                                            
+                                                    <% }); %>                        
+                                                                            
+                                                                    </form>    
+                                                                </div>
+                                                                <div class="containerProfileMessage ms-1" style="width: 80%; text-align: right;">
+                                                                    <p style="color: <%= ele.bGColorText %>;"><i><%= ele.profileMessage %></i></p>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="datesUser">
                                                                 <span class="me-1"><%= ele.names %></span><br>
                                                                 <!-- <span><%= ele.dateborn %></span> <br> -->
@@ -1164,31 +1258,6 @@
                                                                             <button type="submit" class="btn btn-secondary btn-sm my-1">Aceptar Cambios</button>
                                                                     </form>
                                                                     
-
-                                                                    <div class="containerSearch my-2  rounded" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                                        <div class="containerSearch my-0 d-flex flex-wrap">
-                                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
-                                                                            <% if(sumCount >= 11) { %>    
-                                                                                <label class="form-check-label p-0 labelFilter me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción"> Activar Buscador de Tienda :</label>
-                                                                                <div class="form-check form-switch">
-                                                                                                                                    
-                                                                                    <% if (ele.searchFilter === 'on' ){%>  
-                                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> <i class="bi bi-unlock"></i><span class="ms-1">(Motor de Busqueda)</span>
-                                                                                    <% } else { %>
-                                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> <i class="bi bi-unlock"></i><span class="ms-1">(Motor de Busqueda)</span>
-                                                                                    <% }; %>
-                                                                                    
-                                                                                </div>
-                                                                            <% } else { %>
-                                                                                <label class="form-check-label p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción"> Activar Buscador de Tienda : </label>
-                                                                                <div class="form-check form-switch">
-                                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock"></i> <span class="ms-1">(Motor de Busqueda)</span>                                                                        
-                                                                                </div>
-                                                                            <% }; %>        
-                                                                        </div>
-                                                                    </div>
-
-                                                                    
                                                                     <div class="containerAD-QR my-2 rounded" style="width: 100%;">
                                                                         <div class="containerADQR my-0 form-group">
                                                                             Descarga tu Anuncio de tienda virtual y colocalo en un lugar visible. 
@@ -1212,7 +1281,7 @@
                                                                                 </span>
                                                                             
                                                                             </div>
-    
+
                                                                             
                                                                         </div>
 
@@ -1220,30 +1289,141 @@
                                                                             <button class="form-control btn btn-primary" id="downloadCard"> <i class="bi bi-card-heading mx-2" style="font-size: larger;"></i>  Descargar Tarjeta  </button>
                                                                         </div>
                                                                     </div>
-
-
-                                                                    
                                                                 
                                                                 </div> 
                                                             </div>
                     
                                                             <div class="row shadow p-2 m-2 bg-body rounded border">
-                                                                <div class="col-md-2 col-sm-2  d-flex justify-align-center justify-content-center"> <img src="/img/cheched.png" style="width : 50px; height: 50px;"> </div>
-                                                                <div class="col-md-10 col-sm-10 d-flex justify-align-center justify-content-center">
+                                                                
+                                                               
                                                                 <% if (user) {  %>
-                                                                    <span class="m-2"> ¡ Perfil creado exitosamente, puedes editar cuando lo necesites ! <span><a href="/account/<%= user.username %>" class="text-dark"><i>mirar mi sitio...</i></a> </span>  </span>
-                                                                    <% } %>                          
-                                                                    
+                                                                <div class="col-lg-9 col-md-9 col-sm-11 d-flex justify-align-center justify-content-center">
+                                                                    <span class="m-2">  <img src="/img/cheched.png" style="width : 45px; height: 45px;"> ¡ Perfil creado exitosamente, puedes editar cuando lo necesites ! </span>
                                                                 </div> 
+                                                                <div class="col-lg-3 col-md-3 col-sm-11">       
+                                                                    <div class="form-group d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+                                                                        <a href="/account/<%= user.username %>" class="btn btn-primary text-light text-decoration-none rounded-3 w-100 d-block">
+                                                                            <i class="bi bi-shop-window me-1"></i> Ir a mi Tienda
+                                                                        </a>
+                                                                    </div>
+                                                                </div>     
+                                                                <% } %>                          
+                                                                    
+                                                                 
                                                             </div>
-                    
-                                                        <% }) %>
-                    
-                                                    <% }; %>
-                                                    
+
+                                                    </div>        
+                                                <% }); %>
+                                            
+                                            </div>
+                                        </div>
+
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                Herramientas de Tienda
+                                            </div>
+                                            <div class="card-body">
+
+                                                <div class="container-fluid p-0 mb-3">
+                                                    <div class="alert alert-info" style="border-left: 5px solid rgb(33, 103, 150);">
+                                                        <p class="m-0">
+                                                            <span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> </span> 
+                                                             Importante : "¡Hola! Explora estas herramientas para mejorar la experiencia de tus clientes. Haz clic en el ícono de información para más detalles. <i class="bi bi-info-circle mx-1"></i>"   
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                    </div>
-                                </div>
+                                                
+                                                <span class="alert-info rounded-2 p-2" style="border-left: 5px solid rgb(33, 103, 150);">
+                                                    <span>Anuncios Existentes :</span>
+                                                     <% if(sumCount) { %>  <span class="px-2">  <b><%= sumCount %></b>  </span>  <% } else { %> <span class="px-2"><%= sumCount %> </span> <% } %>
+                                                </span>
+                                                
+                                                <div class="containerTools m-2 p-1 border-bottom ">
+
+
+                                                    <div class="containerSearch my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                    <!--  cantidad de articulos para habilitar la opcion de busqueda -->
+                                                        <div class="contentSoonSearch d-flex">
+                                                        <% if(sumCount >= 11) { %>    
+                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                            <div class="form-check form-switch">
+                                                                                                                
+                                                                <% if (ele.searchFilter === 'on' ){%>  
+                                                                <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> <i class="bi bi-unlock ms-1"></i>
+                                                                <% } else { %>
+                                                                <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> <i class="bi bi-unlock ms-1"></i>
+                                                                <% }; %>
+                                                                
+                                                            </div>
+                                                        <% } else { %>
+                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                            <div class="form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
+                                                            </div>
+                                                        <% }; %>
+                                                        </div> 
+                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
+                                                    </div>
+
+                                                    <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <div class="contentSoonCarBuy d-flex">
+                                                            <label class="form-check-label no-select p-0 me-2" for="suicheCarBuy" title="Activa un carrito de compra, debes tener al menos 11 articulos del departamento de Items">○ Carrito de Compra </label>
+                                                            <div class="form-check form-switch">
+                                                                                                                
+                                                                <input class="form-check-input" type="checkbox" id="suicheCarBuy" name="Buy" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
+
+                                                            </div>
+                                                        </div>    
+                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                    </div>
+
+                                                    <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <div class="contentSoonCarBuy d-flex">
+                                                            <label class="form-check-label no-select p-0 me-2" for="suicheADS" title="Para activar esta opción, debes tener al menos 11 articulos.">○ Gestor de Anuncios </label>
+                                                            <div class="form-check form-switch">
+                                                                                                                
+                                                                <input class="form-check-input" type="checkbox" id="suicheADS" name="updateADS" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
+
+                                                            </div>
+                                                        </div>    
+                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheGestorADS"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                    </div>
+
+                                                    <div class="containerCRM my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <div class="contentSoonCRM d-flex">    
+                                                            <label class="form-check-label no-select p-0 me-2" for="suicheCRM" title="Activa la opción CRM (Customer Relationship Management) debes tener al menos 1 articulos de cualquier departamento publicado">○ Agenda CRM </label>
+                                                            <div class="form-check form-switch">
+                                                                                                                
+                                                                <input class="form-check-input" type="checkbox" id="suicheCRM" name="CRM" value="off" disabled>  <i class="bi bi-lock ms-1"></i> 
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCRM"> <i class="bi bi-info-circle mx-1"></i> </div>    
+                                                    </div>
+
+                                                </div>
+                                                <div class="containerIrATienda d-flex justify-content-end">
+
+                                                    <div class="row m-0" style="width: 100%; height: 100%;">
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                                            <a href="/admin-store" class="mt-1 btn btn-secondary text-light text-decoration-none rounded-3 d-block w-100">
+                                                                <i class="bi bi-gear me-1"></i> Administración
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 form-group"> 
+                                                            <a href="/account/<%= user.username %>" class="mt-1 btn btn-primary text-light text-decoration-none rounded-3 d-block w-100">
+                                                                <i class="bi bi-shop-window me-1"></i> Mi Tienda
+                                                            </a>   
+                                                        </div>    
+                                                    </div>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>                                                        
+
+                                                    
+                                                
                             </div>
 
                         </div>    

@@ -28,6 +28,7 @@ const SchemaProfile = new Schema({
     tiktok : { type : String },
     favoritestores : { type : Array }, //"Siguiendo" un array de todas las tiendas que sigo o mis tiendas favoritas.
     followMe : { type : Array }, // "Me siguen" un array de todas las cuentas que me estan siguiendo.
+    segment : {  type : Object, default : { active : false, segmentations : [ "all" ] } }, //por defecto el profile nace con el objeto segment ya definido. Esto es el campo requerido para segmentar
     paused : { type: Boolean, default: false }, //por default nace false. este campo se utilizará para impedir que un usuario moroso con sus impagos pueda crear, editar y eliminar publicaciones. será la unica forma existente para presionar a los usuarios morosos. 
     view : { type : Number, default: 0  }, //este campo permite tener la cantidad de veces que entran en la tienda. 
     hashtags : { type : Object , default : [] }, //este campo crea por defecto un objeto vacio, en el se agregara un array con las diferentes palabras claves de la tienda. 

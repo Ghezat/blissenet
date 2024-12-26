@@ -181,7 +181,6 @@ main{
 /* este es el efecto pulse del icono de informacion de los modales info */
 .info-icon{
   animation: pulse 3s infinite;
-  
 }
 
 @keyframes pulse{
@@ -195,10 +194,13 @@ main{
     transform: scale(1);
   }
 }
-/* fin efecto pulse del icono modales info */
-/* ///// footerCSS \\\\\ */
+
 .cursor-pointer{
   cursor: pointer;
+}
+
+.no-select{
+  user-select: none;
 }
 
 .close{

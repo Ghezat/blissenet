@@ -1492,24 +1492,31 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
 });
 
 routes.get('/myaccount/bank', async (req, res)=> {
-    //esta ruta es para obtener toda la informacion nacaria del usuario,
+    //esta ruta es para obtener toda la informacion necesaria del usuario,
     //es solicitada al entrar en profile de forma automatica. es necesario que esta informacion la tenga cargada en la seccion "bancaria".
-    const user = req.session.user;
-    const Id = user._id; 
-    console.log('--------------------OJO----------------------');
-    console.log("Estamos aqui --->get  /myaccount/bank");
-    console.log("Este es el user que esta loegado", user);
-    console.log("Este es el Id ---->", Id);
-    const searchProfile = await modelProfile.find({indexed : Id});
-    const IdProfile = searchProfile[0]._id;
-    console.log("IdProfile :", IdProfile)
-    
-    if (searchProfile){
-        //console.log("searchProfile ---->", searchProfile);
-        const searchBankUser = await modelBankUser.find({ indexed : IdProfile });
-        //console.log("Estos son los datos bancarios del usuario", searchBankUser);
-        res.json({"data" : searchBankUser});
-    }
+    try {
+        const user = req.session.user;
+        const Id = user._id; 
+        console.log('--------------------OJO----------------------');
+        console.log("Estamos aqui --->get  /myaccount/bank");
+        console.log("Este es el user que esta logeado", user);
+        console.log("Este es el Id ---->", Id);
+        const searchProfile = await modelProfile.findOne({indexed : Id});
+        
+        if (searchProfile){
+            const IdProfile = searchProfile._id;
+            console.log("IdProfile :", IdProfile)
+            //console.log("searchProfile ---->", searchProfile);
+            const searchBankUser = await modelBankUser.find({ indexed : IdProfile });
+            //console.log("Estos son los datos bancarios del usuario", searchBankUser);
+            res.json({"data" : searchBankUser});
+        }        
+
+    } catch (error) {
+        console.log("ha habido un error en la ruta '/myaccount/bank', intente luego", error);
+
+    }   
+
         
 });
 

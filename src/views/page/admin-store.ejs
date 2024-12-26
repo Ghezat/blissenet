@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+        <title>Blissenet Admin</title>
+
+</head>
+<style>
+
+
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+ 
+}
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    <main style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+        <% if (user) { %>
+
+            <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class="ms-5 p-0" style="font-weight: 400;"> Administración </span>
+            </div>   
+            
+            <div class="container-fluid p-0">
+                            
+                <div class="row m-0 ">
+
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-12  py-1 px-0 border" style="background-color: #e9ecef;">
+                                        
+                        <% if (searchProfile) {  %>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group my-1">
+                                        <button class="btn btn-primary form-control" id="segment">Segmentación</button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="btn btn-secondary form-control" id="gestorADS">Gestor ADS</button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="btn btn-secondary form-control" id="carBuy" >Carrito de Compra</button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="btn btn-secondary form-control" id="raffle">Rifa</button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="btn btn-secondary form-control" id="agendaCRM">Agenda CRM</button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="btn btn-secondary form-control" id="manager">Gerencia de Análisis</button>
+                                    </div> 
+                                </div>
+                            </div>
+                        <% } else { %>
+                            
+                        <% }; %>
+    
+                        
+
+                        <!-- seccion nombre de tienda -->
+                        
+                        <% const username = user.username %>
+                        <% const indexed = user._id %> <!-- esto es igual al id user -->
+                            
+                    </div>
+
+                        <!-- aqui estaran todos los modales informativos -->
+                    
+                        
+                        <!-- Modal Segmentar Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSegment" -->
+                        <div class="modal fade" id="staticSegment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH1" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH1">Segmentar tu Tienda</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary"> ¡Segmenta tus publicaciones! </span> "Organiza tus anuncios en categorías personalizadas para facilitar la navegación en tu tienda virtual. Mejora la experiencia de tus clientes y haz que encuentren lo que buscan de manera más rápida y sencilla." </p>
+                                        <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>0 Anuncio</b>  </span> </p>
+                                        <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>                               
+                            
+                        <!-- Modal Carrito de Compra --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarBuy" -->
+                        <div class="modal fade" id="staticCarBuy" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH3" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH3">Carrito de Compra</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Agrega un carrito de Compra</span>
+                                            "¡Explora nuestra herramienta Carrito de Compra! Agrega fácilmente productos y realiza tu pedido de manera rápida y segura.
+                                                Ofrecele a tus clientes una experiencia de compra cómoda y eficiente."
+                                        </p>
+                                        <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios de Items</b>  </span> </p>
+                                        <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                             
+                        
+                        <!-- Modal Gestor ADS --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticGestorADS" -->
+                        <div class="modal fade" id="staticGestorADS" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH4">Gestor de Anuncios</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Agrega el Gestor de Anuncios</span>
+                                            "Edita múltiples anuncios de forma rápida y sencilla. Visualiza un listado y actualiza diferentes campos al mismo tiempo como titulo, precio y existencia, ideal para tiendas con decenas de artículos."
+                                        </p>
+                                        <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios</b>  </span> </p>
+                                        <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                             
+                        
+                        <!-- Modal Agenda CRM --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCRM" -->
+                        <div class="modal fade" id="staticCRM" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH4">Agenda CRM</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Agrega la Agenda CRM</span>
+                                            "¡Presentamos nuestra Agenda CRM! Organiza y gestiona tus contactos de manera eficiente con nuestro <b>Customer Relationship Management o Gestión de Relación con los Clientes</b>. Mantén un seguimiento de tus interacciones y mejora tus relaciones con los clientes, todo en un solo lugar."
+                                        </p>
+                                        <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>1 Anuncio</b>  </span> </p>
+                                        <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Gerencia Estado --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticEstado" -->
+                        <div class="modal fade" id="staticEstado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH4">Gerencia de Análisis.</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Estados de Anuncios</span>
+                                            "Esta sección les permite activar o desactivar anuncios según su necesidad. También pueden ocultar un anuncio de la tienda con un botón invisible, aunque seguirá visible en los mercados. La idea es mantener una tienda objetiva si vendes perfumes y quieres por necesidad anunciar un telefono usado puedes hacerlo sin que aparezca en tu tienda."
+                                        </p>
+                                        <div class="d-flex justify-content-center">
+                                            <img src="/img/icon_Estado.png" alt="" style="width: 70px; height: 70px;">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Gerencia Estado --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticAnalisi" -->
+                        <div class="modal fade" id="staticAnalisi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH4">Gerencia de Análisis.</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Análisis de Tienda</span>
+                                            "Aquí tienen acceso a métricas esenciales que incluyen el número de seguidores, a quiénes están siguiendo, cuántas personas han visitado su tienda, cuántas interacciones han tenido sus artículos y las vistas individuales. También se presentan las métricas de "Vistómetro" y "Fascinómetro" para un análisis más detallado."
+                                        </p>
+                                        <div class="d-flex justify-content-center">
+                                            <img src="/img/icon_Analisis.png" alt="" style="width: 70px; height: 70px;">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+
+                    <div class="col-lg-9 col-md-9 col-sm-12 col-12 py-1 px-0 border" style="background-color: #e9ecef;">
+                            
+                    
+                        <% if (searchProfile) {  %> <!-- cuenta con perfil -->
+                            
+                            <div class="content_segment">
+
+                                <div class="card">
+                                    
+                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center ">
+
+                                        <h1 class="text-secondary">Estamos trabajando</h1>
+                                        <h4 class="text-secondary" style="text-align: center;">Próximamente estará disponible.</h4>
+                                        <h5 class="text-secondary" style="text-align: center;">Segment</h5>
+                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSegment"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                                            
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="content_gestorADS close">
+
+                                <div class="card">
+                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center ">
+
+                                        <h1 class="text-secondary">Estamos trabajando</h1>
+                                        <h4 class="text-secondary" style="text-align: center;">Próximamente estará disponible.</h4>
+                                        <h5 class="text-secondary" style="text-align: center;">Gestor ADS</h5>
+                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticGestorADS"> <i class="bi bi-info-circle mx-1"></i> </div>
+
+                                    </div>
+                                </div>
+                                
+                            </div>                           
+                            <div class="content_carBuy close">
+
+                                <div class="card">
+                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center ">
+
+                                        <h1 class="text-secondary">Estamos trabajando</h1>
+                                        <h4 class="text-secondary" style="text-align: center;">Próximamente estará disponible.</h4>
+                                        <h5 class="text-secondary" style="text-align: center;">Car Buy</h5>
+                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCarBuy"> <i class="bi bi-info-circle mx-1"></i> </div>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="content_raffle close">
+
+                                <div class="card">
+                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center">
+
+                                        <% if (Raffle) { %>
+                                            <% const image = Raffle.images %>
+                                            <% const imageURL = image[0].url %>
+
+                                        <div class="contentRaffleMain" style="width: 100%;">
+                                            <div class="row m-0">
+                                                <div class="col-lg-3 col-md-3 col-sm-12 col-12 p-0"> 
+                                                    <div class="contentImg d-flex justify-content-center">
+                                                        <img src="<%= imageURL %>" alt="" class="border" style="width: 190px; height: 190px;" >
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12 p-0">    
+                                                    <div class="contentRaffle text-secondary" style="width: 100%; height: 100%;">
+                                                        <h3><%= Raffle.title %></h3>
+                                                        <p class="mb-1"> Serial Sorteo : <span class="bg-dark text-light fw-bold rounded-pill p-1"> <%= Raffle._id %> </span> </p>
+                                                        <p class="mb-1"> Departamento : <span> <%= Raffle.department %> </span>  </p>
+                                                        <p class="mb-1"> Categoria : <span> <%= Raffle.category %> </span>  </p>
+                                                        <p class="mb-1"> Politica : <span> <%= Raffle.raffleClosingPolicy %> </span>  </p>
+                                                        <p class="mb-1"> Tickets : <span> <%= Raffle.numTickets %> </span>  </p>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-lg-3 col-md-3 col-sm-12 col-12 p-0"> 
+                                                    <div class="contentBtn form-group d-flex align-items-center " style="height: 100%;">
+                                                       <a href="/raffleModule-admin/<%= Raffle._id %>" class="btn btn-primary rounded-pill form-control"> Entrar</a>
+                                                    </div>
+                                                </div>   
+                                            </div>
+
+                                        </div>
+
+
+                                        <% } else { %>
+
+                                            <div class="card">
+                                                <div class="card-body text-secondary">
+                                                    <h3 style="text-align: center;">¡Anímate a crear un sorteo y atrae la atención de más clientes! </h3>
+                                                    <div class="form-group mt-3">
+                                                        <a href="/department/raffle" class="btn btn-primary form-control rounded-pill"> Crear Sorteo </a>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div> 
+                                        
+                                        <% }; %>    
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="content_agendaCRM close">
+
+                                <div class="card">
+                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center ">
+
+                                        <h1 class="text-secondary">Estamos trabajando</h1>
+                                        <h4 class="text-secondary" style="text-align: center;">Próximamente estará disponible.</h4>
+                                        <h5 class="text-secondary" style="text-align: center;">Agenda CRM</h5>
+                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCRM"> <i class="bi bi-info-circle mx-1"></i> </div>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="content_manager close">
+
+                                <div class="card">
+                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center text-secondary">
+
+                                        <div class="contentRaffleMain" style="width: 100%;">
+                                            <div class="row m-0">
+                                                <div class="contentMain d-flex justify-content-center">
+                                                   <a href="/myaccount/manage" class="text-decoration-none" style="color: inherit;"><h3>Gerencia de Análisis</h3></a> 
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12 p-0 my-1">
+
+                                                    <div class="card" style="border: none;">
+                                                        <div class="card-body">
+
+                                                            <div class="contentTitle d-flex justify-content-center border border-secondary rounded-2 shadow-sm py-3">
+                                                                
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div class="contentLeft d-flex align-items-center flex-column">
+                                                                        <h5 class="text-secondary">Estados</h5>
+                                                                        <div class="cursor-pointer info-icon" style="width:max-content;" data-bs-toggle="modal" data-bs-target="#staticEstado"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                                    </div>
+                                                                    <div class="contentLeft">
+                                                                        <img src="/img/icon_Estado.png" alt="" style="width: 120px; height: 120px;">
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12 p-0 my-1">
+
+                                                    <div class="card" style="border: none;">
+                                                        <div class="card-body">
+
+                                                            <div class="contentTitle d-flex justify-content-center border border-secondary rounded-2 shadow-sm py-3">
+                                                                
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div class="contentLeft d-flex align-items-center flex-column">
+                                                                        <h5 class="text-secondary">Análisis</h5>
+                                                                        <div class="cursor-pointer info-icon" style="width:max-content;" data-bs-toggle="modal" data-bs-target="#staticAnalisi"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                                    </div>
+                                                                    <div class="contentLeft">
+                                                                        <img src="/img/icon_Analisis.png" alt="" style="width: 120px; height: 120px;">
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                            
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="for-group d-flex justify-content-center mt-3">
+                                                    <a href="/myaccount/manage" class="form-control btn btn-primary rounded-pill"> Entrar</a>
+                                                    
+                                                </div>
+                                            </div>
+                                        
+                                        </div>                        
+
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+
+                            <div class="card mt-1">
+                                <div class="card-body d-flex justify-content-center ">
+                                    <span id="logoBlissenet_com"> </span>
+                                </div>
+                            </div>
+                            
+                        <% } else { %> <!-- cuenta sin perfil -->
+
+                        <% } %>                                                        
+
+                                        
+                    </div>
+
+                </div>    
+
+            </div>
+
+         <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+         <% }; %>
+
+    </main>
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+       
+
+</body>
+
+
+<script>
+    const segment = document.getElementById('segment');
+    const gestorADS = document.getElementById('gestorADS');
+    const carBuy = document.getElementById('carBuy');
+    const raffle = document.getElementById('raffle');
+    const manager = document.getElementById('manager');
+    const agendaCRM = document.getElementById('agendaCRM');
+
+    const content_segment = document.querySelector('.content_segment');
+    const content_gestorADS = document.querySelector('.content_gestorADS');
+    const content_carBuy = document.querySelector('.content_carBuy');
+    const content_raffle = document.querySelector('.content_raffle');
+    const content_manager = document.querySelector('.content_manager');
+    const content_agendaCRM = document.querySelector('.content_agendaCRM');
+
+    segment.addEventListener('click', ()=>{
+        segment.classList.replace('btn-secondary', 'btn-primary');
+        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
+        carBuy.classList.replace('btn-primary' , 'btn-secondary');
+        raffle.classList.replace('btn-primary' , 'btn-secondary');
+        manager.classList.replace('btn-primary' , 'btn-secondary');
+        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
+
+        content_segment.classList.remove('close');
+        content_gestorADS.classList.add('close');
+        content_carBuy.classList.add('close');
+        content_raffle.classList.add('close');
+        content_manager.classList.add('close');
+        content_agendaCRM.classList.add('close');
+    });
+
+    gestorADS.addEventListener('click', ()=>{
+        gestorADS.classList.replace('btn-secondary', 'btn-primary');
+        segment.classList.replace('btn-primary' , 'btn-secondary');
+        carBuy.classList.replace('btn-primary' , 'btn-secondary');
+        raffle.classList.replace('btn-primary' , 'btn-secondary');
+        manager.classList.replace('btn-primary' , 'btn-secondary');
+        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
+
+        content_segment.classList.add('close');
+        content_gestorADS.classList.remove('close');
+        content_carBuy.classList.add('close');
+        content_raffle.classList.add('close');
+        content_manager.classList.add('close');
+        content_agendaCRM.classList.add('close');
+    });
+
+    carBuy.addEventListener('click', ()=>{
+        carBuy.classList.replace('btn-secondary', 'btn-primary');
+        segment.classList.replace('btn-primary' , 'btn-secondary');
+        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
+        raffle.classList.replace('btn-primary' , 'btn-secondary');
+        manager.classList.replace('btn-primary' , 'btn-secondary');
+        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
+
+        content_segment.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_carBuy.classList.remove('close');
+        content_raffle.classList.add('close');
+        content_manager.classList.add('close');
+        content_agendaCRM.classList.add('close');
+    });
+
+    raffle.addEventListener('click', ()=>{
+        raffle.classList.replace('btn-secondary', 'btn-primary');
+        carBuy.classList.replace('btn-primary' , 'btn-secondary');
+        segment.classList.replace('btn-primary' , 'btn-secondary');
+        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
+        manager.classList.replace('btn-primary' , 'btn-secondary');
+        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
+
+        content_segment.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_carBuy.classList.add('close');
+        content_raffle.classList.remove('close');
+        content_manager.classList.add('close');
+        content_agendaCRM.classList.add('close');
+    });
+
+    manager.addEventListener('click', ()=>{
+        manager.classList.replace('btn-secondary', 'btn-primary');
+        raffle.classList.replace('btn-primary' , 'btn-secondary');
+        carBuy.classList.replace('btn-primary' , 'btn-secondary');
+        segment.classList.replace('btn-primary' , 'btn-secondary');
+        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
+        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
+
+        content_segment.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_carBuy.classList.add('close');
+        content_raffle.classList.add('close');
+        content_manager.classList.remove('close');
+        content_agendaCRM.classList.add('close');
+    });
+
+    agendaCRM.addEventListener('click', ()=>{
+        agendaCRM.classList.replace('btn-secondary', 'btn-primary');
+        manager.classList.replace('btn-primary' , 'btn-secondary');
+        raffle.classList.replace('btn-primary' , 'btn-secondary');
+        carBuy.classList.replace('btn-primary' , 'btn-secondary');
+        segment.classList.replace('btn-primary' , 'btn-secondary');
+        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
+
+        content_segment.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_carBuy.classList.add('close');
+        content_raffle.classList.add('close');
+        content_manager.classList.add('close');
+        content_agendaCRM.classList.remove('close');
+    });
+</script>

@@ -36,6 +36,14 @@ io.on('connection', (socket)=>{
         console.log("---->creacion:Bid");
         io.emit('refresh:bid', data);
     });
+
+    //socket.emit('error:Bid', { 'obje' : participantsSort });
+    socket.on('error:Bid', (data)=>{
+        console.log("::::: Aqui llega un error de Bid, para ser enviada solo al sockets que lo emitio ::::");
+        console.log("---->error:Bid");
+        socket.emit('refresh:bid', data);
+    });
+
 });
 
 

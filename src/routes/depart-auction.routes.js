@@ -1149,7 +1149,7 @@ cron.schedule('*/1 * * * *', async () => {
     const horaNow = dtNow.getHours();
     const minuNow = dtNow.getMinutes();
 
-    //este codigo es creado con la fecha y hora actual
+    //este codigo es creado con la fecha y hora actual del servidor
     if (minuNow <= 9){
         TNow = `${diaNow}${mesNow}${yearNow}T${horaNow}:0${minuNow}`; //esto es un codigo creaado con fecha y hora
     } else {
@@ -1198,6 +1198,7 @@ cron.schedule('*/1 * * * *', async () => {
             let diaSt = fechaStart[0]; let mesSt = fechaStart[1]; let anioSt = fechaStart[2];
             let horaSt = horaStart[0]; let minuSt = horaStart[1];
             let TStart = `${diaSt}${mesSt}${anioSt}T${horaSt}:${minuSt}`;
+            console.log("Esto es TStart ---->", TStart);
 
 
             const fechaClose = dtCloseFecha.split("-");
@@ -1206,6 +1207,7 @@ cron.schedule('*/1 * * * *', async () => {
             let diaCl = fechaClose[0]; let mesCl = fechaClose[1]; let anioCl = fechaClose[2];
             let horaCl = horaClose[0]; let minuCl = horaClose[1];
             let TClose = `${diaCl}${mesCl}${anioCl}T${horaCl}:${minuCl}`;
+            console.log("Esto es TClose ---->", TClose);
        
             console.log("------------  Subastas  ---------");
             console.log("Escucha de Incio de Subasta");
@@ -1336,7 +1338,7 @@ cron.schedule('*/1 * * * *', async () => {
                         
                     }
 
-                    //Creacion y envio de correo a (vendedor)    
+                    //Creacion y envio de correo al anfitrion (vendedor)    
                     async function sendEmailSell(){
                    
                         const message = "Cierre de Subasta."
@@ -1346,7 +1348,7 @@ cron.schedule('*/1 * * * *', async () => {
                             <li> cuenta : ${emailSell} </li> 
                             <li> asunto : ${message} </li>
                         <ul>
-                        <h2> Cierre de Subasta ${titleX}. </h2>
+                        <h2> ${titleX}</h2>
                         <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al apartado de negociación, donde le estará esperando su comprador. </p>
                         `
 
@@ -1486,7 +1488,7 @@ cron.schedule('*/1 * * * *', async () => {
                             console.log("NO hubo participastes por lo tanto se actualizo los datos de esta subasta para que pueda ser nuevamente progrmada por su anunciante");
                         })
                         .catch((error)=>{
-                            console.log("Ha ocurrido un error, ¡ATENCIO ADMINISTRACION!", error);
+                            console.log("Ha ocurrido un error, ¡ATENCION ADMINISTRACION!", error);
                         })
 
     

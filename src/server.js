@@ -81,6 +81,7 @@ app.use(require('./routes/my-tickets.routes.js'));
 app.use(require('./routes/manage.routes.js'));
 app.use(require('./routes/messages.routes.js'));
 app.use(require('./routes/account.routes.js'));
+app.use(require('./routes/admin-store.routes.js'));
 app.use(require('./routes/my-ads.routes.js'));
 app.use(require('./routes/buy-sell.routes.js'));
 app.use(require('./routes/history.routes.js'));

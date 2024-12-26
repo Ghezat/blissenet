@@ -12,7 +12,8 @@
     <meta name="twitter:description" content="Visita mi tienda en Blissenet.com">
     <meta name="twitter:image" content="<%= searchBanner[0].url %>">
     <meta name="twitter:url" content="https://blissenet.com/account/<%= storeProfile[0].username %>">
-    
+
+        
     <%- include('../partials/head.ejs') %>
     <title>Blissenet Account</title>
 </head>
@@ -35,7 +36,11 @@
     height: auto;
   }
 
- 
+  .popover {
+    position: relative; /* o relative, según tu diseño */
+    z-index: 110; /* valor que necesites */
+    /*para que z-index funcione debe ir acompañado de un valor en la propiedad position*/
+  }
   .containerBanner:hover{
   
      .starData{
@@ -187,6 +192,7 @@
       /* trabaja en conjunto con themaTextLight */
       color: white;
     }
+
     
    /*  Media queries */
    @media screen and (min-width: 500px) and (max-width: 700px ){
@@ -292,10 +298,11 @@
 <body>
 
   <main class="mainTheme">
+    
 
     <%- include('../partials/navi-simple.ejs') %>
 
-
+    <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
 
       <% if (storeProfile.length !==0) { %>
         <div class="container-fluid p-0 m-0">
@@ -361,7 +368,7 @@
 
                 <!-- bloque Topbar -->
                 <div class="TopbarMain p-1 d-flex justify-content-between px-4 shadow "
-                  style="background-color: <%= ele.bGColorTopbar%> ; color: <%= ele.bGColorText %>; position: relative; z-index: 110;">
+                  style="background-color: <%= ele.bGColorTopbar%> ; color: <%= ele.bGColorText %>; position: relative; z-index: 200;">
                   
                     <div class="containerAvatarUser d-flex" style="width: 30%;">
                         <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
@@ -578,86 +585,117 @@
                           </div>  
                         </a>
 
-                      <div class="containerScoreTrustMain" style="position: fixed; right: 0; top: 120px; z-index : 1">
-                          <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column shadow" 
-                          style="background-color: #fcfcfc; width: 70px; height: 300px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
-                            <div class="containerScore border-bottom d-flex flex-column justify-content-center align-items-center p-1" style="height: 40%; width: 100%;">
-                              <p class="level m-0" style="font-size: 13px;"></p>
-                              <div class="imgLevel"></div>
-                              <p class="scoreLevel m-0"></p>
-                            </div>
-                            <div class="containerTrust border-top d-flex flex-column justify-content-center align-items-center" style="height: 40%; width: 100%;">
-                              <p class="m-0">Trust</p>
-                              <i class="bi bi-shield-check my-2" style="font-size: 1.4rem;"></i>
-                              <p class="trustLevel m-0"></p>
-                            </div>
+<!--                             //prueba de popover                                                                                                
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="popover" title="Título del Popover" data-bs-placement="left" data-bs-content="Left Contenido del popover aquí.">
+                          Hover o click aquí
+                        </button>
 
-                            <% if (user) { %>
-                              <% if (user.username === Account[0].username ) { %>
-                                
-                                <% if (raffle_Id) { %>
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Left Contenido del popover aquí sin titulo.">
+                          Hover o click aquí
+                        </button>
+ -->
+                      <div class="containerScoreTrustMain" style="position: fixed; right: 0px; top: 120px; z-index : 1">
 
-                                  <% if ( raffle_Id !== undefined ) { %>
-                                    <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: #8DB600; height: 20%; width: 100%;">
-                                      <a href="/raffleModule-admin/<%= raffle_Id %>" style="color: black"><i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i></a>
-                                    </div>
-                                  <% }; %>
-                                    
-                                <% } else { %>
-                                  <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
-                                    <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
-                                  </div>
-                                <% }; %> 
-
-                              <% } else { %>  
-                                <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
-                                  <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
-                                </div>
-                              <% }; %>
-                              
-                            <% } else { %>
-                              <div class="containRifa border-top d-flex flex-column align-items-center justify-content-center" style="background-color: rgb(167, 167, 167); height: 20%; width: 100%;">
-                                <i class="bi bi-ticket-perforated" style="font-size: 1.4rem;"></i>
-                              </div>
-                            <% }; %> 
-
-                            <% if (user) { %>
-                              
-                                  <% if (user.username == Account[0].username) { %> <!-- el usuario logeado es el mismo dueño de la tienda -->
-
-                                    <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
-                                      <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                                    </div> 
-
-                                  <% } else { %>
-
-                                        <% if (boxPublisher.length !==0) { %>  <!-- tiene al menos un articulo -->
-                                          <div class="containRate border-top d-flex flex-column align-items-center justify-content-center cursor-pointer" style="background-color:  #9dc90e; height: 20%; width: 100%; border-bottom-left-radius: 5px;" data-bs-toggle="modal" data-bs-target="#staticOption">
-                                            <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                                          </div>
-
-
-
-                                        <% } else { %>
-                                          <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
-                                            <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                                          </div> 
-                                        <% }; %>
-
-                                  <% }; %>  
-                                  
-                            <% } else { %>
-                              
-                              <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 5px;">
-                                <i class="bi bi-star" style="font-size: 1.4rem;"></i> 
-                              </div> 
-
-                            <% }; %>  
-
-                          
+                        
+                          <div class="nail border d-flex justify-content-center align-items-center cursor-pointer"  style="margin-bottom: 8px; width: 40px; height: 40px; border-radius: 50%; background-color: rgb(34, 34, 34)">
+                            <i class="bi bi-arrows-expand text-light" style="font-size: 1rem;"></i>
                           </div>
+                          <div class="contentEfec mb-3" style="position: relative;">
+
+                            <div class="contentExpan">
+                              <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column"  
+                                style="position: absolute; top: 0; width: 55px; height: 0px; border-top-left-radius: 0px; border-bottom-left-radius: 5px;">
+                                  <div class="contenForEfect closed" style="width: 100%; height: 100%;">
+                                    <div class="containerScore border d-flex flex-column justify-content-center align-items-center p-1 no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
+                                      <p class="level m-0" style="font-size: 11px;"></p>
+                                      <div class="imgLevel"></div>
+                                      <p class="scoreLevel m-0"></p>
+                                    </div>
+                                    <div class="containerTrust border closed d-flex flex-column justify-content-center align-items-center no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
+                                      <p class="m-0" style="font-size: 11px;">Trust</p> 
+                                      <i class="bi bi-shield-check my-2" style="font-size: 1rem;"></i>
+                                      <p class="trustLevel m-0"></p>
+                                    </div>
+                                  
+
+                                <% if (user) { %>
+                                  
+                                      <% if (user.username == Account[0].username) { %> <!-- el usuario logeado es el mismo dueño de la tienda -->
+
+                                        <!-- <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"> -->
+                                        <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                          <i class="bi bi-star" style="font-size: 1rem;"></i> 
+                                        </div> 
+
+                                      <% } else { %> <!-- no es el dueño de la tienda -->
+
+                                            <% if (boxPublisher.length !==0) { %>  <!-- no es el propietario tiene al menos un articulo -->
+                                              <div class="containRate border d-flex flex-column align-items-center justify-content-center cursor-pointer bg-warning " style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"  data-bs-toggle="modal" data-bs-target="#staticOption">
+                                                <i class="bi bi-star-fill" style="font-size: 1rem;"></i>
+                                              </div>
+
+
+                                            <% } else { %> <!-- no es el propietario y no tiene articulos es una tienda vacia -->
+                                              <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                                <!-- <i class="bi bi-star" style="font-size: 1rem;"></i> -->
+                                                <div class="contentStart d-flex justify-content-center align-items-center rounded-pill shadow-sm"  style="width: 30px; height: 30px; ">
+                                                  <i class="bi bi-star" style="font-size: 1rem;"></i>
+                                                </div>
+                                                  
+                                              </div> 
+                                            <% }; %>
+
+                                      <% }; %>  
+                                      
+                                <% } else { %>
+                                  <!-- el usuaio entra sin haberse logeado  -->
+                                  <div class="containRate border d-flex flex-column align-items-center justify-content-center" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                    <i class="bi bi-star" style="font-size: 1rem;"></i> 
+                                  </div> 
+
+                                <% }; %>  
+
+                              
+                                </div>
+                              </div>
+                            </div>  
+                          </div>
+
+
+                          <div class="containerAdminMain d-flex flex-column justify-content-center align-items-center" style="margin-right: 13px; z-index : 1">
+
+                            <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Carrito de compras en desarrollo.">
+                              <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
+                                <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                              </div>
+                            </button>  
+
+
+                            <button style="background-color: transparent; border: none;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Chat de mensajeria de tienda en desarrollo.">
+                              <div class="contentChatMessage border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
+                                <img src="/img/iconChatMessage.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                              </div>
+                            </button>  
+
+                            <% if (user) { %>
+                                  <!-- si existe un usuario -->
+                              <% if (user.username == Account[0].username) { %>
+                                  <!-- y es el propietario de la tienda podra ver esta opcion -->
+                                <div class="contentAdmin border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
+                                  <a href="/admin-store"><img src="/img/iconAdmin.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                                  </a> 
+                                </div>
+
+                              <% } %>
+
+                            <% } %>  
+
+                          </div> 
+
+
                       </div>
 
+                      
                                                 
                       <div class="Workspace" style="width: 96%;">
 
@@ -881,7 +919,7 @@
 
                               </div>
 
-                              <div class="paginate d-flex justify-content-end align-items-center mt-2" style="position: relative; z-index : 120 !important">
+                              <div class="paginate d-flex justify-content-center align-items-center mt-2" style="position: relative; z-index : 120 !important">
                                 <nav aria-label="...">
                                   <ul class="pagination  m-0">
                                     <% if (paginate) { %>
@@ -1109,7 +1147,71 @@
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
 
+  <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Popover(tooltipTriggerEl)
+    })
+  </script>
 
+<script>
+  const nail = document.querySelector('.nail');
+  const contentExpan = document.querySelector('.contentExpan');
+  const containerScoreTrust = document.querySelector('.containerScoreTrust');
+  const contenForEfect = document.querySelector('.contenForEfect');
+  const containerAdminMain = document.querySelector('.containerAdminMain');
+
+  const efectSoundExpan = document.getElementById('efectSoundExpan');
+  
+
+//clientHeight`: te da la altura del elemento, incluyendo el padding, pero sin los bordes ni el margen.
+//`offsetHeight`: te da la altura total del elemento, incluyendo el padding y los bordes.
+  
+                          
+
+  nail.addEventListener('click', ()=>{
+    const altura = containerScoreTrust.clientHeight; 
+    //console.log('La altura del containerScoreTrust :', altura);
+
+    if (altura == 0){ //esta en forma redonda y se pondra rectangular pero debe hacerlo con transicion.
+      //contentExpan.classList.remove('closed');
+      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+      efectSoundExpan.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
+
+      //console.log("altura es cero", altura);
+      nail.style.cssText = 'transition: 1s ease all; margin-bottom: 0; width: 55px; height: 30px; background-color: rgba(29, 29, 29, 1)'
+      containerScoreTrust.style.cssText = 'transition: 1.5s ease height; width: 55px; height: 230px; border-top-left-radius: 0px; border-bottom-left-radius: 5px;';
+      containerAdminMain.style.cssText = 'transition: 1.5s ease margin-right; margin-right : 0px';
+      //contenForEfect.style.cssText = "transition: 1.0s ease opacity; opacity : 1"
+      setTimeout(() => {
+        contenForEfect.classList.remove('closed');
+      }, 200);
+    } else {
+
+      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+      efectSoundExpan.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
+
+      //console.log("altura es diferente de cero", altura);
+      nail.style.cssText = 'transition: 1s ease all; margin-bottom: 0px; width: 40px; height: 40px; border-radius: 50%; background-color: rgba(29, 29, 29, 1)'
+      containerScoreTrust.style.cssText = 'transition: 1.5s ease height; width: 55px; height: 0; border-top-left-radius: 0px; border-bottom-left-radius: 5px;';
+      //contenForEfect.style.cssText = "transition: 2.s ease opacity; opacity : 0";
+      containerAdminMain.style.cssText = 'transition: 1.5s ease margin-right; margin-right : 13px';
+      setTimeout(() => {
+        contenForEfect.classList.add('closed');
+      }, 600);
+   
+      
+    }
+    
+    
+  })
+
+
+</script>  
 
 <script>
     const containerStar = document.querySelector('.containerStar');
@@ -1269,37 +1371,37 @@
               if ( sellerCount <= 9 ){ // de 0 a 9
                   console.log("Estas en el nivel Carbon como comprador");
                   level.innerText = 'Carbon'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralCarbonClean.png" class="m-0" style="width: 50px;">'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralCarbonClean.png" class="m-0" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
   
               } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
                   console.log("Estas en el nivel Hierro como vendedor");
                   level.innerText = 'Hierro'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralHierroClean.png" style="width: 50px;">'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralHierroClean.png" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
                               
               } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
                   console.log("Estas en el nivel Bronce como vendedor");
                   level.innerText = 'Bronce'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralBronceClean.png" style="width: 50px;">'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralBronceClean.png" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
                               
               } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
                   console.log("Estas en el nivel Plata como vendedor");
                   level.innerText = 'Plata'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralPlataClean.png" style="width: 50px;">'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralPlataClean.png" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
                               
               } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
                   console.log("Estas en el nivel Oro como vendedor");
                   level.innerText = 'Oro'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralOroClean.png" style="width: 50px;">'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralOroClean.png" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
            
               } else if ( sellerCount >= 200 ){
                   console.log("Estas en el nivel Diamante como vendedor");
                   level.innerText = 'Diamante'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralDiamanteClean.png" style="width: 50px;">'
+                  imgLevel.innerHTML +=  '<img src="/img/MineralDiamanteClean.png" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
              
               }

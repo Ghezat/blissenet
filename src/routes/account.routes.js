@@ -66,17 +66,6 @@ routes.get('/account/:account', async (req,res)=>{
             //console.log("Aqui la firma del visitante ---->", firmaVisitante)
             }
 
-            //aqui busco el id del sorteo. 
-            const raffle = await modelRaffle.find({ user_id : accountId });
-            //si tiene entonces lo incluyo en los objetos a enviar al front para anexarlo en el contenedor derecho alargado donde esta el Score y el trust 
-            let raffle_Id;
-    
-            if (raffle.length !==0){
-                raffle_Id = raffle[0]._id;
-
-            } else {
-                raffle_Id = undefined;
-            }
 
             //----------------------------------------------
 
@@ -147,7 +136,7 @@ routes.get('/account/:account', async (req,res)=>{
                     newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
 
                 } else if (receive == "first"){
 
@@ -161,7 +150,7 @@ routes.get('/account/:account', async (req,res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
 
                 } else if (receive == "next"){
 
@@ -181,7 +170,7 @@ routes.get('/account/:account', async (req,res)=>{
                         //console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
            
                     }
           
@@ -206,7 +195,7 @@ routes.get('/account/:account', async (req,res)=>{
                         //console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
                     } 
           
 
@@ -239,7 +228,7 @@ routes.get('/account/:account', async (req,res)=>{
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
 
                 }
                   
@@ -472,20 +461,7 @@ routes.post('/account/search', async (req, res)=>{
             searchBanner = storeProfile[0].bannerPerfil;
         }
 
-        //aqui busco el id del sorteo. 
-        const raffle = await modelRaffle.find({ user_id : accountId });
-        //si tiene entonces lo inlcuyo en elos objetos a enviar al front para anexarlo en el contenedor derecho alargado donde esta el Score y el trust 
-        let raffle_Id;
-            
-        if (raffle.length !==0){
-            raffle_Id = raffle[0]._id;
-        
-        } else {
-            raffle_Id = undefined;
-        }
-        
-        //----------------------------------------------
-
+ 
         //aqui vamos a buscar en todas las colecciones el filto de busqueda 
         //console.log("esto es store ------------->", store);
         //console.log("esto es search ------------->", search);
@@ -553,7 +529,7 @@ routes.post('/account/search', async (req, res)=>{
 
               const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-              res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+              res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
 
         } else if (receive == "first"){
 
@@ -567,7 +543,7 @@ routes.post('/account/search', async (req, res)=>{
               //console.log("totalPagina :  ", totalPagina);
               const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-              res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+              res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
 
         } else if (receive == "next"){
 
@@ -585,7 +561,7 @@ routes.post('/account/search', async (req, res)=>{
                   //console.log("totalPagina :  ", totalPagina);
                   const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
      
               }
     
@@ -608,7 +584,7 @@ routes.post('/account/search', async (req, res)=>{
                   //console.log("totalPagina :  ", totalPagina);
                   const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id });
+                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
               } 
     
 
@@ -625,7 +601,7 @@ routes.post('/account/search', async (req, res)=>{
               //console.log("totalPagina :  ", totalPagina);
               const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-              res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, raffle_Id});
+              res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell });
 
         }
 
@@ -1466,6 +1442,8 @@ routes.post('/account/pountRate/star-5', async(req, res)=>{
     const rateStore = await modelStoreRate.find( {$and : [{storeName}, {markStar : '5'}]} ).sort({updatedAt : -1});
     //console.log("rateStore --->", rateStore)
     res.json(rateStore);
-})
+});
+
+
 
 module.exports = routes;
