@@ -6,6 +6,7 @@ const SchemaAuctions = new Schema({
     department : { type: String, default: 'auctions' },
     category : { type: String },
     sub_category : { type: String },
+    segment : { type: String }, // normalmente esto seria "All"
     state_use : { type: String },
     tecnicalDescription : { type: String },
     generalMessage: { type: String },

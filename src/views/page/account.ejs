@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta property="og:title" content="<%= storeProfile[0].username %>">
+<head> 
+    <!-- storeProfile[0].username -->
+    <meta property="og:title" content="<%= storeProfile.username %>">
     <meta property="og:type" content="website">
     <meta property="og:description" content="Visita mi tienda en Blissenet.com">
     <meta property="og:image" content="<%= searchBanner[0].url %>">
-    <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile[0].username %>">
+    <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile.username %>">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<%= storeProfile[0].username %>">
+    <meta name="twitter:title" content="<%= storeProfile.username %>">
     <meta name="twitter:description" content="Visita mi tienda en Blissenet.com">
     <meta name="twitter:image" content="<%= searchBanner[0].url %>">
-    <meta name="twitter:url" content="https://blissenet.com/account/<%= storeProfile[0].username %>">
+    <meta name="twitter:url" content="https://blissenet.com/account/<%= storeProfile.username %>">
 
         
     <%- include('../partials/head.ejs') %>
@@ -51,6 +52,7 @@
      }
 
   }
+
  
   .starData{
     opacity: 0;
@@ -73,7 +75,10 @@
     display: flex;
   }
 
- 
+
+  .containerShare  { 
+    background-color: rgba(255, 255, 255, 0.8); position: absolute; top: -30px; left:110px; z-index: 220;
+  }
 
   .nailUpp{
     /* background-color: rgb(240, 240, 240, 0.3); */
@@ -193,6 +198,29 @@
       color: white;
     }
 
+    .lupaSinRespuesta{
+      animation: moverLupa 8s infinite;
+      transform-origin: center; /* Establecer el eje central para rotar */
+    }
+
+    @keyframes moverLupa {
+          0% {
+              transform: rotate(0deg);
+          }
+          20% {
+              transform: rotate(25deg); /* Rota hacia arriba */
+          }
+          40% {
+              transform: rotate(0deg); /* Regresa a la posición original */
+          }
+          60% {
+              transform: rotate(-25deg); /* Rota hacia abajo */
+          }
+          100% {
+              transform: rotate(0deg); /* Regresa a la posición original */
+          }
+      }
+
     
    /*  Media queries */
    @media screen and (min-width: 500px) and (max-width: 700px ){
@@ -270,9 +298,12 @@
     }
 
     .containerShare{
-      /* esto pertenece al modulo de comapartir */
+      /* esto pertenece al modulo de compartir */
+
       right: 3px;
+      background-color: rgba(255, 255, 255, 0.9); position: absolute; top: 30px; left:-200px; z-index: 220;
     }
+
 
     footer{
       display: flex;
@@ -304,26 +335,26 @@
 
     <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
 
-      <% if (storeProfile.length !==0) { %>
+      <% if (storeProfile) { %>
         <div class="container-fluid p-0 m-0">
           <div class="row rowWidth mx-0">
 
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
 
                 <div class="containAlert" style="position: sticky; top: 0px; z-index: 200;"> <!-- bloque dinamico --> </div>
-                <div class="containerBanner" style="position: relative; z-index: 130">
+                <div class="containerBanner" style="position: relative; z-index: 220">
                     <% if (user) { %>
                         <% if (searchBanner) { %>
                           <img src="<%= searchBanner[0].url %>" style="width: 100%;">
                         
                           <% if (searchProfile.length !== 0) { %>
                         
-                              <% if (storeProfile.length !==0) { %>
+                              <% if (storeProfile) { %>
                               <div class="containerStar d-flex justify-content-center align-items-center" style="position: absolute; right: 30px; bottom: 15px; border-radius: 50%; width: 40px; height: 40px;">
                                 <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
                                 <i class="bi bi-bookmark-check starData"  style="width: auto;">
                                   <input type="hidden" id="iDLogeado" value="<%= user._id %>">
-                                  <input type="hidden" id="iDStore" value="<%= storeProfile[0].indexed %>">
+                                  <input type="hidden" id="iDStore" value="<%= storeProfile.indexed %>">
                                 </i>
                                 <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
                                 <!-- el objetivo es saber quien es el que esta logeado y que tienda quiere como favorito -->
@@ -342,19 +373,19 @@
 
                           <!-- este bloque de codigo es para que no de error cuando no exista usuario, aqui existira pero invisible a los usarios -->
                           <div class="containerMainStar d-flex justify-content-center align-items-end me-3 pb-4 invisible" style="width: 10%; height: 100%;  position: absolute; right: 0px; top: 0px;">
-                            <% if (storeProfile.length !==0) { %>
+                            <% if (storeProfile) { %>
                             <div class="containerStar d-flex justify-content-center align-items-center" style="border-radius: 50%; width: 40px; height: 40px;">
                               <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
                               <i class="bi bi-star-fill starData" style="width: auto;">
                                 
-                                <input type="hidden" value="<%= storeProfile[0].indexed %>">
+                                <input type="hidden" value="<%= storeProfile.indexed %>">
 
                               </i>
                               <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
                             </div>
 
                             <!-- esta data es para usarla abajo en un script para poder enviar un fecth con el nombre de la tienda. -->
-                            <input type="hidden" value="<%= storeProfile[0].username %>" id="nameStore"> 
+                            <input type="hidden" value="<%= storeProfile.username %>" id="nameStore"> 
                             <% }; %>
                           </div>
 
@@ -363,23 +394,23 @@
                 </div>
 
               </div>
-            <% storeProfile.forEach( (ele)=> { %> <!-- este es el foreach de colores -->
+           
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
 
                 <!-- bloque Topbar -->
-                <div class="TopbarMain p-1 d-flex justify-content-between px-4 shadow "
-                  style="background-color: <%= ele.bGColorTopbar%> ; color: <%= ele.bGColorText %>; position: relative; z-index: 200;">
+                <div class="TopbarMain p-1 d-flex justify-content-between px-4"
+                  style="background-color: <%= storeProfile.bGColorTopbar%> ; color: <%= storeProfile.bGColorText %>; position: relative; z-index: 200;">
                   
                     <div class="containerAvatarUser d-flex" style="width: 30%;">
                         <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
 
-                          <% if (ele.avatarPerfil[0].url.length === 0 ) {%>
-                            <td> <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 70px;"></td>   
+                          <% if (storeProfile.avatarPerfil[0].url.length === 0 ) {%>
+                            <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px;"></td>   
                             <% } else {%>
-                            <td><img src="<%= ele.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px;"></td>
+                            <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px;"></td>
                           <% }; %>
 
-            <% }); %>   <!-- este es el fin del foreach de colores -->
+               <!-- este es el fin del foreach de colores -->
                         </div>
                         <div class="containerDetails d-flex flex-column">
                         <% if (Account) { %> 
@@ -392,11 +423,11 @@
                                   <div class="d-flex justify-content-start" style="position: relative;">
 
                                     <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit"> <i class="bi bi-share me-1"></i>  Compartir </button> 
-                                            
-                                    <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 45px;" >
-                                          <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
-                                          <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
-                                          <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
+                                    
+                                    <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3">
+                                          <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 40px; height: 40px;">   </a> 
+                                          <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 40px; height: 40px"> </a> 
+                                          <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 40px; height: 40px">  </a>
                                           <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
                                             <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i>
                                             <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
@@ -417,12 +448,12 @@
                     
                     <div class="containerDetailsMessajesRRSS" style="width: 60%;" >
                       <% if (storeProfile) { %>
-                        <% storeProfile.forEach((ele)=>{ %>
+                      
                           <div class="containerMessager">
 
                             <p class="MessagerStore mb-0" style="font-size: 18px; text-align: right;">
                               <i>
-                                <%= ele.profileMessage %>
+                                <%= storeProfile.profileMessage %>
                               </i>
                             </p>
                       
@@ -430,27 +461,26 @@
                           <div class="containerMainRRSS" style="position: relative; height: 30px;">
                            
                             <div class="containerRRSS d-flex justify-content-end " style="position: absolute; right: 10px; width: 35%">
-                              
-                             
+                                                           
                           
                               <div class="facebook mx-2">
-                                  <% if (ele.facebook) { %>
-                                    <a href="https://www.facebook.com/<%= ele.facebook %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-facebook"></i></a>
+                                  <% if (storeProfile.facebook) { %>
+                                    <a href="https://www.facebook.com/<%= storeProfile.facebook %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-facebook"></i></a>
                                   <% } %>
                               </div>
                               <div class="instagram mx-2">
-                                <% if (ele.instagram) { %>
-                                  <a href="https://www.instagram.com/<%= ele.instagram %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-instagram"></i></a>
+                                <% if (storeProfile.instagram) { %>
+                                  <a href="https://www.instagram.com/<%= storeProfile.instagram %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-instagram"></i></a>
                                 <% } %>
                               </div>
                               <div class="youtube mx-2">
-                                <% if (ele.youtube) { %>
-                                  <a href="https://www.youtube.com/<%= ele.youtube %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-youtube"></i></a>
+                                <% if (storeProfile.youtube) { %>
+                                  <a href="https://www.youtube.com/<%= storeProfile.youtube %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-youtube"></i></a>
                                 <% } %>
                               </div>
                               <div class="tiktok mx-2">
-                                <% if (ele.tiktok) { %>
-                                  <a href="https://www.tiktok.com/<%= ele.tiktok %>" target="_blank" style="color:<%= ele.bGColorText %>"><i class="bi bi-tiktok"></i></a>
+                                <% if (storeProfile.tiktok) { %>
+                                  <a href="https://www.tiktok.com/<%= storeProfile.tiktok %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-tiktok"></i></a>
                                 <% } %>
                               </div>
 
@@ -458,12 +488,42 @@
 
                             </div>
                           </div>
-                        <% }); %>
+                        
                       <% }; %>
                     </div> 
         
                 </div> <!-- aqui cierra el bloque Topbar--> 
-                <% storeProfile.forEach((eleStore)=>{ %>
+                <% if (storeProfile) { %>
+                    <% const store_username = storeProfile.username %>
+                    <% const store_id = storeProfile.indexed %>
+
+                    <form  method="get" id="formSegment"> <!-- acti0n se forma abajo en un script -->
+                        <input type="hidden" value="<%= store_username %>" id="store_username">
+                        <input type="hidden" value="<%= store_id %>" name="store" id="store_indexed">  
+
+                        <div class="form-floating shadow-sm" style="position: relative; z-index: 200;">
+                            <select class="form-select" id="floatingSelect" name="segment" aria-label="label select example"
+                            style="border: none; outline: none; border-radius: 0; background-color: <%= storeProfile.bGColorTopbar%> ; color: <%= storeProfile.bGColorText %>; ">
+                            
+                              
+                            <% if (segment) { %> <!-- esto es un objeto que viebe del backend -->
+                              <option value= "<%= segment %>" selected> <%= segment %>  </option>
+                            <% }; %>  
+
+                            <% storeProfile.segment.forEach((Segment)=>{ %>
+                              <option value= "<%= Segment %>"> <%= Segment %>  </option>
+                            <% }) %>
+
+                            </select>
+                            <label for="floatingSelect" style="color: <%= storeProfile.bGColorText %>; "><i>Selecciona un Segmento</i> </label>
+                        </div>
+                    </form>    
+
+                <% }; %>
+                
+               
+                    
+                  <!-- //storeProfile camiar por storeProfile --> 
 
 
                   <!-- importante que estos modales esten aqui afuera del contenedor containerWorkSpace -->
@@ -556,276 +616,244 @@
                           </div>
                       </div>                      
 
-                <div class="containerWorkSpace">
-                  <!-- bloque Workspace -->
-                  <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= eleStore.bGColorWorkspace %>; position: relative;">
+                  <div class="containerWorkSpace">
+                    <!-- bloque Workspace -->
+                    <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= storeProfile.bGColorWorkspace %>; position: relative;">
 
-                        <a name="workSpace"></a>
+                          <a name="workSpace"></a>
 
-                        <!-- Este bloque es para acceder a un buscador dentro de la misma tienda, será una opcion del profile -->
-                        <% if (eleStore.searchFilter === 'on' ){%>
-                        <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>; z-index : 100">
+                          <!-- Este bloque es para acceder a un buscador dentro de la misma tienda, será una opcion del profile -->
+                          <% if (storeProfile.searchFilter === 'on' ){%>
+                          <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= storeProfile.bGColorTopbar%>;color:<%= storeProfile.bGColorText %>; z-index : 100">
 
-                            <div class="container-fluid">
-                                <div class="container" style="width: 50%;">
-                                  <form action="/account/search" method="post" class="d-flex">
-                                    <input type="hidden" name="store" value="<%= eleStore.username %>">
-                                    <input class="form-control me-2" type="text" name="search" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search">
-                                    <button class="btn" type="submit" style="color:<%= eleStore.bGColorText %>; border : 1px solid <%= eleStore.bGColorText %>">Search</button>
-                                  </form>
-                                </div>
-                            </div>
-                        
-                        </div>
-                        <% }; %>
+                              <div class="container-fluid">
+                                  <div class="container" style="width: 50%;">
 
-                        <a href="#workSpace" class="anclaWorspace text-dark">
-                          <div class="nailUpp px-3 mb-2" style="background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>;">
-                            <i class="bi bi-chevron-down Heading"></i>
-                          </div>  
-                        </a>
-
-<!--                             //prueba de popover                                                                                                
-                        <button type="button" class="btn btn-secondary" data-bs-toggle="popover" title="Título del Popover" data-bs-placement="left" data-bs-content="Left Contenido del popover aquí.">
-                          Hover o click aquí
-                        </button>
-
-                        <button type="button" class="btn btn-secondary" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Left Contenido del popover aquí sin titulo.">
-                          Hover o click aquí
-                        </button>
- -->
-                      <div class="containerScoreTrustMain" style="position: fixed; right: 0px; top: 120px; z-index : 1">
-
-                        
-                          <div class="nail border d-flex justify-content-center align-items-center cursor-pointer"  style="margin-bottom: 8px; width: 40px; height: 40px; border-radius: 50%; background-color: rgb(34, 34, 34)">
-                            <i class="bi bi-arrows-expand text-light" style="font-size: 1rem;"></i>
-                          </div>
-                          <div class="contentEfec mb-3" style="position: relative;">
-
-                            <div class="contentExpan">
-                              <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column"  
-                                style="position: absolute; top: 0; width: 55px; height: 0px; border-top-left-radius: 0px; border-bottom-left-radius: 5px;">
-                                  <div class="contenForEfect closed" style="width: 100%; height: 100%;">
-                                    <div class="containerScore border d-flex flex-column justify-content-center align-items-center p-1 no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
-                                      <p class="level m-0" style="font-size: 11px;"></p>
-                                      <div class="imgLevel"></div>
-                                      <p class="scoreLevel m-0"></p>
-                                    </div>
-                                    <div class="containerTrust border closed d-flex flex-column justify-content-center align-items-center no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
-                                      <p class="m-0" style="font-size: 11px;">Trust</p> 
-                                      <i class="bi bi-shield-check my-2" style="font-size: 1rem;"></i>
-                                      <p class="trustLevel m-0"></p>
-                                    </div>
+                                    <% const store = storeProfile.username %>
+                                    <% let Segment %>
+                                    <% if (segment) { %> <!-- esto es un objeto que viene del backend -->
+                                      <%  Segment = segment %>   
+                                    <% } else { %>
+                                      <%  Segment = "null" %> 
+                                    <% } %>  
+                                                                          
                                   
+                                      <form  method="get" class="d-flex" id="formSearch">
+                                        <input type="hidden" value="<%= store %>" id="storeSearch">
+                                        <input type="hidden" value="<%= Segment %>" id="segmentSearch">
+                                        <input class="form-control me-2" type="text" id="elementSearch" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search">
+                                        <button class="btn"  id="submitSearch" style="color:<%= storeProfile.bGColorText %>; border : 1px solid <%= storeProfile.bGColorText %>">Search</button>
+                                      </form>
+                                     
 
-                                <% if (user) { %>
-                                  
-                                      <% if (user.username == Account[0].username) { %> <!-- el usuario logeado es el mismo dueño de la tienda -->
-
-                                        <!-- <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"> -->
-                                        <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-                                          <i class="bi bi-star" style="font-size: 1rem;"></i> 
-                                        </div> 
-
-                                      <% } else { %> <!-- no es el dueño de la tienda -->
-
-                                            <% if (boxPublisher.length !==0) { %>  <!-- no es el propietario tiene al menos un articulo -->
-                                              <div class="containRate border d-flex flex-column align-items-center justify-content-center cursor-pointer bg-warning " style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"  data-bs-toggle="modal" data-bs-target="#staticOption">
-                                                <i class="bi bi-star-fill" style="font-size: 1rem;"></i>
-                                              </div>
-
-
-                                            <% } else { %> <!-- no es el propietario y no tiene articulos es una tienda vacia -->
-                                              <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-                                                <!-- <i class="bi bi-star" style="font-size: 1rem;"></i> -->
-                                                <div class="contentStart d-flex justify-content-center align-items-center rounded-pill shadow-sm"  style="width: 30px; height: 30px; ">
-                                                  <i class="bi bi-star" style="font-size: 1rem;"></i>
-                                                </div>
-                                                  
-                                              </div> 
-                                            <% }; %>
-
-                                      <% }; %>  
-                                      
-                                <% } else { %>
-                                  <!-- el usuaio entra sin haberse logeado  -->
-                                  <div class="containRate border d-flex flex-column align-items-center justify-content-center" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-                                    <i class="bi bi-star" style="font-size: 1rem;"></i> 
-                                  </div> 
-
-                                <% }; %>  
-
-                              
-                                </div>
+                                  </div>
                               </div>
+                          
+                          </div>
+                          <% }; %>
+
+                          <a href="#workSpace" class="anclaWorspace text-dark">
+                            <div class="nailUpp px-3 mb-2" style="background-color:<%= storeProfile.bGColorTopbar%>;color:<%= storeProfile.bGColorText %>;">
+                              <i class="bi bi-chevron-down Heading"></i>
                             </div>  
-                          </div>
+                          </a>
+
+  <!--                             //prueba de popover                                                                                                
+                          <button type="button" class="btn btn-secondary" data-bs-toggle="popover" title="Título del Popover" data-bs-placement="left" data-bs-content="Left Contenido del popover aquí.">
+                            Hover o click aquí
+                          </button>
+
+                          <button type="button" class="btn btn-secondary" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Left Contenido del popover aquí sin titulo.">
+                            Hover o click aquí
+                          </button>
+  -->
+                        <div class="containerScoreTrustMain" style="position: fixed; right: 0px; top: 120px; z-index : 1">
+
+                          
+                            <div class="nail border d-flex justify-content-center align-items-center cursor-pointer"  style="margin-bottom: 8px; width: 40px; height: 40px; border-radius: 50%; background-color: rgb(34, 34, 34)">
+                              <i class="bi bi-arrows-expand text-light" style="font-size: 1rem;"></i>
+                            </div>
+                            <div class="contentEfec mb-3" style="position: relative;">
+
+                              <div class="contentExpan">
+                                <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column"  
+                                  style="position: absolute; top: 0; width: 55px; height: 0px; border-top-left-radius: 0px; border-bottom-left-radius: 5px;">
+                                    <div class="contenForEfect closed" style="width: 100%; height: 100%;">
+                                      <div class="containerScore border d-flex flex-column justify-content-center align-items-center p-1 no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
+                                        <p class="level m-0" style="font-size: 11px;"></p>
+                                        <div class="imgLevel"></div>
+                                        <p class="scoreLevel m-0"></p>
+                                      </div>
+                                      <div class="containerTrust border closed d-flex flex-column justify-content-center align-items-center no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
+                                        <p class="m-0" style="font-size: 11px;">Trust</p> 
+                                        <i class="bi bi-shield-check my-2" style="font-size: 1rem;"></i>
+                                        <p class="trustLevel m-0"></p>
+                                      </div>
+                                    
+
+                                  <% if (user) { %>
+                                    
+                                        <% if (user.username == Account[0].username) { %> <!-- el usuario logeado es el mismo dueño de la tienda -->
+
+                                          <!-- <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"> -->
+                                          <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                            <i class="bi bi-star" style="font-size: 1rem;"></i> 
+                                          </div> 
+
+                                        <% } else { %> <!-- no es el dueño de la tienda -->
+
+                                              <% if (boxPublisher.length !==0) { %>  <!-- no es el propietario tiene al menos un articulo -->
+                                                <div class="containRate border d-flex flex-column align-items-center justify-content-center cursor-pointer bg-warning " style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"  data-bs-toggle="modal" data-bs-target="#staticOption">
+                                                  <i class="bi bi-star-fill" style="font-size: 1rem;"></i>
+                                                </div>
 
 
-                          <div class="containerAdminMain d-flex flex-column justify-content-center align-items-center" style="margin-right: 13px; z-index : 1">
-
-                            <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Carrito de compras en desarrollo.">
-                              <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
-                                <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
-                              </div>
-                            </button>  
-
-
-                            <button style="background-color: transparent; border: none;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Chat de mensajeria de tienda en desarrollo.">
-                              <div class="contentChatMessage border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
-                                <img src="/img/iconChatMessage.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
-                              </div>
-                            </button>  
-
-                            <% if (user) { %>
-                                  <!-- si existe un usuario -->
-                              <% if (user.username == Account[0].username) { %>
-                                  <!-- y es el propietario de la tienda podra ver esta opcion -->
-                                <div class="contentAdmin border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
-                                  <a href="/admin-store"><img src="/img/iconAdmin.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
-                                  </a> 
-                                </div>
-
-                              <% } %>
-
-                            <% } %>  
-
-                          </div> 
-
-
-                      </div>
-
-                      
-                                                
-                      <div class="Workspace" style="width: 96%;">
-
-                            <% if (newBox.length !==0) {%>
-                              <div class="containerCard d-flex flex-wrap justify-content-start p-3" style="width: 100%;">
-
-                                <% newBox.forEach( (ele, i)=>{ %>
-
-                                  <div class="card m-2 p-0 shadow cardPublished">
-
-                                    <div class="card-body d-flex flex-column p-0">
-
-                                        <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
-                                          <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
-
-                                            <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
-                                              data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
-
-                                              <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable & Delivery -->
-                                              <% if (user) { %>
-
-                                                  <% if (user.username === eleStore.username) { %>
-                                                        
-                                                    <% if (ele.department !== 'raffle' ){ %>
-
-                                                          <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
-                                                            <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
-                                                                                                  
-                                                            <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
-                                                              <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
-                                                              <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                              <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
-                                                              <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
-                                                                <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                              <%  } else { %>
-                                                                <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                              <% } %>  
-                                                            </ul>
-                                                          </div>
-
-                                                    <% }; %>
-                                                        
-                                                  <% }; %>
-                                
-                                              <% }; %>
-                                            
-                                              
-                                              <div class="carousel-inner" style="width: 100%; height: 220px;  z-index: 1;">
-                                                <div class="carousel-item active">
-                                                  <a href="/product/<%= ele.department %>/<%= ele._id %>"> 
-                                                    <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
-                                                  </a>
-                                                 </div>
-                                                <% for (let x=1; x < ele.images.length; x++) { %>
-                                                  <% const element=ele.images[x] %>
-                                                    <div class="carousel-item">
-                                                      <a href="/product/<%= ele.department %>/<%= ele._id %>"> <img src="<%= element.url %>" class="d-block w-100"
-                                                        style="  width: 100%; height: 100%; object-fit: cover;">
-                                                      </a>
-                                                    </div>
-
-                                                <% }; %>
-                                              </div>
-
-                                              <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon"></span>
-                                                <span class="visually-hidden">Previous</span>
-                                              </button>
-                                              <button class="carousel-control-next" type="button"
-                                                data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon"></span>
-                                                <span class="visually-hidden">Next</span>
-                                              </button>
-                                            </div>
-                                
-                                        </div>
-
-                                        <hr class="m-0">
-
-                                        <!-- esta parte va a cambiar cuando sea oferta -->
-                                        <% if (ele.department !== 'raffle') { %>
-                                          <% if (ele.offer === false) { %>
-                                          <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
-                                                  <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-                
-                                                      <div class="containerTitleFavorite d-flex justify-content-between">
-                                                        <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
-                                                          style="text-decoration: none;">
-                                                          <%= ele.title %>
-                                                        </a>                                            
-                                                      
-                                                        <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                                      </div>
-                  
-                                                      <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                                      
-                                                      <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
-                
-                                                        <div class="containerPrice d-flex justify-content-between px-2">
-                                                          <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
-                                                          </p>
-                                                          <div class="containerTresIconos d-flex">
-                                                            
-                                                            <div class="containerDelivery">
-                                                              <% if (ele.delivery === true) {%>
-                                                                <i class="bi bi-truck me-1"></i>
-                                                              <% }; %>  
-                                                            </div>     
-                                                            <div class="containerOnlyOneAvailable">
-                                                              <% if (ele.onlyOneAvailable === true) {%>
-                                                                <i class="bi bi-1-square-fill me-1"></i>
-                                                              <% }; %>  
-                                                            </div>
-                                                            <div class="containBestProduct">
-                                                              <% if (ele.bestProduct === true) {%>
-                                                                <i class="bi bi-award"></i>
-                                                              <% }; %>  
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                
-                                                      </div>
-                                                      
-                  
+                                              <% } else { %> <!-- no es el propietario y no tiene articulos es una tienda vacia -->
+                                                <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                                  <!-- <i class="bi bi-star" style="font-size: 1rem;"></i> -->
+                                                  <div class="contentStart d-flex justify-content-center align-items-center rounded-pill shadow-sm"  style="width: 30px; height: 30px; ">
+                                                    <i class="bi bi-star" style="font-size: 1rem;"></i>
                                                   </div>
+                                                    
+                                                </div> 
+                                              <% }; %>
+
+                                        <% }; %>  
+                                        
+                                  <% } else { %>
+                                    <!-- el usuaio entra sin haberse logeado  -->
+                                    <div class="containRate border d-flex flex-column align-items-center justify-content-center" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                      <i class="bi bi-star" style="font-size: 1rem;"></i> 
+                                    </div> 
+
+                                  <% }; %>  
+
+                                
+                                  </div>
+                                </div>
+                              </div>  
+                            </div>
+
+
+                            <div class="containerAdminMain d-flex flex-column justify-content-center align-items-center" style="margin-right: 13px; z-index : 1">
+
+                              <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Carrito de compras en desarrollo.">
+                                <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
+                                  <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                                </div>
+                              </button>  
+
+
+                              <button style="background-color: transparent; border: none;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="NetdeBliss en desarrollo.">
+                                <div class="contentChatMessage border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
+                                  <img src="/img/iconChatMessage.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                                </div>
+                              </button>  
+
+                              <% if (user) { %>
+                                    <!-- si existe un usuario -->
+                                <% if (user.username == Account[0].username) { %>
+                                    <!-- y es el propietario de la tienda podra ver esta opcion -->
+                                  <div class="contentAdmin border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
+                                    <a href="/admin-store"><img src="/img/iconAdmin.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                                    </a> 
+                                  </div>
+
+                                <% } %>
+
+                              <% } %>  
+
+                            </div> 
+
+
+                        </div>
+
+                        
+                                                  
+                        <div class="Workspace" style="width: 96%;">
+
+                              <% if (newBox.length !==0) {%>
+                                <div class="containerCard d-flex flex-wrap justify-content-start p-3" style="width: 100%;">
+
+                                  <% newBox.forEach( (ele, i)=>{ %>
+
+                                    <div class="card m-2 p-0 shadow cardPublished">
+
+                                      <div class="card-body d-flex flex-column p-0">
+
+                                          <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
+                                            <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
+
+                                              <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
+                                                data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
+
+                                                <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable & Delivery -->
+                                                <% if (user) { %>
+
+                                                    <% if (user.username === storeProfile.username) { %>
+                                                          
+                                                      <% if (ele.department !== 'raffle' ){ %>
+
+                                                            <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
+                                                              <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                    
+                                                              <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
+                                                                <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
+                                                                <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
+                                                                <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
+                                                                  <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                <%  } else { %>
+                                                                  <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                <% } %>  
+                                                              </ul>
+                                                            </div>
+
+                                                      <% }; %>
+                                                          
+                                                    <% }; %>
+                                  
+                                                <% }; %>
+                                              
+                                                
+                                                <div class="carousel-inner" style="width: 100%; height: 220px;  z-index: 1;">
+                                                  <div class="carousel-item active">
+                                                    <a href="/product/<%= ele.department %>/<%= ele._id %>"> 
+                                                      <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
+                                                    </a>
+                                                  </div>
+                                                  <% for (let x=1; x < ele.images.length; x++) { %>
+                                                    <% const element=ele.images[x] %>
+                                                      <div class="carousel-item">
+                                                        <a href="/product/<%= ele.department %>/<%= ele._id %>"> <img src="<%= element.url %>" class="d-block w-100"
+                                                          style="  width: 100%; height: 100%; object-fit: cover;">
+                                                        </a>
+                                                      </div>
+
+                                                  <% }; %>
+                                                </div>
+
+                                                <button class="carousel-control-prev" type="button"
+                                                  data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
+                                                  <span class="carousel-control-prev-icon"></span>
+                                                  <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button"
+                                                  data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
+                                                  <span class="carousel-control-next-icon"></span>
+                                                  <span class="visually-hidden">Next</span>
+                                                </button>
+                                              </div>
+                                  
                                           </div>
-                                          <% } else { %>
-                                          <div class="boxDetail" style="height: 120px; position: relative; background-color: #fcda57;">
-                                                      <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+
+                                          <hr class="m-0">
+
+                                          <!-- esta parte va a cambiar cuando sea oferta -->
+                                          <% if (ele.department !== 'raffle') { %>
+                                            <% if (ele.offer === false) { %>
+                                            <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
                   
                                                         <div class="containerTitleFavorite d-flex justify-content-between">
                                                           <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
@@ -835,22 +863,21 @@
                                                         
                                                           <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
                                                         </div>
-                
+                    
                                                         <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                                            
-                                                        <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                                                        
+                                                        <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
                   
                                                           <div class="containerPrice d-flex justify-content-between px-2">
-                                                            <p class="m-0 px-1 border border-dark rounded-pill">
-                                                              $ <%= ele.price %>
+                                                            <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
                                                             </p>
                                                             <div class="containerTresIconos d-flex">
-
+                                                              
                                                               <div class="containerDelivery">
                                                                 <% if (ele.delivery === true) {%>
                                                                   <i class="bi bi-truck me-1"></i>
                                                                 <% }; %>  
-                                                              </div>
+                                                              </div>     
                                                               <div class="containerOnlyOneAvailable">
                                                                 <% if (ele.onlyOneAvailable === true) {%>
                                                                   <i class="bi bi-1-square-fill me-1"></i>
@@ -866,234 +893,280 @@
                   
                                                         </div>
                                                         
-                                                      </div>
-                                          </div>  
-                                          <% }; %>
-                                        <% } else { %>
-                                          <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
-                                            <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-          
-                                                <div class="containerTitleFavorite d-flex justify-content-between">
-                                                  <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
-                                                    style="text-decoration: none;">
-                                                    <%= ele.title %>
-                                                  </a>                                            
-                                                
-                                                  <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                                </div>
-            
-                                                <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                                      
-                                                <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                    
+                                                    </div>
+                                            </div>
+                                            <% } else { %>
+                                            <div class="boxDetail" style="height: 120px; position: relative; background-color: #fcda57;">
+                                                        <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                    
+                                                          <div class="containerTitleFavorite d-flex justify-content-between">
+                                                            <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                                              style="text-decoration: none;">
+                                                              <%= ele.title %>
+                                                            </a>                                            
+                                                          
+                                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                          </div>
                   
-                                                  <div class="containerPrice d-flex justify-content-between px-2">
-                                                    <p class="m-0 px-1 border border-dark rounded-pill">
-                                                      $ <%= ele.price %>
-                                                    </p>
-                                                    <div class="containerTickets">
-                                                      <div class="containerIconCategory">
-                                                        <% if (ele.category == 'Gratis' ) {%>
-                                                        <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
-                                                          <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
-                                                        </span>
-                                                        <% } else { %>
-                                                        <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
-                                                          <i class="bi bi-ticket-fill" style="color: brown;"></i>
-                                                        </span>
-                                                        <% }; %>  
+                                                          <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                                              
+                                                          <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                    
+                                                            <div class="containerPrice d-flex justify-content-between px-2">
+                                                              <p class="m-0 px-1 border border-dark rounded-pill">
+                                                                $ <%= ele.price %>
+                                                              </p>
+                                                              <div class="containerTresIconos d-flex">
+
+                                                                <div class="containerDelivery">
+                                                                  <% if (ele.delivery === true) {%>
+                                                                    <i class="bi bi-truck me-1"></i>
+                                                                  <% }; %>  
+                                                                </div>
+                                                                <div class="containerOnlyOneAvailable">
+                                                                  <% if (ele.onlyOneAvailable === true) {%>
+                                                                    <i class="bi bi-1-square-fill me-1"></i>
+                                                                  <% }; %>  
+                                                                </div>
+                                                                <div class="containBestProduct">
+                                                                  <% if (ele.bestProduct === true) {%>
+                                                                    <i class="bi bi-award"></i>
+                                                                  <% }; %>  
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                    
+                                                          </div>
+                                                          
+                                                        </div>
+                                            </div>  
+                                            <% }; %>
+                                          <% } else { %>
+                                            <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                              <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+            
+                                                  <div class="containerTitleFavorite d-flex justify-content-between">
+                                                    <a href="/product/<%= ele.department %>/<%= ele._id %>" class="text-dark lh-sm"
+                                                      style="text-decoration: none;">
+                                                      <%= ele.title %>
+                                                    </a>                                            
+                                                  
+                                                    <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                  </div>
+              
+                                                  <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                                        
+                                                  <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                    
+                                                    <div class="containerPrice d-flex justify-content-between px-2">
+                                                      <p class="m-0 px-1 border border-dark rounded-pill">
+                                                        $ <%= ele.price %>
+                                                      </p>
+                                                      <div class="containerTickets">
+                                                        <div class="containerIconCategory">
+                                                          <% if (ele.category == 'Gratis' ) {%>
+                                                          <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                            <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
+                                                          </span>
+                                                          <% } else { %>
+                                                          <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                            <i class="bi bi-ticket-fill" style="color: brown;"></i>
+                                                          </span>
+                                                          <% }; %>  
+                                                        </div>
                                                       </div>
                                                     </div>
+            
                                                   </div>
-          
-                                                </div>
-                                              
+                                                
+                                              </div>
                                             </div>
-                                          </div>
-                                        <% }; %>  
+                                          <% }; %>  
+
+                                      </div>
 
                                     </div>
 
-                                  </div>
+                                  <% }); %>
 
-                                <% }); %>
+                                </div>
 
-                              </div>
-
-                              <div class="paginate d-flex justify-content-center align-items-center mt-2" style="position: relative; z-index : 120 !important">
-                                <nav aria-label="...">
-                                  <ul class="pagination  m-0">
-                                    <% if (paginate) { %>
-        
-                                      <% if ( paginate.pagina == 1 ) { %>
-                                      <li class="page-item disabled">
-                                        <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
-                                      </li>
-                                      <% } else { %>
-                                        <li class="page-item">
+                                <div class="paginate d-flex justify-content-center align-items-center mt-2" style="position: relative; z-index : 120 !important">
+                                  <nav aria-label="...">
+                                    <ul class="pagination  m-0">
+                                      <% if (paginate) { %>
+          
+                                        <% if ( paginate.pagina == 1 ) { %>
+                                        <li class="page-item disabled">
                                           <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                        </li>
+                                        <% } else { %>
+                                          <li class="page-item">
+                                            <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                          </li>  
+                                        <% }; %>  
+          
+                                        <% if ( paginate.pagina == 1 ) { %>
+                                        <li class="page-item prev disabled">
+                                          <a class="page-link" href="?paginate=prev"> Prev</a>
+                                        </li>
+                                        <% } else { %>
+                                        <li class="page-item prev">
+                                          <a class="page-link" href="?paginate=prev"> Prev </a>
                                         </li>  
-                                      <% }; %>  
-        
-                                      <% if ( paginate.pagina == 1 ) { %>
-                                      <li class="page-item prev disabled">
-                                        <a class="page-link" href="?paginate=prev"> Prev</a>
-                                      </li>
-                                      <% } else { %>
-                                      <li class="page-item prev">
-                                        <a class="page-link" href="?paginate=prev"> Prev </a>
-                                      </li>  
+                                        <% }; %>
+                                        <li class="page-item active">
+                                          <span class="page-link pagina"><%= paginate.pagina %></span>
+                                        </li>
+                                        <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                                        <li class="page-item next disabled">
+                                          <a class="page-link" href="?paginate=next"> Next</i></a>
+                                        </li>
+                                        <% } else { %>
+                                        <li class="page-item next">
+                                          <a class="page-link" href="?paginate=next"> Next</i> </a>
+                                        </li>  
+                                        <% }; %>
+          
+                                        <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                                        <li class="page-item disabled">
+                                          <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                                        </li>
+                                        <% } else { %>
+                                        <li class="page-item">
+                                          <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                                        </li>  
+                                        <% }; %>  
+          
                                       <% }; %>
-                                      <li class="page-item active">
-                                        <span class="page-link pagina"><%= paginate.pagina %></span>
-                                      </li>
-                                      <% if ( paginate.pagina == paginate.totalPagina ) { %>
-                                      <li class="page-item next disabled">
-                                        <a class="page-link" href="?paginate=next"> Next</i></a>
-                                      </li>
-                                      <% } else { %>
-                                      <li class="page-item next">
-                                        <a class="page-link" href="?paginate=next"> Next</i> </a>
-                                      </li>  
-                                      <% }; %>
-        
-                                      <% if ( paginate.pagina == paginate.totalPagina ) { %>
-                                      <li class="page-item disabled">
-                                        <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
-                                      </li>
-                                      <% } else { %>
-                                      <li class="page-item">
-                                        <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
-                                      </li>  
-                                      <% }; %>  
-        
-                                    <% }; %>
-                                  </ul>
-                                </nav>
-                              </div>
-                            <% } else { %>
+                                    </ul>
+                                  </nav>
+                                </div>
+                              <% } else { %>
 
-                              <div class="ContainerMessage rounded-1 p-2" style="background-color: #dbdfe4; width: 90%; margin-top: 80px; margin-bottom: 80px;">
-                                    <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
-                                        <div class="containerMessage m-2">
-                                            <span style="font-size: 18px;">¡Esta tienda no tiene productos ni servicios que mostrar!<i class="bi bi-emoji-frown ms-3"></i></span>
-                                        </div>
-                                    </div>
-                              </div>
+                                <div class="ContainerMessage d-flex justify-content-center p-2" style="background-color: rgba(219, 223, 228, 0); width: 100%; margin-top: 80px; margin-bottom: 80px;">
+                              
+                                        <div class="containerImg border border-warning rounded-pill p-3" style="background-color:<%= storeProfile.bGColorTopbar%>; width: 140px; height: 140px;">
+                                          <img src="/img/Lupa_sinResultados.png" alt="lupa" class="lupaSinRespuesta"  style="width: 140px; height: 140px;">
+                                        </div>  
+                              
+                                </div>
 
-                            <% }; %>
-                            
-                      </div>
+                              <% }; %>
+                              
+                        </div>
 
-                  </div>
-                </div> 
-                
-                <div class="containerViewRatesStore closed border" style="background-color: white;">
-                  <div class="containert">
-                    <div class="modal-header" style="background-color: white;">
-                      <h6 class="modal-title">Ver Calificaciones y Opiniones</h6>
-                      <i class="bi bi-x-lg cursor-pointer" id= "btnXCloseViewRate"></i>
                     </div>
-                    
-                    <div class="row m-0 bodyAnalisi d-flex justify-content-between">
-
-                      <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6 p-0 containerPoint d-flex flex-column justify-content-center align-items-center px-2">
-                          
-                          <p class="pountrateView p-0 mb-1" style="font-size: 40px;"> <!-- 4.8 --> </p>
-                          <div class="boxstarView"> <!-- ***** --> </div>
-                          <p class="countrateView"> <!-- 56 --> </p>
-
-                      </div>
-
-                      <div class="col-xl-9 col-lg-9 col-md-6 col-sm-6 p-0 containerRatePercentBar px-3">
-                                                                 
-                            <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                              <span class="p-0 ms-2" style="width: 10%;"> <small class="m-0"> 5 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                              <div class="progress py-1 mt-1" id="barStar5" style="width: 90%;">
-                                <!-- dinamico -->
-                              </div>
-
-                            </div>
-
-                            <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 4 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                              <div class="progress py-1 mt-1" id="barStar4" style="width: 90%;">
-                                <!-- dinamico -->
-                              </div>
-
-                            </div>
-
-                            <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 3 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                              <div class="progress py-1 mt-1" id="barStar3" style="width: 90%;">
-                                <!-- dinamico -->
-                              </div>
-
-                            </div>
-
-                            <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 2 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                              <div class="progress py-1 mt-1" id="barStar2" style="width: 90%;">
-                                <!-- dinamico -->
-                              </div>
-
-                            </div>
-
-                            <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                              <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 1 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                              <div class="progress py-1 mt-1" id="barStar1" style="width: 90%;">
-                                <!-- dinamico -->
-                              </div>
-
-                            </div>
-                          
+                  </div> 
+                  
+                  <div class="containerViewRatesStore closed border" style="background-color: white;">
+                    <div class="containert">
+                      <div class="modal-header" style="background-color: white;">
+                        <h6 class="modal-title">Ver Calificaciones y Opiniones</h6>
+                        <i class="bi bi-x-lg cursor-pointer" id= "btnXCloseViewRate"></i>
                       </div>
                       
-                    </div>
-                    <div class="row m-0 my-3">
-                      <div class="col-12 d-flex py-2" style="overflow-x: auto;">
-                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRateAll" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">Todos <i class="bi bi-star ms-1"></i> </span> </button>
-                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate5" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">5 <i class="bi bi-star ms-1"></i> </span> </button>
-                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate4" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">4 <i class="bi bi-star ms-1"></i> </span> </button>
-                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate3" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">3 <i class="bi bi-star ms-1"></i> </span> </button>
-                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate2" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">2 <i class="bi bi-star ms-1"></i> </span> </button>
-                          <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate1" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">1 <i class="bi bi-star ms-1"></i> </span> </button>
+                      <div class="row m-0 bodyAnalisi d-flex justify-content-between">
+
+                        <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6 p-0 containerPoint d-flex flex-column justify-content-center align-items-center px-2">
+                            
+                            <p class="pountrateView p-0 mb-1" style="font-size: 40px;"> <!-- 4.8 --> </p>
+                            <div class="boxstarView"> <!-- ***** --> </div>
+                            <p class="countrateView"> <!-- 56 --> </p>
+
+                        </div>
+
+                        <div class="col-xl-9 col-lg-9 col-md-6 col-sm-6 p-0 containerRatePercentBar px-3">
+                                                                  
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%;"> <small class="m-0"> 5 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar5" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 4 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar4" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 3 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar3" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 2 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar2" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 1 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar1" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+                            
+                        </div>
+                        
+                      </div>
+                      <div class="row m-0 my-3">
+                        <div class="col-12 d-flex py-2" style="overflow-x: auto;">
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRateAll" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">Todos <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate5" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">5 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate4" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">4 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate3" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">3 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate2" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">2 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate1" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">1 <i class="bi bi-star ms-1"></i> </span> </button>
+                        </div>
+                      </div>
+
+                      <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
+                        <!-- dinamico -->
+                      </div>
+                      
+
+                      <div class="bodyFooter d-flex justify-content-end my-2">
+                          <button type="button" class="btn btn-success btnCloseViewRate m-2">Cerrar Calificaciones</button>
                       </div>
                     </div>
-
-                    <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
-                      <!-- dinamico -->
-                    </div>
-                    
-
-                    <div class="bodyFooter d-flex justify-content-end my-2">
-                        <button type="button" class="btn btn-success btnCloseViewRate m-2">Cerrar Calificaciones</button>
-                    </div>
                   </div>
-                </div>
-                
-                <!-- cierre de storeProfile -->   
+                  
+                  <!-- cierre de storeProfile -->   
                   
               </div>
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                <div class="contetAntFooter" style="height: 50px; background-color:<%= eleStore.bGColorWorkspace %>;"></div>
-                <footer class="py-4" style="height: auto; background-color:<%= eleStore.bGColorTopbar%>;color:<%= eleStore.bGColorText %>;">
+                <div class="contetAntFooter" style="height: 50px; background-color:<%= storeProfile.bGColorWorkspace %>;"></div>
+                <footer class="py-4" style="height: auto; background-color:<%= storeProfile.bGColorTopbar%>;color:<%= storeProfile.bGColorText %>;">
                   
                   <div class="row mx-0 contentClient d-flex justify-content-around align-items-center">
                     <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImg d-flex justify-content-center align-items-center my-2">
                         <div class="containerImg mx-2">
-                          <% if (eleStore.avatarPerfil[0].url.length === 0 ) {%>
-                            <td> <img src="https://www.gravatar.com/avatar/<%= eleStore.mailhash %>?d=identicon" class="rounded-3" style="width: 50px;"></td>   
+                          <% if (storeProfile.avatarPerfil[0].url.length === 0 ) {%>
+                            <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" class="rounded-3" style="width: 50px;"></td>   
                             <% } else {%>
-                            <td><img src="<%= eleStore.avatarPerfil[0].url %>" alt="" class="rounded-3" style="width: 50px;"></td>
+                            <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-3" style="width: 50px;"></td>
                           <% }; %>
                         </div>
                         <div class="containerDetail my-2">
-                          <p class="mb-0" style="color:<%= eleStore.bGColorText %>"> <%= eleStore.username%></p>
+                          <p class="mb-0" style="color:<%= storeProfile.bGColorText %>"> <%= storeProfile.username%></p>
                           <p class="mb-0"> <span class="from"></span> </p>
                         </div>
 
@@ -1107,15 +1180,15 @@
                     </div> 
                     <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImgDetails d-flex justify-content-around align-items-center">
                         <div class="containerYears my-2 d-flex flex-column align-items-center">
-                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><small><%= eleStore.company %></small></p>
-                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><small><%= eleStore.companyRif %></small></p>
-                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><span class="yearRegister"></span> - <span class="yearCurrent"></span></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><small><%= storeProfile.company %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><small><%= storeProfile.companyRif %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><span class="yearRegister"></span> - <span class="yearCurrent"></span></p>
                         </div>
                     </div>    
                     <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImgDetails d-flex justify-content-around align-items-center">
                         <div class="containerYears my-2 rounded-3 d-flex flex-column align-items-center">
-                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><i class="bi bi-geo-alt me-1"></i> <small><%= eleStore.states %></small></p>
-                          <p class="m-0" style="color:<%= eleStore.bGColorText %>"><i class="bi bi-geo me-1"></i> <small><%= eleStore.cities %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-geo-alt me-1"></i> <small><%= storeProfile.states %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-geo me-1"></i> <small><%= storeProfile.cities %></small></p>
                         </div>
                     </div>   
                   </div>
@@ -1123,11 +1196,11 @@
                     <div class="col-sm-12 col-md-12 col-lg-12 px-0 contentPlatform border-start border-dark d-flex justify-content-center align-items-center">
                       <div class="containerBlisnetRedes my-2 rounded-3 d-flex flex-column align-items-center">
   
-                        <p class="m-0"  style="color:<%= eleStore.bGColorText %>;"  id="logoBlissenet_com" </p>
+                        <p class="m-0"  style="color:<%= storeProfile.bGColorText %>;"  id="logoBlissenet_com" </p>
                         <div class="contentRedes d-flex">
-                          <span class="itemOption"><a href="https://www.instagram.com/blissenetcom/"  style="color :<%= eleStore.bGColorText %>"><i class="bi bi-instagram  me-3"></i></a></span>
-                          <span class="itemOption"><a href="https://www.facebook.com/search/top?q=blissenetcom"  style="color :<%= eleStore.bGColorText %>"><i class="bi bi-facebook me-3"></i></a></span>
-                          <span class="itemOption"><a href="https://x.com/blissenetcom/"  style="color :<%= eleStore.bGColorText %>"><i class="bi bi-twitter-x  me-3"></i></a></span>
+                          <span class="itemOption"><a href="https://www.instagram.com/blissenetcom/"  style="color :<%= storeProfile.bGColorText %>"><i class="bi bi-instagram  me-3"></i></a></span>
+                          <span class="itemOption"><a href="https://www.facebook.com/search/top?q=blissenetcom"  style="color :<%= storeProfile.bGColorText %>"><i class="bi bi-facebook me-3"></i></a></span>
+                          <span class="itemOption"><a href="https://x.com/blissenetcom/"  style="color :<%= storeProfile.bGColorText %>"><i class="bi bi-twitter-x  me-3"></i></a></span>
                         </div>
                        
                       </div>
@@ -1138,9 +1211,9 @@
 
                 </footer>
               </div>
-               <% }); %>
+              
           </div>
-        <% }; %>
+      <% }; %>
 
   </main>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1153,6 +1226,75 @@
       return new bootstrap.Popover(tooltipTriggerEl)
     })
   </script>
+
+
+
+<script>
+  const formSegment = document.getElementById('formSegment');
+  const floatingSelect = document.getElementById('floatingSelect');
+  const store_indexed = document.getElementById('store_indexed');
+  const store_username = document.getElementById('store_username');
+
+  floatingSelect.addEventListener('change', ()=>{
+    
+    const segment = floatingSelect.value;
+    const storeIndexed = store_indexed.value;
+    const storeUsername = store_username.value;
+    console.log("segment -->", segment);
+    console.log("storeIndexed -->", storeIndexed);
+    //aqui se forma el url donde se va a mandar
+    formSegment.action=`/account/${storeUsername}/${segment}`;
+    console.log("formSegment -->", formSegment);
+    formSegment.submit();
+      
+  })
+
+</script>
+
+<script>
+  const formSearch = document.getElementById('formSearch');
+  const storeSearch = document.getElementById('storeSearch');
+  const segmentSearch = document.getElementById('segmentSearch');
+  const elementSearch = document.getElementById('elementSearch');
+  const submitSearch = document.getElementById('submitSearch');
+  let element; //se usa abajo puede tener dos valores vacio o con alguna informacion
+  //si es vacio ira con un string "null", esto es porque en el url debe viajar algo siempre sino
+  //no conocera la direccion donde va.
+
+  formSearch.addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita que el formulario se envíe automáticamente
+    // Aquí puedes ejecutar tu lógica o enviar el formulario manualmente
+    console.log('Formulario enviado manualmente');
+    // Si deseas enviar el formulario, puedes hacerlo aquí
+  });
+
+  submitSearch.addEventListener('click', function() {
+    // Aquí puedes decidir cuándo enviar el formulario
+    console.log("Datos obtenidos del buscador para enviar al backend");
+    
+    const store = storeSearch.value;
+    const segment = segmentSearch.value;
+    element = elementSearch.value;
+
+    if (element === "" ){
+      element = "null";
+    } 
+    
+    console.log("store --->", store);
+    console.log("segment --->", segment);
+    console.log("element --->", element);
+    
+    formSearch
+     //aqui se forma el url donde se va a mandar
+     //action="/account/search/store/Segment/search"
+    formSearch.action=`/account/search/${store}/${segment}/${element}`;
+    console.log("formSegment -->", formSegment);
+    formSearch.submit();
+  });
+
+  
+  
+</script>
 
 <script>
   const nail = document.querySelector('.nail');

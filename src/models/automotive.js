@@ -6,6 +6,7 @@ const SchemaAutomotive = new Schema({
     department : { type: String, default: 'automotive' },
     category : { type: String},
     sub_category : { type: String },
+    segment : { type: String }, // normalmente esto seria "All"
     model: { type: String },
     construcDate: { type: Number },
     kilometros: { type: Number },

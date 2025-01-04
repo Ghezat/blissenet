@@ -6,6 +6,7 @@ const SchemaRealstate = new Schema({
     department : { type: String, default: 'realstate' },
     category : { type: String},
     sub_category : { type: String },
+    segment : { type: String }, // normalmente esto seria "All"
     construcDate: { type: Number },
     mtrs2: { type: Number },
     tecnicalDescription : { type: String},

@@ -6,6 +6,7 @@ const SchemaService = new Schema({
     department : { type: String, default: 'service' },
     category : { type: String },
     sub_category : { type: String },
+    segment : { type: String },
     tecnicalDescription : { type: String },
     generalMessage: { type: String },
     video : { type : Object, default: [] }, //aqui se guardaria un archivo de video con la informacion del lugar donde esta para ser leido o eliminado.

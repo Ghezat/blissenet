@@ -3,6 +3,7 @@
   let estadoColorHead;
   const controlHead = document.querySelector('.controlHead');
   const navHead = document.getElementById('navHead');
+  const afterNavHead = document.getElementById('afterNavHead');
   const logoBlissenet = document.getElementById('logoBlissenet');
   const logoBlissenetCom = document.getElementById('logoBlissenet_com');
   const footerTheme = document.querySelector('.footerTheme');
@@ -22,6 +23,8 @@
         localStorage.setItem("estadoHead", "light"); //pode fecto se configura como light desde el principio
         navHead.style.backgroundColor = "#f9f9f9"; //color muy claro en el navegador
         navHead.classList.add('navbar-light');
+        afterNavHead.style.background = "#f9f9f9";
+        afterNavHead.classList.add('navbar-light');
         logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
         logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
         controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'
@@ -44,6 +47,8 @@
     } else {
         navHead.style.backgroundColor = "rgb(27, 27, 27)";
         navHead.classList.add('navbar-dark');
+        afterNavHead.style.backgroundColor = "rgb(27, 27, 27)";
+        afterNavHead.classList.add('navbar-dark');
         logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
         logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
         controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
@@ -79,6 +84,8 @@ controlHead.addEventListener('click', ()=>{
       navHead.style.backgroundColor = "rgb(27, 27, 27)";
       navHead.classList.add('navbar-dark');
       navHead.classList.remove('navbar-light');
+      afterNavHead.style.backgroundColor = "rgb(27, 27, 27)";
+      afterNavHead.classList.replace('navbar-light', 'navbar-dark');
       logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span> `;
       logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
       controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
@@ -104,6 +111,8 @@ controlHead.addEventListener('click', ()=>{
       navHead.style.backgroundColor = "#f9f9f9";
       navHead.classList.add('navbar-light');
       navHead.classList.remove('navbar-dark');
+      afterNavHead.style.backgroundColor = "#f9f9f9";
+      afterNavHead.classList.replace('navbar-dark','navbar-light');
       logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span>`;
       logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
       controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'

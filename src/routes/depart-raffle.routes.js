@@ -80,7 +80,8 @@ routes.get('/department/create/raffle', async(req,res)=>{
     delete req.session.numTicketFall;
 
     if (user) {
-        searchProfile = await modelProfile.find({indexed : user._id});
+        //searchProfile = await modelProfile.find({indexed : user._id}); viejo
+        searchProfile = await modelProfile.findOne({indexed : user._id});
         Raffle = await modelRaffle.find({ user_id : user._id });
 
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
@@ -177,7 +178,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
             console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
             console.log("Aqui el estado --->",searchProfile[0].states)
             const state = searchProfile[0].states 
-            const { title, category, tecnicalDescription, price, numTickets, fundRaising, raffleClosingPolicy, numberOfPrizes, Prizes1, Prizes2, Prizes3, Prizes4, Prizes5, dateEnd } = req.body;
+            const { title, category, tecnicalDescription, price, numTickets, fundRaising, raffleClosingPolicy, numberOfPrizes, Prizes1, Prizes2, Prizes3, Prizes4, Prizes5, dateEnd, segment } = req.body;
             const Prizes = [Prizes1, Prizes2, Prizes3, Prizes4, Prizes5];
 
 
@@ -320,7 +321,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                         
                         async function createAD(){
 
-                            const Raffle =  new modelRaffle({ title, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd }); 
+                            const Raffle =  new modelRaffle({ title, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
                             const RaffleSave = await Raffle.save();
                             //console.log(RaffleSave);                    
 

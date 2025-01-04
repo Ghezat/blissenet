@@ -6,6 +6,7 @@ const SchemaNautico = new Schema({
     department : { type: String, default: 'nautical' },
     category : { type: String},
     sub_category : { type: String },
+    segment : { type: String }, // normalmente esto seria "All"
     construcDate: { type: Number },
     length: { type: Number }, // longitud de eslora
     tecnicalDescription : { type: String},

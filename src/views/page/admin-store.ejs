@@ -78,8 +78,8 @@
 
                         <!-- aqui estaran todos los modales informativos -->
                     
-                        
-                        <!-- Modal Segmentar Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSegment" -->
+                    
+                         <!-- Modal Segmentar Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSegment" -->
                         <div class="modal fade" id="staticSegment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH1" aria-hidden="true">
                             <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                 <div class="modal-content">
@@ -91,7 +91,9 @@
                                     <div class="modal-body">
                                         <p><span class="fw-bold text-primary"> ¡Segmenta tus publicaciones! </span> "Organiza tus anuncios en categorías personalizadas para facilitar la navegación en tu tienda virtual. Mejora la experiencia de tus clientes y haz que encuentren lo que buscan de manera más rápida y sencilla." </p>
                                         <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>0 Anuncio</b>  </span> </p>
-                                        <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                        <div class="d-flex justify-content-center">
+                                            <img src="/img/icon_Segment.png" alt="" style="width: 70px; height: 70px;">
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
@@ -99,7 +101,7 @@
 
                                 </div>
                             </div>
-                        </div>                               
+                        </div>
                             
                         <!-- Modal Carrito de Compra --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarBuy" -->
                         <div class="modal fade" id="staticCarBuy" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH3" aria-hidden="true">
@@ -195,7 +197,7 @@
                             </div>
                         </div>
 
-                        <!-- Modal Gerencia Estado --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticAnalisi" -->
+                        <!-- Modal Gerencia Analisis --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticAnalisi" -->
                         <div class="modal fade" id="staticAnalisi" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
                             <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                 <div class="modal-content">
@@ -227,14 +229,44 @@
                             <div class="content_segment">
 
                                 <div class="card">
-                                    
-                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center ">
+                                    <div class="card-body p-5 d-flex flex-column justify-content-center align-items-center text-secondary">
 
-                                        <h1 class="text-secondary">Estamos trabajando</h1>
-                                        <h4 class="text-secondary" style="text-align: center;">Próximamente estará disponible.</h4>
-                                        <h5 class="text-secondary" style="text-align: center;">Segment</h5>
-                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSegment"> <i class="bi bi-info-circle mx-1"></i> </div>
-                                                                            
+                                        <div class="contentSegmenMain" style="width: 100%;">
+                                            <div class="row m-0">
+                                                <div class="contentMain d-flex justify-content-center">
+                                                   <a href="/myaccount/segment" class="text-decoration-none" style="color: inherit;"><h3>Segmentación</h3></a> 
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12 p-0 my-1">
+
+                                                    <div class="card" style="border: none;">
+                                                        <div class="card-body">
+
+                                                            <div class="contentTitle d-flex justify-content-center border border-secondary rounded-2 shadow-sm py-3">
+                                                                
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div class="contentLeft d-flex align-items-center flex-column">
+                                                                        <h5 class="text-secondary">Segmentar</h5>
+                                                                        <div class="cursor-pointer info-icon" style="width:max-content;" data-bs-toggle="modal" data-bs-target="#staticSegment"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                                    </div>
+                                                                    <div class="contentLeft">
+                                                                        <img src="/img/icon_Segment.png" alt="" style="width: 120px; height: 120px;">
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="for-group d-flex justify-content-center mt-3">
+                                                    <a href="/myaccount/segment" class="form-control btn btn-primary rounded-pill"> Entrar</a>
+                                                    
+                                                </div>
+                                            </div>
+                                        
+                                        </div>                        
+
                                     </div>
                                 </div>
 
@@ -403,7 +435,6 @@
 
                                     </div>
                                 </div>
-
                                 
                             </div>
 

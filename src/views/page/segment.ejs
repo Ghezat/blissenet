@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+        <title>Blissenet Segment</title>
+
+</head>
+<style>
+
+
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+ 
+}
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    <main style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+        <% if (user) { %>
+
+            <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                <span class="ms-4 p-0" style="font-weight: 400;"> Segmentación </span>
+            </div>   
+            
+            <div class="container-fluid p-0">
+                            
+                <div class="row m-0 ">
+
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-12 p-0" style="background-color: #e9ecef;">
+                                        
+                        <% if (searchProfile) {  %>
+                            <div class="card" style="border-radius: 0; border: none;">
+                                <div class="card-body">
+                                    <div class="accordion" id="accordionExample">
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="headingOne">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                              Crear Segmentación
+                                            </button>
+                                          </h2>
+                                          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                              <strong>Crea Segmentos para ordenar tu tienda en departamentos, </strong> 
+                                              crea espacios para organizar de forma efectiva y sea una experiencia más grata para tus clientes.
+                                               <span class="rounded-pill alert-primary py-0 px-2">Límite máximo de Segmentos 14.</span>
+                                              
+                                                <div class="input-group my-2">
+                                                    <input type="text" class="form-control" id="hashtags" placeholder="Segmento" aria-label="Username" aria-describedby="basic-addon1" style="text-transform: capitalize">
+                                                    <button class="btn btn-outline-secondary" type="button" id="btnSegment">Añadir </button>
+                                                </div>
+                                                <div class="input-group my-2 border rounded-2" id="boxTagsSegment">
+                                                    
+                                                    <!-- este elemento se creara de forma dinamica por medio de un script -->
+                                                    <!-- <span class="alert-secondary m-1 py-1 ps-1 pe-4 rounded-3" style="position: relative;">monopatin <i class="bi bi-x" style="position: absolute; right: 5px; top: 6px;"></i></span> -->
+                                                
+                                                </div>
+                                            
+                                                
+                                        <!--     
+                                                <div class="form-group my-1">
+                                                
+                                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                            <strong><i class="bi bi-check-circle-fill me-2"></i> </strong> 
+                                                            <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                                                
+                                                </div> 
+                                                <div class="form-group my-1">
+                                                    
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> </strong> 
+                                                        <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                            
+                                                </div> -->
+                                                
+                                                <div class="contentAlert">
+                                                    <!-- aqui va un alerta cuando se supere la cantidad de palabras permitidas -->
+                                                </div> 
+
+                                                <div class="form-group my-3">
+                                                
+                                                    <button class="form-control btn btn-primary" id="btnSubmitHashtag" disabled>Crear Segmento</button>
+                                            
+                                                </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="headingTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                              Editar Segmentación
+                                            </button>
+                                          </h2>
+                                          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <strong>Edita Segmentos de manera fácil.</strong> Manten tu tienda segmentada con las categorias precisas para tener todo ordenado.
+                                                <div class="my-1 form-group my-2">
+                                                    <select name="" id="selectEditTagsSegment" class="form-control">
+                                                         <!-- option dinamicos -->
+                                                    </select>
+                                                 </div>
+ 
+                                                 <div class="input-group form-group my-2">
+                                                     <input type="text" class="form-control" id="inputEditTagSegment"  disabled>
+                                                     <span class="input-group-text"> <i class="bi bi-eraser-fill"></i> </span>
+                                                 </div>
+
+                                                 <div class="input-group form-group my-2">
+                                                    <input type="text" class="form-control text-capitalize" id="inputEditNewTagSegment">
+                                                    <span class="input-group-text"> <i class="bi bi-pencil"></i> </span>
+                                                </div>
+
+                                                <div class="contentAlertEdit" id="contentAlertEdit">
+                                                   
+                                                    <!-- <div class="alert alert-danger"> Ha habido un error <i class="bi bi-trash3 ms-2"></i></div> -->
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                    <button class="btn btn-success form-control" id="btnEditSegment" disabled> Editar Segmento</button>
+                                                </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="headingThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                Eliminar Segmentación
+                                            </button>
+                                          </h2>
+                                          <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <strong>Elimina Segmentos que ya no estes usando.</strong> 
+                                                Si existe algún anuncio en esta categoría se pasará a la segmentación por defecto <strong>"All".</strong>
+                                            
+                                                <div class="my-1 form-group my-2">
+                                                   <select name="" id="selectDelTagsSegment" class="form-control">
+                                                        <!-- option dinamicos -->
+                                                   </select>
+                                                </div>
+
+                                                <div class="input-group form-group my-2">
+                                                    <input type="text" class="form-control" id="inputDelTagSegment"  disabled>
+                                                    <span class="input-group-text"> <i class="bi bi-trash3"></i> </span>
+                                                </div>
+
+                                                <div class="contentAlertDelete" id="contentAlertDelete">
+                                                   
+                                                    <!-- <div class="alert alert-danger"> Ha habido un error <i class="bi bi-trash3 ms-2"></i></div> -->
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                    <button class="btn btn-danger form-control" id="btnDelSegment" disabled> Eliminar Segmento</button>
+                                                </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            
+                        <% }; %>
+    
+                        
+
+                        <!-- seccion nombre de tienda -->
+                        
+                        <% const username = user.username %>
+                        <% const indexed = user._id %> <!-- esto es igual al id user -->
+                            
+                    </div>
+
+                        <!-- aqui estaran todos los modales informativos -->
+                    
+                    
+                         <!-- Modal Segmentar Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSegment" -->
+                        <div class="modal fade" id="staticSegment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH1" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH1">Segmentar tu Tienda</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary"> ¡Segmenta tus publicaciones! </span> "Organiza tus anuncios en categorías personalizadas para facilitar la navegación en tu tienda virtual. Mejora la experiencia de tus clientes y haz que encuentren lo que buscan de manera más rápida y sencilla." </p>
+                                        <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>0 Anuncio</b>  </span> </p>
+                                        <div class="d-flex justify-content-center">
+                                            <img src="/img/icon_Segment.png" alt="" style="width: 70px; height: 70px;">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                            
+
+                     
+                                
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-12 p-0" style="background-color: #e9ecef;">
+                            
+                    
+                        <% if (searchProfile) {  %> <!-- cuenta con perfil -->
+                            
+                            <div class="content_segments">
+
+                                <% const storeUser = searchProfile.username %> <!-- aqui el store en cuention username-->
+                                <% const storeUserId = searchProfile._id %> <!-- aqui el store en cuention id -->
+                                <% const storeUserIndexed = searchProfile.indexed %> <!-- aqui el store en cuention indexed que es el mismo id del user -->
+                                
+                                <input type="hidden" value="<%= storeUser %>" id="storeUser">
+                                <input type="hidden" value="<%= storeUserId %>" id="storeUserId">
+                                <input type="hidden" value="<%= storeUserIndexed %>" id="storeUserIndexed">
+                                <% const segment = searchProfile.segment %> <!-- aqui el array segment -->
+                                <div class="row m-0 d-flex justify-content-center " style="background-color: white;">
+                                    <div class="col-12">                                        
+
+                                        <div class="form-group my-3">
+                                                                                                 
+                                            <div class="alert p-0">
+                                                <spam class="form-control alert-success m-0" style="border-left: 3px solid green;"> 
+                                                    <strong>Cambiar anuncios de un segmento a otros segmentos,</strong> 
+                                                    para cambiar uno o un grupo de anuncios a otra clase de segmento. Seleccione el primer selector para buscar todos los anuncios y luego utilice el segundo selector para cambiar al nuevo segmento. </spam>
+                                            </div>                                       
+                                          
+                                        </div>
+                                                                                
+
+                                            <div class="row m-0">
+                                                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 p-0">
+                                                    <div class="input-group d-flex">
+                                                        <span class="input-group-text"><i class="bi bi-1-square"></i></span>
+                                                        <select name="" id="seletSegment1" class="form-control">
+                                                                <option value="">Seleccionar opción</option>
+                                                            <% segment.forEach((ele)=>{ %>
+                                                                <option value="<%= ele %>"><%= ele %></option>
+                                                            <% }); %>
+        
+                                                        </select>
+                                                        
+                                                    </div>
+                                                </div> 
+                                                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 p-0">
+                                                    
+                                                    <div class="input-group d-flex" id="contentSelect2">
+                                                        <span class="input-group-text"><i class="bi bi-2-square"></i></span>
+                                                        <select name="" id="seletSegment2" class="form-control">
+                                                                <option value="">Seleccionar opción</option>
+                                                            <% segment.forEach((ele)=>{ %>
+                                                                <option value="<%= ele %>"><%= ele %></option>
+                                                            <% }); %>
+        
+                                                        </select>
+                                                        
+                                                    </div>
+
+                                                </div> 
+                                            </div>    
+                                        
+                                        
+                                        <div class="form-group d-flex justify-content-between my-2">
+                                            <input type="search" class="form-control" id="searchSegment" style="width: 68%;" placeholder="Filtre por título">
+                                            <button class="btn btn-success form-control" id="btnSearch" style="width: 30%;" disabled> <span> Buscar <i class="bi bi-search ms-2"></i> </span> </button>
+                                        </div>
+                                        
+                                        <div class="contentTable" style="overflow: auto;">
+                                            <table class="table responsive no-select">
+                                                <thead>
+                                                    <tr>
+                                                        <th> Título </th><th> Departamento </th><th> Categoría </th><th> Precio </th><th> Segmento </th> <th class="d-flex justify-content-start" style="border-bottom: 1px solid black;">  <label for="todoCheckbox">Todo</label> <input type="checkbox" id="todoCheckbox" class="ms-2"> </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableSelected">
+                                                    <!-- generacion dinamica -->
+                                                </tbody>
+    
+                                            </table>
+                                            <div class="contentChangeAlert">
+                                                
+                                            </div>
+                                            <div class="form-group my-3">
+                                                <button class="btn btn-success form-control" id="btnChangeAccept" disabled> Aceptar Cambios </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 
+                      
+                            </div>
+
+
+                            <div class="card mt-1">
+                                <div class="card-body d-flex justify-content-center no-select">
+                                    <span id="logoBlissenet_com"> </span>
+                                </div>
+                            </div>
+                            
+                        <% } else { %> <!-- cuenta sin perfil -->
+
+                        <% } %>                                                        
+
+                                        
+                    </div>
+
+                </div>    
+
+            </div>
+
+         <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+         <% }; %>
+
+    </main>
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+       
+
+</body>
+
+        <!-- script Segmentacion -->
+        <script>
+
+            const storeUserId = document.getElementById('storeUserId'); //este es el id del profile del user, no confundir con el id del user. cuidado
+
+            const hashtags = document.getElementById('hashtags'); //este es el input donde introduzco el hashtag
+            const btnSegment = document.getElementById('btnSegment'); //este es el boton que crea el hashtag y lo mete dentro del array
+            const boxTagsSegment = document.getElementById('boxTagsSegment'); //este es el contenedor donde se almacenan todos las etiquetas de segmentos "el array";
+            const btnSubmitHashtag = document.getElementById('btnSubmitHashtag'); //este es el boton de envio de etiquetas a la ruta para su actualizacion en DB
+            const contentAlert = document.querySelector('.contentAlert');
+
+
+            //--constantes edicion de segmentos
+            const selectEditTagsSegment = document.getElementById('selectEditTagsSegment');
+            const inputEditTagSegment = document.getElementById('inputEditTagSegment');
+            const inputEditNewTagSegment = document.getElementById('inputEditNewTagSegment');
+            const alertsEdit = document.getElementById('contentAlertEdit');
+            const btnEditSegment = document.getElementById('btnEditSegment');
+
+
+            //---constantes de eliminacion de segmentos 
+            const selectDelTagsSegment = document.getElementById('selectDelTagsSegment');
+            const inputDelTagSegment = document.getElementById('inputDelTagSegment');
+            const btnDelSegment = document.getElementById('btnDelSegment');
+            const alertsDelete = document.getElementById('contentAlertDelete');
+            
+            let segments;
+            let boxSegment = [];
+            let realBoxSegment  = [];
+                
+            
+            //extraemos todos los segmentos
+            fetch("/myaccount/segment-extraer", {
+                method: "GET",
+                headers: { "Content-Type" : "applications/json"}
+            })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                console.log("objeto biene de /myaccount/segment-extraer")
+                console.log("jsonx -->", jsonx);
+                segments = jsonx;
+
+                segments.forEach((ele)=>{
+                    boxTagsSegment.innerHTML += `
+                                                <span class="alert-success m-1 py-1 ps-1 pe-2 rounded-3" style="position: relative;"> ${ele} </span>
+                                                `
+                
+                    //este es el select de opciones para editar segmentos
+                    selectEditTagsSegment.innerHTML += `<option value="${ele}">${ele}</option> `
+
+                    //este es el select de opciones para eliminar segmentos 
+                    selectDelTagsSegment.innerHTML += `<option value="${ele}">${ele}</option> `  
+                                             
+                                                  
+                });
+                
+            })
+            .catch( err => console.log(err));
+
+
+
+    
+            //boton para añadir segmento
+            btnSegment.addEventListener('click', ()=>{
+                const segment =  hashtags.value;
+                const newHashtag = segment.charAt(0).toUpperCase() + segment.slice(1);
+                console.log("newHashtag :",newHashtag)
+                
+                if (newHashtag.length !== 0){
+    
+                    console.log("boxSegment cantidad de elementos antes de incertar el nuevo hastags : ",boxSegment.length)
+                    if (boxSegment.length <=9 ){ //esta es la cantidad maxima de segmentos 9 antes de meter uno mas ya que el limite son 10.
+                        boxSegment.push(newHashtag);
+                       
+                        boxTagsSegment.innerHTML += `
+                                                    <span class="alert-warning m-1 py-1 ps-1 pe-2 rounded-3" style="position: relative;"> ${newHashtag} <i class="bi bi-x ms-1 deleSegment cursor-pointer"  data-segment =${newHashtag} ></i> </span>
+                                                `
+
+                    
+                        hashtags.value = ""; //limpiamos el input
+                        hashtags.focus(); //enviamos el focus
+                        btnSubmitHashtag.removeAttribute('disabled'); // activar el boton actualizar.
+                        console.log("boxSegment", boxSegment);// perfecto
+
+
+                        //-------este bloque es para eliminar un elemento del HTML-------
+                        const deleSegment = document.querySelectorAll('.deleSegment');
+                        deleSegment.forEach((ele) => {
+                            ele.addEventListener('click', () => {
+                                // Obtiene el span padre del icono que se ha clicado
+                                let info = ele.getAttribute("data-segment");
+                                console.log("Esto es info -->", info)
+
+                                const parentSpan = ele.parentElement; 
+                                parentSpan.remove(); // Elimina el span del DOM
+
+                                // Filtra el array para eliminar el elemento seleccionado
+                                boxSegment = boxSegment.filter(elem => elem !== info);
+                                console.log(boxSegment);
+                                if (boxSegment.length === 0){
+                                    console.log("debemos desactivar el boton")
+                                    btnSubmitHashtag.setAttribute("disabled", "");
+                                } else {
+                                    console.log("debemos activar el boton")
+                                    btnSubmitHashtag.removeAttribute("disabled");
+                                }
+                            });
+                        });  
+                        
+
+                        //---------------------------------------------------------------
+    
+                    } else {
+                        contentAlert.innerHTML = `<div class="form-group my-1">
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <strong><i class="bi bi-exclamation-triangle-fill me-2"></i> Solo puede agregar nueve (9) Segmentos en su sitio.</strong> 
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                                                  </div>
+                                                 `    
+                    }    
+    
+                }
+    
+            });
+    
+            //boton para crear segmento
+            btnSubmitHashtag.addEventListener('click', ()=>{
+    
+                //console.log(" cantidad de elementos de boxSegment : ",boxSegment.length)
+                if (boxSegment.length !== 0){
+    
+                        const datos = {
+                            boxSegment : boxSegment
+                        };
+                        console.log("datos --->", datos)
+                
+                        fetch('/myaccount/segment', {
+    
+                        method: "post",
+                        body: JSON.stringify(datos),
+                        headers: {"content-type" : "application/json"}
+    
+                        })
+                            .then(response =>response.json() )
+                            .then( jsonx => {
+                                console.log("jsonx array segment--", jsonx)
+                                const code = jsonx.code; const nota = jsonx.nota;
+                                const reqUpdate = jsonx.reqUpdate;
+                                console.log(`reqUpdate ---> ${reqUpdate}`);
+                                
+                                boxTagsSegment.innerHTML = "";
+                                boxSegment = [];//aqui limpiamos el array hasta dejarlo vacio;
+                                reqUpdate.forEach((ele)=>{
+
+                                    boxTagsSegment.innerHTML += `
+                                                        <span class="alert-success m-1 py-1 ps-1 pe-2 rounded-3" style="position: relative;"> ${ele} </span>
+                                                    `
+                                });
+                                //en un contendor colocamos la respuesta positiva o negativa del backend solo puede tener 13 segmentos
+                                //si tiene menos podra crearlo sino obtendra un alerta de que no ha podido crearse el segmento.
+
+                                if (code === 0){ //No agregado por superar el limite de 14 segmentos.
+                                    contentAlert.innerHTML = `<div class="alert alert-danger"> <i class="bi bi-x-circle-fill me-2"></i> ${nota} </div>`
+                                    setTimeout(() => {
+                                        contentAlert.innerHTML = "";
+                                        location.reload()
+                                    }, 4000);
+                                }  else if  (code === 1){ // Si agregado a segmentos
+                                    contentAlert.innerHTML = `<div class="alert alert-success"> <i class="bi bi-check-circle me-2"></i> ${nota} </div>`
+                                    setTimeout(() => {
+                                        contentAlert.innerHTML = "";
+                                        location.reload()
+                                    }, 4000);
+                                } else { //No agregado por ocurrir un error
+                                    contentAlert.innerHTML = `<div class="alert alert-danger"> <i class="bi bi-x-circle-fill me-2"></i> ${nota} </div>`
+                                    setTimeout(() => {
+                                        contentAlert.innerHTML = "";
+                                        location.reload()
+                                    }, 4000);
+                                }
+
+
+
+                            })
+                            .catch( err => console.log(err));
+                      
+                }
+    
+            });
+                  
+
+            //seleccionar un segmento para editarlo
+            selectEditTagsSegment.addEventListener('change', ()=>{
+                let selectTag = selectEditTagsSegment.value;
+                console.log("selectTag ----->", selectTag)
+                inputEditTagSegment.value = selectTag;
+
+                if (inputEditTagSegment.value === "" || inputEditTagSegment.value == "All" ){
+                    console.log("No hay un tagsSegment para ser eliminado", inputEditTagSegment.value);
+                    //como No hay un tags en el input entonces desactivamos el boton rojo de eliminar
+                    btnEditSegment.setAttribute("disabled", "");
+                } else {
+                    console.log("hay un tagsSegment para ser eliminado ", inputEditTagSegment.value);
+                    //como hay un tags en el input entonces activamos el boton rojo de eliminar
+                    btnEditSegment.removeAttribute("disabled");
+                    
+                }
+
+            });
+            
+            //ejecutar proceso de edicion
+            btnEditSegment.addEventListener('click', ()=>{
+            let selectedSegment = inputEditTagSegment.value;
+            let newTagSegment;
+
+            if (inputEditNewTagSegment.value !==""){
+                let tagSegment = inputEditNewTagSegment.value;
+                newTagSegment = tagSegment.charAt(0).toUpperCase() + tagSegment.slice(1);
+            }
+
+            btnEditSegment.setAttribute("disabled", "");
+
+            const datos = {
+                        segment : selectedSegment,
+                        newSegment : newTagSegment
+                    };
+                    
+            console.log("datos para editar--->", datos)
+            
+                fetch('/myaccount/segment-edit', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                    .then(response =>response.json() )
+                    .then( jsonx => 
+                        { 
+                            console.log("respuesta que llega del backend despues de editar el segmento");
+                            console.log("jsonx", jsonx)
+                        
+                          
+                            const response = jsonx.response;
+                            alertsEdit.innerHTML = `<div class="alert alert-success"> ${response} <i class="bi bi-trash3 ms-2"></i> </div>`;
+                            setTimeout(() => {
+                                alertsEdit.innerHTML = "";
+                                inputEditTagSegment.value = "";
+                                inputEditNewTagSegment.value = "";
+                                btnEditSegment.setAttribute("disabled", "");
+                                console.log("Esto es segments -->", segments);
+                                selectEditTagsSegment.innerHTML = ""; //limpiamos para actualizar
+                                btnEditSegment.removeAttribute("disabled");
+                                location.reload()
+
+                            }, 3000);
+                     
+                        })
+                    .catch( error => {console.log("ha ocurrido un error", error) } )
+        }); 
+
+
+
+    
+            
+            //seleccionar un segmento para su eliminacion
+            selectDelTagsSegment.addEventListener('change', ()=>{
+                let selectTag = selectDelTagsSegment.value;
+                console.log("selectTag ----->", selectTag)
+                inputDelTagSegment.value = selectTag;
+
+                if (inputDelTagSegment.value === "" || inputDelTagSegment.value == "All" ){
+                    console.log("No hay un tagsSegment para ser eliminado", inputDelTagSegment.value);
+                    //como No hay un tags en el input entonces desactivamos el boton rojo de eliminar
+                    btnDelSegment.setAttribute("disabled", "");
+                } else {
+                    console.log("hay un tagsSegment para ser eliminado ", inputDelTagSegment.value);
+                    //como hay un tags en el input entonces activamos el boton rojo de eliminar
+                    btnDelSegment.removeAttribute("disabled");
+                    
+                }
+
+            });                   
+
+            //ejecutar proceso de eliminacion
+            btnDelSegment.addEventListener('click', ()=>{
+                let selectedSegment = inputDelTagSegment.value
+                btnDelSegment.setAttribute("disabled", "");
+
+                const dato = {
+                            segment : selectedSegment
+                        };
+                        
+                console.log("dato --->", dato)
+                
+                    fetch('/myaccount/segment-delete', {
+
+                    method: "post",
+                    body: JSON.stringify(dato),
+                    headers: {"content-type" : "application/json"}
+
+                    })
+                        .then(response =>response.json() )
+                        .then( jsonx => 
+                            { 
+                                console.log("respuesta que llega del backend despues de elimnar el segmento");
+                                console.log("jsonx", jsonx)
+                                const response = jsonx.response;
+                                alertsDelete.innerHTML = `<div class="alert alert-success"> ${response} <i class="bi bi-trash3 ms-2"></i> </div>`;
+                                setTimeout(() => {
+                                    alertsDelete.innerHTML = "";
+                                    inputDelTagSegment.value = "";
+                                    btnDelSegment.setAttribute("disabled", "");
+                                    console.log("Esto es segments -->", segments);
+                                    const nuevoSegments = segments.filter(segment => segment !== selectedSegment);
+                                    console.log(nuevoSegments); // ["All", "Frutas"]
+
+                                    selectDelTagsSegment.innerHTML = ""; //limpiamos para actualizar
+                                    nuevoSegments.forEach((ele)=>{
+                                        selectDelTagsSegment.innerHTML += `<option value="${ele}">${ele}</option> `
+                                    })
+                                    
+                                    location.reload()
+                                }, 3000);
+                            
+                            })
+                        .catch( error => {console.log("ha ocurrido un error", error) } )
+            }); 
+       
+       
+       
+        </script>
+
+        <!-- script cambio por grupos -->
+         <script>
+            const seletSegment1 = document.getElementById('seletSegment1');
+            const seletSegment2 = document.getElementById('seletSegment2');
+            const storeUser = document.getElementById('storeUser');
+            const contentSelect2 = document.getElementById('contentSelect2'); //este es el contenedor que arropa al input-group del selector 2
+            const searchSegment = document.getElementById('searchSegment'); //-> input search
+            const btnSearch = document.getElementById('btnSearch'); //->boton de busqueda
+            const tableSelected = document.getElementById('tableSelected');
+            const btnChangeAccept = document.getElementById('btnChangeAccept');
+            const contentChangeAlert = document.querySelector('.contentChangeAlert');//contenedor donde se veran las alertas
+
+            const todoCheckbox = document.getElementById('todoCheckbox');
+
+
+            let StoreUser; //sacamos esta variable para poder usarla mas abajo
+            let StoreUserIndexed; //sacamos esta variable para poder usarla mas abajo
+            let selected; //sacamos esta variable para poder usarla mas abajo
+            let selected2; //sacamos la variable del selector 2 para pder usarla abajo bien
+            let idADS; //esta variable es el valor que tendra los check de las listas de resultados. Seran los id de los anuncios
+            let boxCheckedADS = []; //este es el array que tendra todos los ads cheched que iran al backend
+            seletSegment1.addEventListener('change', ()=>{
+                selected =  seletSegment1.value;
+                StoreUser = storeUser.value; 
+                StoreUserIndexed = storeUserIndexed.value;
+                //console.log(selected)
+
+                if (selected){
+                                
+                    //ahora preguntamos si hay algun valor en select
+                    if (selected2){
+                        
+                        if (selected){
+                            btnChangeAccept.removeAttribute("disabled");
+                        }
+                        
+                    } else {
+                        console.log("NO hay valor en el  selector 1")
+                    }
+                } else{
+                    btnChangeAccept.setAttribute("disabled", "");
+                    console.log("no hay un valor en los selectores");
+                }
+
+                //enviaremos un request al backend
+                const datos = {
+                    storeUserIndexed : StoreUserIndexed,
+                    segmentSelected : selected
+                };
+                console.log("Esto es --->", datos);
+
+                
+                fetch('/myaccount/segment-editGroup', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>
+                 {
+                    console.log("Esto es lo que llega del backend");
+                    console.log(jsonx);
+                    tableSelected.innerHTML =""; //limpiamos la tabla
+                    const response = jsonx.response; // array
+                    let intermitente;
+                    response.forEach((ele)=>{
+                        id_ADS = ele._id;
+                        const title = ele.title;
+                        const depart = ele.department;
+                        const category = ele.category;
+                        const price = ele.price;
+                        const segment = ele.segment;
+                        
+                        tableSelected.innerHTML += ` <tr>
+                                                        <td> ${title} </td><td> ${depart} </td><td>${category}</td><td>${price}</td><td>${segment}</td> <td> <input type="checkbox" value="${id_ADS}" class="idADS"> </td>
+                                                    </tr>`
+
+                        idADS = document.querySelectorAll('.idADS');                            
+                    })
+
+                    //este codigo permite tomar todos los elementos de la lista a traves de un input checkbox
+                    todoCheckbox.addEventListener('change', ()=>{
+                        
+                        console.log("todoCheckbox -->", todoCheckbox.checked);
+                        const todoCheckboxValue = todoCheckbox.checked;
+                        let checkboxes = document.querySelectorAll('.idADS');
+                        
+                        if (todoCheckboxValue === true ){
+                            console.log("esta checked")    
+                        
+                            checkboxes.forEach(checkbox => {
+                                checkbox.checked = true;
+                            });
+                        } else {
+                            checkboxes.forEach(checkbox => {
+                                checkbox.checked = false;
+                            });
+                        }
+
+                    })
+
+                    contentSelect2.style.cssText = "outline: 2px transparent green"; //esta linea quita el border del selector del contenedor input-group
+
+                    seletSegment2.addEventListener('change', ()=>{
+                        //aqui es donde fijamos el intermitente el valor de selected debe ser diferente a este selector 2
+                        selected2 = seletSegment2.value;
+
+                            if (selected2){
+                                if (selected){
+                                    if (selected){
+                                        btnChangeAccept.removeAttribute("disabled");
+                                    }
+            
+                                } else {
+                                    console.log("NO hay valor en el  selector 1")
+                                }
+                            } else{
+                                btnChangeAccept.setAttribute("disabled", "");
+                                //si esta marcado el selector 2 lo quitamos
+                                clearInterval(intermitente);
+                                (() => {
+                                    setTimeout(() => {
+                                        //seletSegment2.style.cssText = "outline: 2px solid green";
+                                        contentSelect2.style.cssText = "outline: 2px transparent green"
+                                    }, 700);
+                                    
+                                })();
+
+                                console.log("no hay un valor en los selectores");
+                            }
+
+                            if (selected !== selected2){
+                            //console.log(seletSegment2.value)
+                            /* let selectIntermitente = true; */
+                            clearInterval(intermitente);
+                            (() => {
+                                setTimeout(() => {
+                                    //seletSegment2.style.cssText = "outline: 2px solid green";
+                                    contentSelect2.style.cssText = "outline: 2px solid green"
+                                }, 500);
+                                
+                            })();
+
+                        }
+                            
+                    })
+
+                    //efecto de border en el segmento 2
+                    let selectIntermitente = false;
+                    if (selectIntermitente === false ){
+                        selectStyle()
+                    }
+                    
+                    function selectStyle(){
+                        intermitente = setInterval(() => {
+                            seletSegment2.style.cssText = "outline: 2px dashed green"
+                            
+                            setTimeout(() => {
+                                noStyle()
+                            }, 300);
+                        }, 400);
+                    }
+
+                    function noStyle(){
+                        seletSegment2.style.cssText = "border: 2px transparent green"
+                    }
+                  
+
+                 })
+                .catch( err => console.log(err));
+            
+            });
+
+
+            searchSegment.addEventListener('input', function() {
+                if (searchSegment.value.trim() !== '') {
+                    btnSearch.disabled = false; // Habilitar el botón
+                } else {
+                    btnSearch.disabled = true; // Mantener el botón deshabilitado
+                }
+            });
+
+            //buscador search filter
+            btnSearch.addEventListener('click', ()=>{
+
+                const search = searchSegment.value;
+                if (search !== ""){
+                    //activamos el boton
+                    btnSearch.removeAttribute("disabled");
+
+                    const datos = {
+                        storeUserIndexed : StoreUserIndexed,
+                        segmentSelected : selected,
+                        filter : search 
+                    };
+                    console.log("Esto es --->", datos);
+                    fetch('/myaccount/segment-filter', {
+
+                        method: "post",
+                        body: JSON.stringify(datos),
+                        headers: {"content-type" : "application/json"}
+
+                        })
+                        .then(response =>response.json() )
+                        .then( jsonx => 
+                            {
+                                console.log("/myaccount/segment-filter")
+                                console.log("jsonx", jsonx)
+                                const response = jsonx.response;
+                                tableSelected.innerHTML =""; //limpiamos la tabla
+
+                                response.forEach((ele)=>{
+                                    id_ADS = ele._id;
+                                    const title = ele.title;
+                                    const depart = ele.department;
+                                    const category = ele.category;
+                                    const price = ele.price;
+                                    const segment = ele.segment;
+                                    
+                                    tableSelected.innerHTML += ` <tr>
+                                                    <td> ${title} </td><td> ${depart} </td><td>${category}</td><td>${price}</td><td>${segment}</td> <td> <input type="checkbox" value="${id_ADS}" class="idADS"> </td>
+                                                </tr>`
+
+                                    idADS = document.querySelectorAll('.idADS'); 
+                                })
+
+
+                            })
+                        .catch((error)=> console.log("Ha habido un error"))
+
+                } else {
+                    console.log("No hay nada en el buscador")
+                }
+
+            });
+
+            //Aceptar cambios de segmento
+            btnChangeAccept.addEventListener('click', ()=>{
+
+                
+
+                    btnChangeAccept.removeAttribute("disabled", "");
+                    boxCheckedADS = []; //limpiamos el array, aseguramos que no se va a concatenar datos
+                    console.log("ver estooooo debe ser un array de valores");
+                    //console.log("idADS --->", idADS)
+                    idADS.forEach((ele)=>{
+                        if (ele.checked === true ){
+                            
+                            const adsSelected = ele.value;
+                            //console.log("adsSelected -->", adsSelected );
+                            boxCheckedADS.push(adsSelected);
+                            
+
+                        }
+                    })
+
+                    //storeUserId --> aqui el id del profile
+                    if (boxCheckedADS.length !==0 ){
+                        console.log("userStore --->", storeUser.value);
+                        console.log("storeUserId --->", storeUserId.value);
+                        console.log("selected --->", selected);
+                        console.log("selected2 --->", selected2);
+                        console.log("boxCheckedADS --->", boxCheckedADS);
+                        const storeUserID = storeUserId.value
+                        
+                        //luego se desactiva el boton y se envia al backend.
+                        btnChangeAccept.setAttribute("disabled", "");
+
+                        //ahora enviamos el backend
+                
+                        const datosChange = {
+                            storeUserId : storeUserID,
+                            selected1 : selected,
+                            selected2 : selected2,
+                            boxCheckedADS : boxCheckedADS
+                        };
+                        console.log("Esto es lo que se enviara finalmente al backend--->", datosChange);
+
+                    
+                        fetch('/myaccount/segment-changeGroup', {
+
+                        method: "post",
+                        body: JSON.stringify(datosChange),
+                        headers: {"content-type" : "application/json"}
+
+                        })
+                        .then(response =>response.json() )
+                        .then( jsonx => {
+                            console.log("jsonx -------->",jsonx);
+                            const response = jsonx.response; //mensaje a mostrar
+                            const code = jsonx.code; //code 1 positivo, code 0 negativo
+                            //{response: 'Actualización realizada exitosamente.', code: 1}
+                            todoCheckbox.checked = false; //si todoChecked esta true "marcado lo desmarcamos"
+                            tableSelected.innerHTML = ""; //limpiamos la tabla
+                            contentSelect2.style.cssText = "outline: 2px trasparent green"//deseleccionamos el select2
+                            //enviamos un alert de que ha sido actualizado satisfactoriamente
+                            
+                            if (code === 1){
+                                contentChangeAlert.innerHTML = `<div class="alert alert-success"> <i class="bi bi-check-circle me-2"></i> ${response} </div>`
+                            } else {
+                                contentChangeAlert.innerHTML = `<div class="alert alert-danger"> <i class="bi bi-x-circle-fill me-2"></i> ${response} </div>`
+                            }
+
+                            setTimeout(() => {
+                                contentChangeAlert.innerHTML = "";
+                            }, 3000);
+                            
+                            
+                        })
+                        .catch((err)=> { console.log("Ha habido un error") })
+                    
+
+                    }
+                
+
+            })
+
+         </script>

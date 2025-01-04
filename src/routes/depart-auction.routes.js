@@ -70,7 +70,8 @@ routes.get('/department/create/auctions', async(req,res)=>{
     delete req.session.catcherro;
 
     if (user){
-        searchProfile = await modelProfile.find({indexed : user._id});
+        //searchProfile = await modelProfile.find({indexed : user._id}); viejo
+        searchProfile = await modelProfile.findOne({indexed : user._id});
         Auctions = await modelAuction.find({ user_id : user._id });
 
         console.log("Esto es Auctions : ", Auctions);
@@ -165,7 +166,7 @@ routes.post('/department/create/auctions', async(req,res)=>{
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
         console.log("Aqui el estado --->",searchProfile[0].states)
         const state = searchProfile[0].states
-        const { title, category, sub_category, state_use, tecnicalDescription, auctionDate, biddingTime, price } = req.body
+        const { title, category, sub_category, state_use, tecnicalDescription, auctionDate, biddingTime, price, segment } = req.body
         const currentYear = new Date().getFullYear();
         let anio; 
 
@@ -355,7 +356,7 @@ routes.post('/department/create/auctions', async(req,res)=>{
                 
                 async function createAD(){
 
-                    const Auctions =  new modelAuction({ title, category, sub_category, state_use, tecnicalDescription, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, images : boxImg, price, user_id : user._id, username, state_province : state }) 
+                    const Auctions =  new modelAuction({ title, category, sub_category, state_use, tecnicalDescription, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, images : boxImg, price, user_id : user._id, username, state_province : state, segment }) 
                     const AuctionsSave = await Auctions.save()
                     //console.log(AuctionsSave);
                     

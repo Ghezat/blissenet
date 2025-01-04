@@ -5,6 +5,7 @@ const SchemaRaffle = new Schema({
     title : { type: String },
     department : { type: String, default: 'raffle' },
     category : { type: String }, //Gratis or Pago
+    segment : { type: String }, // normalmente esto seria "All"
     tecnicalDescription : { type: String },
     video : { type : Object, default: [] }, //aqui se guardaria un archivo de video con la informacion del lugar donde esta para ser leido o eliminado.
     images : { type : Object },

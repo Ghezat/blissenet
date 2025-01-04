@@ -5,6 +5,7 @@ const SchemaAirplane = new Schema({
     title : { type: String },
     department : { type: String, default: 'airplanes' },
     category : { type: String},
+    segment : { type: String }, // normalmente esto seria "All"
     produce: { type: String }, //reeplazar sub_category por produce en las rutas view-airplane.
     model: { type: String },
     construcDate: { type: Number },

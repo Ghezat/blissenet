@@ -1319,106 +1319,108 @@
                                         </div>
 
                                         <div class="card mt-2">
-                                            <div class="card-header">
-                                                Herramientas de Tienda
-                                            </div>
-                                            <div class="card-body">
-
-                                                <div class="container-fluid p-0 mb-3">
-                                                    <div class="alert alert-info" style="border-left: 5px solid rgb(33, 103, 150);">
-                                                        <p class="m-0">
-                                                            <span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> </span> 
-                                                             Importante : "¡Hola! Explora estas herramientas para mejorar la experiencia de tus clientes. Haz clic en el ícono de información para más detalles. <i class="bi bi-info-circle mx-1"></i>"   
-                                                        </p>
-                                                    </div>
+                                            <% searchProfile.forEach( (ele)=> { %>
+                                                <div class="card-header">
+                                                    Herramientas de Tienda
                                                 </div>
-                                                
-                                                <span class="alert-info rounded-2 p-2" style="border-left: 5px solid rgb(33, 103, 150);">
-                                                    <span>Anuncios Existentes :</span>
-                                                     <% if(sumCount) { %>  <span class="px-2">  <b><%= sumCount %></b>  </span>  <% } else { %> <span class="px-2"><%= sumCount %> </span> <% } %>
-                                                </span>
-                                                
-                                                <div class="containerTools m-2 p-1 border-bottom ">
+                                                <div class="card-body">
 
-
-                                                    <div class="containerSearch my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                    <!--  cantidad de articulos para habilitar la opcion de busqueda -->
-                                                        <div class="contentSoonSearch d-flex">
-                                                        <% if(sumCount >= 11) { %>    
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
-                                                            <div class="form-check form-switch">
-                                                                                                                
-                                                                <% if (ele.searchFilter === 'on' ){%>  
-                                                                <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> <i class="bi bi-unlock ms-1"></i>
-                                                                <% } else { %>
-                                                                <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> <i class="bi bi-unlock ms-1"></i>
-                                                                <% }; %>
-                                                                
-                                                            </div>
-                                                        <% } else { %>
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
-                                                            <div class="form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
-                                                            </div>
-                                                        <% }; %>
-                                                        </div> 
-                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
-                                                    </div>
-
-                                                    <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                        <div class="contentSoonCarBuy d-flex">
-                                                            <label class="form-check-label no-select p-0 me-2" for="suicheCarBuy" title="Activa un carrito de compra, debes tener al menos 11 articulos del departamento de Items">○ Carrito de Compra </label>
-                                                            <div class="form-check form-switch">
-                                                                                                                
-                                                                <input class="form-check-input" type="checkbox" id="suicheCarBuy" name="Buy" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
-
-                                                            </div>
-                                                        </div>    
-                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy"> <i class="bi bi-info-circle mx-1"></i> </div>
-                                                    </div>
-
-                                                    <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                        <div class="contentSoonCarBuy d-flex">
-                                                            <label class="form-check-label no-select p-0 me-2" for="suicheADS" title="Para activar esta opción, debes tener al menos 11 articulos.">○ Gestor de Anuncios </label>
-                                                            <div class="form-check form-switch">
-                                                                                                                
-                                                                <input class="form-check-input" type="checkbox" id="suicheADS" name="updateADS" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
-
-                                                            </div>
-                                                        </div>    
-                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheGestorADS"> <i class="bi bi-info-circle mx-1"></i> </div>
-                                                    </div>
-
-                                                    <div class="containerCRM my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                        <div class="contentSoonCRM d-flex">    
-                                                            <label class="form-check-label no-select p-0 me-2" for="suicheCRM" title="Activa la opción CRM (Customer Relationship Management) debes tener al menos 1 articulos de cualquier departamento publicado">○ Agenda CRM </label>
-                                                            <div class="form-check form-switch">
-                                                                                                                
-                                                                <input class="form-check-input" type="checkbox" id="suicheCRM" name="CRM" value="off" disabled>  <i class="bi bi-lock ms-1"></i> 
-
-                                                            </div>
+                                                    <div class="container-fluid p-0 mb-3">
+                                                        <div class="alert alert-info" style="border-left: 5px solid rgb(33, 103, 150);">
+                                                            <p class="m-0">
+                                                                <span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> </span> 
+                                                                Importante : "¡Hola! Explora estas herramientas para mejorar la experiencia de tus clientes. Haz clic en el ícono de información para más detalles. <i class="bi bi-info-circle mx-1"></i>"   
+                                                            </p>
                                                         </div>
-                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCRM"> <i class="bi bi-info-circle mx-1"></i> </div>    
                                                     </div>
+                                                    
+                                                    <span class="alert-info rounded-2 p-2" style="border-left: 5px solid rgb(33, 103, 150);">
+                                                        <span>Anuncios Existentes :</span>
+                                                        <% if(sumCount) { %>  <span class="px-2">  <b><%= sumCount %></b>  </span>  <% } else { %> <span class="px-2"><%= sumCount %> </span> <% } %>
+                                                    </span>
+                                                    
+                                                    <div class="containerTools m-2 p-1 border-bottom ">
 
-                                                </div>
-                                                <div class="containerIrATienda d-flex justify-content-end">
 
-                                                    <div class="row m-0" style="width: 100%; height: 100%;">
-                                                        <div class="col-lg-6 col-md-6 col-sm-12 form-group">
-                                                            <a href="/admin-store" class="mt-1 btn btn-secondary text-light text-decoration-none rounded-3 d-block w-100">
-                                                                <i class="bi bi-gear me-1"></i> Administración
-                                                            </a>
+                                                        <div class="containerSearch my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
+                                                            <div class="contentSoonSearch d-flex">
+                                                            <% if(sumCount >= 11) { %>    
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                                <div class="form-check form-switch">
+                                                                                                                    
+                                                                    <% if (ele.searchFilter === 'on' ){%>  
+                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> <i class="bi bi-unlock ms-1"></i>
+                                                                    <% } else { %>
+                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> <i class="bi bi-unlock ms-1"></i>
+                                                                    <% }; %>
+                                                                    
+                                                                </div>
+                                                            <% } else { %>
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
+                                                                </div>
+                                                            <% }; %>
+                                                            </div> 
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
                                                         </div>
-                                                        <div class="col-lg-6 col-md-6 col-sm-12 form-group"> 
-                                                            <a href="/account/<%= user.username %>" class="mt-1 btn btn-primary text-light text-decoration-none rounded-3 d-block w-100">
-                                                                <i class="bi bi-shop-window me-1"></i> Mi Tienda
-                                                            </a>   
-                                                        </div>    
+
+                                                        <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                            <div class="contentSoonCarBuy d-flex">
+                                                                <label class="form-check-label no-select p-0 me-2" for="suicheCarBuy" title="Activa un carrito de compra, debes tener al menos 11 articulos del departamento de Items">○ Carrito de Compra </label>
+                                                                <div class="form-check form-switch">
+                                                                                                                    
+                                                                    <input class="form-check-input" type="checkbox" id="suicheCarBuy" name="Buy" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
+
+                                                                </div>
+                                                            </div>    
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                        </div>
+
+                                                        <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                            <div class="contentSoonCarBuy d-flex">
+                                                                <label class="form-check-label no-select p-0 me-2" for="suicheADS" title="Para activar esta opción, debes tener al menos 11 articulos.">○ Gestor de Anuncios </label>
+                                                                <div class="form-check form-switch">
+                                                                                                                    
+                                                                    <input class="form-check-input" type="checkbox" id="suicheADS" name="updateADS" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
+
+                                                                </div>
+                                                            </div>    
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheGestorADS"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                                        </div>
+
+                                                        <div class="containerCRM my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                            <div class="contentSoonCRM d-flex">    
+                                                                <label class="form-check-label no-select p-0 me-2" for="suicheCRM" title="Activa la opción CRM (Customer Relationship Management) debes tener al menos 1 articulos de cualquier departamento publicado">○ Agenda CRM </label>
+                                                                <div class="form-check form-switch">
+                                                                                                                    
+                                                                    <input class="form-check-input" type="checkbox" id="suicheCRM" name="CRM" value="off" disabled>  <i class="bi bi-lock ms-1"></i> 
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCRM"> <i class="bi bi-info-circle mx-1"></i> </div>    
+                                                        </div>
+
                                                     </div>
-                                                   
+                                                    <div class="containerIrATienda d-flex justify-content-end">
+
+                                                        <div class="row m-0" style="width: 100%; height: 100%;">
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                                                <a href="/admin-store" class="mt-1 btn btn-secondary text-light text-decoration-none rounded-3 d-block w-100">
+                                                                    <i class="bi bi-gear me-1"></i> Administración
+                                                                </a>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 form-group"> 
+                                                                <a href="/account/<%= user.username %>" class="mt-1 btn btn-primary text-light text-decoration-none rounded-3 d-block w-100">
+                                                                    <i class="bi bi-shop-window me-1"></i> Mi Tienda
+                                                                </a>   
+                                                            </div>    
+                                                        </div>
+                                                    
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            <% }) %>
                                         </div>
                                         <% } %>                                                        
 

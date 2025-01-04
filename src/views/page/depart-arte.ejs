@@ -266,10 +266,28 @@
                                                         <span>Aprovecha estos carácteres para crear un anuncio impactante. ¡Buena suerte! </span>
                                                         <span class="ms-2 spnCharacterCount"> 1500 </span> 
                                                     </div>
+
+                                                    <!-- lista de segmentos disponibles -->
+                                                    <div class="form-group my-2">
+
+                                                        <select name="segment" id="segment_id" class="form-control me-1" required>
+                                                            <option value=""> Selecciona un Segmento</option>
+                                                            <% if (searchProfile) { %>
+                                                                
+                                                                <% const segment = searchProfile.segment %>
+                                                                <% segment.forEach((ele)=> { %>
+                                                                    <option value="<%= ele %>"> <%= ele %></option>
+                                                                <% }) %>
+                                                                
+                                                            <% } %>
+
+                                                        </select>
+
+                                                    </div>
+
                                                     <!-- Campo de entrada oculto -->
                                                     <input type="hidden" id="hiddenInput" name="tecnicalDescription">    
-    
-    
+                                                                                                            
                                                     <div class="card-header">Subir imagenes</div>
                                                     <div class="form-group d-flex justify-content-start my-2 border">
                                                         <div class="add_photo me-2" id="add_photo" title="Click para subir un max. de tres (3) imagenes">

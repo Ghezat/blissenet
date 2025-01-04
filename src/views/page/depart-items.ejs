@@ -160,7 +160,6 @@
     <main class="mainTheme">
 
     <% if (user) { %>
-
         <% if (countImpagos >= 3) { %>
             <!-- Modal restrictivo por imapago -->
             <div class="conuntenImpagos d-flex justify-content-center my-5" style="width: 100%; height: 100%; background-color: white;">
@@ -259,7 +258,7 @@
                                                         <!-- estas opciones se arman en el javascript -->
                                                     </select>
                                                 </div>
-    
+
                                                 <div class="form-group my-2">
                                                   
                                                     <select name="state_use" id="" class="form-control me-1">
@@ -274,6 +273,25 @@
                                                     <span>Aprovecha estos carácteres para crear un anuncio impactante. ¡Buena suerte! </span>
                                                     <span class="ms-2 spnCharacterCount"> 1500 </span> 
                                                 </div>
+
+                                                <!-- lista de segmentos disponibles -->
+                                                <div class="form-group my-2">
+
+                                                    <select name="segment" id="segment_id" class="form-control me-1" required>
+                                                        <option value=""> Selecciona un Segmento</option>
+                                                        <% if (searchProfile) { %>
+                                                            
+                                                            <% const segment = searchProfile.segment %>
+                                                            <% segment.forEach((ele)=> { %>
+                                                                <option value="<%= ele %>"> <%= ele %></option>
+                                                            <% }) %>
+                                                            
+                                                        <% } %>
+
+                                                    </select>
+
+                                                </div>
+                                                
                                                 <!-- Campo de entrada oculto -->
                                                 <input type="hidden" id="hiddenInput" name="tecnicalDescription">
     
@@ -774,8 +792,8 @@
             let Hogar_muebles = ["Select it", "Articulos de Cocinas","Muebles de Cocina", "Muebles de Oficina", "Muebles de Baño", "Escritorios", "Camas","Sillas","Juegos de Sala", "Juegos de Comedor", "Juegos de Cuartos", "Baúles y Cofres", "Vajillas Y Copas", "Otros..." ];
             let Instrumentos_musicales = ["Select it","Guitarras", "Bajos", "Cuatros","Bandolinas","Baterias Acusticas", "Baterias Electricas", "Flautas", "Violínes", "Tambores", "Trombones", "Pianos", "Teclados", "Insumos de Instrumentos", "Otros..."];
             let Insumos_implementos_reposteria = ["Select it","Sacos de Harina", "Harina por Kilos", "Levaduras", "Polvo de Hornear", "Colorantes y sabores Artificiales", "Mantecas", "Otros..."];
-            let Juguetes = ["Select it", "Juguetes Infantiles", "Juguetes p/Adolescentes", "Otros..."];
-            let Lentes = ["Select it", "Correctivos","Deportivos","Industriales", "Lentes p/Motos", "Otros..." ];
+            let Juguetes = ["Select it", "Juguetes Infantiles", "Juguetes Adolescentes", "Juegos de Mesa", "Otros..."];
+            let Lentes = ["Select it", "Correctivos","Deportivos","Industriales", "Lentes para Motos", "Otros..." ];
             let Merceria = ["Select it", "Accesorios varios", "Agujas", "Botones", "Cremalleras y Cierres Magicos", "Dedales", "Hilos", "Telas", "Otros..."];
             let Vehiculo_Movilidad_Personal = ["Select it", "Scooter Electricos", "Monopatines Electricos", "Monociclos Electricos", "Accesorios p/Scooter", "Bicimotos", "Repuestos Varios", "Otros..."];
             let Papeleria = ["Select it", "Borradores", "Boligrafos, Lapices y Marcadores",  "Cuadernos y Libretas", "Colas y Pegas", "Grapas y Grapadoras", "Resmas de Papel y Hojas de Examenes", "Pinceles", "Otros..." ];

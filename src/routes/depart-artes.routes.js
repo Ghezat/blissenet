@@ -58,7 +58,8 @@ routes.get('/department/create/artes', async(req,res)=>{
     delete req.session.catcherro;
 
     if (user) {
-        searchProfile = await modelProfile.find({indexed : user._id});
+        //searchProfile = await modelProfile.find({indexed : user._id}); viejo
+        searchProfile = await modelProfile.findOne({indexed : user._id});
         Artes = await modelArtes.find({ user_id : user._id });
 
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
@@ -147,7 +148,7 @@ routes.post('/department/create/artes', async(req,res)=>{
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
         console.log("Aqui el estado --->",searchProfile[0].states)
         const state = searchProfile[0].states
-        const { title, category, author, construcDate, tecnicalDescription, price } = req.body
+        const { title, category, author, construcDate, tecnicalDescription, price, segment } = req.body
 
 
         let countFall = 0;
@@ -244,7 +245,7 @@ routes.post('/department/create/artes', async(req,res)=>{
                 
                 async function createAD(){
 
-                    const Artes =  new modelArtes({ title, category, author, construcDate, tecnicalDescription,  images : boxImg, price, user_id : user._id, username, state_province : state }) 
+                    const Artes =  new modelArtes({ title, category, author, construcDate, tecnicalDescription,  images : boxImg, price, user_id : user._id, username, state_province : state, segment }) 
                     const ArtesSave = await Artes.save()
                     //console.log(ArtesSave);
                     

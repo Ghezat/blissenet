@@ -257,12 +257,31 @@
                                                             <option value="En tramite">En Tramite</option>
                                                         </select>
                                                     </div>
-        
+                                                            
                                                     <div class="form-goup" id="tecDescrip"></div>
                                                     <div class="alert alert-warning mb-2">
                                                         <span>Aprovecha estos carácteres para crear un anuncio impactante. ¡Buena suerte! </span>
                                                         <span class="ms-2 spnCharacterCount"> 1500 </span> 
                                                     </div>
+
+                                                    <!-- lista de segmentos disponibles -->
+                                                    <div class="form-group my-2">
+
+                                                        <select name="segment" id="segment_id" class="form-control me-1" required>
+                                                            <option value=""> Selecciona un Segmento</option>
+                                                            <% if (searchProfile) { %>
+                                                                
+                                                                <% const segment = searchProfile.segment %>
+                                                                <% segment.forEach((ele)=> { %>
+                                                                    <option value="<%= ele %>"> <%= ele %></option>
+                                                                <% }) %>
+                                                                
+                                                            <% } %>
+
+                                                        </select>
+
+                                                    </div>
+                                                                                                        
                                                     <!-- Campo de entrada oculto -->
                                                     <input type="hidden" id="hiddenInput" name="tecnicalDescription">    
         

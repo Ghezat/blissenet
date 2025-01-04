@@ -59,7 +59,8 @@ routes.get('/department/create/realstate', async(req,res)=>{
 
 
     if (user){
-        searchProfile = await modelProfile.find({indexed : user._id});
+        //searchProfile = await modelProfile.find({indexed : user._id});viejo
+        searchProfile = await modelProfile.findOne({indexed : user._id});
         Realstate = await modelRealstate.find({ user_id : user._id });
 
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
@@ -151,7 +152,7 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
         console.log("Aqui el estado --->",searchProfile[0].states);
         const state = searchProfile[0].states;
-        const { title, category, sub_category, construcDate, mtrs2, tecnicalDescription, generalMessage, price } = req.body
+        const { title, category, sub_category, construcDate, mtrs2, tecnicalDescription, generalMessage, price, segment } = req.body
         
 
         let countFall = 0;
@@ -247,7 +248,7 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
                     
                     async function createAD(){
 
-                        const Realstate =  new modelRealstate({ title, category, sub_category, construcDate, mtrs2, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state  }); 
+                        const Realstate =  new modelRealstate({ title, category, sub_category, construcDate, mtrs2, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment  }); 
                         const RealstateSave = await Realstate.save();
                         //console.log(RealstateSave);
 

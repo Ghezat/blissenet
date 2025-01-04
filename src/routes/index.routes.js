@@ -25,6 +25,8 @@ const modelBannerDefault = require('../models/bannerUserDefault.js');
 const modelBackgroundSign = require('../models/backgroundSign.js');
 const modelStoreRate = require('../models/storeRate.js');
 
+const modelRateCurrency = require('../models/rateCurrency.js');
+
 const fetch = require('node-fetch'); //ver: 2.6.1 ultima dependencia instalada. 
 const bcrypt = require('bcryptjs');
 
@@ -126,6 +128,27 @@ routes.get('/', async(req, res)=>{
     console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
 
     res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay})
+});
+
+routes.get('/requireRateUpdate', async(req, res)=>{
+    const rateUpdate = await modelRateCurrency.find();
+    const rateSort = rateUpdate.reverse()[0];
+    console.log("Esto es rateSort >>", rateSort);
+    console.log("******RATE UPDATE******");
+
+    //vamos a sacar la fecha del servidor
+    const date = new Date()
+    const dia = date.getDate(); const mes = date.getMonth() + 1; const anio = date.getFullYear();
+    const hora = date.getHours()
+    const minu = String(date.getMinutes()).padStart(2, '0'); // Asegura que los minutos tengan dos dígitos
+    const segu = String(date.getSeconds()).padStart(2, '0'); // Asegura que los segundos tengan dos dígitos
+
+    const timerNowServ = `${dia}-${mes}-${anio} ${hora}:${minu}:${segu}`;
+    const response = { rateSort, "date" : timerNowServ };
+    console.log("Esto es response >>", response);
+
+    res.json(response);
+    
 });
 
 routes.get('/alertNotProfile', async (req, res)=>{
