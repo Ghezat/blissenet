@@ -19,29 +19,34 @@ const modelStoreRate = require('../models/storeRate.js');
       
 
 routes.get('/account/:account', async (req,res)=>{
-    console.log("Este es el parametroooo ---->",req.params);
+    //console.log("Este es el parametroooo ---->",req.params);
     const account  = req.params.account;
-    console.log("este es el account a visitar o tienda", account)
+    console.log("este es el account a visitar o tienda", account) //rogelio 
+    
     const boxPublisher = [];
     let newBox;
     const user = req.session.user;
-    console.log("este es el usuario visitante--->", user);
+    
+    //console.log("este es el usuario visitante--->", user);
     const countMessages = req.session.countMessages
     const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
-    console.log("ver receive -------------------------->", receive);
+    //console.log("ver receive -------------------------->", receive);
     let searchProfile;
     const segment = null;
 
     //aqui obtengo la cantidad de negotiationsBuySell
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
-    console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+    //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
   
 
         
     if (user){
         //console.log("Esto es user._id ------>", user._id );
-        searchProfile = await modelProfile.find({ indexed : user._id });
+        const userId = user._id; //usaremos con el indexed en la coleccion profile.
+        searchProfile = await modelProfile.find({ indexed : userId });
+        
         //console.log("Aqui el profile de la cuenta", searchProfile);
+
     
         const Account = await modelUser.find({ username : account }); //esto hay que acomodar hay que buscar por id
         //console.log("Este es la data del account que queremos visitar ...", Account);
@@ -49,7 +54,15 @@ routes.get('/account/:account', async (req,res)=>{
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ejecuta el bloque siguiente)
 
             const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
-            //console.log("Este es el id del account que queremos visitar ...", accountId);  
+            const accountIdString = accountId.toString(); //paso de objectId a String
+            console.log("**********************ver esto**********************************")
+            console.log("Este es el id user del account que queremos visitar ...", accountId);  
+            console.log("typeof accountId ---->", typeof accountId); 
+            
+            //---consultamos si el user que visita esta tienda ya la sigue.     
+            const statusFollow = await modelProfile.findOne({ indexed : userId, favoritestores : accountIdString });
+            console.log("statusFollow --->", statusFollow);
+            //-----------------------------------------------------------------
 
             const storeProfile = await modelProfile.findOne({ indexed : accountId });
             const segmentations = storeProfile.segment; // ["All", "Hoverboard"];
@@ -142,7 +155,7 @@ routes.get('/account/:account', async (req,res)=>{
                     newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
 
                 } else if (receive == "first"){
 
@@ -156,7 +169,7 @@ routes.get('/account/:account', async (req,res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
 
                 } else if (receive == "next"){
 
@@ -176,7 +189,7 @@ routes.get('/account/:account', async (req,res)=>{
                         //console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
            
                     }
           
@@ -201,7 +214,7 @@ routes.get('/account/:account', async (req,res)=>{
                         //console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
                     } 
           
 
@@ -234,7 +247,7 @@ routes.get('/account/:account', async (req,res)=>{
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
 
                 }
                   
@@ -260,10 +273,10 @@ routes.get('/account/:account', async (req,res)=>{
             const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
             //console.log("Este es el id del account que queremos visitar ...", accountId);  
 
-            const storeProfile = await modelProfile.find({ indexed : accountId });
+            const storeProfile = await modelProfile.findOne({ indexed : accountId });
             //console.log("Aqui el profile de la cuenta", storeProfile);
 
-            let view = storeProfile[0].view; //aqui guardo la cantidad de visitas actuales que tiene la tienda;
+            let view = storeProfile.view; //aqui guardo la cantidad de visitas actuales que tiene la tienda;
             //console.log('aqui las vistas  view---->', view);
             let signature = (view + 1);     
 
@@ -273,8 +286,8 @@ routes.get('/account/:account', async (req,res)=>{
             //console.log("Aqui la firma del visitante ---->", firmaVisitante)
             
 
-            if (storeProfile.length !== 0) { 
-                const searchBanner = storeProfile[0].bannerPerfil;
+            if (storeProfile) { 
+                const searchBanner = storeProfile.bannerPerfil;
         
                 //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
                 const resultAirplane = await modelAirplane.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
@@ -340,7 +353,7 @@ routes.get('/account/:account', async (req,res)=>{
      
                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
+                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
  
                 } else if (receive == "first"){
  
@@ -354,7 +367,7 @@ routes.get('/account/:account', async (req,res)=>{
                      //console.log("totalPagina :  ", totalPagina);
                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
+                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
  
                 } else if (receive == "next"){
  
@@ -372,7 +385,7 @@ routes.get('/account/:account', async (req,res)=>{
                          //console.log("totalPagina :  ", totalPagina);
                          const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
+                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
             
                      }
            
@@ -395,7 +408,7 @@ routes.get('/account/:account', async (req,res)=>{
                          //console.log("totalPagina :  ", totalPagina);
                          const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
+                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
                      } 
            
  
@@ -414,7 +427,7 @@ routes.get('/account/:account', async (req,res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
  
                 }
 
@@ -1481,6 +1494,133 @@ try {
 // hay tres valores en Type = "Save", "Following", "Error"
 
 
+});
+
+//esta es la nueva forma de seguir a una tienda.
+routes.post('/account/followStore', async(req, res)=>{
+    try {
+      
+        console.log("Esto es lo que esta llegando de un favoritoStore al backend ---->", req.body)
+        const { user, userOfStore } = req.body;
+        console.log(` user:  ${user}    userOfStore:  ${userOfStore} `);
+        //user:  66ac0281a3afb22ac770d5f2    userOfStore:  66fd4cede0160a6c5f8d5954
+        let searchProfile;
+        
+        let date = new Date();
+        let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+        let hora = date.getHours(); let minu = date.getMinutes();
+    
+        //### Consideraciones adicionales:
+        //Si deseas que los minutos siempre se muestren con dos dígitos (por ejemplo, `03` en lugar de `3`), puedes agregar un formato adicional. Por ejemplo:
+        //String(minu)`**: Esta parte convierte el valor de la variable `minu` a un tipo de dato `String`. Esto es importante porque queremos asegurarnos de que el valor que estamos manejando sea una cadena de texto.
+        //padStart(2, '0')`**: Esta es una función que se aplica a la cadena que obtenemos del paso anterior. La función `padStart` se utiliza para rellenar la cadena con un carácter específico hasta alcanzar una longitud deseada. 
+        //El primer argumento (`2`) indica que queremos que la longitud total de la cadena sea de al menos 2 caracteres.
+        //El segundo argumento (`'0'`) especifica que queremos rellenar con ceros (`'0'`) si la longitud original de la cadena es menor que 2.
+    
+        let mesFormatted = String(mes).padStart(2, '0');
+        let minuFormatted = String(minu).padStart(2, '0');
+        const timeNow = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
+        
+        console.log("Esto es timeNow>>>", timeNow);
+    
+        searchProfile = await modelProfile.findOne({ indexed : user });
+        console.log("Esto es searchProfile : ", searchProfile)
+    
+         
+        if (searchProfile){
+    
+            //const elqueSigue = await modelProfile.findOne({ indexed : user });
+            // ya tenemos este objeto "searchProfile" asi que no hace falta volverlo a buscar 
+            const tiendaAseguir = await modelProfile.findOne({ indexed : userOfStore }, {username : 1, indexed : 1} );
+            //console.log("-------------------------------------")
+            //console.log("elqueSigue >>", searchProfile);
+            console.log("tiendaAseguir >>", tiendaAseguir); //esta es la tienda que vamos a seguir
+
+            const sigoEstaTienda = await modelProfile.findOne({ indexed : user, favoritestores : userOfStore  }, { username: 1, favoritestores: 1 });
+            console.log("sigoEstaTienda -------->", sigoEstaTienda); // null o envia un objeto
+            
+            if (sigoEstaTienda){
+                console.log("Sigo esta tienda, es hora de dejar de seguirla", sigoEstaTienda.favoritestores );
+
+                async function stopFollowing(){
+                    const resultUpdate = await modelProfile.updateOne({ indexed : user }, {$pull:{ favoritestores : userOfStore }});
+                }
+
+                stopFollowing()
+                    .then(()=>{
+                        res.json({ "type" : "stopFollowing", "note" : "Hemos dejado de seguir esta tienda" });
+                    })
+                    .catch((err)=>{
+                        res.json({ "type" : "Error", "message" : "Ha habido un error en stopFollowing(), intente luego"});
+                    })
+
+                
+
+            } else {
+                console.log("No sigo esta tienda, es hora de seguirla", sigoEstaTienda);
+                
+
+                const usernameElqueSigue = searchProfile.username; 
+                const avatar = searchProfile.avatarPerfil[0].url; const avatarDefault = searchProfile.mailhash;
+                const usernameTiendaAseguir = tiendaAseguir.username; 
+                //userOfStore = al indexed 
+                console.log("Esto es avatar>>", avatar);
+                console.log("Esto es avatarDefault>>", avatarDefault);
+                
+               
+                async function Follow(){
+                    console.log("No existe esta tienda en el array favoriteStore de este usuario")
+                    console.log("----------------------------see-------------------------")
+                    const resultUpdate = await modelProfile.updateOne({ indexed : user }, {$push:{ favoritestores : userOfStore }});
+                    //ahora vamos a agregar al user al array folowMe
+                    const followMe = await modelProfile.updateOne({ indexed : userOfStore }, { $push: { followMe : user } } );    
+                }
+                //ahora que amvas partes tienen la informacion de siguiendo y seguido procedemos a crear la notificacion
+                //de siguiendome para que el usuario sepa cuando lo siguen y quien lo sigue.
+                async function Notification(){
+                    //enviar mensaje al usuario que lo estan siguiendo.
+                    const newNotification = new modelMessage( { typeNote: 'followMe',
+                                                                times: timeNow,
+                                                                objeAvatar : {avatar, avatarDefault},
+                                                                username: usernameElqueSigue,
+                                                                question: `¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también.`,
+                                                                toCreatedArticleId : userOfStore,
+                                                                ownerStore  : usernameTiendaAseguir,
+                                                                answer: 'waiting',
+                                                                view: false } );
+                    console.log("newNotification ------>", newNotification);
+                    const saveMessage = await newNotification.save();
+                    console.log("se ha creado la notificacion del seguidor");
+                }
+        
+        
+                Follow()
+                .then(()=>{
+                    Notification()
+                        .then(()=>{
+                            res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
+                        })
+                        .catch((error)=>{
+                            res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
+                        })
+                    
+                })
+                .catch((error)=>{
+                    res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
+                })
+
+            }
+                        
+    
+        }
+    
+    } catch (error) {
+       console.log("Ha habido un error, intente luego", error); 
+    }  
+    
+        
+    // hay tres valores en Type = "Save", "Following", "Error"
+    
 });
 
 routes.post('/account/offer', async (req, res)=>{

@@ -345,24 +345,9 @@
                 <div class="containerBanner" style="position: relative; z-index: 220">
                     <% if (user) { %>
                         <% if (searchBanner) { %>
+
                           <img src="<%= searchBanner[0].url %>" style="width: 100%;">
                         
-                          <% if (searchProfile.length !== 0) { %>
-                        
-                              <% if (storeProfile) { %>
-                              <div class="containerStar d-flex justify-content-center align-items-center" style="position: absolute; right: 30px; bottom: 15px; border-radius: 50%; width: 40px; height: 40px;">
-                                <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
-                                <i class="bi bi-bookmark-check starData"  style="width: auto;">
-                                  <input type="hidden" id="iDLogeado" value="<%= user._id %>">
-                                  <input type="hidden" id="iDStore" value="<%= storeProfile.indexed %>">
-                                </i>
-                                <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
-                                <!-- el objetivo es saber quien es el que esta logeado y que tienda quiere como favorito -->
-                              </div>
-                              <% }; %>
-                    
-                          <% }; %>
-
                         <% } %>
                     <% } else { %> 
                         <% if (searchBanner) { %>
@@ -370,25 +355,6 @@
                           <img src="<%= searchBanner[0].url %>" style="width: 100%;">
               
                         <% }; %>
-
-                          <!-- este bloque de codigo es para que no de error cuando no exista usuario, aqui existira pero invisible a los usarios -->
-                          <div class="containerMainStar d-flex justify-content-center align-items-end me-3 pb-4 invisible" style="width: 10%; height: 100%;  position: absolute; right: 0px; top: 0px;">
-                            <% if (storeProfile) { %>
-                            <div class="containerStar d-flex justify-content-center align-items-center" style="border-radius: 50%; width: 40px; height: 40px;">
-                              <!-- starData es el elemento que almacena datos con sus hijos y es el que detona la secuencia de procesos con el evento click abajo descrito -->
-                              <i class="bi bi-star-fill starData" style="width: auto;">
-                                
-                                <input type="hidden" value="<%= storeProfile.indexed %>">
-
-                              </i>
-                              <!-- Estos input hidden almacenan datos que necesito para poder enviar por fetch al backend  -->
-                            </div>
-
-                            <!-- esta data es para usarla abajo en un script para poder enviar un fecth con el nombre de la tienda. -->
-                            <input type="hidden" value="<%= storeProfile.username %>" id="nameStore"> 
-                            <% }; %>
-                          </div>
-
 
                     <% }; %> <!-- fin del user --> 
                 </div>
@@ -404,10 +370,10 @@
                     <div class="containerAvatarUser d-flex" style="width: 30%;">
                         <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
 
-                          <% if (storeProfile.avatarPerfil[0].url.length === 0 ) {%>
-                            <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px;"></td>   
-                            <% } else {%>
-                            <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px;"></td>
+                          <% if (storeProfile.avatarPerfil[0].url.length === 0 ) { %>
+                           <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px;"></td>    
+                            <% } else { %>
+                              <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px;"></td> 
                           <% }; %>
 
                <!-- este es el fin del foreach de colores -->
@@ -425,11 +391,11 @@
                                     <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit"> <i class="bi bi-share me-1"></i>  Compartir </button> 
                                     
                                     <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3">
-                                          <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 40px; height: 40px;">   </a> 
-                                          <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 40px; height: 40px"> </a> 
-                                          <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 40px; height: 40px">  </a>
+                                          <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
+                                          <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
+                                          <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
                                           <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
-                                            <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i>
+                                            <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i> </button>
                                             <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
                                           </div>
                                           <button class="btn btn-dark mx-2" id="btnQR" style="border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
@@ -445,52 +411,37 @@
                         <% }; %>
                         </div>
                     </div>
-                    
-                    <div class="containerDetailsMessajesRRSS" style="width: 60%;" >
+
+
+                    <% if (user) { %>
+                      <input type="hidden" id="iDLogeado" value="<%= user._id %>">
                       <% if (storeProfile) { %>
-                      
-                          <div class="containerMessager">
+                        <input type="hidden" id="iDStore" value="<%= storeProfile.indexed %>">
 
-                            <p class="MessagerStore mb-0" style="font-size: 18px; text-align: right;">
-                              <i>
-                                <%= storeProfile.profileMessage %>
-                              </i>
-                            </p>
-                      
-                          </div>
-                          <div class="containerMainRRSS" style="position: relative; height: 30px;">
-                           
-                            <div class="containerRRSS d-flex justify-content-end " style="position: absolute; right: 10px; width: 35%">
-                                                           
-                          
-                              <div class="facebook mx-2">
-                                  <% if (storeProfile.facebook) { %>
-                                    <a href="https://www.facebook.com/<%= storeProfile.facebook %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-facebook"></i></a>
-                                  <% } %>
-                              </div>
-                              <div class="instagram mx-2">
-                                <% if (storeProfile.instagram) { %>
-                                  <a href="https://www.instagram.com/<%= storeProfile.instagram %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-instagram"></i></a>
-                                <% } %>
-                              </div>
-                              <div class="youtube mx-2">
-                                <% if (storeProfile.youtube) { %>
-                                  <a href="https://www.youtube.com/<%= storeProfile.youtube %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-youtube"></i></a>
-                                <% } %>
-                              </div>
-                              <div class="tiktok mx-2">
-                                <% if (storeProfile.tiktok) { %>
-                                  <a href="https://www.tiktok.com/<%= storeProfile.tiktok %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-tiktok"></i></a>
-                                <% } %>
-                              </div>
-
-                                                      
-
+                        <% if (statusFollow !== null) { %>
+                            <div class="content-btn-follow mt-3 cursor-pointer" id="btnFollow" style = "position: relative;">
+                                <button class="btn rounded-pill shadow-sm px-4" style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= storeProfile.bGColorText %>; background-color:<%= storeProfile.bGColorTopbar%>;"> <span id= "spanBtnFollow"> Siguiendo </span>  </button>
+                                <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
                             </div>
-                          </div>
-                        
-                      <% }; %>
-                    </div> 
+                        <% } else { %>
+                            <div class="content-btn-follow mt-3 cursor-pointer" id="btnFollow" style = "position: relative;">
+                                <button class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= storeProfile.bGColorText %>; background-color:<%= storeProfile.bGColorTopbar%>;"> <span id= "spanBtnFollow"> Seguir </span>  </button>
+                                <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
+                            </div>
+                        <% }; %>
+
+                      <% } %>  
+                    <% } else { %>
+
+                      <div class="content-btn-follow mt-3" style = "position: relative;">
+                      
+                        <button class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= storeProfile.bGColorText %>; background-color:<%= storeProfile.bGColorTopbar%>;">Seguir</button>
+                        <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
+                      
+                    </div>
+                    <% }; %>  
+                    
+
         
                 </div> <!-- aqui cierra el bloque Topbar--> 
                 <% if (storeProfile) { %>
@@ -744,7 +695,7 @@
                               </button>  
 
 
-                              <button style="background-color: transparent; border: none;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="NetdeBliss en desarrollo.">
+                              <button style="background-color: transparent; border: none;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="ChatdeBliss en desarrollo.">
                                 <div class="contentChatMessage border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
                                   <img src="/img/iconChatMessage.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
                                 </div>
@@ -1153,7 +1104,56 @@
                   
               </div>
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
-                <div class="contetAntFooter" style="height: 50px; background-color:<%= storeProfile.bGColorWorkspace %>;"></div>
+                <div class="contetAntFooter" style="height: 40px; background-color:<%= storeProfile.bGColorWorkspace %>">
+                   <!-- aqui ira el contenedor del marketing space --> 
+                </div>
+                <div class="containerDetailsMessajesRRSS pt-3" style="height: auto; background-color:<%= storeProfile.bGColorTopbar%>;">
+                    <% if (storeProfile) { %>
+                    
+                        <div class="containerMessager d-flex justify-content-start">
+
+                          <p class="MessagerStore mb-0 mx-5" style="font-size: 18px; text-align: right; color: <%= storeProfile.bGColorText %>">
+                            <i>
+                              <%= storeProfile.profileMessage %>
+                            </i>
+                          </p>
+                    
+                        </div>
+                        <div class="containerMainRRSS d-flex justify-content-end mx-5"  style="position: relative; height: 30px;">
+                         
+                          <div class="containerRRSS d-flex justify-content-end" style="position: absolute; right: 10px; width: 35%">
+                                                         
+                        
+                            <div class="facebook mx-2">
+                                <% if (storeProfile.facebook) { %>
+                                  <a href="https://www.facebook.com/<%= storeProfile.facebook %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-facebook"></i></a>
+                                <% } %>
+                            </div>
+                            <div class="instagram mx-2">
+                              <% if (storeProfile.instagram) { %>
+                                <a href="https://www.instagram.com/<%= storeProfile.instagram %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-instagram"></i></a>
+                              <% } %>
+                            </div>
+                            <div class="youtube mx-2">
+                              <% if (storeProfile.youtube) { %>
+                                <a href="https://www.youtube.com/<%= storeProfile.youtube %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-youtube"></i></a>
+                              <% } %>
+                            </div>
+                            <div class="tiktok mx-2">
+                              <% if (storeProfile.tiktok) { %>
+                                <a href="https://www.tiktok.com/<%= storeProfile.tiktok %>" target="_blank" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-tiktok"></i></a>
+                              <% } %>
+                            </div>
+
+                                                    
+
+                          </div>
+
+                        </div>
+                      
+                    <% }; %>
+                </div> 
+                
                 <footer class="py-4" style="height: auto; background-color:<%= storeProfile.bGColorTopbar%>;color:<%= storeProfile.bGColorText %>;">
                   
                   <div class="row mx-0 contentClient d-flex justify-content-around align-items-center">
@@ -1219,6 +1219,79 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+
+  <script>
+    const btnFollow = document.getElementById('btnFollow');
+    const spanBtnFollow = document.getElementById('spanBtnFollow');
+    const contentConfetyFollow = document.querySelector('.contentConfetyFollow');
+    const user = document.getElementById('iDLogeado'); 
+    const userTienda = document.getElementById('iDStore'); 
+
+    btnFollow.addEventListener("click", ()=>{
+      const User = user.value; const UserTienda = userTienda.value;
+      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+      efectSoundExpan.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
+      contentConfetyFollow.innerHTML = `<img src="/img/gif-1.gif" alt="" style = "width: 180px; height: 90px;">`
+      
+      setTimeout(() => {
+        contentConfetyFollow.innerHTML = "";
+      }, 1500);
+
+      
+        const datos = {
+            user : User,
+            userOfStore : UserTienda
+        };
+          
+               
+        fetch('/account/followStore', {
+
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: {"content-type" : "application/json"}
+
+          })
+          .then(response =>response.json() )
+          .then( jsonx =>{
+            
+
+            console.log("ver aqui lo que llega despues de seguir a alguien ---->", jsonx)
+            const type = jsonx.type;
+            const note = jsonx.note; 
+            // { "type" : "Following", "note" : "Tienda guardada y siguiendo" });
+            // type puede ser Following, Error o stopFollowing 
+            if (type === "Following"){
+              //Seguir
+              console.log("empiezo a seguirla, cambiar el boton a Siguiendo. ");
+              console.log("note ->", note);
+              spanBtnFollow.innerText = "";
+              spanBtnFollow.innerText = "Siguiendo";
+
+            } else if (type === "stopFollowing") {
+              //Siguiendo
+              console.log("deje de seguirla, cambiar al boton Seguir. ")
+              console.log("note ->", note);
+              spanBtnFollow.innerText = "";
+              spanBtnFollow.innerText = "Seguir";
+            } else {
+              console.log("Ha ocurrido un error");
+              console.log("note ->", note);
+            }
+
+            
+          })
+          .catch( err => console.log(err));
+
+
+
+
+    });
+
+    
+  </script>
 
   <script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -1354,107 +1427,6 @@
 
 
 </script>  
-
-<script>
-    const containerStar = document.querySelector('.containerStar');
-    const starData = document.querySelector('.starData');
-    const containAlert = document.querySelector('.containAlert');
-    let btnClose;
- 
-    containerStar.addEventListener('click', ()=>{
-        //console.log("le has dado click a este boton");
-        //console.log("Estos son los dato---->1 ", starData.childNodes[1].value );
-        //console.log("Estos son los dato---->3 ", starData.childNodes[3].value );
-
-        efecto()
-        setInterval(normalStart, 2000)
-
-        const user = starData.childNodes[1].value; //usuario que esta logeado
-        const userTienda = starData.childNodes[3].value; //usuario dueño de la tienda
-      
-        const datos = {
-            user : user,
-            userOfStore : userTienda
-        };
-          
-
-        fetch('/account/myfavorite-stores', {
-
-          method: "post",
-          body: JSON.stringify(datos),
-          headers: {"content-type" : "application/json"}
-
-          })
-          .then(response =>response.json() )
-          .then( jsonx =>{
-            
-
-            console.log("ver aqui ---->", jsonx)
-            const type = jsonx.type;
-            const message = jsonx.message; //{type: 'Ok', message: 'Cuenta seguida'} 
-            // hay tres valores en Type = "Save", "Following", "Error"
-            if (type === "Save"){
-              closeAlert();
-            
-              containAlert.innerHTML = `<div class="container-fluid auctionsMessages my-2 d-flex justify-content-center">
-                                          <div class="alert alert-success alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.9">
-                                              <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
-                                              <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                          </div>
-                                        </div>`
-              btnClose = document.querySelector('.btn-close');
-
-            } else if (type === "Following") {
-              closeAlert();
-              btnClose = document.querySelector('.btn-close');
-              containAlert.innerHTML = `<div class="container-fluid auctionsMessages my-2 d-flex justify-content-center">
-                                          <div class="alert alert-info alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.9">
-                                              <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
-                                              <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                          </div>
-                                        </div>`
-              btnClose = document.querySelector('.btn-close');
-            } else {
-              btnClose = document.querySelector('.btn-close');
-              containAlert.innerHTML = `<div class="container-fluid auctionsMessages my-2 d-flex justify-content-center">
-                                          <div class="alert alert-danger alert-dismissible fade show auctionsMessagesSon" role="alert" style="opacity : 0.9">
-                                              <strong class="me-1"><i class="bi bi-check-circle-fill me-2"></i> ${message}. </strong> 
-                                              <button type="button" class="btn-close invisible" data-bs-dismiss="alert" aria-label="Close"></button>
-                                          </div>
-                                        </div>`
-              btnClose = document.querySelector('.btn-close');
-
-            }
-
-            
-          })
-          .catch( err => console.log(err));
-
-          
-
-          function closeAlert(){
-            
-            setTimeout(()=>{
-                btnClose.click();
-            }, 3000);
-
-          }
-
-          function efecto() {
-            starData.classList.remove('bi-bookmark-check');
-            starData.classList.add('bi-bookmark-check-fill')
-          }
-
-          function normalStart() {
-            starData.classList.remove('bi-bookmark-check-fill');
-            starData.classList.add('bi-bookmark-check')
-          }
-    }); 
-
-
-         
-
-</script>
 
 
 <script>
