@@ -864,12 +864,18 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
 
             const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
+            const accountIdString = accountId.toString(); //paso de objectId a String
             //console.log("Este es el id del account que queremos visitar ...", accountId);  
 
-            const storeProfile = await modelProfile.find({ indexed : accountId });
+            //---consultamos si el user que visita esta tienda ya la sigue.     
+            const statusFollow = null
+            console.log("statusFollow --->", statusFollow);
+            //-----------------------------------------------------------------
+
+            const storeProfile = await modelProfile.findOne({ indexed : accountId });
             //console.log("Aqui el profile de la cuenta", storeProfile);
 
-            let view = storeProfile[0].view; //aqui guardo la cantidad de visitas actuales que tiene la tienda;
+            let view = storeProfile.view; //aqui guardo la cantidad de visitas actuales que tiene la tienda;
             //console.log('aqui las vistas  view---->', view);
             let signature = (view + 1);     
 
@@ -879,150 +885,339 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
             //console.log("Aqui la firma del visitante ---->", firmaVisitante)
             
 
-            if (storeProfile.length !== 0) { 
-                const searchBanner = storeProfile[0].bannerPerfil;
+            if (storeProfile) { 
+                const searchBanner = storeProfile.bannerPerfil;
         
-                //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                const resultAirplane = await modelAirplane.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment} ]});
-                const resultArtes = await modelArtes.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment}]});
-                const resultItems = await modelItems.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment}]});
-                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment}]});
-                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment}]});
-                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment}]});
-                const resultService = await modelService.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment}]});
-                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment}]});
-                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment}]});
+                //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones.
+                if (segment === "All"){
+                    //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
+                    const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]});
+                    const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]});
+                    const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                    const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                    const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                    const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                    const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                    const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                    const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
 
-                if (resultAirplane) {
-                    boxPublisher.push(...resultAirplane)
-                } 
-                if (resultArtes) {
-                    boxPublisher.push(...resultArtes)
-                }
-                if (resultItems) {
-                    boxPublisher.push(...resultItems)
-                }
-                if (resultAutomotive) {
-                    boxPublisher.push(...resultAutomotive)
-                }
-                if (resultRealstate) {
-                    boxPublisher.push(...resultRealstate)
-                }
-                if (resultNautical) {
-                    boxPublisher.push(...resultNautical)
-                }
-                if (resultService) {
-                    boxPublisher.push(...resultService)
-                }
-                if (resultAuction) {
-                    boxPublisher.push(...resultAuction)
-                }
-                if (resultRaffle) {
-                    boxPublisher.push(...resultRaffle)
-                }
+                    if (resultAirplane) {
+                        boxPublisher.push(...resultAirplane)
+                    } 
+                    if (resultArtes) {
+                        boxPublisher.push(...resultArtes)
+                    }
+                    if (resultItems) {
+                        boxPublisher.push(...resultItems)
+                    }
+                    if (resultAutomotive) {
+                        boxPublisher.push(...resultAutomotive)
+                    }
+                    if (resultRealstate) {
+                        boxPublisher.push(...resultRealstate)
+                    }
+                    if (resultNautical) {
+                        boxPublisher.push(...resultNautical)
+                    }
+                    if (resultService) {
+                        boxPublisher.push(...resultService)
+                    }
+                    if (resultAuction) {
+                        boxPublisher.push(...resultAuction)
+                    }
+                    if (resultRaffle) {
+                        boxPublisher.push(...resultRaffle)
+                    }
+        
+                    console.log("Este es el boxPublisher del selector de segmentos con valor All ------>");
+                    console.log("Este es el boxPublisher un array de esta cantidad de elementos ------>", boxPublisher.length );
 
-                //console.log("Este es el boxPublisher ------>", boxPublisher);
-                // paginate
-                let long = boxPublisher.length; //conocer la longitud del array
-                const limit = 10; //establecer la cantidad  de elementos que se mostrarán
-                let pagina = 1; //declaracion de la pagina por default en 1
-                let X;
-                let totalPagina = Math.ceil(long / limit);    
- 
-                //console.log("long : ", long);
-                //console.log("limit : ", limit);
-                //console.log("totalPagina : ", totalPagina);
-     
- 
-                if (receive == undefined){
- 
-                     req.session.x = 0;
-                     X = req.session.x;
- 
-                     //console.log("Estamos aqui en el inicio");
-                     //console.log("Esto es el valor de x : ", X );
-                     //aqui el nuevo arreglo por default 
-                     newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-     
-                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
- 
-                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
- 
-                } else if (receive == "first"){
- 
-                     X = 0;//0
-                     req.session.x = X;
-                                            //   0    10 + 0
-                     newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-                                         // 10      / 10 = 1
-                     pagina = Math.ceil((limit + X) / limit);
-                     //console.log("pagina :  ", pagina);
-                     //console.log("totalPagina :  ", totalPagina);
-                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
- 
-                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
- 
-                } else if (receive == "next"){
- 
-                     X = req.session.x;
- 
-                     if (X + limit < long ){
-    
-                         X = X + limit;//6
-                         req.session.x = X;
- 
-                         newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                    // paginate
+                    let long = boxPublisher.length; //conocer la longitud del array
+                    const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                    let pagina = 1; //declaracion de la pagina por default en 1
+                    let X, V; //variables importantes para guardar datos necesarios
+                    let totalPagina = Math.ceil(long / limit);    
+
+                    console.log("long : ", long);
+                    console.log("limit : ", limit);
+                    console.log("totalPagina : ", totalPagina);
+        
+
+                    if (receive == undefined){
+
+                        req.session.x = 0;
+                        X = req.session.x;
+
+                        console.log("Estamos aqui en el inicio");
+                        console.log("Esto es el valor de x : ", X );
+                        //aqui el nuevo arreglo por default 
+                        newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                        const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+
+                    } else if (receive == "first"){
+
+                        X = 0;//0
+                        req.session.x = X;
+                        
+                        newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                        //        6    + 0  / 6 = 1 //aqui no hace falta el Math.ceil ya que siempre se dividira entre el mismo numero, siempre dara "1" 
+                        pagina = (limit + X) / limit; //perfecto
+                        //console.log("pagina :  ", pagina);
+                        //console.log("totalPagina :  ", totalPagina);
+                        const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+
+                    } else if (receive == "next"){
+                        console.log("Estamos en paginate next ******************")
+                        X = req.session.x; //24 al inicio.... en la cuarta vuelta es 24
+                        // 20 +  8    < 31  =  true      
+                        if (X + limit < long ){
+                        // X  16 +  8  = 24
+                            X = X + limit;
+                            //console.log("XXXXXXXXXXXXXXXXXXXXXX");
+                            //console.log("Ver valor de X :", X);
+                            req.session.x = X;//24
+
+                            newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                                        //       8   + 16 / 8 = 3
+                            pagina = Math.ceil((limit + X) / limit);
+                            //console.log("pagina :  ", pagina);
+                            //console.log("totalPagina :  ", totalPagina);
+                            const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                            console.log("newBox ver estamo sen next---->", newBox)
+
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+          
+                        }
             
-                         pagina = Math.ceil((limit + X) / limit);
-                         //console.log("pagina :  ", pagina);
-                         //console.log("totalPagina :  ", totalPagina);
-                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
- 
-                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
-            
-                     }
-           
-             
-                } else if (receive == "prev"){
- 
-                     X = req.session.x;
-                     //console.log("Estamos en Prev");
-                     //console.log("Esto es el valor de x :", X); 
- 
-                     if (X  > 0){
-    
-                         X = X - limit
-                         req.session.x = X;
- 
-                         newBox = boxPublisher.slice(X , limit + X); 
-   
-                         pagina = Math.ceil((limit + X) / limit);
-                         //console.log("pagina :  ", pagina);
-                         //console.log("totalPagina :  ", totalPagina);
-                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
- 
-                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
-                     } 
-           
- 
-                } else if (receive == "last"){
- 
+                
+                    } else if (receive == "prev"){
 
-                    let n = (long % limit);
-                    X = long - limit; 
-                    V = long - n;    
-                    req.session.x = V;
-                            
+                        X = req.session.x;
+                        //console.log("Estamos en Prev");
+                        //console.log("Esto es el valor de x :", X); //30
+
+                        if (X  > 0){
+    
+                            X = X - limit //20
+                            //console.log("XXXXXXXXXXXXXXXXXXXXXX");
+                            //console.log("Ver valor de X :", X);//20
+                            req.session.x = X; //20
+
+                            newBox = boxPublisher.slice(X , limit + X); 
+    
+                            pagina = Math.ceil((limit + X) / limit);
+                            //console.log("pagina :  ", pagina);
+                            //console.log("totalPagina :  ", totalPagina);
+                            const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        } 
+            
+
+                    } else if (receive == "last"){
+
+                    //console.log("Esto es long :", long);//30
+                    //console.log("Esto es limit :", limit);//10
+
+                    let n = (long % limit);//0
+
+                    if (n !==0 ){
+                        X = long - limit; //30- 10 = 20
+                        V = long - n;     //30- 3  = 27
+                        req.session.x = V; //27
+                        //console.log("Esto es n :", n);//3
+                        //console.log("Esto es X :", X);//20
+                    } else {
+                        X = long - limit; //30- 10 = 20
+                        V = long - limit; //30- 10 = 20
+                        req.session.x = V; //30
+                        //console.log("Esto es n :", n);//0
+                        //console.log("Esto es X :", X);//20
+                    }
+
                     newBox = boxPublisher.slice(V , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-            
+                    //       10   + 23  / 10 = 3.3 pero el Mat.ceil lo lleva a 4 perfecto
                     pagina = Math.ceil((limit + X) / limit);
                     //console.log("pagina :  ", pagina);
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
- 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell});
- 
-                }
+
+
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+
+                    }
+              
+
+
+                } else {
+
+                        //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]});
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]});
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]});
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]});
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
+
+                        if (resultAirplane) {
+                            boxPublisher.push(...resultAirplane)
+                        } 
+                        if (resultArtes) {
+                            boxPublisher.push(...resultArtes)
+                        }
+                        if (resultItems) {
+                            boxPublisher.push(...resultItems)
+                        }
+                        if (resultAutomotive) {
+                            boxPublisher.push(...resultAutomotive)
+                        }
+                        if (resultRealstate) {
+                            boxPublisher.push(...resultRealstate)
+                        }
+                        if (resultNautical) {
+                            boxPublisher.push(...resultNautical)
+                        }
+                        if (resultService) {
+                            boxPublisher.push(...resultService)
+                        }
+                        if (resultAuction) {
+                            boxPublisher.push(...resultAuction)
+                        }
+                        if (resultRaffle) {
+                            boxPublisher.push(...resultRaffle)
+                        }
+            
+                        //console.log("Este es el boxPublisher ------>", boxPublisher);
+
+                        // paginate
+                        let long = boxPublisher.length; //conocer la longitud del array
+                        const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                        let pagina = 1; //declaracion de la pagina por default en 1
+                        let X, V; //variables importantes para guardar datos necesarios
+                        let totalPagina = Math.ceil(long / limit);    
+
+                        console.log("long : ", long);
+                        console.log("limit : ", limit);
+                        console.log("totalPagina : ", totalPagina);
+            
+
+                        if (receive == undefined){
+
+                            req.session.x = 0;
+                            X = req.session.x;
+
+                            console.log("Estamos aqui en el inicio");
+                            console.log("Esto es el valor de x : ", X );
+                            //aqui el nuevo arreglo por default 
+                            newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                            const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+
+                        } else if (receive == "first"){
+
+                            X = 0;//0
+                            req.session.x = X;
+                            
+                            newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                            //        6    + 0  / 6 = 1 //aqui no hace falta el Math.ceil ya que siempre se dividira entre el mismo numero, siempre dara "1" 
+                            pagina = (limit + X) / limit; //perfecto
+                            //console.log("pagina :  ", pagina);
+                            //console.log("totalPagina :  ", totalPagina);
+                            const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+
+                        } else if (receive == "next"){
+
+                            X = req.session.x; //24 al inicio.... en la cuarta vuelta es 24
+                            // 20 +  8    < 31  =  true      
+                            if (X + limit < long ){
+                            // X  16 +  8  = 24
+                                X = X + limit;
+                                //console.log("XXXXXXXXXXXXXXXXXXXXXX");
+                                //console.log("Ver valor de X :", X);
+                                req.session.x = X;//24
+
+                                newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                                            //       8   + 16 / 8 = 3
+                                pagina = Math.ceil((limit + X) / limit);
+                                //console.log("pagina :  ", pagina);
+                                //console.log("totalPagina :  ", totalPagina);
+                                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                
+                            }
+                
+                    
+                        } else if (receive == "prev"){
+
+                            X = req.session.x;
+                            //console.log("Estamos en Prev");
+                            //console.log("Esto es el valor de x :", X); //30
+
+                            if (X  > 0){
+        
+                                X = X - limit //20
+                                //console.log("XXXXXXXXXXXXXXXXXXXXXX");
+                                //console.log("Ver valor de X :", X);//20
+                                req.session.x = X; //20
+
+                                newBox = boxPublisher.slice(X , limit + X); 
+        
+                                pagina = Math.ceil((limit + X) / limit);
+                                //console.log("pagina :  ", pagina);
+                                //console.log("totalPagina :  ", totalPagina);
+                                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            } 
+                
+
+                        } else if (receive == "last"){
+
+                        //console.log("Esto es long :", long);//30
+                        //console.log("Esto es limit :", limit);//10
+
+                        let n = (long % limit);//0
+
+                        if (n !==0 ){
+                            X = long - limit; //30- 10 = 20
+                            V = long - n;     //30- 3  = 27
+                            req.session.x = V; //27
+                            //console.log("Esto es n :", n);//3
+                            //console.log("Esto es X :", X);//20
+                        } else {
+                            X = long - limit; //30- 10 = 20
+                            V = long - limit; //30- 10 = 20
+                            req.session.x = V; //30
+                            //console.log("Esto es n :", n);//0
+                            //console.log("Esto es X :", X);//20
+                        }
+
+                        newBox = boxPublisher.slice(V , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                        //       10   + 23  / 10 = 3.3 pero el Mat.ceil lo lleva a 4 perfecto
+                        pagina = Math.ceil((limit + X) / limit);
+                        //console.log("pagina :  ", pagina);
+                        //console.log("totalPagina :  ", totalPagina);
+                        const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+
+                        }
+                
+
+                }  
 
             } 
 

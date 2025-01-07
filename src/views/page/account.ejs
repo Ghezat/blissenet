@@ -439,6 +439,7 @@
                       <% if (storeProfile) { %>
                         <input type="hidden" id="iDStore" value="<%= storeProfile.indexed %>">
                         
+                        <!-- estos datos ocultos se usan para jugar con los estilos el bton buttonFollow abajo presente -->
                         <input type="hidden" id="bGColorText" value="<%= storeProfile.bGColorText %>">
                         <input type="hidden" id="bGColorTopbar" value="<%= storeProfile.bGColorTopbar %>">
 
@@ -525,6 +526,67 @@
                             </div>
                         </div>
                       </div>
+
+                      <!-- Modal status de nivel  data-bs-toggle="modal" data-bs-target="#staticLevelSell" -->
+                      <div class="modal fade" id="staticLevelSell" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticLevelSell" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">Récor como vendedor </h5>
+                                  <button type="button" class="btn-close" id="closeModalStaticLevelSell" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center mb-0">
+                                  <p class="my-1"> Esta métrica indica que tan habilidoso es la administración de esta tienda, su capacidad de vender. Este nivel inicia en Carbón (pocas ventas realizadas) y termina en Diamante (Muchas ventas logradas +200). <span class="bg-dark rounded-pill text-info py-0 px-2 cursor-pointer seeLevel" data-bs-toggle="modal" data-bs-target="#staticScalafon">  Ver Niveles </span> </p> 
+                                </div>
+                                <div class="containerMessage">
+                                  <hr>
+                                  <p class="mx-3">"Recuerde que esta información no refleja la confiabilidad de la tienda. Considere el nivel de confianza  (<i class="bi bi-shield-check mx-1" style="font-size: 1rem;"></i>)  y los comentarios de sus clientes (<i class="bi bi-star-fill mx-1" style="font-size: 1rem;"></i>). Tómese su tiempo para revisar todos los indicadores y calificaciones antes de comprar."</p>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <!-- Modal status de nivel  data-bs-toggle="modal" data-bs-target="#staticScalafon" -->
+                      <div class="modal fade" id="staticScalafon" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticScalafon" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">Niveles </h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center">
+                                  <img src="/img/scalafon.png" alt="niveles" style="max-width: 90%;">
+                                </div>
+                                <div class="details d-flex justify-content-start">
+                                  <span class="mx-3"> <small> <i>Las cantidades expresadas en los niveles representan las ventas realizadas.</i> </small> </span>
+                                </div>
+                                
+                                <div class="containerMessage">
+                                  <hr>
+                                  <p class="mx-3">Puedes ver tu nivel en Publicaciones opción Record. </p>
+                                </div>
+                            </div>
+                        </div>
+                      </div>                       
+                      
+                      <!-- Modal status de nivel  data-bs-toggle="modal" data-bs-target="#staticTrustSell" -->
+                      <div class="modal fade" id="staticTrustSell" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrustSell" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">Nivel de confianza</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center my-2">
+                                  "La confiabilidad se expresa en porcentajes del 100% (máxima confianza) al 0% (mínima confianza). Si no hay información, es porque no ha habido intercambios comerciales calificados".
+                                </div>
+                                <div class="containerMessage">
+                                  <hr>
+                                  <p class="mx-3">Esta información es valiosa, ya que muestra la confiabilidad de la tienda. ¡No olvides revisar los comentarios de sus clientes en la sección de <b>Calificación de Tienda <span class="bg-dark rounded-pill text-info px-2 py-1"> (Estrella <i class="bi bi-star-fill" style="font-size: 1rem; color: #fcda57;"></i>). </span>  </b> </p>
+                                </div>
+                            </div>
+                        </div>
+                      </div>                           
 
                       <!-- Option Rate -->
                       <div class="modal fade" id="staticOption" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticOptionRate" aria-hidden="true">
@@ -657,12 +719,12 @@
                                 <div class="containerScoreTrust d-flex justify-content-center align-items-center flex-column"  
                                   style="position: absolute; top: 0; width: 55px; height: 0px; border-top-left-radius: 0px; border-bottom-left-radius: 5px;">
                                     <div class="contenForEfect closed" style="width: 100%; height: 100%;">
-                                      <div class="containerScore border d-flex flex-column justify-content-center align-items-center p-1 no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
+                                      <div class="containerScore border d-flex flex-column justify-content-center align-items-center p-1 no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;" data-bs-toggle="modal" data-bs-target="#staticLevelSell">
                                         <p class="level m-0" style="font-size: 11px;"></p>
                                         <div class="imgLevel"></div>
                                         <p class="scoreLevel m-0"></p>
                                       </div>
-                                      <div class="containerTrust border closed d-flex flex-column justify-content-center align-items-center no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;">
+                                      <div class="containerTrust border closed d-flex flex-column justify-content-center align-items-center no-select" style="background-color: #fcfcfc; height: 40%; width: 100%;" data-bs-toggle="modal" data-bs-target="#staticTrustSell">
                                         <p class="m-0" style="font-size: 11px;">Trust</p> 
                                         <i class="bi bi-shield-check my-2" style="font-size: 1rem;"></i>
                                         <p class="trustLevel m-0"></p>
@@ -675,25 +737,29 @@
 
                                           <!-- <div class="containRate border-top d-flex flex-column align-items-center justify-content-center" style="background-color:  rgb(167, 167, 167); height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"> -->
                                           <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-                                            <i class="bi bi-star" style="font-size: 1rem;"></i> 
+                                            <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Los propietarios no pueden calificar sus tiendas.">  
+                                              <i class="bi bi-star" style="font-size: 1rem;"></i>
+                                            </button>   
                                           </div> 
 
                                         <% } else { %> <!-- no es el dueño de la tienda -->
 
-                                              <% if (boxPublisher.length !==0) { %>  <!-- no es el propietario tiene al menos un articulo -->
+                                              <% if (boxPublisher.length !==0) { %>  <!-- no es el propietario y la tienda tiene al menos un articulo -->
                                                 <div class="containRate border d-flex flex-column align-items-center justify-content-center cursor-pointer bg-warning " style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;"  data-bs-toggle="modal" data-bs-target="#staticOption">
                                                   <i class="bi bi-star-fill" style="font-size: 1rem;"></i>
                                                 </div>
 
 
-                                              <% } else { %> <!-- no es el propietario y no tiene articulos es una tienda vacia -->
-                                                <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-                                                  <!-- <i class="bi bi-star" style="font-size: 1rem;"></i> -->
-                                                  <div class="contentStart d-flex justify-content-center align-items-center rounded-pill shadow-sm"  style="width: 30px; height: 30px; ">
-                                                    <i class="bi bi-star" style="font-size: 1rem;"></i>
-                                                  </div>
-                                                    
-                                                </div> 
+                                              <% } else { %> <!-- no es el propietario y la tienda no tiene articulos es una tienda vacia -->
+                                               
+                                                    <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+                                                      <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Las cuentas sin productos o servicios no serán calificadas en Blissenet, ya que no se consideran tiendas.">
+                                                        <div class="contentStart d-flex justify-content-center align-items-center rounded-pill shadow-sm"  style="width: 30px; height: 30px; ">
+                                                          <i class="bi bi-star" style="font-size: 1rem;"></i>
+                                                        </div>
+                                                      </button>  
+                                                    </div>
+  
                                               <% }; %>
 
                                         <% }; %>  
@@ -701,7 +767,9 @@
                                   <% } else { %>
                                     <!-- el usuaio entra sin haberse logeado  -->
                                     <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-                                      <i class="bi bi-star" style="font-size: 1rem;"></i> 
+                                      <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Debes estar logeado para poder calificar.">    
+                                        <i class="bi bi-star" style="font-size: 1rem;"></i>
+                                      </button>   
                                     </div> 
 
                                   <% }; %>  
@@ -1593,6 +1661,8 @@
 
 
 </script>
+
+
 
 <!-- script para calificar -->
 <script>
