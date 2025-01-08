@@ -504,7 +504,8 @@ routes.post('/myaccount/signup', async(req,res)=>{
 
     //consulta en la base de datos del campo email
     const search = await modelUser.findOne({email})    
-    usernameParse = username.replace(/\s+/g, ''); // Quitamos todos los espacios.
+    //usernameParse = username.replace(/\s+/g, ''); modelo viejo se paso a la de abajo.
+    usernameParse = username.replace(/\s+/g, '').trim(); // Quitamos todos los espacios.
     console.log("usernameParse", usernameParse);
     
     const result = await modelUser.findOne({ username: new RegExp( '^' + usernameParse + '$','i' ) });
@@ -2268,27 +2269,30 @@ routes.post('/myaccount/change-username', async(req, res)=>{
         console.log("-----change username------");
         console.log(req.body);
         const { indexed, username, newName, code, password } = req.body;
-        console.log("indexed", indexed); console.log("username", username); console.log("newName", newName); console.log("code", code); console.log("password", password);
+        //console.log("indexed", indexed); console.log("username", username); console.log("newName", newName); console.log("code", code); console.log("password", password);
+
+        // debemos tomar newName y formatearlo para asegurar que no tiene espacios en blanco ni delante ni detras ni en ningun lado.
+        let newNameParse = newName.replace(/\s+/g, '').trim(); // Quitamos todos los espacios.
 
         //hacemos una busqueda en la coleccion user para revisar si el newName ya existe
-        const searchNewName = await modelUser.find({username : newName});
+        const searchNewName = await modelUser.find({username : newNameParse});
         console.log("searchNewName--->", searchNewName);
 
         //Conjunto de funciones que estaran activas para su ejecucion.
         async function editUser(){
-            const editUser = await modelUser.updateOne({ _id : indexed}, { $set : {username : newName} });
+            const editUser = await modelUser.updateOne({ _id : indexed}, { $set : {username : newNameParse} });
         }
 
         async function editProfile(){
-            const editProfile =  await modelProfile.updateOne({indexed : indexed}, { $set : {username : newName} });
+            const editProfile =  await modelProfile.updateOne({indexed : indexed}, { $set : {username : newNameParse} });
         }
         
         async function editMessages(){
-            const editMessages = await modelMessages.updateMany({userId : indexed }, { $set : {username : newName} });
+            const editMessages = await modelMessages.updateMany({userId : indexed }, { $set : {username : newNameParse} });
         }
         
         async function editStoreRate(){
-            const editStoreRate = await modelStoreRate.updateMany({logeado : indexed}, { $set: {'dataLogeado.username' : newName} });
+            const editStoreRate = await modelStoreRate.updateMany({logeado : indexed}, { $set: {'dataLogeado.username' : newNameParse} });
         }
 
         const searchUser = await modelUser.findOne({_id : indexed});
@@ -2305,7 +2309,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                 if (searchNewName.length === 0){
 
                     if ( code === 'user_profile_messages_storeRate' ){
-                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
                         editUser()
                             .then(()=>{
@@ -2335,7 +2339,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
 
 
                     } else if ( code === 'user_profile_messages') {
-                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
                         editUser()
                             .then(()=>{
@@ -2358,7 +2362,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                             })
 
                     } else if ( code === 'user_profile_storeRate' ) {
-                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
                         editUser()
                             .then(()=>{
@@ -2381,7 +2385,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                             })        
 
                     } else if ( code === 'user_profile' ) {
-                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
                         editUser()
                             .then(()=>{
@@ -2398,7 +2402,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                             })        
 
                     } else if ( code === 'user_messages' ) {
-                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
                         editUser()
                             .then(()=>{
@@ -2415,7 +2419,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                             }) 
 
                     } else if ( code === 'user' ){
-                        console.log(`vamos a cambiar el username ${username} por ${newName} en estas colecciones ${code}`);
+                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
                         editUser()
                             .then(()=>{

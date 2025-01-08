@@ -935,7 +935,7 @@
                                                 <li>No haber tenido negociación ni compra alguna. </li>
                                                 <li>No poseer anuncios.</li>
                                             </ul>
-                                            <p>Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Editar </span> para saber si tu cuenta admite esta edición. Introduce el nuevo nombre que quieres y finalmente da clic a <span class="fw-bold text-primary">Actualizar</span>. </p>
+                                            <p>Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Editar </span> para saber si tu cuenta admite esta edición. Introduce el nuevo nombre que quieres y finalmente da clic a <span class="fw-bold text-primary">Actualizar</span>. El sistema actualizará su nuevo nombre de Cuenta/Tienda y en 3 segundos será deslogeado. Vuelva a entrar y todos los cambios estarán listos.  </p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
@@ -983,7 +983,29 @@
                                     </div>
                                 </div>
                             </div> 
-                           
+
+                            <!-- Modal zonaBliss --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticZonaBliss" -->
+                            <div class="modal fade" id="staticZonaBliss" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">ZonaBliss</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">**¡Bienvenido a ZonaBliss!** 🌟
+                                                Una herramientas innovadora para crear carruseles de banners atractivos, insertar videos cautivadores y subir fotos impresionantes, todo desde un espacio fácil de administrar.     
+                                                Haz que tu tienda brille y atraiga a más usuarios con estilo y creatividad. ¡Descubre el poder de la personalización y eleva tu negocio al siguiente nivel con ZonaBliss! 
+                                            </p>
+                                            <p> Requerimentos : <span class="alert-success py-1 px-2 rounded-2"> <b>1 Anuncio</b>  </span> </p>
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                             
 
                             <!-- Modal Buscador en Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
                             <div class="modal fade" id="staticCheckSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
@@ -1315,6 +1337,39 @@
                                                     </div>        
                                                 <% }); %>
                                             
+                                            </div>
+                                        </div>
+
+                                        <!-- esto es zonaBliss -->
+                                        <div class="card mt-2" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <div class="card-body">
+
+                                                <div class="row shadow px-2 py-4 m-2 rounded border"> 
+                                                
+                                                                
+                                                               
+                                                    <% if (user) {  %>
+                                                    <div class="col-lg-9 col-md-9 col-sm-11 d-flex justify-align-center justify-content-center">
+                                                        <span class="m-2 p-3 rounded-3 text-light" style="background-color: rgba(0, 0, 0, 0.9);">  ¡Es hora de darle un poco más de estilo a tu Tienda! <i class="bi bi-info-circle mx-1 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticZonaBliss"></i> </span>
+                                                    </div> 
+                                                    <div class="col-lg-3 col-md-3 col-sm-11">       
+                                                        <div class="form-group d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+
+                                                            <% if(sumCount >= 1) { %>
+                                                                
+                                                                <a href="/zonabliss/<%= user.username %>" class="btn btn-dark text-light text-decoration-none rounded-3 w-100 d-block">
+                                                                    <i class="bi bi-brush me-1"></i> Ir a ZonaBliss
+                                                                </a>
+                        
+                                                            <% } %>    
+
+                                                        </div>
+                                                    </div>     
+                                                    <% } %>                          
+                                                        
+                                                     
+                                                </div>
+
                                             </div>
                                         </div>
 
@@ -2139,9 +2194,19 @@
                                                                         <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
                                                                     </div>
                                                                     <div class="alert-success p-2">
-                                                                        <i class="bi bi-door-closed-fill mx-1"></i> Cierre Session y vuelva a entrar... 
+                                                                        <i class="bi bi-door-closed-fill mx-1"></i> Cerrando session en 3 segundos... 
                                                                     </div>
-                                                                    `                           
+                                                                    `
+                                        //ahora vamos a cerrar session......................................................
+                                        setTimeout(() => {
+                                            // Crear el elemento <a>
+                                            const logoutLink = document.createElement('a');
+                                            // Establecer el atributo href
+                                            logoutLink.href = '/myaccount/logout';
+                                            // Simular un clic en el enlace (sin agregarlo al DOM)
+                                        logoutLink.click();                                            
+                                        }, 3000);
+                                                       
 
 
                                     } else {
