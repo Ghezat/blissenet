@@ -25,6 +25,7 @@ routes.get('/account/:account', async (req,res)=>{
     
     const boxPublisher = [];
     let newBox;
+    let boxOffert = [];
     const user = req.session.user;
     
     //console.log("este es el usuario visitante--->", user);
@@ -38,20 +39,73 @@ routes.get('/account/:account', async (req,res)=>{
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
     //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
   
+    const Account = await modelUser.find({ username : account });
+    const accountID = Account[0]._id;
+    //console.log("Este es la data del account que queremos visitar ...", Account);
 
+    async function searchOffert(){
+        //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+        const respItems = await modelItems.find({ user_id: accountID, offer: true });
+        if (respItems.length > 0) {
+            boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
+        }
+            
+        const respAerop = await modelAirplane.find({user_id : accountID, offer : true });
+        if (respAerop.length > 0){
+            boxOffert.push(...respAerop);
+        }
+
+        const respAutom = await modelAutomotive.find({user_id : accountID, offer : true });
+        if (respAutom.length > 0){
+            boxOffert.push(...respAutom);
+        }
+
+        const respArtes = await modelArtes.find({user_id : accountID, offer : true });
+        if (respArtes.length > 0){
+            boxOffert.push(...respArtes);
+        }
+
+        const respReals = await modelRealstate.find({user_id : accountID, offer : true });
+        if (respReals.length > 0){
+            boxOffert.push(...respReals);
+        }
+
+        const respServi = await modelService.find({user_id : accountID, offer : true });
+        if (respServi.length > 0){
+            boxOffert.push(...respServi);
+        }
+
+        const respNauti = await modelNautical.find({user_id : accountID, offer : true });
+        if (respNauti.length > 0){
+            boxOffert.push(...respNauti);
+        }
+
+        const respAucti = await modelAuction.find({user_id : accountID, offer : true });
+        if (respAucti.length > 0){
+            boxOffert.push(...respAucti);
+        }
+
+    }
+
+    searchOffert()
+        .then(()=>{
+            console.log("Aqui lo recaudado de las ofertas");
+            console.log("boxOffert --->",boxOffert);
+            
+        })
+        .catch((err)=>{
+            console.log("Ha ocurrido un error en la function searchOffert()")
+        })
         
     if (user){
         //console.log("Esto es user._id ------>", user._id );
         const userId = user._id; //usaremos con el indexed en la coleccion profile.
         searchProfile = await modelProfile.find({ indexed : userId });
-        
         //console.log("Aqui el profile de la cuenta", searchProfile);
 
-    
-        const Account = await modelUser.find({ username : account }); //esto hay que acomodar hay que buscar por id
-        //console.log("Este es la data del account que queremos visitar ...", Account);
 
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ejecuta el bloque siguiente)
+
 
             const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
             const accountIdString = accountId.toString(); //paso de objectId a String
@@ -87,6 +141,7 @@ routes.get('/account/:account', async (req,res)=>{
 
 
             //----------------------------------------------
+
 
             if (storeProfile) { 
                 const searchBanner = storeProfile.bannerPerfil;
@@ -155,7 +210,7 @@ routes.get('/account/:account', async (req,res)=>{
                     newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                 } else if (receive == "first"){
 
@@ -169,7 +224,7 @@ routes.get('/account/:account', async (req,res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                 } else if (receive == "next"){
 
@@ -189,7 +244,7 @@ routes.get('/account/:account', async (req,res)=>{
                         //console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
            
                     }
           
@@ -214,7 +269,7 @@ routes.get('/account/:account', async (req,res)=>{
                         //console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
                     } 
           
 
@@ -247,7 +302,7 @@ routes.get('/account/:account', async (req,res)=>{
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                 }
                   
@@ -263,9 +318,6 @@ routes.get('/account/:account', async (req,res)=>{
 
     } else {
         //console.log("No hay usuario visitante.")
-
-        const Account = await modelUser.find({ username : account });
-        //console.log("Este es la data del account que queremos visitar ...", Account);
 
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ehecuta el bloque siguiente)
 
@@ -353,7 +405,7 @@ routes.get('/account/:account', async (req,res)=>{
      
                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
+                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, boxOffert});
  
                 } else if (receive == "first"){
  
@@ -367,7 +419,7 @@ routes.get('/account/:account', async (req,res)=>{
                      //console.log("totalPagina :  ", totalPagina);
                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
+                     res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, boxOffert});
  
                 } else if (receive == "next"){
  
@@ -385,7 +437,7 @@ routes.get('/account/:account', async (req,res)=>{
                          //console.log("totalPagina :  ", totalPagina);
                          const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
+                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, boxOffert});
             
                      }
            
@@ -408,7 +460,7 @@ routes.get('/account/:account', async (req,res)=>{
                          //console.log("totalPagina :  ", totalPagina);
                          const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
+                         res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, boxOffert});
                      } 
            
  
@@ -427,7 +479,7 @@ routes.get('/account/:account', async (req,res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
  
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment});
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, boxOffert});
  
                 }
 
@@ -452,6 +504,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
     const {storeUsername, segment} = req.params
+    let boxOffert = [];
     
     console.log(`store --> ${storeUsername} |  segment -->${segment} `);
     const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
@@ -459,8 +512,67 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
     const usernameStore = await modelProfile.findOne({username : storeUsername});
     const StoreUsername = usernameStore.username;
-    
+    const storeID = usernameStore.indexed;
 
+    //Consultamos todas las ofertas -----------------------------------------------
+
+    async function searchOffert(){
+        //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+        const respItems = await modelItems.find({ user_id: storeID, offer: true });
+        if (respItems.length > 0) {
+            boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
+        }
+            
+        const respAerop = await modelAirplane.find({user_id : storeID, offer : true });
+        if (respAerop.length > 0){
+            boxOffert.push(...respAerop);
+        }
+
+        const respAutom = await modelAutomotive.find({user_id : storeID, offer : true });
+        if (respAutom.length > 0){
+            boxOffert.push(...respAutom);
+        }
+
+        const respArtes = await modelArtes.find({user_id : storeID, offer : true });
+        if (respArtes.length > 0){
+            boxOffert.push(...respArtes);
+        }
+
+        const respReals = await modelRealstate.find({user_id : storeID, offer : true });
+        if (respReals.length > 0){
+            boxOffert.push(...respReals);
+        }
+
+        const respServi = await modelService.find({user_id : storeID, offer : true });
+        if (respServi.length > 0){
+            boxOffert.push(...respServi);
+        }
+
+        const respNauti = await modelNautical.find({user_id : storeID, offer : true });
+        if (respNauti.length > 0){
+            boxOffert.push(...respNauti);
+        }
+
+        const respAucti = await modelAuction.find({user_id : storeID, offer : true });
+        if (respAucti.length > 0){
+            boxOffert.push(...respAucti);
+        }
+
+    }
+
+    searchOffert()
+        .then(()=>{
+            console.log("Aqui lo recaudado de las ofertas");
+            console.log("boxOffert --->",boxOffert);
+            
+        })
+        .catch((err)=>{
+            console.log("Ha ocurrido un error en la function searchOffert()")
+        })
+
+
+    //-----------------------------------------------------------------------------
+    
     const url = `${StoreUsername}`; //el username del store
     let searchProfile;
     let searchBanner;
@@ -581,7 +693,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         } else if (receive == "first"){
 
@@ -595,7 +707,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             //console.log("totalPagina :  ", totalPagina);
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         } else if (receive == "next"){
                             console.log("Estamos en paginate next ******************")
@@ -616,7 +728,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
                                 console.log("newBox ver estamo sen next---->", newBox)
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
               
                             }
                 
@@ -641,7 +753,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
                             } 
                 
 
@@ -674,7 +786,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         }
                   
@@ -746,7 +858,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         } else if (receive == "first"){
 
@@ -760,7 +872,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             //console.log("totalPagina :  ", totalPagina);
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         } else if (receive == "next"){
 
@@ -780,7 +892,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
                 
                             }
                 
@@ -805,7 +917,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
                             } 
                 
 
@@ -838,7 +950,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         }
                   
@@ -846,7 +958,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                 }    
 
             } else {
-                res.render('page/account', {searchBanner, user, storeProfile, searchProfile, Account, countMessages, countNegotiationsBuySell});
+                res.render('page/account', {searchBanner, user, storeProfile, searchProfile, Account, countMessages, countNegotiationsBuySell, boxOffert});
             }   
                
         } else {
@@ -1120,7 +1232,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         } else if (receive == "first"){
 
@@ -1134,7 +1246,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             //console.log("totalPagina :  ", totalPagina);
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         } else if (receive == "next"){
 
@@ -1154,7 +1266,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
                 
                             }
                 
@@ -1179,7 +1291,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
                             } 
                 
 
@@ -1212,7 +1324,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                         }
                 
@@ -1225,39 +1337,40 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
             res.render('partials/error404');
         };
     }
-  
 
 })
 
             
 routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
-    console.log("Estamos en la seccion de busqueda filtro");
-    console.log("Esto es un protocolo get no existe solicitud de cuerpo no hay req.body ---->", req.body);
-    const user = req.session.user;
-    const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
-    const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
-    console.log("req.params ----->", req.params);
-    let { store, segment, element } = req.params; 
-    
-    console.log(`store -> ${store} | segment -> ${segment} | element -> ${element} `);
-    const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
-    const url = `${store}`;
-    let searchProfile;
-    let searchBanner;
-    let userId;
-    const boxPublisher = [];
-    const account = store;
-    const Account = await modelUser.find({ username : account });
-    console.log("*****************************************************************");
-    console.log("*************************** segment **************************************")
-    console.log("Esto es segment ----->", segment);
-    console.log("Esto es segment typeof----->", typeof segment);
-    
-  
-    //console.log("nada de busqueda esta en blanco, entonces redirecciona a la busqueda original");
-    //res.redirect(url); con esto podemos recargar la pagina antes usado  
 
-       
+    try {
+        console.log("Estamos en la seccion de busqueda filtro");
+        console.log("Esto es un protocolo get no existe solicitud de cuerpo no hay req.body ---->", req.body);
+        const user = req.session.user;
+        const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
+        console.log("req.params ----->", req.params);
+        let { store, segment, element } = req.params; 
+        
+        console.log(`store -> ${store} | segment -> ${segment} | element -> ${element} `);
+        const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        const url = `${store}`;
+        let searchProfile;
+        let searchBanner;
+        let userId;
+        const boxPublisher = [];
+        let boxOffert = [];
+        const account = store;
+        const Account = await modelUser.find({ username : account });
+        console.log("*****************************************************************");
+        console.log("*************************** segment **************************************")
+        console.log("Esto es segment ----->", segment);
+        console.log("Esto es segment typeof----->", typeof segment);
+        
+    
+        //console.log("nada de busqueda esta en blanco, entonces redirecciona a la busqueda original");
+        //res.redirect(url); con esto podemos recargar la pagina antes usado  
+    
         
         if (user){
             userId = user._id; //usaremos con el indexed en la coleccion profile.
@@ -1266,14 +1379,74 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
         };    
         
         const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
+        const storeID = accountId;
         const accountIdString = accountId.toString(); //paso de objectId a String
-        //console.log("Este es el id del account que queremos visitar ...", accountId);  
+        //console.log("Este es el id del account que queremos visitar ...", accountId);
+        
+        //Consultamos todas las ofertas -----------------------------------------------
 
+            async function searchOffert(){
+                //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+                const respItems = await modelItems.find({ user_id: storeID, offer: true });
+                if (respItems.length > 0) {
+                    boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
+                }
+                    
+                const respAerop = await modelAirplane.find({user_id : storeID, offer : true });
+                if (respAerop.length > 0){
+                    boxOffert.push(...respAerop);
+                }
+
+                const respAutom = await modelAutomotive.find({user_id : storeID, offer : true });
+                if (respAutom.length > 0){
+                    boxOffert.push(...respAutom);
+                }
+
+                const respArtes = await modelArtes.find({user_id : storeID, offer : true });
+                if (respArtes.length > 0){
+                    boxOffert.push(...respArtes);
+                }
+
+                const respReals = await modelRealstate.find({user_id : storeID, offer : true });
+                if (respReals.length > 0){
+                    boxOffert.push(...respReals);
+                }
+
+                const respServi = await modelService.find({user_id : storeID, offer : true });
+                if (respServi.length > 0){
+                    boxOffert.push(...respServi);
+                }
+
+                const respNauti = await modelNautical.find({user_id : storeID, offer : true });
+                if (respNauti.length > 0){
+                    boxOffert.push(...respNauti);
+                }
+
+                const respAucti = await modelAuction.find({user_id : storeID, offer : true });
+                if (respAucti.length > 0){
+                    boxOffert.push(...respAucti);
+                }
+
+            }
+        
+
+            searchOffert()
+                .then(()=>{
+                    //console.log("Aqui lo recaudado de las ofertas");
+                    //console.log("boxOffert --->",boxOffert);
+                    //luego sigue todo normal                    
+                })
+                .catch((err)=>{
+                    console.log("Ha ocurrido un error en la function searchOffert()");
+                })
+
+
+        //-----------------------------------------------------------------------------
         //---consultamos si el user que visita esta tienda ya la sigue.     
         const statusFollow = await modelProfile.findOne({ indexed : userId, favoritestores : accountIdString });
         console.log("statusFollow --->", statusFollow);
-        //-----------------------------------------------------------------
-   
+        //---------------------------------------------------------
+
         const storeProfile = await modelProfile.findOne({ indexed : accountId });
         //console.log("Aqui el profile de la **Tienda** a visistar --->", storeProfile);
         const Segment = storeProfile.segment; //["All"] All siempre va a existir
@@ -1347,89 +1520,89 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
     
             if (receive == undefined){
     
-                  req.session.x = 0;
-                  X = req.session.x;
+                req.session.x = 0;
+                X = req.session.x;
     
-                  //console.log("Estamos aqui en el inicio");
-                  //console.log("Esto es el valor de x : ", X );
-                  //aqui el nuevo arreglo por default 
-                  newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                //console.log("Estamos aqui en el inicio");
+                //console.log("Esto es el valor de x : ", X );
+                //aqui el nuevo arreglo por default 
+                newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
     
-                  const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
     
             } else if (receive == "first"){
     
-                  X = 0;//0
-                  req.session.x = X;
+                X = 0;//0
+                req.session.x = X;
                     
-                  newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-         
-                  pagina = (limit + X) / limit;
-                  //console.log("pagina :  ", pagina);
-                  //console.log("totalPagina :  ", totalPagina);
-                  const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+        
+                pagina = (limit + X) / limit;
+                //console.log("pagina :  ", pagina);
+                //console.log("totalPagina :  ", totalPagina);
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
     
             } else if (receive == "next"){
     
-                  X = req.session.x;
+                X = req.session.x;
     
-                  if (X + limit < long ){
+                if (X + limit < long ){
     
-                      X = X + limit;//6
-                      req.session.x = X;
+                    X = X + limit;//6
+                    req.session.x = X;
     
-                      newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-         
-                      pagina = (limit + X) / limit;
-                      //console.log("pagina :  ", pagina);
-                      //console.log("totalPagina :  ", totalPagina);
-                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
-    
-                      res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
-         
-                  }
+                    newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
         
-          
+                    pagina = (limit + X) / limit;
+                    //console.log("pagina :  ", pagina);
+                    //console.log("totalPagina :  ", totalPagina);
+                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+    
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+        
+                }
+        
+        
             } else if (receive == "prev"){
     
-                  X = req.session.x;
-                  //console.log("Estamos en Prev");
-                  //console.log("Esto es el valor de x :", X); //6
+                X = req.session.x;
+                //console.log("Estamos en Prev");
+                //console.log("Esto es el valor de x :", X); //6
     
-                  if (X  > 0){
+                if (X  > 0){
     
-                      X = X - limit
-                      req.session.x = X;
+                    X = X - limit
+                    req.session.x = X;
     
-                      newBox = boxPublisher.slice(X , limit + X); 
+                    newBox = boxPublisher.slice(X , limit + X); 
     
-                      pagina = (limit + X) / limit;
-                      //console.log("pagina :  ", pagina);
-                      //console.log("totalPagina :  ", totalPagina);
-                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                    pagina = (limit + X) / limit;
+                    //console.log("pagina :  ", pagina);
+                    //console.log("totalPagina :  ", totalPagina);
+                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                      res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
-                  } 
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                } 
         
     
             } else if (receive == "last"){
     
-                  let n = (long % limit);
-                  X = long - n;
-                  req.session.x = X;
-                         
-                  newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-         
-                  pagina = (limit + X) / limit;
-                  //console.log("pagina :  ", pagina);
-                  //console.log("totalPagina :  ", totalPagina);
-                  const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                let n = (long % limit);
+                X = long - n;
+                req.session.x = X;
+                        
+                newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+        
+                pagina = (limit + X) / limit;
+                //console.log("pagina :  ", pagina);
+                //console.log("totalPagina :  ", totalPagina);
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
     
             }
     
@@ -1490,95 +1663,97 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
     
             if (receive == undefined){
     
-                  req.session.x = 0;
-                  X = req.session.x;
+                req.session.x = 0;
+                X = req.session.x;
     
-                  //console.log("Estamos aqui en el inicio");
-                  //console.log("Esto es el valor de x : ", X );
-                  //aqui el nuevo arreglo por default 
-                  newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                //console.log("Estamos aqui en el inicio");
+                //console.log("Esto es el valor de x : ", X );
+                //aqui el nuevo arreglo por default 
+                newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
     
-                  const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
     
             } else if (receive == "first"){
     
-                  X = 0;//0
-                  req.session.x = X;
+                X = 0;//0
+                req.session.x = X;
                     
-                  newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-         
-                  pagina = (limit + X) / limit;
-                  //console.log("pagina :  ", pagina);
-                  //console.log("totalPagina :  ", totalPagina);
-                  const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+        
+                pagina = (limit + X) / limit;
+                //console.log("pagina :  ", pagina);
+                //console.log("totalPagina :  ", totalPagina);
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
     
             } else if (receive == "next"){
     
-                  X = req.session.x;
+                X = req.session.x;
     
-                  if (X + limit < long ){
+                if (X + limit < long ){
     
-                      X = X + limit;//6
-                      req.session.x = X;
+                    X = X + limit;//6
+                    req.session.x = X;
     
-                      newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-         
-                      pagina = (limit + X) / limit;
-                      //console.log("pagina :  ", pagina);
-                      //console.log("totalPagina :  ", totalPagina);
-                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
-    
-                      res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
-         
-                  }
+                    newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
         
-          
+                    pagina = (limit + X) / limit;
+                    //console.log("pagina :  ", pagina);
+                    //console.log("totalPagina :  ", totalPagina);
+                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+    
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+        
+                }
+        
+        
             } else if (receive == "prev"){
     
-                  X = req.session.x;
-                  //console.log("Estamos en Prev");
-                  //console.log("Esto es el valor de x :", X); //6
+                X = req.session.x;
+                //console.log("Estamos en Prev");
+                //console.log("Esto es el valor de x :", X); //6
     
-                  if (X  > 0){
+                if (X  > 0){
     
-                      X = X - limit
-                      req.session.x = X;
+                    X = X - limit
+                    req.session.x = X;
     
-                      newBox = boxPublisher.slice(X , limit + X); 
+                    newBox = boxPublisher.slice(X , limit + X); 
     
-                      pagina = (limit + X) / limit;
-                      //console.log("pagina :  ", pagina);
-                      //console.log("totalPagina :  ", totalPagina);
-                      const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                    pagina = (limit + X) / limit;
+                    //console.log("pagina :  ", pagina);
+                    //console.log("totalPagina :  ", totalPagina);
+                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                      res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
-                  } 
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                } 
         
     
             } else if (receive == "last"){
     
-                  let n = (long % limit);
-                  X = long - n;
-                  req.session.x = X;
-                         
-                  newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-         
-                  pagina = (limit + X) / limit;
-                  //console.log("pagina :  ", pagina);
-                  //console.log("totalPagina :  ", totalPagina);
-                  const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+                let n = (long % limit);
+                X = long - n;
+                req.session.x = X;
+                        
+                newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+        
+                pagina = (limit + X) / limit;
+                //console.log("pagina :  ", pagina);
+                //console.log("totalPagina :  ", totalPagina);
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                  res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
     
             }
     
         }
 
-
+    } catch (error) {
+        console.log("ha habido un error, en la busqueda");
+    }
 
 });
 

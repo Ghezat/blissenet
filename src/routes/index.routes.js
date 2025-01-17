@@ -1,7 +1,10 @@
 const { Router } = require('express');
 const hash = require('object-hash');
 const nodemailer = require('nodemailer');
-const routes = Router()
+const routes = Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
 const modelBankUser = require('../models/bankUser.js');
@@ -30,16 +33,6 @@ const modelRateCurrency = require('../models/rateCurrency.js');
 const fetch = require('node-fetch'); //ver: 2.6.1 ultima dependencia instalada. 
 const bcrypt = require('bcryptjs');
 
-
-/*
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-    cloud_name : process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret : process.env.API_SECRET,
-    secure: true
-})
-*/
 
 const fs = require('fs-extra');
 const {S3} = require('aws-sdk');
@@ -2045,52 +2038,715 @@ routes.post('/myaccount/bGColor', async(req, res)=>{
         const user = req.session.user;
         const userId = user._id;
         const datos = req.body
-        const {bGColorText, bGColorTopbar, bGColorWorkspace , typeText, typeTopbar, typeWorkspace} = req.body;
+        const { ColorText, ColorTopbar, ColorWorkspace } = req.body;
     
-        console.log("este es el user ------->", user );
-        console.log("Este es el objeto datos ------------------>", datos);
+        console.log("Estamos llegando a /myaccount/bGColor")
+        console.log("este es el user ------->", user.username );
+        //console.log("Este es el objeto datos ------------------>", datos);
+        console.log(`ColorText--> ${ColorText}  ColorTopbar--> ${ColorTopbar}  ColorWorkspace--> ${ColorWorkspace}`)
+        //ColorText--> #fcf7f7  ColorTopbar--> #1c1c1c  ColorWorkspace--> #bdddff
 
-        if (typeText !== 'customTex' && typeTopbar !== 'customTop' && typeWorkspace !== 'customWork') {
-            console.log("Todos los bgColor estan por defecto");
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText : typeText, bGColorTopbar : typeTopbar, bGColorWorkspace : typeWorkspace }); 
-            res.redirect('profile');
-        } else if (typeText !== 'customTex' && typeTopbar !== 'customTop' && typeWorkspace === 'customWork'){ 
-            console.log("bgColorText defecto, bGColorTop defecto,  el bGColorWork customizable");
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText : typeText, bGColorTopbar : typeTopbar, bGColorWorkspace }); 
-            res.redirect('profile');
-        } else if (typeText !== 'customTex' && typeTopbar === 'customTop' && typeWorkspace !== 'customWork') {
-            console.log("bgColorText default, bGColorTop custom y el bGColorWork default");
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText : typeText, bGColorTopbar, bGColorWorkspace : typeWorkspace }); 
-            res.redirect('profile');
-        } else if (typeText !== 'customTex' && typeTopbar === 'customTop' && typeWorkspace === 'customWork') {
-            console.log("bgColorText defecto, bGColorTop y el bGColorWork estan customizable");
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText : typeText, bGColorTopbar, bGColorWorkspace }); 
-            res.redirect('profile');
-        } else if (typeText === 'customTex' && typeTopbar === 'customTop' && typeWorkspace === 'customWork') {
-            console.log("bgColorText, bGColorTop y el bGColorWork estan customizable");
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText, bGColorTopbar, bGColorWorkspace }); 
-            res.redirect('profile');
-        } else if (typeText === 'customTex' && typeTopbar !== 'customTop' && typeWorkspace === 'customWork') {
-            console.log("bgColorText custom, bGColorTop default y el bGColorWork custom")
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText, bGColorTopbar : typeTopbar , bGColorWorkspace }); 
-            res.redirect('profile');
-        } else if (typeText === 'customTex' && typeTopbar === 'customTop' && typeWorkspace !== 'customWork') {
-            console.log("bgColorText custom, bGColorTop custom y el bGColorWork default")
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText, bGColorTopbar , bGColorWorkspace : typeWorkspace }); 
-            res.redirect('profile');
-        } else if (typeText === 'customTex' && typeTopbar !== 'customTop' && typeWorkspace !== 'customWork') {
-            console.log("bgColorText custom, bGColorTop default y el bGColorWork default")
-            const updatesProfile =  await modelProfile.updateOne({ indexed : userId }, { bGColorText, bGColorTopbar: typeTopbar , bGColorWorkspace : typeWorkspace }); 
-            res.redirect('profile');
-        }
+        const updatesProfile =  await modelProfile.updateOne({ indexed : userId },
+            { 
+                bGColorText : ColorText,
+                bGColorTopbar : ColorTopbar,
+                bGColorWorkspace : ColorWorkspace
+            });
+
+        res.json({updatesProfile});
         
     } catch (error) {
         req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
-        res.redirect('/myaccount/profile');
     }    
    
         
 });
+
+
+/* recibir el backgroundColor del Text desde el profile al backend */
+routes.post('/zonabliss/bGColor', async(req, res)=>{
+
+    try {
+        
+        const user = req.session.user;
+        const userId = user._id;
+        const datos = req.body
+        const { ColorText, ColorTopbar, ColorGallery, ColorWorkspace } = req.body;
+    
+        //console.log("este es el user._id ------->", user );
+        //console.log("Este es el objeto datos ------------------>", datos);
+
+        //console.log(` bGColorText--> ${ColorText}   bGColorTopbar--> ${ColorTopbar}  bGColorWorkspace--> ${ColorWorkspace}  bGColorGallery--> ${ColorGallery}`);
+        
+        //bGColorText--> #f90606   bGColorTopbar--> #181616  bGColorWorkspace--> #fffafa  bGColorGallery--> #131313
+        const updatesProfile =  await modelProfile.updateOne({ indexed : userId },  { $set : { 
+                                                                                        bGColorText : ColorText,
+                                                                                        bGColorTopbar : ColorTopbar,
+                                                                                        bGColorWorkspace : ColorWorkspace,
+                                                                                        bGColorGallery : ColorGallery
+                                                                                    } });
+
+        res.json({updatesProfile});
+        
+    } catch (error) {
+        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
+    }    
+        
+});
+
+routes.post('/zonabliss/setupGallery', async(req, res)=>{
+    try{
+        console.log("LLegando a /zonabliss/setupGallery");
+        const user = req.session.user;
+        const userId = user._id;
+        const { carouselOffert, sectionMedias, carouselImages ,carouselBanner } = req.body;
+
+        const updatesProfile = await modelProfile.updateOne(
+            { indexed: userId },
+            { $set: { 'gallery.carouselOffert.show': carouselOffert,
+                      'gallery.carouselImages.show': carouselImages,
+                      'gallery.carouselBanner.show': carouselBanner,
+                      'gallery.sectionMedia.show' : sectionMedias
+                    } }
+        );
+
+        res.json(updatesProfile);
+        
+    } catch (error) {
+        res.json({ response : "Ha ocurrido un error en /zonabliss/setupGallery"});
+    }
+})
+
+routes.post('/zonabliss/upload/media', async (req, res)=> {
+    try {
+        console.log("Llegando a /zonabliss/upload/media");
+        const user = req.session.user;
+        const userId = user._id;
+        const element = req.files[0]; // Aquí accedes al archivo subido
+        let boxImg = [];
+        let boxVideo = [];
+
+        console.log("element ->", element);
+
+        const statusProfileGallery = await modelProfile.findOne(
+            { indexed: userId },
+            { 'gallery.sectionMedia.data': 1 }
+          );
+
+        //console.log("statusProfileGallery -->", statusProfileGallery);  
+        const data = statusProfileGallery.gallery.sectionMedia.data;
+        //console.log("aqui en data hay esta cantidad de elementos -->", data.length);
+
+        if (data.length < 2){
+            //solo se puede recibir 2 recursos de media para la seccion de media.
+            
+            if (element.mimetype.startsWith("image/")){
+                //caso de ser imagen validar que no supere los 3 mb.
+                if (element.size <= 3000000 ){
+                                    
+                    //console.log("una imagen aqui aceptada----->", element)
+
+                    const folder = 'gallery'; const ident = new Date().getTime();
+                    const pathField = element.path; const extPart = pathField.split(".");
+                    const ext = extPart[1];
+                                
+                    //console.log("Bucket :", bucketName); console.log("folder :", folder);
+                    // console.log("pathField :", pathField); console.log("ext", ext);
+
+                    const fileContent = fs.readFileSync(pathField);
+                    const key = `${folder}/${ident}.${ext}`;
+                    console.log("key -->", key);
+
+                    //const endpoint = 'nyc3.digitaloceanspaces.com';
+                    //const bucketName = 'bucket-blissve';
+                    
+                    const params = { 
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read' 
+                    };
+
+                    s3.putObject(params, function(err, data){
+                    
+                        if (err){
+                            console.log('Error al subir un archivo', err);
+                            res.json({ code : -1, response: "¡Ha ocurrido un error!. Intenta luego."});
+                        } else {
+                            console.log('La imagen fue subida, Exito', data);
+                            
+                            //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                            let format = ext;
+                            let url = `https://${bucketName}.${endpoint}/${key}`;
+                            let bytes = element.size;
+                            let public_id = key;
+                            let type = 'image';
+                            
+                            //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id}, type : ${type} `);
+                            boxImg.push( {url, public_id, bytes, format, type} );            
+
+                            async function saveDB(){
+                                //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                await fs.unlink(element.path) 
+                                
+                                //console.log("Esto es boxImg -------->", boxImg);
+                                const box = boxImg[0]; 
+                                //console.log("Esto es box -------->", box);
+                                
+                                const updateProfile = await modelProfile.findOneAndUpdate({indexed: userId}, { $push: { 'gallery.sectionMedia.data': box } });
+                                                                
+                            }
+            
+                            saveDB()
+                                .then(()=>{
+                                    console.log("Se ha guardado en la base de datos. Imagen Subido y Guardado en la DB");
+                                    res.json({ code : 1, response: "¡Genial! Tu imagen se ha subido exitosamente."});
+                                
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                    res.json({ code : -1, response: "¡Ha habido un error!. Intente mas tarde."});
+                                })
+
+                        }
+                        
+                    }); 
+
+                } else {
+                    //supera los 3mb
+                    res.json({ code : 0,  response: "Su imagen supera el peso de 3mb" });
+                    await fs.unlink(element.path); 
+                }
+
+            } else if (element.mimetype.startsWith("video/")) {
+
+                //casi de ser video validar que no supere los 50mb.
+                if (element.size <= 50000000 ){
+
+                    //console.log("una video aqui aceptado----->", element)
+
+                    const folder = 'gallery'; const ident = new Date().getTime();
+                    const pathField = element.path; const extPart = pathField.split(".");
+                    const ext = extPart[1];
+                                
+                    //console.log("Bucket :", bucketName); console.log("folder :", folder);
+                    // console.log("pathField :", pathField); console.log("ext", ext);
+
+                    //const fileContent = fs.readFileSync(pathField); //imagen
+                    const fileContent = fs.createReadStream(pathField); //video largos
+                    const key = `${folder}/${ident}.${ext}`;
+                    
+                    const params = {
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read'
+                    }
+    
+                    s3.upload(params, (err, data)=>{
+                        if (err){
+                            console.error("Error al subir un video", err);
+                            req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+                            res.redirect('/department/create/items');
+                        } else {
+                            console.log("Video subido con exito", data);
+            
+                            //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.
+                            let format = ext;
+                            let url = `https://${bucketName}.${endpoint}/${key}`;
+                            let bytes = element.size;
+                            let public_id = key;
+                            let type = 'video';
+                            
+                            console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id}, type : ${type} `);    
+                            boxVideo.push( {url, public_id, bytes, format, type} );
+                            //console.log("Esto es boxVideo -------->", boxVideo);
+            
+                                
+                            async function saveDB(){
+                                //console.log("este es el path que tiene que ser eliminado:", element.path)
+                                await fs.unlink(element.path) 
+                                
+                                //console.log("Esto es boxImg -------->", boxImg);
+                                const box = boxVideo[0]; 
+                                //console.log("Esto es box -------->", box);
+                                
+                                const updateProfile = await modelProfile.findOneAndUpdate({indexed: userId}, { $push: { 'gallery.sectionMedia.data': box } });
+                                        
+                            }
+    
+                            saveDB()
+                                .then(()=>{
+                                    console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                    res.json({ code : 1, response: "¡Genial! Tu video se ha subido exitosamente."});
+                                })
+                                .catch((err)=>{
+                                    console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                    res.json({ code : -1, response: "¡Ha habido un error!. Intente mas tarde."});
+                                })
+    
+    
+                        }
+                    });
+
+                } else {
+                    //supera los 50mb
+                    await fs.unlink(element.path) 
+                    res.json({ code : 0,  response: "Su video supera el peso de 50mb" });
+                    
+                }
+
+            } else {
+                //no es ni imagen ni video
+                await fs.unlink(element.path) 
+                res.json({ code : 0,  response: "Su archivo no es de video ni de imagen." });
+            }
+
+        } else {
+            await fs.unlink(element.path) 
+            res.json({ code : 0,  response: "Ha llegado al tope máximo de subida de dos (2) Medias." });
+        }
+
+        
+    } catch (error) {
+        console.error(error); // Es buena práctica loggear el error
+        res.status(500).json({ code : -1, response: "Ha ocurrido un error al intentar subir una Imagen." });
+    }
+
+    //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+
+});
+
+routes.post('/zonabliss/upload/imgCarousel', async (req, res)=> {
+    try {
+        console.log("Llegando a /zonabliss/upload/imgCarousel");
+        const user = req.session.user;
+        const userId = user._id;
+        const element = req.files[0]; // Aquí accedes al archivo subido
+        let boxImg = [];
+
+        console.log("element ->", element);
+
+        const statusProfileGallery = await modelProfile.findOne(
+            { indexed: userId },
+            { 'gallery.carouselImages.data': 1 }
+          );
+
+        //console.log("statusProfileGallery -->", statusProfileGallery);  
+        const data = statusProfileGallery.gallery.carouselImages.data;
+        //console.log("aqui en data hay esta cantidad de elementos -->", data.length);
+
+        if (data.length < 10){
+            //solo se puede recibir 10 imagenes para el carousel de imagenes.
+                    
+            if (element.size <= 3000000  && element.mimetype.startsWith("image/")){
+
+                console.log("es una imagen y pesa menos de 3mb ");
+
+                //console.log("una imagen aqui aceptada----->", element)
+
+                const folder = 'gallery'; const ident = new Date().getTime();
+                const pathField = element.path; const extPart = pathField.split(".");
+                const ext = extPart[1];
+                            
+                //console.log("Bucket :", bucketName); console.log("folder :", folder);
+                // console.log("pathField :", pathField); console.log("ext", ext);
+
+                const fileContent = fs.readFileSync(pathField);
+                const key = `${folder}/${ident}.${ext}`;
+                console.log("key -->", key);
+
+                //const endpoint = 'nyc3.digitaloceanspaces.com';
+                //const bucketName = 'bucket-blissve';
+                
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+
+                s3.putObject(params, function(err, data){
+                
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                        res.json({ code : -1, response: "¡Ha ocurrido un error!. Intenta luego."});
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        
+                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                        let format = ext;
+                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                        let bytes = element.size;
+                        let public_id = key;
+                        
+                        //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                        boxImg.push( {url, public_id, bytes, format} );            
+
+                        async function saveDB(){
+                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                            await fs.unlink(element.path) 
+                            
+                            //console.log("Esto es boxImg -------->", boxImg);
+                            const box = boxImg[0]; 
+                            //console.log("Esto es box -------->", box);
+                            
+                            const updateProfile = await modelProfile.findOneAndUpdate({indexed: userId}, { $push: { 'gallery.carouselImages.data': box } });
+                                                            
+                        }
+        
+                        saveDB()
+                            .then(()=>{
+                                console.log("Se ha guardado en la base de datos. Imagen Subido y Guardado en la DB");
+                                res.json({ code : 1, response: "¡Genial! Tu imagen se ha subido exitosamente."});
+                               
+                            })
+                            .catch((err)=>{
+                                console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                          
+                            })
+
+                    }
+                    
+                }); 
+
+            } else {
+                res.json({ code : 0,  response: "Supera el peso de 3mb o el archivo no es de imagen." });    
+            }
+
+        } else {
+            
+            await fs.unlink(element.path) 
+            res.json({ code : 0,  response: "Ha llegado al tope máximo de subida de cinco (10) imagenes." });
+
+        }
+
+
+        
+        // Aquí puedes agregar la lógica para procesar el banner
+
+        
+    } catch (error) {
+        console.error(error); // Es buena práctica loggear el error
+        res.status(500).json({ code : -1, response: "Ha ocurrido un error al intentar subir una Imagen." });
+    }
+
+    //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+});
+
+routes.post('/zonabliss/upload/bannerCarousel', async (req, res)=> {
+    try {
+        console.log("Llegando a /zonabliss/upload/bannerCarousel");
+        const user = req.session.user;
+        const userId = user._id;
+        const element = req.files[0]; // Aquí accedes al archivo subido
+        let boxImg = [];
+
+        console.log("element ->", element);
+
+        const statusProfileGallery = await modelProfile.findOne(
+            { indexed: userId },
+            { 'gallery.carouselBanner.data': 1 }
+          );
+
+        //console.log("statusProfileGallery -->", statusProfileGallery);  
+        const data = statusProfileGallery.gallery.carouselBanner.data;
+        //console.log("aqui en data hay esta cantidad de elementos -->", data.length);
+
+        if (data.length < 5){
+            //solo se puede recibir 5 banner para el carousel de banner.
+                    
+            if (element.size <= 3000000  && element.mimetype.startsWith("image/")){
+
+                console.log("es una imagen y pesa menos de 3mb ");
+
+                //console.log("una imagen aqui aceptada----->", element)
+
+                const folder = 'gallery'; const ident = new Date().getTime();
+                const pathField = element.path; const extPart = pathField.split(".");
+                const ext = extPart[1];
+                            
+                //console.log("Bucket :", bucketName); console.log("folder :", folder);
+                // console.log("pathField :", pathField); console.log("ext", ext);
+
+                const fileContent = fs.readFileSync(pathField);
+                const key = `${folder}/${ident}.${ext}`;
+                console.log("key -->", key);
+
+                //const endpoint = 'nyc3.digitaloceanspaces.com';
+                //const bucketName = 'bucket-blissve';
+                
+                const params = { 
+                    Bucket : bucketName,
+                    Key : key,
+                    Body : fileContent,
+                    ACL : 'public-read' 
+                };
+
+                s3.putObject(params, function(err, data){
+                
+                    if (err){
+                        console.log('Error al subir un archivo', err);
+                    } else {
+                        console.log('La imagen fue subida, Exito', data);
+                        
+                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                        let format = ext;
+                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                        let bytes = element.size;
+                        let public_id = key;
+                        
+                        //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                        boxImg.push( {url, public_id, bytes, format} );            
+
+                        async function saveDB(){
+                            //console.log("este es el path que tiene que ser eliminado:", element.path)
+                            await fs.unlink(element.path) 
+                            
+                            //console.log("Esto es boxImg -------->", boxImg);
+                            const box = boxImg[0]; 
+                            //console.log("Esto es box -------->", box);
+                            
+                            const updateProfile = await modelProfile.findOneAndUpdate({indexed: userId}, { $push: { 'gallery.carouselBanner.data': box } });
+                                                            
+                        }
+        
+                        saveDB()
+                            .then(()=>{
+                                console.log("Se ha guardado en la base de datos. Video Subido y Guardado en la DB");
+                                res.json({ code : 1, response: "¡Genial! Tu banner se ha subido exitosamente."});
+                                //res.redirect('/department/create/items');
+                            })
+                            .catch((err)=>{
+                                console.log("Ha habido un error en el proceso de guardar en la Base de Datos");
+                                //res.redirect('/department/create/items');
+                            })
+
+                    }
+                    
+                }); 
+
+            } else {
+                res.json({ code : 0,  response: "Supera el peso de 3mb o el archivo no es de imagen." });    
+            }
+
+        } else {
+            
+            await fs.unlink(element.path) 
+            res.json({ code : 0,  response: "Ha llegado al tope máximo de subida de cinco (5) Banner." });
+
+        }
+
+
+        
+        // Aquí puedes agregar la lógica para procesar el banner
+
+        
+    } catch (error) {
+        console.error(error); // Es buena práctica loggear el error
+        res.status(500).json({ code : -1, response: "Ha ocurrido un error al intentar subir un Banner." });
+    }
+
+    //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+});
+
+routes.get('/zonabliss/delete_sourceMedia/gallery/:public_id', async (req, res)=> {
+    console.log("Llegando a /zonabliss/delete_sourceMedia/:public_id");
+    console.log("req.params", req.params);
+    const user = req.session.user;
+    const userId = user._id;
+    const id  = req.params.public_id
+    const public_id = "gallery/"+id;
+    console.log("public_id ->", public_id);
+ 
+    //console.log("este es el publicId a eliminar  ------>", public_id)
+    //=> "gallery/1720566117383.jpg
+    //encontrar la imagen en la DB
+    try{
+        const result = await modelProfile.findOne({indexed : userId, 'gallery.sectionMedia.data.public_id' : public_id });
+        console.log("esto es result ->", result); //si existe este recurso. el objeto existira.
+
+        if (result){
+
+            const params = {
+                Bucket : bucketName,
+                Key : public_id
+            }
+            s3.deleteObject(params, (err, data)=>{
+                if (err){
+                    console.error("Error al eliminar el archivo", err);
+                } else {
+                    console.error("Archivo eliminado con exito", data); 
+
+
+                    async function deleteDB(){
+                        const deleteSource = await modelProfile.findOneAndUpdate(
+                            { indexed: userId },
+                            { $pull: { 'gallery.sectionMedia.data': { public_id: public_id } } },
+                            { new: true } // Esto devuelve el documento actualizado
+                        );
+
+                    }
+
+                    deleteDB()
+                        .then(()=>{ 
+
+                            setTimeout(() => {
+                                res.redirect(`/zonabliss/${userId}`);    
+                            }, 2000); //un poco de tiempo para detener al usuario y no saturar al servidor
+                            
+
+                        })
+                        .catch((err)=>{
+                            console.log("Ha ocurrido un error, intente mas tarde.", err);
+                            res.redirect(`/zonabliss/${userId}`);
+                        })
+
+                }
+            });            
+
+
+        } 
+ 
+    } catch (error){
+        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+        (`/zonabliss/${userId}`);
+    }    
+
+});
+
+routes.get('/zonabliss/delete_sourceImg/gallery/:public_id', async (req, res)=> {
+    console.log("Llegando a /zonabliss/delete_sourceImg/:public_id");
+    console.log("req.params", req.params);
+    const user = req.session.user;
+    const userId = user._id;
+    const id  = req.params.public_id
+    const public_id = "gallery/"+id;
+    console.log("public_id ->", public_id);
+ 
+    //console.log("este es el publicId a eliminar  ------>", public_id)
+    //=> "gallery/1720566117383.jpg
+    //encontrar la imagen en la DB
+    try{
+        const result = await modelProfile.findOne({indexed : userId, 'gallery.carouselImages.data.public_id' : public_id });
+        console.log("esto es result ->", result); //si existe este recurso. el objeto existira.
+
+        if (result){
+
+            const params = {
+                Bucket : bucketName,
+                Key : public_id
+            }
+            s3.deleteObject(params, (err, data)=>{
+                if (err){
+                    console.error("Error al eliminar el archivo", err);
+                } else {
+                    console.error("Archivo eliminado con exito", data); 
+
+
+                    async function deleteDB(){
+                        const deleteSource = await modelProfile.findOneAndUpdate(
+                            { indexed: userId },
+                            { $pull: { 'gallery.carouselImages.data': { public_id: public_id } } },
+                            { new: true } // Esto devuelve el documento actualizado
+                        );
+
+                    }
+
+                    deleteDB()
+                        .then(()=>{ 
+
+                            setTimeout(() => {
+                                res.redirect(`/zonabliss/${userId}`);    
+                            }, 2000); //un poco de tiempo para detener al usuario y no saturar al servidor
+                            
+
+                        })
+                        .catch((err)=>{
+                            console.log("Ha ocurrido un error, intente mas tarde.", err);
+                            res.redirect(`/zonabliss/${userId}`);
+                        })
+
+                }
+            });            
+
+
+        } 
+ 
+    } catch (error){
+        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+        (`/zonabliss/${userId}`);
+    }    
+
+});
+
+routes.get('/zonabliss/delete_source/gallery/:public_id', async (req, res)=> {
+    console.log("Llegando a /zonabliss/delete/source/:public_id");
+    console.log("req.params", req.params);
+    const user = req.session.user;
+    const userId = user._id;
+    const id  = req.params.public_id
+    const public_id = "gallery/"+id;
+    console.log("public_id ->", public_id);
+ 
+    //console.log("este es el publicId a eliminar  ------>", public_id)
+    //=> "gallery/1720566117383.jpg
+    //encontrar la imagen en la DB
+    try{
+        const result = await modelProfile.findOne({indexed : userId, 'gallery.carouselBanner.data.public_id' : public_id });
+        console.log("esto es result ->", result); //si existe este recurso. el objeto existira.
+
+        if (result){
+
+            const params = {
+                Bucket : bucketName,
+                Key : public_id
+            }
+            s3.deleteObject(params, (err, data)=>{
+                if (err){
+                    console.error("Error al eliminar el archivo", err);
+                } else {
+                    console.error("Archivo eliminado con exito", data); 
+
+
+                    async function deleteDB(){
+                        const deleteSource = await modelProfile.findOneAndUpdate(
+                            { indexed: userId },
+                            { $pull: { 'gallery.carouselBanner.data': { public_id: public_id } } },
+                            { new: true } // Esto devuelve el documento actualizado
+                        );
+
+                    }
+
+                    deleteDB()
+                        .then(()=>{ 
+
+                            setTimeout(() => {
+                                res.redirect(`/zonabliss/${userId}`);    
+                            }, 2000); //un poco de tiempo para detener al usuario y no saturar al servidor
+                            
+
+                        })
+                        .catch((err)=>{
+                            console.log("Ha ocurrido un error, intente mas tarde.", err);
+                            res.redirect(`/zonabliss/${userId}`);
+                        })
+
+                }
+            });            
+
+
+        } 
+ 
+    } catch (error){
+        req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
+        (`/zonabliss/${userId}`);
+    }    
+
+});
+
+
+
 
 routes.post('/myaccount/filter-search', async(req, res)=>{
 
@@ -2553,6 +3209,117 @@ routes.get('/myaccount/palabras-clave/delete/:i', async(req, res)=>{
 
 });
     
+//---------------------------ZonaBliss--------------------------------
+
+routes.get('/zonabliss/:user_id', async(req, res)=>{
+   
+    try {
+        
+        console.log("*********zonabliss******** -->");
+        const user = req.session.user;
+        const userID = user._id;
+        const boxOffert = [];
+        console.log("este es el usuario propietario que esta logeado -->", userID);
+
+        //ahora vamos a obtener el user_id del parametro para hacer una comparacion y de esta forma asegurar que solo el propietario esta accediendo a esta parte.
+        const userIDParam = req.params.user_id; 
+        console.log("este es el usuario propietario que esta logeado -->", userIDParam);
+
+        //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
+        //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
+
+        if (userID === userIDParam){
+            //comprobamos que el usuario logeado es el mismo dueño de la tienda -POR SEGURIDAD-
+
+            const countMessages = req.session.countMessages
+            console.log("esto es countMessages -->", countMessages);
+            //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+            //aqui obtengo la cantidad de negotiationsBuySell
+            const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+            console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+    
+            let searchProfile;
+        
+            if (user){
+                //console.log("Esto es user._id ------>", user._id );
+                searchProfile = await modelProfile.findOne({ indexed : user._id });
+                console.log("searchProfile -->", searchProfile);
+                const searchBanner = searchProfile.bannerPerfil;
+                console.log("searchBanner --->", searchBanner);
+
+
+                async function searchOffert(){
+                    //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+                    const respItems = await modelItems.find({ user_id: userID, offer: true });
+                    if (respItems.length > 0) {
+                        boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
+                    }
+                        
+                    const respAerop = await modelAirplane.find({user_id : userID, offer : true });
+                    if (respAerop.length > 0){
+                        boxOffert.push(...respAerop);
+                    }
+
+                    const respAutom = await modelAutomotive.find({user_id : userID, offer : true });
+                    if (respAutom.length > 0){
+                        boxOffert.push(...respAutom);
+                    }
+
+                    const respArtes = await modelArtes.find({user_id : userID, offer : true });
+                    if (respArtes.length > 0){
+                        boxOffert.push(...respArtes);
+                    }
+
+                    const respReals = await modelRealstate.find({user_id : userID, offer : true });
+                    if (respReals.length > 0){
+                        boxOffert.push(...respReals);
+                    }
+
+                    const respServi = await modelService.find({user_id : userID, offer : true });
+                    if (respServi.length > 0){
+                        boxOffert.push(...respServi);
+                    }
+
+                    const respNauti = await modelNautical.find({user_id : userID, offer : true });
+                    if (respNauti.length > 0){
+                        boxOffert.push(...respNauti);
+                    }
+
+                    const respAucti = await modelAuction.find({user_id : userID, offer : true });
+                    if (respAucti.length > 0){
+                        boxOffert.push(...respAucti);
+                    }
+
+                }
+
+                searchOffert()
+                    .then(()=>{
+                        console.log("Aqui lo recaudado de las ofertas");
+                        console.log("boxOffert --->",boxOffert);
+                        res.render('page/zonabliss', { user, searchProfile, searchBanner,  countMessages, countNegotiationsBuySell, boxOffert });
+                    })
+                    .catch((err)=>{
+                        console.log("Ha ocurrido un error en la function searchOffert()")
+                    })
+                
+                
+            }   
+
+        } 
+        
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de /zonaBliss/:user_id", error);
+    }
+                     
+    
+});
+
+
+
+
+//----------------------------------------------------------------------
+
 /* esta es la ruta de la seccion de creacion de todos los departamentos "donde estan los iconos" */
 routes.get('/department/create', async (req, res)=>{
 

@@ -105,6 +105,15 @@ main{
     border: 1px solid rgb(90, 5, 5);
 } */
 
+.previewMedia{
+  width: 120px;
+  object-fit:cover;  
+}
+
+.previewImgGallery{
+  width: 100%;
+  object-fit:contain;
+}
 
 .preview{
     width: 100px;
@@ -125,7 +134,7 @@ main{
     cursor: pointer;
 }
 
-.inpFile, .inpFileUpdate{
+.inpFile, .inpFileUpdate, .inpFileImg{
     display: none;
 }
 
@@ -245,6 +254,28 @@ fill: currentColor;
 
 color: blueviolet;
 }
+
+
+
+.slick-prev{
+  z-index: 20;
+  left: 30px;
+
+
+}
+
+.slick-next{
+  z-index: 20;
+  right: 40px;
+}
+
+.slick-prev:before, .slick-next:before{
+  /* Tamaño de icono para mover */
+  font-size: 20px;
+}
+
+
+
 /* end footer */
 
 /*  Media queries */

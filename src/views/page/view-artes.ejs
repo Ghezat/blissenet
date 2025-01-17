@@ -528,6 +528,13 @@
                                 <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
                                 <div id="carouselExampleControls<%= i %>" class="carousel slide data-bs-ride="carousel" data-bs-interval="false" data-bs-touch="true" >
                                   <div class="carousel-inner" style="width: 100%; height: 220px;">
+                                    
+                                      <% if (ele.offer === true) { %> <!-- etiqueta de oferta arriba a la derecha    -->
+                                        <span class="border border-warning" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
+                                      <% } else { %>
+                                        <span class="border border-warning invisible" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                      <% }; %> 
+                                    
                                     <div class="carousel-item active" style="filter: none !important;">
                                       <a href="/product/<%= ele.department %>/<%= ele._id %>"><img src="<%= ele.images[0].url%>" class="imgFront" alt="..."></a>
                                     </div>

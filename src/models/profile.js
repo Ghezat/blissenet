@@ -20,6 +20,7 @@ const SchemaProfile = new Schema({
     mailhash : { type : String }, //este dato tambien existe en la coleccion user. aqui se guarda por default el hash que produce el avatar por default.
     bGColorText : { type : String , default : '#1a1a1a' }, //podemos dar el color que tendra el texto;
     bGColorTopbar : { type : String , default : '#f8f9fa' }, //podemos dar el color que tendra la barra superior donde esta el avatar y el mensaje del sistio;
+    bGColorGallery : { type : String , default : '#131313' }, //podemos dar el color que queramos para la seccion de galeria;
     bGColorWorkspace : { type : String , default : '#ffffff' }, //podemos dar el color que queramos para el sitio de trabajo donde estaran los articulos del sitio;
     searchFilter : { type : String, default : "off" }, //esto es para colocar el buscador en la tienda. !IMPORTANTE 
     facebook : { type : String }, 
@@ -29,6 +30,8 @@ const SchemaProfile = new Schema({
     favoritestores : { type : Array }, //"Siguiendo" un array de todas las tiendas que sigo o mis tiendas favoritas.
     followMe : { type : Array }, // "Me siguen" un array de todas las cuentas que me estan siguiendo.
     segment : {  type : Array, default : [ "All" ] }, //por defecto el profile nace con el objeto segment ya definido. Esto es el campo requerido para segmentar
+    gallery : { type : Object, default : 
+        { carouselOffert : { show : false }, sectionMedia : { show : false, data : [] }, carouselImages : { show : false, data : [] }, carouselBanner : { show : false, data : [] } }}, // Este objeto tiene internamente 4 objetos para poder manejar todos los recursos que estaran en galeria.
     paused : { type: Boolean, default: false }, //por default nace false. este campo se utilizará para impedir que un usuario moroso con sus impagos pueda crear, editar y eliminar publicaciones. será la unica forma existente para presionar a los usuarios morosos. 
     view : { type : Number, default: 0  }, //este campo permite tener la cantidad de veces que entran en la tienda. 
     hashtags : { type : Object , default : [] }, //este campo crea por defecto un objeto vacio, en el se agregara un array con las diferentes palabras claves de la tienda. 

@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet ZonaBliss</title>
+
+</head>
+<style>
+
+
+.sinBody{
+    display: none;
+}
+
+.tagDeleteMedia:hover .spanDelete{
+    border: 2px solid red; 
+    color: red;
+}
+
+.tagDelete:hover .spanDelete{
+    border: 2px solid red; 
+    color: red;
+}
+
+.tagDeleteImg:hover .spanDelete{
+    border: 2px solid red; 
+    color: red;
+}
+
+
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+ 
+}
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    <main style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+        <!-- a esta seccion solo puede entrar un usuario logeado con perfil y debe pasar una comprobacion en el backen de resto no podra entrar -->
+        <% if (user) { %>
+
+            <% if (searchProfile) {  %> 
+                <% const bGColorText = searchProfile.bGColorText %> 
+                <% const bGColorTopbar = searchProfile.bGColorTopbar %> 
+                <% const bGColorGallery = searchProfile.bGColorGallery %> 
+                <% const bGColorWorkspace = searchProfile.bGColorWorkspace %> 
+
+                <% const gallery = searchProfile.gallery %>
+                <% const carouselOffert = gallery.carouselOffert  %>
+                <% const carouselBanner = gallery.carouselBanner %>
+                <% const carouselImages = gallery.carouselImages %>
+                <% const sectionMedia = gallery.sectionMedia %>
+
+
+                <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                    <span class="ms-2 p-0" style="font-weight: 400;"> ZonaBliss </span>
+                </div>   
+                
+                <div class="container-fluid p-0">
+                    <input type="hidden" value="<%= bGColorText %>" id="colorText">
+                    <input type="hidden" value="<%= bGColorTopbar %>" id="colorFrame">
+                    <input type="hidden" value="<%= bGColorGallery %>" id="colorGallery">
+                    <input type="hidden" value="<%= bGColorWorkspace %>" id="colorWorkspace">
+                    
+
+                    <div class="row m-0 ">
+
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12  py-1 px-0 border" style="background-color: #e9ecef;">
+                                            
+                            
+                                <div class="card">
+                                    <div class="card-header">Configuración de Colores.</div>
+                                    <div class="card-body">
+                                        <form  id="formZonaBliss" class="p-0 d-flex flex-column overflow-auto w-100">
+                                                                    
+                                            <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= bGColorText %>"></div>
+                                                <span class="p-0">Text :</span>
+                                                <input type="radio" id="defaultText" value="#1a1a1a" name="text" class="mx-2"><label for="defaultText">Default</label>
+                                                <input type="radio" id="customText" value="" name="text" class="mx-2"><label for="customText">Custom</label>
+                                                <input type="color" id="bgColorText" value="<%= bGColorText %>" class="ms-3 rounded-2 sinBody">
+                                                <div class="defaultBoxtext ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#1a1a1a"></div>
+                                            </div>
+                                            
+                                            <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= bGColorTopbar %>"></div>
+                                                <span class="p-0">Frame :</span>
+                                                <input type="radio" id="defaultTopbar" value="#f8f9fa" name="frame" class="mx-2"><label for="defaultTopbar">Default</label>
+                                                <input type="radio" id="customTopbar" value="" name="frame" class="mx-2"><label for="customTopbar">Custom</label>
+                                                <input type="color"  id="bgColorTopbar" value="<%= bGColorTopbar %>" class="ms-3 rounded-2 sinBody">
+                                                <div class="defaultBoxFrame ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#f8f9fa"></div>
+                                            </div>
+
+                                            <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= bGColorGallery %>"></div>
+                                                <span class="p-0">Gallery :</span>
+                                                <input type="radio" id="defaultGallery" value="#131313" name="gallery" class="mx-2"><label for="defaultGallery">Default</label>
+                                                <input type="radio" id="customGallery"  value="" name="gallery" class="mx-2"><label for="customGallery">Custom</label>
+                                                <input type="color" id="bgColorGallery" value="<%= bGColorGallery %>" class="ms-3 rounded-2 sinBody">
+                                                <div class="defaultBoxGallery ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#131313"></div>
+                                            </div> 
+                                            
+                                            <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= bGColorWorkspace %>"></div>
+                                                <span class="p-0">Workspace :</span>
+                                                <input type="radio" id="defaultWorkspace" value="#ffffff" name="workspace" class="mx-2"><label for="defaultWorkspace">Default</label>
+                                                <input type="radio" id="customWorkspace"  value="" name="workspace" class="mx-2"><label for="customWorkspace">Custom</label>
+                                                <input type="color" id="bgColorWorkspace" value="<%= bGColorWorkspace %>" class="ms-3 rounded-2 sinBody">
+                                                <div class="defaultBoxWorkspace ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#ffffff"></div>
+                                            </div>  
+                                            
+
+                                            <button id="btnSubmitZonaBliss" class="btn btn-secondary btn-sm my-2">Aceptar Cambios</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">Control de Secciones de Galeria.</div>                             
+                                    <div class="card-body">
+                                        <div class="carouselOffert d-flex justify-content-between">
+                                           
+                                            <div class="form-check">
+                                                
+                                                <label class="form-check-label" for="flexCheckCarouselOffert">
+                                                    Sección de Ofertas 
+                                                </label>
+                                                <% if (carouselOffert.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckCarouselOffert">
+                                                <% } else { %>    
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckCarouselOffert" checked>
+                                                <% }; %> 
+
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselOffert"></i>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="medias d-flex justify-content-between">
+                                            <div class="form-check">
+                                                
+                                                <label class="form-check-label" for="flexCheckMedias">
+                                                    Sección de MultiMedia
+                                                </label>
+                                                <% if (sectionMedia.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckMedias">
+                                                <% } else { %>    
+                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckMedias" checked>
+                                                <% }; %> 
+                                                
+                                             
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticSectionMedia"></i>
+                                            </div>                                            
+                                        </div>
+
+                                        <div class="carouselImg d-flex justify-content-between">
+                                            <div class="form-check">
+
+                                                <label class="form-check-label" for="flexCheckCarouselImages">
+                                                    Sección de Imágenes
+                                                </label>
+                                                <% if (carouselImages.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckCarouselImages">
+                                                <% } else { %>  
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckCarouselImages" checked>
+                                                <% }; %> 
+
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselImages"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="carouselBanner d-flex justify-content-between">
+                                            <div class="form-check">
+                                                
+                                                <label class="form-check-label" for="flexCheckCarouselBanner">
+                                                    Sección de Banners
+                                                </label>
+                                                <% if (carouselBanner.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckCarouselBanner">
+                                                <% } else { %>  
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckCarouselBanner" checked>
+                                                <% }; %>     
+
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselBanner"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group my-2">
+                                            <button class="form-control btn-sm btn-secondary" id="btnSetGallery">Actualizar Cambios</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="card">
+                                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="flush-headingOne">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                                 Sección de MultiMedia
+                                            </button>
+                                          </h2>
+                                          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+                                                <ul class="nav nav-tabs">
+                                                    <li class="nav-item">
+                                                      <button class="nav-link uploadMedia active" aria-current="page"> Subir </button> 
+                                                    </li>
+                                                    <li class="nav-item">  
+                                                        <button class="nav-link sourceMedia"> Recursos </button>
+                                                    </li>  
+                                                </ul>
+                                                <% const sectionmedia = sectionMedia.data %> <!-- esto es un array -->
+                                                <% let countMedia = sectionMedia.data.length  %>
+
+                                                <div class="contentUploadMedia mt-2">  
+                                                    
+                                                    <div class="card-header bg-secondary text-light ">Cant. MultiMedia: <span class="ms-1 px-2 bg-light rounded-1 text-dark "> <%= countMedia %></span></div>
+                                                    <div class="card-header">Subir Recurso</div>
+                                                    <div class="form-group d-flex justify-content-start my-2 border">
+                                                        <div class="add_photo me-2" id="add_photoMedia" title="Subira una Imagen por carga">
+                                                            <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
+                                                        </div>
+                                                        <span class="mx-2"> <small> ¡Su Media puede ser un archivo de imagen PNG,JPG,MP3 de (3mb) o un archivo de video mp4 de (50mb)! </small></span>
+                                                        <input type="file" name=fileImg class="inpFileImg form-control" id="galleryFileMedia" required>
+                                                    </div>
+                                                    <div class="my-2 d-flex justify-content-center contentImgs border" id="addObjectMedia">
+        
+                                                        <!--   <img src="" class="preview"> -->
+        
+                                                    </div> 
+                                                    <div class="contentResponseMedia">
+                                                        <!-- alertas dinamicos -->
+                                                    </div>
+
+                                                 
+                                                    <% if (countMedia < 2) { %>
+                                                    <div class="form-group my-2"> 
+                                                        <input type="button" class="btn-sm btn-primary form-control" value="Subir MultiMedia" id="galleryBtnSubmitMedia">
+                                                        <button class="btn-sm btn-secondary form-control galleryBtnSubmitMediaDisabled close" disabled> Subiendo... <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
+                                                    </div>
+                                                    <% } else { %>
+                                                    <button class="btn-sm btn-secondary form-control" disabled> <i class="bi bi-lock-fill"></i> Subir MultiMedia </button>
+                                                    <% }; %>    
+
+                                                </div> 
+                                                <div class="contentSourceMedia mt-2 close">
+                                                    
+                                                    <% if (countMedia > 1) { %>
+
+                                                        <div class="contentDeletingMedia p-1 close">
+                                                            <div class="alert alert-primary py-4">
+                                                                <i class="bi bi-trash3-fill"></i> Eliminando recurso  
+                                                                <div class="spinner-border spinner-border-sm ms-2" role="status"></div>
+                                                            </div>
+                                                        </div> 
+
+                                                        <div class="containMainMedia">
+                                                        
+                                                            <div class="contentFlexImgs d-flex flex-wrap" style="width: 100%;">
+                                                                <% sectionmedia.forEach((ele)=>{ %>
+                                                                    <% const public_id = ele.public_id %>
+                                                                    <% const type = ele.type %>
+
+                                                                    <% if (type === "image") { %>
+
+                                                                        <div class="containImg m-1" style="position: relative; width: 120px; height: 120px;">
+                                                                            <img src="<%= ele.url %>" alt="" style="width: 120px; height: 120px; object-fit: cover;">
+                                                                            
+                                                                            <a href="/zonabliss/delete_sourceMedia/<%= public_id %>" class="tagDeleteMedia" style="color: black;">
+                                                                                <span class="rounded-pill p-2 d-flex justify-content-center align-items-center spanDelete" style="position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background-color: #ffffff;">
+                                                                                    <i class="bi bi-trash3-fill"></i>
+                                                                                </span>
+                                                                            </a> 
+                                                    
+                                                                        </div>
+                                                                    
+                                                                    <% } else { %>
+                                                                        <!-- es video -->
+                                                                        
+                                                                        <div class="containImg m-1" style="position: relative; width: 120px; height: 120px;">
+                                                                            <video src="<%= ele.url %>" alt="" style="width: 120px; height: 120px; object-fit: cover;"> </video>
+                                                                                
+                                                                            
+                                                                            <a href="/zonabliss/delete_sourceMedia/<%= public_id %>" class="tagDeleteMedia" style="color: black;">
+                                                                                <span class="rounded-pill p-2 d-flex justify-content-center align-items-center spanDelete" style="position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background-color: #ffffff;">
+                                                                                    <i class="bi bi-trash3-fill"></i>
+                                                                                </span>
+                                                                            </a> 
+                                                    
+                                                                        </div>
+
+                                                                    <% }; %>    
+                                                                    
+                                                                <% }) %>
+                                                            </div>    
+
+                                                        </div>
+
+                                                    <% } else if (countMedia == 1) { %>
+
+                                                        <div class="contentDeletingImg p-1 close">
+                                                            <div class="alert alert-primary py-4">
+                                                                <i class="bi bi-trash3-fill"></i> Eliminando recurso  
+                                                                <div class="spinner-border spinner-border-sm ms-2" role="status"></div>
+                                                            </div>
+                                                        </div> 
+
+                                                        <div class="containMainImgs">
+
+                                                            <div class="contentFlexImgs d-flex flex-wrap" style="width: 100%;">
+                                                                <% sectionmedia.forEach((ele)=>{ %>
+                                                                    <% const public_id = ele.public_id %>
+                                                                    <div class="containImg" style="position: relative; width: 120px; height: 120px;">
+                                                                        <img src="<%= ele.url %>" alt="" style="width: 120px; height: 120px; object-fit: cover;">
+                                                                        
+                                                                        <a href="/zonabliss/delete_sourceMedia/<%= public_id %>" class="tagDeleteImg" style="color: black;">
+                                                                            <span class="rounded-pill p-2 d-flex justify-content-center align-items-center" style="position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background-color: #ffffff;">
+                                                                                <i class="bi bi-trash3-fill"></i>
+                                                                            </span>
+                                                                        </a> 
+                                                
+                                                                    </div>
+                                                                <% }) %>
+                                                            </div>    
+
+                                                        </div>
+
+
+                                                    <% } else { %>
+                                                        <div class="alert alert-primary py-3 mt-2">
+                                                            Sin Multimedia diponible.
+                                                        </div>
+                                                    <% }; %>   
+                                                </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="flush-headingTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                                Sección de Imágenes
+                                            </button>
+                                          </h2>
+                                          <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                                <div class="accordion-body">
+                                                    <ul class="nav nav-tabs">
+                                                        <li class="nav-item">
+                                                          <button class="nav-link createImage active" aria-current="page"> Subir </button> 
+                                                        </li>
+                                                        <li class="nav-item">  
+                                                            <button class="nav-link sourceImage"> Recursos </button>
+                                                        </li>  
+                                                    </ul> 
+
+                                                    <% const carouselImg = carouselImages.data %> <!-- esto es un array -->
+                                                    <% let countImg = carouselImages.data.length  %>
+
+                                                    <div class="contentCreateImage mt-2">
+                                                        
+                                                        <div class="card-header bg-secondary text-light ">Cant. Imagenes: <span class="ms-1 px-2 bg-light rounded-1 text-dark "> <%= countImg %></span></div>
+                                                        <div class="card-header">Subir Imagenes</div>
+                                                        <div class="form-group d-flex justify-content-start my-2 border">
+                                                            <div class="add_photo me-2" id="add_photoImg" title="Subira una Imagen por carga">
+                                                                <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
+                                                            </div>
+                                                            <span class="mx-2"> <small> ¡Su Imagen debe ser un archivo PNG o JPG!. Máximo 10 imagenes y resolución aprox. 1000x1000px  </small></span>
+                                                            <input type="file" name=fileImg class="inpFileImg form-control" id="galleryFileImg" required>
+                                                        </div>
+                                                        <div class="my-2 d-flex justify-content-center contentImgs border" id="addObjectImgs">
+            
+                                                            <!--   <img src="" class="preview"> -->
+            
+                                                        </div> 
+                                                        <div class="contentResponseImg">
+                                                            <!-- alertas dinamicos -->
+                                                        </div>
+
+                                                     
+                                                        <% if (countImg < 10) { %>
+                                                        <div class="form-group my-2"> 
+                                                            <input type="button" class="btn-sm btn-primary form-control" value="Subir Imagen" id="galleryBtnSubmitImg">
+                                                            <button class="btn-sm btn-secondary form-control galleryBtnSubmitImgDisabled close" disabled> Subiendo... <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
+                                                        </div>
+                                                        <% } else { %>
+                                                        <button class="btn-sm btn-secondary form-control" disabled> <i class="bi bi-lock-fill"></i> Subir Imagen </button>
+                                                        <% }; %>    
+
+                                                    </div>
+                                                    <div class="contentSourceImage mt-2 close">
+                                                        
+                                                        <% if (countImg > 1) { %>
+
+                                                            <div class="contentDeletingImg p-1 close">
+                                                                <div class="alert alert-primary py-4">
+                                                                    <i class="bi bi-trash3-fill"></i> Eliminando recurso  
+                                                                    <div class="spinner-border spinner-border-sm ms-2" role="status"></div>
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="containMainImgs">
+                                                            
+                                                                <div class="contentFlexImgs d-flex flex-wrap" style="width: 100%;">
+                                                                    <% carouselImg.forEach((ele)=>{ %>
+                                                                        <% const public_id = ele.public_id %>
+                                                                        <div class="containImg m-1" style="position: relative; width: 120px; height: 120px;">
+                                                                            <img src="<%= ele.url %>" alt="" style="width: 120px; height: 120px; object-fit: cover;">
+                                                                            
+                                                                            <a href="/zonabliss/delete_sourceImg/<%= public_id %>" class="tagDeleteImg" style="color: black;">
+                                                                                <span class="rounded-pill p-2 d-flex justify-content-center align-items-center spanDelete" style="position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background-color: #ffffff;">
+                                                                                    <i class="bi bi-trash3-fill"></i>
+                                                                                </span>
+                                                                            </a> 
+                                                    
+                                                                        </div>
+                                                                    <% }) %>
+                                                                </div>    
+
+                                                            </div>
+
+                                                        <% } else if (countImg == 1) { %>
+
+                                                            <div class="contentDeletingImg p-1 close">
+                                                                <div class="alert alert-primary py-4">
+                                                                    <i class="bi bi-trash3-fill"></i> Eliminando recurso  
+                                                                    <div class="spinner-border spinner-border-sm ms-2" role="status"></div>
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="containMainImgs">
+
+                                                                <div class="contentFlexImgs d-flex flex-wrap" style="width: 100%;">
+                                                                    <% carouselImg.forEach((ele)=>{ %>
+                                                                        <% const public_id = ele.public_id %>
+                                                                        <div class="containImg" style="position: relative; width: 120px; height: 120px;">
+                                                                            <img src="<%= ele.url %>" alt="" style="width: 120px; height: 120px; object-fit: cover;">
+                                                                            
+                                                                            <a href="/zonabliss/delete_sourceImg/<%= public_id %>" class="tagDeleteImg" style="color: black;">
+                                                                                <span class="rounded-pill p-2 d-flex justify-content-center align-items-center" style="position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background-color: #ffffff;">
+                                                                                    <i class="bi bi-trash3-fill"></i>
+                                                                                </span>
+                                                                            </a> 
+                                                    
+                                                                        </div>
+                                                                    <% }) %>
+                                                                </div>    
+
+                                                            </div>
+
+                                                            <div class="alert alert-primary py-3 mt-2">
+                                                                Una Imagen disponible. "Carusel estático".
+                                                            </div>
+
+                                                        <% } else { %>
+                                                            <div class="alert alert-primary py-3 mt-2">
+                                                                Sin Imagen diponible.
+                                                            </div>
+                                                        <% }; %>   
+                                                    </div>                                                                                            
+                                                </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="flush-headingThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                                Sección de Banners
+                                            </button>
+                                          </h2>
+                                          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                                <div class="accordion-body">
+                                                    <ul class="nav nav-tabs">
+                                                        <li class="nav-item">
+                                                          <button class="nav-link createBanner active" aria-current="page"> Subir </button> 
+                                                        </li>
+                                                        <li class="nav-item">  
+                                                            <button class="nav-link sourceBanner"> Recursos </button>
+                                                          </li>
+
+                                                    </ul> 
+                                                    <% const carousel = carouselBanner.data %> <!-- esto es un array -->
+                                                    <% let countbanner = carouselBanner.data.length  %>
+
+                                                    <div class="contentCreateBanner mt-2">
+                                                        
+                                                        <div class="card-header bg-secondary text-light ">Cant. Banner: <span class="ms-1 px-2 bg-light rounded-1 text-dark "> <%= countbanner %></span></div>
+                                                        <div class="card-header">Subir Banner</div>
+                                                        <div class="form-group d-flex justify-content-start my-2 border">
+                                                            <div class="add_photo me-2" id="add_photoBanner" title="Subira un Banner por carga">
+                                                                <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
+                                                            </div>
+                                                            <span class="mx-2"> <small> ¡Su Banner debe ser un archivo PNG o JPG!. Máximo 5 banner y resolución aprox. 1360x300px  </small></span>
+                                                            <input type="file" name=fileImg class="inpFile form-control" id="galleryFileBanner" required>
+                                                        </div>
+                                                        <div class="my-2 d-flex justify-content-center contentImgs border" id="addObjectImg">
+            
+                                                            <!--   <img src="" class="preview"> -->
+            
+                                                        </div> 
+                                                        <div class="contentResponse">
+                                                            <!-- alertas dinamicos -->
+                                                        </div>
+
+                                                     
+                                                        <% if (countbanner < 5) { %>
+                                                        <div class="form-group my-2">
+                                                            <input type="button" class="btn-sm btn-primary form-control" value="Subir Banner" id="galleryBtnSubmit">
+                                                            <button class="btn-sm btn-secondary form-control btnDisabledBannerSubiendo close" disabled> Subiendo... <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
+                                                        </div>
+                                                        <% } else { %>
+                                                        <button class="btn-sm btn-secondary form-control" disabled> <i class="bi bi-lock-fill"></i> Subir Banner </button>
+                                                        <% }; %>    
+
+                                                    </div>
+                                                    <div class="contentSourceBanner mt-2 close">
+                                                        
+                                                        <% if (countbanner > 1) { %>
+
+                                                            <div class="contentDeleting p-1 close">
+                                                                <div class="alert alert-primary py-4">
+                                                                    <i class="bi bi-trash3-fill"></i> Eliminando recurso  
+                                                                    <div class="spinner-border spinner-border-sm ms-2" role="status"></div>
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="containMainImg" style="width: 100%;">
+                                                            
+                                                                <% carousel.forEach((ele)=>{ %>
+                                                                    <% const public_id = ele.public_id %>
+                                                                    <div class="containImg" style="position: relative; width: 100%;">
+                                                                        <img src="<%= ele.url %>" alt="" style="width: 100%; object-fit: contain;">
+                                                                        
+                                                                        <a href="/zonabliss/delete_source/<%= public_id %>" class="tagDelete" style="color: black;">
+                                                                            <span class="rounded-pill p-2 d-flex justify-content-center align-items-center spanDelete" style="position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background-color: #ffffff;">
+                                                                                <i class="bi bi-trash3-fill"></i>
+                                                                            </span>
+                                                                        </a> 
+                                                   
+                                                                    </div>
+                                                                <% }) %>
+
+                                                            </div>
+
+                                                        <% } else if (countbanner == 1) { %>
+
+                                                            <div class="contentDeleting p-1 close">
+                                                                <div class="alert alert-primary py-4">
+                                                                    <i class="bi bi-trash3-fill"></i> Eliminando recurso  
+                                                                    <div class="spinner-border spinner-border-sm ms-2" role="status"></div>
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="containMainImg" style="width: 100%;">
+
+                                                                <% carousel.forEach((ele)=>{ %>
+                                                                    <% const public_id = ele.public_id %>
+                                                                    <div class="containImg" style="position: relative; width: 100%;">
+                                                                        <img src="<%= ele.url %>" alt="" style="width: 100%; object-fit: contain;">
+                                                                        
+                                                                        <a href="/zonabliss/delete_source/<%= public_id %>" class="tagDelete" style="color: black;">
+                                                                            <span class="rounded-pill p-2 d-flex justify-content-center align-items-center" style="position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background-color: #ffffff;">
+                                                                                <i class="bi bi-trash3-fill"></i>
+                                                                            </span>
+                                                                        </a> 
+                                                
+                                                                    </div>
+                                                                <% }) %>
+
+                                                            </div>
+
+                                                            <div class="alert alert-primary py-3 mt-2">
+                                                                Un Banner disponible. Estático.
+                                                                <div class="spinner-grow spinner-grow-sm ms-2" role="status"></div>
+                                                            </div>
+
+                                                        <% } else { %>
+                                                            <div class="alert alert-primary py-3 mt-2">
+                                                                Sin Banner diponible.
+                                                            </div>
+                                                        <% }; %>   
+                                                    </div>
+
+                                                </div>
+                                          </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                    
+                            
+                            <!-- seccion nombre de tienda -->
+                            
+                            <% const username = user.username %>
+                            <% const indexed = user._id %> <!-- esto es igual al id user -->
+                                
+                        </div>
+
+                            <!-- aqui estaran todos los modales informativos -->
+
+                            <!-- Modal Carousel Ofertas --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselOffert" -->
+                            <div class="modal fade" id="staticCarouselOffert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Sección de Ofertas</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Descubre el nuevo Carrusel de Ofertas!🌟  </p>
+
+                                            <p> Con este módulo, tus clientes potenciales podrán ver todas tus ofertas de manera clara y atractiva, todo en un solo lugar. El carrusel permite que cada oferta destaque, facilitando la comparación y la elección. </p>
+                                                
+                                            <b>Beneficios:</b> 
+                                            <ul>
+                                               <li>Visibilidad Aumentada: Presenta tus ofertas de manera llamativa. </li>
+                                               <li>Facilidad de Uso: Navegación sencilla para los usuarios. </li>
+                                               <li>Impulso a las Ventas: Facilita decisiones rápidas al mostrar todas las promociones juntas.</li>
+                                            </ul>    
+                                            <i>¡Haz que tus ofertas brillen como nunca antes! 💡</i> 
+                                        
+                                            <p class="my-2"><small> Requerimentos : <span class="alert-success py-1 px-2 rounded-2"> <b>tener al menos un anuncio en oferta.</b>  </small></span> </p>
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- Modal Seccion de Media --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSectionMedia" -->
+                            <div class="modal fade" id="staticSectionMedia" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ"> Sección de MultiMedia </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Sube videos o Imagenes de impacto!🌟  </p>                                          
+                                            <p> Utiliza esta sección para incrustar dos recursos de media, que puede ser dos videos o dos imagenes o alternarlo dejando un video y una imagen.
+                                                Utiliza este recursos gratuito para afianzar tu marca y Tienda. </p> 
+                                                                                
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- Modal Carousel de Imagenes --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselImages" -->
+                            <div class="modal fade" id="staticCarouselImages" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Sección de Imágenes </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Destaca tu Tienda con un Carrusel de Imagenes!🌟  </p>                                          
+                                            <p> Utiliza este Carrusel, sin movimiento automático para que tus clientes muevan las imagenes y descubran por si mismo todo lo que quieres que vean.
+                                                Con nuestro carrusel de imagenes, podrás utilizar hasta 10 imágenes impactantes para resaltar los aspectos más destacados de tus productos o servicios, estas imagenes pueden tener diferentes anchos.
+                                                Aprovecha este recurso gratuito y haz que tus visitantes vuelen por los aires! </p> 
+                                                                                
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                            <!-- Modal Carousel de Banner --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselBanner" -->
+                            <div class="modal fade" id="staticCarouselBanner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ"> Sección de Banners </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Destaca tu Tienda con un Carrusel de Banner!🌟  </p>                                          
+                                            <p> Diferénciate de la competencia y muestra tu compromiso con tus clientes. Con nuestro carrusel de banner, podrás utilizar hasta 5 imágenes impactantes para resaltar los aspectos más destacados de tus productos o servicios. Esta es una oportunidad perfecta para elevar tu marca y crear una experiencia visual atractiva que cautive a tus visitantes. ¡No te quedes atrás, aprovecha este recurso gratuito y haz que tu tienda brille! </p> 
+                                                                                
+                                        
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                   
+
+                        <div class="col-lg-8 col-md-8 col-sm-12 col-12 py-1 px-0 border" style="background-color: #e9ecef;">
+                                
+                                
+                            <div class="contentMainworkZonaBliss">
+
+                                <div class="card">
+                                    <div class="card-body d-flex justify-content-end">
+
+                                        <div class="contentWorkZonaBliss mt-4 rounded-1 border border-secondary " style="width:100%; height:fit-content;">
+                                            <div class="contentCollapse">
+                                                <div class="contentNav">
+                                                    <!-- <img src="/img/zonaBliss_navLight.png" alt="navigator" style="width: 100%;"> -->
+                                                    <img src="/img/zonaBliss_navDark.png" alt="navigator" style="width: 100%;">
+                                                </div>
+                                                <div class="contentBanner">
+                                                    <% if (searchBanner) { %>
+                                                        <% const banner = searchBanner[0] %>
+                                                
+                                                        <img src="<%= banner.url %>" style="width: 100%;">
+                                                        
+                                                    <% }; %> 
+                                                </div>
+                                                <div class="mainFrame" style="position: relative;">
+                                                    <div class="contentFrame d-flex" style="width: 100%; height: max-content; background-color: <%= bGColorTopbar %>">
+                                                        <div class="row m-0 py-2" style="width: 100%;">
+                                                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 p-0">
+                                                                
+                                                                <div class="contentLeft d-flex" style="width: 100%;">                                                    
+                                                                    <div class="containerAvatar ps-1 me-2 d-flex align-items-center" style="margin-left: 20px;">
+
+                                                                        <% if (searchProfile.avatarPerfil[0].url.length === 0 ) { %>
+                                                                            <td> <img src="https://www.gravatar.com/avatar/<%= searchProfile.mailhash %>?d=identicon" style="width: 55px;"></td>    
+                                                                        <% } else { %>
+                                                                            <td><img src="<%= searchProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 55px;"></td> 
+                                                                        <% }; %>
+                                            
+                                                                    </div>
+                                                                    <div class="containerDetails d-flex flex-column" style="color:<%= bGColorText %>">
+
+                                                                        <span class="mx-1 store" style="font-size: 14px;">
+                                                                            <%= searchProfile.username %> <input type="hidden" value="<%= searchProfile.username %>">
+                                                                        </span>
+                                                                        
+                                                                        <span class="mx-1" style="font-size: 12px; user-select: none"><i class="bi bi-share me-1"></i> Compartir </span>
+                                                                        <span class="mx-1" style="font-size: 12px; user-select: none"><i class="bi bi-bag-plus me-1"></i> Anuncios: 00 </span>
+                                                    
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 p-0">
+
+                                                                <div class="contentRight d-flex justify-content-end" style="width: 100%;">
+                                                                    <button class="btn rounded-pill shadow-sm px-4 mx-4 my-2"  style="font-size: 12px; border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;">Seguir</button>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="contentSegment">
+                                                        <% const segment = searchProfile.segment %>
+                                                        <div class="form-floating shadow-sm" style="position: relative; z-index: 200;">
+                                                            <select class="form-select" id="floatingSelect" name="segment" aria-label="label select example"
+                                                            style="border: none; outline: none; border-radius: 0; background-color: <%= bGColorTopbar%> ; color: <%= bGColorText %>; ">
+                                                            
+                                                
+                                                            <% segment.forEach((Segment)=>{ %>
+                                                            <option style="font-size: 12px;" value= "<%= Segment %>"> <%= Segment %>  </option>
+                                                            <% }) %>
+                                
+                                                            </select>
+                                                            <label for="floatingSelect" style="font-size: 13px; color: <%= bGColorText %>; "><i>Selecciona un Segmento</i> </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="Frame d-flex justify-content-center align-items-center" style="position: absolute; top: 0; width: 100%; height: 100%;">
+                                                        <span style="font-size: 20px; color:<%= bGColorText %>"> <strong> <i>Frame</i> </strong> </span>
+                                                    </div>    
+                                                </div>
+
+
+                                                <% if (searchProfile.searchFilter === 'on' ){%>
+                                                    <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= bGColorTopbar%>;color:<%= bGColorText %>; z-index : 100">
+                        
+                                                        <div class="container-fluid">
+                                                            <div class="container" style="width: 50%;">                                                                                               
+                                                            
+                                                                <div class="d-flex">
+                                                                <input class="form-control me-2" type="text"  placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search" style="font-size: 12px;">
+                                                                <button class="btn" style="font-size: 12px; color:<%= bGColorText %>; border : 1px solid <%= bGColorText %>">Search</button>
+                                                                </div>
+                                                                                    
+                                                            </div>
+                                                        </div>
+                                                    
+                                                    </div>
+                                                <% }; %>
+
+
+                                                <div class="contentWorkSpace" style="position: relative; height: 200px;background-color:<%= bGColorWorkspace %> ; ">
+                                                    <div class="nails px-3 d-flex justify-content-center">
+
+                                                        <div class="boxIconCenter px-3 py-0" style="position: relative; width: 40px; height:20px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; background-color:<%= bGColorTopbar %>;color:<%= bGColorText %>;">
+                                                            <i class="bi bi-chevron-down Heading my-0" style="position: absolute; top: 0; right:38%; font-size: 11px;"></i>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="workSpace d-flex justify-content-center align-items-center" style="position: absolute; top: 0; width: 100%; height: 100%;">
+                                                        <span style="font-size: 20px; color:<%= bGColorText %>"> <strong> <i> WorkSpace </i></strong> </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="contentGallery" style="position: relative; background-color:<%= bGColorGallery %>; height: auto">
+                                                <div class="contentNail d-flex justify-content-center" style="position: absolute; top: -30px; width: 100%;">
+                                                    <div class="tagGalleryIcon cursor-pointer px-2 py-0 rounded-3 close" style="font-size: 14px; color:<%= bGColorText %>; border: 1px solid <%= bGColorText %>"> <i class="bi bi-arrow-bar-down"></i> </div> 
+                                                    <div class="tagGallery cursor-pointer px-3 py-1 rounded-3" style="font-size: 20px; color:<%= bGColorText %>; border: 1px solid <%= bGColorText %>"> <strong> <i> Gallery </i> </strong> </div>
+                                                </div>
+
+                                            <% if (carouselOffert.show === true ) { %> <!-- true o false -->
+
+                                                    <% if (boxOffert) { %>
+                                                    <div class="carousel-offer p-4">    
+                                                        <% boxOffert.forEach((ele)=>{ %>
+
+                                                            <div class="contentCard px-3 d-flex flex-column" style="position: relative;">
+                                                                <img src="<%= ele.images[0].url %>" alt="" style="width: 200px; height: 200px; object-fit: cover;">
+                                                                <span class="border border-warning" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                                <span class="bg-warning px-2 py-0" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
+
+                                                                <div style="width: 200px; background-color: #fcda57; height: 40px; overflow: hidden">
+                                                                    <span class="p-2" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        <% }) %>
+                                                    </div>
+                                                    <% } %>
+
+                                            <% } %>
+
+
+                                            <% if (sectionMedia.show === true ) { %> <!-- true o false -->
+                                                <% const countMedia = sectionMedia.data.length  %>
+                                                <% const medias = sectionMedia.data %>
+
+                                                <% if (countMedia >= 1) { %>
+                                                    <div class="container-fluid p-4">
+                                                        <div class="row m-0 d-flex justify-content-between"> <!-- carousel-images es la clase de slick-carousel -->
+                                                            <% medias.forEach((ele)=>{ %>
+                                                                
+                                                                <% if (ele.type === 'image'){ %>
+                                                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
+                                                                       
+                                                                        <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 230px; object-fit: cover;">
+                                                                      
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
+                                                                        
+                                                                        <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 230px; object-fit: cover;"></video>
+                                                                       
+                                                                    </div>
+                                                                <% }; %>
+
+
+                                                            <% }); %>    
+                                                        </div>    
+                                                    </div>    
+                                                <% } %>    
+
+                                            <% } %> 
+
+
+                                            <% if (carouselImages.show === true ) { %> <!-- true o false -->
+                                                <% const countImg = carouselImages.data.length  %>
+                                                <% const carousel = carouselImages.data %>
+
+                                                <% if (countImg >= 1) { %>
+                                                    <div class="carousel-images p-4"> <!-- carousel-images es la clase de slick-carousel -->
+                                                        <% carousel.forEach((ele)=>{ %>
+                                                        <div class="conteImg px-3 shadow-sm">   
+                                                            <img class="rounded-3" src="<%= ele.url %>" alt="" style="height: 230px; object-fit: cover;">
+                                                        </div>
+                                                        <% }); %>    
+                                                    </div>    
+                                                <% } %>    
+
+                                            <% } %>     
+
+                                            <% if (carouselBanner.show === true ) { %> <!-- true o false -->
+                                                <% const countbanner = carouselBanner.data.length  %>
+                                                <% const carousel = carouselBanner.data %> <!-- esto es un array -->
+
+                                                <% if (countbanner >= 1) { %>
+                                                    <div class="carousel-banner" style="width: 100%;"> <!-- carousel-banner es la clase de slick-carousel -->
+                                                    
+                                                        <% carousel.forEach((ele)=>{ %>
+                                                        
+                                                            <img src="<%= ele.url %>" alt="" style="height: 200px; object-fit: cover;" >                                                   
+                                                        
+                                                        <% }) %>
+
+                                                    </div>
+                                                <% }; %>
+
+                                            <% } %>        
+
+<!--                                        
+                                                <div class="autoplay" style="width: 100%; max-height: 190px;">
+                                                    <img src="https://img.freepik.com/psd-gratis/renderizacion-3d-icono-interfaz_23-2151553996.jpg?t=st=1736474391~exp=1736477991~hmac=41c62685249fe61f6cdad1c51b8003812fe896beaf4743f44b94abd5d3f1065d&w=740" alt="" style="max-height: 190px;">
+                                                    <img src="https://img.freepik.com/fotos-premium/computadora-portatil-teclado-url-http-sitio-web-protocolo-aplicacion-digital-seguridad-cibernetica-o-sistema-informatico-iot-busqueda-nocturna-texto-enlace-busqueda-segura-navegacion-web-o-consulta-linea-sobre-informacion_590464-142237.jpg?w=740" alt="" style="max-height: 190px;">
+                                                    <img src="https://static.vecteezy.com/ti/fotos-gratis/p1/26406989-preto-homem-modelo-isolado-americano-retrato-africano-jaqueta-a-moda-moda-americano-estilo-foto.jpg" alt="" style="max-height: 190px;">
+                                                    <img src="https://img.freepik.com/foto-gratis/fondo-programacion-texto-html_23-2150040421.jpg?t=st=1736474509~exp=1736478109~hmac=36bf9f245e408a0959f7b89bfcd5d0ed5862b4f116291f099c81521d8e4651c9&w=740" alt="" style="max-height: 190px;">                                                    
+                                                    <img src="https://st3.depositphotos.com/4983935/19571/i/450/depositphotos_195711404-stock-photo-portrait-young-woman-red-lips.jpg" alt="" style="max-height: 190px;">
+                                                </div>
+-->
+<!--                                            <div class="variable-width p-4">
+                                                    <img class="px-3" src="https://img.freepik.com/psd-gratis/renderizacion-3d-icono-interfaz_23-2151553996.jpg?t=st=1736474391~exp=1736477991~hmac=41c62685249fe61f6cdad1c51b8003812fe896beaf4743f44b94abd5d3f1065d&w=740" alt="" style="max-height: 190px;">
+                                                    <img class="px-3" src="/img/bannerZonaBliss2.png" alt="" style="max-height: 190px;">
+                                                    <img class="px-3" src="https://img.freepik.com/fotos-premium/computadora-portatil-teclado-url-http-sitio-web-protocolo-aplicacion-digital-seguridad-cibernetica-o-sistema-informatico-iot-busqueda-nocturna-texto-enlace-busqueda-segura-navegacion-web-o-consulta-linea-sobre-informacion_590464-142237.jpg?w=740" alt="" style="max-height: 190px;">
+                                                    <img class="px-3" src="https://oceanika21inc.com/wp-content/uploads/2022/08/BANNER-HOME-2.jpg" alt="" style="max-height: 190px;">
+                                                    <img class="px-3" src="https://img.freepik.com/foto-gratis/fondo-programacion-texto-html_23-2150040421.jpg?t=st=1736474509~exp=1736478109~hmac=36bf9f245e408a0959f7b89bfcd5d0ed5862b4f116291f099c81521d8e4651c9&w=740" alt="" style="max-height: 190px;">                                                    
+                                                    <img class="px-3" src="https://i0.wp.com/notiespartano.com/wp-content/uploads/2023/04/Carro-700x352-1.jpg?fit=700%2C352&ssl=1" alt="" style="max-height: 190px;">
+                                                    <img class="px-3" src="https://www.bardahl.com.mx/wp-content/uploads/2022/03/veleros-y-su-mantenimiento.jpg" alt="" style="max-height: 190px;">
+                                                    <img class="px-3" src="https://static.vecteezy.com/system/resources/previews/011/161/522/non_2x/sailing-ship-logo-design-template-vector.jpg" alt="" style="max-height: 190px;">
+                                                </div> -->
+
+
+                                               
+
+<!--                                                 <div class="workSpace d-flex justify-content-center align-items-center" style="position: absolute; top: 0; width: 100%; height: 100%;">
+                                                    <span style="font-size: 20px; color:<%= bGColorText %>">  <strong> <i>Gallery</i> </strong> </span>
+                                                </div> -->
+                                            </div>
+
+                                            <div class="contentCollapse col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0" style="position: relative;">
+
+                                                <div class="containerDetailsMessajesRRSS pt-3" style="height: auto; background-color:<%= bGColorTopbar%>;">
+                                                                                                    
+                                                        <div class="containerMessager d-flex justify-content-start">
+                                
+                                                          <p class="MessagerStore mb-0 mx-5" style="font-size: 12px; color: <%= bGColorText %>">
+                                                            <i>
+                                                              <%= searchProfile.profileMessage %>
+                                                            </i>
+                                                          </p>
+                                                    
+                                                        </div>
+                                                        <div class="containerMainRRSS mx-5">
+                                                         
+                                                          <div class="containerRRSS d-flex justify-content-end" style="font-size: 13px; height: 30px; width: 100%">
+                                                                                         
+                                                        
+                                                            <div class="facebook mx-2">
+                                                                <% if (searchProfile.facebook) { %>
+                                                                    <a href="" style="color:<%= bGColorText %>"><i class="bi bi-facebook"></i></a>
+                                                                <% } %>
+                                                            </div>
+                                                            <div class="instagram mx-2">
+                                                                <% if (searchProfile.instagram) { %>
+                                                                     <a href="" style="color:<%= bGColorText %>"><i class="bi bi-instagram"></i></a>
+                                                                <% } %>
+                                                            </div>
+                                                            <div class="youtube mx-2">
+                                                                <% if (searchProfile.youtube) { %>
+                                                                    <a href="" style="color:<%= bGColorText %>"><i class="bi bi-youtube"></i></a>
+                                                                <% } %>
+                                                            </div>
+                                                            <div class="tiktok mx-2">
+                                                                <% if (searchProfile.tiktok) { %>
+                                                                    <a href="" style="color:<%= bGColorText %>"><i class="bi bi-tiktok"></i></a>
+                                                                <% } %>
+                                                            </div>
+                                
+                                                                                    
+                                
+                                                          </div>
+                                
+                                                        </div>
+                                                      
+                                                    
+                                                </div> 
+                                                <div class="Frame d-flex justify-content-center align-items-center" style="height: auto; background-color:<%= bGColorTopbar%>;color:<%= bGColorText %>;">
+                                                    <span style="font-size: 20px;"> <strong> <i>Frame</i> </strong> </span>
+                                                </div> 
+                                                <footer class="py-4" style="height: auto; background-color:<%= bGColorTopbar%>;color:<%= bGColorText %>;">
+                                                  <% const date = new Date(searchProfile.createdAt) %>
+                                                  <% const dia = date.getDate() %> <% const mes = date.getMonth() +1 %> <% const anio = date.getFullYear() %>
+                                                  <% const dateNow = new Date() %> <% const anioCurrent = dateNow.getFullYear() %>
+
+                                                  <div class="row mx-0 contentClient d-flex justify-content-around align-items-center">
+                                                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImg d-flex justify-content-center align-items-center my-2">
+                                                        <div class="containerImg mx-2">
+                                                          <% if (searchProfile.avatarPerfil[0].url.length === 0 ) {%>
+                                                            <td> <img src="https://www.gravatar.com/avatar/<%= searchProfile.mailhash %>?d=identicon" class="rounded-3" style="width: 50px;"></td>   
+                                                            <% } else {%>
+                                                            <td><img src="<%= searchProfile.avatarPerfil[0].url %>" alt="" class="rounded-3" style="width: 50px;"></td>
+                                                          <% }; %>
+                                                        </div>
+                                                        <div class="containerDetail my-2" style="font-size: 12px;">
+                                                          <p class="mb-0" style="color:<%= bGColorText %>"> <%= searchProfile.username%></p>
+                                                          <p class="mb-0"> <span class="from"><span> <%= dia %>-<%= mes %>-<%= anio %>  </span></span> </p>
+                                                        </div>
+                                
+                                                    </div>     
+                                                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserDetails d-flex justify-content-around align-items-center">
+                                                      <div class="containerRate d-flex flex-column mx-2" style="font-size: 12px;">
+                                                        <span> 5 <i class="bi bi-star-fill "></i> </span> 
+                                                        <span> (00) </span>
+                                                      </div>
+                                
+                                                    </div> 
+                                                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImgDetails d-flex justify-content-around align-items-center">
+                                                        <div class="containerYears my-2 d-flex flex-column align-items-center" style="font-size: 12px;">
+                                                          <p class="m-0" style="color:<%= bGColorText %>"><small><%= searchProfile.company %></small></p>
+                                                          <p class="m-0" style="color:<%= bGColorText %>"><small><%= searchProfile.companyRif %></small></p>
+                                                          <p class="m-0" style="color:<%= bGColorText %>"><span class="yearRegister"><%= anio %> </span> - <span class="yearCurrent"> <%= anioCurrent %> </span></p>
+                                                        </div>
+                                                    </div>    
+                                                    <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImgDetails d-flex justify-content-around align-items-center">
+                                                        <div class="containerYears my-2 rounded-3 d-flex flex-column align-items-center" style="font-size: 12px;">
+                                                          <p class="m-0" style="color:<%= bGColorText %>"><i class="bi bi-geo-alt me-1"></i> <small><%= searchProfile.states %></small></p>
+                                                          <p class="m-0" style="color:<%= bGColorText %>"><i class="bi bi-geo me-1"></i> <small><%= searchProfile.cities %></small></p>
+                                                        </div>
+                                                    </div>   
+                                                  </div>
+
+                                                 
+                                
+                                                </footer>
+
+  
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="card mt-1">
+                                <div class="card-body d-flex justify-content-center ">
+                                    <span id="logoBlissenet_com"> </span>
+                                </div>
+                            </div>                    
+
+                                            
+                        </div>
+
+                    </div>    
+
+                </div>
+
+            <%  }; %>
+                  
+                  
+
+        <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+        <% }; %>
+
+    </main>
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+       
+
+</body>
+
+<!-- para cambiar el color de texto, el topBar y el workSpace -->
+<script>
+    const containerColor = document.querySelector('.containerColor'); //contenedor del input color;           
+    const btnSubmitBgColor = document.getElementById('btnSubmitBackground'); //este es el submit
+
+    //valores de colores establecidos en la base de datos para esta tienda
+    const colorText = document.getElementById('colorText').value;
+    const colorFrame = document.getElementById('colorFrame').value;
+    const colorGallery = document.getElementById('colorGallery').value;
+    const colorWorkspace = document.getElementById('colorWorkspace').value;
+
+    //boxColorDefault --------------------------------------------------------------------------
+    const defaultBoxtext = document.querySelector('.defaultBoxtext');
+    const defaultBoxFrame = document.querySelector('.defaultBoxFrame');
+    const defaultBoxGallery = document.querySelector('.defaultBoxGallery');
+    const defaultBoxWorkspace = document.querySelector('.defaultBoxWorkspace');
+
+    /* esto controla Text ---------------------------------------------------------------------*/
+    const defaultText = document.getElementById('defaultText'); //opcion por default
+    const customText =  document.getElementById('customText'); //opcion customizbale
+    const bgColorText = document.getElementById('bgColorText'); //este es el input color del Text;
+
+
+    defaultText.addEventListener('click', ()=>{
+        //console.log("he marcado la opcion por default");
+        bgColorText.classList.add('sinBody');
+        bgColorText.value = defaultText.value;
+        defaultBoxtext.classList.remove('close');
+        //console.log("defaultText.value-->", defaultText.value);
+        console.log("bgColorText.value -->", bgColorText.value);
+    })
+
+    customText.addEventListener('click', ()=>{
+        //console.log("he marcado la opcion customisable");
+        //console.log("TextoColor->", TextoColor);
+        bgColorText.classList.remove('sinBody');
+        defaultBoxtext.classList.add('close');
+        bgColorText.value = colorText;
+        console.log("bgColorText.value -->", bgColorText.value);
+    })
+  
+
+    /* esto controla el topbar*/
+    const defaultTopbar = document.getElementById('defaultTopbar');
+    const customTopbar = document.getElementById('customTopbar');
+    const bgColorTopbar = document.getElementById('bgColorTopbar'); //este es el input color Topbar
+
+    /* esto controla Frame ---------------------------------------------------------------------*/
+
+    defaultTopbar.addEventListener('click', ()=>{
+        //console.log("he marcado la opcion por default");
+        bgColorTopbar.classList.add('sinBody');
+        bgColorTopbar.value = defaultTopbar.value;
+        defaultBoxFrame.classList.remove('close');
+        //console.log("defaultTopbar.value", defaultTopbar.value);
+        console.log("bgColorTopbar.value -->", bgColorTopbar.value);
+    })
+
+    customTopbar.addEventListener('click', ()=>{
+        //console.log("he marcado la opcion customisable");
+        //console.log("FrameColor->", FrameColor);
+        bgColorTopbar.classList.remove('sinBody');
+        defaultBoxFrame.classList.add('close');
+        bgColorTopbar.value = colorFrame;
+        console.log("bgColorTopbar.value -->", bgColorTopbar.value);
+    })
+
+
+    /* esto controla Gallery ---------------------------------------------------------------------*/
+    const defaultGallery = document.getElementById('defaultGallery');
+    const customGallery = document.getElementById('customGallery');
+    const bgColorGallery = document.getElementById('bgColorGallery'); //este es el input color Topbar
+
+
+    defaultGallery.addEventListener('change', ()=>{
+        //console.log("he marcado la opcion por default");
+        bgColorGallery.classList.add('sinBody');
+        bgColorGallery.value = defaultGallery.value;
+        defaultBoxGallery.classList.remove('close');
+        //console.log("defaultGallery.value-->", defaultGallery.value);
+        console.log("bgColorGallery.value -->", bgColorGallery.value);
+    })
+
+    customGallery.addEventListener('change', ()=>{
+        //console.log("he marcado la opcion customisable");
+        //console.log("GalleryColor->", GalleryColor);
+        bgColorGallery.classList.remove('sinBody');
+        defaultBoxGallery.classList.add('close');
+        bgColorGallery.value = colorGallery;
+        console.log("bgColorGallery.value -->", bgColorGallery.value);
+    })
+
+
+    /* esto controla el workspace -----------------------------------------------------------------*/
+    const defaultWorkspace = document.getElementById('defaultWorkspace'); //opcion por defaul
+    const customWorkspace = document.getElementById('customWorkspace'); //opcion customizable
+    const bgColorWorkspace = document.getElementById('bgColorWorkspace'); //este es el input color workspace;
+    
+
+    defaultWorkspace.addEventListener('change', ()=>{
+        //console.log("he marcado la opcion por default");
+        bgColorWorkspace.classList.add('sinBody');
+        bgColorWorkspace.value = defaultWorkspace.value;
+        defaultBoxWorkspace.classList.remove('close');
+        //console.log("defaultWorkspace.value-->", defaultWorkspace.value);
+        console.log("bgColorWorkspace.value -->", bgColorWorkspace.value);
+    });
+
+    customWorkspace.addEventListener('change', ()=>{
+        //console.log("he marcado la opcion customisable");
+        //console.log("WorkspaceColor->", WorkspaceColor);
+        bgColorWorkspace.classList.remove('sinBody');
+        defaultBoxWorkspace.classList.add('close');
+        bgColorWorkspace.value = colorWorkspace;
+        console.log("bgColorWorkspace.value -->", bgColorWorkspace.value);
+    });
+
+    
+
+    //Enviar formulario
+    const formZonaBliss = document.getElementById('formZonaBliss'); //formulario
+    const btnSubmitZonaBliss = document.getElementById('btnSubmitZonaBliss'); //boton de formulario
+  
+    formZonaBliss.addEventListener('submit', (e)=>{
+        e.preventDefault()
+
+        console.log(`bgColorText--> ${bgColorText.value}`);
+        console.log(`bgColorTopbar--> ${bgColorTopbar.value}`);
+        console.log(`bgColorGallery--> ${bgColorGallery.value}`);
+        console.log(`bgColorWorkspace--> ${bgColorWorkspace.value}`);
+        const ColorText = bgColorText.value;
+        const ColorTopbar = bgColorTopbar.value;
+        const ColorGallery = bgColorGallery.value;
+        const ColorWorkspace = bgColorWorkspace.value;
+
+            const datos = {
+                ColorText,
+                ColorTopbar,
+                ColorGallery,
+                ColorWorkspace
+            };
+
+            fetch('/zonabliss/bGColor', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                console.log(jsonx)
+                location.reload()
+                })
+            .catch( err => console.log(err));
+            
+            })
+            
+
+
+</script>
+
+<script>
+
+    const flexCheckCarouselOffert = document.getElementById('flexCheckCarouselOffert');
+    const flexCheckCarouselImages = document.getElementById('flexCheckCarouselImages');
+    const flexCheckCarouselBanner = document.getElementById('flexCheckCarouselBanner');
+    const btnSetGallery = document.getElementById('btnSetGallery');
+
+    btnSetGallery.addEventListener('click', ()=>{
+        const carouselOffert = flexCheckCarouselOffert.checked;
+        const sectionMedias = flexCheckMedias.checked;
+        const carouselImages = flexCheckCarouselImages.checked;
+        const carouselBanner = flexCheckCarouselBanner.checked;
+        
+
+        console.log("carouselOffert ->", carouselOffert);
+        console.log("sectionMedias ->", sectionMedias);
+        console.log("carouselImages ->", carouselImages);
+        console.log("carouselBanner ->", carouselBanner);
+        //enviamos un post a /zonabliss/carouselOffert
+
+        const datos = {
+            carouselOffert : carouselOffert,
+            sectionMedias : sectionMedias,
+            carouselImages : carouselImages,
+            carouselBanner : carouselBanner
+        };
+
+        fetch('/zonabliss/setupGallery', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log(jsonx)
+            location.reload()
+        })
+        .catch( err => console.log(err));
+
+
+    });
+
+</script>
+
+
+<script>
+
+    //control de pestañas y contendores de media subir  y recursos ----------------------------------------------
+
+    const uploadMedia = document.querySelector('.uploadMedia');
+    const sourceMedia = document.querySelector('.sourceMedia');
+    const contentUploadMedia = document.querySelector('.contentUploadMedia');
+    const contentSourceMedia = document.querySelector('.contentSourceMedia');
+
+    uploadMedia.addEventListener('click', ()=>{
+        uploadMedia.classList.add('active');
+        sourceMedia.classList.remove('active');
+
+        contentUploadMedia.classList.remove('close');
+        contentSourceMedia.classList.add('close');
+    });
+
+    sourceMedia.addEventListener('click', ()=>{
+        uploadMedia.classList.remove('active');
+        sourceMedia.classList.add('active');
+
+        contentUploadMedia.classList.add('close');
+        contentSourceMedia.classList.remove('close');
+    });
+
+
+    // control de pestañas y contenedores de vista en Carousel de Banner ----------------------------------------------
+    const createBanner = document.querySelector('.createBanner');
+    const sourceBanner = document.querySelector('.sourceBanner');
+    const contentCreateBanner = document.querySelector('.contentCreateBanner');
+    const contentSourceBanner = document.querySelector('.contentSourceBanner');
+
+    createBanner.addEventListener('click', ()=>{
+        createBanner.classList.add('active');
+        sourceBanner.classList.remove('active');
+
+        contentCreateBanner.classList.remove('close');
+        contentSourceBanner.classList.add('close');
+    });
+
+    sourceBanner.addEventListener('click', ()=>{
+        createBanner.classList.remove('active');
+        sourceBanner.classList.add('active');
+
+        contentCreateBanner.classList.add('close');
+        contentSourceBanner.classList.remove('close');
+    });
+
+// control de pestañas y contenedores de carrusel de imagenes----------------------------------------------
+    const createImage = document.querySelector('.createImage');
+    const sourceImage = document.querySelector('.sourceImage');
+    const contentCreateImage = document.querySelector('.contentCreateImage');
+    const contentSourceImage = document.querySelector('.contentSourceImage');
+
+    createImage.addEventListener('click', ()=>{
+        createImage.classList.add('active');
+        sourceImage.classList.remove('active');
+
+        contentCreateImage.classList.remove('close');
+        contentSourceImage.classList.add('close');
+    })
+
+    sourceImage.addEventListener('click', ()=>{
+        createImage.classList.remove('active');
+        sourceImage.classList.add('active');
+
+        contentCreateImage.classList.add('close');
+        contentSourceImage.classList.remove('close');        
+    })
+
+
+</script>
+
+<script>
+
+    //subir recursos de media file.................................................................. 
+    let addObjectMedia = document.getElementById('addObjectMedia'); //este es el span que crea los img
+    let add_photoMedia = document.getElementById('add_photoMedia')
+    let galleryFileMedia = document.getElementById('galleryFileMedia')
+
+
+    add_photoMedia.addEventListener('click', ()=>{
+        galleryFileMedia.click()
+    })
+
+    galleryFileMedia.addEventListener('change', ()=>{
+  
+        let archivo = galleryFileMedia.files
+        console.log("archivo ->", archivo);
+
+        
+        if (! archivo || !archivo.length){
+            previewMedia.src = "";
+            return
+        };
+
+
+        for (let i = 0; i < archivo.length; i++) {
+            const file = archivo[i];
+            const type = file.type;
+            console.log("file ->", file);
+            console.log("type ->", type); //image/jpeg  o video/mp4
+            //aqui hay que validar si es un video o una imagen
+            if (type.startsWith("image/")){ //es Img
+                console.log("Esto es una imagen");
+                let objectURL = URL.createObjectURL(file);
+                console.log(objectURL)
+                addObjectMedia.innerHTML = "";
+                addObjectMedia.innerHTML += ` <div class="contImg" data-id="${i}"><img src="${objectURL}" class="previewMedia">  <div>`
+            
+            } else { //es video
+                console.log("Esto es un video")
+                addObjectMedia.innerHTML = "";
+                addObjectMedia.innerHTML += `<img src= "/img/addVideo.png" class="previewMedia">`
+
+            }
+            
+
+        }
+
+
+    })
+
+
+
+    //subir imagen al carousel images file.................................................................. 
+    let addObjectImgs = document.getElementById('addObjectImgs'); //este es el span que crea los img
+    let addPhotoImg = document.getElementById('add_photoImg')
+    let galleryFileImg = document.getElementById('galleryFileImg')
+     
+
+    addPhotoImg.addEventListener('click', ()=>{
+        galleryFileImg.click()
+    })
+
+    galleryFileImg.addEventListener('change', ()=>{
+  
+        let archivo = galleryFileImg.files
+        console.log(archivo);
+
+        if (! archivo || !archivo.length){
+            preview.src = "";
+            return
+        };
+
+
+        for (let i = 0; i < archivo.length; i++) {
+            const file = archivo[i];
+            console.log(file)
+            let objectURL = URL.createObjectURL(file);
+            console.log(objectURL)
+            addObjectImgs.innerHTML = "";
+            addObjectImgs.innerHTML += ` <div class="contImg" data-id="${i}"><img src="${objectURL}" class="preview">  <div>`
+            
+        }
+
+
+    })
+
+    
+
+
+    //subir Banner al carousel de banner file.................................................................. 
+    let addObjectImg = document.getElementById('addObjectImg'); //este es el span que crea los img
+    let add_photoBanner = document.getElementById('add_photoBanner')
+    let inpFile = document.querySelector('.inpFile')
+     
+
+    add_photoBanner.addEventListener('click', ()=>{
+        inpFile.click()
+    })
+
+    inpFile.addEventListener('change', ()=>{
+  
+        let archivo = inpFile.files
+        console.log(archivo);
+
+        if (! archivo || !archivo.length){
+            preview.src = "";
+            return
+        };
+
+
+        for (let i = 0; i < archivo.length; i++) {
+            const file = archivo[i];
+            console.log(file)
+            let objectURL = URL.createObjectURL(file);
+            console.log(objectURL)
+            addObjectImg.innerHTML = "";
+            addObjectImg.innerHTML += ` <div class="contImg" data-id="${i}"><img src="${objectURL}" class="previewImgGallery">  <div>`
+            
+        }
+
+
+    })
+
+</script>
+
+<script>
+
+    //enviar media al servidor --------------------------------------------------------
+    //addObjectMedia declarado arriba
+    //galleryFileMedia declarado arriba
+    const galleryBtnSubmitMedia = document.getElementById('galleryBtnSubmitMedia');
+    const galleryBtnSubmitMediaDisabled = document.querySelector('.galleryBtnSubmitMediaDisabled');
+    const contentResponseMedia = document.querySelector('.contentResponseMedia');
+
+    galleryBtnSubmitMedia.addEventListener('click', ()=>{
+
+        let file = galleryFileMedia.files[0]; // Asegúrate de seleccionar un solo archivo
+        console.log("le dado al boton de subir galleryBtnSubmitMedia");
+        console.log("file ->", file)//undefined   sera el valor sino tiene nada
+        if (file !== undefined){
+
+            galleryBtnSubmitMedia.classList.add('close');
+            galleryBtnSubmitMediaDisabled.classList.remove('close');
+
+            const datos = new FormData();
+            //            name :  valor
+            datos.append('fileImg', file);
+
+            //console.log("datos -->", datos);
+            for (let [key, value] of datos.entries()) {
+                console.log(key, value);
+            }
+    
+     
+            fetch('/zonabliss/upload/media', {
+                method: "POST",
+                body: datos // Aquí envías el FormData directamente
+            })
+            .then(response => response.json())
+            .then(jsonx => { 
+                
+                console.log(jsonx)    
+                const code = jsonx.code;
+                const response = jsonx.response;
+                
+                console.log("code -->", code);
+                console.log("response -->", response);
+                //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+
+                contentResponseMedia.innerHTML = "";
+
+                if (code === 0 ){
+
+                    contentResponseMedia.innerHTML = `<div class="alert alert-danger">
+                                                    <i class="bi bi-x-circle-fill me-1"></i> ${response}
+                                                </div>`
+
+
+                    setTimeout(() => {
+                        contentResponseMedia.innerHTML = "";
+                        addObjectMedia.innerHTML = "";
+                        galleryBtnSubmitMedia.classList.remove('close');
+                        galleryBtnSubmitMediaDisabled.classList.add('close');
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                } else if (code === 1 ){
+
+                    contentResponseMedia.innerHTML = ` <div class="alert alert-success">
+                                                    <i class="bi bi-check-circle-fill me-1"></i> ${response}
+                                                </div>`
+                                                
+
+                    setTimeout(() => {
+                        contentResponseMedia.innerHTML = "";
+                        addObjectMedia.innerHTML = "";
+                        location.reload(); //refresca la pagina
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                } else {
+                    contentResponseMedia.innerHTML = ` <div class="alert alert-danger">
+                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
+                                                </div>`
+
+
+                    setTimeout(() => {
+                        contentResponseMedia.innerHTML = "";
+                        addObjectMedia.innerHTML = "";
+                        galleryBtnSubmitMedia.classList.remove('close');
+                        galleryBtnSubmitMediaDisabled.classList.add('close');
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                              
+                }           
+
+          
+
+            })
+            .catch(err => console.log(err));
+
+        
+        } 
+    });        
+  
+
+
+
+
+    //enviar la imagen al servidor --------------------------------------------------------
+    const galleryBtnSubmitImg = document.getElementById('galleryBtnSubmitImg');
+    const galleryBtnSubmitImgDisabled = document.querySelector('.galleryBtnSubmitImgDisabled');
+    const contentResponseImg = document.querySelector('.contentResponseImg');
+    //galleryFileImg declarado arriba
+
+    galleryBtnSubmitImg.addEventListener('click', ()=>{
+
+        let file = galleryFileImg.files[0]; // Asegúrate de seleccionar un solo archivo
+        console.log("file ->", file)//undefined   sera el valor sino tiene nada
+        if (file !== undefined){
+
+            galleryBtnSubmitImg.classList.add('close');
+            galleryBtnSubmitImgDisabled.classList.remove('close');
+
+            const datos = new FormData();
+            //            name :  valor
+            datos.append('fileImg', file);
+
+            //console.log("datos -->", datos);
+            for (let [key, value] of datos.entries()) {
+                console.log(key, value);
+            }
+    
+     
+            fetch('/zonabliss/upload/imgCarousel', {
+                method: "POST",
+                body: datos // Aquí envías el FormData directamente
+            })
+            .then(response => response.json())
+            .then(jsonx => { 
+                
+                console.log(jsonx)    
+                const code = jsonx.code;
+                const response = jsonx.response;
+                
+                console.log("code -->", code);
+                console.log("response -->", response);
+                //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+
+                contentResponseImg.innerHTML = "";
+
+                if (code === 0 ){
+
+                    contentResponseImg.innerHTML = `<div class="alert alert-danger">
+                                                    <i class="bi bi-x-circle-fill me-1"></i> ${response}
+                                                </div>`
+
+
+                    setTimeout(() => {
+                        contentResponseImg.innerHTML = "";
+                        addObjectImg.innerHTML = "";
+                        galleryBtnSubmit.classList.remove('close');
+                        btnDisabledBannerSubiendo.classList.add('close');
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                } else if (code === 1 ){
+
+                    contentResponseImg.innerHTML = ` <div class="alert alert-success">
+                                                    <i class="bi bi-check-circle-fill me-1"></i> ${response}
+                                                </div>`
+                                                
+
+                    setTimeout(() => {
+                        contentResponseImg.innerHTML = "";
+                        addObjectImg.innerHTML = "";
+                        location.reload(); //refresca la pagina
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                } else {
+                    contentResponseImg.innerHTML = ` <div class="alert alert-danger">
+                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
+                                                </div>`
+
+
+                    setTimeout(() => {
+                        contentResponseImg.innerHTML = "";
+                        addObjectImg.innerHTML = "";
+                        galleryBtnSubmit.classList.remove('close');
+                        btnDisabledBannerSubiendo.classList.add('close');
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                              
+                }           
+
+          
+
+            })
+            .catch(err => console.log(err));
+
+        
+        } 
+    });
+
+
+
+    //enviar el banner al servidor submit --------------------------------------------------------
+    const galleryFileBanner = document.getElementById('galleryFileBanner');
+    const galleryBtnSubmit = document.getElementById('galleryBtnSubmit');
+    const btnDisabledBannerSubiendo = document.querySelector('.btnDisabledBannerSubiendo');
+    const contentResponse = document.querySelector('.contentResponse');
+
+
+    galleryBtnSubmit.addEventListener('click', () => {
+
+        let file = galleryFileBanner.files[0]; // Asegúrate de seleccionar un solo archivo
+        console.log("file ->", file)//undefined   sera el valor sino tiene nada
+        if (file !== undefined){
+
+            galleryBtnSubmit.classList.add('close');
+            btnDisabledBannerSubiendo.classList.remove('close');
+
+            const datos = new FormData();
+            //            name :  valor
+            datos.append('fileImg', file);
+
+            //console.log("datos -->", datos);
+            for (let [key, value] of datos.entries()) {
+                console.log(key, value);
+            }
+    
+     
+            fetch('/zonabliss/upload/bannerCarousel', {
+                method: "POST",
+                body: datos // Aquí envías el FormData directamente
+            })
+            .then(response => response.json())
+            .then(jsonx => { 
+                
+
+                console.log(jsonx)
+                const code = jsonx.code;
+                const response = jsonx.response;
+                
+                console.log("code -->", code);
+                console.log("response -->", response);
+                //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+
+                contentResponse.innerHTML = "";
+
+                if (code === 0 ){
+
+                    contentResponse.innerHTML = `<div class="alert alert-danger">
+                                                    <i class="bi bi-x-circle-fill me-1"></i> ${response}
+                                                </div>`
+
+
+                    setTimeout(() => {
+                        contentResponse.innerHTML = "";
+                        addObjectImg.innerHTML = "";
+                        galleryBtnSubmit.classList.remove('close');
+                        btnDisabledBannerSubiendo.classList.add('close');
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                } else if (code === 1 ){
+
+                    contentResponse.innerHTML = ` <div class="alert alert-success">
+                                                    <i class="bi bi-check-circle-fill me-1"></i> ${response}
+                                                </div>`
+                                                
+
+                    setTimeout(() => {
+                        contentResponse.innerHTML = "";
+                        addObjectImg.innerHTML = "";
+                        location.reload(); //refresca la pagina
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                } else {
+                    contentResponse.innerHTML = ` <div class="alert alert-danger">
+                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
+                                                </div>`
+
+
+                    setTimeout(() => {
+                        contentResponse.innerHTML = "";
+                        addObjectImg.innerHTML = "";
+                        galleryBtnSubmit.classList.remove('close');
+                        btnDisabledBannerSubiendo.classList.add('close');
+                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                }           
+
+
+
+
+            })
+            .catch(err => console.log(err));
+
+        
+        }   
+    })    
+
+</script>
+
+<script>
+
+    //este script toma todos los span que elimina los media para poder ejecutar un ocultamiento de todos las imagenes y poner un alert de tal manera que no puedan darle a otro delete mientras intenta borrar uno
+    const tagDeleteMedia = document.querySelectorAll('.tagDeleteMedia');
+    const containMainMedia = document.querySelector('.containMainMedia');
+    const contentDeletingMedia = document.querySelector('.contentDeletingMedia');
+
+    tagDeleteMedia.forEach((ele)=>{
+        ele.addEventListener('click', ()=>{
+            console.log("le hemos dado click a este enlace mijo")
+            containMainImgs.classList.add('close');
+            contentDeletingImg.classList.remove('close'); 
+        })
+    })
+
+
+    //este script toma todos los span que elimina imagenes para poder ejecutar un ocultamiento de todos las imagenes y poner un alert de tal manera que no puedan darle a otro delete mientras intenta borrar uno
+    const tagDeleteImg = document.querySelectorAll('.tagDeleteImg');
+    const containMainImgs = document.querySelector('.containMainImgs');
+    const contentDeletingImg = document.querySelector('.contentDeletingImg');
+
+    tagDeleteImg.forEach((ele)=>{
+        ele.addEventListener('click', ()=>{
+            console.log("le hemos dado click a este enlace mijo")
+            containMainImgs.classList.add('close');
+            contentDeletingImg.classList.remove('close'); 
+        })
+    })
+
+
+    //este script toma todos los span que elimina banner para poder ejecutar un ocultamiento de todos los banner y poner un alert de tal manera que no puedan darle a otro delete mientras intenta borrar uno
+    const tagDelete = document.querySelectorAll('.tagDelete');
+    const containMainImg = document.querySelector('.containMainImg');
+    const contentDeleting = document.querySelector('.contentDeleting');
+
+    tagDelete.forEach((ele)=>{
+        ele.addEventListener('click', ()=>{
+            console.log("le hemos dado click a este enlace mijo")
+            containMainImg.classList.add('close');
+            contentDeleting.classList.remove('close'); 
+        })
+    })
+    
+
+</script>
+
+<script>
+    const contentCollapse = document.querySelectorAll('.contentCollapse'); 
+    const tagGallery = document.querySelector('.tagGallery');
+    const tagGalleryIcon = document.querySelector('.tagGalleryIcon');
+
+    tagGallery.addEventListener('click', ()=>{
+        contentCollapse.forEach((ele)=>{
+            ele.classList.toggle('close');
+            const statusCollapse = ele.classList.contains('close');
+            console.log("statusCollapse ->", statusCollapse);
+            if (statusCollapse === true){
+                tagGalleryIcon.classList.remove('close');
+                tagGallery.classList.add('close');
+            } else {
+                tagGalleryIcon.classList.add('close');
+                tagGallery.classList.remove('close');
+            }
+            
+        })
+    });
+
+    tagGalleryIcon.addEventListener('click', ()=>{
+        contentCollapse.forEach((ele)=>{
+            ele.classList.toggle('close');
+            const statusCollapse = ele.classList.contains('close');
+            console.log("statusCollapse ->", statusCollapse);
+            if (statusCollapse === true){
+                tagGalleryIcon.classList.remove('close');
+                tagGallery.classList.add('close');
+            } else {
+                tagGalleryIcon.classList.add('close');
+                tagGallery.classList.remove('close');
+            }
+            
+        })
+    })
+
+</script>

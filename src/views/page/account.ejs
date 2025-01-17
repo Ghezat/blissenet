@@ -357,6 +357,22 @@
     <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
 
       <% if (storeProfile) { %>
+
+        <% const store_username = storeProfile.username %>
+        <% const store_id = storeProfile.indexed %>
+
+        <% const bGColorTopbar = storeProfile.bGColorTopbar %>
+        <% const bGColorText = storeProfile.bGColorText %>
+        <% const bGColorGallery = storeProfile.bGColorGallery  %>
+        <% const bGColorWorkspace = storeProfile.bGColorWorkspace %>
+
+        <% const gallery = storeProfile.gallery %>
+        <% const carouselOffert = gallery.carouselOffert  %>
+        <% const sectionMedia = gallery.sectionMedia  %>
+        <% const carouselImages = gallery.carouselImages %>
+        <% const carouselBanner = gallery.carouselBanner  %> 
+        
+
         <div class="container-fluid p-0 m-0">
           <div class="row rowWidth mx-0 p-0">
 
@@ -386,13 +402,13 @@
 
                 <!-- bloque Topbar -->
                 <div class="TopbarMain p-1 d-flex justify-content-between px-4"
-                  style="position: relative; background-color: <%= storeProfile.bGColorTopbar%> ; color: <%= storeProfile.bGColorText %>; position: relative; z-index: 200;">
+                  style="position: relative; background-color: <%= bGColorTopbar %> ; color: <%= bGColorText %>; position: relative; z-index: 200;">
                   
                     <div class="containerAvatarUser d-flex" style="width: 30%;">
                         <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
 
                           <% if (storeProfile.avatarPerfil[0].url.length === 0 ) { %>
-                           <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px;"></td>    
+                              <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px;"></td>    
                             <% } else { %>
                               <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px;"></td> 
                           <% }; %>
@@ -452,7 +468,7 @@
                             </div>
                         <% } else { %>
                             <div class="content-btn mt-3 cursor-pointer me-5" id="btnFollow" style = "width: max-content; height: max-content; position: relative;">
-                                <button class="btn rounded-pill shadow-sm px-4 buttonFollow"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= storeProfile.bGColorText %>; background-color:<%= storeProfile.bGColorTopbar %>;"> <span id= "spanBtnFollow"> Seguir </span>  </button>
+                                <button class="btn rounded-pill shadow-sm px-4 buttonFollow"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar %>;"> <span id= "spanBtnFollow"> Seguir </span>  </button>
                                 <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
                             </div>
                         <% }; %>
@@ -463,7 +479,7 @@
 
                       <div class="content-btn-follow mt-3 me-5" style = "position: relative;">
                       
-                        <button class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= storeProfile.bGColorText %>; background-color:<%= storeProfile.bGColorTopbar%>;">Seguir</button>
+                        <button class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;">Seguir</button>
                         <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
                       
                     </div>
@@ -472,17 +488,14 @@
 
         
                 </div> <!-- aqui cierra el bloque Topbar--> 
-                <% if (storeProfile) { %>
-                    <% const store_username = storeProfile.username %>
-                    <% const store_id = storeProfile.indexed %>
-
+       
                     <form  method="get" id="formSegment"> <!-- acti0n se forma abajo en un script -->
                         <input type="hidden" value="<%= store_username %>" id="store_username">
                         <input type="hidden" value="<%= store_id %>" name="store" id="store_indexed">  
 
                         <div class="form-floating shadow-sm" style="position: relative; z-index: 200;">
                             <select class="form-select" id="floatingSelect" name="segment" aria-label="label select example"
-                            style="border: none; outline: none; border-radius: 0; background-color: <%= storeProfile.bGColorTopbar%> ; color: <%= storeProfile.bGColorText %>; ">
+                            style="border: none; outline: none; border-radius: 0; background-color: <%= bGColorTopbar%> ; color: <%= bGColorText %>; ">
                             
                               
                             <% if (segment) { %> <!-- esto es un objeto que viebe del backend -->
@@ -494,13 +507,10 @@
                             <% }) %>
 
                             </select>
-                            <label for="floatingSelect" style="color: <%= storeProfile.bGColorText %>; "><i>Selecciona un Segmento</i> </label>
+                            <label for="floatingSelect" style="color: <%= bGColorText %>; "><i>Selecciona un Segmento</i> </label>
                         </div>
                     </form>    
-
-                <% }; %>
-                
-               
+             
                     
                   <!-- //storeProfile camiar por storeProfile --> 
 
@@ -658,13 +668,13 @@
 
                   <div class="containerWorkSpace">
                     <!-- bloque Workspace -->
-                    <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= storeProfile.bGColorWorkspace %>; position: relative;">
+                    <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= bGColorWorkspace %>; position: relative;">
 
                           <a name="workSpace"></a>
 
                           <!-- Este bloque es para acceder a un buscador dentro de la misma tienda, será una opcion del profile -->
                           <% if (storeProfile.searchFilter === 'on' ){%>
-                          <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= storeProfile.bGColorTopbar%>;color:<%= storeProfile.bGColorText %>; z-index : 100">
+                          <div class="containerSearch d-flex justify-content-center align-items-center p-1" style="height: 60px; width: 100%; background-color:<%= bGColorTopbar%>;color:<%= bGColorText %>; z-index : 100">
 
                               <div class="container-fluid">
                                   <div class="container" style="width: 50%;">
@@ -682,7 +692,7 @@
                                         <input type="hidden" value="<%= store %>" id="storeSearch">
                                         <input type="hidden" value="<%= Segment %>" id="segmentSearch">
                                         <input class="form-control me-2" type="text" id="elementSearch" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search">
-                                        <button class="btn"  id="submitSearch" style="color:<%= storeProfile.bGColorText %>; border : 1px solid <%= storeProfile.bGColorText %>">Search</button>
+                                        <button class="btn"  id="submitSearch" style="color:<%= bGColorText %>; border : 1px solid <%= bGColorText %>">Search</button>
                                       </form>
                                      
 
@@ -693,7 +703,7 @@
                           <% }; %>
 
                           <a href="#workSpace" class="anclaWorspace text-dark">
-                            <div class="nailUpp px-3 mb-2" style="background-color:<%= storeProfile.bGColorTopbar%>;color:<%= storeProfile.bGColorText %>;">
+                            <div class="nailUpp px-3 mb-2" style="background-color:<%= bGColorTopbar %>;color:<%= bGColorText %>;">
                               <i class="bi bi-chevron-down Heading"></i>
                             </div>  
                           </a>
@@ -855,6 +865,12 @@
                                                               </ul>
                                                             </div>
 
+                                                          <% if (ele.offer === true) { %>    
+                                                            <span class="border border-warning tagOfferUser" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                          <% } else { %>
+                                                            <span class="border border-warning tagOfferUser invisible" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                          <% }; %>  
+
                                                       <% }; %>
                                                           
                                                     <% }; %>
@@ -862,7 +878,14 @@
                                                 <% }; %>
                                               
                                                 
-                                                <div class="carousel-inner" style="width: 100%; height: 220px;  z-index: 1;">
+                                                <div class="carousel-inner" style="position: relative; width: 100%; height: 220px;  z-index: 1;">
+                                                  
+                                                  <% if (ele.offer === true) { %>    
+                                                    <span class="border border-warning tagOffer" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
+                                                  <% } else { %>
+                                                    <span class="border border-warning tagOffer invisible" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                  <% }; %> 
+
                                                   <div class="carousel-item active">
                                                     <a href="/product/<%= ele.department %>/<%= ele._id %>"> 
                                                       <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
@@ -1038,7 +1061,7 @@
 
                                 </div>
 
-                                <div class="paginate d-flex justify-content-center align-items-center mt-2" style="position: relative; z-index : 120 !important">
+                                <div class="paginate d-flex justify-content-center align-items-center mt-4 mb-5" style="position: relative; z-index : 120 !important">
                                   <nav aria-label="...">
                                     <ul class="pagination  m-0">
                                       <% if (paginate) { %>
@@ -1089,6 +1112,9 @@
                                     </ul>
                                   </nav>
                                 </div>
+
+
+
                               <% } else { %>
 
                                 <div class="ContainerMessage d-flex justify-content-center p-2" style="background-color: rgba(219, 223, 228, 0); width: 100%; margin-top: 80px; margin-bottom: 80px;">
@@ -1198,11 +1224,113 @@
                   <!-- cierre de storeProfile -->   
                   
               </div>
-              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0 ">
-                <div class="contetAntFooter" style="height: 40px; background-color:<%= storeProfile.bGColorWorkspace %>">
-                   <!-- aqui ira el contenedor del marketing space --> 
+              
+
+              <% if (carouselOffert.show === true ) { %> <!-- true o false -->
+                <div class="contentGallery1 p-0" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">  
+
+                      <% if (boxOffert) { %>
+                       <span> </span> 
+                      <div class="carousel-offer p-4">    
+                          <% boxOffert.forEach((ele)=>{ %>
+
+                              <div class="contentCard px-3 d-flex flex-column" style="position: relative;">
+                                  <img src="<%= ele.images[0].url %>" alt="" style="width: 200px; height: 200px; object-fit: cover;">
+                                  <span class="border border-warning" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                  <span class="bg-warning px-2 py-0" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
+
+                                  <div style="width: 200px; background-color: #fcda57; height: 40px; overflow: hidden">
+                                      <span class="p-2" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
+                                  </div>
+                              </div>
+                              
+                          <% }) %>
+                      </div>
+                      <% } %>
+
+                </div>      
+              <% } %>
+
+              <% if (sectionMedia.show === true ) { %> <!-- true o false -->
+                <% const countMedia = sectionMedia.data.length  %>
+                <% const medias = sectionMedia.data %>
+
+                <% if (countMedia >= 1) { %>
+                    <div class="container-fluid p-4" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">
+                        <div class="row m-0 d-flex justify-content-between"> <!-- carousel-images es la clase de slick-carousel -->
+                            <% medias.forEach((ele)=>{ %>
+                                
+                                <% if (ele.type === 'image'){ %>
+                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
+                                       
+                                        <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 240px; object-fit: cover;">
+                                      
+                                    </div>
+                                <% } else { %>
+                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
+                                        
+                                        <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 240px; object-fit: cover;"></video>
+                                       
+                                    </div>
+                                <% }; %>
+
+
+                            <% }); %>    
+                        </div>    
+                    </div>    
+                <% } %>    
+
+              <% } %> 
+
+
+              <% if (carouselImages.show === true ) { %> <!-- true o false -->
+
+                <div class="contentGallery2 p-0" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">
+
+                      <% const countImages = carouselImages.data.length  %>
+                      <% const carouselImg = carouselImages.data %> <!-- esto es un array -->
+
+                      <% if (countImages >= 1) { %>
+                        <div class="carousel-images p-4">
+                            <% carouselImg.forEach((ele)=>{ %>
+                            <div class="conteImg px-3 shadow-sm">   
+                                <img class="rounded-3" src="<%= ele.url %>" alt="" style="height: 230px; object-fit: cover;">
+                            </div>
+                            <% }); %>    
+                        </div>    
+                      <% } %>
+
                 </div>
-                <div class="containerDetailsMessajesRRSS pt-3" style="height: auto; background-color:<%= storeProfile.bGColorTopbar%>;">
+
+              <% } %>    
+
+
+
+              <% if (carouselBanner.show === true ) { %> <!-- true o false -->
+
+                <div class="containerGallery3 p-0"  style="position: relative; z-index: 100">
+                  <% const countbanner = carouselBanner.data.length  %>
+                  <% const carousel = carouselBanner.data %> <!-- esto es un array -->
+
+                  <% if (countbanner >= 1) { %>
+                      <div class="carousel-banner p-0" style="width: 100%;">
+                      
+                          <% carousel.forEach((ele)=>{ %>
+                          
+                              <img src="<%= ele.url %>" alt="" style="height: 300px; object-fit: cover;" >                                                   
+                          
+                          <% }) %>
+
+                      </div>
+                  <% }; %>
+                </div>
+
+              <% } %>
+
+              
+              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0" style="position: relative; z-index: 100;">
+
+                <div class="containerDetailsMessajesRRSS pt-3" style="height: auto; background-color:<%= bGColorTopbar%>;">
                     <% if (storeProfile) { %>
                     
                         <div class="containerMessager d-flex justify-content-start">
@@ -1214,9 +1342,9 @@
                           </p>
                     
                         </div>
-                        <div class="containerMainRRSS d-flex justify-content-end mx-5">
+                        <div class="containerMainRRSS d-flex justify-content-end px-5">
                          
-                          <div class="containerRRSS" style="height: 30px; width: 100%">
+                          <div class="containerRRSS mx-5" style="height: 30px; width: 100%">
                                                          
                         
                             <div class="facebook mx-2">
@@ -1249,7 +1377,7 @@
                     <% }; %>
                 </div> 
                 
-                <footer class="py-4" style="height: auto; background-color:<%= storeProfile.bGColorTopbar%>;color:<%= storeProfile.bGColorText %>;">
+                <footer class="py-4" style="height: auto; background-color:<%= bGColorTopbar%>;color:<%= bGColorText %>;">
                   
                   <div class="row mx-0 contentClient d-flex justify-content-around align-items-center">
                     <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImg d-flex justify-content-center align-items-center my-2">
@@ -3027,13 +3155,19 @@
 <script>
  //este es el controlador de las ofertas
   const offer = document.querySelectorAll('.offer');
+  const tagOffer = document.querySelectorAll('.tagOffer');
+  const tagOfferUser = document.querySelectorAll('.tagOfferUser');
   const boxDetail = document.querySelectorAll('.boxDetail');
+
+  console.log("offer-->", offer)
+
+
 
   for (let i = 0; i < offer.length; i++) {
     const element = offer[i];
     element.addEventListener('click', () => {
-  
-      //console.log(element.childNodes)
+      
+      console.log("element-->", element)
       console.log("depart ---->",element.childNodes[1].value);
       console.log("id ---->",element.childNodes[3].value);
       
@@ -3057,11 +3191,22 @@
             
             console.log("Esto es jsonx--->",jsonx)
             const Offer = jsonx[0].offer;
-
-            if ( Offer === false ){
+            console.log("Offer --->", Offer)
+            if ( Offer === false ) {
               boxDetail[i].style.backgroundColor = "#fcda57";
-            } else {
+              let closeClass =tagOffer[i].classList.contains('invisible');
+              console.log("closeClass ->", closeClass)
+              console.log("esto i ->", i)
+              tagOffer[i].classList.toggle('invisible');
+              tagOfferUser[i].classList.toggle('invisible');
+
+            } else if ( Offer === true ) {
               boxDetail[i].style.backgroundColor = "#ffffff";
+              let closeClass =tagOffer[i].classList.contains('invisible');
+              console.log("closeClass ->", closeClass)
+              console.log("esto i ->", i)
+              tagOffer[i].classList.toggle('invisible');
+              tagOfferUser[i].classList.toggle('invisible');
             }
 
           })

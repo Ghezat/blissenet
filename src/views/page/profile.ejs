@@ -216,7 +216,7 @@
              <% }; %>
 
         <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-            <span class="ms-5 p-0" style="font-weight: 400;"> Perfil </span>
+            <span class="ms-2 p-0" style="font-weight: 400;"> Perfil </span>
         </div>   
         
          <div class="container-fluid mt-0">
@@ -994,7 +994,8 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p class="mb-1">**¡Bienvenido a ZonaBliss!** 🌟
+                                            <p class="mb-1">🌟 <b>¡Bienvenido a la ZonaBliss! </b> 🌟 </p>
+                                            <p>
                                                 Una herramientas innovadora para crear carruseles de banners atractivos, insertar videos cautivadores y subir fotos impresionantes, todo desde un espacio fácil de administrar.     
                                                 Haz que tu tienda brille y atraiga a más usuarios con estilo y creatividad. ¡Descubre el poder de la personalización y eleva tu negocio al siguiente nivel con ZonaBliss! 
                                             </p>
@@ -1130,13 +1131,21 @@
                                             </div>    
                                             <div class="card-body border">    
                                                 <% searchProfile.forEach( (ele)=> { %>
-                                                    <% ele.bannerPerfil.forEach((elem)=>{ %>
+                                                        <% const bGColorText = ele.bGColorText %> 
+                                                        <% const bGColorTopbar = ele.bGColorTopbar %> 
+                                                        <% const bGColorWorkspace = ele.bGColorWorkspace %> 
+
+                                                        <input type="hidden" value="<%= bGColorText %>" id="colorText">
+                                                        <input type="hidden" value="<%= bGColorTopbar %>" id="colorFrame">
+                                                        <input type="hidden" value="<%= bGColorWorkspace %>" id="colorWorkspace">
+
+                                                        <% ele.bannerPerfil.forEach((elem)=>{ %>
                                                         
                                                         <!-- public_id : "sin_data" -->
                                                         <% if (elem.public_id === "sin_data") { %>
                                                             <!-- opcion banner default -->
 
-                                                            <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
+                                                            <div class="containerBanner my-1 p-0 form-control" style="position: relative; width: 100%; height: auto">
                                                 
                                                                 <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
                     
@@ -1157,7 +1166,7 @@
                                                         <% } else { %>
                                                             <!-- opcion banner customizado -->
 
-                                                            <div class="containerBanner my-2 p-0 form-control" style="position: relative; width: 100%; height: auto">
+                                                            <div class="containerBanner my-1 p-0 form-control" style="position: relative; width: 100%; height: auto">
                                                 
                                                                 <img src="<%= elem.url %>" alt="" class="rounded-3" style=" width: 100%; height: 100%; object-fit: cover;">
                     
@@ -1194,32 +1203,43 @@
                                                 
                                             
                                                     <div class="container-fluid px-0">
-                                                            <div class="container-fluid p-0 mx-0 d-flex justify-content-between mb-1" style="width: 100%; background-color:<%= ele.bGColorTopbar %>">
-                                                                <div class="containerAvatarUsername d-flex align-items-end" style="width: 30%">
+                                                            <div class="container-fluid p-0 mx-0 mb-1 rounded-3" style="width: 100%; background-color:<%= ele.bGColorTopbar %>">
+                                                                
+                                                                <div class="containerAvatarUsername">
                                                                     <form action="/myaccount/avatar" method="post" id="formAvatarProfile" enctype="multipart/form-data" class="d-flex align-items-end">
                                                     <% ele.avatarPerfil.forEach((eleAvatar)=>{ %>
 
-                                                        <% if(eleAvatar.public_id == 'sin_data'){  %>                  
-                                                                    
+                                                        <% if(eleAvatar.public_id == 'sin_data'){  %>
+                                                                    <div class="contentMainAvatarUsername d-flex align-items-center">                  
+                                                                        <div class="form-group m-2">
                                                                             <img src="https://www.gravatar.com/avatar/<%= user.mailhash %>?d=identicon" class="imgPerfil">
                                                                             <input type="file" name="fileImg" id="avatarFile" class="sinBody">
-                                                                            <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; width: auto; color: <%= ele.bGColorText %>;"><%= user.username %></span>
+                                                                        </div>
+                                                                        <div class="form-group d-flex flex-column">
+                                                                            <span class="px-2 mx-1" style="font-size: 20px;color: <%= ele.bGColorText %>;"><%= user.username %></span>
+                                                                            <span class="px-2 mx-1" style="font-size: 16px;color: <%= ele.bGColorText %>;"><%= user.email %></span>
                                                                             <input type="submit" id="avatarSubmit" class="sinBody">
+                                                                        </div>
+                                                                    </div>        
                                                         <% } else { %>              
-                                                            
-                                                                            <img src="<%= eleAvatar.url %>" alt="avatar" style="width: 70px; border-radius: 50%;" class="imgPerfil">
+                                                                    <div class="contentMainAvatarUsername d-flex align-items-center">
+                                                                        <div class="form-group m-2">
+                                                                            <img src="<%= eleAvatar.url %>" alt="avatar" class="imgPerfil">
                                                                             <input type="file" name="fileImg" id="avatarFile" class="sinBody">
-                                                                            <span class="rounded-3 px-2 mx-1" style="border-bottom: 1px solid grey; height: 22px; color: <%= ele.bGColorText %>;"><%= user.username %></span>
+                                                                        </div>
+                                                                        <div class="form-group d-flex flex-column">    
+                                                                            <span class="px-2 mx-1" style="font-size: 20px;color: <%= ele.bGColorText %>;"><%= user.username %></span>
+                                                                            <span class="px-2 mx-1" style="font-size: 16px;color: <%= ele.bGColorText %>;"><%= user.email %></span>
                                                                             <input type="submit" id="avatarSubmit" class="sinBody">
+                                                                        </div>
+                                                                    </div>        
                                                         <% }; %> 
                                                             
                                                     <% }); %>                        
                                                                             
                                                                     </form>    
                                                                 </div>
-                                                                <div class="containerProfileMessage ms-1" style="width: 80%; text-align: right;">
-                                                                    <p style="color: <%= ele.bGColorText %>;"><i><%= ele.profileMessage %></i></p>
-                                                                </div>
+
                                                             </div>
 
                                                             <div class="datesUser">
@@ -1250,7 +1270,7 @@
 
                                                             <div class="row m-0 updateBackgroundColor my-1 overflow-auto w-100"  style="height: auto; overflow-x: scroll;">
                                                                 <div class="col-lg-10 col-md-10 col-sm-12 col-12 rounded-3 d-flex flex-column p-2 align-items-center justify-content-between overflow-auto w-100">
-                                                                
+<!--                                                                 
                                                                     <form action="/myaccount/bGColor" method="post" class="p-0 d-flex flex-column  overflow-auto w-100">
                                                                     
                                                                             <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
@@ -1278,6 +1298,40 @@
                                                                             </div>                                                                        
 
                                                                             <button type="submit" class="btn btn-secondary btn-sm my-1">Aceptar Cambios</button>
+                                                                    </form>
+                                                                     -->
+                                                                    <form  id="formZonaBliss" class="p-0 d-flex flex-column overflow-auto w-100">
+                                                                    
+                                                                        <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                                            <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= bGColorText %>"></div>
+                                                                            <span class="p-0">Text :</span>
+                                                                            <input type="radio" id="defaultText" value="#1a1a1a" name="text" class="mx-2"><label for="defaultText">Default</label>
+                                                                            <input type="radio" id="customText" value="" name="text" class="mx-2"><label for="customText">Custom</label>
+                                                                            <input type="color" id="bgColorText" value="<%= bGColorText %>" class="ms-3 rounded-2 sinBody">
+                                                                            <div class="defaultBoxtext ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#1a1a1a"></div>
+                                                                        </div>
+                                                                        
+                                                                        <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                                            <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= bGColorTopbar %>"></div>
+                                                                            <span class="p-0">Frame :</span>
+                                                                            <input type="radio" id="defaultTopbar" value="#f8f9fa" name="frame" class="mx-2"><label for="defaultTopbar">Default</label>
+                                                                            <input type="radio" id="customTopbar" value="" name="frame" class="mx-2"><label for="customTopbar">Custom</label>
+                                                                            <input type="color"  id="bgColorTopbar" value="<%= bGColorTopbar %>" class="ms-3 rounded-2 sinBody">
+                                                                            <div class="defaultBoxFrame ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#f8f9fa"></div>
+                                                                        </div>
+                            
+                                                                        
+                                                                        <div class="containerDetailsButtom my-0 d-flex" style="width: 100%; height: 31px;">
+                                                                            <div class="showPint me-2" style="width: 28px; height: 28px; border: 1px solid grey; background-color:<%= bGColorWorkspace %>"></div>
+                                                                            <span class="p-0">Workspace :</span>
+                                                                            <input type="radio" id="defaultWorkspace" value="#ffffff" name="workspace" class="mx-2"><label for="defaultWorkspace">Default</label>
+                                                                            <input type="radio" id="customWorkspace"  value="" name="workspace" class="mx-2"><label for="customWorkspace">Custom</label>
+                                                                            <input type="color" id="bgColorWorkspace" value="<%= bGColorWorkspace %>" class="ms-3 rounded-2 sinBody">
+                                                                            <div class="defaultBoxWorkspace ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#ffffff"></div>
+                                                                        </div>  
+                                                                        
+                            
+                                                                        <button id="btnSubmitZonaBliss" class="btn btn-secondary btn-sm my-1">Aceptar Cambios</button>
                                                                     </form>
                                                                     
                                                                     <div class="containerAD-QR my-2 rounded" style="width: 100%;">
@@ -1350,14 +1404,14 @@
                                                                
                                                     <% if (user) {  %>
                                                     <div class="col-lg-9 col-md-9 col-sm-11 d-flex justify-align-center justify-content-center">
-                                                        <span class="m-2 p-3 rounded-3 text-light" style="background-color: rgba(0, 0, 0, 0.9);">  ¡Es hora de darle un poco más de estilo a tu Tienda! <i class="bi bi-info-circle mx-1 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticZonaBliss"></i> </span>
+                                                        <span class="m-2 p-3 rounded-3 text-light cursor-pointer" style="background-color: rgba(0, 0, 0, 0.9);" data-bs-toggle="modal" data-bs-target="#staticZonaBliss">  ¡Es hora de darle un poco más de estilo a tu Tienda! <i class="bi bi-info-circle mx-1"></i> </span>
                                                     </div> 
                                                     <div class="col-lg-3 col-md-3 col-sm-11">       
                                                         <div class="form-group d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
 
                                                             <% if(sumCount >= 1) { %>
                                                                 
-                                                                <a href="/zonabliss/<%= user.username %>" class="btn btn-dark text-light text-decoration-none rounded-3 w-100 d-block">
+                                                                <a href="/zonabliss/<%= user._id %>" class="btn btn-dark text-light text-decoration-none rounded-3 w-100 d-block">
                                                                     <i class="bi bi-brush me-1"></i> Ir a ZonaBliss
                                                                 </a>
                         
@@ -1885,74 +1939,7 @@
 
         </script>
 
-        <!-- para cambiar el color de texto, el topBar y el workSpace -->
-        <script>
-            const containerColor = document.querySelector('.containerColor'); //contenedor del input color;           
-            const btnSubmitBgColor = document.getElementById('btnSubmitBackground'); //este es el submit
 
-            /* esto controla el text */
-            const defaultText = document.getElementById('defaultText'); //opcion por default
-            const customText =  document.getElementById('customText'); //opcion customizbale
-            const bgColorText = document.getElementById('bgColorText'); //este es el input color del Text;
-
-            //defaultText este elemento solo existe cuando el usuario ha creado un profile.
-            if (defaultText){
-
-                defaultText.addEventListener('change', ()=>{
-                    console.log("he marcado la opcion por default");
-                    bgColorText.classList.add('sinBody');
-                })
-                customText.addEventListener('change', ()=>{
-                    console.log("he marcado la opcion customisable");
-                    bgColorText.classList.remove('sinBody');
-                })
-            }
-
-
-
-            /* esto controla el topbar*/
-            const defaultTopbar = document.getElementById('defaultTopbar');
-            const customTopbar = document.getElementById('customTopbar');
-            const bgColorTopbar = document.getElementById('bgColorTopbar'); //este es el input color Topbar
-        
-            //defaultTopbar este elemento solo existe cuando el usuario ha creado un profile.
-            if (defaultTopbar){
-
-                defaultTopbar.addEventListener('change', ()=>{
-                    console.log("he marcado la opcion por default");
-                    bgColorTopbar.classList.add('sinBody');
-                })
-                customTopbar.addEventListener('change', ()=>{
-                    console.log("he marcado la opcion customisable");
-                    bgColorTopbar.classList.remove('sinBody');
-                })
-
-            }
-
-
-
-            /* esto controla el workspace */
-            const defaultWorkspace = document.getElementById('defaultWorkspace'); //opcion por defaul
-            const customWorkspace = document.getElementById('customWorkspace'); //opcion customizable
-            const bgColorWorkspace = document.getElementById('bgColorWorkspace'); //este es el input color workspace;
-            
-            //defaultWorkspace este elemento solo existe cuando el usuario ha creado un profile.
-            if (defaultWorkspace){
-
-                defaultWorkspace.addEventListener('change', ()=>{
-                    console.log("he marcado la opcion por default");
-                    bgColorWorkspace.classList.add('sinBody');
-                });
-
-                customWorkspace.addEventListener('change', ()=>{
-                    console.log("he marcado la opcion customisable");
-                    bgColorWorkspace.classList.remove('sinBody');
-                });
-
-            }
-           
-
-        </script>
 
         <!-- para cambiar integra el buscardor en la tienda -->
         <script>
@@ -2426,6 +2413,140 @@
         })
             
     </script>
+
+    <!-- para cambiar el color de texto, el topBar y el workSpace -->
+    <script>
+        const containerColor = document.querySelector('.containerColor'); //contenedor del input color;           
+        const btnSubmitBgColor = document.getElementById('btnSubmitBackground'); //este es el submit
+
+        //valores de colores establecidos en la base de datos para esta tienda
+        const colorText = document.getElementById('colorText').value;
+        const colorFrame = document.getElementById('colorFrame').value;
+        const colorWorkspace = document.getElementById('colorWorkspace').value;
+
+        //boxColorDefault --------------------------------------------------------------------------
+        const defaultBoxtext = document.querySelector('.defaultBoxtext');
+        const defaultBoxFrame = document.querySelector('.defaultBoxFrame');
+        const defaultBoxWorkspace = document.querySelector('.defaultBoxWorkspace');
+
+        /* esto controla Text ---------------------------------------------------------------------*/
+        const defaultText = document.getElementById('defaultText'); //opcion por default
+        const customText =  document.getElementById('customText'); //opcion customizbale
+        const bgColorText = document.getElementById('bgColorText'); //este es el input color del Text;
+
+
+        defaultText.addEventListener('click', ()=>{
+            //console.log("he marcado la opcion por default");
+            bgColorText.classList.add('sinBody');
+            bgColorText.value = defaultText.value;
+            defaultBoxtext.classList.remove('close');
+            //console.log("defaultText.value-->", defaultText.value);
+            console.log("bgColorText.value -->", bgColorText.value);
+        })
+
+        customText.addEventListener('click', ()=>{
+            //console.log("he marcado la opcion customisable");
+            //console.log("TextoColor->", TextoColor);
+            bgColorText.classList.remove('sinBody');
+            defaultBoxtext.classList.add('close');
+            bgColorText.value = colorText;
+            console.log("bgColorText.value -->", bgColorText.value);
+        })
+    
+
+        /* esto controla el topbar*/
+        const defaultTopbar = document.getElementById('defaultTopbar');
+        const customTopbar = document.getElementById('customTopbar');
+        const bgColorTopbar = document.getElementById('bgColorTopbar'); //este es el input color Topbar
+
+        /* esto controla Frame ---------------------------------------------------------------------*/
+
+        defaultTopbar.addEventListener('click', ()=>{
+            //console.log("he marcado la opcion por default");
+            bgColorTopbar.classList.add('sinBody');
+            bgColorTopbar.value = defaultTopbar.value;
+            defaultBoxFrame.classList.remove('close');
+            //console.log("defaultTopbar.value", defaultTopbar.value);
+            console.log("bgColorTopbar.value -->", bgColorTopbar.value);
+        })
+
+        customTopbar.addEventListener('click', ()=>{
+            //console.log("he marcado la opcion customisable");
+            //console.log("FrameColor->", FrameColor);
+            bgColorTopbar.classList.remove('sinBody');
+            defaultBoxFrame.classList.add('close');
+            bgColorTopbar.value = colorFrame;
+            console.log("bgColorTopbar.value -->", bgColorTopbar.value);
+        })
+
+
+        /* esto controla el workspace -----------------------------------------------------------------*/
+        const defaultWorkspace = document.getElementById('defaultWorkspace'); //opcion por defaul
+        const customWorkspace = document.getElementById('customWorkspace'); //opcion customizable
+        const bgColorWorkspace = document.getElementById('bgColorWorkspace'); //este es el input color workspace;
+        
+
+        defaultWorkspace.addEventListener('change', ()=>{
+            //console.log("he marcado la opcion por default");
+            bgColorWorkspace.classList.add('sinBody');
+            bgColorWorkspace.value = defaultWorkspace.value;
+            defaultBoxWorkspace.classList.remove('close');
+            //console.log("defaultWorkspace.value-->", defaultWorkspace.value);
+            console.log("bgColorWorkspace.value -->", bgColorWorkspace.value);
+        });
+
+        customWorkspace.addEventListener('change', ()=>{
+            //console.log("he marcado la opcion customisable");
+            //console.log("WorkspaceColor->", WorkspaceColor);
+            bgColorWorkspace.classList.remove('sinBody');
+            defaultBoxWorkspace.classList.add('close');
+            bgColorWorkspace.value = colorWorkspace;
+            console.log("bgColorWorkspace.value -->", bgColorWorkspace.value);
+        });
+
+        
+
+        //Enviar formulario
+        const formZonaBliss = document.getElementById('formZonaBliss'); //formulario
+        const btnSubmitZonaBliss = document.getElementById('btnSubmitZonaBliss'); //boton de formulario
+    
+        formZonaBliss.addEventListener('submit', (e)=>{
+            e.preventDefault()
+
+            console.log(`bgColorText--> ${bgColorText.value}`);
+            console.log(`bgColorTopbar--> ${bgColorTopbar.value}`);
+            console.log(`bgColorWorkspace--> ${bgColorWorkspace.value}`);
+            const ColorText = bgColorText.value;
+            const ColorTopbar = bgColorTopbar.value;
+            const ColorWorkspace = bgColorWorkspace.value;
+
+                const datos = {
+                    ColorText,
+                    ColorTopbar,
+                    ColorWorkspace
+                };
+
+                fetch('/myaccount/bGColor', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {
+                    console.log(jsonx)
+                    location.reload()
+                    })
+                .catch( err => console.log(err));
+                
+                })
+                
+
+
+    </script>
+
+
 
 
        
