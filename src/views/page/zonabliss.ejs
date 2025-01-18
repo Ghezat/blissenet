@@ -42,7 +42,7 @@
     <main style="max-width: 100% !important;">
 
         <%- include('../partials/navi-simple.ejs') %>
-
+        <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
         
         <%# if (catchError){ %>
             <%#- include('../alert/catchError.ejs') %> 
@@ -90,7 +90,7 @@
                                                 <span class="p-0">Text :</span>
                                                 <input type="radio" id="defaultText" value="#1a1a1a" name="text" class="mx-2"><label for="defaultText">Default</label>
                                                 <input type="radio" id="customText" value="" name="text" class="mx-2"><label for="customText">Custom</label>
-                                                <input type="color" id="bgColorText" value="<%= bGColorText %>" class="ms-3 rounded-2 sinBody">
+                                                <input type="color" id="bgColorText" value="<%= bGColorText %>" class="ms-3 rounded-2 sinBody" style="border: 1px solid gray">
                                                 <div class="defaultBoxtext ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#1a1a1a"></div>
                                             </div>
                                             
@@ -99,7 +99,7 @@
                                                 <span class="p-0">Frame :</span>
                                                 <input type="radio" id="defaultTopbar" value="#f8f9fa" name="frame" class="mx-2"><label for="defaultTopbar">Default</label>
                                                 <input type="radio" id="customTopbar" value="" name="frame" class="mx-2"><label for="customTopbar">Custom</label>
-                                                <input type="color"  id="bgColorTopbar" value="<%= bGColorTopbar %>" class="ms-3 rounded-2 sinBody">
+                                                <input type="color"  id="bgColorTopbar" value="<%= bGColorTopbar %>" class="ms-3 rounded-2 sinBody" style="border: 1px solid gray">
                                                 <div class="defaultBoxFrame ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#f8f9fa"></div>
                                             </div>
 
@@ -108,7 +108,7 @@
                                                 <span class="p-0">Gallery :</span>
                                                 <input type="radio" id="defaultGallery" value="#131313" name="gallery" class="mx-2"><label for="defaultGallery">Default</label>
                                                 <input type="radio" id="customGallery"  value="" name="gallery" class="mx-2"><label for="customGallery">Custom</label>
-                                                <input type="color" id="bgColorGallery" value="<%= bGColorGallery %>" class="ms-3 rounded-2 sinBody">
+                                                <input type="color" id="bgColorGallery" value="<%= bGColorGallery %>" class="ms-3 rounded-2 sinBody" style="border: 1px solid gray">
                                                 <div class="defaultBoxGallery ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#131313"></div>
                                             </div> 
                                             
@@ -117,7 +117,7 @@
                                                 <span class="p-0">Workspace :</span>
                                                 <input type="radio" id="defaultWorkspace" value="#ffffff" name="workspace" class="mx-2"><label for="defaultWorkspace">Default</label>
                                                 <input type="radio" id="customWorkspace"  value="" name="workspace" class="mx-2"><label for="customWorkspace">Custom</label>
-                                                <input type="color" id="bgColorWorkspace" value="<%= bGColorWorkspace %>" class="ms-3 rounded-2 sinBody">
+                                                <input type="color" id="bgColorWorkspace" value="<%= bGColorWorkspace %>" class="ms-3 rounded-2 sinBody" style="border: 1px solid gray">
                                                 <div class="defaultBoxWorkspace ms-3 rounded-2 close" style="width: 45px; height: 28px; border: 1px solid grey; background-color:#ffffff"></div>
                                             </div>  
                                             
@@ -835,8 +835,8 @@
 
                                             <div class="contentGallery" style="position: relative; background-color:<%= bGColorGallery %>; height: auto">
                                                 <div class="contentNail d-flex justify-content-center" style="position: absolute; top: -30px; width: 100%;">
-                                                    <div class="tagGalleryIcon cursor-pointer px-2 py-0 rounded-3 close" style="font-size: 14px; color:<%= bGColorText %>; border: 1px solid <%= bGColorText %>"> <i class="bi bi-arrow-bar-down"></i> </div> 
-                                                    <div class="tagGallery cursor-pointer px-3 py-1 rounded-3" style="font-size: 20px; color:<%= bGColorText %>; border: 1px solid <%= bGColorText %>"> <strong> <i> Gallery </i> </strong> </div>
+                                                    <div class="tagGalleryIcon cursor-pointer px-2 py-0 rounded-3 close" style="font-size: 14px; background-color: <%= bGColorGallery %>; color:<%= bGColorText %>;"> <i class="bi bi-arrow-bar-down"></i> </div> 
+                                                    <div class="tagGallery cursor-pointer px-3 py-1 rounded-3" style="font-size: 20px; background-color: <%= bGColorGallery %>; color:<%= bGColorText %>;" > <strong> <i> Gallery </i> </strong> </div>
                                                 </div>
 
                                             <% if (carouselOffert.show === true ) { %> <!-- true o false -->
@@ -949,8 +949,7 @@
                                                 </div> -->
 
 
-                                               
-
+                                            
 <!--                                                 <div class="workSpace d-flex justify-content-center align-items-center" style="position: absolute; top: 0; width: 100%; height: 100%;">
                                                     <span style="font-size: 20px; color:<%= bGColorText %>">  <strong> <i>Gallery</i> </strong> </span>
                                                 </div> -->
@@ -1854,6 +1853,7 @@
 </script>
 
 <script>
+    const efectSoundExpan = document.getElementById('efectSoundExpan');
     const contentCollapse = document.querySelectorAll('.contentCollapse'); 
     const tagGallery = document.querySelector('.tagGallery');
     const tagGalleryIcon = document.querySelector('.tagGalleryIcon');
@@ -1862,10 +1862,15 @@
         contentCollapse.forEach((ele)=>{
             ele.classList.toggle('close');
             const statusCollapse = ele.classList.contains('close');
-            console.log("statusCollapse ->", statusCollapse);
+            //console.log("statusCollapse ->", statusCollapse);
             if (statusCollapse === true){
+                efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+                efectSoundExpan.play().catch(error => {
+                    //console.error("Error al reproducir el sonido:", error);
+                });
                 tagGalleryIcon.classList.remove('close');
                 tagGallery.classList.add('close');
+
             } else {
                 tagGalleryIcon.classList.add('close');
                 tagGallery.classList.remove('close');
@@ -1878,11 +1883,15 @@
         contentCollapse.forEach((ele)=>{
             ele.classList.toggle('close');
             const statusCollapse = ele.classList.contains('close');
-            console.log("statusCollapse ->", statusCollapse);
+            //console.log("statusCollapse ->", statusCollapse);
             if (statusCollapse === true){
                 tagGalleryIcon.classList.remove('close');
                 tagGallery.classList.add('close');
             } else {
+                efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+                efectSoundExpan.play().catch(error => {
+                    //console.error("Error al reproducir el sonido:", error);
+                });
                 tagGalleryIcon.classList.add('close');
                 tagGallery.classList.remove('close');
             }

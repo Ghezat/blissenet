@@ -114,19 +114,29 @@ routes.post('/myaccount/segment', async (req, res)=>{
     const user = req.session.user;    
     //console.log("llegando un post a /myaccount/segment");
     //console.log(req.body);
-    const {boxSegment} = req.body;
+    let {boxSegment} = req.body;
+
     let docUpdate;
-    //console.log("Esto es boxSegment >>", boxSegment);
+    console.log("Esto es boxSegment >>", boxSegment);
 
    if (user){
-        console.log("Esto es user._id ------>", user._id );
+        //console.log("Esto es user._id ------>", user._id );
         searchProfile = await modelProfile.findOne({ indexed : user._id });
-        console.log("searchProfile para agregar segmentos a este perfil -->", searchProfile);
+        //console.log("searchProfile para agregar segmentos a este perfil -->", searchProfile);
         const segments = searchProfile.segment; //esto es un array de segmentos del perfil del usuario
         const segmentsLength = segments.length;
 
         if (segmentsLength <= 13){
             //solo podrán tener 13 segmentos como maximo
+
+            //primero vamos a rectificar que todos los elementos de este array esten formateados sin espacios en blancos
+            boxSegment.forEach((ele, i) => {
+                boxSegment[i] = ele.trim();
+            });
+            console.log("Esto es boxSegment ya limpio>>", boxSegment);
+            //- **Antes:** `[ 'Seccion de Licores  ', '  farmacia ' ]` -> con esapcios MALO.
+            //- **Después:** `[ 'Seccion de Licores', 'farmacia' ]` -> sin espacios BUENO.
+
 
             const promises = boxSegment.map(async (ele) => { // Asegúrate de que el callback sea async
                 try {
@@ -144,15 +154,15 @@ routes.post('/myaccount/segment', async (req, res)=>{
             // Espera a que todas las promesas se resuelvan
             Promise.all(promises)
             .then(() => {
-                console.log('Todas las segmentaciones han sido añadidas exitosamente.');
+                //console.log('Todas las segmentaciones han sido añadidas exitosamente.');
                 const reqUpdate = docUpdate.segment
-                console.log("reqUpdate --->", reqUpdate);
+                //console.log("reqUpdate --->", reqUpdate);
                 const notaAlert = "Segmento agregado satisfactoriamente.";
                 const response = { reqUpdate: reqUpdate, nota : notaAlert, code : 1 };//code 1 => agregado
                 res.json(response)
             })
             .catch((error) => {
-                console.error('Error en alguna de las actualizaciones:', error);
+                //console.error('Error en alguna de las actualizaciones:', error);
                 const reqUpdate = segments;//vamos a requerir el actual
                 const notaAlert = "Ha ocurrido un error, intente luego.";
                 const response = { reqUpdate: reqUpdate, nota : notaAlert, code : -1 };//code -1 => error no agregado
@@ -186,10 +196,11 @@ routes.post('/myaccount/segment-edit', async (req, res)=>{
     console.log("llegando un post a /myaccount/segment-edit");
     console.log("para editar un segmento un segmento");
     console.log(req.body);
-    const { segment, newSegment } = req.body;
+    let { segment, newSegment } = req.body;
     let segmetToRemove = segment;
+    let newSegmentClean = newSegment.trim(); //aqui me aseguro que no tiene espacios ni adelante ni al final
     let docUpdate;
-    console.log(`segmetToRemove --> ${segmetToRemove} newSegment --> ${newSegment}`);
+    console.log(`segmetToRemove --> ${segmetToRemove} newSegmentClean --> ${newSegmentClean}`);
 
     if (user){
         console.log("Existe un user vamos bien");
@@ -201,14 +212,14 @@ routes.post('/myaccount/segment-edit', async (req, res)=>{
         async function searchAndUpdateCollections() {
             try {
                 const updates = [
-                    modelRaffle.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
-                    modelAirplane.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
-                    modelArtes.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
-                    modelAuction.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
-                    modelAutomotive.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
-                    modelItems.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
-                    modelNautical.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
-                    modelRealstate.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegment }}),
+                    modelRaffle.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
+                    modelAirplane.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
+                    modelArtes.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
+                    modelAuction.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
+                    modelAutomotive.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
+                    modelItems.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
+                    modelNautical.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
+                    modelRealstate.updateMany({ user_id: Id_user, segment: segmetToRemove }, { $set: { segment: newSegmentClean }}),
                 ];
         
                 await Promise.all(updates);
@@ -229,7 +240,7 @@ routes.post('/myaccount/segment-edit', async (req, res)=>{
                 // Luego, agrega el nuevo segmento
                 await modelProfile.updateOne(
                     { indexed: Id_user },
-                    { $push: { segment: newSegment } } // Agrega el nuevo elemento al array
+                    { $push: { segment: newSegmentClean } } // Agrega el nuevo elemento al array
                 );
           
             }

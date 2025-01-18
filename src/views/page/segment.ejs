@@ -43,11 +43,11 @@
                         <% if (searchProfile) {  %>
                             <div class="card" style="border-radius: 0; border: none;">
                                 <div class="card-body">
-                                    <div class="accordion" id="accordionExample">
+                                    <div class="accordion accordion-flush" id="accordionExample">
 
                                         <div class="accordion-item">
                                           <h2 class="accordion-header" id="headingOne">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                               Crear Segmentación
                                             </button>
                                           </h2>
@@ -93,7 +93,7 @@
 
                                                 <div class="form-group my-3">
                                                 
-                                                    <button class="form-control btn btn-primary" id="btnSubmitHashtag" disabled>Crear Segmento</button>
+                                                    <button class="form-control btn btn-primary" id="btnSubmitSegment" disabled>Crear Segmento</button>
                                             
                                                 </div>
 
@@ -356,7 +356,7 @@
             const hashtags = document.getElementById('hashtags'); //este es el input donde introduzco el hashtag
             const btnSegment = document.getElementById('btnSegment'); //este es el boton que crea el hashtag y lo mete dentro del array
             const boxTagsSegment = document.getElementById('boxTagsSegment'); //este es el contenedor donde se almacenan todos las etiquetas de segmentos "el array";
-            const btnSubmitHashtag = document.getElementById('btnSubmitHashtag'); //este es el boton de envio de etiquetas a la ruta para su actualizacion en DB
+            const btnSubmitSegment = document.getElementById('btnSubmitSegment'); //este es el boton de envio de etiquetas a la ruta para su actualizacion en DB
             const contentAlert = document.querySelector('.contentAlert');
 
 
@@ -429,7 +429,7 @@
                     
                         hashtags.value = ""; //limpiamos el input
                         hashtags.focus(); //enviamos el focus
-                        btnSubmitHashtag.removeAttribute('disabled'); // activar el boton actualizar.
+                        btnSubmitSegment.removeAttribute('disabled'); // activar el boton actualizar.
                         console.log("boxSegment", boxSegment);// perfecto
 
 
@@ -449,10 +449,10 @@
                                 console.log(boxSegment);
                                 if (boxSegment.length === 0){
                                     console.log("debemos desactivar el boton")
-                                    btnSubmitHashtag.setAttribute("disabled", "");
+                                    btnSubmitSegment.setAttribute("disabled", "");
                                 } else {
                                     console.log("debemos activar el boton")
-                                    btnSubmitHashtag.removeAttribute("disabled");
+                                    btnSubmitSegment.removeAttribute("disabled");
                                 }
                             });
                         });  
@@ -475,7 +475,7 @@
             });
     
             //boton para crear segmento
-            btnSubmitHashtag.addEventListener('click', ()=>{
+            btnSubmitSegment.addEventListener('click', ()=>{
     
                 //console.log(" cantidad de elementos de boxSegment : ",boxSegment.length)
                 if (boxSegment.length !== 0){

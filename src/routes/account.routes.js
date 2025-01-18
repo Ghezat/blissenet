@@ -1930,6 +1930,9 @@ routes.post('/account/followStore', async(req, res)=>{
 
                 async function stopFollowing(){
                     const stopFollow =  await modelProfile.updateOne({ indexed : user }, {$pull:{ favoritestores : userOfStore }});
+                    //retiro la tienda que estaba siguiendo de mi lista de favoritos.
+                    const stopFollowMe = await modelProfile.updateOne({ indexed : userOfStore }, { $pull: { followMe : user } });
+                    //retiro de la lista de siguiendome al usuario que lo estaba siguiendo.
                 }
 
                 async function deleteNotification(){ //aqui buscamos si esta notificacion existe para eliminarla.
@@ -1966,11 +1969,19 @@ routes.post('/account/followStore', async(req, res)=>{
                 
                
                 async function Follow(){
-                    console.log("No existe esta tienda en el array favoriteStore de este usuario")
+                    console.log("No existe esta tienda en el array favoriteStore de este usuario");
                     console.log("----------------------------see-------------------------")
                     const resultUpdate = await modelProfile.updateOne({ indexed : user }, {$push:{ favoritestores : userOfStore }});
-                    //ahora vamos a agregar al user al array folowMe
-                    const followMe = await modelProfile.updateOne({ indexed : userOfStore }, { $push: { followMe : user } } );    
+                    //ahora vamos a agregar al user al array folowMe pero antes vamos a revisar si ya lo tiene.
+
+                    const existUser = await modelProfile.findOne({ indexed : userOfStore, followMe : user }); //consultamos si tiene este dato.
+
+                    if (!existUser) {
+                        const followMe = await modelProfile.updateOne({ indexed : userOfStore }, { $push: { followMe : user } } );
+                    } 
+                    //esto es muy importante porque sino cada vez que un usuario sigue a una tienda y la deje de seguir y luego vuelva a 
+                    // seguirla se marcara en el apartado de siguiendome y esto temrina con muchos clones o repeticiones de personas que te siguen que es el mismo.
+                        
                 }
                 //ahora que amvas partes tienen la informacion de siguiendo y seguido procedemos a crear la notificacion
                 //de siguiendome para que el usuario sepa cuando lo siguen y quien lo sigue.
