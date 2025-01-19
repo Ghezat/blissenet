@@ -14,6 +14,14 @@
     display: none;
 }
 
+.btnClearRadio{
+    transition: 1s all ease;
+}
+
+.btnClearRadio:hover{
+    background-color: rgb(190, 190, 190)
+}
+
 .tagDeleteMedia:hover .spanDelete{
     border: 2px solid red; 
     color: red;
@@ -81,7 +89,7 @@
                                             
                             
                                 <div class="card">
-                                    <div class="card-header">Configuración de Colores.</div>
+                                    <div class="card-header d-flex justify-content-between">Configuración de Colores.  <span class="btnClearRadio cursor-pointer rounded-pill d-flex justify-content-center align-items-center me-2" title="Limpia valores" style="width: 25px; height: 25px;"> <i class="bi bi-eraser"></i> </span> </div>
                                     <div class="card-body">
                                         <form  id="formZonaBliss" class="p-0 d-flex flex-column overflow-auto w-100">
                                                                     
@@ -838,6 +846,9 @@
                                                     <div class="tagGalleryIcon cursor-pointer px-2 py-0 rounded-3 close" style="font-size: 14px; background-color: <%= bGColorGallery %>; color:<%= bGColorText %>;"> <i class="bi bi-arrow-bar-down"></i> </div> 
                                                     <div class="tagGallery cursor-pointer px-3 py-1 rounded-3" style="font-size: 20px; background-color: <%= bGColorGallery %>; color:<%= bGColorText %>;" > <strong> <i> Gallery </i> </strong> </div>
                                                 </div>
+                                                <div class="contentNailBody" style="width: 100%; height: 30px; background-color:<%= bGColorGallery %>">
+
+                                                </div>
 
                                             <% if (carouselOffert.show === true ) { %> <!-- true o false -->
 
@@ -1099,6 +1110,7 @@
 
 </body>
 
+
 <!-- para cambiar el color de texto, el topBar y el workSpace -->
 <script>
     const containerColor = document.querySelector('.containerColor'); //contenedor del input color;           
@@ -1165,6 +1177,31 @@
         bgColorTopbar.value = colorFrame;
         console.log("bgColorTopbar.value -->", bgColorTopbar.value);
     })
+
+
+    //-------------------------------------------------------------------
+
+
+    const btnClearRadio = document.querySelector('.btnClearRadio');
+    const radios = document.querySelectorAll('input[type="radio"]');
+
+    btnClearRadio.addEventListener('click', ()=>{
+
+        // Recorre cada radio y quita el estado checked
+        radios.forEach(radio => {
+            radio.checked = false;
+        });
+        defaultBoxtext.classList.add('close');
+        defaultBoxFrame.classList.add('close');
+        defaultBoxGallery.classList.add('close');
+        defaultBoxWorkspace.classList.add('close');
+        bgColorText.classList.add('sinBody');
+        bgColorTopbar.classList.add('sinBody');
+        bgColorGallery.classList.add('sinBody');
+        bgColorWorkspace.classList.add('sinBody');
+        
+    })
+    //-------------------------------------------------------------------
 
 
     /* esto controla Gallery ---------------------------------------------------------------------*/
@@ -1515,96 +1552,97 @@
     const galleryBtnSubmitMediaDisabled = document.querySelector('.galleryBtnSubmitMediaDisabled');
     const contentResponseMedia = document.querySelector('.contentResponseMedia');
 
-    galleryBtnSubmitMedia.addEventListener('click', ()=>{
+    if (galleryBtnSubmitMedia){ //si existe entonces se escucha sino crea un error y no funciona el resto del codigo
+        galleryBtnSubmitMedia.addEventListener('click', ()=>{
 
-        let file = galleryFileMedia.files[0]; // Asegúrate de seleccionar un solo archivo
-        console.log("le dado al boton de subir galleryBtnSubmitMedia");
-        console.log("file ->", file)//undefined   sera el valor sino tiene nada
-        if (file !== undefined){
+            let file = galleryFileMedia.files[0]; // Asegúrate de seleccionar un solo archivo
+            console.log("le dado al boton de subir galleryBtnSubmitMedia");
+            console.log("file ->", file)//undefined   sera el valor sino tiene nada
+            if (file !== undefined){
 
-            galleryBtnSubmitMedia.classList.add('close');
-            galleryBtnSubmitMediaDisabled.classList.remove('close');
+                galleryBtnSubmitMedia.classList.add('close');
+                galleryBtnSubmitMediaDisabled.classList.remove('close');
 
-            const datos = new FormData();
-            //            name :  valor
-            datos.append('fileImg', file);
+                const datos = new FormData();
+                //            name :  valor
+                datos.append('fileImg', file);
 
-            //console.log("datos -->", datos);
-            for (let [key, value] of datos.entries()) {
-                console.log(key, value);
-            }
-    
-     
-            fetch('/zonabliss/upload/media', {
-                method: "POST",
-                body: datos // Aquí envías el FormData directamente
-            })
-            .then(response => response.json())
-            .then(jsonx => { 
-                
-                console.log(jsonx)    
-                const code = jsonx.code;
-                const response = jsonx.response;
-                
-                console.log("code -->", code);
-                console.log("response -->", response);
-                //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
-
-                contentResponseMedia.innerHTML = "";
-
-                if (code === 0 ){
-
-                    contentResponseMedia.innerHTML = `<div class="alert alert-danger">
-                                                    <i class="bi bi-x-circle-fill me-1"></i> ${response}
-                                                </div>`
-
-
-                    setTimeout(() => {
-                        contentResponseMedia.innerHTML = "";
-                        addObjectMedia.innerHTML = "";
-                        galleryBtnSubmitMedia.classList.remove('close');
-                        galleryBtnSubmitMediaDisabled.classList.add('close');
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-
-                } else if (code === 1 ){
-
-                    contentResponseMedia.innerHTML = ` <div class="alert alert-success">
-                                                    <i class="bi bi-check-circle-fill me-1"></i> ${response}
-                                                </div>`
-                                                
-
-                    setTimeout(() => {
-                        contentResponseMedia.innerHTML = "";
-                        addObjectMedia.innerHTML = "";
-                        location.reload(); //refresca la pagina
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-                } else {
-                    contentResponseMedia.innerHTML = ` <div class="alert alert-danger">
-                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
-                                                </div>`
-
-
-                    setTimeout(() => {
-                        contentResponseMedia.innerHTML = "";
-                        addObjectMedia.innerHTML = "";
-                        galleryBtnSubmitMedia.classList.remove('close');
-                        galleryBtnSubmitMediaDisabled.classList.add('close');
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-                              
-                }           
-
-          
-
-            })
-            .catch(err => console.log(err));
-
+                //console.log("datos -->", datos);
+                for (let [key, value] of datos.entries()) {
+                    console.log(key, value);
+                }
         
-        } 
-    });        
-  
+        
+                fetch('/zonabliss/upload/media', {
+                    method: "POST",
+                    body: datos // Aquí envías el FormData directamente
+                })
+                .then(response => response.json())
+                .then(jsonx => { 
+                    
+                    console.log(jsonx)    
+                    const code = jsonx.code;
+                    const response = jsonx.response;
+                    
+                    console.log("code -->", code);
+                    console.log("response -->", response);
+                    //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+
+                    contentResponseMedia.innerHTML = "";
+
+                    if (code === 0 ){
+
+                        contentResponseMedia.innerHTML = `<div class="alert alert-danger">
+                                                        <i class="bi bi-x-circle-fill me-1"></i> ${response}
+                                                    </div>`
+
+
+                        setTimeout(() => {
+                            contentResponseMedia.innerHTML = "";
+                            addObjectMedia.innerHTML = "";
+                            galleryBtnSubmitMedia.classList.remove('close');
+                            galleryBtnSubmitMediaDisabled.classList.add('close');
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                    } else if (code === 1 ){
+
+                        contentResponseMedia.innerHTML = ` <div class="alert alert-success">
+                                                        <i class="bi bi-check-circle-fill me-1"></i> ${response}
+                                                    </div>`
+                                                    
+
+                        setTimeout(() => {
+                            contentResponseMedia.innerHTML = "";
+                            addObjectMedia.innerHTML = "";
+                            location.reload(); //refresca la pagina
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                    } else {
+                        contentResponseMedia.innerHTML = ` <div class="alert alert-danger">
+                                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
+                                                    </div>`
+
+
+                        setTimeout(() => {
+                            contentResponseMedia.innerHTML = "";
+                            addObjectMedia.innerHTML = "";
+                            galleryBtnSubmitMedia.classList.remove('close');
+                            galleryBtnSubmitMediaDisabled.classList.add('close');
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                                
+                    }           
+
+            
+
+                })
+                .catch(err => console.log(err));
+
+            
+            } 
+        });        
+    }
 
 
 
@@ -1615,95 +1653,96 @@
     const contentResponseImg = document.querySelector('.contentResponseImg');
     //galleryFileImg declarado arriba
 
-    galleryBtnSubmitImg.addEventListener('click', ()=>{
-
-        let file = galleryFileImg.files[0]; // Asegúrate de seleccionar un solo archivo
-        console.log("file ->", file)//undefined   sera el valor sino tiene nada
-        if (file !== undefined){
-
-            galleryBtnSubmitImg.classList.add('close');
-            galleryBtnSubmitImgDisabled.classList.remove('close');
-
-            const datos = new FormData();
-            //            name :  valor
-            datos.append('fileImg', file);
-
-            //console.log("datos -->", datos);
-            for (let [key, value] of datos.entries()) {
-                console.log(key, value);
-            }
-    
-     
-            fetch('/zonabliss/upload/imgCarousel', {
-                method: "POST",
-                body: datos // Aquí envías el FormData directamente
-            })
-            .then(response => response.json())
-            .then(jsonx => { 
+    if (galleryBtnSubmitImg){ //si existe entonces se escucha las acciones de este boton de resto si no existe todo lo demas de abajo no sera leido y no funcionara.
+        galleryBtnSubmitImg.addEventListener('click', ()=>{
                 
-                console.log(jsonx)    
-                const code = jsonx.code;
-                const response = jsonx.response;
-                
-                console.log("code -->", code);
-                console.log("response -->", response);
-                //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+            let file = galleryFileImg.files[0]; // Asegúrate de seleccionar un solo archivo
+            console.log("file ->", file)//undefined   sera el valor sino tiene nada
+            if (file !== undefined){
 
-                contentResponseImg.innerHTML = "";
+                galleryBtnSubmitImg.classList.add('close');
+                galleryBtnSubmitImgDisabled.classList.remove('close');
 
-                if (code === 0 ){
+                const datos = new FormData();
+                //            name :  valor
+                datos.append('fileImg', file);
 
-                    contentResponseImg.innerHTML = `<div class="alert alert-danger">
-                                                    <i class="bi bi-x-circle-fill me-1"></i> ${response}
-                                                </div>`
-
-
-                    setTimeout(() => {
-                        contentResponseImg.innerHTML = "";
-                        addObjectImg.innerHTML = "";
-                        galleryBtnSubmit.classList.remove('close');
-                        btnDisabledBannerSubiendo.classList.add('close');
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-
-                } else if (code === 1 ){
-
-                    contentResponseImg.innerHTML = ` <div class="alert alert-success">
-                                                    <i class="bi bi-check-circle-fill me-1"></i> ${response}
-                                                </div>`
-                                                
-
-                    setTimeout(() => {
-                        contentResponseImg.innerHTML = "";
-                        addObjectImg.innerHTML = "";
-                        location.reload(); //refresca la pagina
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-                } else {
-                    contentResponseImg.innerHTML = ` <div class="alert alert-danger">
-                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
-                                                </div>`
-
-
-                    setTimeout(() => {
-                        contentResponseImg.innerHTML = "";
-                        addObjectImg.innerHTML = "";
-                        galleryBtnSubmit.classList.remove('close');
-                        btnDisabledBannerSubiendo.classList.add('close');
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-                              
-                }           
-
-          
-
-            })
-            .catch(err => console.log(err));
-
+                //console.log("datos -->", datos);
+                for (let [key, value] of datos.entries()) {
+                    console.log(key, value);
+                }
         
-        } 
-    });
+        
+                fetch('/zonabliss/upload/imgCarousel', {
+                    method: "POST",
+                    body: datos // Aquí envías el FormData directamente
+                })
+                .then(response => response.json())
+                .then(jsonx => { 
+                    
+                    console.log(jsonx)    
+                    const code = jsonx.code;
+                    const response = jsonx.response;
+                    
+                    console.log("code -->", code);
+                    console.log("response -->", response);
+                    //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
 
+                    contentResponseImg.innerHTML = "";
+
+                    if (code === 0 ){
+
+                        contentResponseImg.innerHTML = `<div class="alert alert-danger">
+                                                        <i class="bi bi-x-circle-fill me-1"></i> ${response}
+                                                    </div>`
+
+
+                        setTimeout(() => {
+                            contentResponseImg.innerHTML = "";
+                            addObjectImg.innerHTML = "";
+                            galleryBtnSubmit.classList.remove('close');
+                            btnDisabledBannerSubiendo.classList.add('close');
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                    } else if (code === 1 ){
+
+                        contentResponseImg.innerHTML = ` <div class="alert alert-success">
+                                                        <i class="bi bi-check-circle-fill me-1"></i> ${response}
+                                                    </div>`
+                                                    
+
+                        setTimeout(() => {
+                            contentResponseImg.innerHTML = "";
+                            addObjectImg.innerHTML = "";
+                            location.reload(); //refresca la pagina
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                    } else {
+                        contentResponseImg.innerHTML = ` <div class="alert alert-danger">
+                                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
+                                                    </div>`
+
+
+                        setTimeout(() => {
+                            contentResponseImg.innerHTML = "";
+                            addObjectImg.innerHTML = "";
+                            galleryBtnSubmit.classList.remove('close');
+                            btnDisabledBannerSubiendo.classList.add('close');
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                                
+                    }           
+
+            
+
+                })
+                .catch(err => console.log(err));
+
+            
+            } 
+        });
+    }
 
 
     //enviar el banner al servidor submit --------------------------------------------------------
