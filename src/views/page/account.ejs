@@ -211,6 +211,7 @@
     }
 
     .lupaSinRespuesta{
+      /* Esto es una nimacion que esta en las tiendas no es una lupa real */
       animation: moverLupa 8s infinite;
       transform-origin: center; /* Establecer el eje central para rotar */
     }
@@ -1478,9 +1479,18 @@
       <% }; %>
 
   </main>
+
+  <!-- CDN js Slick-carousel --> <!-- Es importante manejar los script del carrousel en el mismo archivo que se van a usar -->
+  <!-- para no interferir en otros script cdn de jquey --> 
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
 
 
   <script>

@@ -416,27 +416,26 @@
 
                         <div class="containerMiniaturas d-flex flex-row mb-2" style="overflow-x: auto;">
                             
-                        <% if (search.video.length !==0) { %>
-                                
+                            <% if (search.video.length !==0) { %>
+                                    
                                 <div class="containMiniImg me-1 rounded-1" style="background-color: rgba(0, 0, 0, 0.9);">
 
                                     <div class="videoMini blueMask d-flex justify-content-center align-items-center" style="object-fit: cover; background-position: center; background-size: auto; width: 60px; height: 60px;">
                                         <i class="bi bi-play-btn" style="color: rgb(204, 204, 204); font-size: 1.3rem"></i>
                                     </div>         
-                                  
+                                
                                 </div>
 
-                        <%};%>
+                            <%};%>
 
-                        <% search.images.forEach((ele)=> { %>
-                       
+                            <% search.images.forEach((ele)=> { %>
+                                                        
+                            <div class="containMiniImg me-1">
+                                <img src="<%= ele.url%>" class="imgMini border rounded-1" style="object-fit: cover; background-position: center; background-size: auto; width: 60px; height: 60px; cursor: pointer;" >
+                            </div>         
                             
-                          <div class="containMiniImg me-1">
-                            <img src="<%= ele.url%>" class="imgMini border rounded-1" style="object-fit: cover; background-position: center; background-size: auto; width: 60px; height: 60px; cursor: pointer;" >
-                          </div>
-                                                   
-                        
-                        <% }); %>
+                            <% }); %>
+
                         </div>
                        
                         
@@ -493,8 +492,10 @@
                         <div class="card-body">
                             <% if (user) {  %>
                                 <% if (depart == 'items' || depart == 'arts') { %>
+                                    
                                     <span>Solo de a comprar si esta seguro de adquirir este producto.</span> <br> <hr>
                                     <p>Modo compra directa sin seguro</p>
+
                                 <% }; %>
                                 <% if (depart == 'raffle') { %>
                                     <span>¿Con suerte? Entre y busque un Ticket Ganador. </span> <br> <hr>
@@ -510,7 +511,7 @@
                                     <!-- segunda condicion que el usuario no pueda autocomprarse -->
                                     <% if (user.username !== search.username) { %>
                                         <!-- tercera condicion que el articulo no este pausado -->
-                                        <% if (search.paused !== true  ) { %>
+                                        <% if (search.paused !== true && search.soldOut !== true   ) { %>
                                         <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticComprar">
                                             Comprar
                                         </button>
@@ -529,7 +530,7 @@
                                         
                                         <% }  else { %>
                                         <button type="button" class="dataBuy btn btn-secondary mt-2 text-light form-control" disabled>
-                                            Paused Article 
+                                            Articulo Pausado o Agotado
                                         </button>
                                         <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
                                         <hr>
@@ -1213,22 +1214,6 @@
                     });
                 })
                 
-               /*
-                containerViewImg.querySelector('.imgView').addEventListener('click', () => {
-                    // Aquí puedes activar el zoom o cualquier otra funcionalidad que desees
-                    console.log("Activamos la lupa aqui ")
-                    $('.imgView').data('elevateZoom').changeState(1); // Cambia el estado de Zoom a activado
-                    //funciona aunque si yo lo quito el igual se activa sin dar click ya por defecto al pasar el
-                });
-                
-
-                $('.imgView').on('mouseleave', function() {
-                    zoom.hide(); // Oculta el zoom al salir del mouse
-                    $('.imgView').data('elevateZoom').changeState(0);
-                    console.log("Desactivamos la lupa aqui ")
-                    //no funciona
-                });
-                */
                 
             });
            
@@ -1236,9 +1221,9 @@
 
         videoMini.addEventListener('click', () => {
             // el motivo que tuve para esconder el container zoomContainer es por las razones siguientes.
-            // contendor propio de la libreria es el que usa para colcoar a un lado y usarse con la configuracion windows
+            // contendor propio de la libreria es el que usa para colocar a un lado y usarse con la configuracion windows
             // aui usamos la configuracion "lens" asi que ese contenedor no lo vamos a usar. 
-            // estos contendores porque seran la cantidad de imaganes que existan e nla publicacion se ponen a un lado
+            // estos contendores porque seran la cantidad de imaganes que existan en la publicacion se ponen a un lado
             // y no dejan usar los controles de play del reproductor de video. la solucion fue quitarlos con la propiedad display: "none"
             const zoomContainer = document.querySelectorAll('.zoomContainer');
 
