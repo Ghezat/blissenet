@@ -249,7 +249,7 @@
                                                         <div class="add_photo me-2" id="add_photoMedia" title="Subira una Imagen por carga">
                                                             <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
                                                         </div>
-                                                        <span class="mx-2"> <small> ¡Su Media puede ser un archivo de imagen PNG,JPG,MP3 de (3mb) o un archivo de video mp4 de (50mb)! </small></span>
+                                                        <span class="mx-2"> <small> ¡Su Media puede ser un archivo de imagen (jpg, png, gif) de 3 MB o un archivo de video (mp4) de 50 MB!. Máximo 2 recursos de media. </small></span>
                                                         <input type="file" name=fileImg class="inpFileImg form-control" id="galleryFileMedia" required>
                                                     </div>
                                                     <div class="my-2 d-flex justify-content-center contentImgs border" id="addObjectMedia">
@@ -394,7 +394,7 @@
                                                             <div class="add_photo me-2" id="add_photoImg" title="Subira una Imagen por carga">
                                                                 <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
                                                             </div>
-                                                            <span class="mx-2"> <small> ¡Su Imagen debe ser un archivo PNG o JPG!. Máximo 10 imagenes y resolución aprox. 1000x1000px  </small></span>
+                                                            <span class="mx-2"> <small> ¡Su Imagen debe ser un archivo (jpg, png, gif) y no superar 3 MB!. Máximo 12 Imagenes.   </small></span>
                                                             <input type="file" name=fileImg class="inpFileImg form-control" id="galleryFileImg" required>
                                                         </div>
                                                         <div class="my-2 d-flex justify-content-center contentImgs border" id="addObjectImgs">
@@ -407,7 +407,7 @@
                                                         </div>
 
                                                      
-                                                        <% if (countImg < 10) { %>
+                                                        <% if (countImg < 12) { %>
                                                         <div class="form-group my-2"> 
                                                             <input type="button" class="btn-sm btn-primary form-control" value="Subir Imagen" id="galleryBtnSubmitImg">
                                                             <button class="btn-sm btn-secondary form-control galleryBtnSubmitImgDisabled close" disabled> Subiendo... <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
@@ -519,7 +519,7 @@
                                                             <div class="add_photo me-2" id="add_photoBanner" title="Subira un Banner por carga">
                                                                 <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
                                                             </div>
-                                                            <span class="mx-2"> <small> ¡Su Banner debe ser un archivo PNG o JPG!. Máximo 5 banner y resolución aprox. 1360x300px  </small></span>
+                                                            <span class="mx-2"> <small> ¡Su Banner debe ser un archivo (jpg, png)!. Máximo 5 Banners y resolución aprox. 1360x300px.  </small></span>
                                                             <input type="file" name=fileImg class="inpFile form-control" id="galleryFileBanner" required>
                                                         </div>
                                                         <div class="my-2 d-flex justify-content-center contentImgs border" id="addObjectImg">

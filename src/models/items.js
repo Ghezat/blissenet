@@ -19,6 +19,8 @@ const SchemaItems = new Schema({
     onlyOneAvailable : { type: Boolean, default: false },
     bestProduct : { type: Boolean, default: false },
     delivery : { type: Boolean, default: false },
+    soldOut : { type : Boolean, default: false }, //agotado solo para articulos y artes.
+    purchaseTime : { type : Object, default : [] }, //este campo solo existe en items y en artes. aqui solo se guardan indexed con la finalidad de que cuando este articulo deje de estar agotado le envie mensajes a todos los que le dieron a "Avisarme cuando este disponible" solo enviará notificaciones al inbox.   
     state_province : { type: String }, //estado o provincia se guardara en este campo del modelo.
     view : { type : Number, default : 0 }, //aqui tenemos la cantidad de vistas que tiene este producto.
     spread : { type : Object, default : { spreading : false, time : null } }, //este campo es para identificar si se ha hecho la accion de "Difundir entre sus seguidores". 

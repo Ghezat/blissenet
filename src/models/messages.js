@@ -82,7 +82,26 @@ module.exports = model('messageModel', messageSchema, 'messages');
     createdAt: 2024-12-19T17:13:06.132Z,
     updatedAt: 2024-12-19T17:13:06.132Z,
     __v: 0
-  } 
+  },
+  
+  {
+    "_id" : ObjectId("679015665fd4b3725d1c82db"),
+    "typeNote" : "availability-noti",
+    "times" : "21-01-2025 17:45",
+    "titleArticle" : "Nike Mag",
+    "urlImageArticle" : "https://bucket-blissve.nyc3.digitaloceanspaces.com/items/1735431661897.jpg",
+    "userId" : "66ec3ad3ceacc8a916d29e59",
+    "question" : "¡Este artículo ya esta disponible!",
+    "toCreatedArticleId" : "66ab9dc1b8c25e5528f4ea9d",
+    "ownerStore" : "develop-test1",
+    "productId" : ObjectId("677095f1244106c28d6a27b0"),
+    "depart" : "items",
+    "answer" : "waiting",
+    "view" : false,
+    "createdAt" : ISODate("2025-01-21T21:45:10.965Z"),
+    "updatedAt" : ISODate("2025-01-21T21:45:10.965Z"),
+    "__v" : 0
+}
 */
 
 //tipos de notas
@@ -91,3 +110,5 @@ module.exports = model('messageModel', messageSchema, 'messages');
 //2. followMe
 //3. note
 //4. messages
+//5. availability-noti
+

@@ -274,7 +274,10 @@ color: blueviolet;
   font-size: 20px;
 }
 
-
+.elementPaginate{
+  display: flex;
+  justify-content: end;
+}
 
 /* end footer */
 
@@ -350,8 +353,12 @@ color: blueviolet;
     display: flex;
     flex-direction: column;
   }
-   /* :::::::::::::::::: */
+  
 
+  .elementPaginate{
+    display: flex;
+    justify-content: end;
+  }
     
 }
     
@@ -422,6 +429,11 @@ color: blueviolet;
     width: 100%;
     display: flex;
     flex-direction: column;
+  }
+
+  .elementPaginate{
+    display: flex;
+    justify-content: center;
   }
     /* :::::::::::::::::: */
 

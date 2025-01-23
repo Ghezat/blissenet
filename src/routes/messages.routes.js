@@ -22,8 +22,9 @@ routes.get('/myaccount/messenger', async (req,res)=>{
     let userId;
     let searchProfile, searchMessageInbox, searchMessageOutbox, countMessagesInbox, countMessagesOutbox, totalMessages;
     let searchMessageSend, countMessages;
-
+    let searchBoxMessageInbox = [];
     const user = req.session.user; // datos del usuario
+
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
  
     if (user){
@@ -31,18 +32,25 @@ routes.get('/myaccount/messenger', async (req,res)=>{
         console.log("este es el id del usuarios logeado --->", userId);
 
         searchProfile = await modelProfile.find({ indexed : userId });
+    
         console.log("Aqui el profile de la cuenta", searchProfile);
 
         //primer paso ubicar todos los mensajes que tenga el usuario logeado y que el campo answer diga waiting.
-        searchMessageInbox = await modelMessages.find( { $and: [{toCreatedArticleId : userId },{answer: "waiting"} ] } );
+        const searchMessageInbox0 = await modelMessages.find( { $and: [{ toCreatedArticleId : userId },{answer: "waiting"}, { typeNote: { $ne: "availability-noti" } } ] } );
+        const searchMessageInbox1 = await modelMessages.find( { $and: [{ userId : userId }, { typeNote : "availability-noti" }, {answer: "waiting"} ] } );
+        
+        searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
+        searchMessageInbox = searchBoxMessageInbox; 
         console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchMessageInbox);
+       
         countMessagesInbox = searchMessageInbox.length;
    
         console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
 
-        searchMessageOutbox = await modelMessages.find( { $and: [{userId : userId },{view: false}, {answer : {$ne: 'waiting'}  } ] } );
-        console.log("Estos son todos los mensajes que tiene este usuario en Outbox --->", searchMessageOutbox);
-        countMessagesOutbox = searchMessageOutbox.length;
+        const searchMessageOutbox = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } );
+        const searchMessageOutboxAlert = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
+        countMessagesOutbox = searchMessageOutboxAlert.length;
+
 
         console.log('esta es la cantidad de mensajes que tiene este usario en Outbox--->', countMessagesOutbox)
 
@@ -56,8 +64,8 @@ routes.get('/myaccount/messenger', async (req,res)=>{
         //este objeto muestra los mensajes enviados de cada usuario
         searchMessageSend = await modelMessages.find( {$and: [{userId : userId }, {view : false} ]} );
 
-        res.render('page/messenger', {user, searchMessageInbox, countNegotiationsBuySell, countMessages, searchMessageSend, searchProfile})   
-       
+        res.render('page/messenger', {user, searchMessageInbox, searchMessageOutbox, countNegotiationsBuySell, countMessages, searchMessageSend, searchProfile})   
+      
     } else {
 
         res.render('page/messenger', {user})   
@@ -84,7 +92,10 @@ routes.get('/myaccount/messenger/view/:id', async(req, res)=>{
 
     const result = await modelMessages.findById(idMessage);
     console.log("Esto es result message", result);
-    if (result.typeNote === "notes" || result.typeNote === "spread" || result.typeNote === "followMe"){ 
+    console.log("*********************************************** ver ********************************************************");
+    console.log("Esto es result result.typeNote -->", result.typeNote );
+
+    if (result.typeNote === "notes" || result.typeNote === "spread" || result.typeNote === "followMe" || result.typeNote === "availability-noti" ){ 
         
         const change = await modelMessages.findByIdAndUpdate(idMessage, { view : true, answer : 'process' } );
 

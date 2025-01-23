@@ -135,16 +135,20 @@
             <% if (user) { %>
     
               <% if (countMessages) { %>
-                <a class="nav-link text-secondary" title="Alert of inbox"  href="/myaccount/messenger">
-              
-                <i class="bi bi-bell position-relative">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                <%= countMessages %>
-                    <span class="visually-hidden">unread messages</span>
-                </span>
-                </i>  
-    
-                </a>
+
+                <% if (countMessages > 0 ) { %>  
+                  <a class="nav-link text-secondary" title="Alert of inbox"  href="/myaccount/messenger">
+                
+                    <i class="bi bi-bell position-relative">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <%= countMessages %>
+                        <!-- <span class="visually-hidden">unread messages</span> -->
+                    </span>
+                    </i>  
+      
+                  </a>
+                <% }; %>
+
               <% }; %> 
             
     

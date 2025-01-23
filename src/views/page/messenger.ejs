@@ -58,6 +58,7 @@
             </div>
         </div>
    
+        <!-- searchMessageInbox -->
         <div class="contentInbox">
             <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
 
@@ -159,9 +160,7 @@
                                                     <hr class="m-1">     
                                                 </div>
                                                 
-
-                                                
-                                            <% } else { %>
+                                            <% } else if (ele.typeNote === "messages") { %>
                                                 <div class="bodyTheme">
                                                     <form action="/myaccount/messenger/response" method="post">
 
@@ -173,7 +172,7 @@
                 
                                                     </div>
                                                     <div class="question">
-                                                        <p class="rounded-2 ps-1"><%= ele.question %> <span> <small>(<%= ele.username %>) </small> </span></p> 
+                                                        <p class="rounded-2 ps-1"><%= ele.question %> <span>  <small>(<%= ele.username %>) </small>  </span></p> 
                                                     </div>
                                                     <div class="containerInputSubmit form-group d-flex justify-content-between mb-2">
                                                         <input type="hidden" name="idMesagge" value="<%= ele._id%>">
@@ -185,7 +184,32 @@
                                                     </form>
                                                     <hr class="m-1">     
                                                 </div>  
-                                              <% }; %>
+                                            
+                                            <% } else if (ele.typeNote === "availability-noti") { %>
+                                                <div class="bodyTheme">
+                                                    <form action="/myaccount/messenger/view/<%= ele._id %>" method="get">
+
+                                                        <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
+                                                        
+                                                        <div class="containerImgTitle d-flex">
+            
+                                                            <div><img src="<%= ele.urlImageArticle %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                            <div> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p style="font-size: 18px;" ><%= ele.titleArticle %></p> </a> </div>
+                    
+                                                        </div>
+                                                        <div class="question d-flex justify-content-between">
+                                                            <p class="rounded-2 ps-1"><%= ele.question %> 
+                                                            <span> 
+                                                                <a href="/account/<%= ele.ownerStore %>"> <small>(<%= ele.ownerStore %>) </small> </a>
+                                                            </span></p> 
+                                                            <button type="submit" class="btn btn-success btn-sm ms-2" style="height: 30px;">Visto</button>
+                                                        </div>                                      
+
+                                                    </form>
+                                                    <hr class="m-1">     
+                                                </div>  
+                                            
+                                            <% }; %>    
                                             
                                         <% }); %>
                                       
@@ -204,6 +228,7 @@
             </div>
         </div>
 
+        <!-- searchMessageOutbox -->
         <div class="contentOutbox closed">
             <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
 
@@ -214,8 +239,8 @@
                             <div class="containerMain d-flex flex-column">
 
                                 <!-- mensajes que llegan al outBox -->
-                                <% if (searchMessageSend.length !== 0) {  %>
-                                    <% searchMessageSend.forEach((ele)=>{ %>
+                                <% if (searchMessageOutbox.length !== 0) {  %>
+                                    <% searchMessageOutbox.forEach((ele)=>{ %>
 
                                         <div class="containerMessage">
                                             <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>
@@ -235,9 +260,11 @@
                                             <div class="contentQuestion">
                                                 <p class="m-0"><%= ele.question %></p>
                                             </div>
+
                                             <% if (ele.answer !== 'waiting'){ %>
                                             <div class="contentAnswer ms-2 rounded-1 p-1 d-flex">
-                                                <i class="bi bi-arrow-return-right me-2"></i> <p class="mb-0"><%= ele.answer %> <span> <small>(<%= ele.ownerStore %>)</small> </span></p>
+                                                <i class="bi bi-arrow-return-right me-2"></i> 
+                                                <p class="mb-0"><%= ele.answer %> <span> <a href="/account/<%= ele.ownerStore %>"> <small>(<%= ele.ownerStore %>)</small> </a> </span></p>
                                             </div>
                                             <% } else { %>
                                             <div class="contentAnswer ms-2 rounded-1 p-1 d-flex">

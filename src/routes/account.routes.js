@@ -140,22 +140,25 @@ routes.get('/account/:account', async (req,res)=>{
             }
 
 
-            //----------------------------------------------
-
+    
+            //**Orden descendente (`-1`)**: En tu ejemplo, al ordenar por vistas de forma descendente, los documentos se mostrarían en el siguiente orden: primero el documento con 30 vistas, luego el de 15 vistas y finalmente el de 7 vistas. Así que el resultado sería **(30, 15, 7)**.
+            //**Orden ascendente (`1`)**: Si quisieras hacerlo al revés, es decir, que los documentos se muestren desde el menor número de vistas al mayor, deberías usar `sort({ views: 1 })`, lo que daría como resultado **(7, 15, 30)**.
+            //const resultAirplane = await modelAirplane.find({ $and: [{ user_id: accountId }, { visibleStore: true }] }).sort({ views: -1 }) -->por vista ascendete 50,40,16,7,3
+            //const resultAirplane = await modelAirplane.find({ $and: [{ user_id: accountId }, { visibleStore: true }] }).sort({ createdAt: -1 }) -->por creacion ascendete 50,40,16,7,3
 
             if (storeProfile) { 
                 const searchBanner = storeProfile.bannerPerfil;
         
                 //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }]});
-                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true }]});
-                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true }]});
-                const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true }]});
-                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true }]});
-                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]});
+                const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ createdAt: -1 });
+                const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ createdAt: -1 });
+                const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
+                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
+                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
+                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
+                const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
 
                 if (resultAirplane) {
                     boxPublisher.push(...resultAirplane)
@@ -342,15 +345,15 @@ routes.get('/account/:account', async (req,res)=>{
                 const searchBanner = storeProfile.bannerPerfil;
         
                 //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                const resultAirplane = await modelAirplane.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultArtes = await modelArtes.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultItems = await modelItems.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultService = await modelService.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId}, {visibleStore : true }]});
-                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]});
+                const resultAirplane = await modelAirplane.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultArtes = await modelArtes.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultItems = await modelItems.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultService = await modelService.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
 
                 if (resultAirplane) {
                     boxPublisher.push(...resultAirplane)
@@ -629,15 +632,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
                 if (segment === "All"){
                         //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]});
-                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]});
-                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
 
                         if (resultAirplane) {
                             boxPublisher.push(...resultAirplane)
@@ -795,15 +798,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                 } else {
 
                         //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]});
-                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]});
-                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]});
-                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]});
-                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]}).sort({ createdAt: -1 });
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]}).sort({ createdAt: -1 });
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
 
                         if (resultAirplane) {
                             boxPublisher.push(...resultAirplane)
@@ -1003,15 +1006,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                 //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones.
                 if (segment === "All"){
                     //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                    const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]});
-                    const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]});
-                    const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                    const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                    const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                    const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                    const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                    const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
-                    const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]});
+                    const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
 
                     if (resultAirplane) {
                         boxPublisher.push(...resultAirplane)
@@ -1169,15 +1172,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                 } else {
 
                         //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]});
-                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]});
-                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]});
-                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]});
-                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
-                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]});
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]}).sort({ createdAt: -1 });
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]}).sort({ createdAt: -1 });
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
 
                         if (resultAirplane) {
                             boxPublisher.push(...resultAirplane)
@@ -1881,7 +1884,7 @@ try {
 
 });
 
-//esta es la nueva forma de seguir a una tienda. Forma Toggle "Seguir/Siguiendo"
+//esta es la nueva forma de seguir a una tienda. Forma Toggle "Seguir/Siguiendo" -->esto esta en la tienda debajo del banner un boton seguir/siguiendo
 routes.post('/account/followStore', async(req, res)=>{
     try {
       
@@ -2037,17 +2040,49 @@ routes.post('/account/offer', async (req, res)=>{
     console.log(req.body)
     const { depart, id } = req.body;
 
+    const date = new Date();
+    let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+    let hora = date.getHours(); let minu = date.getMinutes();
+
+    let mesFormatted = String(mes).padStart(2, '0');
+    let minuFormatted = String(minu).padStart(2, '0');
+    const times = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
+
     if (depart === 'items'){
         const resultOffer = await modelItems.findById(id);
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { offer : true });
+            const result = await modelItems.findByIdAndUpdate( id, { offer : true, soldOut : false },{ new : true });
+    
+            //console.log('esto es resul', result );
+            
+            //es hora de evaluar si el campo purchaseTime del documento items tiene elementos, estos elementos osn indexed de personas que quieren ser avisados para recibir notificacion en su inbox cuando este producto este disponible.
+            const PurchaseTime = result.purchaseTime; //aqui tenemos el array de usuarios indexed para buscar en el profile
+            const titleArticle = result.title; const urlImageArticle = result.images[0].url;
+            const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
+            const ownerStore = result.username; const productId = result._id;
+            const depart = 'items'; const answer = 'waiting'; const view = 'false';
+
+
+            if (PurchaseTime.length !==0){
+                
+                for (const ele of PurchaseTime) {
+                    
+                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                    
+                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                    console.log("newMessage :", newMessage);
+                    const saveMessage = await newMessage.save();
+
+                }
+            }
+
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
             boxInfo.push(resultSearch);
-            //console.log('esto es resultSearch', resultSearch );
-            //console.log('esto es boxInfo------->', boxInfo); 
+
         }else {
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2058,12 +2093,38 @@ routes.post('/account/offer', async (req, res)=>{
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { offer : true });
+            const result = await modelArtes.findByIdAndUpdate( id, { offer : true, soldOut : false });
+ 
+            //console.log('esto es result', result );
+            //console.log('esto es boxInfo------->', boxInfo);
+            //es hora de evaluar si el campo purchaseTime del documento arts tiene elementos, estos elementos son indexed de personas que quieren ser avisados para recibir notificacion en su inbox cuando este producto este disponible.
+
+            const PurchaseTime = result.purchaseTime; //aqui tenemos el array de usuarios indexed para buscar en el profile
+            const titleArticle = result.title; const urlImageArticle = result.images[0].url;
+            const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
+            const ownerStore = result.username; const productId = result._id;
+            const depart = 'arts'; const answer = 'waiting'; const view = 'false';
+
+
+            if (PurchaseTime.length !==0){
+                
+                for (const ele of PurchaseTime) {
+                    
+                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                    
+                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                    console.log("newMessage :", newMessage);
+                    const saveMessage = await newMessage.save();
+
+                }
+            }
+
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
             boxInfo.push(resultSearch);
-            //console.log('esto es resultSearch', resultSearch );
-            //console.log('esto es boxInfo------->', boxInfo);   
+
+
         }else {
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2074,12 +2135,12 @@ routes.post('/account/offer', async (req, res)=>{
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { offer : true });
+            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { offer : true }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2090,12 +2151,12 @@ routes.post('/account/offer', async (req, res)=>{
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { offer : true });
+            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { offer : true }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2106,12 +2167,12 @@ routes.post('/account/offer', async (req, res)=>{
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelNautical.findByIdAndUpdate( id, { offer : true });
+            const resultSearch = await modelNautical.findByIdAndUpdate( id, { offer : true }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelNautical.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelNautical.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2122,12 +2183,12 @@ routes.post('/account/offer', async (req, res)=>{
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { offer : true });
+            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { offer : true }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2138,12 +2199,12 @@ routes.post('/account/offer', async (req, res)=>{
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelService.findByIdAndUpdate( id, { offer : true });
+            const resultSearch = await modelService.findByIdAndUpdate( id, { offer : true }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelService.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelService.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2154,12 +2215,12 @@ routes.post('/account/offer', async (req, res)=>{
         const Offer = resultOffer.offer;
 
         if (Offer === false){
-            const resultSearch = await modelAuction.findByIdAndUpdate( id, { offer : true });
+            const resultSearch = await modelAuction.findByIdAndUpdate( id, { offer : true }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelAuction.findByIdAndUpdate( id, { offer : false });
+            const resultSearch = await modelAuction.findByIdAndUpdate( id, { offer : false }, {new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2182,12 +2243,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo); 
         }else {
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2198,12 +2259,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2214,12 +2275,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2230,12 +2291,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2246,12 +2307,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelNautical.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelNautical.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelNautical.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelNautical.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2262,12 +2323,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2278,12 +2339,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelService.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelService.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelService.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelService.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2294,12 +2355,12 @@ routes.post('/account/best-product', async (req, res)=>{
         const BestProduct = resultBestProduct.bestProduct;
 
         if (BestProduct === false){
-            const resultSearch = await modelAuction.findByIdAndUpdate( id, { bestProduct : true });
+            const resultSearch = await modelAuction.findByIdAndUpdate( id, { bestProduct : true },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelAuction.findByIdAndUpdate( id, { bestProduct : false });
+            const resultSearch = await modelAuction.findByIdAndUpdate( id, { bestProduct : false },{new : true});
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2317,17 +2378,52 @@ routes.post('/account/only-one-available', async (req, res)=>{
     //console.log(req.body)
     const { depart, id } = req.body;
 
+    const date = new Date();
+    let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+    let hora = date.getHours(); let minu = date.getMinutes();
+
+    let mesFormatted = String(mes).padStart(2, '0');
+    let minuFormatted = String(minu).padStart(2, '0');
+    const times = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;    
+
+
     if (depart === 'items'){
         const resultOnlyOneAvailable = await modelItems.findById(id);
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { onlyOneAvailable : true });
-            boxInfo.push(resultSearch);
-            //console.log('esto es resultSearch', resultSearch );
+            const result = await modelItems.findByIdAndUpdate( id, { onlyOneAvailable : true, soldOut : false }, { new: true });
+            
+            //console.log('esto es result', result );
             //console.log('esto es boxInfo------->', boxInfo); 
+            //es hora de evaluar si el campo purchaseTime del documento arts tiene elementos, estos elementos son indexed de personas que quieren ser avisados para recibir notificacion en su inbox cuando este producto este disponible.
+
+            const PurchaseTime = result.purchaseTime; //aqui tenemos el array de usuarios indexed para buscar en el profile
+            const titleArticle = result.title; const urlImageArticle = result.images[0].url;
+            const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
+            const ownerStore = result.username; const productId = result._id;
+            const depart = 'items'; const answer = 'waiting'; const view = 'false';
+
+
+            if (PurchaseTime.length !==0){
+                
+                for (const ele of PurchaseTime) {
+                    
+                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                    
+                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                    console.log("newMessage :", newMessage);
+                    const saveMessage = await newMessage.save();
+
+                }
+            }
+
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
+            boxInfo.push(resultSearch);
+
+
         }else {
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2338,12 +2434,37 @@ routes.post('/account/only-one-available', async (req, res)=>{
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { onlyOneAvailable : true });
-            boxInfo.push(resultSearch);
-            //console.log('esto es resultSearch', resultSearch );
-            //console.log('esto es boxInfo------->', boxInfo);   
+            const result = await modelArtes.findByIdAndUpdate( id, { onlyOneAvailable : true },{ new: true });
+    
+            //console.log('esto es result', result );
+            //console.log('esto es boxInfo------->', boxInfo);
+            //es hora de evaluar si el campo purchaseTime del documento arts tiene elementos, estos elementos son indexed de personas que quieren ser avisados para recibir notificacion en su inbox cuando este producto este disponible.
+
+            const PurchaseTime = result.purchaseTime; //aqui tenemos el array de usuarios indexed para buscar en el profile
+            const titleArticle = result.title; const urlImageArticle = result.images[0].url;
+            const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
+            const ownerStore = result.username; const productId = result._id;
+            const depart = 'arts'; const answer = 'waiting'; const view = 'false';
+
+
+            if (PurchaseTime.length !==0){
+                
+                for (const ele of PurchaseTime) {
+                    
+                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                    
+                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                    console.log("newMessage :", newMessage);
+                    const saveMessage = await newMessage.save();
+
+                }
+            }
+
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
+            boxInfo.push(resultSearch);            
+            
         }else {
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2354,12 +2475,12 @@ routes.post('/account/only-one-available', async (req, res)=>{
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { onlyOneAvailable : true });
+            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { onlyOneAvailable : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelAutomotive.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2370,12 +2491,12 @@ routes.post('/account/only-one-available', async (req, res)=>{
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { onlyOneAvailable : true });
+            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { onlyOneAvailable : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelAirplane.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2386,12 +2507,12 @@ routes.post('/account/only-one-available', async (req, res)=>{
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelNautical.findByIdAndUpdate( id, { onlyOneAvailable : true });
+            const resultSearch = await modelNautical.findByIdAndUpdate( id, { onlyOneAvailable : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelNautical.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelNautical.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2402,12 +2523,12 @@ routes.post('/account/only-one-available', async (req, res)=>{
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { onlyOneAvailable : true });
+            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { onlyOneAvailable : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
         }else {
-            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelRealstate.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2418,12 +2539,12 @@ routes.post('/account/only-one-available', async (req, res)=>{
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelService.findByIdAndUpdate( id, { onlyOneAvailable : true });
+            const resultSearch = await modelService.findByIdAndUpdate( id, { onlyOneAvailable : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelService.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelService.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2434,12 +2555,12 @@ routes.post('/account/only-one-available', async (req, res)=>{
         const OnlyOneAvailable = resultOnlyOneAvailable.onlyOneAvailable;
 
         if (OnlyOneAvailable === false){
-            const resultSearch = await modelAuction.findByIdAndUpdate( id, { onlyOneAvailable : true });
+            const resultSearch = await modelAuction.findByIdAndUpdate( id, { onlyOneAvailable : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelAuction.findByIdAndUpdate( id, { onlyOneAvailable : false });
+            const resultSearch = await modelAuction.findByIdAndUpdate( id, { onlyOneAvailable : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
@@ -2463,12 +2584,12 @@ routes.post('/account/delivery', async (req, res)=>{
         console.log("Esto es Delivery", Delivery);
 
         if (Delivery === false){
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { delivery : true });
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { delivery : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             console.log('esto es boxInfo------->', boxInfo); 
         }else {
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { delivery : false });
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { delivery : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             console.log('esto es boxInfo------->', boxInfo);  
@@ -2479,12 +2600,12 @@ routes.post('/account/delivery', async (req, res)=>{
         const Delivery = result.delivery;
 
         if (Delivery === false){
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { delivery : true });
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { delivery : true }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);   
         }else {
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { delivery : false });
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { delivery : false }, { new: true });
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo);  
@@ -2496,7 +2617,179 @@ routes.post('/account/delivery', async (req, res)=>{
     res.json(boxInfo);
 });
 
+//agotado
+routes.post('/account/soldOut', async (req, res)=>{ 
+    const boxInfo = []
+    console.log("hemos llegado a setting/soldOut")
+    console.log(req.body)
+    const { depart, id } = req.body;
+
+    const date = new Date();
+    let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+    let hora = date.getHours(); let minu = date.getMinutes();
+
+    let mesFormatted = String(mes).padStart(2, '0');
+    let minuFormatted = String(minu).padStart(2, '0');
+    const times = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;    
+
+    if (depart === 'items'){
+        const result = await modelItems.findById(id);
+        const soldOut = result.soldOut;
+        //console.log("Esto es soldOut", soldOut);
+
+        if (soldOut === false){
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { soldOut : true, offer : false, onlyOneAvailable : false }, { new: true });
+            //cuando colocamos la etiqueta de agotado, quitamos oferta y ultimo disponible por si los tenia.
+            boxInfo.push(resultSearch);
+            //console.log('esto es resultSearch', resultSearch );
+            //console.log('esto es boxInfo------->', boxInfo); 
+
+        }else {
+            const result = await modelItems.findByIdAndUpdate( id, { soldOut : false }, { new: true });
+            //console.log('esto es resultSearch', resultSearch );
+            //es hora de evaluar si el campo purchaseTime del documento arts tiene elementos, estos elementos son indexed de personas que quieren ser avisados para recibir notificacion en su inbox cuando este producto este disponible.
+
+            const PurchaseTime = result.purchaseTime; //aqui tenemos el array de usuarios indexed para buscar en el profile
+            const titleArticle = result.title; const urlImageArticle = result.images[0].url;
+            const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
+            const ownerStore = result.username; const productId = result._id;
+            const depart = 'items'; const answer = 'waiting'; const view = 'false';
+
+
+            if (PurchaseTime.length !==0){
+                
+                for (const ele of PurchaseTime) {
+                    
+                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                    
+                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                    console.log("newMessage :", newMessage);
+                    const saveMessage = await newMessage.save();
+
+                }
+            }
+
+            const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });            
+            boxInfo.push(resultSearch);
+            //console.log('esto es resultSearch', resultSearch );
+            //console.log('esto es boxInfo------->', boxInfo); 
+
+            console.log('esto es boxInfo------->', boxInfo);  
+        }
+        
+    } else if ( depart === "arts"){
+        const result = await modelArtes.findById(id);
+        const soldOut = result.soldOut;
+        //console.log("Esto es soldOut", soldOut);
+
+        if (soldOut === false){
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { soldOut : true, offer : false, onlyOneAvailable : false }, { new: true });
+            //es hora de evaluar si el campo purchaseTime del documento arts tiene elementos, estos elementos son indexed de personas que quieren ser avisados para recibir notificacion en su inbox cuando este producto este disponible.
+            boxInfo.push(resultSearch);
+            //console.log('esto es resultSearch', resultSearch );
+            //console.log('esto es boxInfo------->', boxInfo);   
+        }else {
+            const result = await modelArtes.findByIdAndUpdate( id, { soldOut : false }, { new: true });
+
+            const PurchaseTime = result.purchaseTime; //aqui tenemos el array de usuarios indexed para buscar en el profile
+            const titleArticle = result.title; const urlImageArticle = result.images[0].url;
+            const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
+            const ownerStore = result.username; const productId = result._id;
+            const depart = 'items'; const answer = 'waiting'; const view = 'false';
+
+
+            if (PurchaseTime.length !==0){
+                
+                for (const ele of PurchaseTime) {
+                    
+                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                    
+                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                    console.log("newMessage :", newMessage);
+                    const saveMessage = await newMessage.save();
+
+                }
+            }
+
+            const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
+            boxInfo.push(resultSearch);
+        }
+        
+    }    
+
+    
+    res.json(boxInfo);
+});
  
+
+routes.post('/account/purchaseTime', async (req, res)=>{
+    console.log("hemos llegado a /account/purchaseTime")
+    const user = req.session.user;
+    const indexed = user._id;
+
+    console.log(req.body)
+    const { depart, id } = req.body;
+
+    if (depart === 'items'){
+        const result = await modelItems.findOne( {_id : id, purchaseTime : indexed} );
+
+        if (!result){
+            console.log("Esto es result", result);
+            const updatePurchaseTime = await modelItems.findByIdAndUpdate(
+                id,
+                { $push: { purchaseTime: indexed } },
+                { new: true } // Esto asegura que obtienes el documento actualizado
+            );
+            console.log("updatePurchaseTime ->", updatePurchaseTime);
+            const response = { note: 1 };
+            res.json(response);
+
+        } else {
+            console.log("Esto es result", result);
+            const updatePurchaseTime = await modelItems.findByIdAndUpdate(
+                id,
+                { $pull: { purchaseTime: indexed } },
+                { new: true } // Esto asegura que obtienes el documento actualizado
+            );
+            console.log("updatePurchaseTime ->", updatePurchaseTime);
+            const response = { note: 0 };
+            res.json(response);
+
+        }
+        //const purchaseTime = result;
+        
+
+
+    } else if ( depart === "arts"){
+        const result = await modelArtes.findOne( {_id : id, purchaseTime : indexed} );
+
+        if (!result){
+            console.log("Esto es result", result);
+            const updatePurchaseTime = await modelArtes.findByIdAndUpdate(
+                id,
+                { $push: { purchaseTime: indexed } },
+                { new: true } // Esto asegura que obtienes el documento actualizado
+            );
+            console.log("updatePurchaseTime ->", updatePurchaseTime);
+            const response = { note: 1 };
+            res.json(response);
+
+        } else {
+            console.log("Esto es result", result);
+            const updatePurchaseTime = await modelArtes.findByIdAndUpdate(
+                id,
+                { $pull: { purchaseTime: indexed } },
+                { new: true } // Esto asegura que obtienes el documento actualizado
+            );
+            console.log("updatePurchaseTime ->", updatePurchaseTime);
+            const response = { note: 0 };
+            res.json(response);
+
+        }
+
+        
+    }   
+});
 
 //Sección de manejo de Raffles --------------------------------------------
             

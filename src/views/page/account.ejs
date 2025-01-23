@@ -843,7 +843,7 @@
                                               <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
                                                 data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
 
-                                                <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable & Delivery -->
+                                                <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable, Delivery, soldOut -->
                                                 <% if (user) { %>
 
                                                     <% if (user.username === storeProfile.username) { %>
@@ -859,31 +859,70 @@
                                                                 <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
                                                                 <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
                                                                   <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                  <li> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
                                                                 <%  } else { %>
                                                                   <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                  <li class="invisible"> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
                                                                 <% } %>  
                                                               </ul>
                                                             </div>
 
                                                           <% if (ele.offer === true) { %>    
-                                                            <span class="border border-warning tagOfferUser" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                            <span class="border border-warning tagOfferUser" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
                                                           <% } else { %>
-                                                            <span class="border border-warning tagOfferUser invisible" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                            <span class="border border-warning tagOfferUser invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
                                                           <% }; %>  
+
+                                                          <% if (ele.soldOut === true) { %>    
+                                                            <span class="tagSoldOutUser" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                          <% } else { %>
+                                                            <span class="tagSoldOutUser invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span>
+                                                          <% }; %>
 
                                                       <% }; %>
                                                           
-                                                    <% }; %>
+                                                    <% } else { %> <!-- en el caso de que haya un usuario logeado pero no es el dueño de la tienda --> 
+
+                                                          <% if (ele.department !== 'raffle' ){ %>
+                                                           
+                                                             <% if (ele.soldOut === true) { %>
+                                                                <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 200; width: 100%;">
+                                                                  <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                        
+                                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
+                                                                  
+                                                                        <li class="no-select"> <button class="purchaseTime dropdown-item"> <small> Avisarme cuando este disponible </small>  <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>                                                                                                                      
+                                                                     
+                                                                    </ul>
+                                                          
+
+                                                                </div>
+                                                                <div class="alert alert-light boxDetailPT border border-secondary mx-1 close" style="position: absolute; top: 40px; z-index: 200; width: 96%;">
+                                                                  
+                                                                </div>
+                                                             <%  }; %>
+
+                                                          <% }; %>     
+
+                                                    <% }; %>  
                                   
-                                                <% }; %>
+                                        
+
+                                                <% }; %>  
                                               
                                                 
                                                 <div class="carousel-inner" style="position: relative; width: 100%; height: 220px;  z-index: 1;">
                                                   
                                                   <% if (ele.offer === true) { %>    
-                                                    <span class="border border-warning tagOffer" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
+                                                    <span class="border border-warning tagOffer" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
                                                   <% } else { %>
-                                                    <span class="border border-warning tagOffer invisible" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                    <span class="border border-warning tagOffer invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                  <% }; %> 
+
+                                                  <% if (ele.soldOut === true) { %>    
+                                                    <span class="tagSoldOut" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                  <% } else { %>
+                                                    <span class="tagSoldOut invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
                                                   <% }; %> 
 
                                                   <div class="carousel-item active">
@@ -1012,7 +1051,7 @@
                                             </div>  
                                             <% }; %>
                                           <% } else { %>
-                                            <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                                            <div class="boxDetailRaffle" style="height: 120px; position: relative; background-color: #ffffff;">
                                               <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
             
                                                   <div class="containerTitleFavorite d-flex justify-content-between">
@@ -1570,38 +1609,44 @@
   //si es vacio ira con un string "null", esto es porque en el url debe viajar algo siempre sino
   //no conocera la direccion donde va.
 
-  formSearch.addEventListener('submit', function(event) {
-    event.preventDefault(); // Evita que el formulario se envíe automáticamente
-    // Aquí puedes ejecutar tu lógica o enviar el formulario manualmente
-    console.log('Formulario enviado manualmente');
-    // Si deseas enviar el formulario, puedes hacerlo aquí
-  });
+  if (formSearch){
+    formSearch.addEventListener('submit', function(event) {
+      event.preventDefault(); // Evita que el formulario se envíe automáticamente
+      // Aquí puedes ejecutar tu lógica o enviar el formulario manualmente
+      console.log('Formulario enviado manualmente');
+      // Si deseas enviar el formulario, puedes hacerlo aquí
+    });
+  }
 
-  submitSearch.addEventListener('click', function() {
-    // Aquí puedes decidir cuándo enviar el formulario
-    console.log("Datos obtenidos del buscador para enviar al backend");
-    
-    const store = storeSearch.value;
-    const segment = segmentSearch.value;
-    element = elementSearch.value;
+  if (submitSearch){
+    submitSearch.addEventListener('click', function() {
+      // Aquí puedes decidir cuándo enviar el formulario
+      console.log("Datos obtenidos del buscador para enviar al backend");
+      
+      const store = storeSearch.value;
+      const segment = segmentSearch.value;
+      element = elementSearch.value;
 
-    if (element === "" ){
-      element = "null";
-    } 
-    
-    console.log("store --->", store);
-    console.log("segment --->", segment);
-    console.log("element --->", element);
-    
-    formSearch
-     //aqui se forma el url donde se va a mandar
-     //action="/account/search/store/Segment/search"
-    formSearch.action=`/account/search/${store}/${segment}/${element}`;
-    console.log("formSegment -->", formSegment);
-    formSearch.submit();
-  });
+      if (element === "" ){
+        element = "null";
+      } 
+      
+      console.log("store --->", store);
+      console.log("segment --->", segment);
+      console.log("element --->", element);
+      
+      formSearch
+      //aqui se forma el url donde se va a mandar
+      //action="/account/search/store/Segment/search"
+      formSearch.action=`/account/search/${store}/${segment}/${element}`;
+      console.log("formSegment -->", formSegment);
+      formSearch.submit();
 
-  
+    });
+
+  }
+
+    
   
 </script>
 
@@ -3155,9 +3200,11 @@
 <script>
  //este es el controlador de las ofertas
   const offer = document.querySelectorAll('.offer');
-  const tagOffer = document.querySelectorAll('.tagOffer');
-  const tagOfferUser = document.querySelectorAll('.tagOfferUser');
+  const tagOffer = document.querySelectorAll('.tagOffer');//visitante de tienda
+  const tagOfferUser = document.querySelectorAll('.tagOfferUser');//propietario de tienda
   const boxDetail = document.querySelectorAll('.boxDetail');
+  //const tagSoldOut -> declardo abajo
+  //const tagSoldOutUser declarado abajo
 
   console.log("offer-->", offer)
 
@@ -3193,18 +3240,22 @@
             const Offer = jsonx[0].offer;
             console.log("Offer --->", Offer)
             if ( Offer === false ) {
-              boxDetail[i].style.backgroundColor = "#fcda57";
-              let closeClass =tagOffer[i].classList.contains('invisible');
-              console.log("closeClass ->", closeClass)
-              console.log("esto i ->", i)
-              tagOffer[i].classList.toggle('invisible');
-              tagOfferUser[i].classList.toggle('invisible');
-
-            } else if ( Offer === true ) {
               boxDetail[i].style.backgroundColor = "#ffffff";
               let closeClass =tagOffer[i].classList.contains('invisible');
               console.log("closeClass ->", closeClass)
               console.log("esto i ->", i)
+              tagSoldOut[i].classList.add('invisible');
+              tagSoldOutUser[i].classList.add('invisible');
+              tagOffer[i].classList.toggle('invisible');
+              tagOfferUser[i].classList.toggle('invisible');
+
+            } else if ( Offer === true ) {
+              boxDetail[i].style.backgroundColor = "#fcda57";
+              let closeClass =tagOffer[i].classList.contains('invisible');
+              console.log("closeClass ->", closeClass)
+              console.log("esto i ->", i)
+              tagSoldOut[i].classList.add('invisible');
+              tagSoldOutUser[i].classList.add('invisible');
               tagOffer[i].classList.toggle('invisible');
               tagOfferUser[i].classList.toggle('invisible');
             }
@@ -3254,9 +3305,9 @@
              const BestProduct = jsonx[0].bestProduct;
  
              if ( BestProduct === false ){
-              containBestProduct[e].innerHTML = '<i class="bi bi-award"></i>';
-             } else {
               containBestProduct[e].innerHTML = '';
+             } else {
+              containBestProduct[e].innerHTML = '<i class="bi bi-award"></i>';
              }
  
            })
@@ -3270,9 +3321,11 @@
 </script>
 
 <script>
-  //este es el controlador del onlyOneAvailable
+  //este es el controlador del onlyOneAvailable "unico disponible"
    const onlyOneAvailable = document.querySelectorAll('.onlyOneAvailable');
    const containerOnlyOneAvailable = document.querySelectorAll('.containerOnlyOneAvailable');
+   //const tagSoldOut -> declarado abajo
+   //const tagSoldOutUser -> declarado abajo
  
 
    for (let g = 0; g < onlyOneAvailable.length; g++) {
@@ -3301,13 +3354,18 @@
            .then(response => response.json())
            .then(jsonx => {
              
-             console.log("Esto es jsonx--->",jsonx)
+             console.log("Esto es jsonx - unico disponible--->",jsonx)
              const OnlyOneAvailable = jsonx[0].onlyOneAvailable;
- 
+             console.log("OnlyOneAvailable ->", OnlyOneAvailable)
+
              if ( OnlyOneAvailable === false ){
-              containerOnlyOneAvailable[g].innerHTML = '<i class="bi bi-1-square-fill me-1"></i>';
-             } else {
               containerOnlyOneAvailable[g].innerHTML = '';
+              tagSoldOut[g].classList.add('invisible');
+              tagSoldOutUser[g].classList.add('invisible');
+             } else {
+              containerOnlyOneAvailable[g].innerHTML = '<i class="bi bi-1-square-fill me-1"></i>';
+              tagSoldOut[g].classList.add('invisible');
+              tagSoldOutUser[g].classList.add('invisible');
              }
  
            })
@@ -3360,9 +3418,9 @@
              console.log("Esto es Delivery ---->", Delivery);
  
              if ( Delivery === false ){
-                containerDelivery[i].innerHTML = '<i class="bi bi-truck me-1"></i>'
+                containerDelivery[i].innerHTML = ''
              } else {        
-                containerDelivery[i].innerHTML = '';
+                containerDelivery[i].innerHTML = '<i class="bi bi-truck me-1"></i>';
              }
  
            })
@@ -3374,6 +3432,151 @@
    };
    
 </script>
+
+<script>
+  //este es el controlador de las etiquetas agotados
+  
+   const soldOut = document.querySelectorAll('.soldOut');
+   const tagSoldOut = document.querySelectorAll('.tagSoldOut');
+   const tagSoldOutUser = document.querySelectorAll('.tagSoldOutUser');
+   const boxDetailSoldOut = document.querySelectorAll('.boxDetail'); //limpiar si estaba en oferta y quitar unio disponible
+   //const tagOffer --> declarado arriba esto es un array de objetos
+   //const tagOfferUser --> declarado arriba esto es un array de objetos
+   //const containerOnlyOneAvailable --> declarado arriba. cuando colocamos agotado se debe eliminar tambien la etiqueta de ultimo disponible
+
+    
+  
+  if (soldOut){
+    console.log("soldOut-->", soldOut)
+
+      for (let i = 0; i < soldOut.length; i++) {
+        const element = soldOut[i];
+        element.addEventListener('click', () => {
+          
+          console.log("element-->", element)
+          console.log("depart ---->",element.childNodes[1].value);
+          console.log("id ---->",element.childNodes[3].value);
+          
+          const depart = element.childNodes[1].value;
+          const id = element.childNodes[3].value;
+          
+          const datos = {
+              depart: depart,
+              id: id
+            }
+    
+            fetch('/account/soldOut', {
+    
+              method: "post",
+              body: JSON.stringify(datos),
+              headers: { "content-type": "application/json" }
+    
+            })
+              .then(response => response.json())
+              .then(jsonx => {
+                
+                console.log("Esto es jsonx--->",jsonx)
+                const SoldOut = jsonx[0].soldOut;
+                console.log("SoldOut --->", SoldOut)
+                if ( SoldOut === false ) {
+                  boxDetailSoldOut[i].style.backgroundColor = "#ffffff";
+                  let closeClass =tagSoldOut[i].classList.contains('invisible');
+                  console.log("closeClass ->", closeClass)
+                  console.log("esto i ->", i)
+                  tagOffer[i].classList.add('invisible');
+                  tagOfferUser[i].classList.add('invisible');
+                  tagSoldOut[i].classList.toggle('invisible');
+                  tagSoldOutUser[i].classList.toggle('invisible');
+                  containerOnlyOneAvailable[i].innerHTML = '';
+    
+                } else if ( SoldOut === true ) {
+                  boxDetailSoldOut[i].style.backgroundColor = "#ffffff";
+                  let closeClass =tagSoldOut[i].classList.contains('invisible');
+                  console.log("closeClass ->", closeClass)
+                  console.log("esto i ->", i)
+                  tagOffer[i].classList.add('invisible');
+                  tagOfferUser[i].classList.add('invisible');
+                  tagSoldOut[i].classList.toggle('invisible');
+                  tagSoldOutUser[i].classList.toggle('invisible');
+                  containerOnlyOneAvailable[i].innerHTML = '';
+                }
+    
+              })
+              .catch(err => console.log(err));
+      
+      
+        });
+    
+      };
+    
+  }
+
+</script>
+
+ <script>
+
+  const purchaseTime = document.querySelectorAll('.purchaseTime');
+  const boxDetailPurchaseTime = document.querySelectorAll('.boxDetailPT');
+
+  if (purchaseTime){
+
+      purchaseTime.forEach((ele, i)=>{
+        ele.addEventListener('click', ()=>{
+
+          console.log("element-->", ele)
+          //console.log("ele.childNodes -->", ele.childNodes);
+          console.log("depart ---->",ele.childNodes[3].value);
+          console.log("id ---->",ele.childNodes[5].value);
+          const depart = ele.childNodes[3].value;
+          const id = ele.childNodes[5].value;
+
+          const datos = {
+              depart: depart,
+              id: id
+          }
+          console.log("datos ->", datos);
+    
+            fetch('/account/purchaseTime', {
+    
+              method: "post",
+              body: JSON.stringify(datos),
+              headers: { "content-type": "application/json" }
+    
+            })
+              .then(response => response.json())
+              .then(jsonx => {
+                
+                console.log("Esto es jsonx--->",jsonx);
+                const note = jsonx.note;
+                console.log("note ->", note)
+                // esto llefa del backend --> const response = con note 0 o note 1;
+
+
+                if (note === 1){
+                  boxDetailPurchaseTime[i].innerHTML = `<div class="d-flex flex-column align-items-center">  <span class="d-flex justify-content-center align-items-center bg-success text-light rounded-pill" style= "width: 30px; height: 30px"> <i class="bi bi-envelope"></i> </span>  ¡Será notificado al estar disponible!. </div>`
+                } else {
+                  boxDetailPurchaseTime[i].innerHTML = `<div class="d-flex flex-column align-items-center">  <span class="d-flex justify-content-center align-items-center bg-danger text-light rounded-pill" style= "width: 30px; height: 30px"> <i class="bi bi-trash-fill"></i> </span>  ¡Notificación eliminada!. </div>`
+                }                
+
+                boxDetailPurchaseTime[i].classList.toggle('close');
+
+                setTimeout(() => {
+                  boxDetailPurchaseTime[i].classList.toggle('close');
+                }, 3500);
+
+    
+              })
+              .catch(err => console.log(err));
+      
+
+        })
+      })
+
+  }  
+
+
+
+ </script>
 
 
 <% }; %>

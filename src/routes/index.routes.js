@@ -58,19 +58,49 @@ routes.get('/', async(req, res)=>{
     const success = req.session.success;
     const stopped = req.session.stopped; //"Su cuenta ha sido baneada por infringir nuestras normas.";
     const dataLocked = req.session.dataLocked // {username, date, ban}; envo estos tres datos para especificar el username cantidad de dias y la fecga de bloqueo
+    let countMessages, countMessagesInbox
+    let searchBoxMessageInbox = [];
 
     delete req.session.success;
     delete req.session.stopped;
     delete req.session.dataLocked;
-    
+    console.log("Esto es user ->", user);
+
     let searchProfile;
     const boxResult = [];
         
     if (user){
         //console.log("Esto es user._id ------>", user._id );
-        searchProfile = await modelProfile.find({ indexed : user._id });
+        const userId = user._id;
+        searchProfile = await modelProfile.find({ indexed : userId });
         console.log("Aqui el profile de la cuenta", searchProfile);
         username = user.username;
+
+        //:::::::: Alert of message :::::::::::
+
+        //primer paso ubicar todos los mensajes que tenga el usuario logeado y que el campo answer diga waiting.
+        const searchMessageInbox0 = await modelMessages.find( { $and: [{ toCreatedArticleId : userId },{answer: "waiting"}, { typeNote: { $ne: "availability-noti" } } ] } );
+        const searchMessageInbox1 = await modelMessages.find( { $and: [{ userId : userId }, { typeNote : "availability-noti" }, {answer: "waiting"} ] } );
+        
+        searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
+        console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchBoxMessageInbox);
+       
+        countMessagesInbox = searchBoxMessageInbox.length;
+   
+        console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
+
+        const searchMessageOutbox = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } );
+        const searchMessageOutboxAlert = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
+        let countMessagesOutbox = searchMessageOutboxAlert.length;
+
+        totalMessages = (countMessagesInbox + countMessagesOutbox);
+        console.log("La totalidad de los mensajes en inbox y en outbox Una sumatoria de contadores resultado un numero --->", totalMessages)
+        //aqui tenemos la sumatoria de mensajes en Inbox y Outbox
+
+
+        req.session.countMessages = totalMessages
+        countMessages = req.session.countMessages;
+        //:::::::: End of message ::::::::
     }
 
     const currentBanner = await modelBannerFront.find({ "active" : true, "delete" : false });
@@ -79,17 +109,7 @@ routes.get('/', async(req, res)=>{
     const currentNewsDay = await modelNewsDay.find({ "active" : true, "delete" : false });
     //console.log("Esto es currentNewsDay ----->", currentNewsDay);
 
-    //:::::::: Alert of message :::::::::::
-    const searchMessages = await modelMessages.find( { $and: [{toCreatedArticleId : user },{answer: "waiting"} ] } );
-    let searchMessagesInbox = searchMessages.length; 
 
-    const searchMessageOutbox = await modelMessages.find( { $and: [{userId : user },{view: false}, {answer: {$ne: 'waiting'}}] } );
-    let countMessagesOutbox = searchMessageOutbox.length;
-
-    let countMessages = (searchMessagesInbox + countMessagesOutbox);
-    req.session.countMessages = countMessages; // ---> Esto es lo que se propagara por toda la aplicacion.
-
-    //:::::::: End of message ::::::::
     
     // :::::: Aqui obtengo la cantidad de negotiationsBuySell ::::::::
     const searchBuy = [];
@@ -2336,8 +2356,8 @@ routes.post('/zonabliss/upload/imgCarousel', async (req, res)=> {
         const data = statusProfileGallery.gallery.carouselImages.data;
         //console.log("aqui en data hay esta cantidad de elementos -->", data.length);
 
-        if (data.length < 10){
-            //solo se puede recibir 10 imagenes para el carousel de imagenes.
+        if (data.length < 12){
+            //solo se puede recibir 12 imagenes para el carousel de imagenes.
                     
             if (element.size <= 3000000  && element.mimetype.startsWith("image/")){
 
