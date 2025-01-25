@@ -59,6 +59,9 @@
                                         <button class="form-control d-flex justify-content-between align-items-center" id="agendaCRM"><div><img src="/img/icon_AgendaCRM.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Agenda CRM</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
                                     </div>
                                     <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="infoBliss"><div><img src="/img/icon_InfoBliss.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">InfoBliss</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
+                                    </div>
+                                    <div class="form-group my-1">
                                         <button class="form-control d-flex justify-content-between align-items-center" id="manager"> <div> <img src="/img/icon_Analisis.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Gerencia de Análisis</span> </div>  <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
                                     </div> 
                                 </div>
@@ -271,6 +274,19 @@
                                 </div>
                                 
                             </div>
+                            <div class="content_iconInfoBliss close">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);"> 
+                                    <div class="card-body p-2 m-3 d-flex flex-column justify-content-center align-items-center rounded-2 border">
+
+                                        <h3>Estamos trabajando</h3>
+                                        <h5 style="text-align: center;">Próximamente estará disponible.</h5>
+                                        <h6 style="text-align: center;">InfoBliss</h6>
+                                        
+                                    </div>
+                                </div>
+                                
+                            </div>
                             <div class="content_manager close">
 
                                 <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
@@ -350,6 +366,7 @@
     const raffle = document.getElementById('raffle');
     const manager = document.getElementById('manager');
     const agendaCRM = document.getElementById('agendaCRM');
+    const infoBliss = document.getElementById('infoBliss');
 
     const content_segment = document.querySelector('.content_segment');
     const content_gestorADS = document.querySelector('.content_gestorADS');
@@ -357,100 +374,75 @@
     const content_raffle = document.querySelector('.content_raffle');
     const content_manager = document.querySelector('.content_manager');
     const content_agendaCRM = document.querySelector('.content_agendaCRM');
+    const content_iconInfoBliss = document.querySelector('.content_iconInfoBliss');
 
     segment.addEventListener('click', ()=>{
-        segment.classList.replace('btn-secondary', 'btn-primary');
-        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
-        carBuy.classList.replace('btn-primary' , 'btn-secondary');
-        raffle.classList.replace('btn-primary' , 'btn-secondary');
-        manager.classList.replace('btn-primary' , 'btn-secondary');
-        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
-
         content_segment.classList.remove('close');
         content_gestorADS.classList.add('close');
         content_carBuy.classList.add('close');
         content_raffle.classList.add('close');
         content_manager.classList.add('close');
         content_agendaCRM.classList.add('close');
+        content_iconInfoBliss.classList.add('close');
     });
 
     gestorADS.addEventListener('click', ()=>{
-        gestorADS.classList.replace('btn-secondary', 'btn-primary');
-        segment.classList.replace('btn-primary' , 'btn-secondary');
-        carBuy.classList.replace('btn-primary' , 'btn-secondary');
-        raffle.classList.replace('btn-primary' , 'btn-secondary');
-        manager.classList.replace('btn-primary' , 'btn-secondary');
-        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
-
         content_segment.classList.add('close');
         content_gestorADS.classList.remove('close');
         content_carBuy.classList.add('close');
         content_raffle.classList.add('close');
         content_manager.classList.add('close');
         content_agendaCRM.classList.add('close');
+        content_iconInfoBliss.classList.add('close');
     });
 
     carBuy.addEventListener('click', ()=>{
-        carBuy.classList.replace('btn-secondary', 'btn-primary');
-        segment.classList.replace('btn-primary' , 'btn-secondary');
-        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
-        raffle.classList.replace('btn-primary' , 'btn-secondary');
-        manager.classList.replace('btn-primary' , 'btn-secondary');
-        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
-
         content_segment.classList.add('close');
         content_gestorADS.classList.add('close');
         content_carBuy.classList.remove('close');
         content_raffle.classList.add('close');
         content_manager.classList.add('close');
         content_agendaCRM.classList.add('close');
+        content_iconInfoBliss.classList.add('close');
     });
 
     raffle.addEventListener('click', ()=>{
-        raffle.classList.replace('btn-secondary', 'btn-primary');
-        carBuy.classList.replace('btn-primary' , 'btn-secondary');
-        segment.classList.replace('btn-primary' , 'btn-secondary');
-        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
-        manager.classList.replace('btn-primary' , 'btn-secondary');
-        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
-
         content_segment.classList.add('close');
         content_gestorADS.classList.add('close');
         content_carBuy.classList.add('close');
         content_raffle.classList.remove('close');
         content_manager.classList.add('close');
         content_agendaCRM.classList.add('close');
+        content_iconInfoBliss.classList.add('close');
     });
 
     manager.addEventListener('click', ()=>{
-        manager.classList.replace('btn-secondary', 'btn-primary');
-        raffle.classList.replace('btn-primary' , 'btn-secondary');
-        carBuy.classList.replace('btn-primary' , 'btn-secondary');
-        segment.classList.replace('btn-primary' , 'btn-secondary');
-        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
-        agendaCRM.classList.replace('btn-primary' , 'btn-secondary');
-
         content_segment.classList.add('close');
         content_gestorADS.classList.add('close');
         content_carBuy.classList.add('close');
         content_raffle.classList.add('close');
         content_manager.classList.remove('close');
         content_agendaCRM.classList.add('close');
+        content_iconInfoBliss.classList.add('close');
     });
 
     agendaCRM.addEventListener('click', ()=>{
-        agendaCRM.classList.replace('btn-secondary', 'btn-primary');
-        manager.classList.replace('btn-primary' , 'btn-secondary');
-        raffle.classList.replace('btn-primary' , 'btn-secondary');
-        carBuy.classList.replace('btn-primary' , 'btn-secondary');
-        segment.classList.replace('btn-primary' , 'btn-secondary');
-        gestorADS.classList.replace('btn-primary' , 'btn-secondary');
-
         content_segment.classList.add('close');
         content_gestorADS.classList.add('close');
         content_carBuy.classList.add('close');
         content_raffle.classList.add('close');
         content_manager.classList.add('close');
         content_agendaCRM.classList.remove('close');
+        content_iconInfoBliss.classList.add('close');
     });
+
+    infoBliss.addEventListener('click', ()=>{
+        content_segment.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_carBuy.classList.add('close');
+        content_raffle.classList.add('close');
+        content_manager.classList.add('close');
+        content_agendaCRM.classList.add('close');
+        content_iconInfoBliss.classList.remove('close');
+    })
 </script>
