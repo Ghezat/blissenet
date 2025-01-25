@@ -1100,13 +1100,26 @@
         <% }; %>
 
     </main>
+
+        <!-- CDN js Slick-carousel --> <!-- Es importante manejar los script del carrousel en el mismo archivo que se van a usar -->
+        <!-- para no interferir en otros script cdn de jquey --> 
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <!-- porque estos tres scripts van arriba del <%- include('../partials/scripts.ejs') %> la razon ... -->
+        <!-- primero se carga la cdn y luego se inicializan los programas con sus clases. para que pueda funcionar los carruseles. -->
+
         <%- include('../partials/scripts.ejs') %>
         <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
         <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
         <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+<!--         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-       
+        -->
+        
+ 
 
 </body>
 
@@ -1343,7 +1356,6 @@
     });
 
 </script>
-
 
 <script>
 

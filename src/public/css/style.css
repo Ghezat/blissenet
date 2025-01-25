@@ -20,6 +20,25 @@ main{
     height: 100%;
 }
 
+.iconsAdmin{
+  /* configuracion de estilos de los iconos administrativos */
+  width: 22px;
+  height: 22px;
+}
+
+.cardAdmin{
+  transition: 1s ease all;
+}
+
+.cardAdmin:hover{
+  box-shadow: 2px 2px 2px 2px rgba(128, 128, 128, 0.8);
+}
+
+.textLight{
+  /* trabaja en conjunto con themaTextLight */
+  color: white;
+}
+
 @font-face{
   font-family: "modelo1";
   src: url("/fonts/Dream MMA.ttf");
@@ -277,6 +296,7 @@ color: blueviolet;
 .elementPaginate{
   display: flex;
   justify-content: end;
+  /* vista desktop */
 }
 
 /* end footer */
@@ -358,6 +378,7 @@ color: blueviolet;
   .elementPaginate{
     display: flex;
     justify-content: end;
+    /* vista tablet */
   }
     
 }
@@ -434,6 +455,7 @@ color: blueviolet;
   .elementPaginate{
     display: flex;
     justify-content: center;
+    /* vista movil */
   }
     /* :::::::::::::::::: */
 

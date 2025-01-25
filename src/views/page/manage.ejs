@@ -199,7 +199,7 @@
                       </table>
                   </div>
                   <% if (newBox.length !==0 ) { %>
-                  <div class="paginate d-flex justify-content-end align-items-center  mt-2">
+                  <div class="paginate elementPaginate my-3">
                     <nav aria-label="...">
                       <ul class="pagination  m-0" >
                         <% if (paginate) { %>
@@ -250,7 +250,8 @@
                       </ul>
                     </nav>
                   </div>
-                  <% }; %>  
+                  <% }; %>
+
               </div>
               
               <div class="row m-0 contentAnalisys d-flex closed p-0 flex-wrap bodyTheme">
@@ -434,7 +435,7 @@
 
                   <div class="col-lg-9 col-md-12 col-sm-12 mt-3 col-12 p-3">
                       
-                      <div class="containerFasciVisto">
+                      <div class="containerFasciVisto" style="max-height: 120vh; overflow-y: auto;">
 
                         <div class="contentNails">
 
@@ -449,9 +450,9 @@
 
                         </div>
 
-                        <div class="row m-0 contentFascinometro shadow d-flex border">
+                        <div class="row m-0 contentFascinometro d-flex" >
                           <!-- Fascinometro -->
-                            <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-8 p-0 fascinometro" style="position: relative;">
+                            <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-8 p-0 fascinometro border" style="position: relative;">
 
                                 <div class="contentP p-2 d-flex justify-content-center align-items-center" style="position: absolute; top : 10px; width: 100%;">
                                   <p class="mb-0" style="font-size: 16; font-weight: 600; color: rgb(102, 102, 102);" >Fascinometro</p>
@@ -465,8 +466,8 @@
 
                             </div>
 
-                            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 p-0 metric" style="overflow-y: auto;">
-                              <table class="table table-striped table-hover tableBox" style="overflow-y: auto; overflow-x: auto;">
+                            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 p-0 metric">
+                              <table class="table table-striped table-hover tableBox">
                                 <thead class="table-danger">
                                     <tr>
                                         <th>Title</th> <th><i class="bi bi-heart-fill"></i></th>
@@ -488,9 +489,9 @@
 
                         </div>
                         
-                        <div class="row m-0 contentVistometro shadow d-flex border closed">
+                        <div class="row m-0 contentVistometro d-flex closed">
                           <!-- vistometro -->
-                            <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-8 p-0 vistometro" style="position: relative;">
+                            <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-8 p-0 vistometro border" style="position: relative;">
 
                               <div class="contentP p-2 d-flex justify-content-center align-items-center" style="position: absolute; top : 10px; width: 100%;">
                                 <p class="mb-0" style="font-size: 16; font-weight: 600; color: rgb(102, 102, 102);" >Vistometro</p>
@@ -504,8 +505,8 @@
 
                             </div>
 
-                            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 p-0 metric" style="overflow-y: auto;">
-                              <table class="table table-striped table-hover tableBox" style="overflow-y: auto; overflow-x: auto;">
+                            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 p-0 metric">
+                              <table class="table table-striped table-hover tableBox">
                                 <thead>
                                     <tr class="table-warning">
                                         <th>Title</th> <th><i class="bi bi-eye-fill"></i></th>
