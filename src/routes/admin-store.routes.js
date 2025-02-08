@@ -503,4 +503,207 @@ routes.post('/myaccount/segment-changeGroup', async (req, res)=>{
 
 });
 
+//---------------------------InfoBliss--------------------------------
+
+routes.get('/infobliss/:user_id', async(req, res)=>{
+   
+    try {
+       
+        console.log("*********infoBliss******** -->");
+        const user = req.session.user;
+        const userID = user._id;
+        console.log("este es el usuario propietario que esta logeado -->", userID);
+
+        //ahora vamos a obtener el user_id del parametro para hacer una comparacion y de esta forma asegurar que solo el propietario esta accediendo a esta parte.
+        const userIDParam = req.params.user_id;
+        console.log("este es el usuario propietario que esta logeado -->", userIDParam);
+
+        //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
+        //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
+
+        if (userID === userIDParam){
+            //comprobamos que el usuario logeado es el mismo dueño de la tienda -POR SEGURIDAD-
+
+            const countMessages = req.session.countMessages
+            console.log("esto es countMessages -->", countMessages);
+            //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+            //aqui obtengo la cantidad de negotiationsBuySell
+            const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+            console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+   
+            let searchProfile;
+       
+            if (user){
+                //console.log("Esto es user._id ------>", user._id );
+                searchProfile = await modelProfile.findOne({ indexed : user._id });
+                console.log("searchProfile -->", searchProfile);
+
+
+                res.render('page/infobliss', { user, searchProfile, countMessages, countNegotiationsBuySell });
+               
+               
+            }  
+
+        }
+       
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de /infobliss/:user_id", error);
+    }
+                     
+});
+
+routes.post('/infobliss/setupInfo', async(req, res)=>{
+    try{
+        console.log("LLegando a /infobliss/setupInfo");
+        const user = req.session.user;
+        const userId = user._id;
+        const { policy, faq, survey, map } = req.body;
+
+       
+        const updatesProfile = await modelProfile.updateOne(
+            { indexed: userId },
+            { $set: { 'infobliss.policy.show': policy,
+                      'infobliss.faq.show': faq,
+                      'infobliss.survey.show': survey,
+                      'infobliss.map.show' : map
+                    } }
+        );
+
+        res.json(updatesProfile);
+       
+    } catch (error) {
+        res.json({ response : "Ha ocurrido un error en /infobliss/setupInfo"});
+    }
+})
+
+routes.post('/infobliss/policyData', async(req, res)=>{
+    try{
+        console.log("LLegando a /infobliss/policyData");
+        const { userId, data } = req.body;
+
+       
+        const updatesProfile = await modelProfile.updateOne(
+            { indexed: userId },
+            { $set: { 'infobliss.policy.data': data } },
+            { new : true } //opcion para devolver documento actualizado
+        );
+
+        res.json(updatesProfile);
+       
+    } catch (error) {
+        res.json({ response : "Ha ocurrido un error en /infobliss/policyData"});
+    }
+});
+
+routes.post('/infobliss/faqData', async(req, res)=>{
+    //aqui se crea el esquema de la subasta. el esquema es las preguntas y sus posibles respuestas, solo se permite una encuesta, pero es funcional ya que permite tener varias preguntas.
+    try{
+        console.log("LLegando a /infobliss/faqData");
+        const { userId, data } = req.body;
+
+       
+        const updatesProfile = await modelProfile.updateOne(
+            { indexed: userId },
+            { $set: { 'infobliss.faq.data': data } },
+            { new : true } //opcion para devolver documento actualizado
+        );
+
+        res.json(updatesProfile);
+       
+    } catch (error) {
+        res.json({ response : "Ha ocurrido un error en /infobliss/faqData"});
+    }
+});
+
+routes.post('/infobliss/createScheme/survey', async(req, res)=>{
+    try{
+        console.log("LLegando a /infobliss/createScheme/survey");
+        const { userId, surveyId, surveyData } = req.body;
+       
+        const date = new Date();
+        const dia = date.getDate(); const mes = date.getMonth() + 1; const anio = date.getFullYear();
+        const surveyTime = `${dia}-${mes}-${anio}`;
+       
+
+        const data = {
+            surveyId,
+            surveyData,
+            surveyTime
+        }
+
+        const searchSurvey = await modelProfile.findOne(
+            { indexed: userId },{ 'infobliss.survey' : 1 }
+        );
+
+        console.log("searchSurvey ->", searchSurvey);
+        const scheme = searchSurvey.infobliss.survey.scheme;
+        console.log("scheme ->", scheme);
+        console.log("scheme.length ->", scheme.length);
+
+        //scheme.length -> 2
+        if (scheme.length === 0){
+
+            console.log("data ->", data);
+       
+            const updatesProfile = await modelProfile.updateOne(
+                { indexed: userId },
+                { $set: { 'infobliss.survey.scheme': data } },
+                { new : true } //opcion para devolver documento actualizado
+            );
+   
+            res.json({ code: 1, response : "Encuesta creada satisfactoriamente"});
+
+        } else {
+
+            res.json({ code: 2, response : "Ya tienes una encuesta activa. Solo se permite una."});
+        }
+
+ 
+       
+    } catch (error) {
+        res.json({ code: 0, response : "Ha ocurrido un error al crear la encuesta, intente más tarde"});
+    }
+});
+
+routes.post('/infobliss/deleteScheme/survey', async(req, res)=>{
+    //aqui eliminamos el esquema de la subasta. solo se permite una. y al eliminarla no se elimina el historial de esta.
+    try{
+        console.log("LLegando a /infobliss/deleteScheme/survey");
+        const { userId, codeSurvey } = req.body;
+           
+        const CodeSurvey = parseInt(codeSurvey);
+
+        const searchScheme = await modelProfile.findOne(
+            { indexed: userId },{ 'infobliss.survey.scheme' : 1 }
+        );
+
+        console.log("searchScheme ->", searchScheme);
+       
+        const surveyId = searchScheme.infobliss.survey.scheme.surveyId;
+        console.log("surveyId ->", surveyId);
+        console.log("CodeSurvey ->", CodeSurvey);
+       
+        if (surveyId === CodeSurvey){
+            console.log("Hemos encontrado la subasta a eliminar y vamos a eliminarla");
+
+            const updatesProfile = await modelProfile.updateOne(
+                { indexed: userId },
+                { $set: { 'infobliss.survey.scheme': [] } }, //vaciamos el array
+                { new : true } //opcion para devolver documento actualizado
+            );
+
+            res.json({ code: 1, response : "Encuesta eliminada satisfactoriamente"});
+
+        } else {
+            console.log("Encuesta No encontrada.");
+            res.json({ code: 2, response : "Encuesta no encontrada"});
+        }
+       
+       
+    } catch (error) {
+        res.json({ code: 0, response : "Ha ocurrido un error al eliminar la encuesta, intente más tarde"});
+    }
+});
+
 module.exports = routes;

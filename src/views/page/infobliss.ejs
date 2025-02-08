@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet InfoBliss</title>
+
+</head>
+<style>
+
+.boxLikert{
+    width: 40px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.marked{
+    background-color: black;
+}
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+ 
+}
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    <main style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+        <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+        <!-- a esta seccion solo puede entrar un usuario logeado con perfil y debe pasar una comprobacion en el backen de resto no podra entrar -->
+        <% if (user) { %>
+            <% const userId = user._id %>
+            <input type="hidden" value="<%= userId %>" id="userID">
+
+            <% if (searchProfile) {  %> 
+                <% const bGColorText = searchProfile.bGColorText %> 
+                <% const bGColorTopbar = searchProfile.bGColorTopbar %> 
+                <% const bGColorGallery = searchProfile.bGColorGallery %> 
+                <% const bGColorWorkspace = searchProfile.bGColorWorkspace %> 
+
+                <% const infobliss = searchProfile.infobliss %>  
+                <% const policy = infobliss.policy %>
+                <% const faq = infobliss.faq %>
+                <% const survey = infobliss.survey %>
+                <% const map = infobliss.map %>
+
+
+                <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+                    <span class="ms-2 p-0" style="font-weight: 400;"> InfoBliss </span>
+                </div>   
+                
+                <div class="container-fluid p-0">
+                    <input type="hidden" value="<%= bGColorText %>" id="colorText">
+                    <input type="hidden" value="<%= bGColorTopbar %>" id="colorFrame">
+                    <input type="hidden" value="<%= bGColorGallery %>" id="colorGallery">
+                    <input type="hidden" value="<%= bGColorWorkspace %>" id="colorWorkspace">
+                    
+
+                    <div class="row m-0 ">
+
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12  py-1 px-0 border" style="background-color: #e9ecef;">
+                                            
+                            
+                                <div class="card">
+                                    <div class="card-header">Control de Activación de Información.</div>                             
+                                    <div class="card-body">
+                                        <div class="policy d-flex justify-content-between">
+                                           
+                                            <div class="form-check">
+                                                
+                                                <label class="form-check-label" for="flexCheckPolicy">
+                                                    Politicas de Tienda
+                                                </label>
+                                                <% if (policy.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckPolicy">
+                                                <% } else { %>    
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckPolicy" checked>
+                                                <% }; %> 
+
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselOffert"></i>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="faq d-flex justify-content-between">
+                                            <div class="form-check">
+                                                
+                                                <label class="form-check-label" for="flexCheckFAQ">
+                                                    FAQ
+                                                </label>
+                                                <% if (faq.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckFAQ">
+                                                <% } else { %>    
+                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckFAQ" checked>
+                                                <% }; %> 
+                                                
+                                             
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticSectionMedia"></i>
+                                            </div>                                            
+                                        </div>
+
+                                        <div class="survey d-flex justify-content-between">
+                                            <div class="form-check">
+
+                                                <label class="form-check-label" for="flexCheckSurvey">
+                                                    Encuestas
+                                                </label>
+                                                <% if (survey.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckSurvey">
+                                                <% } else { %>  
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckSurvey" checked>
+                                                <% }; %> 
+
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselImages"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="map d-flex justify-content-between">
+                                            <div class="form-check">
+                                                
+                                                <label class="form-check-label" for="flexCheckMap">
+                                                    Ubicación Geografica
+                                                </label>
+                                                <% if (map.show === false ) { %> <!-- true o false -->
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckMap">
+                                                <% } else { %>  
+                                                    <input class="form-check-input" type="checkbox" id="flexCheckMap" checked>
+                                                <% }; %>     
+
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselBanner"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group my-2">
+                                            <button class="form-control btn-sm btn-secondary" id="btnSetInfo">Actualizar Cambios</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card"> <!-- cuerpos de acordeon  -->
+                                    <div class="accordion accordion-flush" id="accordionFlushExample">
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="flush-headingOne">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                                 Politicas de Tienda
+                                            </button>
+                                          </h2>
+                                          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+
+                                                <% const policyData = policy.data %>
+                                                
+                                                    <input type="hidden" value="<%= policyData %>" id="inpPolicyData">
+
+                                                    <div class="containData mt-2">
+                                                    
+                                                        <div id="editorPolicy"> 
+                                                            <!-- editor quilljs -->
+                                                        </div>
+                                                        <input type="hidden" id="inputPolicy">
+                                                        <div class="contentCount border">
+                                                           <p class="p-0 my-2 ms-3"> Limite de texto :  <span class="bg-warning px-2 py-1 rounded-3" id="spanCountPolicy"> </span> </p>  
+                                                        </div>
+
+                                                    </div> 
+                                                    
+                                                    <% if (policyData === "" ){  %>
+                                                    <div class="form-group my-3">
+                                                        <button class="btn-sm btn-success form-control btnPolicy"> Crear Politicas </button>
+                                                    </div>
+                                                    <% } else { %>
+
+                                                    <div class="form-group my-3">
+                                                        <button class="btn-sm btn-secondary form-control btnPolicy"> Editar Politicas </button>
+                                                    </div>
+
+                                                <% }; %>
+
+
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="flush-headingTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                                Preguntas y Respuesta mas Frecuentes (FAQ)
+                                            </button>
+                                          </h2>
+                                          <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+
+                                                <% const faqData = faq.data %>
+                                                
+                                                    <input type="hidden" value="<%= faqData %>" id="inpFaqData">
+
+                                                    <div class="containData mt-2">
+                                                    
+                                                        <div id="editorFaq"> 
+                                                            <!-- editor quilljs -->
+                                                        </div>
+                                                        <input type="hidden" id="inputFaq">
+                                                        <div class="contentCount border">
+                                                            <p class="p-0 my-2 ms-3"> Limite de texto :  <span class="bg-warning px-2 py-1 rounded-3" id="spanCountFaq"> </span> </p>  
+                                                         </div>
+
+                                                    </div>
+                                                
+                                                <% if (faqData === "" ){  %>
+
+                                                    <div class="form-group my-3">
+                                                        <button class="btn-sm btn-success form-control btnFaq"> Crear FAQ </button>
+                                                    </div>
+
+                                                <% } else { %>
+
+                                                    <div class="form-group my-3">
+                                                        <button class="btn-sm btn-secondary form-control btnFaq"> Editar FAQ </button>
+                                                    </div>
+
+                                                <% }; %>    
+
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                          <h2 class="accordion-header" id="flush-headingThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                                Encuestas
+                                            </button>
+                                          </h2>
+                                          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+
+                                                <% const scheme = survey.scheme %>
+                                                <% const surveyData = scheme.surveyData %> <!-- esto es un array -->
+                                                <% const surveyId = scheme.surveyId %> <!-- esto es el id de la subasta -->
+                                                
+                                                    <ul class="nav nav-tabs">
+                                                        <li class="nav-item">
+                                                            <button class="nav-link active" aria-current="page" id="navCreateSurvey" > Crear </button> 
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <button class="nav-link" aria-current="page" id="navDeleteSurvey"> Eliminar </button>
+                                                        </li>
+                                                    </ul>
+
+                                            
+                                                
+                                                    <div class="containCreateSurvey mt-2">
+
+                                                        <% if (scheme.length === 0 ) { %>
+                                                    
+                                                            <label for="" class="mt-2"> <small>Pregunta</small> </label>
+                                                            <div class="form-group mb-2">
+                                                                <!-- <input type="text" class="form-control" id="questionSurvey" placeholder="Escriba la pregunta aquí" maxlength="150"> -->
+                                                                <textarea class="form-control" id="questionSurvey" placeholder="Escriba la pregunta aquí. (límite max 200 caracteres)" maxlength="200" rows="2"></textarea>
+                                                            </div>
+
+                                                            <label for="" class="mt-2"> <small>Tipo de Respuesta</small> </label>
+                                                            <div class="form-group mb-2">
+                                                                <select id="typeResponse" class="form-control">
+                                                                    <option value="multiple">Opción Multiple</option>
+                                                                    <option value="likert">Opción de Likert (1-5)</option>
+                                                                </select>
+                                                            </div>
+
+
+                                                            <div class="contentMultiple">
+                                                                <div class="contentMultipleInput form-group mt-3">
+                                    
+                                                                    <input type="text" class="form-control addInpOption" placeholder="Añadir">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                            <div class="contentAdd form-group mt-1 mb-3">
+                                                                <button class="btn-sm btn-secondary form-control" id="addOptionResponse">  <i class="bi bi-plus-square-dotted mx-2"></i> Añadir </button>
+                                                            </div>    
+
+                                                            <div class="contentLikert close">
+                                                                <div class="alert alert-success d-flex justify-content-between">
+                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="alertQuestion close">
+                                                                <div class="alert alert-success py-1 d-flex justify-content-between">
+                                                                    <span>Pregunta creada satisfactoriamente </span>  <span class="bg-light px-2 rounded-2" id="questionCount">  </span>
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="alertDenied close">
+                                                                <div class="alert alert-danger py-1 ">
+                                                                    <span> <i class="bi bi-exclamation-triangle-fill me-2"></i>  No es posible crear más preguntas</span>    
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="alertCreatedSurvey">
+                                                                <!-- dinamico -->
+                                                            </div>
+                                                            <div class="alertError"> 
+                                                                <!-- dinamico -->
+                                                            </div>
+
+                                                            <div class="contentBtnCreateSurvey form-group mt-4 mb-3">
+                                                                <div class="btn-group" role="group" aria-label="Basic mixed styles example" style="width: 100%;">
+                                                                    <button type="button" class="btn btn-primary" id="btnNewQuestion" style="border-right: 2px solid rgb(227, 227, 255);" >Crear Pregunta</button>
+                                                                    <button type="button" class="btn btn-primary" id="btnCreateSurvey" >Crear Encuesta</button>
+                                                                </div>
+                                                            </div>
+
+                                                        <% } else { %>
+                                                            
+
+                                                            <div class="alert alert-info my-3">
+                                                                <span> <b>¡Encuesta creada con éxito!</b> Recuerda que solo se permite tener una encuesta activa a la vez. Si deseas crear otra, primero deberás eliminar la encuesta actual </span>
+                                                            </div>
+
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text ">Encuesta : </span>
+                                                                <input class="form-control" type="text" value="<%= surveyId %>" id="inpCodeSurvey" disabled>
+                                                            </div>
+
+
+                                                        <% } %>    
+
+                                                    </div>
+                                                    
+                                                    <div class="containDeleteSurvey mt-2 close">
+
+                                                        <% if (scheme.length !== 0) { %>
+
+                                                            <div class="alert alert-info my-3">
+                                                                <span>Eliminar esquema de encuesta no elimina el hitorial de esta.</span>
+                                                            </div>
+
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text ">Encuesta : </span>
+                                                                <input class="form-control" type="text" value="<%= surveyId %>" id="inpCodeSurvey" disabled>
+                                                            </div>
+
+                                                            <div class="alertDeleteSurvey">
+                                                                <!-- dinamico -->
+                                                            </div>
+                                                            <div class="alertErrorDelete"> 
+                                                                <!-- dinamico -->
+                                                            </div>
+
+                                                            <div class="form-group my-3">
+                                                                <button class="btn-sm btn-danger form-control" id="btnDeleteSurvey" >Eliminar Encuesta</button>
+                                                            </div>
+                                                            
+                                                        <% } else { %>
+                                                            
+                                                            <div class="alert alert-info my-3">
+                                                                <span>No hay encuesta.</span>
+                                                            </div>
+
+                                                            <div class="form-group my-3">
+                                                                <button class="btn-sm btn-danger form-control" id="btnDeleteSurvey" disabled>Eliminar Encuesta</button>
+                                                            </div>
+
+                                                        <% }; %>    
+
+                                                    </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="flush-headingFour">
+                                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                                                  Ubicación Geografica
+                                              </button>
+                                            </h2>
+                                            <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                                              <div class="accordion-body">
+  
+                                                  <% const mapData = map.data %>
+                                                  
+                                                      <div class="containData mt-2">
+                                                      
+                                                          <span>aqui va el boton para ejecutar el ratreo de ubicación </span>
+  
+                                                      </div>                                       
+  
+                                              </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                    
+                            
+                            <!-- seccion nombre de tienda -->
+                            
+                            <% const username = user.username %>
+                            <% const indexed = user._id %> <!-- esto es igual al id user -->
+                                
+                        </div>
+
+                            <!-- aqui estaran todos los modales informativos -->
+
+                            <!-- Modal Carousel Ofertas --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselOffert" -->
+                            <div class="modal fade" id="staticCarouselOffert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Sección de Ofertas</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Descubre el nuevo Carrusel de Ofertas!🌟  </p>
+
+                                            <p> Con este módulo, tus clientes potenciales podrán ver todas tus ofertas de manera clara y atractiva, todo en un solo lugar. El carrusel permite que cada oferta destaque, facilitando la comparación y la elección. </p>
+                                                
+                                            <b>Beneficios:</b> 
+                                            <ul>
+                                               <li>Visibilidad Aumentada: Presenta tus ofertas de manera llamativa. </li>
+                                               <li>Facilidad de Uso: Navegación sencilla para los usuarios. </li>
+                                               <li>Impulso a las Ventas: Facilita decisiones rápidas al mostrar todas las promociones juntas.</li>
+                                            </ul>    
+                                            <i>¡Haz que tus ofertas brillen como nunca antes! 💡</i> 
+                                        
+                                            <p class="my-2"><small> Requerimentos : <span class="alert-success py-1 px-2 rounded-2"> <b>tener al menos un anuncio en oferta.</b>  </small></span> </p>
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- Modal Seccion de Media --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSectionMedia" -->
+                            <div class="modal fade" id="staticSectionMedia" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ"> Sección de MultiMedia </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Sube videos o Imagenes de impacto!🌟  </p>                                          
+                                            <p> Utiliza esta sección para incrustar dos recursos de media, que puede ser dos videos o dos imagenes o alternarlo dejando un video y una imagen.
+                                                Utiliza este recursos gratuito para afianzar tu marca y Tienda. </p> 
+                                                                                
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- Modal Carousel de Imagenes --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselImages" -->
+                            <div class="modal fade" id="staticCarouselImages" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Sección de Imágenes </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Destaca tu Tienda con un Carrusel de Imagenes!🌟  </p>                                          
+                                            <p> Utiliza este Carrusel, sin movimiento automático para que tus clientes muevan las imagenes y descubran por si mismo todo lo que quieres que vean.
+                                                Con nuestro carrusel de imagenes, podrás utilizar hasta 10 imágenes impactantes para resaltar los aspectos más destacados de tus productos o servicios, estas imagenes pueden tener diferentes anchos.
+                                                Aprovecha este recurso gratuito y haz que tus visitantes vuelen por los aires! </p> 
+                                                                                
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                            <!-- Modal Carousel de Banner --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselBanner" -->
+                            <div class="modal fade" id="staticCarouselBanner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ"> Sección de Banners </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1">🌟¡Destaca tu Tienda con un Carrusel de Banner!🌟  </p>                                          
+                                            <p> Diferénciate de la competencia y muestra tu compromiso con tus clientes. Con nuestro carrusel de banner, podrás utilizar hasta 5 imágenes impactantes para resaltar los aspectos más destacados de tus productos o servicios. Esta es una oportunidad perfecta para elevar tu marca y crear una experiencia visual atractiva que cautive a tus visitantes. ¡No te quedes atrás, aprovecha este recurso gratuito y haz que tu tienda brille! </p> 
+                                                                                
+                                        
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                   
+
+                        <div class="col-lg-8 col-md-8 col-sm-12 col-12 py-1 px-0 border" style="background-color: #e9ecef;">
+                                
+                                
+                            <div class="contentMainworkInfoBliss">
+
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <button class="nav-link active" aria-current="page" id="navPolicy" > Politicas </button> 
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" aria-current="page" id="navFaq"> FAQ </button>
+                                    </li>
+                                
+                                    <li class="nav-item dropdown">
+                                        <button class="nav-link dropdown-toggle" aria-current="page" id="navSurvey" data-bs-toggle="dropdown"> Encuesta </button>
+                                     <!--    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Encuesta</a> -->
+                                        <ul class="dropdown-menu">
+                                          <li><button class="dropdown-item" aria-current="page" id="navSurveyVisualize"> Visualización de Encuesta </button></li>
+                                          <li><hr class="dropdown-divider"></li>
+                                          <li><button class="dropdown-item" aria-current="page" id="navSurveyAnalysis"> Análisis de Resultados </button></li>
+                                        </ul>
+                                    </li>
+                                    
+                                    <li class="nav-item">
+                                        <button class="nav-link" aria-current="page" id="navMap"> Geolocalización </button>
+                                    </li>
+                                </ul>
+
+                                <div class="card">
+                                    <div class="card-body" style="background-color: rgba(248, 252, 255, 0.5);">
+
+                                        <div class="contentPolicy">
+                                            
+                                            <% const dataPolicy = policy.data %>
+                                            <input type="hidden" value="<%= dataPolicy %>" id="inputDataPolicyDelta">
+                                        
+                                            <div class="d-flex justify-content-center my-2"> <span> <b> <h4>Politicas de mi Tienda</h4> </b> </span> </div>
+                                            <div id="policyDataDelta"> 
+                                                <!-- inyeccion dinamica -->
+                                            </div>
+                                             
+
+                                        </div>
+                                        <div class="contentFAQ close">
+
+                                            <% const dataFaq = faq.data %>
+                                            <input type="hidden" value="<%= dataFaq %>" id="inputDataFaqDelta">
+                                        
+                                            <div class="d-flex justify-content-center my-2"> <span> <b> <h4>Preguntas y Respuestas más Frecuentes</h4> </b> </span> </div>
+                                            <div id="faqDataDelta"> 
+                                                <!-- inyeccion dinamica -->
+                                            </div>
+
+                                        </div>
+                                        <div class="contentSurvey close">
+
+                                            <div class="d-flex justify-content-center my-2"> <span> <b> <h4>Crear un encuesta</h4> </b> </span> </div>
+                                            <div class="carousel-images p-2"> <!-- carousel-images es la clase de slick-carousel -->
+                                               
+                                                <div class="contentSurvey px-3">   
+                                                    
+                                                    <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
+                                                        <div class="card-header">
+                                                            <p class="my-2"> ¿Como hacer una encuesta objetiva? </p>
+                                                        </div>
+                                                        <div class="card-body" style="position: relative;">
+                                                                                                                        
+                                                            <p> <b> 1. Define el objetivo : </b> Antes de crear la encuesta, es fundamental tener claro qué información deseas obtener. Esto te ayudará a formular preguntas relevantes.</p>
+
+                                                            <p> <b> 2. Conoce a tu audiencia : </b> Identifica quiénes serán los encuestados. Esto te permitirá adaptar el lenguaje y el contenido de las preguntas.</p>
+                                                                
+                                                            <p> <b> 3. Usa preguntas claras y concisas : </b> Evita el uso de jerga o términos confusos. Las preguntas deben ser fáciles de entender para evitar malentendidos.</p>
+                                                                
+                                                            <p> <b> 4. Opta por preguntas cerradas : </b> Las preguntas de opción múltiple, verdadero/falso o escala de Likert son más fáciles de analizar y suelen proporcionar respuestas más objetivas.</p>
+                                                        
+                                                            <div  style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> 1/3 </span> </div> 
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="contentSurvey px-3">   
+                                                    
+                                                    <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
+   
+                                                        <div class="card-body" style="position: relative;">
+
+                                                            <p> <b> 5. Evita sesgos : </b> Formula las preguntas de manera neutral para no influir en las respuestas. Por ejemplo, evita preguntas que sugieran una respuesta preferida. </p>
+
+                                                            <p> <b> 6. Incluye un espacio para comentarios : </b> Aunque la mayoría de las preguntas deben ser cerradas, ofrecer una opción abierta permite a los encuestados expresar opiniones o sugerencias que pueden ser valiosas. </p>
+                                                            
+                                                            <p> <b> 7. Prueba la encuesta : </b> Antes de lanzarla oficialmente, haz una prueba con un grupo pequeño para identificar posibles confusiones o problemas. </p>
+                                                            
+                                                            <p> <b> 8. Analiza los resultados : </b> Una vez recopiladas las respuestas, analiza los datos de manera objetiva y busca patrones que te ayuden a tomar decisiones informadas. </p>
+                                                        
+                                                            <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> 2/3 </span> </div> 
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="contentSurvey px-3">   
+                                                    
+                                                    <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
+                                                        <div class="card-header">
+                                                            <p class="my-2"> Crear una encuesta </p>
+                                                        </div>
+                                                        <div class="card-body" style="position: relative;">
+                                                                                                                        
+                                                            <p> <b> 1. Pregunta : </b> Tendrás disponible un campo que te permite escribir tu pregunta. </p>
+
+                                                            <p> <b> 2. Selector Multiple o Likert : </b> Por defecto la opción multiple estará activa, La otra opción (Likert)  con 5 niveles desde muy malo, malo, regular, bueno y excelente. te servirá para crear una respuesta con niveles.  </p>
+                                                                
+                                                            <p> <b> 3. Añadir (Caso Opción Multiple) : </b> Escribe la ocpión de respuesta que quieres que tengan tus usuarios para responder. ejemplo (Si, No, Quizas) o ejemplo de articulos (Toallas, Almohadas, Sabanas). ya que la pregunta puede ser extensa.  </p>
+                                                                
+                                                            <p> <b> 4. Opción Likert : </b> En esta opción provee un contenedor con 5 opciones de emojis para representar los 5 niveles que son (muy malo, malo, regular, bueno y excelente). </p>
+
+                                                            <p> <b> 5. Crear pregunta : </b> Ya con una pregunta establecida y sus posibles respuestas, procede a crear tu pregunta. Puedes repetir esta acción y crear hasta 6 preguntas para obtener los resultados objetivos de una necesidad de análisis de mercado. </p>
+                                                            
+                                                            <p> <b> 5. Crear encuesta : </b> Con todas las preguntas y sus posibles respuestas ya creadas, Solo queda crear la encuesta. Felicidades ya la has creado.  </p>
+                                                        
+                                                            <div  style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> 3/3 </span> </div> 
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                               
+                                            </div> 
+                                        </div>
+                                        <div class="contentSurveyVisualize close">
+
+                                            
+                                            <% if (survey.scheme.length !==0 ) { %>
+                                                    <% const surveyId = survey.scheme.surveyId %> <% const surveyTime = survey.scheme.surveyTime %>
+                                                <p> ID : <span class="alert-success rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-stopwatch"></i> : <span class="alert-success rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
+                                                
+                                                    <% const surveyData = survey.scheme.surveyData %> <!-- esto es un array -->
+                                                <div class="carousel-images p-2"> <!-- carousel-images es la clase de slick-carousel -->
+                                                    <% surveyData.forEach((ele, card)=>{ %>
+                                                    <div class="contentSurvey px-3">   
+                                                        
+                                                        <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
+                                                            <div class="card-header">
+                                                                <p class="my-2"> <%= ele.question %> </p>
+                                                            </div>
+                                                            <div class="card-body" style="position: relative;">
+                                                                                                                
+                                                                <% const responses = ele.boxResponses %>
+
+                                                                <% responses.forEach((resp, i)=>{ %>
+
+                                                                    <% if (resp !== "likert" ) { %>
+                                                                        <div class="form-check form-check-inline mt-2">
+                                                                            <input class="form-check-input" type="radio" name="inlineRadio<%= card %>" id="inlineRadio<%= card %><%= i %>" value="option1">
+                                                                            <label class="form-check-label" for="inlineRadio<%= card %><%= i %>"><%= resp %></label>
+                                                                        </div>
+                                                                    <% } else { %>
+                                                                        <div class="contentLikert mt-2">
+                                                                            <div class="alert alert-success d-flex justify-content-between">
+                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    <% } %>    
+
+                                                                <%  }) %>
+                                                                <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> <%= card + 1 %> / <%= surveyData.length %> </span> </div>   
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <% }); %>    
+                                                </div> 
+                                            <% } else { %>
+                                                
+                                                <div class="contentNoSurvey">
+                                                    <div class="alert alert-info">
+                                                        No Tiene ninguna encuesta. ¡Si desea crear una!. por favor lea cuidadosamente las recomendaciones, en la pestaña <b>"Encuesta"</b> aqui arriba se explica como usar nuestra herramienta para crear una encuesta objetiva.  
+                                                    </div>
+                                                </div>
+
+                                            <% }; %>    
+                                              
+                                        </div>
+                                        <div class="contentSurveyAnalysis close">
+                                            Resultados de Análisis
+                                        </div>
+                                        <div class="contentMap close">
+                                            contenedor de Mapa
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="card mt-1">
+                                <div class="card-body d-flex justify-content-center ">
+                                    <span id="logoBlissenet_com"> </span>
+                                </div>
+                            </div>                    
+
+                                            
+                        </div>
+
+                    </div>    
+
+                </div>
+
+            <%  }; %>
+                  
+                  
+
+        <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+        <% }; %>
+
+    </main>
+
+        <!-- CDN js Slick-carousel --> <!-- Es importante manejar los script del carrousel en el mismo archivo que se van a usar -->
+        <!-- para no interferir en otros script cdn de jquey --> 
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <!-- porque estos tres scripts van arriba del <%- include('../partials/scripts.ejs') %> la razon ... -->
+        <!-- primero se carga la cdn y luego se inicializan los programas con sus clases. para que pueda funcionar los carruseles. -->
+
+
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+      
+
+</body>
+
+
+<script>
+ 
+    const userID = document.getElementById('userID'); //aqui tengo el id del user que es el mismo indexed de profile
+    const flexCheckPolicy = document.getElementById('flexCheckPolicy');
+    const flexCheckFAQ = document.getElementById('flexCheckFAQ');
+    const flexCheckSurvey = document.getElementById('flexCheckSurvey');
+    const flexCheckMap = document.getElementById('flexCheckMap');
+    const btnSetInfo = document.getElementById('btnSetInfo');
+
+    btnSetInfo.addEventListener('click', ()=>{
+        const policy = flexCheckPolicy.checked;
+        const faq = flexCheckFAQ.checked;
+        const survey = flexCheckSurvey.checked;
+        const map = flexCheckMap.checked;
+        
+        console.log("policy ->", policy);
+        console.log("faq ->", faq);
+        console.log("survey ->", survey);
+        console.log("map ->", map);
+        
+
+        const datos = {
+            policy : policy,
+            faq : faq,
+            survey : survey,
+            map : map
+        };
+
+        console.log("Esto es datos --->", datos);
+
+        
+        fetch('/infobliss/setupInfo', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log(jsonx)
+            location.reload()
+        })
+        .catch( err => console.log(err));
+        
+
+    });
+
+</script>
+
+<script>
+    const inpPolicyData = document.getElementById('inpPolicyData'); //aqui esta el input oculto con el delta de la data policy
+    const editorPolicy = document.getElementById('editorPolicy');
+    const inputPolicyNew = document.getElementById('inputPolicy'); //este input es el que recupera todo finalmente y es el que se usa para enviar al backend
+    const spanCountPolicy = document.getElementById('spanCountPolicy'); //span que contendra el limite de texto aceptado
+    const btnPolicy = document.querySelector('.btnPolicy');
+    let deltaPolicy;
+
+
+    const toolbarOptions = [
+        [ { header : [] } ],
+        [ { size : ["small", "large", "huge", "false"] } ],
+        [ "bold", "italic", "underline", "strike" ],
+        [ { list : "ordered"}, { list : "bullet"} ], 
+        [ { align : [] } ]
+    ]
+
+    let quillPolicy = new Quill('#editorPolicy', {
+        modules: {
+            toolbar : toolbarOptions
+        }, 
+        theme : 'snow'
+        
+    });
+
+    const PolicyData = inpPolicyData.value;
+    
+    if (PolicyData !== ""){
+        deltaPolicy = JSON.parse(PolicyData)
+        //console.log("deltaPolicy" , deltaPolicy)
+        quillPolicy.setContents(deltaPolicy)
+    } else {
+        quillPolicy.setContents()
+    }
+
+    let textoActualPolicy = quillPolicy.getText(); // Obtiene todo el texto
+    let longitudPolicy = textoActualPolicy.length -1;
+    //console.log("longitud --->", longitud)
+    spanCountPolicy.innerText = 2000 - longitudPolicy;
+
+    quillPolicy.on('text-change', function(){
+    longitudPolicy = quillPolicy.getLength() - 1;
+    let cuentaPolicy = 2000 - longitudPolicy; 
+    spanCountPolicy.innerText = cuentaPolicy; 
+
+        if (cuentaPolicy <= 0) {
+            // Limitar la entrada de texto cuando se alcance el límite
+            quillPolicy.enable(false); // Desactiva la entrada de texto
+            quillPolicy.history.undo(); // Deshacer la última acción si es necesario
+            console.log("Has alcanzado el límite de caracteres.");
+        } else {
+            quillPolicy.enable(true); // Habilita la entrada nuevamente si no se ha alcanzado el límite
+        }
+    });
+
+    
+    btnPolicy.addEventListener('click', ()=>{
+
+        let delta = quillPolicy.getContents(); // Obtiene el contenido
+        inputPolicyNew.value = JSON.stringify(delta); // Asigna el contenido al input
+
+        policyData = inputPolicyNew.value;
+        let userId = userID.value;
+
+        console.log("policyData", policyData);
+        console.log("userId", userId);
+
+        const datos = {
+            userId: userId,
+            data: policyData
+        };
+            
+        
+        fetch('/infobliss/policyData', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx =>
+            {  
+            console.log("esto es el documento data politica actualizada -> ", jsonx)
+            location.reload();
+            })    
+        .catch( err => console.log(err));
+     
+    })
+
+
+</script>
+
+<script>
+    const inpFaqData = document.getElementById('inpFaqData'); //aqui esta el input oculto con el delta de la data faq
+    const editorFaq = document.getElementById('editorFaq');
+    const inputFaqNew = document.getElementById('inputFaq'); //este input es el que recupera todo finalmente y es el que se usa para enviar al backend
+    const spanCountFaq = document.getElementById('spanCountFaq'); //span que contendra el limite de texto aceptado
+    const btnFaq = document.querySelector('.btnFaq');
+    let deltaFaq;
+
+
+    let quillFaq = new Quill('#editorFaq', {
+        modules: {
+            toolbar : toolbarOptions
+        }, 
+        theme : 'snow'
+    });
+
+
+    const FaqData = inpFaqData.value;
+    //console.log("FaqData ->" , FaqData);
+
+    if ( FaqData !== ""){
+        deltaFaq = JSON.parse(FaqData);
+        //console.log("deltaFaq" , deltaFaq);
+        quillFaq.setContents(deltaFaq)
+    } else {
+        quillFaq.setContents()
+    } 
+  
+    let textoActualFaq = quillFaq.getText(); // Obtiene todo el texto
+    let longitudFaq = textoActualFaq.length -1 ;
+    //console.log("longitud --->", longitud)
+    spanCountFaq.innerText = 2000 - longitudFaq;
+
+    quillFaq.on('text-change', function(){
+    longitudFaq = quillFaq.getLength() - 1;
+    let cuentaFaq = 2000 - longitudFaq; 
+    spanCountFaq.innerText = cuentaFaq; 
+
+        if (cuentaFaq <= 0) {
+            // Limitar la entrada de texto cuando se alcance el límite
+            quillFaq.enable(false); // Desactiva la entrada de texto
+            quillFaq.history.undo(); // Deshacer la última acción si es necesario
+            console.log("Has alcanzado el límite de caracteres.");
+        } else {
+            quillFaq.enable(true); // Habilita la entrada nuevamente si no se ha alcanzado el límite
+        }
+    });
+
+    btnFaq.addEventListener('click', ()=>{
+
+        let delta = quillFaq.getContents(); // Obtiene el contenido
+        inputFaqNew.value = JSON.stringify(delta); // Asigna el contenido al input
+
+        faqData = inputFaqNew.value;
+        let userId = userID.value;
+
+        console.log("policyData", faqData);
+        console.log("userId", userId);  
+        
+        const datos = {
+            userId : userId,
+            data : faqData
+        };
+
+        fetch('/infobliss/faqData', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx =>
+            {  
+                console.log("esto es el documento data FAQ actualizada -> ", jsonx)
+                location.reload();
+            }) 
+        .catch( err => console.log(err));
+        
+    })
+
+</script>
+
+<script>
+
+
+    const inputDataPolicyDelta = document.getElementById('inputDataPolicyDelta');
+    const inputDataFaqDelta = document.getElementById('inputDataFaqDelta');
+   
+    let inputDataPolicy = inputDataPolicyDelta.value;
+    let inputDataFaq = inputDataFaqDelta.value;
+    //console.log("inputDataFaq->", inputDataFaq)
+
+    let quillPolicyData = new Quill('#policyDataDelta', {
+        modules: {
+            toolbar : false
+        }, 
+        theme : 'snow'
+        
+    });
+
+    let quillFaqData = new Quill('#faqDataDelta', {
+        modules: {
+            toolbar : false
+        }, 
+        theme : 'snow'
+
+    });
+  
+    
+    if (inputDataPolicy !== ""){
+        let delta_policy = JSON.parse(inputDataPolicy); //no se puede parsear si no hay un json
+        console.log("delta_policy", delta_policy);
+        // Inyectar el delta en Quill
+        quillPolicyData.setContents(delta_policy);
+    } else {
+        quillPolicyData.setContents();
+    }
+
+    if (inputDataFaq !== ""){
+        let delta_faq = JSON.parse(inputDataFaq); //no se puede parsear si no hay un json
+        console.log("delta_faq", delta_faq);
+        // Inyectar el delta en Quill
+        quillFaqData.setContents(delta_faq);
+    } else {
+        quillFaqData.setContents();
+    }
+    
+ 
+</script>
+
+<script>
+
+    const navPolicy = document.getElementById('navPolicy');
+    const navFaq = document.getElementById('navFaq');
+    const navSurvey = document.getElementById('navSurvey');
+    const navSurveyVisualize = document.getElementById('navSurveyVisualize');
+    const navSurveyAnalysis = document.getElementById('navSurveyAnalysis');
+    const navMap = document.getElementById('navMap');
+
+    const contentPolicy = document.querySelector('.contentPolicy'); 
+    const contentFAQ = document.querySelector('.contentFAQ');
+    const contentSurvey = document.querySelector('.contentSurvey');
+    const contentSurveyVisualize = document.querySelector('.contentSurveyVisualize');
+    const contentSurveyAnalysis = document.querySelector('.contentSurveyAnalysis');
+    const contentMap = document.querySelector('.contentMap');
+
+    navPolicy.addEventListener('click', ()=>{
+        navPolicy.classList.add('active');
+        navFaq.classList.remove('active');
+        navSurvey.classList.remove('active');
+        navMap.classList.remove('active');
+        
+        contentPolicy.classList.remove('close');
+        contentFAQ.classList.add('close');
+        contentSurvey.classList.add('close');
+        contentSurveyVisualize.classList.add('close');
+        contentSurveyAnalysis.classList.add('close');
+        contentMap.classList.add('close');
+    });
+
+    navFaq.addEventListener('click', ()=>{
+        navPolicy.classList.remove('active');
+        navFaq.classList.add('active');
+        navSurvey.classList.remove('active');
+        navMap.classList.remove('active');
+
+        contentPolicy.classList.add('close');
+        contentFAQ.classList.remove('close');
+        contentSurvey.classList.add('close');
+        contentSurveyVisualize.classList.add('close');
+        contentSurveyAnalysis.classList.add('close');
+        contentMap.classList.add('close');
+    });
+
+    navSurvey.addEventListener('click', ()=>{
+        navPolicy.classList.remove('active');
+        navFaq.classList.remove('active');
+        navSurvey.classList.add('active');
+        navMap.classList.remove('active');
+
+        contentPolicy.classList.add('close');
+        contentFAQ.classList.add('close');
+        contentSurvey.classList.remove('close');
+        contentSurveyVisualize.classList.add('close');
+        contentSurveyAnalysis.classList.add('close');
+        contentMap.classList.add('close');
+    });
+
+    navSurveyVisualize.addEventListener('click', ()=>{
+        contentPolicy.classList.add('close');
+        contentFAQ.classList.add('close');
+        contentSurvey.classList.add('close');
+        contentSurveyVisualize.classList.remove('close');
+        contentSurveyAnalysis.classList.add('close');
+        contentMap.classList.add('close');
+    });
+
+    navSurveyAnalysis.addEventListener('click', ()=>{
+        contentPolicy.classList.add('close');
+        contentFAQ.classList.add('close');
+        contentSurvey.classList.add('close');
+        contentSurveyVisualize.classList.add('close');
+        contentSurveyAnalysis.classList.remove('close');
+        contentMap.classList.add('close');
+    });
+
+    navMap.addEventListener('click', ()=>{
+        navPolicy.classList.remove('active');
+        navFaq.classList.remove('active');
+        navSurvey.classList.remove('active');
+        navMap.classList.add('active');
+
+        contentPolicy.classList.add('close');
+        contentFAQ.classList.add('close');
+        contentSurvey.classList.add('close');
+        contentSurveyVisualize.classList.add('close');
+        contentSurveyAnalysis.classList.add('close');
+        contentMap.classList.remove('close');
+    });
+
+</script>
+
+<script>
+    //controlador de pestañas en la seccion de encuestas
+    const navCreateSurvey = document.getElementById('navCreateSurvey'); 
+    const navDeleteSurvey = document.getElementById('navDeleteSurvey');
+    const containCreateSurvey = document.querySelector('.containCreateSurvey');
+    const containDeleteSurvey = document.querySelector('.containDeleteSurvey');
+
+    navCreateSurvey.addEventListener('click', ()=>{
+        navCreateSurvey.classList.add('active');
+        navDeleteSurvey.classList.remove('active');
+
+        containCreateSurvey.classList.remove('close');
+        containDeleteSurvey.classList.add('close');
+    })
+
+    navDeleteSurvey.addEventListener('click', ()=>{
+        navCreateSurvey.classList.remove('active');
+        navDeleteSurvey.classList.add('active');
+
+        containCreateSurvey.classList.add('close');
+        containDeleteSurvey.classList.remove('close');
+    })
+
+</script>
+
+<script>
+    //controlador de añadir opcion de respuesta de optiones en la encuesta
+    const questionSurvey = document.getElementById('questionSurvey'); //input pregunta
+    const typeResponse = document.getElementById('typeResponse'); //selector de opciones opcion (multiple, likert)
+
+    const contentMultiple = document.querySelector('.contentMultiple'); //contenedor de opcion multiple
+    const contentAdd = document.querySelector('.contentAdd'); //boton de añadir input
+    const contentMultipleInput = document.querySelector('.contentMultipleInput'); //contenedor donde inyectamos los input de las posibles respuestas
+    const contentLikert = document.querySelector('.contentLikert'); //contenedor de opcion likert
+    
+    const addOptionResponse = document.getElementById('addOptionResponse');
+    const btnNewQuestion = document.getElementById('btnNewQuestion') //button para crear nueva pregunta
+    const btnCreateSurvey = document.getElementById('btnCreateSurvey') //button para crear encuesta.
+
+    let alertQuestion = document.querySelector('.alertQuestion'); //alertas de creacion de preguntas
+    let questionCount = document.getElementById('questionCount'); //span de contador de preguntas
+    let alertDenied = document.querySelector('.alertDenied'); //alerta rojo denegado de creacion de pregunta por llegar al limite
+    let alertCreatedSurvey = document.querySelector('.alertCreatedSurvey'); //alerte de creacion de encuesta exitosa
+    let alertError = document.querySelector('.alertError'); //alerta de error, intente luego
+
+    const efectSoundExpan = document.getElementById('efectSoundExpan')
+
+    let type;
+    let boxResponses = []; 
+    let surveyData = [];
+    
+
+
+    //selector de respuesta
+    if (typeResponse){
+        typeResponse.addEventListener('change', ()=>{
+            type = typeResponse.value;
+
+            if (type === "multiple"){
+                contentMultiple.classList.remove('close');
+                contentLikert.classList.add('close');
+                contentAdd.classList.remove('close');
+            } else {
+                contentMultiple.classList.add('close');
+                contentLikert.classList.remove('close');
+                contentAdd.classList.add('close');
+            }
+        });
+    }    
+
+    //agregar input para posibles repuestas
+    if (addOptionResponse){
+        addOptionResponse.addEventListener('click', ()=>{
+            let newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.className = 'form-control'; //clase principal
+            newInput.classList.add('addInpOption'); // otra clase
+            newInput.placeholder = 'Añadir';
+
+            //añadir el input al contenedor
+            contentMultipleInput.appendChild(newInput)
+            
+            // Agregar el evento para eliminar el input si está vacío
+            newInput.addEventListener('input', () => {
+                if (newInput.value === "") {
+                    newInput.remove(); // Eliminar el input si está vacío
+                }
+            });
+            
+        })
+    }    
+
+    //crear pregunta con su posibles respuestas.
+    if (btnNewQuestion){
+        btnNewQuestion.addEventListener('click', ()=>{
+
+            console.log("questionSurvey ->", questionSurvey.value);
+            console.log("boxResponses.length ->", boxResponses.length);
+
+            if (type === "likert"){
+
+                boxResponses.push("likert");
+
+                if (questionSurvey.value !== "" && boxResponses.length > 0 ){
+
+                    if (surveyData.length <= 4){ //solo se permite un máximo de 5 preguntas por encuesta.
+
+                        let question = questionSurvey.value;      
+
+                        let data = {
+                            "question" : question,
+                            "boxResponses" : boxResponses  
+                        }
+
+                        console.log("data ----> ", data)
+                        surveyData.push(data);
+
+                        efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+                        efectSoundExpan.play().catch(error => {
+                        //console.error("Error al reproducir el sonido:", error);
+                        });
+
+                        
+                        questionSurvey.value = ""; //limpiamos question
+                        boxResponses = []; // limpiamos el array donde almacenamos las posibles respuestas. 
+                        
+                        
+                        alertQuestion.classList.remove('close'); //hacemos ver el alerta de creacion de pregunta 
+                        questionCount.innerText = surveyData.length; //inyectamos la cantidad de preguntas que existen en la encuesta
+
+                    } else {
+
+                        alertDenied.classList.remove('close'); //hacemos ver el alerta denegado de creacion de pregunta
+
+                        setTimeout(() => {
+                            alertDenied.classList.add('close');
+                        }, 4000);
+
+                    }   
+
+                }  
+
+            } else {
+
+                let addInpOption = document.querySelectorAll('.addInpOption');
+
+                addInpOption.forEach((ele)=>{
+                    if (ele.value !== ""){
+                        boxResponses.push(ele.value);
+                    }
+                });
+
+                if (questionSurvey.value !== "" && boxResponses.length > 0 ){
+
+                    if (surveyData.length <= 4){ //solo se permite un máximo de 5 preguntas por encuesta.
+
+                        let question = questionSurvey.value;
+
+                        let data = {
+                            "question" : question,
+                            "boxResponses" : boxResponses  
+                        }
+
+                        console.log("data ----> ", data)
+                        surveyData.push(data);
+
+                        efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+                        efectSoundExpan.play().catch(error => {
+                        //console.error("Error al reproducir el sonido:", error);
+                        });
+
+                        //limpiamos question
+                        questionSurvey.value = "";
+                        addInpOption.forEach((ele) => {
+                            ele.remove(); // Esto eliminará el elemento del DOM
+                        });
+                        boxResponses = []; // limpiamos el array donde almacenamos las posibles respuestas.
+
+                        let newInput = document.createElement('input');
+                        newInput.type = 'text';
+                        newInput.className = 'form-control'; //clase principal
+                        newInput.classList.add('addInpOption'); // otra clase
+                        newInput.placeholder = 'Añadir';
+
+                        //añadir el input al contenedor
+                        contentMultipleInput.appendChild(newInput);
+
+                        alertQuestion.classList.remove('close'); //hacemos ver el alerta de creacion de pregunta 
+                        questionCount.innerText = surveyData.length; //inyectamos la cantidad de preguntas que existen en la encuesta
+                    } else {
+
+                        alertDenied.classList.remove('close'); //hacemos ver el alerta denegado de creacion de pregunta
+
+                        setTimeout(() => {
+                            alertDenied.classList.add('close');
+                        }, 4000);
+
+                    }     
+
+                }    
+
+            }              
+        
+                
+        });
+    }    
+   
+    if (btnCreateSurvey){
+        btnCreateSurvey.addEventListener('click', ()=>{
+                        
+            let userId = userID.value;
+
+            if (surveyData.length > 0 ){
+
+                btnCreateSurvey.setAttribute("disabled", "");// deshabilitamos el boton para que no puedan darle de nuevo
+
+                let surveyId = new Date().getTime();
+
+                let datos = {
+                    userId : userId,
+                    surveyId : surveyId,
+                    surveyData : surveyData
+                }
+
+                efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+                efectSoundExpan.play().catch(error => {
+                //console.error("Error al reproducir el sonido:", error);
+                });
+
+                console.log("datos ----> ", datos);
+                
+                fetch('/infobliss/createScheme/survey', {
+                    
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => 
+                    { 
+                        console.log("llegando del backend", jsonx);
+                        let code = jsonx.code;
+                        let response = jsonx.response;
+
+                        if (code === 1){
+                            //mensaje de creacion exitosa
+                            alertCreatedSurvey.innerHTML = ` 
+                            <div class="alert alert-success py-1 ">
+                                <span> <i class="bi bi-check-circle-fill me-2"></i> ${response} </span>    
+                            </div>
+                            `
+
+                            alertQuestion.classList.add('close'); //hacemos ver el alerta de creacion de pregunta 
+                            surveyData = []; //limpiamos este array
+
+                            setTimeout(() => {
+                                alertCreatedSurvey.innerHTML = "";
+                                location.reload()    
+                            }, 4000);
+
+
+                        
+                        } else if (code === 2) {  
+                            //mensaje de que ya esta cuenta tiene una encuesta activa, solo se permite una
+                            console.log("code", code);
+                            console.log("response", response);
+                            alertError.innerHTML = ` 
+                            <div class="alert alert-danger py-1 ">
+                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
+                            </div>
+                            `
+
+                            setTimeout(() => {
+                                alertError.innerHTML = "";    
+                            }, 4000);
+
+                            alertError.classList.add('close'); //hacemos ver el alerta de creacion de pregunta 
+                            surveyData = []; //limpiamos este array
+
+                        } else {
+                            //mensaje de error. no se ha podio crear, intente luego.
+                            alertError.innerHTML = ` 
+                            <div class="alert alert-danger py-1 ">
+                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
+                            </div>
+                            `
+
+                            setTimeout(() => {
+                                alertError.innerHTML = "";    
+                            }, 4000);
+
+                        }
+                    
+                    })
+                .catch( err => console.log(err));
+            }
+
+        })
+    }    
+ 
+</script>
+
+<script>
+    /* eliminar una encuesta */
+    const btnDeleteSurvey = document.getElementById('btnDeleteSurvey');
+    const inpCodeSurvey = document.getElementById('inpCodeSurvey');
+
+    const alertDeleteSurvey = document.querySelector('.alertDeleteSurvey');
+    const alertErrorDelete = document.querySelector('.alertErrorDelete');
+
+    btnDeleteSurvey.addEventListener('click', ()=>{
+        btnDeleteSurvey.setAttribute("disabled", "");// deshabilitamos el boton para que no puedan darle de nuevo
+        let userId = userID.value;
+        codeSurvey = inpCodeSurvey.value;
+
+        const datos = {
+            userId : userId,
+            codeSurvey : codeSurvey 
+        } 
+
+        console.log("Esto es datos ->", datos);
+
+        efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+            efectSoundExpan.play().catch(error => {
+            //console.error("Error al reproducir el sonido:", error);
+        });
+
+        fetch('/infobliss/deleteScheme/survey', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => { 
+           console.log("jsonx -->", jsonx)
+           const code = jsonx.code;
+           const response = jsonx.response;
+           
+           if (code === 1 ){
+            // eliminado satisfactoriamente
+
+            inpCodeSurvey.value = ""; //limpiamos el input donde estaba el codigo de encuesta
+
+            alertDeleteSurvey.innerHTML = `
+                            <div class="alert alert-success py-1 ">
+                                <span> <i class="bi bi-check-circle-fill me-2"></i> ${response} </span>    
+                            </div>`
+
+                setTimeout(() => {
+                    alertDeleteSurvey.innerHTML = "";
+                    location.reload();
+                }, 3000);           
+
+           } else if (code === 2) {
+            // encuesta no encontrada
+            alertErrorDelete.innerHTML = `
+                            <div class="alert alert-danger py-1 ">
+                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
+                            </div>`
+
+                setTimeout(() => {
+                    alertErrorDelete.innerHTML = "";
+                    location.reload();
+                }, 3000);              
+
+           } else {
+            // ha habido un error, intente luego
+            alertErrorDelete.innerHTML = `
+                            <div class="alert alert-danger py-1 ">
+                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
+                            </div>`
+
+                setTimeout(() => {
+                    alertErrorDelete.innerHTML = "";
+                    location.reload();
+                }, 3000); 
+
+           }
+
+            
+            
+        })
+        .catch( err => console.log(err));
+
+    })    
+
+</script>
+
+<script>
+
+const boxLikert = document.querySelectorAll('.boxLikert');
+boxLikert.forEach((ele) => {
+    ele.addEventListener('click', () => {
+        // Elimina la clase 'marked' de todos los elementos
+        boxLikert.forEach((el) => el.classList.remove('marked'));
+        
+        // Añade la clase 'marked' al elemento clicado
+        ele.classList.add('marked');
+    });
+});
+
+</script>
