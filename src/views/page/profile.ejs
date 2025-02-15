@@ -215,8 +215,8 @@
                 <%- include('../alert/bannerDefaultRestart.ejs') %> 
              <% }; %>
 
-        <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-            <span class="ms-2 p-0" style="font-weight: 400;"> Perfil </span>
+        <div class="container-fluid d-flex justify-content-start py-2" style="background-color: #9200ff;">
+            <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Perfil </b>  </span>
         </div>   
         
          <div class="container-fluid mt-0">
@@ -362,9 +362,9 @@
                                                 </div>
                                                 
                                                 <div class="form-group my-3">
-                                                    <input type="submit" class="form-control btn btn-primary" id="btnCreateProfile" value="Crear Perfil">
+                                                    <input type="submit" class="form-control btn btn-dark" id="btnCreateProfile" value="Crear Perfil">
                                                     
-                                                    <button class="form-control btn btn-primary close" type="button" id="btnCreateLoading" disabled>
+                                                    <button class="form-control btn btn-dark close" type="button" id="btnCreateLoading" disabled>
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                         Creando Perfil ...
                                                     </button>
@@ -695,7 +695,7 @@
                                                 </div>
                                                         
                                                 <div class="form-group my-3">
-                                                    <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnChangeUsername" disabled>
+                                                    <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnChangeUsername" disabled>
                                                 </div> 
                                             <!-- fetch post  -->
                                         </div>
@@ -771,7 +771,7 @@
                                                 </div>
                                                     
                                             <div class="form-group my-2">
-                                                <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnSubmitHashtag" disabled>
+                                                <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnSubmitHashtag" disabled>
                                             </div>
                                         <!-- fetch post  -->
                                     </div>
@@ -802,7 +802,7 @@
                                                     <label for=""> <small> Contraseña debe tener mínimo 6 caracteres. </small></label>
                                                 </div>
                                                 <div class="form-group my-3">
-                                                    <button type="submit" class="btn btn-primary form-control">Cambiar Contraseña</button>
+                                                    <button type="submit" class="btn btn-dark form-control">Cambiar Contraseña</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -819,7 +819,7 @@
                                                     <label for="">Para cambiar su Contraseña se requiere enviar un Token de seguridad a su email. Recomendamos tener su correo abierto antes de dar al botón "Enviar token". </label>
                                                 </div>
                                                 <div class="form-group my-3">
-                                                    <button type="submit" class="btn btn-primary form-control">Enviar Token</button>
+                                                    <button type="submit" class="btn btn-dark form-control">Enviar Token</button>
                                                 </div>
 
                                             </form>
@@ -828,7 +828,7 @@
                                 <% }; %>
                             </div>
 
-                            <!-- aqui estaran todos los modales informativos -->
+                            <!-- aqui estaran todos los modales informativos --> <!-- bannerPerfil.png -->
 
                             <!-- Modal crear perfil --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCreatePerfil" -->
                             <div class="modal fade" id="staticCreatePerfil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelP" aria-hidden="true">
@@ -851,12 +851,13 @@
 
                                             <p>Esta información es de carácter administrativo y no será visible para la comunidad. Se utilizará exclusivamente para generar tus facturas y recibos relacionados con la creación de anuncios y/o ventas. Agradecemos tu comprensión.</p>   
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
+                            
 
                             <!-- Modal edit perfil --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticEditPerfil" -->
                             <div class="modal fade" id="staticEditPerfil" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelR" aria-hidden="true">
@@ -879,15 +880,15 @@
 
                                             <p>Esta información es de carácter administrativo y no será visible para la comunidad. Se utilizará exclusivamente para generar tus facturas y recibos relacionados con la creación de anuncios y/o ventas. Agradecemos tu comprensión.</p>   
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             
-                            <!-- Modal edit perfil --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticEditDataBank" -->
+                            <!-- Modal banco --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticEditDataBank" -->
                             <div class="modal fade" id="staticEditDataBank" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelR" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content">
@@ -912,8 +913,8 @@
 
                                             <p>Esta información es de carácter administrativo y solo será visible en la vista de negociacion o de Gestor de ventas (Marketer).</p>   
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -937,8 +938,8 @@
                                             </ul>
                                             <p>Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Editar </span> para saber si tu cuenta admite esta edición. Introduce el nuevo nombre que quieres y finalmente da clic a <span class="fw-bold text-primary">Actualizar</span>. El sistema actualizará su nuevo nombre de Cuenta/Tienda y en 3 segundos será deslogeado. Vuelva a entrar y todos los cambios estarán listos.  </p>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -954,12 +955,12 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p>" <span class="fw-bold"> ¡Añade hasta 9 palabras clave! </span> Así, tu tienda aparecerá cuando los usuarios busquen con esos términos en <span class="fw-bold">Tiendas</span>. ¡Haz que te encuentren fácilmente!"</p>
+                                            <p> <span class="fw-bold"> ¡Añade hasta 9 palabras clave! </span> Así, tu tienda aparecerá cuando los usuarios busquen con esos términos en <span class="fw-bold">Tiendas</span>. ¡Haz que te encuentren fácilmente!</p>
 
                                             <p> Agrega la palabra clave <span class="fw-bold">sin usar el #</span> y luego utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Añadir </span> repite esta acción hasta tener todas las palabras que deseas y finalmente da clic en <span class="fw-bold text-primary">Actualizar</span>. </p>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -977,8 +978,8 @@
                                         <div class="modal-body">
                                             <p>Cambiar contraseña de al botón <span class="fw-bold text-primary">Enviar Token </span> vaya a su correo y recupere el token (Número de 6 digitos) vuelva a la misma sección y coloque el número copiado, debajo la Nueva Contraseña y por ultimo clic en <span class="fw-bold text-primary">Cambiar Contraseña</span>. </p>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -994,7 +995,7 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p class="mb-1">🌟 <b>¡Bienvenido a la ZonaBliss! </b> 🌟 </p>
+                                            <p class="mb-1"> <b>¡Bienvenido a la ZonaBliss! </b> </p>
                                             <p>
                                                 Una herramientas innovadora para crear carruseles de banners atractivos, insertar videos cautivadores y subir fotos impresionantes, todo desde un espacio fácil de administrar.     
                                                 Haz que tu tienda brille y atraiga a más usuarios con estilo y creatividad. ¡Descubre el poder de la personalización y eleva tu negocio al siguiente nivel con ZonaBliss! 
@@ -1024,8 +1025,8 @@
                                             </p>
                                             <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios</b>  </span> </p>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1048,8 +1049,8 @@
                                             <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios de Items</b>  </span> </p>
                                             <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1071,8 +1072,8 @@
                                             <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios</b>  </span> </p>
                                             <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1094,8 +1095,8 @@
                                             <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>1 Anuncio</b>  </span> </p>
                                             <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1378,7 +1379,7 @@
                                                                 </div> 
                                                                 <div class="col-lg-3 col-md-3 col-sm-11">       
                                                                     <div class="form-group d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
-                                                                        <a href="/account/<%= user.username %>" class="btn btn-primary text-light text-decoration-none rounded-3 w-100 d-block">
+                                                                        <a href="/account/<%= user.username %>" class="btn btnBlissenet text-decoration-none rounded-3 w-100 d-block">
                                                                             <i class="bi bi-shop-window me-1"></i> Ir a mi Tienda
                                                                         </a>
                                                                     </div>
@@ -1435,7 +1436,7 @@
                                                 <div class="card-body">
 
                                                     <div class="container-fluid p-0 mb-3">
-                                                        <div class="alert alert-info" style="border-left: 5px solid rgb(33, 103, 150);">
+                                                        <div class="alert alert-dark" style="border-left: 5px solid #131313;">
                                                             <p class="m-0">
                                                                 <span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> </span> 
                                                                 Importante : "¡Hola! Explora estas herramientas para mejorar la experiencia de tus clientes. Haz clic en el ícono de información para más detalles. <i class="bi bi-info-circle mx-1"></i>"   
@@ -1443,7 +1444,7 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <span class="alert-info rounded-2 p-2" style="border-left: 5px solid rgb(33, 103, 150);">
+                                                    <span class="alert alert-dark rounded-2 p-2" style="border-left: 5px solid #131313;">
                                                         <span>Anuncios Existentes :</span>
                                                         <% if(sumCount) { %>  <span class="px-2">  <b><%= sumCount %></b>  </span>  <% } else { %> <span class="px-2"><%= sumCount %> </span> <% } %>
                                                     </span>
@@ -1521,7 +1522,7 @@
                                                                 </a>
                                                             </div>
                                                             <div class="col-lg-6 col-md-6 col-sm-12 form-group"> 
-                                                                <a href="/account/<%= user.username %>" class="mt-1 btn btn-primary text-light text-decoration-none rounded-3 d-block w-100">
+                                                                <a href="/account/<%= user.username %>" class="mt-1 btn btnBlissenet text-decoration-none rounded-3 d-block w-100">
                                                                     <i class="bi bi-shop-window me-1"></i> Mi Tienda
                                                                 </a>   
                                                             </div>    

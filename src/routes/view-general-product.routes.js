@@ -1409,7 +1409,7 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
                             const newTicket = new modelTickets ({ id_raffle: Id, dateStart, category, numTickets, raffleClosingPolicy: policy, title,  price, serial, No : Ticket , username , anfitrion });
                             const newTicketSave = await newTicket.save();
 
-                            req.session.ticketTakeFine = `Felicidades, Ha tomado el Ticket, ${Ticket}`; 
+                            req.session.ticketTakeFine = `Felicidades, ha tomado el ticket, ${Ticket}`; 
                             
                             console.log("Aun faltan Numeros por tomar")
                             console.log("cantVerifiedTicket", cantVerifiedTicket);
@@ -1537,7 +1537,7 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
             
                     }});
         
-                    req.session.ticketTakeFine = `Felicidades, Ha tomado el Ticket, ${Ticket}`;   
+                    req.session.ticketTakeFine = `Felicidades, ha tomado el ticket, ${Ticket}`;   
         
                 } else {
         
@@ -2039,7 +2039,7 @@ routes.get("/raffleModule/verifiedTicket/payYes/:id/:contestan/:NoTicket", async
 
 ////:::NO boton No (el pago sera registrado como No pagado)
 //aqui es donde un anfitrion de un sorteo pago verifica un pago de Ticket
-routes.get("/raffleModule/verifiedTicket/payNo/:id/:NoTicket", async(req, res)=>{
+routes.get("/raffleModule/verifiedTicket/payNo/:id/:contestan/:NoTicket", async(req, res)=>{
 
     const Id = req.params.id;
     const NoTicket = req.params.NoTicket;

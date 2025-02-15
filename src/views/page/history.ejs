@@ -28,15 +28,17 @@
     <%- include('../partials/navi-simple.ejs') %>
     
 <% if (user) { %>
-    <div class="container-fluid d-flex justify-content-between p-1 themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-          <div class="containerNav d-flex align-items-center"><p class="m-0 ps-3">Historial</p></div>
-       
-          <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-secondary active" id="buySell">Compras</button>
-            <button type="button" class="btn btn-secondary" id="contact">Contactos</button>
-            <button type="button" class="btn btn-secondary" id="raffle">Sorteos</button>
-          </div>
-    </div>
+
+
+    <div class="container-fluid d-flex justify-content-between py-2" style="background-color: #9200ff">
+      <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Historial </b>  </div>
+      
+      <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-dark active" id="buySell">Compras</button>
+        <button type="button" class="btn btn-dark" id="contact">Contactos</button>
+        <button type="button" class="btn btn-dark" id="raffle">Sorteos</button>
+      </div>
+    </div>      
 
     <ul class="nav nav-tabs mt-2 mx-4">
 

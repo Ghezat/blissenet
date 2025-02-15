@@ -14,41 +14,43 @@
 .cube{
     width: 42px;
     height: 42px;
-    border: 1px solid burlywood;
-    background-color: brown;
-    color: burlywood;
+    border: 1px solid #d5a3fc;
+    background-color: #494949;
+  
+    color: #eaceff;
+  
     margin: 1px;
     cursor: pointer;
-    transition: 0.5s outline;
+    transition: 0.8s outline all;
 }
 
 .cube:hover{
-  outline: 1px solid rgb(46, 7, 7);
+  outline: 2px solid #490081;
 }
 
 .cubeTake{
     width: 42px;
     height: 42px;
-    border: 1px solid burlywood;
-    background-color: rgb(36, 1, 1);
-    color: burlywood;
+    border: 1px solid #eaceff;
+    background-color: #202020;
+    color: gold;
     margin: 1px;
 }
 .cubeTakeVerified{
     width: 42px;
     height: 42px;
-    border: 1px solid burlywood;
-    background-color: rgb(36, 1, 1);
-    color: burlywood;
+    border: 1px solid #eaceff;
+    background-color: #202020;
+    color: gold;
     margin: 1px;
 }
 
 .cubeTakeNOVerified{
     width: 42px;
     height: 42px;
-    border: 1px solid burlywood;
+    border: 1px solid #eaceff;
     background-color: goldenrod;
-    color: rgb(36, 1, 1);
+    color: #303030;
     margin: 1px;
 }
 
@@ -106,15 +108,20 @@
             
           </div>
 
-        <div class="contentSerial py-3 px-2 d-flex justify-content-end align-itens-center border-bottom border-dark" style="background-color: gray;">
+        <div class="contentSerial d-flex justify-content-end align-itens-center py-3 px-2" style="background-color: #9200ff;">
           <% if (search) { %>
-            <p class="my-0"> <span><b>Serial Raffle : </b></span><span class="rounded-pill ms-1 px-2 py-1 bg-dark text-light"><b><%= search._id %></b></span> </p>
+
+            <p class="my-0"> <span style="color: white;" ><b>Serial Raffle : </b></span><span class="rounded-pill ms-1 px-2 py-1 bg-dark text-light"><b><%= search._id %></b></span> </p>
             <input type="hidden" value="<%= search._id %>" id="idRaffle">
+
           <% }; %>
         </div>
-        <div class="row mx-0 d-flex justify-content-center themaTextLight" style="background-color: rgba(233, 236, 239, 0.1)">
+
+
+
+        <div class="row mx-0 d-flex justify-content-center themaTextLight">
             
-            <div class="col-12 col-sm-12 col-md-11 col-lg-11  px-0" style="border: 2px solid brown;">
+            <div class="col-12 col-sm-12 col-md-11 col-lg-11  px-0 " style="border: 2px solid #d5a3fc;">
                 
                 <div class="contentCubes d-flex justify-content-center flex-wrap">
                   
@@ -128,10 +135,10 @@
         
         <div class="row mx-0 d-flex justify-content-center contentPercentdata" style="height: auto;">
 
-              <div class="col-xl-5 col-lg-5 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column themaTextLight" style="height: 130px; border: 2px solid brown;">
+              <div class="col-xl-5 col-lg-5 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column themaTextLight" style="height: 130px; border: 2px solid #d5a3fc;">
                 
-                <div class="content-fluid" style="background-color: brown; height: 30px;">
-                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Progess</b> </span>
+                <div class="content-fluid" style="background-color: #eaceff; height: 30px;">
+                  <span class="d-flex justify-content-start ms-2" style="color: #303030;"> <b>Progeso</b> </span>
                 </div>
                 <div class="contentPercentdata d-flex justify-content-center align-itens-center" style="height: 100px;">
                     <div class="d-flex align-items-center justify-content-center" style="width: 50%; height: 100%;">
@@ -144,21 +151,21 @@
                 
               </div>
 
-              <div class="col-xl-3 col-lg-3 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column" style="background-color: rgba(165, 42, 42, 0.8); height: 130px; border: 2px solid brown;">
+              <div class="col-xl-3 col-lg-3 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column" style="background-color: rgba(146, 0, 255, 0); height: 130px; border: 2px solid #d5a3fc;">
                 
-                <div class="content-fluid" style="background-color: brown; height: 30px;">
-                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Ticket Random</b> </span>
+                <div class="content-fluid" style="background-color: #eaceff; height: 30px;">
+                  <span class="d-flex justify-content-start ms-2" style="color: #303030"> <b>Ticket Aleatorio</b> </span>
                 </div>
-                <span class="randonFront d-flex justify-content-center" style="font-size: 50px; color: gold">  </span>
+                <span class="randonFront d-flex justify-content-center themaTextLight" style="font-size: 50px;">  </span>
 
               </div>
 
-              <div class="col-xl-3 col-lg-3 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column" style="background-color: rgba(165, 42, 42, 0.8); height: 130px; border: 2px solid brown;">
+              <div class="col-xl-3 col-lg-3 col-md-11 col-sm-12 col-12 px-0 d-flex flex-column" style="background-color: rgba(146, 0, 255, 0); height: 130px; border: 2px solid #d5a3fc;">
                 
-                <div class="content-fluid" style="background-color: brown; height: 30px;">
-                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Prizes</b> </span>
+                <div class="content-fluid" style="background-color: #eaceff; height: 30px;">
+                  <span class="d-flex justify-content-start ms-2" style="color: #303030"> <b>Premios</b> </span>
                 </div>
-                <div class="container-fluid p-0 bg-light" id="prizesObject" style="overflow-y: auto; overflow-x: auto; width: 100%;">
+                <div class="container-fluid p-0" id="prizesObject" style="overflow-y: auto; overflow-x: auto; width: 100%;">
                   <!-- aqui el objeto PrizesObject (los premios y al lado los numeros ganadores cuando los tenga) -->
                   
                 </div>
@@ -167,13 +174,13 @@
                 
         </div>
        
-        <div class="row mx-0 d-flex justify-content-center mt-3 pb-3 themaTextLight" style="background-color: rgba(233, 236, 239, 0.1); height: auto;" >
+        <div class="row mx-0 d-flex justify-content-center align-items-center mt-3 py-3 themaTextLight shadow-sm" style="background-color: rgba(110, 110, 110, 0.1); height: auto;" >
         
          
             <% if (search) { %>
 
                 <% if (search.allTicketsTake == true) { %>
-                  <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0 border border-danger">
+                  <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0" style="border: 2px solid #d5a3fc;">
                     <% let win = 0; %> <!-- creo un contador si termina con 1 o mas de 1 es un ganador-->
                     <% let ticketWin = []; %>
                     <% let rate = 0; %>
@@ -192,7 +199,7 @@
                       <% if (rate == 0  ){ %>
                         <div class="row m-0">
 
-                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0 border border-success alert-success" >
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0" >
                             <div class="p-0 d-flex align-items-center justify-content-center" style="height: auto;">
                               <div class="alert m-0" style="width: 100%;">
                                 <span><b class="me-1">(<%= user.username %>) <i class="bi bi-arrow-right-short"></i> Calificación enviada. </b> En cuanto todos los ganadores hayan calificado. Este sorteo podrá ser dado de baja por el Anfitrión.</span>
@@ -203,8 +210,8 @@
                         </div>
                       <% } else { %>
                         <div class="row m-0">
-                          <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0 border border-danger">
-                            <div class="p-2 border border-success" style="height: auto;">
+                          <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
+                            <div class="p-2" style="height: auto;">
 
                               <form action="/raffleModule/rate" method="post">
                                 
@@ -235,7 +242,7 @@
 
                             </div>
                           </div>
-                          <div class="col-12 col-sm-12 col-md-7 col-lg-7 d-flex align-items-center border border-danger alert-danger">
+                          <div class="col-12 col-sm-12 col-md-7 col-lg-7 d-flex align-items-center">
                             <div class="p-2" style="height: auto;">
                               <p class="m-0">Usted ha sido ganador con el Ticket <b><%= ticketWin %></b>. Ahora pongase encontacto con el Anfitrión, Luego de recibir su Premio, Puede calificar este Sorteo, eligiendo las opciones y dando clic en <b>Calificar</b>.</p>
                             </div>
@@ -244,7 +251,7 @@
                       <% }; %>
                      
                     <% } else { %>
-                      <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0 border border-info alert-info" >
+                      <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0" >
                         <div class="p-0 d-flex align-items-center justify-content-center" style="height: auto;">
                           <div class="alert m-0" style="width: 100%;">
                             <span> <b class="me-1">Este Sorteo ya se ha Celebrado.</b> En cuanto todos los ganadores hayan calificado este sorteo podrá ser dado de baja por el Anfitrión.</span>
@@ -260,10 +267,10 @@
                       <% if (search.category === "Pago") { %>
                         <div class="col-12 m-0 p-0 d-flex flex-wrap justify-content-center" style="height: auto;">
                            <div class="row m-0 d-flex flex-wrap justify-content-center"> 
-                              <div class="col-12 col-sm-12 col-md-5 col-lg-5 px-0 border border-danger selectorContent" style="height: 100%; background-color: rgba(165, 42, 42, 0.8);">
+                              <div class="col-12 col-sm-12 col-md-5 col-lg-5 px-0 selectorContent" style="border: 2px solid #202020; height: 100%;">
 
-                                <div class="content-fluid" style="background-color: brown; height: auto;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Datos de Pago</b> </span> </div>
-                                <div class="contentPayData p-3" style="border:1px solid brown; height: auto;">
+                                <div class="content-fluid py-2" style="background-color: #202020; height: auto;"> <span class="d-flex justify-content-start ms-2" style="color: gold;"> <b>Datos de Pago</b> </span> </div>
+                                <div class="contentPayData p-3" style="height: auto;">
                                   
                                   <form action="/raffleModule/registerTicket/pay" method="post">
                                       <div class="input-group my-1">
@@ -286,7 +293,7 @@
                                           <span class="input-group-text"><i class="bi bi-plus-circle"></i></span>
                                           
                                       </div>
-                                      <div class="form-group mt-3 mb-2">
+                                      <div class="form-group mt-4 mb-1">
                                           <input type="submit" value="Registrar Pago" id="btnRegister" class="form-control btn btn-secondary" disabled>
                                       </div>
                                   </form>
@@ -294,14 +301,14 @@
                                 </div>    
                                 
                               </div>
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-0 d-flex flex-column border border-danger infoContent" style="background-color: rgb(255, 227, 227); height: 100%;">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-0 d-flex flex-column infoContent" style="border: 2px solid #202020; height: 100%;">
                     
-                                <div class="content-fluid" style="background-color: brown; height: auto">
-                                  <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Información</b> </span>
+                                <div class="content-fluid py-2" style="background-color: #202020; height: auto">
+                                  <span class="d-flex justify-content-start ms-2" style="color: gold;"> <b>Información</b> </span>
                                 </div>
                                 <div class="content-fluid p-2 m-0 d-flex justify-content-center align-items-center" style="height: 80%; overflow-y: auto;">
                     
-                                  <div class="alert-danger mt-0 py-2" style="height: auto !important;">
+                                  <div class=" mt-0 py-2" style="height: auto !important;">
                                     <p class="m-0"> Elige el ticket en la tabla de Distribución de Tickets, realiza el pago al anfitrión del Sorteo y regístralo en <b>'Datos de pago'</b> seleccionando el Ticket elegido y dando clic al botón azul. La información será verificada por el administrador del sorteo. Si el pago es efectivo, simplemente coloca la palabra 'efectivo'. En caso de depósito bancario, proporciona el número de confirmación o ref. completo. De esta forma, el anfitrión podrá verificar la información. </p>
                                   </div>
                                   
@@ -311,13 +318,13 @@
                           </div>
                         </div>  
                       <% } else { %>
-                        <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0 border border-danger" style="background-color: rgb(255, 227, 227); height: 100%;">
+                        <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0" style="border: 2px solid #202020; height: 100%;">
               
-                          <div class="content-fluid" style="background-color: brown; height: 20%;"> <span class="d-flex justify-content-start ms-2" style="color: burlywood;"> <b>Información</b> </span> </div>
+                          <div class="content-fluid py-2" style="background-color: #202020; height: 20%;"> <span class="d-flex justify-content-start ms-2" style="color: gold;"> <b>Información</b> </span> </div>
                           <div class="p-2  m-0 d-flex justify-content-center align-items-center" style="height: 80%; overflow-y: auto;">
               
-                            <div class=" alert-danger my-2 p-2 rounded-2" style="border-left: 7px solid brown;">
-                              Por favor, elija un número de Ticket de la tabla de Distribución de Tickets. Es importante recordar que este sorteo es completamente <b>Gratuito</b> y cada participante solo podrá escoger un número una sola vez. Los eventos de sorteos constan de tres fases:  1. Distribución de Tickets, 2. Celebración del Evento (Generación del número ganador), 3. Cierre o culminación del Evento (Los ganadores, al calificar, cierran el evento).
+                            <div class="my-2 p-2 rounded-2" style="border-left: 7px solid goldenrod">
+                              Por favor, elija un número de Ticket de la tabla de Distribución de Tickets. Es importante recordar que este sorteo es completamente <b>Gratuito</b> y cada participante solo podrá escoger un número una sola vez. Los eventos de sorteos constan de tres fases:  1. Distribución de Tickets, 2. Celebración del Evento (Generación del número ganador), 3. Cierre o culminación del Evento (Los ganadores, al calificar, cierran el evento). 
                             </div>
                             
                           </div>
@@ -560,7 +567,7 @@ fetch('/raffleModule/data/', {
 
         if (winTicket !== null){
           prizesObject.innerHTML += `
-                                  <div class="alert-danger px-2 border-bottom border-danger fw-bold" style="width: 100%; overflow : auto; white-space: nowrap">
+                                  <div class="px-2 fw-bold" style="background-color: #c584f7; border-bottom: 1px solid #6200ad; width: 100%; overflow : auto; white-space: nowrap">
                                       <span style="display: inline-block"> ${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i> </span>
                                       <span style="display: inline-block"> <i class="bi bi-ticket-perforated me-1"></i>${winTicket}</span>
                                   </div>
@@ -569,7 +576,7 @@ fetch('/raffleModule/data/', {
                            
         } else {
           prizesObject.innerHTML += `
-                                  <div class="alert-danger px-2 border-bottom border-danger fw-bold" style="width: 100%; overflow : auto; white-space: nowrap">
+                                  <div class="px-2 fw-bold" style="background-color: #c584f7; border-bottom: 1px solid #6200ad; width: 100%; overflow : auto; white-space: nowrap">
                                      <span style="display: inline-block"> ${i + 1}º Premio : ${prize} <i class="bi bi-arrow-right-short mx-1"></i> </span>
                                   </div>
                                   `
@@ -617,12 +624,8 @@ fetch('/raffleModule/data/', {
             console.log("Prize", Prize)
             winPrize.value = Prize
             if (rateSelect.value !== "select"){
-              btnRate.classList.add('btn-primary');
-              btnRate.classList.remove('btn-secondary');
               btnRate.removeAttribute("disabled");
             } else {
-              btnRate.classList.remove('btn-primary');
-              btnRate.classList.add('btn-secondary');
               btnRate.setAttribute("disabled", "");
             }
             
@@ -630,8 +633,6 @@ fetch('/raffleModule/data/', {
           
           if (ticketSelected == "select"){
             winPrize.value = "";
-            btnRate.classList.remove('btn-primary');
-            btnRate.classList.add('btn-secondary');
             btnRate.setAttribute("disabled", "");
           }
 
@@ -644,18 +645,12 @@ fetch('/raffleModule/data/', {
 
         if (rateSelect.value !== "select"){
           if (ticketSelected !== "select"){
-            btnRate.classList.remove('btn-secondary');
-            btnRate.classList.add('btn-primary');
             btnRate.removeAttribute("disabled");
           } else {
-            btnRate.classList.add('btn-secondary');
-            btnRate.classList.remove('btn-primary');
             btnRate.setAttribute("disabled", "");
           }
           
         } else {
-            btnRate.classList.add('btn-secondary');
-            btnRate.classList.remove('btn-primary');
             btnRate.setAttribute("disabled", "");
         }
       })
@@ -689,15 +684,11 @@ fetch('/raffleModule/data/', {
                   console.log("La Ref ya tiene informacion:", ele.Ref);
                   referTicket.setAttribute("disabled", "");
                   referTicket.value = "";
-                  btnRegister.classList.add("btn-secondary");
-                  btnRegister.classList.remove("btn-primary");
                   btnRegister.setAttribute("disabled", "");
                   referTicket.value = ele.Ref
               } else {
                   console.log("La Ref es vacia o diferente:", ele.Ref);
                   referTicket.removeAttribute("disabled");
-                  btnRegister.classList.remove("btn-secondary");
-                  btnRegister.classList.add("btn-primary");
                   btnRegister.removeAttribute("disabled");
               }
           }
@@ -709,8 +700,6 @@ fetch('/raffleModule/data/', {
 
           referTicket.setAttribute("disabled", "");
           referTicket.value = "";
-          btnRegister.classList.add("btn-secondary");
-          btnRegister.classList.remove("btn-primary");
           btnRegister.setAttribute("disabled", "");
 
     }

@@ -19,8 +19,10 @@
 }
 
 .marked{
-    background-color: black;
+    background-color: #9200ff;
+    color: #ffde00;
 }
+
 
 @media screen and (min-width: 290px) and (max-width: 499px ){
 
@@ -57,8 +59,8 @@
                 <% const map = infobliss.map %>
 
 
-                <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-                    <span class="ms-2 p-0" style="font-weight: 400;"> InfoBliss </span>
+                <div class="container-fluid d-flex justify-content-start py-2" style="background-color: #9200ff;">
+                    <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> InfoBliss </b>  </span>
                 </div>   
                 
                 <div class="container-fluid p-0">
@@ -66,7 +68,8 @@
                     <input type="hidden" value="<%= bGColorTopbar %>" id="colorFrame">
                     <input type="hidden" value="<%= bGColorGallery %>" id="colorGallery">
                     <input type="hidden" value="<%= bGColorWorkspace %>" id="colorWorkspace">
-                    
+
+                    <input type="hidden" value="<%= map.data %>" id="geolocationData">
 
                     <div class="row m-0 ">
 
@@ -86,12 +89,12 @@
                                                 <% if (policy.show === false ) { %> <!-- true o false -->
                                                     <input class="form-check-input" type="checkbox" id="flexCheckPolicy">
                                                 <% } else { %>    
-                                                    <input class="form-check-input" type="checkbox" id="flexCheckPolicy" checked>
+                                                    <input class="form-check-input checkColor" type="checkbox" id="flexCheckPolicy"  checked>
                                                 <% }; %> 
 
                                             </div>
                                             <div>
-                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselOffert"></i>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticPolity"></i>
                                             </div>
 
                                         </div>
@@ -105,13 +108,13 @@
                                                 <% if (faq.show === false ) { %> <!-- true o false -->
                                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckFAQ">
                                                 <% } else { %>    
-                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckFAQ" checked>
+                                                    <input class="form-check-input checkColor" type="checkbox" value="" id="flexCheckFAQ" checked>
                                                 <% }; %> 
                                                 
                                              
                                             </div>
                                             <div>
-                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticSectionMedia"></i>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticFaq"></i>
                                             </div>                                            
                                         </div>
 
@@ -124,12 +127,12 @@
                                                 <% if (survey.show === false ) { %> <!-- true o false -->
                                                     <input class="form-check-input" type="checkbox" id="flexCheckSurvey">
                                                 <% } else { %>  
-                                                    <input class="form-check-input" type="checkbox" id="flexCheckSurvey" checked>
+                                                    <input class="form-check-input checkColor" type="checkbox" id="flexCheckSurvey" checked>
                                                 <% }; %> 
 
                                             </div>
                                             <div>
-                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselImages"></i>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticSurvey"></i>
                                             </div>
                                         </div>
 
@@ -142,12 +145,12 @@
                                                 <% if (map.show === false ) { %> <!-- true o false -->
                                                     <input class="form-check-input" type="checkbox" id="flexCheckMap">
                                                 <% } else { %>  
-                                                    <input class="form-check-input" type="checkbox" id="flexCheckMap" checked>
+                                                    <input class="form-check-input checkColor" type="checkbox" id="flexCheckMap" checked>
                                                 <% }; %>     
 
                                             </div>
                                             <div>
-                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticCarouselBanner"></i>
+                                                <i class="bi bi-info-circle me-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticLocation"></i>
                                             </div>
                                         </div>
 
@@ -185,9 +188,9 @@
 
                                                     </div> 
                                                     
-                                                    <% if (policyData === "" ){  %>
+                                                    <% if (policyData.length === 0 ){  %> 
                                                     <div class="form-group my-3">
-                                                        <button class="btn-sm btn-success form-control btnPolicy"> Crear Politicas </button>
+                                                        <button class="btn-sm btn-dark form-control btnPolicy"> Crear Politicas </button>
                                                     </div>
                                                     <% } else { %>
 
@@ -227,10 +230,10 @@
 
                                                     </div>
                                                 
-                                                <% if (faqData === "" ){  %>
+                                                <% if (faqData.length === 0 ){  %>
 
                                                     <div class="form-group my-3">
-                                                        <button class="btn-sm btn-success form-control btnFaq"> Crear FAQ </button>
+                                                        <button class="btn-sm btn-dark form-control btnFaq"> Crear FAQ </button>
                                                     </div>
 
                                                 <% } else { %>
@@ -300,12 +303,12 @@
                                                             </div>    
 
                                                             <div class="contentLikert close">
-                                                                <div class="alert alert-success d-flex justify-content-between">
-                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
+                                                                <div class="alert alert-dark d-flex justify-content-between">
+                                                                    <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
                                                                 </div>
                                                             </div>
 
@@ -338,7 +341,7 @@
                                                         <% } else { %>
                                                             
 
-                                                            <div class="alert alert-info my-3">
+                                                            <div class="alert alert-bliss my-3">
                                                                 <span> <b>¡Encuesta creada con éxito!</b> Recuerda que solo se permite tener una encuesta activa a la vez. Si deseas crear otra, primero deberás eliminar la encuesta actual </span>
                                                             </div>
 
@@ -356,7 +359,7 @@
 
                                                         <% if (scheme.length !== 0) { %>
 
-                                                            <div class="alert alert-info my-3">
+                                                            <div class="alert alert-bliss my-3">
                                                                 <span>Eliminar esquema de encuesta no elimina el hitorial de esta.</span>
                                                             </div>
 
@@ -378,7 +381,7 @@
                                                             
                                                         <% } else { %>
                                                             
-                                                            <div class="alert alert-info my-3">
+                                                            <div class="alert alert-bliss my-3">
                                                                 <span>No hay encuesta.</span>
                                                             </div>
 
@@ -405,10 +408,61 @@
   
                                                   <% const mapData = map.data %>
                                                   
+                                                  
                                                       <div class="containData mt-2">
-                                                      
-                                                          <span>aqui va el boton para ejecutar el ratreo de ubicación </span>
+                                                                                                                
+                                                        <% if (mapData.length === 0) { %>
+                                                            <div class="alert alert-bliss">
+                                                                <span> El boton abajo captura su ubicación geografica. utilicelo para definir la ubicación real de su tienda.</span>
+                                                            </div>
+
+                                                            <div class="alertCreatedLocation">
+                                                                <!-- dinamico -->
+                                                              </div> 
+    
+                                                              <div class="alertLocationError"> 
+                                                                <!-- dinamico -->
+                                                              </div>
+                                                              
+    
+                                                              <div class="form-group my3">
+                                                                <button class="btn-sm btn-danger form-control" id="captureLocation"> Capturar ubicación </button>
+                                                                <button class="btn-sm btn-danger form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
+                                                              </div>
+
+                                                        <% } else { %>
+
+                                                            <!-- Estos input ocultos estan para almacenar las variable de Longitud y Latitud -->
+                                                            <input type="hidden" value="<%= mapData[0].lon %>" id="mapDataLon">
+                                                            <input type="hidden" value="<%= mapData[0].lat %>" id="mapDataLat">
+                                                            
+                                                            <div class="alert alert-bliss">
+                                                                <div class="alert alert-light p-1"> <span><i class="bi bi-geo-alt me-2"></i> Ubicación establecida.</span> </div>
+                                                                
+                                                                <p class="my-1"> Longitud : ( <%= mapData[0].lon %> ) </p>
+                                                                <p class="my-1"> Latitud : ( <%= mapData[0].lat %> ) </p>
+                                                            </div>
+
+                                                            <div class="alertCreatedLocation">
+                                                                <!-- dinamico -->
+                                                              </div> 
+    
+                                                              <div class="alertLocationError"> 
+                                                                <!-- dinamico -->
+                                                              </div>
+                                                              
+    
+                                                              <div class="form-group my3">
+                                                                <button class="btn-sm btn-danger form-control" id="captureLocation"> Capturar nueva ubicación </button>
+                                                                <button class="btn-sm btn-danger form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
+                                                              </div>
+
+                                                        <% }; %>    
+
+
   
+
+                                                          
                                                       </div>                                       
   
                                               </div>
@@ -428,99 +482,89 @@
 
                             <!-- aqui estaran todos los modales informativos -->
 
-                            <!-- Modal Carousel Ofertas --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselOffert" -->
-                            <div class="modal fade" id="staticCarouselOffert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                            <!-- Modal Polity --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticPolity" -->
+                            <div class="modal fade" id="staticPolity" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content">
 
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelZ">Sección de Ofertas</h5>
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Politicas de Tienda</h5>
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p class="mb-1">🌟¡Descubre el nuevo Carrusel de Ofertas!🌟  </p>
+                                            <p class="mb-1"> <b> <i class="bi bi-card-heading me-2"></i>  ¡Deja tus Políticas y reglas claras! </b>   </p>
 
-                                            <p> Con este módulo, tus clientes potenciales podrán ver todas tus ofertas de manera clara y atractiva, todo en un solo lugar. El carrusel permite que cada oferta destaque, facilitando la comparación y la elección. </p>
-                                                
-                                            <b>Beneficios:</b> 
-                                            <ul>
-                                               <li>Visibilidad Aumentada: Presenta tus ofertas de manera llamativa. </li>
-                                               <li>Facilidad de Uso: Navegación sencilla para los usuarios. </li>
-                                               <li>Impulso a las Ventas: Facilita decisiones rápidas al mostrar todas las promociones juntas.</li>
-                                            </ul>    
-                                            <i>¡Haz que tus ofertas brillen como nunca antes! 💡</i> 
+                                            <p> Con estas políticas, tus clientes potenciales podrán entender de forma sencilla las ventajas y desventajas al adquirir un producto o servicio. Esto les ayudará a tomar decisiones informadas y a generar confianza en tu tienda.  </p>
                                         
-                                            <p class="my-2"><small> Requerimentos : <span class="alert-success py-1 px-2 rounded-2"> <b>tener al menos un anuncio en oferta.</b>  </small></span> </p>
                                         </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-
-                            <!-- Modal Seccion de Media --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSectionMedia" -->
-                            <div class="modal fade" id="staticSectionMedia" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
-                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelZ"> Sección de MultiMedia </h5>
-                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="mb-1">🌟¡Sube videos o Imagenes de impacto!🌟  </p>                                          
-                                            <p> Utiliza esta sección para incrustar dos recursos de media, que puede ser dos videos o dos imagenes o alternarlo dejando un video y una imagen.
-                                                Utiliza este recursos gratuito para afianzar tu marca y Tienda. </p> 
-                                                                                
-                                        </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerInfoBliss.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div> 
 
-                            <!-- Modal Carousel de Imagenes --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselImages" -->
-                            <div class="modal fade" id="staticCarouselImages" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                            <!-- Modal Faq --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticFaq" -->
+                            <div class="modal fade" id="staticFaq" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticFaq" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content">
 
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelZ">Sección de Imágenes </h5>
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Preguntas y Respuestas Frecuentes</h5>
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p class="mb-1">🌟¡Destaca tu Tienda con un Carrusel de Imagenes!🌟  </p>                                          
-                                            <p> Utiliza este Carrusel, sin movimiento automático para que tus clientes muevan las imagenes y descubran por si mismo todo lo que quieres que vean.
-                                                Con nuestro carrusel de imagenes, podrás utilizar hasta 10 imágenes impactantes para resaltar los aspectos más destacados de tus productos o servicios, estas imagenes pueden tener diferentes anchos.
-                                                Aprovecha este recurso gratuito y haz que tus visitantes vuelen por los aires! </p> 
-                                                                                
+                                            <p class="mb-1">  <b> <i class="bi bi-question-diamond me-2"></i>  ¡Responde a las preguntas más frecuentes de manera clara y accesible! </b> </p>
+
+                                            <p> Ofrece a tus potenciales clientes un listado organizado de preguntas y respuestas, fácilmente accesibles con un solo clic. Esto les permitirá estar bien informados sobre cómo utilizar tu sistema de ventas y conocer los procedimientos de comercio y despacho. ¡Facilita su experiencia y genera confianza en tu servicio!  </p>
+                                        
                                         </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerInfoBliss.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- Modal Survey --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSurvey" -->
+                            <div class="modal fade" id="staticSurvey" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Encuestas</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="mb-1"> <b> <i class="bi bi-card-checklist me-2"></i>  Crea encuestas oportunas y claras  </b>   </p>
+
+                                            <p> Aprovecha esta increíble herramienta para recopilar todos los datos necesarios que te ayudarán a mejorar tu tienda y tus servicios. Con información clara y precisa, podrás tomar decisiones objetivas y ofrecer una mejor experiencia a tus clientes.  </p>
+                                        
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerInfoBliss.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div> 
                             
-                            <!-- Modal Carousel de Banner --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCarouselBanner" -->
-                            <div class="modal fade" id="staticCarouselBanner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
+                            <!-- Modal Location --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticLocation" -->
+                            <div class="modal fade" id="staticLocation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticZonaBliss" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content">
 
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelZ"> Sección de Banners </h5>
+                                            <h5 class="modal-title" id="staticBackdropLabelZ">Geolocalización</h5>
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p class="mb-1">🌟¡Destaca tu Tienda con un Carrusel de Banner!🌟  </p>                                          
-                                            <p> Diferénciate de la competencia y muestra tu compromiso con tus clientes. Con nuestro carrusel de banner, podrás utilizar hasta 5 imágenes impactantes para resaltar los aspectos más destacados de tus productos o servicios. Esta es una oportunidad perfecta para elevar tu marca y crear una experiencia visual atractiva que cautive a tus visitantes. ¡No te quedes atrás, aprovecha este recurso gratuito y haz que tu tienda brille! </p> 
-                                                                                
+                                            <p class="mb-1"> <b> <i class="bi bi-geo-alt me-2"></i>  Provee tu ubicación a tus clientes </b>   </p>
+
+                                            <p>  Comparte tu ubicación de manera interactiva para brindar mayor seguridad a tus clientes. Con esta herramienta podrán ver un mapa interactivo. Tus clientes decidirán fácilmente si desean visitarte o elegir una opción de entrega conveniente. Facilita el acceso a tu tienda y mejora la experiencia de compra de tus clientes. </p>
                                         
                                         </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
-                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerInfoBliss.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -565,9 +609,19 @@
                                             <input type="hidden" value="<%= dataPolicy %>" id="inputDataPolicyDelta">
                                         
                                             <div class="d-flex justify-content-center my-2"> <span> <b> <h4>Politicas de mi Tienda</h4> </b> </span> </div>
-                                            <div id="policyDataDelta"> 
-                                                <!-- inyeccion dinamica -->
-                                            </div>
+                                            
+                                            <% if (dataPolicy.length === 0) { %>
+                                                <div class="alert alert-bliss">
+                                                    "No se ha creado ninguna política hasta el momento. ¡Si desea crear una, dirígete a <b> Políticas de Tienda</b>!"   
+                                                </div>
+                                            <% } else { %>
+                                            
+                                                <div id="policyDataView"> 
+                                                    <!-- inyeccion dinamica -->
+                                                </div>
+
+                                            <% } %>
+
                                              
 
                                         </div>
@@ -577,9 +631,16 @@
                                             <input type="hidden" value="<%= dataFaq %>" id="inputDataFaqDelta">
                                         
                                             <div class="d-flex justify-content-center my-2"> <span> <b> <h4>Preguntas y Respuestas más Frecuentes</h4> </b> </span> </div>
-                                            <div id="faqDataDelta"> 
-                                                <!-- inyeccion dinamica -->
-                                            </div>
+                                            
+                                            <% if (dataFaq.length === 0) { %>
+                                                <div class="alert alert-bliss">
+                                                    "No se ha creado la sección FAQ hasta el momento. ¡Si desea crear una, dirígete a <b> Preguntas y Respuestas más Frecuentes (FAQ) </b>!"   
+                                                </div>
+                                            <% } else { %>
+                                                <div id="faqDataView"> 
+                                                    <!-- inyeccion dinamica -->
+                                                </div>
+                                            <% } %>    
 
                                         </div>
                                         <div class="contentSurvey close">
@@ -603,7 +664,7 @@
                                                                 
                                                             <p> <b> 4. Opta por preguntas cerradas : </b> Las preguntas de opción múltiple, verdadero/falso o escala de Likert son más fáciles de analizar y suelen proporcionar respuestas más objetivas.</p>
                                                         
-                                                            <div  style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> 1/3 </span> </div> 
+                                                            <div  style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-secondary rounded-pill px-2 mx-2"> 1/3 </span> </div> 
                                                         </div>
                                                     </div>
 
@@ -622,7 +683,7 @@
                                                             
                                                             <p> <b> 8. Analiza los resultados : </b> Una vez recopiladas las respuestas, analiza los datos de manera objetiva y busca patrones que te ayuden a tomar decisiones informadas. </p>
                                                         
-                                                            <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> 2/3 </span> </div> 
+                                                            <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-secondary rounded-pill px-2 mx-2"> 2/3 </span> </div> 
                                                         </div>
                                                     </div>
 
@@ -647,7 +708,7 @@
                                                             
                                                             <p> <b> 5. Crear encuesta : </b> Con todas las preguntas y sus posibles respuestas ya creadas, Solo queda crear la encuesta. Felicidades ya la has creado.  </p>
                                                         
-                                                            <div  style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> 3/3 </span> </div> 
+                                                            <div  style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-secondary rounded-pill px-2 mx-2"> 3/3 </span> </div> 
                                                         </div>
                                                     </div>
 
@@ -660,7 +721,7 @@
                                             
                                             <% if (survey.scheme.length !==0 ) { %>
                                                     <% const surveyId = survey.scheme.surveyId %> <% const surveyTime = survey.scheme.surveyTime %>
-                                                <p> ID : <span class="alert-success rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-stopwatch"></i> : <span class="alert-success rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
+                                                <p> ID : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-stopwatch"></i> : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
                                                 
                                                     <% const surveyData = survey.scheme.surveyData %> <!-- esto es un array -->
                                                 <div class="carousel-images p-2"> <!-- carousel-images es la clase de slick-carousel -->
@@ -684,18 +745,18 @@
                                                                         </div>
                                                                     <% } else { %>
                                                                         <div class="contentLikert mt-2">
-                                                                            <div class="alert alert-success d-flex justify-content-between">
-                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
-                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
-                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
-                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
-                                                                                <div class="boxLikert border border-success shadow "> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
+                                                                            <div class="alert alert-dark d-flex justify-content-between">
+                                                                                <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
+                                                                                <div class="boxLikert border border-dark shadow "> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
                                                                             </div>
                                                                         </div>
                                                                     <% } %>    
 
                                                                 <%  }) %>
-                                                                <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-success rounded-pill px-2 mx-2"> <%= card + 1 %> / <%= surveyData.length %> </span> </div>   
+                                                                <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-secondary rounded-pill px-2 mx-2"> <%= card + 1 %> / <%= surveyData.length %> </span> </div>   
                                                             </div>
                                                         </div>
 
@@ -717,7 +778,30 @@
                                             Resultados de Análisis
                                         </div>
                                         <div class="contentMap close">
-                                            contenedor de Mapa
+
+                                            <% if (mapData.length === 0) { %>
+                                            
+                                                <div class="contentLocation d-flex flex-column  justify-content-center align-items-center ">
+
+                                                    
+                                                    <img src="/img/geolocationIcon.png" alt="" style="width: 200px;">
+                                                    
+                                                    
+                                                    <div class="alert alert-info py-2 px-5">
+                                                        <span> <i class="bi bi-geo-alt me-2"></i>  "No hay geolocalización disponible. Por favor, establece una en <b> 'Ubicación Geográfica'.</b> " </span>
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+
+                                                
+                                            <% } else { %>
+                                                    
+                                                <div id="map" style="height: 400px;"></div>     
+                                                    
+                                            <% }; %>        
+                                            
+
                                         </div>
 
                                     </div>
@@ -758,11 +842,12 @@
         <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
         <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-        <!-- porque estos tres scripts van arriba del <%- include('../partials/scripts.ejs') %> la razon ... -->
+        <!-- porque estos tres scripts van arriba del <%- include('../partials/scripts.ejs') %> 
         <!-- primero se carga la cdn y luego se inicializan los programas con sus clases. para que pueda funcionar los carruseles. -->
 
 
         <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/carrousel.ejs') %>
         <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
       
 
@@ -771,6 +856,8 @@
 
 <script>
  
+    
+
     const userID = document.getElementById('userID'); //aqui tengo el id del user que es el mismo indexed de profile
     const flexCheckPolicy = document.getElementById('flexCheckPolicy');
     const flexCheckFAQ = document.getElementById('flexCheckFAQ');
@@ -930,7 +1017,7 @@
 
 
     const FaqData = inpFaqData.value;
-    //console.log("FaqData ->" , FaqData);
+    console.log("FaqData ->" , FaqData);
 
     if ( FaqData !== ""){
         deltaFaq = JSON.parse(FaqData);
@@ -968,7 +1055,7 @@
         faqData = inputFaqNew.value;
         let userId = userID.value;
 
-        console.log("policyData", faqData);
+        console.log("faqData", faqData);
         console.log("userId", userId);  
         
         const datos = {
@@ -997,50 +1084,63 @@
 
 <script>
 
-
     const inputDataPolicyDelta = document.getElementById('inputDataPolicyDelta');
-    const inputDataFaqDelta = document.getElementById('inputDataFaqDelta');
    
     let inputDataPolicy = inputDataPolicyDelta.value;
-    let inputDataFaq = inputDataFaqDelta.value;
-    //console.log("inputDataFaq->", inputDataFaq)
-
-    let quillPolicyData = new Quill('#policyDataDelta', {
-        modules: {
-            toolbar : false
-        }, 
-        theme : 'snow'
-        
-    });
-
-    let quillFaqData = new Quill('#faqDataDelta', {
-        modules: {
-            toolbar : false
-        }, 
-        theme : 'snow'
-
-    });
-  
-    
-    if (inputDataPolicy !== ""){
-        let delta_policy = JSON.parse(inputDataPolicy); //no se puede parsear si no hay un json
-        console.log("delta_policy", delta_policy);
-        // Inyectar el delta en Quill
-        quillPolicyData.setContents(delta_policy);
-    } else {
-        quillPolicyData.setContents();
-    }
-
-    if (inputDataFaq !== ""){
-        let delta_faq = JSON.parse(inputDataFaq); //no se puede parsear si no hay un json
-        console.log("delta_faq", delta_faq);
-        // Inyectar el delta en Quill
-        quillFaqData.setContents(delta_faq);
-    } else {
-        quillFaqData.setContents();
-    }
-    
+    console.log("inputDataPolicy->", inputDataPolicy)
  
+    if (inputDataPolicy){
+
+        let quillPolicyData = new Quill('#policyDataView', {
+            modules: {
+                toolbar : false
+            }, 
+            theme : 'snow',
+            readOnly : true
+        });
+
+        
+        if (inputDataPolicy !== ""){
+            let delta_policy = JSON.parse(inputDataPolicy); //no se puede parsear si no hay un json
+            console.log("delta_policy", delta_policy);
+            // Inyectar el delta en Quill
+            quillPolicyData.setContents(delta_policy);
+        } else {
+            quillPolicyData.setContents();
+        }
+
+    }    
+</script>
+
+<script>
+    
+    const inputDataFaqDelta = document.getElementById('inputDataFaqDelta');
+
+
+    let inputDataFaq = inputDataFaqDelta.value;
+    if (inputDataFaq){
+
+        let quillFaqData = new Quill('#faqDataView', {
+            modules: {
+                toolbar : false
+            }, 
+            theme : 'snow',
+            readOnly : true
+
+        });
+
+
+        if (inputDataFaq !== ""){
+            let delta_faq = JSON.parse(inputDataFaq); //no se puede parsear si no hay un json
+            console.log("delta_faq", delta_faq);
+            // Inyectar el delta en Quill
+            quillFaqData.setContents(delta_faq);
+        } else {
+            quillFaqData.setContents();
+        }
+    
+    }
+
 </script>
 
 <script>
@@ -1071,6 +1171,7 @@
         contentSurveyVisualize.classList.add('close');
         contentSurveyAnalysis.classList.add('close');
         contentMap.classList.add('close');
+        
     });
 
     navFaq.addEventListener('click', ()=>{
@@ -1085,6 +1186,7 @@
         contentSurveyVisualize.classList.add('close');
         contentSurveyAnalysis.classList.add('close');
         contentMap.classList.add('close');
+        
     });
 
     navSurvey.addEventListener('click', ()=>{
@@ -1099,6 +1201,7 @@
         contentSurveyVisualize.classList.add('close');
         contentSurveyAnalysis.classList.add('close');
         contentMap.classList.add('close');
+        
     });
 
     navSurveyVisualize.addEventListener('click', ()=>{
@@ -1108,6 +1211,7 @@
         contentSurveyVisualize.classList.remove('close');
         contentSurveyAnalysis.classList.add('close');
         contentMap.classList.add('close');
+        
     });
 
     navSurveyAnalysis.addEventListener('click', ()=>{
@@ -1117,6 +1221,7 @@
         contentSurveyVisualize.classList.add('close');
         contentSurveyAnalysis.classList.remove('close');
         contentMap.classList.add('close');
+        
     });
 
     navMap.addEventListener('click', ()=>{
@@ -1131,6 +1236,9 @@
         contentSurveyVisualize.classList.add('close');
         contentSurveyAnalysis.classList.add('close');
         contentMap.classList.remove('close');
+
+        //activar el mapa
+        createMap()
     });
 
 </script>
@@ -1208,21 +1316,36 @@
     //agregar input para posibles repuestas
     if (addOptionResponse){
         addOptionResponse.addEventListener('click', ()=>{
-            let newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.className = 'form-control'; //clase principal
-            newInput.classList.add('addInpOption'); // otra clase
-            newInput.placeholder = 'Añadir';
-
-            //añadir el input al contenedor
-            contentMultipleInput.appendChild(newInput)
+            let addInp = document.querySelectorAll('.addInpOption');
+            let lastInp = addInp.length; //este es el ultimo input agregado 
+            console.log("addInp ---", addInp)
+            console.log('lastInp', lastInp - 1);
+            let valueInp = addInp[lastInp - 1].value;
             
-            // Agregar el evento para eliminar el input si está vacío
-            newInput.addEventListener('input', () => {
-                if (newInput.value === "") {
-                    newInput.remove(); // Eliminar el input si está vacío
-                }
-            });
+            console.log("ver este valor valueInp -------", valueInp);
+
+            if (valueInp !== ""){
+
+                let newInput = document.createElement('input');
+                newInput.type = 'text';
+                newInput.className = 'form-control'; //clase principal
+                newInput.classList.add('addInpOption'); // otra clase
+                newInput.placeholder = 'Añadir';
+
+                //añadir el input al contenedor
+                contentMultipleInput.appendChild(newInput)
+
+                // Agregar el evento para eliminar el input si está vacío
+                newInput.addEventListener('input', () => {
+                    if (newInput.value === "") {
+                        newInput.remove(); // Eliminar el input si está vacío
+                    }
+                });
+
+            }
+
+            
+
             
         })
     }    
@@ -1538,5 +1661,196 @@ boxLikert.forEach((ele) => {
         ele.classList.add('marked');
     });
 });
+
+</script>
+
+<script>
+    const captureLocation = document.getElementById('captureLocation');
+    const captureLocationDisabled = document.getElementById('captureLocationDisabled');
+
+    const alertCreatedLocation = document.querySelector('.alertCreatedLocation');
+    const alertLocationError = document.querySelector('.alertLocationError');
+    let lat;
+    let lon;
+
+    captureLocation.addEventListener('click', () => {
+
+        captureLocation.classList.add('close');
+        captureLocationDisabled.classList.remove('close');
+
+        let userId = userID.value;
+    
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                lat = position.coords.latitude;
+                lon = position.coords.longitude;
+                //console.log(`Latitud: ${lat}, Longitud: ${lon}`);
+
+                const datos = {
+                    userId : userId,
+                    lat : lat,
+                    lon : lon 
+                }
+
+                //console.log("Datos a enviar --->", datos );
+        
+
+                fetch('/infobliss/addLocation', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => 
+                  {
+                    //console.log(jsonx)
+                    const code = jsonx.code;
+                    const response = jsonx.response;
+
+                    if (code === 1){
+                        //geolocalizacion guardada con exito
+                        alertCreatedLocation.innerHTML = `
+                            <div class="alert alert-success py-1 ">
+                                <span> <i class="bi bi-check-circle-fill me-2"></i> ${response} </span>    
+                            </div>`
+
+                        setTimeout(() => {
+                            alertCreatedLocation.innerHTML = "";
+                            location.reload();
+                        }, 4000);    
+
+                    } else if (code === 2){
+                        //Perfil no existe. 
+                        alertLocationError.innerHTML = `
+                            <div class="alert alert-danger py-1 ">
+                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
+                            </div>`
+
+                        setTimeout(() => {
+                            alertLocationError.innerHTML = "";
+                        }, 4000);     
+
+                    } else if (code === 0){
+                        //Ha ocurrido un error, intente luego.
+                        alertLocationError.innerHTML = `
+                            <div class="alert alert-danger py-1 ">
+                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
+                            </div>`
+
+                        setTimeout(() => {
+                            alertLocationError.innerHTML = "";
+                        }, 4000);                             
+                    }
+
+                    captureLocation.classList.remove('close');
+                    captureLocationDisabled.classList.add('close');
+
+                    captureLocation.setAttribute("disabled", "");
+                    setTimeout(() => {
+                        captureLocation.removeAttribute("disabled", "");
+                        //esto es una forma de proteger el sistema y no lo usen para saturar de peticiones el servidor.
+                    }, 5000);
+
+                  })
+                .catch( err => console.log(err));
+                                            
+            }) , function(error) {
+                    switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                console.log("El usuario denegó la solicitud de geolocalización.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                console.log("La información de ubicación no está disponible.");
+                                break;
+                            case error.TIMEOUT:
+                                console.log("La solicitud para obtener la ubicación ha expirado.");
+                                break;
+                            case error.UNKNOWN_ERROR:
+                                console.log("Ha ocurrido un error desconocido.");
+                                break;
+                    }            
+                }
+
+        } else {
+
+            console.log('La geolocalización no es soportada por este navegador.')
+
+        }
+    })
+</script>
+
+<script>
+
+
+let map; // Variable global para almacenar la instancia del mapa
+
+function createMap() {
+    const Lon = document.getElementById('mapDataLon');
+    const Lat = document.getElementById('mapDataLat');
+    
+    if (Lon && Lat){
+
+        const lon = Lon.value;
+        const lat = Lat.value;
+
+        //console.log("lon -->", Lon);
+        //console.log("Lat -->", Lat);
+
+        console.log(`Estas variables ya están definidas ---> Latitud: ${lat}, Longitud: ${lon}`);
+
+        // Verifica si el mapa ya ha sido creado
+        if (map) {
+            map.remove(); // Destruye el mapa existente
+        }
+
+        // Crear un nuevo mapa en el div con id "map" instanciar
+        map = L.map('map').setView([lat, lon], 13); // El segundo parámetro es el nivel de zoom
+        
+
+
+        // Añadir una capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Añadir un marcador en las coordenadas especificadas
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup('¡Estás aquí!')
+            .openPopup();
+ 
+        
+
+        const options = {
+            position: 'topleft',
+            primaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'hectares',
+            activeColor: '#9200FF',
+            completedColor: '#c174fc',
+            // Traducción de los textos
+        };
+        const measureControl = new L.Control.Measure(options);
+        map.addControl(measureControl); // Asegúrate de añadir el control al mapa
+
+        L.Control.Measure.include({
+            _setCaptureMarkerIcon: function () {
+                this._captureMarker.options.autoPanOnFocus = false;
+
+                this._captureMarker.setIcon(
+                    L.divIcon({
+                        iconSize: this._map.getSize().multiplyBy(2)
+                    })
+                );
+            },
+        });
+        
+
+    }
+
+}
+
 
 </script>

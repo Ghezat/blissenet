@@ -43,6 +43,9 @@
     /*para que z-index funcione debe ir acompañado de un valor en la propiedad position*/
   }
 
+  .boderBtn{
+    cursor: pointer;
+  }
   
   .btnMaskSeguir{
     opacity: 0;
@@ -51,7 +54,6 @@
   .btnMaskSiguiendo{
     opacity: 0;
   }
-
 
 
   .containerBanner:hover{
@@ -216,6 +218,27 @@
       transform-origin: center; /* Establecer el eje central para rotar */
     }
 
+    .contentInfoBliss{
+      display: flex;
+      justify-content: start;
+      flex-wrap: wrap;
+    }
+
+    .containerInfo{
+      position: relative;
+    }
+
+    .btnInfo{
+      position: absolute;
+      top: 0;
+      right: -110px;
+      transition: 1.5s all;
+    }
+
+    .btnInfo:hover{
+      right: 0px;
+
+    }
 
     @keyframes moverLupa {
           0% {
@@ -283,6 +306,12 @@
       justify-content: end;
     }
 
+    .contentInfoBliss{
+      display: flex;
+      justify-content: start;
+      flex-wrap: wrap;
+    }
+
 
    }
     
@@ -344,6 +373,12 @@
       justify-content: center;
     }
 
+    .contentInfoBliss{
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
   }
 
 </style>
@@ -373,6 +408,13 @@
         <% const carouselImages = gallery.carouselImages %>
         <% const carouselBanner = gallery.carouselBanner  %> 
         
+        <% const infobliss = storeProfile.infobliss %>  
+        <% const policy = infobliss.policy %>
+        <% const faq = infobliss.faq %>
+        <% const survey = infobliss.survey %>
+        <% const map = infobliss.map %>
+
+        <input type="hidden" id="StorenameValue" value="<%= store_username %>">
 
         <div class="container-fluid p-0 m-0">
 
@@ -465,11 +507,13 @@
                         
                         <% if (statusFollow !== null) { %>
                             <div class="content-btn mt-3 cursor-pointer me-5" id="btnFollow" style = "width: max-content; height: max-content; position: relative;">
+                              
                                 <button class="btn rounded-pill shadow-sm px-4 buttonFollow" style="background-color: #131313; color: #ffffff; border: 1px solid #ffffff"> <span id= "spanBtnFollow"> Siguiendo </span>  </button>
                                 <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
                             </div>
                         <% } else { %>
                             <div class="content-btn mt-3 cursor-pointer me-5" id="btnFollow" style = "width: max-content; height: max-content; position: relative;">
+                                
                                 <button class="btn rounded-pill shadow-sm px-4 buttonFollow"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar %>;"> <span id= "spanBtnFollow"> Seguir </span>  </button>
                                 <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
                             </div>
@@ -481,6 +525,7 @@
 
                       <div class="content-btn-follow mt-3 me-5" style = "position: relative;">
                       
+            
                         <button class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;">Seguir</button>
                         <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
                       
@@ -490,7 +535,9 @@
 
         
                 </div> <!-- aqui cierra el bloque Topbar--> 
-       
+        
+                <div class="containerSegment"> 
+
                     <form  method="get" id="formSegment"> <!-- acti0n se forma abajo en un script -->
                         <input type="hidden" value="<%= store_username %>" id="store_username">
                         <input type="hidden" value="<%= store_id %>" name="store" id="store_indexed">  
@@ -511,8 +558,9 @@
                             </select>
                             <label for="floatingSelect" style="color: <%= bGColorText %>; "><i>Selecciona un Segmento</i> </label>
                         </div>
-                    </form>    
-             
+                    </form>
+
+                </div>
                     
                   <!-- //storeProfile camiar por storeProfile --> 
 
@@ -668,7 +716,7 @@
                           </div>
                       </div>                      
 
-                  <div class="containerWorkSpace">
+                  <div class="containerWorkSpace"> 
                     <!-- bloque Workspace -->
                     <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= bGColorWorkspace %>; position: relative;">
 
@@ -1172,6 +1220,66 @@
 
                     </div>
                   </div> 
+
+                  <div class="containerInfoBliss close"  id="infoblis" style="height: auto; background-color: rgba(255, 255, 255, 0.9); color: #131313;">
+                    <!-- este contenedor es donde vamos a mostrar todo lo referente a infoblis para esta tienda -->
+                     
+                      <div class="containerPolity close px-5 py-5">
+                        <div class="mainSurvey d-flex flex-column align-items-center justify-content-center">
+                              <div class="title my-3"> <h5> Politicas de la Tienda </h5> </div>
+                              <input type="hidden" id="dataPolicy" value="<%= policy.data %>">
+                              <div class="mt-2" id="quillPolicy" style="border: none;"></div>
+                          </div>
+                      </div>
+
+                      <div class="containerFaqs close px-5 py-5"> 
+                        <div class="mainSurvey d-flex flex-column align-items-center justify-content-center">
+                            <div class="title my-3"> <h5> Preguntas  y Respuestas mas Frecuentes (FAQs)  </h5> </div>
+                            <input type="hidden" id="dataFaq" value="<%= faq.data %>">
+                            <div class="mt-2" id="quillFaq" style="border: none;"></div>
+                        </div>
+                      </div>
+
+                     <div class="containerSurvey close">
+                        <div class="mainSurvey d-flex flex-column align-items-center justify-content-center">
+                          <div class="title my-3"> <h5> ¡Próximamente disponible! </h5> </div>
+                        
+                            <div class="alert alert-light mt-2">
+                              <p>Estamos trabajando arduamente en esta herramienta de encuestas, y en muy poco tiempo podrás disfrutar de todas sus funcionalidades. ¡Gracias por tu paciencia! </p>
+                            </div>
+                        </div>  
+                     </div>
+
+                     <div class="containerLocation close"> 
+                        
+                           
+                          <% const dataMap = map.data %>
+
+                            <% if (dataMap.length !== 0) { %>
+                               
+                              <input type="hidden" id="mapDataLon" value="<%= dataMap[0].lon %>">
+                              <input type="hidden" id="mapDataLat" value="<%= dataMap[0].lat %>">
+
+                              <div id="mapStore" style="height: 500px;"></div>
+                        
+
+                            <% } else { %>
+                              
+                                <span> No hay coordenadas </span>
+
+                            <% }; %>
+                            
+ 
+                     </div>
+
+
+                     <div class="form-group px-3 py-5">
+                        <button class="form-control btn rounded-pill" id="btnBackToAds" style="background-color: <%= bGColorTopbar %>; color: <%= bGColorText %>"> Volver a los anuncios </button>
+                     </div>
+
+
+                  </div> 
+
                   
                   <div class="containerViewRatesStore closed border" style="background-color: white;">
                     <div class="containert">
@@ -1267,107 +1375,109 @@
               </div>
 
 
-              <% if (carouselOffert.show === true ) { %> <!-- true o false -->
-                <div class="contentGallery1 p-0" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">  
+              <div class="mainGallery  p-0 ">
+                  <% if (carouselOffert.show === true ) { %> <!-- true o false -->
+                    <div class="contentGallery1 p-0" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">  
 
-                      <% if (boxOffert) { %>
-                       <span> </span> 
-                      <div class="carousel-offer p-4">    
-                          <% boxOffert.forEach((ele)=>{ %>
+                          <% if (boxOffert) { %>
+                          <span> </span> 
+                          <div class="carousel-offer p-4">    
+                              <% boxOffert.forEach((ele)=>{ %>
 
-                              <div class="contentCard px-3 d-flex flex-column" style="position: relative;">
-                                  <img src="<%= ele.images[0].url %>" alt="" style="width: 200px; height: 200px; object-fit: cover;">
-                                  <span class="border border-warning" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
-                                  <span class="bg-warning px-2 py-0" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
+                                  <div class="contentCard px-3 d-flex flex-column" style="position: relative;">
+                                      <img src="<%= ele.images[0].url %>" alt="" style="width: 200px; height: 200px; object-fit: cover;">
+                                      <span class="border border-warning" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                      <span class="bg-warning px-2 py-0" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
 
-                                  <div style="width: 200px; background-color: #fcda57; height: 40px; overflow: hidden">
-                                      <span class="p-2" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
+                                      <div style="width: 200px; background-color: #fcda57; height: 40px; overflow: hidden">
+                                          <span class="p-2" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
+                                      </div>
                                   </div>
-                              </div>
+                                  
+                              <% }) %>
+                          </div>
+                          <% } %>
+
+                    </div>      
+                  <% } %>
+
+                  <% if (sectionMedia.show === true ) { %> <!-- true o false -->
+                    <% const countMedia = sectionMedia.data.length  %>
+                    <% const medias = sectionMedia.data %>
+
+                    <% if (countMedia >= 1) { %>
+                        <div class="container-fluid p-4" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">
+                            <div class="row m-0 d-flex justify-content-between"> <!-- carousel-images es la clase de slick-carousel -->
+                                <% medias.forEach((ele)=>{ %>
+                                    
+                                    <% if (ele.type === 'image'){ %>
+                                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
+                                          
+                                            <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 240px; object-fit: cover;">
+                                          
+                                        </div>
+                                    <% } else { %>
+                                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
+                                            
+                                            <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 240px; object-fit: cover;"></video>
+                                          
+                                        </div>
+                                    <% }; %>
+
+
+                                <% }); %>    
+                            </div>    
+                        </div>    
+                    <% } %>    
+
+                  <% } %> 
+
+
+                  <% if (carouselImages.show === true ) { %> <!-- true o false -->
+
+                    <div class="contentGallery2 p-0" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">
+
+                          <% const countImages = carouselImages.data.length  %>
+                          <% const carouselImg = carouselImages.data %> <!-- esto es un array -->
+
+                          <% if (countImages >= 1) { %>
+                            <div class="carousel-images p-4">
+                                <% carouselImg.forEach((ele)=>{ %>
+                                <div class="conteImg px-3 shadow-sm">   
+                                    <img class="rounded-3" src="<%= ele.url %>" alt="" style="height: 230px; object-fit: cover;">
+                                </div>
+                                <% }); %>    
+                            </div>    
+                          <% } %>
+
+                    </div>
+
+                  <% } %>    
+
+
+                  <% if (carouselBanner.show === true ) { %> <!-- true o false -->
+
+                    <div class="containerGallery3 p-0"  style="position: relative; z-index: 100">
+                      <% const countbanner = carouselBanner.data.length  %>
+                      <% const carousel = carouselBanner.data %> <!-- esto es un array -->
+
+                      <% if (countbanner >= 1) { %>
+                          <div class="carousel-banner p-0" style="width: 100%;">
+                          
+                              <% carousel.forEach((ele)=>{ %>
                               
-                          <% }) %>
-                      </div>
-                      <% } %>
+                                  <img src="<%= ele.url %>" alt="" style="height: 300px; object-fit: cover;" >                                                   
+                              
+                              <% }) %>
 
-                </div>      
-              <% } %>
+                          </div>
+                      <% }; %>
+                    </div>
 
-              <% if (sectionMedia.show === true ) { %> <!-- true o false -->
-                <% const countMedia = sectionMedia.data.length  %>
-                <% const medias = sectionMedia.data %>
+                  <% } %>
 
-                <% if (countMedia >= 1) { %>
-                    <div class="container-fluid p-4" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">
-                        <div class="row m-0 d-flex justify-content-between"> <!-- carousel-images es la clase de slick-carousel -->
-                            <% medias.forEach((ele)=>{ %>
-                                
-                                <% if (ele.type === 'image'){ %>
-                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
-                                       
-                                        <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 240px; object-fit: cover;">
-                                      
-                                    </div>
-                                <% } else { %>
-                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
-                                        
-                                        <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 240px; object-fit: cover;"></video>
-                                       
-                                    </div>
-                                <% }; %>
+              </div>
 
-
-                            <% }); %>    
-                        </div>    
-                    </div>    
-                <% } %>    
-
-              <% } %> 
-
-
-              <% if (carouselImages.show === true ) { %> <!-- true o false -->
-
-                <div class="contentGallery2 p-0" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">
-
-                      <% const countImages = carouselImages.data.length  %>
-                      <% const carouselImg = carouselImages.data %> <!-- esto es un array -->
-
-                      <% if (countImages >= 1) { %>
-                        <div class="carousel-images p-4">
-                            <% carouselImg.forEach((ele)=>{ %>
-                            <div class="conteImg px-3 shadow-sm">   
-                                <img class="rounded-3" src="<%= ele.url %>" alt="" style="height: 230px; object-fit: cover;">
-                            </div>
-                            <% }); %>    
-                        </div>    
-                      <% } %>
-
-                </div>
-
-              <% } %>    
-
-
-              <% if (carouselBanner.show === true ) { %> <!-- true o false -->
-
-                <div class="containerGallery3 p-0"  style="position: relative; z-index: 100">
-                  <% const countbanner = carouselBanner.data.length  %>
-                  <% const carousel = carouselBanner.data %> <!-- esto es un array -->
-
-                  <% if (countbanner >= 1) { %>
-                      <div class="carousel-banner p-0" style="width: 100%;">
-                      
-                          <% carousel.forEach((ele)=>{ %>
-                          
-                              <img src="<%= ele.url %>" alt="" style="height: 300px; object-fit: cover;" >                                                   
-                          
-                          <% }) %>
-
-                      </div>
-                  <% }; %>
-                </div>
-
-              <% } %>
-
-              
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0" style="position: relative; z-index: 100;">
 
                 <div class="containerDetailsMessajesRRSS pt-3 pb-1" style="height: auto; background-color:<%= bGColorTopbar%>;">
@@ -1460,58 +1570,75 @@
 
                   <!-- Este bloque es donde debo trabajar. Crear en administración infoBliss -->
                   <!-- es un modulo que permite crear FAQ, Terminos y condiciones, y encuestas. -->
-                  <div class="row m-0 px-5 py-4 contentInfo close"> <!-- quitar el close para dejar ver el nuevo contenedor infobliss -->
 
-                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-12 col-12 p-0">
-                        <div class="d-flex px-5">
-                            <img src="/img/infoStoreBliss.png" alt="" style="width: 30px; height: 30px;">
-                            <div class="contenText d-flex flex-column ms-3">
-                                <span> <small> Preguntas Frecuentes (FAQ)</small></span>
-                              <!--  <span> <small> <i>Consulta las preguntas y respuestas más comunes para aclarar tus dudas.</i></small> </span> -->
-                            </div>
-                        </div>
-                        <div class="d-flex px-5">
-                          <img src="/img/infoStoreBliss.png" alt=""  style="width: 30px; height: 30px;">
-                          <div class="contenText d-flex flex-column ms-3">
-                            <span> <small>Términos y Condiciones</small></span>
-                            <!-- <span> <small> <i>Asegúrate de leer los términos y condiciones de esta tienda antes de realizar tu compra.</i></small> </span> -->
-                          </div>
-                      </div>
-                      </div>
 
-                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-12 col-12 p-0">
-                        <div class="d-flex px-5">
-                          <img src="/img/infoStoreBliss.png" alt="" style="width: 30px; height: 30px;">
-                          <div class="contenText d-flex flex-column ms-3">
-                            <span> <small> ¡Participa en nuestra Encuesta! </small></span>
-                           <!--  <span> <small> <i>Tu opinión es importante para nosotros. Contribuye a nuestras métricas y ayúdanos a mejorar.</i></small> </span> -->
-                          </div>
-                        </div>
-                        <!--  <div class="d-flex px-5">
-                                <img src="/img/infoStoreBliss.png" alt="" style="width: 30px; height: 30px;">
-                                <div class="contenText d-flex flex-column ms-3">
-                                  <span> <small> ¡Algo nuevo! </small></span>
-                                </div>
+                  <div class="container-fluid d-flex justify-content-start my-3 py-1 px-0 mx-0 containerInfo">
+                 <div class="contentInfoBliss mx-5">
+
+                      <% if (policy.show === true) {  %>                      
+                        <a href="#infoblis" class="boderBtn btn-polity my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                          
+                          <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1); width: 150px;" >
+                              <i class="bi bi-card-heading me-2"></i>
+                              <div class="contenText d-flex flex-column ms-2">
+                                  <span> <small> Politicas </small></span>
                               </div>
-                         -->
-                      </div>
+                          </div>
 
-                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-12 col-12 p-0">
-                        <!-- estos contenedores deben tener el mismo formato que los de arriba -->
-                      </div>
+                        </a>  
+                      <% } %>
 
-                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-12 col-12 p-0">
-                        <!-- estos contenedores deben tener el mismo formato que los de arriba -->
-                      </div>  
+                      <% if (faq.show === true) {  %>
+                        <a href="#infoblis" class="boderBtn btn-faqs my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                          
+                          <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1); width: 150px;" >
+                            <i class="bi bi-question-diamond me-2"></i>
+                            <div class="contenText d-flex flex-column ms-2">
+                              <span> <small> FAQs</small></span>    
+                            </div>
+                          </div>
+
+                        </a> 
+                      <% } %>
+
+                      <% if (survey.show === true) {  %>
+                        <a href="#infoblis" class="boderBtn btn-survey my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                          
+                          <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1) ; width: 150px;" >
+                            <i class="bi bi-card-checklist me-2"></i>
+                            <div class="contenText d-flex flex-column ms-2">
+                              <span> <small> Encuesta </small></span>
+                            </div>
+                          </div>
+
+                        </a>
+                      <% } %>     
+
+                      <% if (map.show === true) {  %>
+                        <a href="#infoblis" class="boderBtn btn-location my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                          
+                          <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1); width: 150px;" >
+                            <i class="bi bi-geo-alt me-2"></i>
+                            <div class="contenText d-flex flex-column ms-2">
+                              <span> <small> Ubicación </small></span>
+                            </div>
+                          </div>
+
+                        </a> 
+                      <% } %>
+
+                    </div> 
 
                   </div>
+
+ 
 
                   <div class="row m-0 p-4  contentBlissnet d-flex justify-content-center align-items-center" style="background-color: rgba(19, 19, 19, 0.1);">
                     <div class="col-sm-12 col-md-12 col-lg-12 px-0 contentPlatform  d-flex justify-content-center align-items-center">
                       <div class="containerBlisnetRedes my-2 rounded-3 d-flex flex-column align-items-center">
   
                         <p class="m-0" id="logoBlissenet_com" style="color:<%= storeProfile.bGColorText %>;"> </p>
-                        <div class="contentRedes d-flex">
+                        <div class="contentRedes d-flex my-2">
                           <span class="itemOption"><a href="https://www.instagram.com/blissenetcom/"  style="color :<%= storeProfile.bGColorText %>"><i class="bi bi-instagram  me-3"></i></a></span>
                           <span class="itemOption"><a href="https://www.facebook.com/search/top?q=blissenetcom"  style="color :<%= storeProfile.bGColorText %>"><i class="bi bi-facebook me-3"></i></a></span>
                           <span class="itemOption"><a href="https://x.com/blissenetcom/"  style="color :<%= storeProfile.bGColorText %>"><i class="bi bi-twitter-x  me-3"></i></a></span>
@@ -1539,6 +1666,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/carrousel.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
 
 
@@ -3634,6 +3762,251 @@
 
   }  
 
+
+
+ </script>
+
+ <script>
+
+  const storenameValue = document.getElementById('StorenameValue');
+  const containerInfoBliss = document.querySelector('.containerInfoBliss');
+  const containerPolity = document.querySelector('.containerPolity');
+  const containerFaqs = document.querySelector('.containerFaqs'); 
+  const containerSurvey = document.querySelector('.containerSurvey');
+  const containerLocation = document.querySelector('.containerLocation');
+  const btnBackToAds = document.getElementById('btnBackToAds'); //boton para devolver los anuncios 
+
+  const containerSegment = document.querySelector('.containerSegment');
+  //const containerWorkSpace = document.querySelector('.containerWorkSpace'); //declarado arriba.
+  const mainGallery = document.querySelector('.mainGallery');
+
+  const btnPolity = document.querySelector('.btn-polity');
+  const btnFaqs = document.querySelector('.btn-faqs');
+  const btnSurvey = document.querySelector('.btn-survey');
+  const btnLocation = document.querySelector('.btn-location');
+
+  const dataPolicy = document.getElementById('dataPolicy');
+  const dataFaq = document.getElementById('dataFaq');
+  
+  const quillPolicy = document.getElementById('quillPolicy');
+  const quillFaq = document.getElementById('quillFaq');
+
+
+if (btnPolity) {
+  btnPolity.addEventListener('click', ()=>{
+    containerSegment.classList.add('close');
+    containerWorkSpace.classList.add('close');
+    mainGallery.classList.add('close');
+
+    containerInfoBliss.classList.remove('close');
+
+    containerPolity.classList.remove('close');
+    containerFaqs.classList.add('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+
+    const DataPolicy = dataPolicy.value;
+    //console.log("DataPolicy", DataPolicy);  
+    let deltaPolicy;
+
+    let quillPolicy = new Quill('#quillPolicy', {
+      modules: {
+        toolbar : false
+      },
+      readOnly : true
+    })
+
+    
+    deltaPolicy = JSON.parse(DataPolicy);
+        //console.log("deltaPolicy" , deltaPolicy);
+    quillPolicy.setContents(deltaPolicy)
+
+
+  });
+}  
+
+if (btnFaqs){  
+  btnFaqs.addEventListener('click', ()=>{
+    containerSegment.classList.add('close');
+    containerWorkSpace.classList.add('close');
+    mainGallery.classList.add('close');
+
+    containerInfoBliss.classList.remove('close');
+
+    containerPolity.classList.add('close');
+    containerFaqs.classList.remove('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+
+    const DataFaq = dataFaq.value;
+    console.log("DataFaq", DataFaq);
+      
+    let deltaFaq;
+
+    let quillFaq = new Quill('#quillFaq', {
+      modules: {
+        toolbar : false
+      },
+      readOnly : true
+    })
+
+    
+    deltaFaq = JSON.parse(DataFaq);
+        //console.log("deltaFaq" , deltaFaq);
+    quillFaq.setContents(deltaFaq)
+
+  });
+}  
+
+if (btnSurvey){
+    btnSurvey.addEventListener('click', ()=>{
+      containerSegment.classList.add('close');
+      containerWorkSpace.classList.add('close');
+      mainGallery.classList.add('close');
+
+      containerInfoBliss.classList.remove('close');
+
+      containerPolity.classList.add('close');
+      containerFaqs.classList.add('close');
+      containerSurvey.classList.remove('close');
+      containerLocation.classList.add('close');
+
+      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+      efectSoundExpan.play().catch(error => {
+          console.error("Error al reproducir el sonido:", error);
+      });
+
+    });
+  }    
+
+if (btnLocation){  
+  btnLocation.addEventListener('click', ()=>{
+    containerSegment.classList.add('close');
+    containerWorkSpace.classList.add('close');
+    mainGallery.classList.add('close');
+
+    containerInfoBliss.classList.remove('close');
+
+    containerPolity.classList.add('close');
+    containerFaqs.classList.add('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.remove('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+
+    createMap()
+   
+  });
+}  
+
+let map; // Variable global para almacenar la instancia del mapa
+
+
+function createMap() {
+    const Lon = document.getElementById('mapDataLon'); 
+    const Lat = document.getElementById('mapDataLat');
+    const storename = storenameValue.value; //username de la tienda
+   
+    if (Lon && Lat){
+
+        const lon = Lon.value;
+        const lat = Lat.value;
+
+        console.log("lon -->", Lon);
+        console.log("Lat -->", Lat);
+
+        console.log(`Estas variables ya están definidas ---> Latitud: ${lat}, Longitud: ${lon}`);
+
+        // Verifica si el mapa ya ha sido creado
+        if (map) {
+            map.remove(); // Destruye el mapa existente
+        }
+
+        
+        // Crear un nuevo mapa en el div con id "map" instanciar
+        map = L.map('mapStore').setView([lat, lon], 13); // El segundo parámetro es el nivel de zoom
+        
+        //var myMap = L.map('miMapa').setView([latitud, longitud], zoomLevel);
+
+        console.log("map ->", map);
+
+        // Añadir una capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Añadir un marcador en las coordenadas especificadas
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup(storename)
+            .openPopup();
+ 
+        
+
+        const options = {
+            position: 'topleft',
+            primaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'hectares',
+            activeColor: '#9200FF',
+            completedColor: '#c174fc',
+            // Traducción de los textos
+        };
+        const measureControl = new L.Control.Measure(options);
+        map.addControl(measureControl); // Asegúrate de añadir el control al mapa
+
+        L.Control.Measure.include({
+            _setCaptureMarkerIcon: function () {
+                this._captureMarker.options.autoPanOnFocus = false;
+
+                this._captureMarker.setIcon(
+                    L.divIcon({
+                        iconSize: this._map.getSize().multiplyBy(2)
+                    })
+                );
+            },
+        });
+        
+
+    }
+
+
+
+}
+
+if (btnBackToAds){
+
+  btnBackToAds.addEventListener('click', ()=>{
+    containerSegment.classList.remove('close');
+    containerWorkSpace.classList.remove('close');
+    mainGallery.classList.remove('close');
+
+    containerInfoBliss.classList.add('close');
+
+    containerPolity.classList.add('close');
+    containerFaqs.classList.add('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+  })
+
+}
 
 
  </script>

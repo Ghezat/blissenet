@@ -29,20 +29,20 @@
         <%# }; %>
 
         <% if (user) { %>
-
-            <div class="container-fluid d-flex justify-content-start themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-                <span class="ms-4 p-0" style="font-weight: 400;"> Segmentación </span>
-            </div>   
+            
+            <div class="container-fluid d-flex justify-content-start py-2" style="background-color: #9200ff;">
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Segmentación </b>  </span>
+            </div> 
             
             <div class="container-fluid p-0">
                             
                 <div class="row m-0 ">
 
-                    <div class="col-lg-4 col-md-4 col-sm-12 col-12 p-0" style="background-color: #e9ecef;">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-12 p-0" style="background-color: rgba(233, 236, 239, 0.1);">
                                         
                         <% if (searchProfile) {  %>
-                            <div class="card" style="border-radius: 0; border: none;">
-                                <div class="card-body">
+                            <div class="card border-bottom" style="border-radius: 0; border: none;">
+                                <div class="card-body p-0">
                                     <div class="accordion accordion-flush" id="accordionExample">
 
                                         <div class="accordion-item">
@@ -93,7 +93,7 @@
 
                                                 <div class="form-group my-3">
                                                 
-                                                    <button class="form-control btn btn-primary" id="btnSubmitSegment" disabled>Crear Segmento</button>
+                                                    <button class="form-control btn btn-dark" id="btnSubmitSegment" disabled>Crear Segmento</button>
                                             
                                                 </div>
 
@@ -132,7 +132,7 @@
                                                 </div>
 
                                                 <div class="form-group my-3">
-                                                    <button class="btn btn-success form-control" id="btnEditSegment" disabled> Editar Segmento</button>
+                                                    <button class="btn btn-secondary form-control" id="btnEditSegment" disabled> Editar Segmento</button>
                                                 </div>
 
                                             </div>
@@ -174,14 +174,13 @@
                                           </div>
                                         </div>
 
-                                      </div>
+                                    </div>
                                 </div>
                             </div>
                         <% } else { %>
                             
                         <% }; %>
     
-                        
 
                         <!-- seccion nombre de tienda -->
                         
@@ -220,7 +219,7 @@
 
                      
                                 
-                    <div class="col-lg-8 col-md-8 col-sm-12 col-12 p-0" style="background-color: #e9ecef;">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-12 p-0" style="background-color: rgba(233, 236, 239, 0.1);">
                             
                     
                         <% if (searchProfile) {  %> <!-- cuenta con perfil -->
@@ -235,13 +234,13 @@
                                 <input type="hidden" value="<%= storeUserId %>" id="storeUserId">
                                 <input type="hidden" value="<%= storeUserIndexed %>" id="storeUserIndexed">
                                 <% const segment = searchProfile.segment %> <!-- aqui el array segment -->
-                                <div class="row m-0 d-flex justify-content-center " style="background-color: white;">
+                                <div class="row m-0 d-flex justify-content-center" style="background-color: rgb(255, 255, 255, 0.8);">
                                     <div class="col-12">                                        
 
                                         <div class="form-group my-3">
                                                                                                  
                                             <div class="alert p-0">
-                                                <spam class="form-control alert-success m-0" style="border-left: 3px solid green;"> 
+                                                <spam class="form-control alert-light m-0 ps-4" style="border-left: 4px solid #9200ff; border-top: 1px solid #9200ff; border-bottom: 1px solid #9200ff; border-right: 1px solid #9200ff;"> 
                                                     <strong>Cambiar anuncios de un segmento a otros segmentos,</strong> 
                                                     para cambiar uno o un grupo de anuncios a otra clase de segmento. Seleccione el primer selector para buscar todos los anuncios y luego utilice el segundo selector para cambiar al nuevo segmento. </spam>
                                             </div>                                       
@@ -283,26 +282,26 @@
                                         
                                         <div class="form-group d-flex justify-content-between my-2">
                                             <input type="search" class="form-control" id="searchSegment" style="width: 68%;" placeholder="Filtre por título">
-                                            <button class="btn btn-success form-control" id="btnSearch" style="width: 30%;" disabled> <span> <i class="bi bi-search ms-2"></i> </span> </button>
+                                            <button class="btn btn-dark form-control" id="btnSearch" style="width: 30%;" disabled> <span> <i class="bi bi-search ms-2"></i> </span> </button>
                                         </div>
                                         
                                         <div class="contentTable" style="overflow: auto;">
                                             <table class="table responsive no-select">
                                                 <thead>
                                                     <tr>
-                                                        <th> Título </th><th> Departamento </th><th> Categoría </th><th> Precio </th><th> Segmento </th> <th class="d-flex justify-content-start" style="border-bottom: 1px solid black;">  <label for="todoCheckbox">Todo</label> <input type="checkbox" id="todoCheckbox" class="ms-2"> </th>
+                                                        <th> Título </th><th> Departamento </th><th> Categoría </th><th> Precio </th><th> Segmento </th> <th class="d-flex justify-content-start" style="border-bottom: 1px solid black;">  <label for="todoCheckbox">Todo</label> <input type="checkbox" id="todoCheckbox" class="form-check-input ms-2"> </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tableSelected">
                                                     <!-- generacion dinamica -->
-                                                </tbody>
+                                                </tbody> 
     
                                             </table>
                                             <div class="contentChangeAlert">
                                                 
                                             </div>
                                             <div class="form-group my-3">
-                                                <button class="btn btn-success form-control" id="btnChangeAccept" disabled> Aceptar Cambios </button>
+                                                <button class="btn btn-dark form-control" id="btnChangeAccept" disabled> Aceptar Cambios </button>
                                             </div>
                                         </div>
                                     </div>
@@ -312,7 +311,7 @@
                             </div>
 
 
-                            <div class="card mt-1">
+                            <div class="card mt-1" style="background-color: rgb(255, 255, 255, 0.8);">
                                 <div class="card-body d-flex justify-content-center no-select">
                                     <a href="/" class="text-decoration-none" style="color: inherit">  <span id="logoBlissenet_com"> </span> </a> 
                                 </div>
@@ -392,7 +391,7 @@
 
                 segments.forEach((ele)=>{
                     boxTagsSegment.innerHTML += `
-                                                <span class="alert-success m-1 py-1 ps-1 pe-2 rounded-3" style="position: relative;"> ${ele} </span>
+                                                <span class="alert-secondary m-1 py-1 ps-1 pe-2 rounded-3" style="position: relative;"> ${ele} </span>
                                                 `
                 
                     //este es el select de opciones para editar segmentos
@@ -504,7 +503,7 @@
                                 reqUpdate.forEach((ele)=>{
 
                                     boxTagsSegment.innerHTML += `
-                                                        <span class="alert-success m-1 py-1 ps-1 pe-2 rounded-3" style="position: relative;"> ${ele} </span>
+                                                        <span class="alert-secondary m-1 py-1 ps-1 pe-2 rounded-3" style="position: relative;"> ${ele} </span>
                                                     `
                                 });
                                 //en un contendor colocamos la respuesta positiva o negativa del backend solo puede tener 13 segmentos
@@ -758,7 +757,7 @@
                         const segment = ele.segment;
                         
                         tableSelected.innerHTML += ` <tr>
-                                                        <td> ${title} </td><td> ${depart} </td><td>${category}</td><td>${price}</td><td>${segment}</td> <td> <input type="checkbox" value="${id_ADS}" class="idADS"> </td>
+                                                        <td> ${title} </td><td> ${depart} </td><td>${category}</td><td>${price}</td><td>${segment}</td> <td> <input type="checkbox" value="${id_ADS}" class="form-check-input idADS"> </td>
                                                     </tr>`
 
                         idADS = document.querySelectorAll('.idADS');                            
@@ -785,7 +784,7 @@
 
                     })
 
-                    contentSelect2.style.cssText = "outline: 2px transparent green"; //esta linea quita el border del selector del contenedor input-group
+                    contentSelect2.style.cssText = "outline: 2px transparent #9200ff"; //esta linea quita el border del selector del contenedor input-group
 
                     seletSegment2.addEventListener('change', ()=>{
                         //aqui es donde fijamos el intermitente el valor de selected debe ser diferente a este selector 2
@@ -807,7 +806,7 @@
                                 (() => {
                                     setTimeout(() => {
                                         //seletSegment2.style.cssText = "outline: 2px solid green";
-                                        contentSelect2.style.cssText = "outline: 2px transparent green"
+                                        contentSelect2.style.cssText = "outline: 2px transparent #9200ff"
                                     }, 700);
                                     
                                 })();
@@ -822,7 +821,7 @@
                             (() => {
                                 setTimeout(() => {
                                     //seletSegment2.style.cssText = "outline: 2px solid green";
-                                    contentSelect2.style.cssText = "outline: 2px solid green"
+                                    contentSelect2.style.cssText = "outline: 2px solid #9200ff"
                                 }, 500);
                                 
                             })();
@@ -839,7 +838,7 @@
                     
                     function selectStyle(){
                         intermitente = setInterval(() => {
-                            seletSegment2.style.cssText = "outline: 2px dashed green"
+                            seletSegment2.style.cssText = "outline: 2px dashed #9200ff"
                             
                             setTimeout(() => {
                                 noStyle()
@@ -848,7 +847,7 @@
                     }
 
                     function noStyle(){
-                        seletSegment2.style.cssText = "border: 2px transparent green"
+                        seletSegment2.style.cssText = "border: 2px transparent #9200ff"
                     }
                   
 
@@ -978,7 +977,7 @@
                             //{response: 'Actualización realizada exitosamente.', code: 1}
                             todoCheckbox.checked = false; //si todoChecked esta true "marcado lo desmarcamos"
                             tableSelected.innerHTML = ""; //limpiamos la tabla
-                            contentSelect2.style.cssText = "outline: 2px trasparent green"//deseleccionamos el select2
+                            contentSelect2.style.cssText = "outline: 2px trasparent #9200ff"//deseleccionamos el select2
                             //enviamos un alert de que ha sido actualizado satisfactoriamente
                             
                             if (code === 1){

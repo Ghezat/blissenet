@@ -36,9 +36,13 @@
     <%- include('../partials/navi-simple.ejs') %>
 
     <% if (user){ %>
-    <div class="container-fluid d-flex justify-content-start p-1 themaTextLight" style="background-color:  rgb(243, 238, 238, 0.6); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
-        <span class="ms-3 p-0" style="font-weight: 400;" > Favoritos </span>
-    </div>
+
+
+    <div class="container-fluid d-flex justify-content-start py-2" style="background-color: #9200ff;">
+      <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Favoritos </b>  </span>
+    </div>  
+
+
     <div class="container-fluid d-flex justify-content-end my-2 border-bottom border-secondary">
         
       <% if (favoritesCount) { %>

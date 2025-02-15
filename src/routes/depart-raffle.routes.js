@@ -175,7 +175,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
 
 
             
-            if ( numTickets >= 50 && numTickets <=1000 ){
+            if ( numTickets >= 4 && numTickets <=1000 ){
 
                 let dateStart;
                 const date = new Date();

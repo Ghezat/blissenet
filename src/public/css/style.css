@@ -299,6 +299,46 @@ color: blueviolet;
   /* vista desktop */
 }
 
+
+/* 
+a {
+  color: #9200ff !important;
+}
+
+a:hover {
+  color: #7b00cc !important;  Un poco más oscuro al pasar el mouse 
+}
+ */
+
+.nav-link {
+  color: #9200ff;
+}
+
+.nav-link.active {
+  color: #ffffff; /* Color diferente para el estado activo */
+  background-color: #9200ff; /* Fondo para el estado activo */
+} 
+
+.form-check-input:checked {
+  background-color: #9200ff;
+  border-color: #9200ff;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(146, 0, 255, 0.25);
+}
+
+.btnBlissenet{
+  background-color: #9200ff;
+  color: #ffffff;
+}
+
+.alert-bliss{
+  background-color: rgb(239, 219, 255);
+  color: #450279;
+  border-left: 5px solid #450279;
+}
+
 /* end footer */
 
 /*  Media queries */

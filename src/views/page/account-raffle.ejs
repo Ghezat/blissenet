@@ -23,12 +23,36 @@
     <main>
         <%- include('../partials/navi-simple.ejs') %>
 
-        <div class="contentSerial py-3 px-2 d-flex justify-content-end align-itens-center border-bottom border-dark" style="background-color: gray;">
+       
           <% if (search) { %>
-            <p class="my-0"> <span><b>Serial Raffle : </b></span><span class="rounded-pill ms-1 px-2 py-1 bg-dark text-light"><a href="/raffleModule/<%= search._id %>" class="text-decoration-none" style="color: white;"><b><%= search._id %></b></a> </span> </p>
-            <input type="hidden" value="<%= search._id %>" id="idRaffle">
+<!--             <p class="my-0"> <span><b>Serial Raffle : </b></span><span class="rounded-pill ms-1 px-2 py-1 bg-dark text-light"><a href="/raffleModule/<%= search._id %>" class="text-decoration-none" style="color: white;"><b><%= search._id %></b></a> </span> </p>
+            <input type="hidden" value="<%= search._id %>" id="idRaffle"> -->
+
+          <div class="container-fluid d-flex justify-content-start py-2" style="background-color: #9200ff;">
+
+            <div class="row m-0" style="width: 100%;">
+
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-0">
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Administración de Sorteo </b>  </span>
+              </div>
+
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-0">
+                <div class="d-flex justify-content-end py-1">
+                  <p class="my-0"> <span style="color: white;" ><b>Serial Raffle : </b></span><span class="rounded-pill ms-1 px-2 py-1 bg-dark text-light"><a href="/raffleModule/<%= search._id %>" class="text-decoration-none" style="color: white;"><b><%= search._id %></b></a> </span> </p>
+                  <input type="hidden" value="<%= search._id %>" id="idRaffle">
+                </div>
+              </div>
+
+            </div>
+              
+          </div> 
+
           <% }; %>
-        </div>
+
+          
+    
+
+
         <div class="row mx-0 d-flex justify-content-center themaTextLight" style="background-color: rgba(233, 236, 239, 0.1)">
             
             <div class="col-12 col-sm-12 col-md-11 col-lg-11  px-0">
