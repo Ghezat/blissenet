@@ -42,7 +42,7 @@
     <%- include('../partials/navi-simple.ejs') %>
     <% if (user) { %>
 
-    <div class="container-fluid d-flex justify-content-between py-2" style="background-color: #9200ff">
+    <div class="container-fluid d-flex justify-content-between py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
       <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Facturas </b>  </div>
       
       <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
@@ -150,7 +150,7 @@
                             <span style="position: absolute; top: 8px; right: 4px; font-size: 13px;">(USD)</span>
                         </div>
                         <div class="contentMontVES form-control p-0" style="position: relative;">
-                            <input type="number" name="montoPay" class="form-control pe-5" id="montoInvoicePay"  step="0.001" readonly style="position: relative; text-align: right; font-weight: bold; background-color: rgb(168, 207, 168, 0.5); height: 100%; border-radius: 0px ; border: none;">
+                            <input type="number" name="montoPay" class="form-control pe-5" id="montoInvoicePay"  step="0.001" readonly style="position: relative; text-align: right; font-weight: bold; background-color: rgba(13, 110, 253, 0.2); height: 100%; border-radius: 0px ; border: none;">
                             <span style="position: absolute; top: 8px; right: 4px; font-size: 13px;">(VES)</span>
                         </div>  
                     </div>
@@ -159,7 +159,7 @@
                         <input type="text" name="refer" class="form-control inpRefer" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required disabled>
                     </div>
                     <div class="form-goup my-2">
-                         <input type="submit" class="btn btn-success form-control btnRegisterPay" value="Sent" disabled> 
+                         <input type="submit" class="btn btn-primary form-control btnRegisterPay" value="Sent" disabled> 
                     </div>
 
                   </form>

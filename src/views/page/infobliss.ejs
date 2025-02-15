@@ -59,7 +59,7 @@
                 <% const map = infobliss.map %>
 
 
-                <div class="container-fluid d-flex justify-content-start py-2" style="background-color: #9200ff;">
+                <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
                     <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> InfoBliss </b>  </span>
                 </div>   
                 
@@ -313,13 +313,13 @@
                                                             </div>
 
                                                             <div class="alertQuestion close">
-                                                                <div class="alert alert-success py-1 d-flex justify-content-between">
+                                                                <div class="alert alert-primary py-1 d-flex justify-content-between">
                                                                     <span>Pregunta creada satisfactoriamente </span>  <span class="bg-light px-2 rounded-2" id="questionCount">  </span>
                                                                 </div>
                                                             </div> 
 
                                                             <div class="alertDenied close">
-                                                                <div class="alert alert-danger py-1 ">
+                                                                <div class="alert alert-danger py-1">
                                                                     <span> <i class="bi bi-exclamation-triangle-fill me-2"></i>  No es posible crear más preguntas</span>    
                                                                 </div>
                                                             </div>
@@ -359,7 +359,7 @@
 
                                                         <% if (scheme.length !== 0) { %>
 
-                                                            <div class="alert alert-bliss my-3">
+                                                            <div class="alert alert-primary my-3" style="border-left: 5px solid #007bff;">
                                                                 <span>Eliminar esquema de encuesta no elimina el hitorial de esta.</span>
                                                             </div>
 
@@ -376,17 +376,17 @@
                                                             </div>
 
                                                             <div class="form-group my-3">
-                                                                <button class="btn-sm btn-danger form-control" id="btnDeleteSurvey" >Eliminar Encuesta</button>
+                                                                <button class="btn-sm btn-secondary form-control" id="btnDeleteSurvey" >Eliminar Encuesta</button>
                                                             </div>
                                                             
                                                         <% } else { %>
                                                             
-                                                            <div class="alert alert-bliss my-3">
+                                                            <div class="alert alert-secondary my-3">
                                                                 <span>No hay encuesta.</span>
                                                             </div>
 
                                                             <div class="form-group my-3">
-                                                                <button class="btn-sm btn-danger form-control" id="btnDeleteSurvey" disabled>Eliminar Encuesta</button>
+                                                                <button class="btn-sm btn-secondary form-control" id="btnDeleteSurvey" disabled>Eliminar Encuesta</button>
                                                             </div>
 
                                                         <% }; %>    
@@ -412,7 +412,7 @@
                                                       <div class="containData mt-2">
                                                                                                                 
                                                         <% if (mapData.length === 0) { %>
-                                                            <div class="alert alert-bliss">
+                                                            <div class="alert alert-primary">
                                                                 <span> El boton abajo captura su ubicación geografica. utilicelo para definir la ubicación real de su tienda.</span>
                                                             </div>
 
@@ -426,8 +426,8 @@
                                                               
     
                                                               <div class="form-group my3">
-                                                                <button class="btn-sm btn-danger form-control" id="captureLocation"> Capturar ubicación </button>
-                                                                <button class="btn-sm btn-danger form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
+                                                                <button class="btn-sm btn-dark form-control" id="captureLocation"> Capturar ubicación </button>
+                                                                <button class="btn-sm btn-dark form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
                                                               </div>
 
                                                         <% } else { %>
@@ -436,7 +436,7 @@
                                                             <input type="hidden" value="<%= mapData[0].lon %>" id="mapDataLon">
                                                             <input type="hidden" value="<%= mapData[0].lat %>" id="mapDataLat">
                                                             
-                                                            <div class="alert alert-bliss">
+                                                            <div class="alert alert-secondary">
                                                                 <div class="alert alert-light p-1"> <span><i class="bi bi-geo-alt me-2"></i> Ubicación establecida.</span> </div>
                                                                 
                                                                 <p class="my-1"> Longitud : ( <%= mapData[0].lon %> ) </p>
@@ -453,8 +453,8 @@
                                                               
     
                                                               <div class="form-group my3">
-                                                                <button class="btn-sm btn-danger form-control" id="captureLocation"> Capturar nueva ubicación </button>
-                                                                <button class="btn-sm btn-danger form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
+                                                                <button class="btn-sm btn-secondary form-control" id="captureLocation"> Capturar nueva ubicación </button>
+                                                                <button class="btn-sm btn-secondary form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
                                                               </div>
 
                                                         <% }; %>    
@@ -611,7 +611,7 @@
                                             <div class="d-flex justify-content-center my-2"> <span> <b> <h4>Politicas de mi Tienda</h4> </b> </span> </div>
                                             
                                             <% if (dataPolicy.length === 0) { %>
-                                                <div class="alert alert-bliss">
+                                                <div class="alert alert-primary">
                                                     "No se ha creado ninguna política hasta el momento. ¡Si desea crear una, dirígete a <b> Políticas de Tienda</b>!"   
                                                 </div>
                                             <% } else { %>
@@ -633,7 +633,7 @@
                                             <div class="d-flex justify-content-center my-2"> <span> <b> <h4>Preguntas y Respuestas más Frecuentes</h4> </b> </span> </div>
                                             
                                             <% if (dataFaq.length === 0) { %>
-                                                <div class="alert alert-bliss">
+                                                <div class="alert alert-primary">
                                                     "No se ha creado la sección FAQ hasta el momento. ¡Si desea crear una, dirígete a <b> Preguntas y Respuestas más Frecuentes (FAQ) </b>!"   
                                                 </div>
                                             <% } else { %>
@@ -766,7 +766,10 @@
                                             <% } else { %>
                                                 
                                                 <div class="contentNoSurvey">
-                                                    <div class="alert alert-info">
+
+                                                    <div class="d-flex justify-content-center my-2"> <span> <b> <h4> Encuesta </h4> </b> </span> </div>
+
+                                                    <div class="alert alert-primary">
                                                         No Tiene ninguna encuesta. ¡Si desea crear una!. por favor lea cuidadosamente las recomendaciones, en la pestaña <b>"Encuesta"</b> aqui arriba se explica como usar nuestra herramienta para crear una encuesta objetiva.  
                                                     </div>
                                                 </div>
@@ -775,7 +778,9 @@
                                               
                                         </div>
                                         <div class="contentSurveyAnalysis close">
-                                            Resultados de Análisis
+                                            <div class="d-flex justify-content-center my-2"> <span> <b> <h4> Análisis de Encuesta </h4> </b> </span> </div>
+                                            <div class="alert alert-primary py-2 px-5">
+                                                <span>  Estamos trabajando arduamente en esta herramienta de encuestas, y en muy poco tiempo podrás disfrutar de todas sus funcionalidades. ¡Gracias por tu paciencia! </span>                                            </div>
                                         </div>
                                         <div class="contentMap close">
 
@@ -783,11 +788,11 @@
                                             
                                                 <div class="contentLocation d-flex flex-column  justify-content-center align-items-center ">
 
-                                                    
+                                                    <div class="d-flex justify-content-center my-2"> <span> <b> <h4> Geolocalización </h4> </b> </span> </div>
                                                     <img src="/img/geolocationIcon.png" alt="" style="width: 200px;">
                                                     
                                                     
-                                                    <div class="alert alert-info py-2 px-5">
+                                                    <div class="alert alert-primary py-2 px-5">
                                                         <span> <i class="bi bi-geo-alt me-2"></i>  "No hay geolocalización disponible. Por favor, establece una en <b> 'Ubicación Geográfica'.</b> " </span>
                                                     </div>
                                                     
@@ -1506,7 +1511,7 @@
                         if (code === 1){
                             //mensaje de creacion exitosa
                             alertCreatedSurvey.innerHTML = ` 
-                            <div class="alert alert-success py-1 ">
+                            <div class="alert alert-primary py-1 ">
                                 <span> <i class="bi bi-check-circle-fill me-2"></i> ${response} </span>    
                             </div>
                             `
@@ -1605,7 +1610,7 @@
             inpCodeSurvey.value = ""; //limpiamos el input donde estaba el codigo de encuesta
 
             alertDeleteSurvey.innerHTML = `
-                            <div class="alert alert-success py-1 ">
+                            <div class="alert alert-primary py-1 ">
                                 <span> <i class="bi bi-check-circle-fill me-2"></i> ${response} </span>    
                             </div>`
 
@@ -1713,7 +1718,7 @@ boxLikert.forEach((ele) => {
                     if (code === 1){
                         //geolocalizacion guardada con exito
                         alertCreatedLocation.innerHTML = `
-                            <div class="alert alert-success py-1 ">
+                            <div class="alert alert-primary py-1 ">
                                 <span> <i class="bi bi-check-circle-fill me-2"></i> ${response} </span>    
                             </div>`
 

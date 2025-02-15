@@ -5,8 +5,9 @@
     <title>Blissenet Mis Anuncios</title>
 </head>
 <style>
-    .blockRed{
-        background-color: red;
+
+    .blockPause{
+        background-color: #6c757d;
         border-radius: 2px;
         width: 26px;
         height: 16px;
@@ -14,8 +15,8 @@
         margin-top: 6px;
     }
 
-    .blockGreen{
-        background-color: green;
+    .blockActive{
+        background-color: #0d6efd;
         border-radius: 2px;
         width: 26px;
         height: 16px;
@@ -37,7 +38,7 @@
     <% if (user) { %>
 
          
-    <div class="container-fluid d-flex justify-content-start py-2" style="background-color: #9200ff;">
+    <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
       <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Mis Anuncios </b>  </span>
     </div>  
 
@@ -63,9 +64,9 @@
                                     <td><a href="/product/<%= ele.department %>/<%= ele._id %>"><%= ele.title %></a></td><td><%= ele.department %></td><td>$ <%= ele.price%></td>
                                
                                     <% if (ele.paused == true ) { %>
-                                        <td> <div class="blockRed"> </div> </td>
+                                        <td> <div class="blockPause"> </div> </td>
                                     <% } else { %>
-                                        <td> <div class="blockGreen"> </div> </td>
+                                        <td> <div class="blockActive"> </div> </td>
                                     <% } %>
                     
                                 </tr>

@@ -139,11 +139,6 @@
           <div class="row rowWidth m-0">
               <div class="col-12 p-0">
 
-                  <div class="containerBanner d-flex">
-                    <% if (searchBanner) {  %>
-                      <img src="<%= searchBanner[0].url %>" style="width: 100%"  >
-                    <% } %>
-                  </div>
 
                   <!-- esta data es para usarla abajo en un script para poder enviar un fecth con el nombre de la tienda. -->
                   <input type="hidden" value="<%= searchProfile[0].username %>" id="nameStore"> 
@@ -154,7 +149,7 @@
               <!-- <div class="container-fluid d-flex justify-content-between p-1" style="background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);"> -->
                 
   
-              <div class="container-fluid d-flex justify-content-between py-2" style="background-color: #9200ff">
+              <div class="container-fluid d-flex justify-content-between py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%)";>
                 <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Gerencia de Análisis </b>  </div>
                 
                 <div class="btn-group btn-group-sm mx-2" role="group" aria-label="Basic example">
