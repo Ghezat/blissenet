@@ -1545,6 +1545,8 @@
                           <% const mes = dateStore.getMonth() +1 %>
                           <% const anio = dateStore.getFullYear() %>
 
+                          <% const currentAnio = new Date().getFullYear() %>
+
                           <span> <%= dia %>-<%= mes %>-<%= anio %> </span>
                         </div>
                     </div>
@@ -1561,7 +1563,7 @@
                         <div class="containerYears my-2 d-flex flex-column align-items-center">
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><small><%= storeProfile.company %></small></p>
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><small><%= storeProfile.companyRif %></small></p>
-                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><span class="yearRegister"></span> - <span class="yearCurrent"></span></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <%= anio %> - <%= currentAnio %></p>
                         </div>
                     </div> 
 
@@ -1909,8 +1911,6 @@
   const imgLevel = document.querySelector('.imgLevel');  
   const scoreLevel = document.querySelector('.scoreLevel');
   const trustLevel = document.querySelector('.trustLevel');
-  const yearRegister = document.querySelector('.yearRegister');
-  const yearCurrent = document.querySelector('.yearCurrent'); 
   
   const Store = store.childNodes[1].value;
   //console.log("Esto es Store ----------->",Store);
