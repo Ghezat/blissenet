@@ -930,14 +930,15 @@
                                     <div class="storeCreated d-flex justify-content-between mb-1">    
                                         <p class="mb-1 boder border-dark"> Creacion de Tienda </p>
                                         <!-- <%= search.createdAt %> -->
-
-                                        <% const dateProfile = new Date(searchProfile[0].createdAt) %>
-                                        <% const dia = dateProfile.getDate() %>
-                                        <% const mes = dateProfile.getMonth() +1 %>
-                                        <% const anio = dateProfile.getFullYear() %>
-                                        <span> <i class="bi bi-calendar2-week mx-1"></i> <%= dia %>-<%= mes %>-<%= anio %> </span>
-                                         
+                                       <% if (store) { %> 
+                                            <% const dateProfile = new Date(store.createdAt) %>
+                                            <% const dia = dateProfile.getDate() %>
+                                            <% const mes = dateProfile.getMonth() +1 %>
+                                            <% const anio = dateProfile.getFullYear() %>
+                                            <span> <i class="bi bi-calendar2-week mx-1"></i> <%= dia %>-<%= mes %>-<%= anio %> </span>
+                                       <% }; %>     
                                     </div>
+                                    <!-- search es el articulo en cuestion -->
                                     <% if (search) { %>
                                     
                                         

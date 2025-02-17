@@ -87,6 +87,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
 
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
+
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             console.log('esta es la cantidad de vistas actuales', viewCount);
 
@@ -110,7 +114,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
             
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport });
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport });
         
         } else {
         
@@ -128,6 +132,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
 
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
+
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
 
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             console.log('esta es la cantidad de vistas actuales', viewCount);
@@ -148,7 +156,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
     
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
@@ -164,6 +172,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
 
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
+
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             console.log('esta es la cantidad de vistas actuales', viewCount);
 
@@ -174,6 +186,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
                     //console.log("este es el producto encontrado y que será mostrado en el view-general-product ----->", search);
                 }
             } else {
+            
                 const viewSum = viewCount + 1;
                 const updateView =  await modelArtes.findByIdAndUpdate(productId, {view : viewSum}); //aqui actualizo la vista
             }         
@@ -181,7 +194,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
     
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});  
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});  
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
@@ -201,6 +214,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
 
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
+
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             console.log('esta es la cantidad de vistas actuales', viewCount);
 
@@ -219,7 +236,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             //console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
             console.log("reportDone :", reportDone);
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});       
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});       
 
         } else {
             //esta pagina se mostrara si el producto no existe pero debemos precisar que no existe por haber sido eliminado.
@@ -236,6 +253,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
 
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
+
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
 
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             console.log('esta es la cantidad de vistas actuales', viewCount);
@@ -255,7 +276,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
         
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});      
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});      
 
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
@@ -270,6 +291,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
 
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
+
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
             
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             console.log('esta es la cantidad de vistas actuales', viewCount);
@@ -288,7 +313,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
             
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});          
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});          
             
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
@@ -303,6 +328,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
 
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
+
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
 
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             console.log('esta es la cantidad de vistas actuales', viewCount);
@@ -321,7 +350,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
 
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
@@ -335,6 +364,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
         
             const usernameSell = search.username;
             //console.log("Este es el username del vendedor ---->", usernameSell);
+
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
         
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             //console.log('esta es la cantidad de vistas actuales', viewCount);
@@ -353,7 +386,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
         
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }     
@@ -367,6 +400,10 @@ routes.get('/product/:depart/:id', async(req, res)=>{
 
             const usernameSell = search.username;
             console.log("Este es el username del vendedor ---->", usernameSell);
+
+            const indexed = search.user_id //esto es el indexed para buscar en el profile.
+            const store = await modelProfile.findOne({indexed : indexed});
+            console.log("Esto es store   ->", store);
             
             const viewCount = search.view //aqui obtengo la cantidad actual de vistas.
             //console.log('esta es la cantidad de vistas actuales', viewCount);
@@ -386,7 +423,7 @@ routes.get('/product/:depart/:id', async(req, res)=>{
             //console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
 
             //console.log(":::::: Esto es search ::::::" , search);
-            res.render('page/view-general-products', {user, usernameSell, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
         } else {            
             res.render('page/unknown-auction', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
