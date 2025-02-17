@@ -12,10 +12,11 @@
     }
 
 </style>
-<body style="background-color: rgba(233, 236, 239, 0.1);  height: 120hv; overflow-y: auto;">
+
+<body class="mainTheme" style="background-color: rgba(233, 236, 239, 0.1);  height: 120hv; overflow-y: auto;">
 
      
-  <main class="mainTheme">
+  <main>
     <%- include('../partials/navi-simple.ejs') %>
     
 
@@ -31,7 +32,7 @@
     <div class="mainComment">
         <div class="contentComments">
           <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
-              <div class="col-lg-10  my-4 p-0 themaTextLight">
+              <div class="col-lg-10  my-4 p-0 themaTextLight" >
 
                         <div class="containerMain d-flex justify-content-between mb-2 rounded-1" style="background-color: rgba(255, 255, 255, 0.1);">
                         <% if (storeSearch) { %>

@@ -407,7 +407,6 @@
                     <% }; %>
                 <% }; %>
             </div>  
-
              
 
             <div class="col-lg-6 d-flex flex-column p-2" style="background-color: rgb(233, 236, 239)">
@@ -454,7 +453,7 @@
                     
             </div>
        
-        
+            
             <div class="col-lg-3 p-2" style="background-color: rgb(233, 236, 239);">
                     
                     <% if (user) {  %>
@@ -926,10 +925,32 @@
                                 </div>
                             <% }; %>    
                                 <div class="contentLinkStore my-2  py-2" style="border-top: 1px solid  #cbd1d6;" >
-                                        <p class="mb-1"> Creacion de Tienda  <i class="bi bi-calendar2-week mx-1"></i><span class="from"></span> </p>
+
+                                    
+                                    <div class="storeCreated d-flex justify-content-between mb-1">    
+                                        <p class="mb-1 boder border-dark"> Creacion de Tienda </p>
+                                        <!-- <%= search.createdAt %> -->
+
+                                        <% const dateProfile = new Date(searchProfile[0].createdAt) %>
+                                        <% const dia = dateProfile.getDate() %>
+                                        <% const mes = dateProfile.getMonth() +1 %>
+                                        <% const anio = dateProfile.getFullYear() %>
+                                        <span> <i class="bi bi-calendar2-week mx-1"></i> <%= dia %>-<%= mes %>-<%= anio %> </span>
+                                         
+                                    </div>
                                     <% if (search) { %>
-                                        <p class="mb-1"> Comentarios de sus clientes  <a href="/comments/<%= search.username%>"> Aquí</a></p>
-                                        <p class="mb-3 me-2">Visitar Tienda... <a href="/account/<%= search.username %>" class="store text-light" style="text-decoration: none;"><span class="bg-secondary p-1 border rounded-3"><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a></p>
+                                    
+                                        
+                                        <div class="comment d-flex justify-content-between mb-1">
+                                            <p class="mb-1"> Comentarios de sus clientes </p>
+                                            <a href="/comments/<%= search.username%>"> Aquí</a>
+                                        </div>
+                                        <div class="goToStore d-flex justify-content-between my-1">
+                                            <p class="mb-3 me-2">Visitar Tienda... </p>
+                                            <a href="/account/<%= search.username %>" class="store"><span><%= search.username %></span> <input type="hidden" value="<%= search.username %>"></a>
+                                        </div>
+
+                                        
                                             
                                         <div class="form-group" style="position: relative; cursor: pointer;">
 
@@ -1089,7 +1110,7 @@
                     <% }; %>
 
 
-        </div>
+            </div>
 
         <% }; %>   <!-- ::::Aqui cierro el search:::: -->   
     </div>
@@ -1109,17 +1130,20 @@
                                    <% if (search) { %> 
                                         <% if (user.username !== search.username) { %>
                                         <h6 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h6>
-                                        <div class="form-group d-flex">
-                                            <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;">    
+                                        <div class="form-group">
+                                            <!-- <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;">     -->
+                                            <textarea class="form-control" name="questions" id="questions" rows="2" placeholder="Escribe aqui su pregunta"></textarea>
                                         </div>
                                         <div class="form-group mt-3">
                                             <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar Pregunta" style="width: 100%;">
                                         </div>
                                         <% } else { %>
                                         <h6 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h6>
-                                        <div class="form-group d-flex">
-                                             <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;" disabled>    
+                                        <div class="form-group">
+                                            <!--  <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;" disabled>     -->
+                                             <textarea class="form-control" name="questions" id="questions" rows="2" placeholder="Escribe aqui su pregunta" disabled></textarea>
                                         </div>
+                                        
                                         <div class="form-group mt-3">
                                              <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar Pregunta" style="width: 100%;" disabled>
                                         </div>
@@ -1534,44 +1558,7 @@ const DataFetch = fetch('/extraer')
 
 </script>
 
-<script>
-    /* aqui extraigo la fecha del creacion de la tienda */
-    // store ya esta declarado 
- 
-const from = document.querySelector('.from');
-const storeUsername = store.childNodes[2].value;
-//console.log("Esto es storeUsername aqui ----------->", storeUsername);
 
-let datoStore = {
-    store : storeUsername
-  }
-  
-  //console.log("datoStore ---->", datoStore)
-  
- 
-   fetch("/date", {
-                method: "post",
-                body: JSON.stringify(datoStore),
-                headers: { "content-type": "application/json" }
-          })
-          .then(response => response.json())
-          .then(jsonDate =>{
-            
-            //console.log("Esto es jsondate --->",jsonDate)
-            const date = jsonDate;
-            //console.log(date);
-            const year = date[0];
-            const month = date[1];
-            const day = date[2];
-            
-            const dateArmada = `${day}-${month}-${year}`
-            from.innerText =  `${dateArmada}` ;
-           
-          })
-          .catch( e => console.log(e))
-          
-
-</script>
 
 <script>
     
@@ -1646,13 +1633,6 @@ let datoStore = {
         });
 
 
-
-
-
-
-
-
-
     }
 
   
@@ -1663,7 +1643,7 @@ let datoStore = {
     //consulta periodica cada minuto para evaluar si esta subasta aun existe
     //const bidIDProduct = document.querySelector('.bidIDProduct'); //id del producto data ya declarado arriba
 
-    const datoId = {
+        const datoId = {
             id : idHidden.value
         };
 
@@ -1693,7 +1673,6 @@ let datoStore = {
             .catch( err => console.log(err));
 
         }, 60000);
-
 
 
 </script>

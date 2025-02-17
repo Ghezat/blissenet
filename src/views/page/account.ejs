@@ -1540,7 +1540,12 @@
                         </div>
                         <div class="containerDetail my-2">
                           <p class="mb-0" style="color:<%= storeProfile.bGColorText %>"> <%= storeProfile.username%></p>
-                          <p class="mb-0"> <span class="from"></span> </p>
+                          <% const dateStore = new Date( storeProfile.createdAt) %>
+                          <% const dia = dateStore.getDate() %>
+                          <% const mes = dateStore.getMonth() +1 %>
+                          <% const anio = dateStore.getFullYear() %>
+
+                          <span> <%= dia %>-<%= mes %>-<%= anio %> </span>
                         </div>
                     </div>
 
@@ -1904,7 +1909,6 @@
   const imgLevel = document.querySelector('.imgLevel');  
   const scoreLevel = document.querySelector('.scoreLevel');
   const trustLevel = document.querySelector('.trustLevel');
-  const from = document.querySelector('.from');
   const yearRegister = document.querySelector('.yearRegister');
   const yearCurrent = document.querySelector('.yearCurrent'); 
   
@@ -1992,32 +1996,6 @@
              
           })
           .catch(err => console.log(err));
-
-
-          //aqui el fetch para obtener la fecha de creacion
-          fetch("/date", {
-                method: "post",
-                body: JSON.stringify(dato),
-                headers: { "content-type": "application/json" }
-          })
-          .then(resp => resp.json())
-          .then(jsonDate =>{
-            
-            console.log("Esto es jsondate --->",jsonDate)
-            const date = jsonDate;
-            console.log(date);
-            const year = date[0];
-            const month = date[1];
-            const day = date[2];
-            const yearcurrent = date[3];
-            
-            const dateArmada = `${day}-${month}-${year}`
-            from.innerText =  `${dateArmada}` ;
-            yearRegister.innerText = `${year}`;
-            yearCurrent.innerText = `${yearcurrent}`;
-           
-          })
-          .catch( e => console.log(e))
 
 
 </script>
