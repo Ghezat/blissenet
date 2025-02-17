@@ -21,8 +21,7 @@
     }
 
 </style>
-<body  class="mainTheme">
-
+<body class="mainTheme" style="background-color: rgba(233, 236, 239, 0.1);  height: 120hv; overflow-y: auto;">
      
   <main>
     <%- include('../partials/navi-simple.ejs') %>
@@ -51,63 +50,65 @@
   
     </ul>
    
-    <div class="mainBuySell">
+    <div class="mainBuySell themaTextLight">
         <div class="contentBuyes">
           <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
               <div class="col-lg-10  my-4 p-0">
-                        <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.7);">
-                          <% if (searchBuy.length !==0){ %>
+                                                          
+                <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.1);">
+                  <% if (searchBuy.length !==0){ %>
 
-                            <div class="containerFlx d-flex flex-column">
-                                  <% searchBuy.forEach((ele)=>{ %>
+                    <div class="containerFlx d-flex flex-column">
+                          <% searchBuy.forEach((ele)=>{ %>
 
-                                    <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
-                                      <div class="containerData" style="width: 60%;">
+                            <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
+                              <div class="containerData" style="width: 60%;">
 
-                                        <img src="<%= ele.image[0].url %>" alt="" style="width: 40px;">
-                                        <span><b>Order :</b> <%= ele._id %> </span>
-                                        <span class="ms-2"><b>Seller :</b> <%= ele.usernameSell %></span>
-                                        <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
-                                        <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
-                                        
-                                      </div>
-                                      <div class="containerRatingComment d-flex" style="width: 38%;">
-                                          <div class="containerRating d-flex align-items-center justify-content-center p-3">
-                                          
-                                            <% if (ele.ratingBuy === 'Positivo' ) { %>
-                                              <span class="text-info rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>+</b></span>
-                                            <% }; %>
-                                            <% if (ele.ratingBuy === 'Negativo' ) { %>
-                                              <span class="text-danger rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>-</b></span>
-                                            <% }; %>
-                                            <% if (ele.ratingBuy === 'Neutral' ) { %>
-                                              <span class="text-warning rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 14px; width: 26px; height: 33px;"> <b>N</b></span>
-                                            <% }; %>
+                                <img src="<%= ele.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
+                                <span><b>Order :</b> <%= ele._id %> </span>
+                                <span class="ms-2"><b>Seller :</b> <%= ele.usernameSell %></span>
+                                <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
+                                <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
+                                
+                              </div>
+                              <div class="containerRatingComment d-flex" style="width: 38%;">
+                                  <div class="containerRating d-flex align-items-center justify-content-center p-3">
+                                  
+                                    <% if (ele.ratingBuy === 'Positivo' ) { %>
+                                      <span class="text-info rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>+</b></span>
+                                    <% }; %>
+                                    <% if (ele.ratingBuy === 'Negativo' ) { %>
+                                      <span class="text-danger rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>-</b></span>
+                                    <% }; %>
+                                    <% if (ele.ratingBuy === 'Neutral' ) { %>
+                                      <span class="text-warning rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 14px; width: 26px; height: 33px;"> <b>N</b></span>
+                                    <% }; %>
 
-                                          </div>
-                                          <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: #e9ecef; border: 1px solid rgb(128, 128, 128, 0.5);">
-                                            <p style="text-align: justify; line-height: 18px; font-style: italic;">
-                                              
-                                              <% if (ele.CommentBuy.length <= 1){ %>
-                                                <i>¡sin comentarios!</i> 
-                                              <% } else { %>
-                                                <%= ele.CommentBuy %>
-                                              <% }; %>
-                                              
-                                            </p>
-                                          </div>
-                                          
-                                      </div>
-                                    </div>
-                                    <hr class="my-1">
-                                    
-                                  <% }); %>
+                                  </div>
+                                  <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: rgb(233, 236, 239, 0.1); border: 1px solid rgb(128, 128, 128, 0.5);">
+                                    <p style="text-align: justify; line-height: 18px; font-style: italic;">
+                                      
+                                      <% if (ele.CommentBuy.length <= 1){ %>
+                                        <i>¡sin comentarios!</i> 
+                                      <% } else { %>
+                                        <%= ele.CommentBuy %>
+                                      <% }; %>
+                                      
+                                    </p>
+                                  </div>
+                                  
+                              </div>
                             </div>
-                          
-                          <% } else { %>
-                              <p class="mb-0">¡No hay nada por aqui!</p>
-                          <% }; %> 
-                        </div>
+                            <hr class="my-1">
+                            
+                          <% }); %>
+                    </div>
+                  
+                  <% } else { %>
+                      <p class="mb-0">¡No hay nada por aqui!</p>
+                  <% }; %> 
+                </div>
+
               </div> 
           </div>
         </div>
@@ -115,7 +116,8 @@
         <div class="contentSelles closed">
           <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
               <div class="col-lg-10  my-4 p-0">
-                <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.7);">
+
+                <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.1);">
                   <% if (searchSell.length !==0){ %>
 
                     <div class="containerFlx d-flex flex-column">
@@ -124,7 +126,7 @@
                             <div class="containerFlexRow d-flex justify-content-between mb-2" style=" height: auto;">
                               <div class="containerData" style="width: 60%;">
                                            
-                                <img src="<%= ele.image[0].url %>" alt="" style="width: 40px;">
+                                <img src="<%= ele.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
                                 <span><b>Order :</b> <%= ele._id %> </span>
                                 <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
                                 <span class="ms-2"><b>Amount :</b> <%= ele.price %></span> <br>
@@ -145,7 +147,7 @@
                                         <% }; %>  
                                       
                                   </div>
-                                  <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: #e9ecef; border: 1px solid rgb(128, 128, 128, 0.5);">
+                                  <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: rgba(233, 236, 239, 0.1); border: 1px solid rgb(128, 128, 128, 0.5);">
                                     <p style="text-align: justify; line-height: 18px; font-style: italic;">
                                       
                                       <% if (ele.CommentSeller.length <= 1){ %>
@@ -167,53 +169,55 @@
                   <% } else { %>
                       <p class="mb-0">¡No hay nada por aqui!</p>
                   <% }; %> 
-              </div>
+                </div>
                   
               </div>
           </div>
         </div>
     </div>
 
-    <div class="mainContact closed">
+    <div class="mainContact themaTextLight closed">
 
         <div class="contentContactBuy">
           <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
             <div class="col-lg-10  my-4 p-0">
-                    <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.7);">
-                             
-                      <% if (searchContactBuy.length !==0){ %>
 
-                        <div class="containerFlex d-flex flex-column">
-                              <% searchContactBuy.forEach((elem, i)=>{ %>
-                                          
-                                <% if (elem.visibleBuy == true ) { %>
-                                <div class="containerFlexRow d-flex justify-content-between mb-2" style=" height: auto;">
-                                  
-                                  <div class="containerData" style="width: 60%;">
-                                    <img src="<%= elem.image[0].url %>" alt="" style="width: 40px;">
-                                    <span><b>Order :</b> <%= elem._id %> </span>
-                                    <span class="ms-2"><b>Seller :</b> <%= elem.usernameSell %></span>
-                                    <span class="ms-2"><b>Amount:</b> <%= elem.price %></span> <br>
-                                    <span><i><a href="/negotiation-body/<%= elem._id %>"><%= elem.title %></a></i></span>
-                                  </div>
-                                  <div class="containerDelete me-4 d-flex align-items-center">
-                                    <input class="idContact" type="hidden" value="<%= elem._id %>">
-                                    <button class="btn btn-small btn-outline-danger btnVisible"> x </button>
-                                  </div>
-                                
-                                </div>
-                                <hr class="my-1">
-                                                             
-                                <% }; %>   
-                                
-                              <% }); %>
-                        </div>
-                      
-                      <% } else { %>
-                          <p class="mb-0">¡No hay nada por aqui!</p>
-                      <% }; %> 
+                <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.1);">
+                          
+                  <% if (searchContactBuy.length !==0){ %>
 
+                    <div class="containerFlex d-flex flex-column">
+                          <% searchContactBuy.forEach((elem, i)=>{ %>
+                                      
+                            <% if (elem.visibleBuy == true ) { %>
+                            <div class="containerFlexRow d-flex justify-content-between mb-2" style=" height: auto;">
+                              
+                              <div class="containerData" style="width: 60%;">
+                                <img src="<%= elem.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
+                                <span><b>Order :</b> <%= elem._id %> </span>
+                                <span class="ms-2"><b>Seller :</b> <%= elem.usernameSell %></span>
+                                <span class="ms-2"><b>Amount:</b> <%= elem.price %></span> <br>
+                                <span><i><a href="/negotiation-body/<%= elem._id %>"><%= elem.title %></a></i></span>
+                              </div>
+                              <div class="containerDelete me-4 d-flex align-items-center">
+                                <input class="idContact" type="hidden" value="<%= elem._id %>">
+                                <button class="btn btn-small btn-outline-danger btnVisible"> x </button>
+                              </div>
+                            
+                            </div>
+                            <hr class="my-1">
+                                                          
+                            <% }; %>   
+                            
+                          <% }); %>
                     </div>
+                  
+                  <% } else { %>
+                      <p class="mb-0">¡No hay nada por aqui!</p>
+                  <% }; %> 
+
+                </div>
+
             </div> 
           </div>
         </div>
@@ -221,46 +225,48 @@
         <div class="contentContactSell closed">
           <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
             <div class="col-lg-10  my-4 p-0">
-                      <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.7);">
-                        <% if (searchContactSell.length !==0){ %>
 
-                          <div class="containerFlex d-flex flex-column">
-                                <% searchContactSell.forEach((ele)=>{ %>
-                                             
-                                  <% if (ele.visibleSell == true ) { %>
-                                  <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
-                                    
-                                    <div class="containerData" style="width: 60%;">
-                                      <img src="<%= ele.image[0].url %>" alt="" style="width: 40px;">
-                                      <span><b>Order :</b> <%= ele._id %> </span>
-                                      <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
-                                      <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
-                                      <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
-                                    </div>
-                                    <div class="containerDelete me-4 d-flex align-items-center">
-                                      <input class="idContact" type="hidden" value="<%= ele._id %>">
-                                      <button class="btn btn-small btn-outline-danger btnVisible"> x </button>
-                                    </div>
-                                   
-                                  </div>
-                                  <hr class="my-1">
-                               
-                                  <% }; %> 
-                                  
-                                <% }); %>
+              <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.1);">
+                <% if (searchContactSell.length !==0){ %>
+
+                  <div class="containerFlex d-flex flex-column">
+                        <% searchContactSell.forEach((ele)=>{ %>
+                                      
+                          <% if (ele.visibleSell == true ) { %>
+                          <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
+                            
+                            <div class="containerData" style="width: 60%;">
+                              <img src="<%= ele.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
+                              <span><b>Order :</b> <%= ele._id %> </span>
+                              <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
+                              <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
+                              <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
+                            </div>
+                            <div class="containerDelete me-4 d-flex align-items-center">
+                              <input class="idContact" type="hidden" value="<%= ele._id %>">
+                              <button class="btn btn-small btn-outline-danger btnVisible"> x </button>
+                            </div>
+                            
                           </div>
+                          <hr class="my-1">
                         
-                        <% } else { %>
-                            <p class="mb-0">¡No hay nada por aqui!</p>
-                        <% }; %> 
-                      </div>
+                          <% }; %> 
+                          
+                        <% }); %>
+                  </div>
+                
+                <% } else { %>
+                    <p class="mb-0">¡No hay nada por aqui!</p>
+                <% }; %> 
+              </div>
+
             </div> 
           </div>
         </div>
 
     </div>
 
-    <div class="mainRaffle closed">
+    <div class="mainRaffle themaTextLight closed">
        
         <div class="ContainerMessage rounded-1 my-2 p-2">
             
@@ -268,14 +274,14 @@
               <div class="containerFlex d-flex flex-column">
                   <% raffleHistory.forEach((ele)=>{ %>
 
-                    <div class="row my-2 d-flex justify-content-center " style="width: 100%; overflow-y: auto;">
+                    <div class="row mx-0 my-2 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
                       <div class="contentElement d-flex justify-content-center flex-wrap">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 col-xxl5 p-1"  style="background-color: rgba(219, 223, 228, 0.7); height: 140px;">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 col-xxl5 p-1"  style="background-color: rgba(219, 223, 228, 0.1); height: 140px;">
                             <div class="leftPart d-flex border border-secondary" style="width: auto; height: 100%;">
                               <% if (ele.category === "Gratis") { %> <!-- solo para identificar que fue un sorteo con categoria "Gratis" -->
                               <div class="imageTrust d-flex flex-column me-2 px-0  align-items-center alert-info" style="position: relative;">
-                                  <img src="<%= ele.image[0].url %>" alt="" class="mb-1" style="width: 55px; max-height: 60px;">
-                                  <% let ratePositivo = 0; let rateNegativo = 0; %>
+                                  <img src="<%= ele.image[0].url %>" alt="" class="mb-1" style="width: 55px; max-height: 60px; object-fit: cover;">
+                                  <% let ratePositivo = 0; let rateNegativo = 0; %> 
                                   <% let totalRate = 0 %>
                                   <% ele.PrizesObject.forEach((i)=>{ %>
                                     <% if  (i.rate === 'positivo') { %>
@@ -293,7 +299,7 @@
                               </div>
                               <% } else { %> <!-- solo para identificar que fue un sorteo con categoria "Pago" -->
                               <div class="imageTrust d-flex flex-column me-2 px-0  align-items-center alert-danger" style="position: relative;">
-                                  <img src="<%= ele.image[0].url %>" alt="" class="mb-1" style="width: 55px; max-height: 60px;">
+                                  <img src="<%= ele.image[0].url %>" alt="" class="mb-1" style="width: 55px; max-height: 60px; object-fit: cover;">
                                   <% let ratePositivo = 0; let rateNegativo = 0; %>
                                   <% let totalRate = 0 %>
                                   <% ele.PrizesObject.forEach((i)=>{ %>
@@ -331,7 +337,7 @@
                               </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6 p-1"  style="background-color: rgba(219, 223, 228, 0.7); height: 140px; overflow-y: auto;">     
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6 p-1"  style="background-color: rgba(219, 223, 228, 0.1); height: 140px; overflow-y: auto;">     
                             <div class="rightPart d-flex border border-secondary" style="width: auto; height: 100%;">
 
                                 <div class="contetListObjetPrizes d-flex flex-column" style="overflow-y: auto;">
@@ -366,7 +372,7 @@
               <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
                 
                 <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 col-xxl-10  my-4 p-0">
-                          <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.7);">
+                          <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.1);">
                             <p class="mb-0">¡No hay nada por aqui!</p>
                           </div>
                 </div>
@@ -378,6 +384,7 @@
         </div>
  
     </div>
+
 <% } else { %>
 
   <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">

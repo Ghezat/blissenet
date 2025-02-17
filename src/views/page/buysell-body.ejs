@@ -123,11 +123,11 @@
                         <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4; width: 100%;">
                             <div class="containerP_Button d-flex justify-content-between" style="width: 100%; background-color: rgb(43, 255, 43, 0.5); border-bottom: 1px solid rgb(128, 128, 128, 0.3);">
                                 <p class="m-0 px-1" style="width: 100%;">He comprado, confirmo que he pagado. <input type="hidden" id="pay" value="pagado"> <input type="hidden" id="idOrder" value="<%= buySell._id %>"></p>
-                                <button class="ms-2 btn btn-success btn-sm" id="btnPay" style="width: 80px;">Pagado</button>
+                                <button class="ms-2 btn btn-success btn-sm" id="btnPay" style="width: 90px;">Pagado</button>
                             </div>
                             <div class="containerP_Button d-flex justify-content-between" style="width: 100%;  background-color: rgb(252, 25, 18, 0.5);">
                                 <p class="m-0 px-1" style="width: 100%;">No quiero comprar, cancelo la orden. <input type="hidden" id="cancel" value="cancel"> <input type="hidden" id="idOrderCancel" value="<%= buySell._id %>"></p>
-                                <button class="ms-2 btn btn-danger btn-sm" id="btnCancel" style="width: 80px;">Cancelar</button>
+                                <button class="ms-2 btn btn-danger btn-sm" id="btnCancel" style="width: 90px;">Cancelar</button>
                             </div>    
                         </div>   
                     <% } else if (buySell.usernameBuy == user.username && buySell.pay == true && buySell.cancel === false && buySell.CommentSeller === "no_comment" ) { %>
