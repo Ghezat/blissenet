@@ -508,7 +508,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
     const {storeUsername, segment} = req.params
     let boxOffert = [];
-    
+     
     console.log(`store --> ${storeUsername} |  segment -->${segment} `);
     const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
     console.log(`receive --------------------------------------------->${receive}`);
@@ -1070,7 +1070,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                         newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                     } else if (receive == "first"){
 
@@ -1084,7 +1084,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                         //console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                     } else if (receive == "next"){
                         console.log("Estamos en paginate next ******************")
@@ -1105,7 +1105,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
                             console.log("newBox ver estamo sen next---->", newBox)
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
           
                         }
             
@@ -1130,7 +1130,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             //console.log("totalPagina :  ", totalPagina);
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
                         } 
             
 
@@ -1163,7 +1163,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
 
                     }
               
