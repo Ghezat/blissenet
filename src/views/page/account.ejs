@@ -3308,6 +3308,251 @@
         
   </script>
 
+<script>
+  /* script que controla la aparicion del mapa, politicas faq y encuestas.  */
+  const storenameValue = document.getElementById('StorenameValue');
+  const containerInfoBliss = document.querySelector('.containerInfoBliss');
+  const containerPolity = document.querySelector('.containerPolity');
+  const containerFaqs = document.querySelector('.containerFaqs'); 
+  const containerSurvey = document.querySelector('.containerSurvey');
+  const containerLocation = document.querySelector('.containerLocation');
+  const btnBackToAds = document.getElementById('btnBackToAds'); //boton para devolver los anuncios 
+
+  const containerSegment = document.querySelector('.containerSegment');
+  //const containerWorkSpace = document.querySelector('.containerWorkSpace'); //declarado arriba.
+  const mainGallery = document.querySelector('.mainGallery');
+
+  const btnPolity = document.querySelector('.btn-polity');
+  const btnFaqs = document.querySelector('.btn-faqs');
+  const btnSurvey = document.querySelector('.btn-survey');
+  const btnLocation = document.querySelector('.btn-location');
+
+  const dataPolicy = document.getElementById('dataPolicy');
+  const dataFaq = document.getElementById('dataFaq');
+  
+  const quillPolicy = document.getElementById('quillPolicy');
+  const quillFaq = document.getElementById('quillFaq');
+
+
+if (btnPolity) {
+  btnPolity.addEventListener('click', ()=>{
+    containerSegment.classList.add('close');
+    containerWorkSpace.classList.add('close');
+    mainGallery.classList.add('close');
+
+    containerInfoBliss.classList.remove('close');
+
+    containerPolity.classList.remove('close');
+    containerFaqs.classList.add('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+
+    const DataPolicy = dataPolicy.value;
+    //console.log("DataPolicy", DataPolicy);  
+    let deltaPolicy;
+
+    let quillPolicy = new Quill('#quillPolicy', {
+      modules: {
+        toolbar : false
+      },
+      readOnly : true
+    })
+
+    
+    deltaPolicy = JSON.parse(DataPolicy);
+        //console.log("deltaPolicy" , deltaPolicy);
+    quillPolicy.setContents(deltaPolicy)
+
+
+  });
+}  
+
+if (btnFaqs){  
+  btnFaqs.addEventListener('click', ()=>{
+    containerSegment.classList.add('close');
+    containerWorkSpace.classList.add('close');
+    mainGallery.classList.add('close');
+
+    containerInfoBliss.classList.remove('close');
+
+    containerPolity.classList.add('close');
+    containerFaqs.classList.remove('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+
+    const DataFaq = dataFaq.value;
+    console.log("DataFaq", DataFaq);
+      
+    let deltaFaq;
+
+    let quillFaq = new Quill('#quillFaq', {
+      modules: {
+        toolbar : false
+      },
+      readOnly : true
+    })
+
+    
+    deltaFaq = JSON.parse(DataFaq);
+        //console.log("deltaFaq" , deltaFaq);
+    quillFaq.setContents(deltaFaq)
+
+  });
+}  
+
+if (btnSurvey){
+    btnSurvey.addEventListener('click', ()=>{
+      containerSegment.classList.add('close');
+      containerWorkSpace.classList.add('close');
+      mainGallery.classList.add('close');
+
+      containerInfoBliss.classList.remove('close');
+
+      containerPolity.classList.add('close');
+      containerFaqs.classList.add('close');
+      containerSurvey.classList.remove('close');
+      containerLocation.classList.add('close');
+
+      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+      efectSoundExpan.play().catch(error => {
+          console.error("Error al reproducir el sonido:", error);
+      });
+
+    });
+  }    
+
+if (btnLocation){  
+  btnLocation.addEventListener('click', ()=>{
+    containerSegment.classList.add('close');
+    containerWorkSpace.classList.add('close');
+    mainGallery.classList.add('close');
+
+    containerInfoBliss.classList.remove('close');
+
+    containerPolity.classList.add('close');
+    containerFaqs.classList.add('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.remove('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+
+    createMap()
+   
+  });
+}  
+
+let map; // Variable global para almacenar la instancia del mapa
+
+
+function createMap() {
+    const Lon = document.getElementById('mapDataLon'); 
+    const Lat = document.getElementById('mapDataLat');
+    const storename = storenameValue.value; //username de la tienda
+   
+    if (Lon && Lat){
+
+        const lon = Lon.value;
+        const lat = Lat.value;
+
+        console.log("lon -->", Lon);
+        console.log("Lat -->", Lat);
+
+        console.log(`Estas variables ya están definidas ---> Latitud: ${lat}, Longitud: ${lon}`);
+
+        // Verifica si el mapa ya ha sido creado
+        if (map) {
+            map.remove(); // Destruye el mapa existente
+        }
+
+        
+        // Crear un nuevo mapa en el div con id "map" instanciar
+        map = L.map('mapStore').setView([lat, lon], 13); // El segundo parámetro es el nivel de zoom
+        
+        //var myMap = L.map('miMapa').setView([latitud, longitud], zoomLevel);
+
+        console.log("map ->", map);
+
+        // Añadir una capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Añadir un marcador en las coordenadas especificadas
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup(storename)
+            .openPopup();
+ 
+        
+
+        const options = {
+            position: 'topleft',
+            primaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'hectares',
+            activeColor: '#9200FF',
+            completedColor: '#c174fc',
+            // Traducción de los textos
+        };
+        const measureControl = new L.Control.Measure(options);
+        map.addControl(measureControl); // Asegúrate de añadir el control al mapa
+
+        L.Control.Measure.include({
+            _setCaptureMarkerIcon: function () {
+                this._captureMarker.options.autoPanOnFocus = false;
+
+                this._captureMarker.setIcon(
+                    L.divIcon({
+                        iconSize: this._map.getSize().multiplyBy(2)
+                    })
+                );
+            },
+        });
+        
+
+    }
+
+
+
+}
+
+if (btnBackToAds){
+
+  btnBackToAds.addEventListener('click', ()=>{
+    containerSegment.classList.remove('close');
+    containerWorkSpace.classList.remove('close');
+    mainGallery.classList.remove('close');
+
+    containerInfoBliss.classList.add('close');
+
+    containerPolity.classList.add('close');
+    containerFaqs.classList.add('close');
+    containerSurvey.classList.add('close');
+    containerLocation.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+  })
+
+}
+
+
+ </script>
+
 
 <% if ( user !== undefined ) { %>
   <!-- estas son las opciones que estaran cuando SI exista un usuario logeado -->
@@ -3678,315 +3923,70 @@
 
 </script>
 
- <script>
+<script>
+/* purchaseTime es el agotado que termine con el avisarme cuando este disponible */
+const purchaseTime = document.querySelectorAll('.purchaseTime');
+const boxDetailPurchaseTime = document.querySelectorAll('.boxDetailPT');
 
-  const purchaseTime = document.querySelectorAll('.purchaseTime');
-  const boxDetailPurchaseTime = document.querySelectorAll('.boxDetailPT');
+if (purchaseTime){
 
-  if (purchaseTime){
+    purchaseTime.forEach((ele, i)=>{
+      ele.addEventListener('click', ()=>{
 
-      purchaseTime.forEach((ele, i)=>{
-        ele.addEventListener('click', ()=>{
+        console.log("element-->", ele)
+        //console.log("ele.childNodes -->", ele.childNodes);
+        console.log("depart ---->",ele.childNodes[3].value);
+        console.log("id ---->",ele.childNodes[5].value);
+        const depart = ele.childNodes[3].value;
+        const id = ele.childNodes[5].value;
 
-          console.log("element-->", ele)
-          //console.log("ele.childNodes -->", ele.childNodes);
-          console.log("depart ---->",ele.childNodes[3].value);
-          console.log("id ---->",ele.childNodes[5].value);
-          const depart = ele.childNodes[3].value;
-          const id = ele.childNodes[5].value;
-
-          const datos = {
-              depart: depart,
-              id: id
-          }
-          console.log("datos ->", datos);
-    
-            fetch('/account/purchaseTime', {
-    
-              method: "post",
-              body: JSON.stringify(datos),
-              headers: { "content-type": "application/json" }
-    
-            })
-              .then(response => response.json())
-              .then(jsonx => {
-                
-                console.log("Esto es jsonx--->",jsonx);
-                const note = jsonx.note;
-                console.log("note ->", note)
-                // esto llefa del backend --> const response = con note 0 o note 1;
-
-
-                if (note === 1){
-                  boxDetailPurchaseTime[i].innerHTML = `<div class="d-flex flex-column align-items-center">  <span class="d-flex justify-content-center align-items-center bg-success text-light rounded-pill" style= "width: 30px; height: 30px"> <i class="bi bi-envelope"></i> </span>  ¡Será notificado al estar disponible!. </div>`
-                } else {
-                  boxDetailPurchaseTime[i].innerHTML = `<div class="d-flex flex-column align-items-center">  <span class="d-flex justify-content-center align-items-center bg-danger text-light rounded-pill" style= "width: 30px; height: 30px"> <i class="bi bi-trash-fill"></i> </span>  ¡Notificación eliminada!. </div>`
-                }                
-
-                boxDetailPurchaseTime[i].classList.toggle('close');
-
-                setTimeout(() => {
-                  boxDetailPurchaseTime[i].classList.toggle('close');
-                }, 3500);
-
-    
-              })
-              .catch(err => console.log(err));
-      
-
-        })
-      })
-
-  }  
-
-
-
- </script>
-
- <script>
-
-  const storenameValue = document.getElementById('StorenameValue');
-  const containerInfoBliss = document.querySelector('.containerInfoBliss');
-  const containerPolity = document.querySelector('.containerPolity');
-  const containerFaqs = document.querySelector('.containerFaqs'); 
-  const containerSurvey = document.querySelector('.containerSurvey');
-  const containerLocation = document.querySelector('.containerLocation');
-  const btnBackToAds = document.getElementById('btnBackToAds'); //boton para devolver los anuncios 
-
-  const containerSegment = document.querySelector('.containerSegment');
-  //const containerWorkSpace = document.querySelector('.containerWorkSpace'); //declarado arriba.
-  const mainGallery = document.querySelector('.mainGallery');
-
-  const btnPolity = document.querySelector('.btn-polity');
-  const btnFaqs = document.querySelector('.btn-faqs');
-  const btnSurvey = document.querySelector('.btn-survey');
-  const btnLocation = document.querySelector('.btn-location');
-
-  const dataPolicy = document.getElementById('dataPolicy');
-  const dataFaq = document.getElementById('dataFaq');
-  
-  const quillPolicy = document.getElementById('quillPolicy');
-  const quillFaq = document.getElementById('quillFaq');
-
-
-if (btnPolity) {
-  btnPolity.addEventListener('click', ()=>{
-    containerSegment.classList.add('close');
-    containerWorkSpace.classList.add('close');
-    mainGallery.classList.add('close');
-
-    containerInfoBliss.classList.remove('close');
-
-    containerPolity.classList.remove('close');
-    containerFaqs.classList.add('close');
-    containerSurvey.classList.add('close');
-    containerLocation.classList.add('close');
-
-    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-    efectSoundExpan.play().catch(error => {
-        console.error("Error al reproducir el sonido:", error);
-    });
-
-    const DataPolicy = dataPolicy.value;
-    //console.log("DataPolicy", DataPolicy);  
-    let deltaPolicy;
-
-    let quillPolicy = new Quill('#quillPolicy', {
-      modules: {
-        toolbar : false
-      },
-      readOnly : true
-    })
-
-    
-    deltaPolicy = JSON.parse(DataPolicy);
-        //console.log("deltaPolicy" , deltaPolicy);
-    quillPolicy.setContents(deltaPolicy)
-
-
-  });
-}  
-
-if (btnFaqs){  
-  btnFaqs.addEventListener('click', ()=>{
-    containerSegment.classList.add('close');
-    containerWorkSpace.classList.add('close');
-    mainGallery.classList.add('close');
-
-    containerInfoBliss.classList.remove('close');
-
-    containerPolity.classList.add('close');
-    containerFaqs.classList.remove('close');
-    containerSurvey.classList.add('close');
-    containerLocation.classList.add('close');
-
-    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-    efectSoundExpan.play().catch(error => {
-        console.error("Error al reproducir el sonido:", error);
-    });
-
-    const DataFaq = dataFaq.value;
-    console.log("DataFaq", DataFaq);
-      
-    let deltaFaq;
-
-    let quillFaq = new Quill('#quillFaq', {
-      modules: {
-        toolbar : false
-      },
-      readOnly : true
-    })
-
-    
-    deltaFaq = JSON.parse(DataFaq);
-        //console.log("deltaFaq" , deltaFaq);
-    quillFaq.setContents(deltaFaq)
-
-  });
-}  
-
-if (btnSurvey){
-    btnSurvey.addEventListener('click', ()=>{
-      containerSegment.classList.add('close');
-      containerWorkSpace.classList.add('close');
-      mainGallery.classList.add('close');
-
-      containerInfoBliss.classList.remove('close');
-
-      containerPolity.classList.add('close');
-      containerFaqs.classList.add('close');
-      containerSurvey.classList.remove('close');
-      containerLocation.classList.add('close');
-
-      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-      efectSoundExpan.play().catch(error => {
-          console.error("Error al reproducir el sonido:", error);
-      });
-
-    });
-  }    
-
-if (btnLocation){  
-  btnLocation.addEventListener('click', ()=>{
-    containerSegment.classList.add('close');
-    containerWorkSpace.classList.add('close');
-    mainGallery.classList.add('close');
-
-    containerInfoBliss.classList.remove('close');
-
-    containerPolity.classList.add('close');
-    containerFaqs.classList.add('close');
-    containerSurvey.classList.add('close');
-    containerLocation.classList.remove('close');
-
-    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-    efectSoundExpan.play().catch(error => {
-        console.error("Error al reproducir el sonido:", error);
-    });
-
-    createMap()
-   
-  });
-}  
-
-let map; // Variable global para almacenar la instancia del mapa
-
-
-function createMap() {
-    const Lon = document.getElementById('mapDataLon'); 
-    const Lat = document.getElementById('mapDataLat');
-    const storename = storenameValue.value; //username de la tienda
-   
-    if (Lon && Lat){
-
-        const lon = Lon.value;
-        const lat = Lat.value;
-
-        console.log("lon -->", Lon);
-        console.log("Lat -->", Lat);
-
-        console.log(`Estas variables ya están definidas ---> Latitud: ${lat}, Longitud: ${lon}`);
-
-        // Verifica si el mapa ya ha sido creado
-        if (map) {
-            map.remove(); // Destruye el mapa existente
+        const datos = {
+            depart: depart,
+            id: id
         }
+        console.log("datos ->", datos);
+  
+          fetch('/account/purchaseTime', {
+  
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: { "content-type": "application/json" }
+  
+          })
+            .then(response => response.json())
+            .then(jsonx => {
+              
+              console.log("Esto es jsonx--->",jsonx);
+              const note = jsonx.note;
+              console.log("note ->", note)
+              // esto llefa del backend --> const response = con note 0 o note 1;
 
-        
-        // Crear un nuevo mapa en el div con id "map" instanciar
-        map = L.map('mapStore').setView([lat, lon], 13); // El segundo parámetro es el nivel de zoom
-        
-        //var myMap = L.map('miMapa').setView([latitud, longitud], zoomLevel);
 
-        console.log("map ->", map);
+              if (note === 1){
+                boxDetailPurchaseTime[i].innerHTML = `<div class="d-flex flex-column align-items-center">  <span class="d-flex justify-content-center align-items-center bg-success text-light rounded-pill" style= "width: 30px; height: 30px"> <i class="bi bi-envelope"></i> </span>  ¡Será notificado al estar disponible!. </div>`
+              } else {
+                boxDetailPurchaseTime[i].innerHTML = `<div class="d-flex flex-column align-items-center">  <span class="d-flex justify-content-center align-items-center bg-danger text-light rounded-pill" style= "width: 30px; height: 30px"> <i class="bi bi-trash-fill"></i> </span>  ¡Notificación eliminada!. </div>`
+              }                
 
-        // Añadir una capa de OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+              boxDetailPurchaseTime[i].classList.toggle('close');
 
-        // Añadir un marcador en las coordenadas especificadas
-        L.marker([lat, lon]).addTo(map)
-            .bindPopup(storename)
-            .openPopup();
- 
-        
+              setTimeout(() => {
+                boxDetailPurchaseTime[i].classList.toggle('close');
+              }, 3500);
 
-        const options = {
-            position: 'topleft',
-            primaryLengthUnit: 'kilometers',
-            primaryAreaUnit: 'hectares',
-            activeColor: '#9200FF',
-            completedColor: '#c174fc',
-            // Traducción de los textos
-        };
-        const measureControl = new L.Control.Measure(options);
-        map.addControl(measureControl); // Asegúrate de añadir el control al mapa
+  
+            })
+            .catch(err => console.log(err));
+    
 
-        L.Control.Measure.include({
-            _setCaptureMarkerIcon: function () {
-                this._captureMarker.options.autoPanOnFocus = false;
+      })
+    })
 
-                this._captureMarker.setIcon(
-                    L.divIcon({
-                        iconSize: this._map.getSize().multiplyBy(2)
-                    })
-                );
-            },
-        });
-        
-
-    }
+}  
 
 
 
-}
-
-if (btnBackToAds){
-
-  btnBackToAds.addEventListener('click', ()=>{
-    containerSegment.classList.remove('close');
-    containerWorkSpace.classList.remove('close');
-    mainGallery.classList.remove('close');
-
-    containerInfoBliss.classList.add('close');
-
-    containerPolity.classList.add('close');
-    containerFaqs.classList.add('close');
-    containerSurvey.classList.add('close');
-    containerLocation.classList.add('close');
-
-    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-    efectSoundExpan.play().catch(error => {
-        console.error("Error al reproducir el sonido:", error);
-    });
-  })
-
-}
-
-
- </script>
+</script>
 
 
 <% }; %>
