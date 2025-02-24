@@ -55,6 +55,14 @@
     opacity: 0;
   }
 
+  .iconoLupa {
+        transition: transform 0.5s ease;
+        display: inline-block; /* Asegúrate de que el icono pueda rotar */
+    }
+
+    .btn:hover .iconoLupa {
+        transform: rotate(-22deg); /* Gira la lupa */
+    }
 
   .containerBanner:hover{
   
@@ -482,7 +490,7 @@
                                           <button class="btn btn-dark mx-2" id="btnQR" style="width: 42px; height: 42px ; border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
                                     </div>
                                     <input type="hidden" id="linkToShare" value="https://blissenet.com/account/<%= ele.username %>">
-
+                                    
                                   </div>
 
                                 <% if (boxPublisher) { %>
@@ -741,8 +749,8 @@
                                       <form  method="get" class="d-flex" id="formSearch">
                                         <input type="hidden" value="<%= store %>" id="storeSearch">
                                         <input type="hidden" value="<%= Segment %>" id="segmentSearch">
-                                        <input class="form-control me-2" type="text" id="elementSearch" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search">
-                                        <button class="btn"  id="submitSearch" style="color:<%= bGColorText %>; border : 1px solid <%= bGColorText %>">Search</button>
+                                        <input class="form-control me-2" type="search" id="elementSearch" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search" style="border : 1px solid <%= bGColorText %>" >
+                                        <button class="btn" id="submitSearch" style="color:<%= bGColorText %>; border : 1px solid <%= bGColorText %>"> <i class="bi bi-search iconoLupa"></i> </button>
                                       </form>
                                      
 
@@ -825,7 +833,7 @@
                                         <% }; %>  
                                         
                                   <% } else { %>
-                                    <!-- el usuaio entra sin haberse logeado  -->
+                                    <!-- el usuario entra sin haberse logeado  -->
                                     <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
                                       <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Debes estar logeado para poder calificar.">    
                                         <i class="bi bi-star" style="font-size: 1rem;"></i>
@@ -1413,13 +1421,13 @@
                                     <% if (ele.type === 'image'){ %>
                                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
                                           
-                                            <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 240px; object-fit: cover;">
+                                            <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 280px; object-fit: cover;">
                                           
                                         </div>
                                     <% } else { %>
                                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
                                             
-                                            <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 240px; object-fit: cover;"></video>
+                                            <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 280px; object-fit: cover;"></video>
                                           
                                         </div>
                                     <% }; %>
@@ -1444,7 +1452,7 @@
                             <div class="carousel-images p-4">
                                 <% carouselImg.forEach((ele)=>{ %>
                                 <div class="conteImg px-3 shadow-sm">   
-                                    <img class="rounded-3" src="<%= ele.url %>" alt="" style="height: 230px; object-fit: cover;">
+                                    <img class="rounded-3" src="<%= ele.url %>" alt="" style="height: 280px; object-fit: cover;">
                                 </div>
                                 <% }); %>    
                             </div>    

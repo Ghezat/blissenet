@@ -34,6 +34,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal codigo QR -->
+            <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
+                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="staticComprarLabel">Codigo QR</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body d-flex justify-content-center align-items-center py-5" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(102,0,255,1) 100%);">
+                            <div class="contentQR d-flex flex-column my-2" style="position: relative; max-width: 320px;">
+                                <canvas id="qr-canvas" class="rounded-3 mt-2 p-3" style="background-color: white;">  
+                                    <!-- Aqui va el codigo QR dinamico -->
+                                </canvas>
+                                <img src="/img/logoSuperiorQR.png" class="shadow" alt="" style="position: absolute; top: -33px; right: 87px; width: 60px;"> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         
     </div>
     <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-sm-12 d-flex align-items-center justify-content-center px-2 my-2">
@@ -63,7 +83,7 @@
             <div class="markBlisnet rounded-2 px-0 py-1" style="position: relative;">
                 <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit">  <span id="logoBlissenet_com"> </span> <i class="bi bi-share me-1"></i>  </button>   
             
-                <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 45px; left: -28px;" >
+                <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: 45px; left: -58px;" >
                     <a href="https://api.whatsapp.com/send?text=https://blissenet.com" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
                     <a href="https://t.me/share/url?url=https://blissenet.com" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
                     <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
@@ -71,9 +91,9 @@
                       <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i>
                       <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
                     </div>
-                    
+                    <button class="btn btn-dark mx-2" id="btnQR" style="border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
               </div>
-                             
+              <input type="hidden" id="linkToShare" value="https://blissenet.com %>">               
             </div>
             
 
@@ -93,13 +113,17 @@
 </div>
 
 
-                                        
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>                         
 <!-- script para controlar todo el modulo de compartir -->
 <script>
     const shareToggle = document.querySelector('.shareToggle');
     const containerShare = document.querySelector('.containerShare');
     const btnClicBoard = document.getElementById('btnClicBoard');
     const btnClicBoardCheck = document.getElementById('btnClicBoardCheck');
+    const btnQR = document.getElementById('btnQR'); 
+    const linkToShare = document.getElementById('linkToShare');
+    const canvas = document.getElementById('qr-canvas');
  
   
     shareToggle.addEventListener('click', ()=>{
@@ -107,6 +131,22 @@
       
       const shareActive = containerShare.classList.contains('invisible');
       //console.log("shareActive -->", shareActive);
+
+    })
+
+    //fabricar Codigo QR
+    btnQR.addEventListener('click', ()=>{
+
+    const store = linkToShare.value;
+    const url = `${store}`;
+    console.log("url", url);
+
+    const qr = new QRious({
+        element: canvas, //en el contenedor donde ira.
+        value: url, // informacion que codificara.
+        size: 200, // calidad del codigo
+        foreground: '#9200ff' // Establece el color violeta
+    });
 
     })
   
