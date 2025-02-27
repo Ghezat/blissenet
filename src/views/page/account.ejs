@@ -468,36 +468,39 @@
                <!-- este es el fin del foreach de colores -->
                         </div>
                         <div class="containerDetails d-flex flex-column">
-                        <% if (Account) { %> 
-                            <% Account.forEach((ele)=>{ %>
-                                  <span class="mx-1 store" style="font-size: 20px;">
-                                      <%= ele.username %> <input type="hidden" value="<%= ele.username %>">
-                                  </span>
-                                  <!-- <span class="mx-1" style="font-size: 16px;">@<%= ele.username %> </span> -->
+                          <% if (Account) { %> 
+                              <% Account.forEach((ele)=>{ %>
+                                    <span class="mx-1 store" style="font-size: 20px;">
+                                        <%= ele.username %> <input type="hidden" value="<%= ele.username %>">
+                                    </span>
+                                    <!-- <span class="mx-1" style="font-size: 16px;">@<%= ele.username %> </span> -->
 
-                                  <div class="d-flex justify-content-start">
+                                    <div class="d-flex justify-content-start">
 
-                                    <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit"> <i class="bi bi-share me-1"></i>  Compartir </button> 
-                                    
-                                    <div class="containerShare d-flex invisible border border-secondary py-3 px-2 rounded-3" style="height: 80px;">
-                                          <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
-                                          <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
-                                          <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
-                                          <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
-                                            <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i> </button>
-                                            <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
-                                          </div>
-                                          <button class="btn btn-dark mx-2" id="btnQR" style="width: 42px; height: 42px ; border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
+                                      <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit"> <i class="bi bi-share me-1"></i>  Compartir </button> 
+                                      
+                                      <div class="containerShare d-flex invisible border border-secondary py-3 px-2 rounded-3" style="height: 80px;">
+                                            <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
+                                            <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
+                                            <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
+                                              <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i> </button>
+                                              <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
+                                            </div>
+                                            <button class="btn btn-dark mx-2" id="btnQR" style="width: 42px; height: 42px ; border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
+                                      </div>
+                                      <input type="hidden" id="linkToShare" value="https://blissenet.com/account/<%= ele.username %>">
+                                      
                                     </div>
-                                    <input type="hidden" id="linkToShare" value="https://blissenet.com/account/<%= ele.username %>">
-                                    
-                                  </div>
 
-                                <% if (boxPublisher) { %>
-                                    <span class="mx-1" style="font-size: 16px; user-select: none"><i class="bi bi-bag-plus me-1"></i> Anuncios: <%= boxPublisher.length %> </span>
-                                <% }; %>
-                            <% }) %>
-                        <% }; %>
+                                  <% if (boxPublisher) { %>
+
+                                      <span class="mx-1" style="font-size: 16px; user-select: none"><i class="bi bi-bag-plus me-1"></i> Anuncios: <%= boxPublisher.length %> </span>
+                                  
+                                  <% }; %>
+                                  
+                              <% }) %>
+                          <% }; %>
                         </div>
                     </div>
 
@@ -507,7 +510,7 @@
                       <% if (storeProfile) { %>
                         <input type="hidden" id="iDStore" value="<%= storeProfile.indexed %>">
                         
-                        <!-- estos datos ocultos se usan para jugar con los estilos el bton buttonFollow abajo presente -->
+                        <!-- estos datos ocultos se usan para jugar con los estilos el boton buttonFollow abajo presente -->
                         <input type="hidden" id="bGColorText" value="<%= storeProfile.bGColorText %>">
                         <input type="hidden" id="bGColorTopbar" value="<%= storeProfile.bGColorTopbar %>">
 
@@ -531,16 +534,17 @@
                       <% } %>  
                     <% } else { %>
 
-                      <div class="content-btn-follow mt-3 me-5" style = "position: relative;">
-                      
             
-                        <button class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;">Seguir</button>
-                        <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
                       
-                    </div>
+                          <div class="content-btn-follow mt-3 me-5" style = "width: fit-content; position: relative;" data-bs-toggle="modal" data-bs-target="#staticnoLogin">    
+                              <a class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;"> Seguir </a>
+                          </div>
+                      
+              
+
+
                     <% }; %>  
                     
-
         
                 </div> <!-- aqui cierra el bloque Topbar--> 
         
@@ -570,10 +574,10 @@
 
                 </div>
                     
-                  <!-- //storeProfile camiar por storeProfile --> 
 
 
                   <!-- importante que estos modales esten aqui afuera del contenedor containerWorkSpace -->
+                      
                       <!-- Modal codigo QR -->
                       <div class="modal fade" id="staticQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticQRLabel" aria-hidden="true">
                         <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
@@ -590,6 +594,37 @@
                                       </canvas>
                                       <img src="/img/logoSuperiorQR.png" class="shadow" alt="" style="position: absolute; top: -35px; right: 70px; width: 60px;"> 
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <!-- Option noLogeado -->
+                      <div class="modal fade" id="staticnoLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticnoLogin" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">¿Quieres seguir a esta tienda?</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center my-1">
+
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="viewRateStore" data-bs-dismiss="modal" aria-label="Close"> 
+                                    
+                                    <span class="mt-2">
+                                      "¡Hola! Para poder seguir a esta tienda y disfrutar de todas las actualizaciones y ofertas exclusivas, necesitas tener una cuenta en Blissenet. Iniciar sesión te permitirá no solo seguir a tus tiendas favoritas, 
+                                      sino también poder calificarlas, tener contacto directo con ellos y un historial de tus interacciones. ¿Te gustaría crear una cuenta ahora? Es rápido y fácil."
+                                    </span>
+
+                                  </div> 
+
+                                </div>
+                                <div class="containerMessage">
+                                  <hr>
+                                  <p class="mx-4 py-0"> 
+                                      Puedes logearte aqui <a href="/myaccount/signin"> Login </a> en caso que no tengas un registro puedes hacerlo en el siguiente enlace <a href="/myaccount/signup"> Registro </a>. 
+                                  </p>
+                                
                                 </div>
                             </div>
                         </div>
@@ -766,7 +801,7 @@
                             </div>  
                           </a>
 
-  <!--                             //prueba de popover                                                                                                
+  <!--                    //prueba de popover                                                                                                
                           <button type="button" class="btn btn-secondary" data-bs-toggle="popover" title="Título del Popover" data-bs-placement="left" data-bs-content="Left Contenido del popover aquí.">
                             Hover o click aquí
                           </button>
@@ -1027,7 +1062,14 @@
                                                             <%= ele.title %>
                                                           </a>                                            
                                                         
-                                                          <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                          <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                          <% } else { %>
+                                                            <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="¡No estas logeado!">
+                                                              <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                            </button>
+                                                          <% } %>  
+
                                                         </div>
                     
                                                         <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
@@ -1072,7 +1114,14 @@
                                                               <%= ele.title %>
                                                             </a>                                            
                                                           
-                                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                            <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                              <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                            <% } else { %>
+                                                              <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="¡No estas logeado!">
+                                                                <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                              </button>
+                                                            <% } %> 
+
                                                           </div>
                   
                                                           <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
@@ -1770,14 +1819,26 @@
     
   </script>
 
-  <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Popover(tooltipTriggerEl)
-    })
-  </script>
+        // Crear el popover
+        var popover = new bootstrap.Popover(tooltipTriggerEl);
+        
+        // Agregar evento para cerrar otros popovers al abrir uno nuevo
+        tooltipTriggerEl.addEventListener('click', function () {
+            // Cerrar todos los popovers abiertos
+            tooltipList.forEach(function (otherPopover) {
+                if (otherPopover._element !== tooltipTriggerEl) {
+                    otherPopover.hide();
+                }
+            });
+        });
 
-
+        return popover;
+    });
+</script>
 
 <script>
   const formSegment = document.getElementById('formSegment');

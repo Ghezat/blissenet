@@ -146,19 +146,22 @@ routes.get('/account/:account', async (req,res)=>{
             //const resultAirplane = await modelAirplane.find({ $and: [{ user_id: accountId }, { visibleStore: true }] }).sort({ views: -1 }) -->por vista ascendete 50,40,16,7,3
             //const resultAirplane = await modelAirplane.find({ $and: [{ user_id: accountId }, { visibleStore: true }] }).sort({ createdAt: -1 }) -->por creacion ascendete 50,40,16,7,3
 
+            //**Orden por title ascendente a, b, c, d, e, f */
+            /* const resultAirplane = await modelAirplane.find({ $and: [{ user_id: accountId }, { visibleStore: true }] }).sort({ title: 1 }); */
+
             if (storeProfile) { 
                 const searchBanner = storeProfile.bannerPerfil;
         
                 //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ createdAt: -1 });
-                const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ createdAt: -1 });
-                const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
-                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
-                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
-                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ createdAt: -1 });
-                const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ title: 1 });
+                const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ title: 1 });
+                const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
+                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
+                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
 
                 if (resultAirplane) {
                     boxPublisher.push(...resultAirplane)
@@ -345,15 +348,15 @@ routes.get('/account/:account', async (req,res)=>{
                 const searchBanner = storeProfile.bannerPerfil;
         
                 //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                const resultAirplane = await modelAirplane.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultArtes = await modelArtes.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultItems = await modelItems.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultService = await modelService.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ createdAt: -1 });
-                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ createdAt: -1 });
+                const resultAirplane = await modelAirplane.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultArtes = await modelArtes.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultItems = await modelItems.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultService = await modelService.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId}, {visibleStore : true }]}).sort({ title: 1 });
+                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
 
                 if (resultAirplane) {
                     boxPublisher.push(...resultAirplane)
@@ -632,15 +635,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
                 if (segment === "All"){
                         //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
 
                         if (resultAirplane) {
                             boxPublisher.push(...resultAirplane)
@@ -798,15 +801,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                 } else {
 
                         //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]}).sort({ createdAt: -1 });
-                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]}).sort({ createdAt: -1 });
-                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]}).sort({ title: 1 });
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]}).sort({ title: 1 });
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ title: 1 });
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ title: 1 });
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
 
                         if (resultAirplane) {
                             boxPublisher.push(...resultAirplane)
@@ -1006,15 +1009,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                 //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones.
                 if (segment === "All"){
                     //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                    const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
-                    const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ createdAt: -1 });
+                    const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
+                    const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } ]}).sort({ title: 1 });
 
                     if (resultAirplane) {
                         boxPublisher.push(...resultAirplane)
@@ -1172,15 +1175,15 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                 } else {
 
                         //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]}).sort({ createdAt: -1 });
-                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]}).sort({ createdAt: -1 });
-                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
-                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ createdAt: -1 });
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment } ]}).sort({ title: 1 });
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }, {segment : segment }]}).sort({ title: 1 });
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ title: 1 });
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }, {segment : segment} ]}).sort({ title: 1 });
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true } , {segment : segment} ]}).sort({ title: 1 });
 
                         if (resultAirplane) {
                             boxPublisher.push(...resultAirplane)
