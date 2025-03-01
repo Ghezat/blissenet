@@ -1352,7 +1352,7 @@
                                 <input type="hidden" value="<%= surveyId %>" id="surveyId">  
 
                                 <div class="containerSurveyCustomer">
-                                  <p class="ps-3 pt-2"> ID : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-stopwatch"></i> : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
+                                  <p class="ps-3 pt-2"> ID : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-calendar2-week"></i> : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
                                       <% const surveyData = survey.scheme.surveyData %> <!-- esto es un array -->
                                   <div class="carousel-images  p-2"> <!-- carousel-images es la clase de slick-carousel -->
 
@@ -3675,7 +3675,7 @@ if (btnSurvey){
                   console.log(jsonx)
                   const code = jsonx.code;
                   console.log("code -->", code);
-                  irATopBar() //nos llevan al lugar que se debe en el DOM
+                  
                   if (code == 0){
                     //este usuario no ha realizado la encuesta
                     containerSegment.classList.add('close');
@@ -3692,6 +3692,7 @@ if (btnSurvey){
                     containerSurveyCustomer.classList.remove('close');
                     containerSurveyDone.classList.add('close');
                     containerError.classList.add('close');
+                    irATopBar() //nos llevan al lugar que se debe en el DOM
 
                   } else if (code == 1) {
                     //este usuario ha realizado la encuesta
@@ -3709,6 +3710,7 @@ if (btnSurvey){
                     containerSurveyCustomer.classList.add('close');
                     containerSurveyDone.classList.remove('close');
                     containerError.classList.add('close');
+                    irATopBar() //nos llevan al lugar que se debe en el DOM
 
                   } else if (code == 2) {
                     //ha habido un error
@@ -3726,11 +3728,29 @@ if (btnSurvey){
                     containerSurveyCustomer.classList.add('close');
                     containerSurveyDone.classList.add('close');
                     containerError.classList.remove('close');
+                    irATopBar() //nos llevan al lugar que se debe en el DOM
 
                   }
 
                 })
-              .catch((error)=> console.log('Ha ocurrido un error'))    
+              .catch((error)=> {
+                console.log('Ha ocurrido un error')
+                containerSegment.classList.add('close');
+                containerWorkSpace.classList.add('close');
+                mainGallery.classList.add('close');
+
+                containerInfoBliss.classList.remove('close');
+
+                containerPolity.classList.add('close');
+                containerFaqs.classList.add('close');
+                containerSurvey.classList.remove('close');
+                containerLocation.classList.add('close');
+                
+                containerSurveyCustomer.classList.add('close');
+                containerSurveyDone.classList.add('close');
+                containerError.classList.remove('close');
+                irATopBar() //nos llevan al lugar que se debe en el DOM
+              })    
 
  
               efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
