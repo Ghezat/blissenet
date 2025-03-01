@@ -16,6 +16,8 @@ const modelAuction = require('../models/auction.js');
 const modelRaffle = require('../models/raffle.js');
 
 const modelStoreRate = require('../models/storeRate.js');
+const modelCustomerSurvey = require('../models/customerSurvey.js');
+const messages = require('../models/messages.js');
       
 
 routes.get('/account/:account', async (req,res)=>{
@@ -2795,7 +2797,6 @@ routes.post('/account/purchaseTime', async (req, res)=>{
 });
 
 //Sección de manejo de Raffles --------------------------------------------
-            
 routes.get('/raffleModule-admin/:id', async(req, res)=>{
 
     const idRaffle = req.params.id;
@@ -3038,6 +3039,80 @@ routes.post('/account/pountRate/star-5', async(req, res)=>{
     res.json(rateStore);
 });
 
+routes.post('/account/survey/search', async(req, res)=>{
+    try {
+        console.log("*----------------------- Consunlta de Encuesta ----------------------------*");
+        console.log("/account/survey/search");
+        const { surveyId, indexed } = req.body; 
+        
+        const user = req.session.user;
+        const indexedCustomer = user._id;
 
+        console.log("indexedCustomer quien hace la encuesta --->", indexedCustomer);
+        console.log("surveyId --->", surveyId);
+        console.log("indexed dueño de tienda --->", indexed);
+
+        const searchUser = await modelCustomerSurvey.findOne({ surveyId, indexedCustomer });
+
+        if (searchUser){
+            
+            res.json({ code : 1 }) //1 es que existe una encuesta ya realizada.
+
+        } else {
+
+            res.json({ code : 0 }) //0 es que NO existe una encuesta realizada.
+
+        }
+
+    } catch (error) {
+        
+        res.json({ code : 2 }) //2 error al hacer la consulta.
+
+    }
+});
+
+routes.post('/account/survey', async(req, res)=>{
+        
+    try{
+        console.log("*----------------------- Encuesta ----------------------------*");
+        console.log("account/survey");
+        const { surveyId, boxSurvey, indexed } = req.body;
+        
+        const user = req.session.user;
+        const indexedCustomer = user._id;
+
+        console.log("indexedCustomer quien hace la encuesta --->", indexedCustomer);
+        console.log("surveyId --->", surveyId);
+        console.log("boxSurvey --->", boxSurvey); //esto es un array
+        console.log("indexed dueño de tienda --->", indexed);
+
+        const searchUser = await modelCustomerSurvey.findOne({ surveyId, indexedCustomer });
+
+        if (searchUser){
+            console.log("usuario ya ha hecho la encuesta");
+            res.json({ message : "Ya ha realizado la encuesta", code : 0 })
+        } else {
+            console.log("usuario no ha hecho la encuesta");
+
+            const newSurvey = new modelCustomerSurvey( {surveyId, indexed, indexedCustomer, surveyResponse : boxSurvey } );
+            newSurvey.save()
+                .then(savedSurvey => {
+                    console.log("Encuesta guardada con éxito:", savedSurvey);
+                    res.json({ message : "Encuesta realizada satisfactoriamente", code : 1, data : savedSurvey }); // Envía la respuesta al cliente
+                })
+                .catch(error => {
+                    console.error("Error al guardar la encuesta:", error);
+                    res.status(500).json({ message: "Error al guardar la encuesta", code : 2 });
+                });
+        }
+
+
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Error al procesar la solicitud" });
+    }
+
+
+});
 
 module.exports = routes;

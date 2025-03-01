@@ -272,6 +272,22 @@
       justify-content: end;
     }
 
+    .boxLikert{
+        width: 40px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+    }
+
+    .marked{
+        background-color: #9200ff;
+        background-color: #0d6efd;
+        color: #ffde00;
+        color: #ffffff;
+    }
+
 
    /*  Media queries */
    @media screen and (min-width: 500px) and (max-width: 700px ){
@@ -453,7 +469,7 @@
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
 
                 <!-- bloque Topbar -->
-                <div class="TopbarMain p-1 d-flex justify-content-between px-4"
+                <div class="TopbarMain p-1 d-flex justify-content-between px-4" id="topBar"
                   style="position: relative; background-color: <%= bGColorTopbar %> ; color: <%= bGColorText %>; position: relative; z-index: 200;">
                   
                     <div class="containerAvatarUser d-flex" style="width: 30%;">
@@ -536,7 +552,7 @@
 
             
                       
-                          <div class="content-btn-follow mt-3 me-5" style = "width: fit-content; position: relative;" data-bs-toggle="modal" data-bs-target="#staticnoLogin">    
+                          <div class="content-btn-follow mt-3 me-5" style= "width: fit-content; position: relative;" data-bs-toggle="modal" data-bs-target="#staticnoLogin">    
                               <a class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;"> Seguir </a>
                           </div>
                       
@@ -757,7 +773,31 @@
                                   </div>
                               </div>
                           </div>
-                      </div>                      
+                      </div>
+                      
+                      <!-- Modal encuesta fallida -->
+                      <div class="modal fade" id="staticSurveyFail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticSurveyFail" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">¡Faltan preguntas por respoder!</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center my-1">
+
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="viewRateStore" data-bs-dismiss="modal" aria-label="Close"> 
+                                    
+                                    <span class="my-2">
+                                      Es fundamental que todas las preguntas de la encuesta sean respondidas para poder avanzar. Agradecemos su comprensión y colaboración.
+                                    </span>
+
+                                  </div> 
+
+                                </div>
+
+                            </div>
+                        </div>
+                      </div>
 
                   <div class="containerWorkSpace"> 
                     <!-- bloque Workspace -->
@@ -1304,13 +1344,126 @@
                       </div>
 
                      <div class="containerSurvey close">
-                        <div class="mainSurvey d-flex flex-column align-items-center justify-content-center">
-                          <div class="title my-3"> <h5> ¡Próximamente disponible! </h5> </div>
+                      
+                      <% if (user) { %> 
                         
-                            <div class="alert alert-light mt-2">
-                              <p>Estamos trabajando arduamente en esta herramienta de encuestas, y en muy poco tiempo podrás disfrutar de todas sus funcionalidades. ¡Gracias por tu paciencia! </p>
-                            </div>
-                        </div>  
+                            <% if (survey.scheme.length !==0 ) { %>
+                                <% const surveyId = survey.scheme.surveyId %> <% const surveyTime = survey.scheme.surveyTime %>
+                                <input type="hidden" value="<%= surveyId %>" id="surveyId">  
+
+                                <div class="containerSurveyCustomer">
+                                  <p class="ps-3 pt-2"> ID : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-stopwatch"></i> : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
+                                      <% const surveyData = survey.scheme.surveyData %> <!-- esto es un array -->
+                                  <div class="carousel-images  p-2"> <!-- carousel-images es la clase de slick-carousel -->
+
+                                      <% const totalElements = surveyData.length %>
+                                      <input type="hidden" id="totalQuestions" value="<%= totalElements %>">     
+                                      <% surveyData.forEach((ele, card)=>{ %>
+                                        
+                                        <div class="contentSurvey px-3">   
+                                            
+                                            <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
+                                                <div class="card-header">
+                                                    <p class="my-2"> <%= ele.question %> </p>
+                                                </div>
+                                                <div class="card-body" style="position: relative;">
+                                                                                                    
+                                                    <% const responses = ele.boxResponses %>
+
+                                                    <% responses.forEach((resp, i)=>{ %>
+
+                                                        <% if (resp !== "likert" ) { %> 
+                                                            <div class="form-check form-check-inline mt-2">
+                                                                <input class="form-check-input radioQuestion" type="radio" name="inlineRadio<%= card %>" id="inlineRadio<%= card %><%= i %>" value="<%= resp %>">
+                                                                <label class="form-check-label" for="inlineRadio<%= card %><%= i %>"><%= resp %></label>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="contentLikert mt-2">
+                                                                <div class="alert alert-dark d-flex justify-content-between">
+                                                                
+                                                                    <div class="boxLikert border border-dark shadow" data-value="1"> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow" data-value="2"> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow" data-value="3"> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow" data-value="4"> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert border border-dark shadow" data-value="5"> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
+                                                                </div>
+                                                            </div>
+                                                        <% } %>    
+
+                                                    <%  }) %>
+                                                    <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-secondary rounded-pill px-2 mx-2"> <%= card + 1 %> / <%= surveyData.length %> </span> </div>   
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                      <% }); %>
+
+                                      <div class="contentSurvey px-3">   
+                                          
+                                        <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
+                                            <div class="card-header">
+                                                <p class="my-2"> Enviar Encuesta </p>
+                                            </div>
+                                            <div class="card-body" style="position: relative;">      
+                                                <p class="mt-2">¡Hemos llegado al final de la encuesta! Agradecemos tu participación, tus respuestas son valiosas y nos ayudarán a mejorar. ¡Gracias!</p> 
+                                                <div class="form-group mt-4">
+                                                  <button class="btn btn-primary form-control" id="btnSendSurvey">
+                                                    Enviar  
+                                                  </button>
+                                                </div>  
+                                                  
+                                            </div>
+                                        </div>
+
+                                    </div>    
+                                  </div> 
+                                </div>
+
+                                <div class="containerSurveyDone close" style="background-color: #ffffff;">
+                                    <div class="containerFlex d-flex flex-column justify-content-center align-items-center py-4">  
+                                      <h4 class="mb-4 mx-3">Felicidades encuesta realiza satisfactoriamente.</h4>
+                                      <img src="/img/checkAnimation.gif" alt="" style="width: 300px;">
+                                    </div>  
+                                </div>
+
+                                <div class="containerError close">
+                                    <div class="containerFlex d-flex flex-column justify-content-center align-items-center py-4">
+                                      <h4 class="mb-4 mx-3"> Ha habido un error, intente en unos minutos. </h4>
+                                      <img src="/img/error28_2_2025.png" alt="" style="width: 150px;">
+                                    </div>    
+                                </div>   
+
+
+                            <% } else { %>
+                                
+                                <div class="contentNoSurvey">
+
+                                    <div class="d-flex justify-content-center my-2"> <span> <b> <h4> Encuesta </h4> </b> </span> </div>
+
+                                    <div class="alert alert-primary">
+                                        Esta Tienda no posee ninguna encuesta activa.  
+                                    </div>
+                                </div>
+
+                            <% }; %>  
+
+                      <% } else { %>
+                      
+                        <div class="contentNoUser d-flex flex-column justify-content-center py-4 px-2">
+
+                          <h5 class="mx-4 py-3"> ¡Las encuestas solo podrán ser realizadas por usuarios que esten logeados! </h5>
+                          <p class="mx-4 py-0"> "¡Hola! Para poder hacer encuestas, seguirla y disfrutar de ofertas exclusivas, necesitas tener una cuenta en Blissenet, 
+                            ¿Te gustaría crear una cuenta ahora? Es rápido y fácil."
+                          </p>
+
+                          <p class="mx-4 py-0"> 
+                            Puedes logearte aqui <a href="/myaccount/signin"> Login </a> en caso que no tengas un registro puedes hacerlo en el siguiente enlace <a href="/myaccount/signup"> Registro </a>. 
+                          </p>
+
+                        </div>
+                      <% }; %>      
+                    
                      </div>
 
                      <div class="containerLocation close"> 
@@ -1646,7 +1799,7 @@
                       <div class="contentInfoBliss mx-5">
 
                       <% if (policy.show === true) {  %>                      
-                        <a href="#infoblis" class="boderBtn btn-polity my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                        <a class="boderBtn btn-polity my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
                           
                           <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1); width: 150px;" >
                               <i class="bi bi-card-heading me-2"></i>
@@ -1659,7 +1812,7 @@
                       <% } %>
 
                       <% if (faq.show === true) {  %>
-                        <a href="#infoblis" class="boderBtn btn-faqs my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                        <a class="boderBtn btn-faqs my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
                           
                           <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1); width: 150px;" >
                             <i class="bi bi-question-diamond me-2"></i>
@@ -1672,7 +1825,7 @@
                       <% } %>
 
                       <% if (survey.show === true) {  %>
-                        <a href="#infoblis" class="boderBtn btn-survey my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                        <a class="boderBtn btn-survey my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
                           
                           <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1) ; width: 150px;" >
                             <i class="bi bi-card-checklist me-2"></i>
@@ -1685,7 +1838,7 @@
                       <% } %>     
 
                       <% if (map.show === true) {  %>
-                        <a href="#infoblis" class="boderBtn btn-location my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
+                        <a class="boderBtn btn-location my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
                           
                           <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1); width: 150px;" >
                             <i class="bi bi-geo-alt me-2"></i>
@@ -3408,6 +3561,12 @@
   const quillPolicy = document.getElementById('quillPolicy');
   const quillFaq = document.getElementById('quillFaq');
 
+  //contenedores importantes para la encuesta
+  const containerSurveyCustomer = document.querySelector('.containerSurveyCustomer');
+  const containerSurveyDone = document.querySelector('.containerSurveyDone');
+  const containerError = document.querySelector('.containerError');
+  
+
 
 if (btnPolity) {
   btnPolity.addEventListener('click', ()=>{
@@ -3443,6 +3602,7 @@ if (btnPolity) {
         //console.log("deltaPolicy" , deltaPolicy);
     quillPolicy.setContents(deltaPolicy)
 
+    irATopBar() //nos llevan al lugar que se debe en el DOM
 
   });
 }  
@@ -3481,27 +3641,102 @@ if (btnFaqs){
     deltaFaq = JSON.parse(DataFaq);
         //console.log("deltaFaq" , deltaFaq);
     quillFaq.setContents(deltaFaq)
+    irATopBar() //nos llevan al lugar que se debe en el DOM
 
   });
 }  
 
 if (btnSurvey){
+    const surveyId = document.getElementById('surveyId');
+        
     btnSurvey.addEventListener('click', ()=>{
-      containerSegment.classList.add('close');
-      containerWorkSpace.classList.add('close');
-      mainGallery.classList.add('close');
 
-      containerInfoBliss.classList.remove('close');
+      //aqui vamos hacer la consulta.
 
-      containerPolity.classList.add('close');
-      containerFaqs.classList.add('close');
-      containerSurvey.classList.remove('close');
-      containerLocation.classList.add('close');
+      const indexed = store_indexed.value; //dueño de la tienda          
+      const surveyIdValue =  surveyId.value;
 
-      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-      efectSoundExpan.play().catch(error => {
-          console.error("Error al reproducir el sonido:", error);
-      });
+      const datos = {
+        indexed,
+        surveyId: surveyIdValue,
+      };
+
+      console.log("datos ->", datos);
+      //hacemos una consulta para evaluar si este usuario ya ha realizado la encuesta en el caso que exista.
+            fetch('/account/survey/search', {
+
+              method: "post",
+              body: JSON.stringify(datos),
+              headers: {"content-type" : "application/json"}
+
+            })
+              .then(response => response.json() )
+              .then( jsonx => {
+                  console.log(jsonx)
+                  const code = jsonx.code;
+                  console.log("code -->", code);
+                  irATopBar() //nos llevan al lugar que se debe en el DOM
+                  if (code == 0){
+                    //este usuario no ha realizado la encuesta
+                    containerSegment.classList.add('close');
+                    containerWorkSpace.classList.add('close');
+                    mainGallery.classList.add('close');
+
+                    containerInfoBliss.classList.remove('close');
+
+                    containerPolity.classList.add('close');
+                    containerFaqs.classList.add('close');
+                    containerSurvey.classList.remove('close');
+                    containerLocation.classList.add('close');
+
+                    containerSurveyCustomer.classList.remove('close');
+                    containerSurveyDone.classList.add('close');
+                    containerError.classList.add('close');
+
+                  } else if (code == 1) {
+                    //este usuario ha realizado la encuesta
+                    containerSegment.classList.add('close');
+                    containerWorkSpace.classList.add('close');
+                    mainGallery.classList.add('close');
+
+                    containerInfoBliss.classList.remove('close');
+
+                    containerPolity.classList.add('close');
+                    containerFaqs.classList.add('close');
+                    containerSurvey.classList.remove('close');
+                    containerLocation.classList.add('close');
+                    
+                    containerSurveyCustomer.classList.add('close');
+                    containerSurveyDone.classList.remove('close');
+                    containerError.classList.add('close');
+
+                  } else if (code == 2) {
+                    //ha habido un error
+                    containerSegment.classList.add('close');
+                    containerWorkSpace.classList.add('close');
+                    mainGallery.classList.add('close');
+
+                    containerInfoBliss.classList.remove('close');
+
+                    containerPolity.classList.add('close');
+                    containerFaqs.classList.add('close');
+                    containerSurvey.classList.remove('close');
+                    containerLocation.classList.add('close');
+                    
+                    containerSurveyCustomer.classList.add('close');
+                    containerSurveyDone.classList.add('close');
+                    containerError.classList.remove('close');
+
+                  }
+
+                })
+              .catch((error)=> console.log('Ha ocurrido un error'))    
+
+ 
+              efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+              efectSoundExpan.play().catch(error => {
+                  console.error("Error al reproducir el sonido:", error);
+              });
 
     });
   }    
@@ -3524,6 +3759,7 @@ if (btnLocation){
         console.error("Error al reproducir el sonido:", error);
     });
 
+    irATopBar() //nos llevan al lugar que se debe en el DOM
     createMap()
    
   });
@@ -3626,7 +3862,15 @@ if (btnBackToAds){
 }
 
 
- </script>
+//esta function permite tener un ancla para poder llevar al usuario al topbar.
+function irATopBar() {
+  const seccion = document.getElementById('topBar');
+  seccion.scrollIntoView({ behavior: 'smooth' });
+}
+
+</script>
+
+
 
 
 <% if ( user !== undefined ) { %>
@@ -4063,6 +4307,119 @@ if (purchaseTime){
 
 </script>
 
+<script>
+
+  const boxLikert = document.querySelectorAll('.boxLikert');
+  boxLikert.forEach((ele) => {
+      ele.addEventListener('click', () => {
+          // Elimina la clase 'marked' de todos los elementos
+          boxLikert.forEach((el) => el.classList.remove('marked'));
+          
+          // Añade la clase 'marked' al elemento clicado
+          ele.classList.add('marked');
+      });
+  });
+  
+</script>
+
+<script>
+  //const store_indexed = document.getElementById('store_indexed'); declarado arriba
+  //const surveyId = document.getElementById('surveyId'); declarado arriba 
+  const radios = document.querySelectorAll('.radioQuestion'); 
+  const totalQuestions = document.getElementById('totalQuestions');
+  const likert = document.querySelectorAll('.boxLikert');
+  const btnSendSurvey = document.getElementById('btnSendSurvey');
+
+
+
+  if (btnSendSurvey){
+
+    btnSendSurvey.addEventListener('click', ()=>{
+   
+        const checkedValues = [];
+        const totalCard = totalQuestions.value;
+
+        // Itera sobre los radios para encontrar los que están seleccionados
+        radios.forEach((radio) => {
+            if (radio.checked) {
+              checkedValues.push(radio.value); // Agrega el valor del radio seleccionado al array
+            }
+        });
+
+        likert.forEach((ele)=>{
+          if (ele.classList.contains('marked') === true ){
+            const value = ele.getAttribute('data-value');
+            console.log(value); // Esto mostrará "tuValor"
+            checkedValues.push(value); // Agrega el valor del radio seleccionado al array
+          }
+        })
+      
+        // Muestra los valores seleccionados en la consola o haz lo que necesites con ellos
+        console.log("Valores seleccionados:", checkedValues);
+        console.log("Valores seleccionados length:", checkedValues.length);
+        console.log("totalCard --->", totalCard);
+
+        if (totalCard == checkedValues.length){
+            console.log("Se ha respondido todas las preguntas, podemos enviar al backend");
+            const indexed = store_indexed.value;         
+            const surveyIdValue =  surveyId.value;
+
+            const datos = {
+              indexed,
+              surveyId: surveyIdValue,
+              boxSurvey : checkedValues
+            };
+            console.log("datos ->", datos);
+ 
+            fetch('/account/survey', {
+
+              method: "post",
+              body: JSON.stringify(datos),
+              headers: {"content-type" : "application/json"}
+
+            })
+              .then(response =>response.json() )
+              .then( jsonx => {
+                  console.log(jsonx)
+                  const code = jsonx.code;
+                  const message = jsonx.message;
+                  console.log("code --->", code);
+                  console.log("code typeof --->", typeof code);
+                  console.log("message --->", message);
+
+                  if (code === 0){
+                    containerSurveyCustomer.classList.add('close');
+                    containerSurveyDone.classList.add('close');
+                    containerError.classList.add('close');
+
+                  } else if (code === 1) {
+                    containerSurveyCustomer.classList.add('close');
+                    containerSurveyDone.classList.remove('close');
+                    containerError.classList.add('close');
+
+                  } else if (code === 2){
+                    containerSurveyCustomer.classList.add('close');
+                    containerSurveyDone.classList.add('close');
+                    containerError.classList.remove('close');
+
+                  }
+                
+              })
+              .catch( err => console.log(err));
+
+
+        } else {
+          console.log("Faltan preguntas por responder, un alert que faltan por responder.");
+          var myModal = new bootstrap.Modal(document.getElementById('staticSurveyFail'));
+          myModal.show();
+        }
+    
+
+    })
+
+  }
+
+</script>
 
 <% }; %>
 
