@@ -22,7 +22,7 @@ const SchemaProfile = new Schema({
     bGColorTopbar : { type : String , default : '#f8f9fa' }, //podemos dar el color que tendra la barra superior donde esta el avatar y el mensaje del sistio;
     bGColorGallery : { type : String , default : '#131313' }, //podemos dar el color que queramos para la seccion de galeria;
     bGColorWorkspace : { type : String , default : '#ffffff' }, //podemos dar el color que queramos para el sitio de trabajo donde estaran los articulos del sitio;
-    searchFilter : { type : String, default : "off" }, //esto es para colocar el buscador en la tienda. !IMPORTANTE 
+    searchFilter : { type : String, default : "off" }, //esto es para colocar el buscador en la tienda. !IMPORTANTE
     facebook : { type : String }, 
     instagram : { type : String },
     youtube : { type : String },
