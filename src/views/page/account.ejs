@@ -1351,7 +1351,7 @@
                                 <div class="containerSurveyCustomer">
                                   <p class="ps-3 pt-2"> ID : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-calendar2-week"></i> : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
                                       <% const surveyData = survey.scheme.surveyData %> <!-- esto es un array -->
-                                  <div class="carousel-images  p-2"> <!-- carousel-images es la clase de slick-carousel -->
+                                  <div class="carousel-images p-2"> <!-- carousel-images es la clase de slick-carousel -->
 
                                       <% const totalElements = surveyData.length %>
                                       <input type="hidden" id="totalQuestions" value="<%= totalElements %>">     
@@ -1396,31 +1396,36 @@
 
                                       <% }); %>
 
-                                      <div class="contentSurvey px-3">   
-                                          
-                                        <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
-                                            <div class="card-header">
-                                                <p class="my-2"> Enviar Encuesta </p>
-                                            </div>
-                                            <div class="card-body" style="position: relative;">      
-                                                <p class="mt-1">¡Fin de la encuesta! Agradecemos tu participación, tus respuestas son importantes para mejorar. ¡Gracias!"</p> 
-                                                <div class="form-group mt-4">
-                                                  <button class="btn btn-primary form-control" id="btnSendSurvey">
-                                                    Enviar  
-                                                  </button>
-                                                  
-                                                  <button class="btn btn-primary form-control close" id="btnSendSurveyLock" disabled>
-                                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                                    Enviando ...
-                                                  </button>
+                                        <div class="contentSurvey px-3">   
+                                            
+                                          <div class="card shadow" style="width: 320px; height: 260px; overflow-y: auto;">
+                                              <div class="card-header">
+                                                  <p class="my-2"> Enviar Encuesta </p>
+                                              </div>
+                                              <div class="card-body" style="position: relative;">      
+                                                  <p class="mt-1">¡Fin de la encuesta! Agradecemos tu participación, tus respuestas son importantes para mejorar. ¡Gracias!"</p> 
+                                                  <div class="form-group mt-4">
+                                                    <button class="btn btn-primary form-control" id="btnSendSurvey">
+                                                      Enviar  
+                                                    </button>
+                                                    
+                                                    <button class="btn btn-primary form-control close" id="btnSendSurveyLock" disabled>
+                                                      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                      Enviando ...
+                                                    </button>
 
-                                                </div>  
-                                            </div>
-                                            <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-secondary rounded-pill px-2 mx-2"> <%= surveyData.length + 1 %> / <%= surveyData.length + 1 %> </span> </div> 
-                                        </div>
-                                          
+                                                  </div>  
+                                              </div>
+                                              <div style="position: absolute; bottom: 10px; right: 10px;"> <span class="alert-secondary rounded-pill px-2 mx-2"> <%= surveyData.length + 1 %> / <%= surveyData.length + 1 %> </span> </div> 
+                                          </div>
+                                            
 
-                                    </div>    
+                                        </div>    
+
+
+                                  </div>
+                                  <div class="containerSwipe d-flex justify-content-center mx-4 rounded-3" style="background-color: #ffffff;">
+                                         <img src="/img/swipeAnimationLeft.gif" alt="" style="width: 80px;">
                                   </div> 
                                 </div>
 
