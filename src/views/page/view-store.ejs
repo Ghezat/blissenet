@@ -526,9 +526,9 @@
                                                 <% }; %>
                                                 
                                                 <% if (ele.avatarPerfil[0].url.length === 0 ) {%>
-                                                    <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" class="rotar" style="width: 55px; border-radius: 50%;">  
+                                                    <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" class="rotar" style="width: 55px; height: 55px; object-fit: cover; border-radius: 50%;">  
                                                 <% } else {%>
-                                                    <img src="<%= ele.avatarPerfil[0].url %>" alt="" class="rotar" style="width: 55px; border-radius: 50%;">
+                                                    <img src="<%= ele.avatarPerfil[0].url %>" alt="" class="rotar" style="width: 55px; height: 55px; object-fit: cover; border-radius: 50%;">
                                                 <% }; %>    
                                           </div>
                                                   

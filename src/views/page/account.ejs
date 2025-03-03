@@ -451,13 +451,13 @@
                     <% if (user) { %>
                         <% if (searchBanner) { %>
 
-                          <img src="<%= searchBanner[0].url %>" style="width: 100%;">
+                          <img src="<%= searchBanner[0].url %>" style="width: 100%; max-height: 100vh; object-fit: cover;">
                         
                         <% } %>
                     <% } else { %> 
                         <% if (searchBanner) { %>
 
-                          <img src="<%= searchBanner[0].url %>" style="width: 100%;">
+                          <img src="<%= searchBanner[0].url %>" style="width: 100%; max-height: 100vh; object-fit: cover;">
               
                         <% }; %>
 
@@ -476,9 +476,9 @@
                         <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
 
                           <% if (storeProfile.avatarPerfil[0].url.length === 0 ) { %>
-                              <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px;"></td>    
+                              <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px; height: 70px; object-fit: cover;"></td>    
                             <% } else { %>
-                              <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px;"></td> 
+                              <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px; height: 70px; object-fit: cover;"></td> 
                           <% }; %>
 
                <!-- este es el fin del foreach de colores -->
@@ -1753,9 +1753,9 @@
                     <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImg d-flex justify-content-center align-items-center my-2">
                         <div class="containerImg mx-2">
                           <% if (storeProfile.avatarPerfil[0].url.length === 0 ) {%>
-                            <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" class="rounded-3" style="width: 50px;"></td>   
+                            <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" class="rounded-3" style="width: 50px; height: 50px; object-fit: cover;"></td>   
                             <% } else {%>
-                            <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-3" style="width: 50px;"></td>
+                            <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-3" style="width: 50px; height: 50px; object-fit: cover;"></td>
                           <% }; %>
                         </div>
                         <div class="containerDetail my-2">
