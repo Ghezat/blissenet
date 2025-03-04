@@ -155,6 +155,20 @@ routes.post('/department/create/service', async(req,res, next)=>{
         const { title, category, sub_category, tecnicalDescription, generalMessage, price, segment } = req.body
 
 
+        function transformarTitle(title) {
+            return title
+                .normalize("NFD") // Elimina acentos
+                .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+                .toLowerCase() // Convierte a minúsculas
+                .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+                .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+                .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+                .trim(); // Elimina guiones al inicio y al final
+        }
+        
+        const titleURL = transformarTitle(title);
+        //console.log(titleURL); // "hoverboard-blue-tooth-250w"
+
         let countFall = 0;
         let countSuccess = 0;
         let countImgAcept = 0;
@@ -249,7 +263,7 @@ routes.post('/department/create/service', async(req,res, next)=>{
                     
                     async function createAD(){
 
-                        const Service =  new modelService({ title, category, sub_category, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment }); 
+                        const Service =  new modelService({ title, titleURL, category, sub_category, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment }); 
                         const ServiceSave = await Service.save()
                         //console.log(ServiceSave);
 
@@ -791,10 +805,24 @@ routes.post('/department/create/service/edit', async(req, res)=>{
    
    
     const {titleToEdit, title, category, sub_category, tecnicalDescription, generalMessage, price} = req.body
+    
+    function transformarTitle(title) {
+        return title
+            .normalize("NFD") // Elimina acentos
+            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+            .toLowerCase() // Convierte a minúsculas
+            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+            .trim(); // Elimina guiones al inicio y al final
+    }
+    
+    const titleURL = transformarTitle(title);
+
     const result = await modelService.findById(titleToEdit)
         
     if (result) {
-        const updates = await modelService.findByIdAndUpdate(titleToEdit, { title, category, sub_category, tecnicalDescription, generalMessage, price });
+        const updates = await modelService.findByIdAndUpdate(titleToEdit, { title, titleURL, category, sub_category, tecnicalDescription, generalMessage, price });
         req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
     } else {
         console.log("no existe nada")

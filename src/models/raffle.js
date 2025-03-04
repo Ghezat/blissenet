@@ -3,6 +3,7 @@ const mongoosePagination = require('mongoose-paginate-v2');
 
 const SchemaRaffle = new Schema({
     title : { type: String },
+    titleURL : { type : String },// aqui guardamos el titulo que se usara en el url (SEO) Search Engine Optimization (Optimización para Motores de Búsqueda)
     department : { type: String, default: 'raffle' },
     category : { type: String }, //Gratis or Pago
     segment : { type: String }, // normalmente esto seria "All"

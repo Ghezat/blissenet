@@ -159,6 +159,20 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
         const { title, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, price, segment } = req.body
     
 
+        function transformarTitle(title) {
+            return title
+                .normalize("NFD") // Elimina acentos
+                .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+                .toLowerCase() // Convierte a minúsculas
+                .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+                .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+                .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+                .trim(); // Elimina guiones al inicio y al final
+        }
+        
+        const titleURL = transformarTitle(title);
+        //console.log(titleURL); // "hoverboard-blue-tooth-250w"
+
         let countFall = 0;
         let countSuccess = 0;
         let countImgAcept = 0;
@@ -252,7 +266,7 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
                 
                 async function createAD(){
 
-                    const Automotive =  new modelAutomotive({ title, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment  }); 
+                    const Automotive =  new modelAutomotive({ title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment  }); 
                     const AutomotiveSave = await Automotive.save()
                     //console.log(AutomotiveSave);
 
@@ -809,10 +823,24 @@ routes.post('/department/create/automotive/edit', async(req, res)=>{
    
    
     const {titleToEdit, title, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, price} = req.body
+    
+    function transformarTitle(title) {
+        return title
+            .normalize("NFD") // Elimina acentos
+            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+            .toLowerCase() // Convierte a minúsculas
+            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+            .trim(); // Elimina guiones al inicio y al final
+    }
+    
+    const titleURL = transformarTitle(title);
+
     const result = await modelAutomotive.findById(titleToEdit)
         
     if (result) {
-        const updates = await modelAutomotive.findByIdAndUpdate(titleToEdit, { title, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, price });
+        const updates = await modelAutomotive.findByIdAndUpdate(titleToEdit, { title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, price });
         req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
     } else {
         console.log("no existe nada")

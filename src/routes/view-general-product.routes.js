@@ -46,7 +46,7 @@ cloudinary.config({
     secure: true
 }) */
 
-routes.get('/product/:depart/:id', async(req, res)=>{
+routes.get('/product/:depart/:id/:title', async(req, res)=>{
     const user = req.session.user;
     console.log("Esto es user : ", user)
                                    

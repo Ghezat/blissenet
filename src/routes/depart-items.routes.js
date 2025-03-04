@@ -152,6 +152,20 @@ routes.post('/department/create/items', async(req,res)=>{
         const state = searchProfile[0].states
         const { title, category, sub_category, state_use, tecnicalDescription, generalMessage, price, segment } = req.body
 
+
+        function transformarTitle(title) {
+            return title
+                .normalize("NFD") // Elimina acentos
+                .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+                .toLowerCase() // Convierte a minúsculas
+                .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+                .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+                .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+                .trim(); // Elimina guiones al inicio y al final
+        }
+        
+        const titleURL = transformarTitle(title);
+        //console.log(titleURL); // "hoverboard-blue-tooth-250w"        
         
         let countFall = 0;
         let countSuccess = 0;
@@ -248,7 +262,7 @@ routes.post('/department/create/items', async(req,res)=>{
 
                 async function createAD(){
 
-                    const Items =  new modelItems({ title, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment }) 
+                    const Items =  new modelItems({ title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment }) 
                     const ItemsSave = await Items.save()
                     //console.log(ItemsSave);
                     
@@ -797,10 +811,24 @@ routes.get('/department/create/items/searh-edit', async(req, res)=>{
     
     
      const {titleToEdit, title, category, sub_category, state_use, tecnicalDescription, generalMessage, price} = req.body
+
+     function transformarTitle(title) {
+        return title
+            .normalize("NFD") // Elimina acentos
+            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+            .toLowerCase() // Convierte a minúsculas
+            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+            .trim(); // Elimina guiones al inicio y al final
+    }
+    
+    const titleURL = transformarTitle(title);     
+     
      const result = await modelItems.findById(titleToEdit)
          
      if (result) {
-         const updates = await modelItems.findByIdAndUpdate(titleToEdit, { title, category, sub_category, state_use, tecnicalDescription, generalMessage, price })
+         const updates = await modelItems.findByIdAndUpdate(titleToEdit, { title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, price })
          req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
      } else {
          console.log("no existe nada")

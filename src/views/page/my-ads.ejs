@@ -59,9 +59,9 @@
                             <% newBox.forEach( (ele)=>{ %>
                                 <tr>
 
-                                    <td><a href="/product/<%= ele.department %>/<%= ele._id %>"><img src="<%= ele.images[0].url %>" class="rounded-1" style="width: 50px; height: 50px; object-fit: cover; background-position: center;"> </a></td>    
+                                    <td><a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" class="rounded-1" style="width: 50px; height: 50px; object-fit: cover; background-position: center;"> </a></td>    
                                                                                         
-                                    <td><a href="/product/<%= ele.department %>/<%= ele._id %>"><%= ele.title %></a></td><td><%= ele.department %></td><td>$ <%= ele.price%></td>
+                                    <td><a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><%= ele.title %></a></td><td><%= ele.department %></td><td>$ <%= ele.price%></td>
                                
                                     <% if (ele.paused == true ) { %>
                                         <td> <div class="blockPause"> </div> </td>

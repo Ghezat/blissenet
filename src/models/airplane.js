@@ -3,6 +3,7 @@ const mongoosePagination = require('mongoose-paginate-v2');
 
 const SchemaAirplane = new Schema({
     title : { type: String },
+    titleURL : { type : String },// aqui guardamos el titulo que se usara en el url (SEO) Search Engine Optimization (Optimización para Motores de Búsqueda)
     department : { type: String, default: 'airplanes' },
     category : { type: String},
     segment : { type: String }, // normalmente esto seria "All"

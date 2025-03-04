@@ -150,6 +150,20 @@ routes.post('/department/create/artes', async(req,res)=>{
         const state = searchProfile[0].states
         const { title, category, author, construcDate, tecnicalDescription, price, segment } = req.body
 
+        function transformarTitle(title) {
+            return title
+                .normalize("NFD") // Elimina acentos
+                .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+                .toLowerCase() // Convierte a minúsculas
+                .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+                .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+                .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+                .trim(); // Elimina guiones al inicio y al final
+        }
+        
+        const titleURL = transformarTitle(title);
+        //console.log(titleURL); // "hoverboard-blue-tooth-250w"
+        
 
         let countFall = 0;
         let countSuccess = 0;
@@ -245,7 +259,7 @@ routes.post('/department/create/artes', async(req,res)=>{
                 
                 async function createAD(){
 
-                    const Artes =  new modelArtes({ title, category, author, construcDate, tecnicalDescription,  images : boxImg, price, user_id : user._id, username, state_province : state, segment }) 
+                    const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, price, user_id : user._id, username, state_province : state, segment }) 
                     const ArtesSave = await Artes.save()
                     //console.log(ArtesSave);
                     
@@ -787,10 +801,24 @@ routes.post('/department/create/artes/edit', async(req, res)=>{
    
    
     const {titleToEdit, title, category, author, construcDate, tecnicalDescription, price} = req.body
+
+    function transformarTitle(title) {
+        return title
+            .normalize("NFD") // Elimina acentos
+            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+            .toLowerCase() // Convierte a minúsculas
+            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+            .trim(); // Elimina guiones al inicio y al final
+    }
+    
+    const titleURL = transformarTitle(title);    
+
     const result = await modelArtes.findById(titleToEdit)
         
     if (result) {
-        const updates = await modelArtes.findByIdAndUpdate(titleToEdit, { title, category ,author, construcDate, tecnicalDescription, price })
+        const updates = await modelArtes.findByIdAndUpdate(titleToEdit, { title, titleURL, category ,author, construcDate, tecnicalDescription, price })
         req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
     } else {
         console.log("no existe nada")

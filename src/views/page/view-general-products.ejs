@@ -12,7 +12,7 @@
     <meta property="og:description" content="Por tan solo $<%= search.price %>">
     <% } %>    
     <meta property="og:image" content="<%= search.images[0].url %>">
-    <meta property="og:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>">    
+    <meta property="og:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>/<%= search.titleURL %>">    
     <meta name= "twitter:card" content="summary_large_image">
     <meta name= "twitter:title" content="<%= search.title %>">
     <% if (user) { %>
@@ -21,7 +21,7 @@
     <meta name= "twitter:description" content="Por tan solo $<%= search.price %>">
     <% } %>
     <meta name= "twitter:image" content="<%= search.images[0].url %>">
-    <meta name= "twitter:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>">
+    <meta name= "twitter:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>/<%= search.titleURL %>">
      
     <%- include('../partials/head.ejs') %>       
     
@@ -156,6 +156,7 @@
         <!-- :::::::::: -->
 
         <% if  (search) { %>
+            <% const titleURL = search.titleURL %> 
             <div class="col-lg-3 p-2" style="background-color: rgb(233, 236, 239); ">
             <% if (depart == 'arts')  { %>
                 <div class="card py-2 px-1" style="max-height: 80vh; overflow-y: auto;">
@@ -960,18 +961,18 @@
                                              
                                             <% if (depart) { %>
                                                
-                                                <% if (productId) { %>
+                                                <% if (productId) { %> 
                                                 <div class="containerShare d-flex invisible border border-secondary p-3 rounded-3" style="background-color: white; position: absolute; top: -120px; right: -10px" >
-                                                    <a href="https://api.whatsapp.com/send?text=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
-                                                    <a href="https://t.me/share/url?url=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/product/<%= depart %>/<%= productId %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
+                                                    <a href="https://api.whatsapp.com/send?text=https://blissenet.com/product/<%= depart %>/<%= productId %>/<%= titleURL %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
+                                                    <a href="https://t.me/share/url?url=https://blissenet.com/product/<%= depart %>/<%= productId %>/<%= titleURL %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/product/<%= depart %>/<%= productId %>/<%= titleURL %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
                                                     <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
                                                         <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i> </button>
                                                         <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; height: 100%; width: 100%;" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
                                                     </div>
                                                     <button class="btn btn-dark mx-2" id="btnQR" style="border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
                                                 </div> 
-                                                <input type="hidden" id="linkToShare" value="https://blissenet.com/product/<%= depart %>/<%= productId %>">
+                                                <input type="hidden" id="linkToShare" value="https://blissenet.com/product/<%= depart %>/<%= productId %>/<%= titleURL %>">
                                                 <% }; %>    
                                             <% }; %>
                                         </div>

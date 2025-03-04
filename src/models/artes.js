@@ -3,7 +3,8 @@ const mongoosePagination = require('mongoose-paginate-v2');
 
 const SchemaArtes = new Schema({
     title : { type: String },
-    department : { type: String, default: 'arts' },
+    titleURL : { type : String },// aqui guardamos el titulo que se usara en el url (SEO) Search Engine Optimization (Optimización para Motores de Búsqueda)
+    department : { type: String, default: 'arts' }, 
     category : { type: String },
     segment : { type: String }, // normalmente esto seria "All"
     author : { type: String },  //reeplazar "sub_category" por "author" (leer) en este caso no se reemplaza. ver el view-artes

@@ -172,9 +172,9 @@
                          <% if (newBox) { %>
                              <% newBox.forEach((ele)=>{ %>
                                  <tr>  
-                                
+                                  
                                      <td><img src="<%= ele.images[0].url %>"class="border"  style="width: 45px; height: 45px; object-fit: contain;" > </td>
-                                     <td> <a href="/product/<%= ele.department %>/<%= ele._id %>"><%= ele.title %></a> </td> 
+                                     <td> <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> <%= ele.title %></a> </td> 
                                      <td><%= ele.department %></td>
                                      <td><%= ele.price %></td>
                                      <td><span class="me-2"><i class="bi bi-heart"></i></span> <%= ele.favorite%></td>

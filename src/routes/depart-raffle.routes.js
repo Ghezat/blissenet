@@ -174,6 +174,20 @@ routes.post('/department/create/raffle', async(req,res)=>{
             const Prizes = [Prizes1, Prizes2, Prizes3, Prizes4, Prizes5];
 
 
+            function transformarTitle(title) {
+                return title
+                    .normalize("NFD") // Elimina acentos
+                    .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+                    .toLowerCase() // Convierte a minúsculas
+                    .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+                    .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+                    .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+                    .trim(); // Elimina guiones al inicio y al final
+            }
+            
+            const titleURL = transformarTitle(title);
+            //console.log(titleURL); // "hoverboard-blue-tooth-250w"            
+
             
             if ( numTickets >= 50 && numTickets <=1000 ){
 
@@ -313,7 +327,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                         
                         async function createAD(){
 
-                            const Raffle =  new modelRaffle({ title, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
+                            const Raffle =  new modelRaffle({ title, titleURL, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
                             const RaffleSave = await Raffle.save();
                             //console.log(RaffleSave);                    
 
@@ -976,10 +990,24 @@ routes.post('/department/create/raffle/edit', async(req, res)=>{
    
    
     const {titleToEdit, title, tecnicalDescription} = req.body
+
+    function transformarTitle(title) {
+        return title
+            .normalize("NFD") // Elimina acentos
+            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+            .toLowerCase() // Convierte a minúsculas
+            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+            .trim(); // Elimina guiones al inicio y al final
+    }
+    
+    const titleURL = transformarTitle(title);
+
     const result = await modelRaffle.findById(titleToEdit)
         
     if (result) {
-        const updates = await modelRaffle.findByIdAndUpdate(titleToEdit, {title, tecnicalDescription})
+        const updates = await modelRaffle.findByIdAndUpdate(titleToEdit, {title, titleURL, tecnicalDescription})
         req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
     } else {
         console.log("no existe nada")
