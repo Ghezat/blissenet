@@ -359,7 +359,7 @@
                     
                     <div class="boxTopStore col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12" style="position: relative">                 
                       <div class="textTitle my-3">
-                        <span class="text-secondary mt-1" style="font-size: 26px;">Top 50 Tiendas + Visitadas</span>
+                        <span class="text-secondary mt-1" style="font-size: 26px;">Top 50 Tiendas + Vistas</span>
                       </div>
                       <div class="Top50Stores d-flex flex-wrap">
   
@@ -664,7 +664,7 @@
                 for (let i = 0; i < boxGallery.length; i++) {
                   const ele = boxGallery[i];
                                                               
-                  contentGallery.innerHTML += ` <div class="boxNewAds"> <a href= "/product/${ele.department}/${ele._id}"> <img src= "${ele.images[0].url}" class="imgGalley"> </a> </div> `
+                  contentGallery.innerHTML += ` <div class="boxNewAds"> <a href= "/product/${ele.department}/${ele._id}/${ele.titleURL}"> <img src= "${ele.images[0].url}" class="imgGalley"> </a> </div> `
                 }
               } else {
 
@@ -695,7 +695,7 @@
             for (let i = 0; i < moreView.length; i++) {
                     const ele = moreView[i];
                                                                 
-                    galleryMoreView.innerHTML += ` <div class="boxNewAds"> <a href= "/product/${ele.department}/${ele._id}"> <img src= "${ele.images[0].url}" class="imgGalley"> </a> </div> `
+                    galleryMoreView.innerHTML += ` <div class="boxNewAds"> <a href= "/product/${ele.department}/${ele._id}/${ele.titleURL}"> <img src= "${ele.images[0].url}" class="imgGalley"> </a> </div> `
             }
 
         } else {

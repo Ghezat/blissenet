@@ -203,7 +203,7 @@ routes.get('/mosaico', async (req,res)=>{
         //console.log('esto es resultAir', resultAir);
         boxResult.push(...resultAir);
     }
-    const resultIte = await modelItems.find().sort({ createdAt : -1 }).limit(4);
+    const resultIte = await modelItems.find().sort({ createdAt : -1 }).limit(16);
     if (resultIte) {
         //console.log('esto es resultIte', resultIte);
         boxResult.push(...resultIte);
@@ -252,7 +252,7 @@ routes.get('/mosaico-more-view', async (req,res)=>{
         //console.log('esto es resultAir', resultAir);
         boxResult.push(...resultAir);
     }
-    const resultIte = await modelItems.find().sort({ view : -1 }).limit(4);
+    const resultIte = await modelItems.find().sort({ view : -1 }).limit(16);
     if (resultIte) {
         //console.log('esto es resultIte', resultIte);
         boxResult.push(...resultIte);
