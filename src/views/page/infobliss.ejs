@@ -830,8 +830,16 @@
                                                                 </div>
                                                             </div>    
                                                             <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12 col-12 p-0 d-flex justify-content-end">    
-                                                                <p class="my-0"> ID : <span class="alert-light rounded-2 px-2 mx-1" id="surveyIdShow"> <!-- dinamico --> </span> <i class="bi bi-calendar2-week"></i> : <span class="alert-light rounded-2 px-2 mx-1" id="surveyTimeShow"> <!-- dinamico --> </span>  <i class="bi bi-people"></i> : <span class="alert-light rounded-2 px-2 mx-1" id="surveyMuestraShow"> <!-- dinamico --> </span> </p>
+                                                                                                                                   
+                                                                <p class="my-0">
+                                                                        ID : <span class="alert-light rounded-2 px-2 mx-1 cursor-pointer" id="surveyIdShow" title="Identificador de Encuesta"> <!-- dinamico --> </span>
+                                                                        <i class="bi bi-calendar2-week"></i> : <span class="alert-light rounded-2 px-2 mx-1 cursor-pointer" id="surveyTimeShow"  title="Creación de Encuesta"> <!-- dinamico --> </span>
+                                                                        <i class="bi bi-people"></i> : <span class="alert-light rounded-2 px-2 mx-1 cursor-pointer" id="surveyMuestraShow"  title="Muestra de Encuesta"> <!-- dinamico --> </span>
+                                                                </p>
                                                             </div>
+                                                            
+
+                                                              
                                                         </div>
                                                     </div>
                                                 </div>    
@@ -931,10 +939,9 @@
 </body>
 
 
+
 <script>
  
-    
-
     const userID = document.getElementById('userID'); //aqui tengo el id del user que es el mismo indexed de profile
     const flexCheckPolicy = document.getElementById('flexCheckPolicy');
     const flexCheckFAQ = document.getElementById('flexCheckFAQ');
@@ -2255,6 +2262,17 @@ const printPDF = document.getElementById('printPDF');
 
 
 printPDF.addEventListener("click", () => {
+
+
+
+    const date = new Date()
+    const dia = date.getDate();
+    const mes = date.getMonth() + 1;
+    const anio = date.getFullYear();
+
+    const nowDate = `${dia}-${mes}-${anio}`
+    console.log("nowDate", nowDate)
+
     console.log("ContainerResult --->", ContainerResult);
 
     //bloqueamos el boton printPDF
@@ -2283,7 +2301,7 @@ printPDF.addEventListener("click", () => {
                 const docDefinition = {
                     pageSize: {
                         width: 595.28,
-                        height: 900
+                        height: 940
                     },
                     content: [
                         {
@@ -2294,16 +2312,26 @@ printPDF.addEventListener("click", () => {
                                     alignment: 'center'
                                 },
                                 {
-                                    image: arrayDonas[0], // Primera dona
-                                    width: 480,
-                                    alignment: 'center'
+                                    columns: [
+                                        {
+                                            text: 'Por Blissenet.com',
+                                            alignment: 'left',
+                                            margin: [10, 10, 0, 0],
+                                        },
+                                        {
+                                            text: `Hoy es : ${nowDate}`,
+                                            alignment: 'right',
+                                            margin: [0, 10, 12, 0],
+                                            italics: true
+                                        }
+                                    ],
+                                    columnGap: 10 // Espacio entre las columnas si lo deseas
                                 },
                                 {
-                                    text: 'Blissenet.com',
-                                    //image: imageBottom, // Imagen en la parte inferior
-                                    width: 500,
+                                    image: arrayDonas[0], // Primera dona
+                                    width: 450,
                                     alignment: 'center',
-                                    margin: [0, 180, 0, 0] // Margen superior para separarla de las donas
+                                    margin: [0, 20, 0, 0] // Ajusta el margen superior aquí
                                 }
                             ]
                     
@@ -2319,7 +2347,7 @@ printPDF.addEventListener("click", () => {
                             //image: imageBottom, // Imagen en la parte inferior
                             width: 500,
                             alignment: 'center',
-                            margin: [0, 230, 0, 0] // Margen superior para separarla de las donas
+                            margin: [0, 200, 0, 0] // Margen superior para separarla de las donas
                         }
 
                         

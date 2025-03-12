@@ -774,8 +774,38 @@
                               </div>
                           </div>
                       </div>
+
+                      <!-- Modal invitación para hacer encuesta rapida-->
+                      <div class="modal fade" id="staticSurveyinvitation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticSurveyinvitation" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticSurvey"> ¡Atención! Esta tienda tiene una encuesta activa y tu opinión es valiosa. </h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center my-1">
+
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="btnTakeSurvey"> 
+                                    
+                                    <img src="/img/take-survey.png" alt=""  style="width: 80px;">
+                                    <span class="mt-2">Hacer Encuesta</span>
+                                    
+                                  </div> 
+
+                                </div>
+                                <div class="modal-footer">
+
+                                  <span class="mx-3 my-2">
+                                    ¡Solo te tomará un minuto! Al participar, contribuirás a mejorar la atención y los servicios. Las preguntas se enfocan en el mercado y tu experiencia como cliente.
+                                  </span>
+                                  
+                                </div>
+
+                            </div>
+                        </div>
+                      </div>
                       
-                      <!-- Modal encuesta fallida -->
+                      <!-- Modal encuesta fallida cuando faltan pregunta spro respodner-->
                       <div class="modal fade" id="staticSurveyFail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticSurveyFail" aria-hidden="true">
                         <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                             <div class="modal-content">
@@ -1841,6 +1871,7 @@
                       <% } %>
 
                       <% if (survey.show === true) {  %>
+                        <input type="hidden" value="true" id="surveyShow">
                         <a class="boderBtn btn-survey my-1 ps-1 pt-1 mx-4 rounded-pill shadow-sm text-decoration-none" style="color: <%= storeProfile.bGColorText %>; border: 1px solid <%= storeProfile.bGColorText %> ; width: 150px;">
                           
                           <div class="d-flex px-4 py-2 rounded-pill" style="background-color: rgba(19, 19, 19, 0.1) ; width: 150px;" >
@@ -1996,7 +2027,7 @@
 
 
 <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         // Crear el popover
         var popover = new bootstrap.Popover(tooltipTriggerEl);
@@ -2172,16 +2203,18 @@
                 headers: { "content-type": "application/json" }
           })
           .then(response => response.json())
-          .then(json =>{ console.log("Esto es el Objeto", json)
+          .then(json =>{ 
+            
+              //console.log("Esto es el Objeto", json)
           
              
               const raffleData = json[0]; 
               const sellerBuySell = json[1].count;
               const sellerTrust = json[2];
   
-              console.log("esto es raffleData----->", raffleData);
-              console.log("esto es sellerCount---->", sellerBuySell);
-              console.log("esto es sellerTrust---->", sellerTrust);
+              //console.log("esto es raffleData----->", raffleData);
+              //console.log("esto es sellerCount---->", sellerBuySell);
+              //console.log("esto es sellerTrust---->", sellerTrust);
 
               let sellerPositivo = sellerTrust.positive + raffleData.countRafflePositivo;  
               let sellerNegativo = sellerTrust.negative + raffleData.countRaffleNegativo;
@@ -2367,7 +2400,7 @@
           const markstar = parseInt(markStar);
           boxRates.push(markstar)
         })
-        console.log("boxRates", boxRates);
+        //console.log("boxRates", boxRates);
         let ratesLength = boxRates.length;
         //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
         let sumRate = 0;
@@ -2377,11 +2410,11 @@
           sumRate = sumRate + stars; 
         })
 
-        console.log("sumRate", sumRate);
-        console.log("ratesLength", ratesLength);
+        //console.log("sumRate", sumRate);
+        //console.log("ratesLength", ratesLength);
         const pount = (sumRate / ratesLength);
         const pountRate = pount.toFixed(1); 
-        console.log("pountRate", pountRate)
+        //console.log("pountRate", pountRate)
 
         //ratesLength = 2458965; para probar
         if ( isNaN(pountRate)){
@@ -3973,7 +4006,7 @@ function irATopBar() {
   //const tagSoldOut -> declardo abajo
   //const tagSoldOutUser declarado abajo
 
-  console.log("offer-->", offer)
+  //console.log("offer-->", offer)
 
 
 
@@ -4214,7 +4247,7 @@ function irATopBar() {
     
   
   if (soldOut){
-    console.log("soldOut-->", soldOut)
+    //console.log("soldOut-->", soldOut)
 
       for (let i = 0; i < soldOut.length; i++) {
         const element = soldOut[i];
@@ -4242,9 +4275,9 @@ function irATopBar() {
               .then(response => response.json())
               .then(jsonx => {
                 
-                console.log("Esto es jsonx--->",jsonx)
+                //console.log("Esto es jsonx--->",jsonx)
                 const SoldOut = jsonx[0].soldOut;
-                console.log("SoldOut --->", SoldOut)
+                //console.log("SoldOut --->", SoldOut)
                 if ( SoldOut === false ) {
                   boxDetailSoldOut[i].style.backgroundColor = "#ffffff";
                   let closeClass =tagSoldOut[i].classList.contains('invisible');
@@ -4346,59 +4379,157 @@ if (purchaseTime){
 </script>
 
 <script>
+  //aqui enviamos datos al backend para saber si el usuario logeado ha hecho la encuesta si hay disponible en la tienda visitada.
+  //aqui vamos hacer la consulta. la idea es que a todos los visitante sle salte un aviso de que hay una encuesta disponible. y de esta manera la hagan. 
+  const surveyShow = document.getElementById('surveyShow');
+  const btnTakeSurvey = document.getElementById('btnTakeSurvey');
+
+  // Crea una instancia del modal
+  let myModal = new bootstrap.Modal(document.getElementById('staticSurveyinvitation'));
+
+  if (surveyShow){
+
+      const surveyShowValue = surveyShow.value;
+      
+      console.log("surveyShowValue --->", surveyShowValue);
+
+      if (surveyShowValue === "true"){
+        console.log("Esta tienda tiene una encuesta activa. vamos a notificarle al visitante que la haga");
+        
+        const indexed = store_indexed.value; //dueño de la tienda          
+        const surveyIdValue =  surveyId.value;     
+
+          const datos = {
+            indexed,
+            surveyId: surveyIdValue,
+          };
+
+          console.log("datos ->", datos);
+
+          //hacemos una consulta para evaluar si este usuario ya ha realizado la encuesta en el caso que exista.
+          fetch('/account/survey/search', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+          })
+            .then(response => response.json() )
+            .then( jsonx => { 
+              const code = jsonx.code
+              //1 = Si ha realizado la encuesta
+              //0 = No ha realizada la encuesta
+              console.log("esta es la consulta de si ha hecho o no la encuesta", code)
+            
+              if (code === 0){
+                console.log("Como no la ha hecho vamos a ponerle un mensaje en pantalla invitandole hacer la encuesta")
+
+                
+                // Muestra el modal
+                myModal.show();
+
+              } 
+
+
+            })
+            .catch( err => console.log(err)); 
+
+      }
+
+      //aqui activamos el boton para hacer la subasta
+      btnTakeSurvey.addEventListener('click', ()=>{
+
+        //escondemos el modal 
+        myModal.hide();
+
+        //activamos la encuesta
+        surveyTakeShow()
+
+        function surveyTakeShow(){
+          //acciones que se realzian para mostrar la encuesta
+          containerSegment.classList.add('close');
+          containerWorkSpace.classList.add('close');
+          mainGallery.classList.add('close');
+
+          containerInfoBliss.classList.remove('close');
+
+          containerPolity.classList.add('close');
+          containerFaqs.classList.add('close');
+          containerSurvey.classList.remove('close');
+          containerLocation.classList.add('close');
+
+          containerSurveyCustomer.classList.remove('close');
+          containerSurveyDone.classList.add('close');
+          containerError.classList.add('close');
+          irATopBar() //nos llevan al lugar que se debe en el DOM
+        }  
+
+      })
+  }  
+    
+
+</script>
+
+<script>
 
 const countResponse = []; let countLikert = 0;
 const surveyDataInput = document.getElementById('surveyDataInput');
-const survey = JSON.parse(surveyDataInput.value);
 
-async function countLikertF(){
-    // Ahora puedes trabajar con surveyData como un array
-    //console.log("survey -->", survey); // Muestra el array en la consola
+if (surveyDataInput){
 
-    // Ejemplo de cómo iterar sobre el array
-    survey.forEach(item => {
-        const boxResponses = item.boxResponses
-        //console.log(boxResponses); // Haz algo con cada elemento del array
-        countResponse.push(...boxResponses)
-    });
+    const survey = JSON.parse(surveyDataInput.value);
 
-    console.log("countResponse -->", countResponse)
-    countResponse.forEach((ele, i)=>{
-        if (ele === "likert" ){
-            countLikert ++;
-        }
-    })
-}
+    async function countLikertF(){
+        //console.log("survey -->", survey); // Muestra el array en la consola
 
-countLikertF()
-    .then(()=>{
-        console.log("countLikert --", countLikert);
-        const cards = {};
+        // iteramos sobre el array
+        survey.forEach(item => {
+            const boxResponses = item.boxResponses
+            //console.log(boxResponses); // Haz algo con cada elemento del array
+            countResponse.push(...boxResponses)
+        });
 
-        for (let i = 0; i < countLikert + 2; i++) {
-            console.log("Esto es i", i);
-            const boxLikertSelect = document.querySelectorAll(`.card${i}`);
-            cards[`card${i}`] = boxLikertSelect;
+        //console.log("countResponse -->", countResponse)
+        countResponse.forEach((ele, i)=>{
+            if (ele === "likert" ){
+                countLikert ++;
+            }
+        })
+    }
 
-            boxLikertSelect.forEach(box => {
-                box.addEventListener('click', () => {
-                    // Agregar o quitar la clase 'mark' al elemento clicado
-                    box.classList.toggle('marked');
+    countLikertF()
+        .then(()=>{
+            //console.log("countLikert --", countLikert);
+            const cards = {};
 
-                    // Desmarcar los demás elementos dentro de la misma NodeList
-                    boxLikertSelect.forEach(otherBox => {
-                        if (otherBox !== box) {
-                            otherBox.classList.remove('marked');
-                        }
+            for (let i = 0; i < countLikert + 2; i++) {
+                //console.log("Esto es i", i);
+                const boxLikertSelect = document.querySelectorAll(`.card${i}`);
+                cards[`card${i}`] = boxLikertSelect;
+
+                boxLikertSelect.forEach(box => {
+                    box.addEventListener('click', () => {
+                        // Agregar o quitar la clase 'mark' al elemento clicado
+                        box.classList.toggle('marked');
+
+                        // Desmarcar los demás elementos dentro de la misma NodeList
+                        boxLikertSelect.forEach(otherBox => {
+                            if (otherBox !== box) {
+                                otherBox.classList.remove('marked');
+                            }
+                        });
                     });
                 });
-            });
-        }
+            }
 
-        
-})
+            
+    })
 
-    
+      
+
+}
+
+
 </script>
 
 <script>

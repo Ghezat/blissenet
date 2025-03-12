@@ -3041,7 +3041,7 @@ routes.post('/account/pountRate/star-5', async(req, res)=>{
 
 routes.post('/account/survey/search', async(req, res)=>{
     try {
-        console.log("*----------------------- Consunlta de Encuesta ----------------------------*");
+        console.log("*----------------------- Consulta de Encuesta ----------------------------*");
         console.log("/account/survey/search");
         const { surveyId, indexed } = req.body; 
         
@@ -3070,6 +3070,15 @@ routes.post('/account/survey/search', async(req, res)=>{
 
     }
 });
+
+//en esta ruta evaluamos si el visitante ha hecho la encuesta y si la ha hecho enviamos al fronted 
+//para que le salte una notificacion de encuesta activa para que la haga.
+routes.post('/account/survey/openStore', async(req, res)=>{
+
+
+
+})
+
 
 //aqui es donde llegan las encustas que hacen los clientes en las tiendas
 routes.post('/account/survey', async(req, res)=>{
