@@ -3071,20 +3071,30 @@ routes.post('/account/survey/search', async(req, res)=>{
     }
 });
 
+//aqui es donde llegan las encustas que hacen los clientes en las tiendas
 routes.post('/account/survey', async(req, res)=>{
         
     try{
         console.log("*----------------------- Encuesta ----------------------------*");
         console.log("account/survey");
-        const { surveyId, boxSurvey, indexed } = req.body;
-        
+        const { surveyTitle, surveyId, surveyTime, surveyData, boxSurvey, indexed } = req.body;
+        const surveyQuestion = []; //aqui guardamos todas las preguntas de la encuesta.
+
         const user = req.session.user;
         const indexedCustomer = user._id;
 
         console.log("indexedCustomer quien hace la encuesta --->", indexedCustomer);
-        console.log("surveyId --->", surveyId);
+        console.log("surveyTitle --->", surveyTitle);
+        console.log("surveyId --->", surveyId); //es el id en fecha unix asi que sirvecomo id y como fecha tambien
+        console.log("surveyTime --->", surveyTime);
         console.log("boxSurvey --->", boxSurvey); //esto es un array
         console.log("indexed dueño de tienda --->", indexed);
+
+        console.log("surveyData --->", surveyData ) //esto es un array.
+        surveyData.forEach(element => {
+            const quest = element.question
+            surveyQuestion.push(quest)
+        });
 
         const searchUser = await modelCustomerSurvey.findOne({ surveyId, indexedCustomer });
 
@@ -3094,7 +3104,7 @@ routes.post('/account/survey', async(req, res)=>{
         } else {
             console.log("usuario no ha hecho la encuesta");
 
-            const newSurvey = new modelCustomerSurvey( {surveyId, indexed, indexedCustomer, surveyResponse : boxSurvey } );
+            const newSurvey = new modelCustomerSurvey( { surveyTitle, surveyId, surveyTime, indexed, indexedCustomer, surveyResponse : boxSurvey, surveyQuestion  } );
             newSurvey.save()
                 .then(savedSurvey => {
                     console.log("Encuesta guardada con éxito:", savedSurvey);
@@ -3114,5 +3124,75 @@ routes.post('/account/survey', async(req, res)=>{
 
 
 });
+
+
+//aqui es donde consultamos todas las encuestas que hacen los clientes para enviar solo un id con su titulo de cada encuesta para poder crear un selector de opciones en el fronted
+routes.post('/account/survey/analysis', async(req, res)=>{
+        
+    try{
+        console.log("*----------------------- Analysis de Encuesta ----------------------------*");
+        console.log("/account/survey/analysis");
+        const { userID } = req.body;
+        
+        const searchSurvey = await modelCustomerSurvey.find({ indexed: userID });
+
+        // Usamos un Set para almacenar los IDs únicos
+        const uniqueSurveys = new Map();
+        
+        searchSurvey.forEach(ele => {
+            const surveyId = ele.surveyId;
+            const surveyTitle = ele.surveyTitle;
+        
+            // Si el surveyId no está en el Map, lo agregamos
+            if (!uniqueSurveys.has(surveyId)) {
+                uniqueSurveys.set(surveyId, surveyTitle);
+            }
+        });
+        
+        // Convertimos el Map a un Array de objetos
+        const resultArray = Array.from(uniqueSurveys, ([surveyId, surveyTitle]) => ({
+            surveyId,
+            surveyTitle
+        }));
+        
+        console.log("resultArray --> Lista de surveys únicos:", resultArray);
+
+ 
+        if (resultArray){
+            console.log("usuario tiene encuesta en su tienda");
+            res.json({ resultArray })
+        } else {
+            console.log("usuario no tiene encuesta");
+            res.json({ resultArray })
+        }
+
+
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Error al procesar la solicitud" });
+    }
+
+
+});
+
+//aqui si hacemos la consulta de una encuesta predeterminada.
+routes.post('/account/survey/analysisData', async(req, res)=>{
+    try {
+
+        console.log("*----------------------- Extraccion de datos de Encuesta ----------------------------*");
+        console.log("/account/survey/analysisData");
+        const { surveyId } = req.body;
+
+        const searchSurveyData = await modelCustomerSurvey.find({ surveyId });
+        console.log("**************** searchSurveyData *************");
+        console.log(searchSurveyData);
+
+        res.json({ searchSurveyData });
+
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Error al procesar la solicitud" });
+    }
+})
 
 module.exports = routes;

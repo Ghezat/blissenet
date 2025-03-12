@@ -66,9 +66,9 @@
 
                         <tr>
                              <% if (ele.avatarPerfil[0].url.length === 0 ) {%>
-                             <td> <a href="/account/<%= ele.username %>"> <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" class="rounded-1" style="width: 45px; height: 45px;"> </a></td>   
+                             <td> <a href="/account/<%= ele.username %>"> <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" class="rounded-1" style="width: 45px; height: 45px; object-fit: cover;"> </a></td>   
                              <% } else {%>
-                             <td> <a href="/account/<%= ele.username %>"> <img src="<%= ele.avatarPerfil[0].url %>" class="rounded-1" style="width: 45px; height: 45px"> </a></td>
+                             <td> <a href="/account/<%= ele.username %>"> <img src="<%= ele.avatarPerfil[0].url %>" class="rounded-1" style="width: 45px; height: 45px; object-fit: cover;"> </a></td>
                              <% }; %>
 
                              <td><a href="/account/<%= ele.username %>"> <%= ele.username %></a></td>

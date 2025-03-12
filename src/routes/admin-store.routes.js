@@ -672,7 +672,7 @@ routes.post('/infobliss/faqData', async(req, res)=>{
 routes.post('/infobliss/createScheme/survey', async(req, res)=>{
     try{
         console.log("LLegando a /infobliss/createScheme/survey");
-        const { userId, surveyId, surveyData } = req.body;
+        const { userId, surveyTitle, surveyId, surveyData } = req.body;
        
         const date = new Date();
         const dia = date.getDate(); const mes = date.getMonth() + 1; const anio = date.getFullYear();
@@ -681,6 +681,7 @@ routes.post('/infobliss/createScheme/survey', async(req, res)=>{
 
         const data = {
             surveyId,
+            surveyTitle,
             surveyData,
             surveyTime
         }

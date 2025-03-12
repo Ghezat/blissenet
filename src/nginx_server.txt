@@ -1,0 +1,75 @@
+#### main domain for blissenet ##
+server {
+    server_name blissenet.com www.blissenet.com mail.blissenet.com 162.240.169.17;
+    listen 80;
+    listen [::]:80;
+
+    include conf.d/includes-optional/cloudflare.conf;
+
+    set $CPANEL_APACHE_PROXY_PASS $scheme://apache_backend_${scheme}_162_240_169_17;
+
+    # For includes:
+    set $CPANEL_APACHE_PROXY_IP 162.240.169.17;
+    set $CPANEL_APACHE_PROXY_SSL_IP 162.240.169.17;
+    set $CPANEL_SERVICE_SUBDOMAIN 0;
+
+    set $CPANEL_PROXY_CACHE blissenet;
+    set $CPANEL_SKIP_PROXY_CACHING 0;
+
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    http2 off;
+
+    ssl_certificate /var/cpanel/ssl/apache_tls/blissenet.com/combined;
+    ssl_certificate_key /var/cpanel/ssl/apache_tls/blissenet.com/combined;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    proxy_ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256;
+    proxy_ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256;  
+
+   root "/home/blissenet/public_html"; 
+
+   location /cpanelwebcall {
+        include conf.d/includes-optional/cpanel-proxy.conf;
+        proxy_pass http://127.0.0.1:2082/cpanelwebcall;
+    }
+
+    location /Microsoft-Server-ActiveSync {
+        include conf.d/includes-optional/cpanel-proxy.conf;
+        proxy_pass http://127.0.0.1:2090/Microsoft-Server-ActiveSync;
+    }
+
+
+    location = /robots.txt {
+       alias /home/blissenet/public_html/robots.txt;
+       allow all;
+       log_not_found off;
+       access_log off;
+    }
+
+    include conf.d/server-includes/*.conf;
+    include conf.d/users/blissenet/*.conf;
+    include conf.d/users/blissenet/blissenet.com/*.conf;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    http2 off;
+
+    ssl_certificate /var/cpanel/ssl/apache_tls/blissenet.com/combined;
+    ssl_certificate_key /var/cpanel/ssl/apache_tls/blissenet.com/combined;
+
+    server_name  cpanel.blissenet.com cpcalendars.blissenet.com cpcontacts.blissenet.com webdisk.blissenet.com webmail.blissenet.com;
+
+   include conf.d/includes-optional/cloudflare.conf;
+
+
+}

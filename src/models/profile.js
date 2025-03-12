@@ -34,7 +34,7 @@ const SchemaProfile = new Schema({
         { carouselOffert : { show : false }, sectionMedia : { show : false, data : [] }, carouselImages : { show : false, data : [] }, carouselBanner : { show : false, data : [] } }}, // Este objeto tiene internamente 4 objetos para poder manejar todos los recursos que estaran en galeria.
     infobliss : { type : Object, default : 
         { policy : { show : false, data : [] }, faq : { show : false, data : [] }, survey : { show : false, scheme : [] }, map : { show : false, data : [] } }}, // Este objeto tiene internamente 4 objetos para poder manejar todos los recursos que estaran en infobliss.
-    //dentro de survey.scheme : [ { surveyId: "123478981153",  surveyData: [ { question : "pregunta1", boxResponses : ["Si, "No", "Quizas"] }, { question : "pregunta2", boxResponses : ["Likert"] }, {...} ]   } ]
+    //dentro de survey.scheme : [ { surveyId: "123478981153", surveyTitle: "Encuesta de satisfaccion 2025", surveyTime: '10-3-2025',  surveyData: [ { question : "pregunta1", boxResponses : ["Si, "No", "Quizas"] }, { question : "pregunta2", boxResponses : ["Likert"] }, {...} ]   } ]
     paused : { type: Boolean, default: false }, //por default nace false. este campo se utilizará para impedir que un usuario moroso con sus impagos pueda crear, editar y eliminar publicaciones. será la unica forma existente para presionar a los usuarios morosos. 
     view : { type : Number, default: 0  }, //este campo permite tener la cantidad de veces que entran en la tienda. 
     hashtags : { type : Object , default : [] }, //este campo crea por defecto un objeto vacio, en el se agregara un array con las diferentes palabras claves de la tienda. 

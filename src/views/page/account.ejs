@@ -1345,12 +1345,19 @@
                       <% if (user) { %> 
                         
                             <% if (survey.scheme.length !==0 ) { %>
-                                <% const surveyId = survey.scheme.surveyId %> <% const surveyTime = survey.scheme.surveyTime %>
+                                <% const surveyId = survey.scheme.surveyId %> <% const surveyTime = survey.scheme.surveyTime %> 
+                                <% const surveyTitle = survey.scheme.surveyTitle %>
+                              
                                 <input type="hidden" value="<%= surveyId %>" id="surveyId">  
+                                <input type="hidden" value="<%= surveyTitle %>" id="surveyTitle">
+                                <input type="hidden" value="<%= surveyTime %>" id="surveyTime">
+                               
 
                                 <div class="containerSurveyCustomer">
                                   <p class="ps-3 pt-2"> ID : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyId %> </span> <i class="bi bi-calendar2-week"></i> : <span class="alert-secondary rounded-2 px-2 mx-2"> <%= surveyTime %> </span> </p>
                                       <% const surveyData = survey.scheme.surveyData %> <!-- esto es un array -->
+                                      <input type="hidden" id="surveyDataInput" value="<%= JSON.stringify(surveyData) %>">
+
                                   <div class="carousel-images p-2"> <!-- carousel-images es la clase de slick-carousel -->
 
                                       <% const totalElements = surveyData.length %>
@@ -1378,11 +1385,11 @@
                                                             <div class="contentLikert mt-2">
                                                                 <div class="alert alert-dark d-flex justify-content-between">
                                                                 
-                                                                    <div class="boxLikert border border-dark shadow" data-value="1"> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-dark shadow" data-value="2"> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-dark shadow" data-value="3"> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-dark shadow" data-value="4"> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
-                                                                    <div class="boxLikert border border-dark shadow" data-value="5"> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert card<%= card %> border border-dark shadow" data-value="Muy Malo"> <i class="bi bi-emoji-frown" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert card<%= card %> border border-dark shadow" data-value="Malo"> <i class="bi bi-emoji-expressionless" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert card<%= card %> border border-dark shadow" data-value="Regular"> <i class="bi bi-emoji-astonished" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert card<%= card %> border border-dark shadow" data-value="Bueno"> <i class="bi bi-emoji-smile" style="font-size: 20px;"></i> </div>
+                                                                    <div class="boxLikert card<%= card %> border border-dark shadow" data-value="Muy Bueno"> <i class="bi bi-emoji-heart-eyes" style="font-size: 20px;"></i> </div>
                                                                 </div>
                                                             </div>
                                                         <% } %>    
@@ -4340,22 +4347,65 @@ if (purchaseTime){
 
 <script>
 
-  const boxLikert = document.querySelectorAll('.boxLikert');
-  boxLikert.forEach((ele) => {
-      ele.addEventListener('click', () => {
-          // Elimina la clase 'marked' de todos los elementos
-          boxLikert.forEach((el) => el.classList.remove('marked'));
-          
-          // Añade la clase 'marked' al elemento clicado
-          ele.classList.add('marked');
-      });
-  });
-  
+const countResponse = []; let countLikert = 0;
+const surveyDataInput = document.getElementById('surveyDataInput');
+const survey = JSON.parse(surveyDataInput.value);
+
+async function countLikertF(){
+    // Ahora puedes trabajar con surveyData como un array
+    //console.log("survey -->", survey); // Muestra el array en la consola
+
+    // Ejemplo de cómo iterar sobre el array
+    survey.forEach(item => {
+        const boxResponses = item.boxResponses
+        //console.log(boxResponses); // Haz algo con cada elemento del array
+        countResponse.push(...boxResponses)
+    });
+
+    console.log("countResponse -->", countResponse)
+    countResponse.forEach((ele, i)=>{
+        if (ele === "likert" ){
+            countLikert ++;
+        }
+    })
+}
+
+countLikertF()
+    .then(()=>{
+        console.log("countLikert --", countLikert);
+        const cards = {};
+
+        for (let i = 0; i < countLikert + 2; i++) {
+            console.log("Esto es i", i);
+            const boxLikertSelect = document.querySelectorAll(`.card${i}`);
+            cards[`card${i}`] = boxLikertSelect;
+
+            boxLikertSelect.forEach(box => {
+                box.addEventListener('click', () => {
+                    // Agregar o quitar la clase 'mark' al elemento clicado
+                    box.classList.toggle('marked');
+
+                    // Desmarcar los demás elementos dentro de la misma NodeList
+                    boxLikertSelect.forEach(otherBox => {
+                        if (otherBox !== box) {
+                            otherBox.classList.remove('marked');
+                        }
+                    });
+                });
+            });
+        }
+
+        
+})
+
+    
 </script>
 
 <script>
   //const store_indexed = document.getElementById('store_indexed'); declarado arriba
-  //const surveyId = document.getElementById('surveyId'); declarado arriba 
+  //const surveyId = document.getElementById('surveyId'); declarado arriba
+  const surveyTitle = document.getElementById('surveyTitle');
+  const surveyTime = document.getElementById('surveyTime'); //aqui tenemos la fecha de creacion de la encuesta esquema 
   const radios = document.querySelectorAll('.radioQuestion'); 
   const totalQuestions = document.getElementById('totalQuestions');
   const likert = document.querySelectorAll('.boxLikert');
@@ -4404,16 +4454,24 @@ if (purchaseTime){
                   console.error("Error al reproducir el sonido:", error);
             });
 
-            const indexed = store_indexed.value;         
+            const indexed = store_indexed.value;  
+            const surveyTitleValue = surveyTitle.value;
+            const surveyTimeValue = surveyTime.value;       
             const surveyIdValue =  surveyId.value;
+            const surveyDataValue = JSON.parse(surveyDataInput.value);
+             
 
             const datos = {
               indexed,
+              surveyTitle: surveyTitleValue,
               surveyId: surveyIdValue,
-              boxSurvey : checkedValues
+              surveyTime : surveyTimeValue,
+              boxSurvey : checkedValues,
+              surveyData : surveyDataValue
             };
+
             console.log("datos ->", datos);
- 
+  
             fetch('/account/survey', {
 
               method: "post",

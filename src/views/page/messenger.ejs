@@ -81,7 +81,7 @@
   
                                                         <div class="contentImgTitle d-flex flex-column">
                                                             <div class="contentImgTitle d-flex">
-                                                                <div> <img src="/img/iconAdmin.gif" style="width: 50px;" class="me-4 rounded-1"></div> 
+                                                                <div> <img src="/img/iconAdmin.gif" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div> 
                                                                 <div class="d-flex align-items-end"> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p class="m-0" style="font-size: 18px;"><%= ele.titleArticle %></p> </a> </div>
                                                             </div>
 
@@ -108,9 +108,9 @@
                                                         <div class="contentImgTitle d-flex flex-column">
                                                             <div class="contentImgTitle d-flex">
                                                                 <% if (ele.objeAvatar.avatar ==="") { %>
-                                                                    <div> <img src="https://www.gravatar.com/avatar/<%= ele.objeAvatar.avatarDefault %>?d=identicon" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                                    <div> <img src="https://www.gravatar.com/avatar/<%= ele.objeAvatar.avatarDefault %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
                                                                 <% } else { %>
-                                                                    <div> <img src="<%= ele.objeAvatar.avatar %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                                    <div> <img src="<%= ele.objeAvatar.avatar %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
                                                                 <% }; %>        
                                                                  
                                                                 <div class="d-flex align-items-end"> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p class="m-0" style="font-size: 18px;"><%= ele.titleArticle %></p> </a> </div>
@@ -139,10 +139,10 @@
                                                         <div class="contentImgTitle d-flex flex-column">
                                                             <div class="contentImgTitle d-flex">
                                                                 <% if (ele.objeAvatar.avatar ==="") { %>
-                                                                    <div> <img src="https://www.gravatar.com/avatar/<%= ele.objeAvatar.avatarDefault %>?d=identicon" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                                    <div> <img src="https://www.gravatar.com/avatar/<%= ele.objeAvatar.avatarDefault %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
                                                                    
                                                                 <% } else { %>
-                                                                    <div> <img src="<%= ele.objeAvatar.avatar %>" style="width: 50px;" class="me-4 rounded-1"></div> 
+                                                                    <div> <img src="<%= ele.objeAvatar.avatar %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div> 
                                                                 <% }; %>        
                                                                  
                                                                 <div class="d-flex align-items-end"> <a href="/account/<%= ele.username %> "> <p class="m-0" style="font-size: 18px;"> <%= ele.username %></p> </a> </div>
@@ -169,7 +169,7 @@
                                                     <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
                                                     <div class="containerImgTitle d-flex">
         
-                                                        <div><img src="<%= ele.urlImageArticle %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                        <div><img src="<%= ele.urlImageArticle %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
                                                         <div> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p style="font-size: 18px;" ><%= ele.titleArticle %></p> </a> </div>
                 
                                                     </div>
@@ -195,7 +195,7 @@
                                                         
                                                         <div class="containerImgTitle d-flex">
             
-                                                            <div><img src="<%= ele.urlImageArticle %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                            <div><img src="<%= ele.urlImageArticle %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
                                                             <div> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p style="font-size: 18px;" ><%= ele.titleArticle %></p> </a> </div>
                     
                                                         </div>
@@ -249,7 +249,7 @@
                                             <div class="containerImgTitle d-flex justify-content-between">
   
                                                 <div class="contentImgTitle d-flex">
-                                                    <div><img src="<%= ele.urlImageArticle %>" style="width: 50px;" class="me-4 rounded-1"></div>
+                                                    <div><img src="<%= ele.urlImageArticle %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
                                                     <div> <a href="/product/<%= ele.depart %>/<%= ele.productId %>"> <p style="font-size: 18px;"><%= ele.titleArticle %></p> </a> </div>
                                                 </div>
                                                 <div class="contentView">
