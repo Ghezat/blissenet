@@ -19,6 +19,8 @@ const modelStoreRate = require('../models/storeRate.js');
 const modelCustomerSurvey = require('../models/customerSurvey.js');
 const messages = require('../models/messages.js');
       
+//este Token es la KEY del bot de Telegram
+const Token =  process.env.Token_Bot;
 
 routes.get('/account/:account', async (req,res)=>{
     //console.log("Este es el parametroooo ---->",req.params);
@@ -3182,6 +3184,38 @@ routes.post('/account/survey/analysis', async(req, res)=>{
     }
 
 
+});
+
+//-------------- controlando las peticiones de BlissBot bot de Telegram
+
+// Endpoint para recibir actualizaciones de Telegram
+app.post(`/webhook/${Token}`, (req, res) => {
+    const update = req.body;
+
+    // Verificar si es un mensaje y contiene el comando /start
+    if (update.message && update.message.text === '/start') {
+        const chatId = update.message.chat.id;
+
+        // Aquí puedes guardar el chatId en tu base de datos asociado al usuario
+        console.log(`Capturado chat_id: ${chatId}`);
+
+        // Enviar mensaje de bienvenida al usuario
+        const welcomeMessage = '¡Hola! Has iniciado una conversación con BlissBot.';
+
+        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+            chat_id: chatId,
+            text: welcomeMessage,
+        })
+        .then(response => {
+            console.log('Mensaje enviado con éxito:', response.data);
+        })
+        .catch(error => {
+            console.error('Error al enviar el mensaje:', error.response.data);
+        });
+    }
+
+    // Responder a Telegram con un 200 OK
+    res.sendStatus(200);
 });
 
 //aqui si hacemos la consulta de una encuesta predeterminada.
