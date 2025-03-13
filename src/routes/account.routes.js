@@ -3189,7 +3189,7 @@ routes.post('/account/survey/analysis', async(req, res)=>{
 //-------------- controlando las peticiones de BlissBot bot de Telegram
 
 // Endpoint para recibir actualizaciones de Telegram
-app.post(`/webhook/${Token}`, (req, res) => {
+routes.post(`/webhook/${Token}`, (req, res) => {
     const update = req.body;
 
     // Verificar si es un mensaje y contiene el comando /start

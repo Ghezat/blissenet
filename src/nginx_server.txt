@@ -71,5 +71,4 @@ server {
 
    include conf.d/includes-optional/cloudflare.conf;
 
-
 }
