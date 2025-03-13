@@ -18,6 +18,8 @@ const modelRaffle = require('../models/raffle.js');
 const modelStoreRate = require('../models/storeRate.js');
 const modelCustomerSurvey = require('../models/customerSurvey.js');
 const messages = require('../models/messages.js');
+
+const axios = require('axios');
       
 //este Token es la KEY del bot de Telegram
 const Token =  process.env.Token_Bot;
@@ -3198,6 +3200,7 @@ routes.post(`/webhook/${Token}`, (req, res) => {
 
         // Aquí puedes guardar el chatId en tu base de datos asociado al usuario
         console.log(`Capturado chat_id: ${chatId}`);
+        //Capturado chat_id: 1629241334
 
         // Enviar mensaje de bienvenida al usuario
         const welcomeMessage = '¡Hola! Has iniciado una conversación con BlissBot.';
