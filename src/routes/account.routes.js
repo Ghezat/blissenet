@@ -3197,7 +3197,7 @@ routes.post(`/webhook/${Token}`, (req, res) => {
     // Verificar si es un mensaje y contiene el comando /start
     if (update.message && update.message.text === '/start') {
         const chatId = update.message.chat.id;
-        const usernameTelegram = update.chat.username;
+        const usernameTelegram = update.message.chat.username;
 
         // Aquí el chatId del usuario que esta interactuando con el BlissBot
         console.log(`Capturado chat_id: ${chatId}`);
