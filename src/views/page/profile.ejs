@@ -217,9 +217,11 @@
                 <%- include('../alert/bannerDefaultRestart.ejs') %> 
              <% }; %>
 
+
         <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%)">
             <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Perfil </b>  </span>
         </div>   
+ 
         
          <div class="container-fluid mt-0">
                 <div class="row p-0">
@@ -652,7 +654,7 @@
                                                             
                                                         <button class="form-control btn btn-secondary close" type="button" id="btnEditingBankLoading" disabled>
                                                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                            Editando Perfil Bancario...
+                                                             Editando Perfil Bancario...
                                                         </button>        
                                                     </div> 
                         
@@ -665,12 +667,149 @@
                                 <% }; %>
             
                                 
-
-                                <!-- seccion nombre de tienda -->
                                 
                                 <% const username = user.username %>
                                 <% const indexed = user._id %> <!-- esto es igual al id user -->
+                                <% let userTelegram = user.blissBot.userTelegram %> <!-- esto es igual al id user -->
+                                <% let chatId = user.blissBot.chatId %> <!-- esto es igual al id user -->
+
+                                <!-- seccion BlissBot -->
+                                <div class="card my-2">
+                                    <div class="card-header d-flex justify-content-between">                                
+                                        Conectar con BlissBot de Telegram  <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangeUsername"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                    </div>
                                     
+                                    <div class="card-body">
+                                    
+                                        <% if (userTelegram === "" && chatId === "" ) { %>
+                                            <div class="input-group my-1">
+                                                <span class="input-group-text"> @ </span>
+                                                <input type="text" class="form-control" id="inpUserTelegram" placeholder="Usuario en Telegram" maxlength="40">
+                                            </div>
+
+                                            <div class="containerConnect" style="position: relative">
+                                                 <img src="/img/BlissBotBanner1.png" alt="" class="border border-secondary rounded-2" style="width: 100%; height: 110px; object-fit: cover;">
+                                             </div>
+
+                                             
+                                            <div class="containerAlert my-2 p-0" id="alertBlissBot">
+                                                <!-- alertas dinamicos -->
+                                                 <div class="alert alert-primary m-0 close" id="alertBlissBotCode3">
+                                                    <span> <i class="bi bi-check2-circle me-2"></i> Ya posee este username en su registro. </span>
+                                                 </div>
+                                                 <div class="alert alert-danger m-0 close" id="alertBlissBotCode2">
+                                                    <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario de Telegram ya esta registrado. </span>
+                                                 </div>
+                                                 <div class="alert alert-primary m-0 close" id="alertBlissBotCode1">
+                                                    <span> <i class="bi bi-check2-circle me-2"></i>  Agregado satisfactoriamente. </span>
+                                                 </div>
+                                                 <div class="alert alert-danger m-0 close" id="alertBlissBotCode0">
+                                                    <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario ya existe. </span>
+                                                 </div>
+                                            </div>
+
+                                            <div class="form-group my-3">
+                                                <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnSendUserTelegram">
+                                                <button class="form-control btn btn-primary close" type="button" id="btnSendUserTelegramLoading" disabled>
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                    Actualizando ...
+                                                </button> 
+                                            </div>
+
+
+                                        <% } else if (userTelegram !== "" && chatId === "") { %>
+                                        <!-- Código a ejecutar si userTelegram tiene un string y chatId está vacío -->
+                                            
+                                            <!-- mañana debes trabajar en que cada usuario debe ser unico, se debe validar este dato -->
+                                            <div class="input-group my-1">
+                                                <span class="input-group-text"> @ </span>
+                                                <input type="text" class="form-control" id="inpUserTelegram" value="<%= userTelegram %>" maxlength="40" disabled>
+                                                <button class="btn btn-outline-secondary" type="button" id="unlockUserTelegram"> Editar </button>
+                                            </div>       
+                                            
+                                            <div class="containerConnect" style="position: relative">
+                                                <!--  <img src="/img/telegramFly1.gif" alt="" class="border border-primary rounded-2" style="width: 100%; height: 100px;"> -->
+                                                 <img src="/img/BlissBotBanner1.png" alt="" class="border border-secondary rounded-2" style="width: 100%; height: 110px; object-fit: cover;">
+                                             </div>
+
+                                             
+                                            <div class="containerAlert my-2 p-0" id="alertBlissBot">
+                                                <!-- alertas dinamicos -->
+                                                 <div class="alert alert-primary m-0 close" id="alertBlissBotCode3">
+                                                    <span> <i class="bi bi-check2-circle me-2"></i> Ya posee este username en su registro. </span>
+                                                 </div>
+                                                 <div class="alert alert-danger m-0 close" id="alertBlissBotCode2">
+                                                    <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario de Telegram ya esta registrado. </span>
+                                                 </div>
+                                                 <div class="alert alert-primary m-0 close" id="alertBlissBotCode1">
+                                                    <span> <i class="bi bi-check2-circle me-2"></i>  Agregado satisfactoriamente. </span>
+                                                 </div>
+                                                 <div class="alert alert-danger m-0 close" id="alertBlissBotCode0">
+                                                    <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario ya existe. </span>
+                                                 </div>
+                                            </div>
+
+                                            <div class="form-group my-3">
+                                                <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnSendUserTelegram">
+                                            
+                                                <button class="form-control btn btn-dark close" type="button" id="btnSendUserTelegramLoading" disabled>
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                    Actualizando ...
+                                                </button> 
+                                            </div>
+
+
+                                        <% } else if (userTelegram !== "" && chatId !== "") { %>
+                                            <!-- Código a ejecutar si userTelegram y chatId tienen un string osea ya esta sincronizado con el chatBot BlissBot   -->
+                                                
+                                                <!-- mañana debes trabajar en que cada usuario debe ser unico, se debe validar este dato -->
+                                                <div class="input-group my-1">
+                                                    <span class="input-group-text"> @ </span>
+                                                    <input type="text" class="form-control" id="inpUserTelegram" value="<%= userTelegram %>" maxlength="40" disabled>
+                                                    <button class="btn btn-outline-secondary" type="button" id="unlockUserTelegram"> Editar </button>
+                                                </div>       
+                                                
+                                                <div class="containerConnect" style="position: relative">
+                                                    <!--  <img src="/img/telegramFly1.gif" alt="" class="border border-primary rounded-2" style="width: 100%; height: 100px;"> -->
+                                                        <img src="/img/BlissBotBanner1.png" alt="" class="border border-secondary rounded-2" style="width: 100%; height: 110px; object-fit: cover;">
+                                                        <i class="bi bi-check2-circle me-2"  style="position: absolute; top: 30px; right: 30px; color:#ffffff; font-size: 28px;"></i>
+                                                        <!-- <img src="/img/BlissBot1x1.png" alt="logoBlissBot" class="box-shadow border border-secondary" style="width: 50px; height: 50px; border-radius: 50%; position: absolute; top: 25px; right: 25px"> -->
+                                                </div>
+    
+                                                    
+                                                <div class="containerAlert my-2 p-0" id="alertBlissBot">
+                                                    <!-- alertas dinamicos -->
+                                                        <div class="alert alert-primary m-0 close" id="alertBlissBotCode3">
+                                                        <span> <i class="bi bi-check2-circle me-2"></i> Ya posee este username en su registro. </span>
+                                                        </div>
+                                                        <div class="alert alert-danger m-0 close" id="alertBlissBotCode2">
+                                                        <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario de Telegram ya esta registrado. </span>
+                                                        </div>
+                                                        <div class="alert alert-primary m-0 close" id="alertBlissBotCode1">
+                                                        <span> <i class="bi bi-check2-circle me-2"></i>  Agregado satisfactoriamente. </span>
+                                                        </div>
+                                                        <div class="alert alert-danger m-0 close" id="alertBlissBotCode0">
+                                                        <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario ya existe. </span>
+                                                        </div>
+                                                </div>
+    
+                                                <div class="form-group my-3">
+                                                    <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnSendUserTelegram">
+                                                
+                                                    <button class="form-control btn btn-dark close" type="button" id="btnSendUserTelegramLoading" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Actualizando ...
+                                                    </button> 
+                                                </div>
+    
+    
+                                        <% }; %> 
+
+                                        
+                                    </div>
+                                </div>
+                                
+                                <!-- seccion nombre de tienda -->
                                 <div class="card my-2">
                                         <div class="card-header d-flex justify-content-between">                                
                                             Cambiar Nombre de Cuenta  <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangeUsername"> <i class="bi bi-info-circle mx-1"></i> </div>
@@ -1942,8 +2081,6 @@
 
         </script>
 
-
-
         <!-- para cambiar integra el buscardor en la tienda -->
         <script>
                                                       
@@ -2549,7 +2686,108 @@
 
     </script>
 
+    <script>
+        const inpUserTelegram = document.getElementById('inpUserTelegram');
+        const alertBlissBotCode0 = document.getElementById('alertBlissBotCode0');
+        const alertBlissBotCode1 = document.getElementById('alertBlissBotCode1');
+        const alertBlissBotCode2 = document.getElementById('alertBlissBotCode2');
+        const alertBlissBotCode3 = document.getElementById('alertBlissBotCode3');
 
+        const unlockUserTelegram = document.getElementById('unlockUserTelegram');
+        const btnSendUserTelegram = document.getElementById('btnSendUserTelegram');
+        const btnSendUserTelegramLoading = document.getElementById('btnSendUserTelegramLoading');
+        
+        if (unlockUserTelegram){
+            unlockUserTelegram.addEventListener('click', ()=>{
+                inpUserTelegram.removeAttribute("disabled");
+                inpUserTelegram.focus();
+            })
+        }
+
+        btnSendUserTelegram.addEventListener('click', ()=>{
+
+            btnSendUserTelegram.classList.add('close') //primero desactivamos el boton Actualizar
+            btnSendUserTelegramLoading.classList.remove('close') //segundo activamos el boton disbled spining
+            const userTelegramValue = inpUserTelegram.value.trim();
+            userTelegram = userTelegramValue.replace(/@/g, "").replace(/\s+/g, "");
+            
+
+            //nota:  la expresión regular `/\s+/` se utiliza para quitar los espacios en blanco en una cadena de texto. 
+            //nota:  La "g" al final de la expresión regular indica que la búsqueda debe ser global, es decir, se aplicará a todo el texto, no solo a la primera coincidencia. Así que si tienes múltiples espacios en blanco en una cadena, usar `/\s+/g` eliminará todos esos espacios
+            //nota:  el tercer atributo "" significa que reeplazara estos espacios por nada osea quita los espacios. si coloco "x" todos los espacios se reemplazaran por una x. 
+            
+            inpUserTelegram.setAttribute("disabled", "");
+            console.log("userTelegram -->", userTelegram);
+
+            //ahora enviamos al backend 
+            
+            const datos = {
+                userTelegram
+                };
+
+            fetch("/acount/blissBot/userTelegram", {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx =>{ 
+                console.log(jsonx);
+                let code = jsonx.code;
+                console.log("El code recibido es --->", code);
+                console.log("El code es te type --->", typeof code);
+
+
+                if (code === 1){
+
+                    alertBlissBotCode1.classList.remove('close');
+                    setTimeout(() => {
+                        alertBlissBotCode1.classList.add('close');
+                        estadoInicialBTN()
+                    }, 4000);
+
+                } else if (code === 0){
+
+                    alertBlissBotCode0.classList.remove('close');
+                    setTimeout(() => {
+                        alertBlissBotCode0.classList.add('close');
+                        estadoInicialBTN()
+                    }, 4000);
+
+                } else if (code === 2){
+
+                    alertBlissBotCode2.classList.remove('close');
+                    setTimeout(() => {
+                        alertBlissBotCode2.classList.add('close');
+                        estadoInicialBTN()
+                    }, 4000);
+
+
+                } else if (code === 3){
+
+                    alertBlissBotCode3.classList.remove('close');
+                    setTimeout(() => {
+                        alertBlissBotCode3.classList.add('close');
+                        estadoInicialBTN()
+                    }, 4000);
+                    
+                }
+
+                function estadoInicialBTN(){
+                    //colocamos los botones como deben estar 
+                    btnSendUserTelegram.classList.remove('close') //primero desactivamos el boton Actualizar
+                    btnSendUserTelegramLoading.classList.add('close') //segundo activamos el boton disbled spining
+                }
+
+                
+            })
+            .catch( err => console.log(err));
+
+        })
+
+    </script>
 
 
        

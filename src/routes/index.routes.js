@@ -137,8 +137,8 @@ routes.get('/', async(req, res)=>{
 
     const countNegotiationsBuySell = (searchBuy.length + searchSell.length);
     req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.
-    //Nota: La liena de arriba es la session que guarda la cantidad de negociacione sy buySell que tiene el usuario.
-    console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
+    //Nota: La linea de arriba es la session que guarda la cantidad de negociacione sy buySell que tiene el usuario.
+    //console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
 
     res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay})
 });
@@ -146,8 +146,8 @@ routes.get('/', async(req, res)=>{
 routes.get('/requireRateUpdate', async(req, res)=>{
     const rateUpdate = await modelRateCurrency.find();
     const rateSort = rateUpdate.reverse()[0];
-    console.log("Esto es rateSort >>", rateSort);
-    console.log("******RATE UPDATE******");
+    //console.log("Esto es rateSort >>", rateSort);
+    //console.log("******RATE UPDATE******");
 
     //vamos a sacar la fecha del servidor
     const date = new Date()
@@ -158,7 +158,7 @@ routes.get('/requireRateUpdate', async(req, res)=>{
 
     const timerNowServ = `${dia}-${mes}-${anio} ${hora}:${minu}:${segu}`;
     const response = { rateSort, "date" : timerNowServ };
-    console.log("Esto es response >>", response);
+    //console.log("Esto es response >>", response);
 
     res.json(response);
     

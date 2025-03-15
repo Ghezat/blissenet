@@ -3190,8 +3190,72 @@ routes.post('/account/survey/analysis', async(req, res)=>{
 
 //-------------- controlando las peticiones de BlissBot bot de Telegram
 
-// Endpoint para recibir actualizaciones de Telegram
-routes.post(`/webhook/${Token}`, (req, res) => {
+routes.post('/acount/blissBot/userTelegram', async(req, res)=>{
+    
+    try {
+        
+        const { userTelegram } = req.body;
+        console.log("-------------------------------------------------");
+        console.log("Llegando a la ruta /acount/blissBot/userTelegram");
+        console.log("userTelegram --->", userTelegram);
+    
+        const user = req.session.user;
+        const userId = user._id;
+        console.log("userId", userId)
+        //userId : '66ab9dc1b8c25e5528f4ea9d'
+    
+        const searchUser = await modelUser.findById(userId);
+    
+        if (searchUser) {
+            console.log("Usuario encontrado");
+
+            //hacemos una nueva consulta... revisamos si este userTelegram lo tiene alguien mas en blissenet.
+            const searchUserTelegram = await modelUser.findOne({'blissBot.userTelegram' : userTelegram });
+            
+            if (searchUserTelegram){
+                console.log("Existe ese userTelegram ya y vamos a ver quien es");
+                console.log("searchUserTelegram :", searchUserTelegram);
+                const user = searchUserTelegram._id;
+
+                if (user == userId){
+                    //es el mismo usuario que porta este userTelegram, enviamos un code : 3  "Ya posee este userTegram en su registro"
+                    const response = { code : 3 }
+                    res.json(response);
+
+                } else {
+                    //otro usuario porta este userTelegram enviar un code : 2
+                    const response = { code : 2 }
+                    res.json(response);
+                }
+
+
+            } else {
+
+                const updateUser = await modelUser.findByIdAndUpdate(userId,
+                    { $set: { 'blissBot.userTelegram': userTelegram } }, { new: true });
+
+                console.log("updateUser ------->", updateUser);    
+                req.session.user = updateUser//actualizo el user
+                
+                const response = { code : 1 }
+                res.json(response);
+            }
+
+                
+            
+        }     
+
+    } catch (error) {
+      console.log("ha habido un error en el envio del user de telegram", error)
+      const response = { code : 0 }
+      res.json(response);   
+    }
+
+});
+
+
+// Endpoint para conectar usuarios de Blissenet con Telegram
+routes.post(`/webhook/${Token}`, async(req, res) => {
     const update = req.body;
 
     // Verificar si es un mensaje y contiene el comando /start
@@ -3202,24 +3266,57 @@ routes.post(`/webhook/${Token}`, (req, res) => {
         // Aquí el chatId del usuario que esta interactuando con el BlissBot
         console.log(`Capturado chat_id: ${chatId}`);
         //Capturado chat_id: 1629241334
-
+        
         // Aquí el username de telegram de este usuario que esta interactuando con el BlissBot
         console.log(`Capturado usernameTelegram: ${usernameTelegram}`);
-        //Capturado usernameTelegram: 
+        //Capturado usernameTelegram: orbigpzo
 
-        // Enviar mensaje de bienvenida al usuario
-        const welcomeMessage = '¡Hola! Has iniciado una conversación con BlissBot.';
+        const updateUser = await modelUser.findOne(
+            { 'blissBot.userTelegram': usernameTelegram },
+            { $set: { 'blissBot.chatId': chatId } },
+            { new: true }
+        );
 
-        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-            chat_id: chatId,
-            text: welcomeMessage,
-        })
-        .then(response => {
-            console.log('Mensaje enviado con éxito:', response.data);
-        })
-        .catch(error => {
-            console.error('Error al enviar el mensaje:', error.response.data);
-        });
+        console.log("updateUser ------->", updateUser);    
+        req.session.user = updateUser//actualizo el user
+
+        const userBliss = updateUser.username;
+        
+        if (updateUser){
+
+            // Enviar mensaje de bienvenida al usuario
+            const Message = `¡Hola! ${userBliss} has sincronizado satistactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram`;
+
+            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                chat_id: chatId,
+                text: Message,
+            })
+            .then(response => {
+                console.log('Mensaje enviado con éxito:', response.data);
+            })
+            .catch(error => {
+                console.error('Error al enviar el mensaje:', error.response.data);
+            });
+
+        } else {
+
+            // Enviar mensaje de bienvenida al usuario
+            const Message = '¡Hola! Has iniciado una conversación con BlissBot.';
+
+            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                chat_id: chatId,
+                text: Message,
+            })
+            .then(response => {
+                console.log('Mensaje enviado con éxito:', response.data);
+            })
+            .catch(error => {
+                console.error('Error al enviar el mensaje:', error.response.data);
+            });
+
+        }
+
+
     }
 
     // Responder a Telegram con un 200 OK
