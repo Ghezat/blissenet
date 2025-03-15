@@ -3271,7 +3271,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
         console.log(`Capturado usernameTelegram: ${usernameTelegram}`);
         //Capturado usernameTelegram: orbigpzo
 
-        const updateUser = await modelUser.findOne(
+        const updateUser = await modelUser.findOneAndUpdate(
             { 'blissBot.userTelegram': usernameTelegram },
             { $set: { 'blissBot.chatId': chatId } },
             { new: true }
