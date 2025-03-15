@@ -676,7 +676,7 @@
                                 <!-- seccion BlissBot -->
                                 <div class="card my-2">
                                     <div class="card-header d-flex justify-content-between">                                
-                                        Conectar con BlissBot de Telegram  <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangeUsername"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                        Conectar con BlissBot de Telegram  <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticBlissBotConnect"> <i class="bi bi-info-circle mx-1"></i> </div>
                                     </div>
                                     
                                     <div class="card-body">
@@ -1061,6 +1061,37 @@
                                 </div>
                             </div>                           
                             
+
+                            <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticBlissBotConnect" -->
+                            <div class="modal fade" id="staticBlissBotConnect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBlissBotConnect" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBlissBotConnect"> BlissBot Conexión </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p> Al conectar tu cuenta de Blissenet con BlissBot, recibirás notificaciones y alertas en tu móvil, facilitando la conexión en tiempo real con tus clientes. </p>
+                                            <p> Pasos para una coneccion exitosa.</p>
+                                            <ol>
+                                                <li> Instala Telegram en tu smartphone si aún no lo tienes. </li>
+                                                <li> Crea un username en Telegram, por ejemplo: @mi_cuenta.
+                                                <li> Accede a tu perfil y dirígete a la sección de "Conexión a Blissbot". </li>
+                                                <li> Introduce tu username en el campo correspondiente (ejemplo: mi_cuenta). </li>
+                                                <li> Haz clic en el botón "Actualizar" para guardar los cambios. </li>
+                                                <li> Abre Telegram  y busca a <b>BlissBot</b> en la barra de búsqueda. </li>
+                                                <li> Envía el comando  <b>/start</b> para iniciar la conexión. ¡En breve recibirás un mensaje confirmando que tu cuenta se ha conectado satisfactoriamente! </li> 
+                                            
+                                            </ol>
+                                            
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/BlissBotBanner1.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticChangeUsername" -->
                             <div class="modal fade" id="staticChangeUsername" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelX" aria-hidden="true">

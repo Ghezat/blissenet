@@ -3343,4 +3343,27 @@ routes.post('/account/survey/analysisData', async(req, res)=>{
     }
 })
 
+/* 
+
+//ejemplo de mensaje mas imagen
+axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+    chat_id: chatId,
+    photo: fs.createReadStream(imagePath), // Usando fs para leer el archivo
+    caption: message // El mensaje que quieres enviar junto a la imagen
+})
+    
+//ejemplo de solo mensaje
+axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+    chat_id: chatId,
+    text: Message,
+})
+.then(response => {
+    console.log('Mensaje enviado con éxito:', response.data);
+})
+.catch(error => {
+    console.error('Error al enviar el mensaje:', error.response.data);
+});
+
+*/
+
 module.exports = routes;
