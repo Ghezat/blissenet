@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const hash = require('object-hash');
+const mongoose = require('mongoose');
 const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
