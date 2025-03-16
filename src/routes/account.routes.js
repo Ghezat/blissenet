@@ -1981,7 +1981,7 @@ routes.post('/account/followStore', async(req, res)=>{
                 console.log("Esto es avatarDefault>>", avatarDefault);
 
                 //descubrimos el chatId del user de la Tienda si posee
-                const searchUserStore = await modelUser.findById(mongoose.Types.ObjectId(userOfStore));
+                const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(userOfStore));
                 const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
 
     
