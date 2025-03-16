@@ -1978,7 +1978,12 @@ routes.post('/account/followStore', async(req, res)=>{
                 //userOfStore = al indexed 
                 console.log("Esto es avatar>>", avatar);
                 console.log("Esto es avatarDefault>>", avatarDefault);
-                
+
+                //descubrimos el chatId del user de la Tienda si posee
+                const searchUserStore = await modelUser.findById(mongoose.Types.ObjectId(userOfStore));
+                const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+
+    
                
                 async function Follow(){
                     console.log("No existe esta tienda en el array favoriteStore de este usuario");
@@ -2012,22 +2017,67 @@ routes.post('/account/followStore', async(req, res)=>{
                     const saveMessage = await newNotification.save();
                     console.log("se ha creado la notificacion del seguidor");
                 }
+
+                async function blissBotNoti(){
+                    const Message = `¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también. 
+                    https://blissenet.com`
+
+                    axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                        chat_id: chatId,
+                        text: Message,
+                    })
+                    .then(response => {
+                        console.log('Mensaje enviado con éxito:', response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error al enviar el mensaje:', error.response.data);
+                    });
+
+                }
         
-        
-                Follow()
-                .then(()=>{
-                    Notification()
-                        .then(()=>{
-                            res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
-                        })
-                        .catch((error)=>{
-                            res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
-                        })
-                    
-                })
-                .catch((error)=>{
-                    res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
-                })
+                if (chatId === ""){
+
+            
+                    Follow()
+                    .then(()=>{
+                        Notification()
+                            .then(()=>{
+                                res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
+                            })
+                            .catch((error)=>{
+                                res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
+                            })
+                        
+                    })
+                    .catch((error)=>{
+                        res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
+                    })
+
+                } else {
+
+                    Follow()
+                    .then(()=>{
+                        Notification()
+                            .then(()=>{
+                                blissBotNoti()
+                                    .then(()=>{
+                                        res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
+                                    })
+                                    .catch((error)=>{
+                                        res.json({ "type" : "Error", "message" : "Ha habido un error en  blissBotNotification(), intente luego"});
+                                    })
+                                
+                            })
+                            .catch((error)=>{
+                                res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
+                            })
+                        
+                    })
+                    .catch((error)=>{
+                        res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
+                    })
+
+                }    
 
             }
                         
@@ -3279,7 +3329,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
 
         console.log("updateUser ------->", updateUser);    
         req.session.user = updateUser//actualizo el user
-
+        
         const userBliss = updateUser.username;
         
         if (updateUser){
@@ -3293,6 +3343,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
             })
             .then(response => {
                 console.log('Mensaje enviado con éxito:', response.data);
+                location.reload(); //esto refresca la pantalla y mostrará elmensaje de Conectado a BlissBot.
             })
             .catch(error => {
                 console.error('Error al enviar el mensaje:', error.response.data);

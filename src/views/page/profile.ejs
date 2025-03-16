@@ -710,7 +710,7 @@
                                             </div>
 
                                             <div class="form-group my-3">
-                                                <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnSendUserTelegram">
+                                                <input type="button" value="Actualizar" class="btn btn-primary form-control" id="btnSendUserTelegram" disabled>
                                                 <button class="form-control btn btn-primary close" type="button" id="btnSendUserTelegramLoading" disabled>
                                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                     Actualizando ...
@@ -732,10 +732,10 @@
                                                 <!--  <img src="/img/telegramFly1.gif" alt="" class="border border-primary rounded-2" style="width: 100%; height: 100px;"> -->
                                                 <img src="/img/BlissBotAnimated.gif" alt="" class="border border-secondary rounded-2" style="width: 100%; height: 160px; object-fit: cover;"> 
                                                 <!-- <img src="/img/BlissBotBanner1.png" alt="" class="border border-secondary rounded-2" style="width: 100%; height: 110px; object-fit: cover;"> -->
-                                             </div>
+                                            </div>
 
                                              
-                                            <div class="containerAlert my-2 p-0" id="alertBlissBot">
+                                            <div class="containerAlert m-0 p-0" id="alertBlissBot">
                                                 <!-- alertas dinamicos -->
                                                  <div class="alert alert-primary m-0 close" id="alertBlissBotCode3">
                                                     <span> <i class="bi bi-check2-circle me-2"></i> Ya posee este username en su registro. </span>
@@ -771,28 +771,33 @@
                                                     <button class="btn btn-outline-secondary" type="button" id="unlockUserTelegram"> Editar </button>
                                                 </div>       
                                                 
-                                                <div class="containerConnect" style="position: relative">
+                                                <div class="containerConnect">
                                                     <!--  <img src="/img/telegramFly1.gif" alt="" class="border border-primary rounded-2" style="width: 100%; height: 100px;"> -->
                                                         <!-- <img src="/img/BlissBotBanner1.png" alt="" class="border border-secondary rounded-2" style="width: 100%; height: 110px; object-fit: cover;"> -->
                                                         <img src="/img/BlissBotAnimated.gif" alt="" class="border border-secondary rounded-2" style="width: 100%; height: 160px; object-fit: cover;"> 
-                                                        <i class="bi bi-check2-circle me-2"  style="position: absolute; top: 30px; right: 30px; color:#ffffff; font-size: 28px;"></i>
                                                         <!-- <img src="/img/BlissBot1x1.png" alt="logoBlissBot" class="box-shadow border border-secondary" style="width: 50px; height: 50px; border-radius: 50%; position: absolute; top: 25px; right: 25px"> -->
+                                                        <div class="ConectionDone my-1">
+                                                            <div class="alert alert-primary">
+                                                                <i class="bi bi-check2-circle me-2"></i> Tienda conectada con BlissBot.
+                                                            </div>
+                                                        </div> 
                                                 </div>
+                                                
     
                                                     
                                                 <div class="containerAlert my-2 p-0" id="alertBlissBot">
-                                                    <!-- alertas dinamicos -->
+                                                       <!-- alertas dinamicos -->
                                                         <div class="alert alert-primary m-0 close" id="alertBlissBotCode3">
                                                         <span> <i class="bi bi-check2-circle me-2"></i> Ya posee este username en su registro. </span>
                                                         </div>
                                                         <div class="alert alert-danger m-0 close" id="alertBlissBotCode2">
-                                                        <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario de Telegram ya esta registrado. </span>
+                                                        <span> <i class="bi bi-exclamation-circle me-2"></i> Este usuario de Telegram ya esta registrado. </span>
                                                         </div>
                                                         <div class="alert alert-primary m-0 close" id="alertBlissBotCode1">
-                                                        <span> <i class="bi bi-check2-circle me-2"></i>  Agregado satisfactoriamente. </span>
+                                                        <span> <i class="bi bi-check2-circle me-2"></i> Agregado satisfactoriamente. </span>
                                                         </div>
                                                         <div class="alert alert-danger m-0 close" id="alertBlissBotCode0">
-                                                        <span> <i class="bi bi-exclamation-circle me-2"></i>  Este usuario ya existe. </span>
+                                                        <span> <i class="bi bi-exclamation-circle me-2"></i> Este usuario ya existe. </span>
                                                         </div>
                                                 </div>
     
@@ -2731,19 +2736,41 @@
         const btnSendUserTelegram = document.getElementById('btnSendUserTelegram');
         const btnSendUserTelegramLoading = document.getElementById('btnSendUserTelegramLoading');
         
+        //aqui tomamos el valor del inpUserTelegram en el caso que lo posea.
+        let valueInput = inpUserTelegram.value;
+        //------------------------------------------------------------------
+
+
         if (unlockUserTelegram){
+            //en el caso que tenga un userTelegram el boton debe estar siempre disabled 
+            btnSendUserTelegram.setAttribute("disabled", ""); 
+
             unlockUserTelegram.addEventListener('click', ()=>{
-                inpUserTelegram.removeAttribute("disabled");
+                inpUserTelegram.removeAttribute("disabled"); //activamos el input
+                btnSendUserTelegram.removeAttribute("disabled"); //activamos el boton
                 inpUserTelegram.focus();
             })
         }
+
+        inpUserTelegram.addEventListener('input', () => {
+            const inpUserTelegramValue = inpUserTelegram.value;
+
+            if (inpUserTelegramValue.length >= 3) {
+                console.log("debemos liberar el input");
+                // Hay texto y debemos liberar el botón de Actualizar
+                btnSendUserTelegram.removeAttribute('disabled');
+            } else {
+                // Si hay menos de 3 caracteres, desactivar el botón
+                btnSendUserTelegram.setAttribute('disabled', 'true');
+            }
+        });
 
         btnSendUserTelegram.addEventListener('click', ()=>{
 
             btnSendUserTelegram.classList.add('close') //primero desactivamos el boton Actualizar
             btnSendUserTelegramLoading.classList.remove('close') //segundo activamos el boton disbled spining
             const userTelegramValue = inpUserTelegram.value.trim();
-            userTelegram = userTelegramValue.replace(/@/g, "").replace(/\s+/g, "");
+            let = userTelegram = userTelegramValue.replace(/@/g, "").replace(/\s+/g, "");
             
 
             //nota:  la expresión regular `/\s+/` se utiliza para quitar los espacios en blanco en una cadena de texto. 
@@ -2777,6 +2804,7 @@
                 if (code === 1){
 
                     alertBlissBotCode1.classList.remove('close');
+                    btnSendUserTelegram.setAttribute("disabled", ""); 
                     setTimeout(() => {
                         alertBlissBotCode1.classList.add('close');
                         estadoInicialBTN()
@@ -2785,6 +2813,7 @@
                 } else if (code === 0){
 
                     alertBlissBotCode0.classList.remove('close');
+                    btnSendUserTelegram.setAttribute("disabled", ""); 
                     setTimeout(() => {
                         alertBlissBotCode0.classList.add('close');
                         estadoInicialBTN()
@@ -2793,6 +2822,9 @@
                 } else if (code === 2){
 
                     alertBlissBotCode2.classList.remove('close');
+                    inpUserTelegram.value = ""; //limpiamos el input
+                    inpUserTelegram.value = valueInput; //le ponemos el valor que debe tener  
+                    btnSendUserTelegram.setAttribute("disabled", ""); 
                     setTimeout(() => {
                         alertBlissBotCode2.classList.add('close');
                         estadoInicialBTN()
@@ -2802,6 +2834,7 @@
                 } else if (code === 3){
 
                     alertBlissBotCode3.classList.remove('close');
+                    btnSendUserTelegram.setAttribute("disabled", ""); 
                     setTimeout(() => {
                         alertBlissBotCode3.classList.add('close');
                         estadoInicialBTN()
@@ -2812,7 +2845,7 @@
                 function estadoInicialBTN(){
                     //colocamos los botones como deben estar 
                     btnSendUserTelegram.classList.remove('close') //primero desactivamos el boton Actualizar
-                    btnSendUserTelegramLoading.classList.add('close') //segundo activamos el boton disbled spining
+                    btnSendUserTelegramLoading.classList.add('close') //segundo activamos el boton disabled spining
                 }
 
                 
