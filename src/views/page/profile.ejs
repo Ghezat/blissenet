@@ -1070,7 +1070,7 @@
                             </div>                           
                             
 
-                            <!-- Modal de Cambio de nombre de tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticBlissBotConnect" -->
+                            <!-- Modal BlissBot conexion --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticBlissBotConnect" -->
                             <div class="modal fade" id="staticBlissBotConnect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBlissBotConnect" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content">
@@ -1088,7 +1088,7 @@
                                                 <li> Accede a tu perfil y dirígete a la sección de "Conexión a Blissbot". </li>
                                                 <li> Introduce tu username en el campo correspondiente (ejemplo: mi_cuenta). </li>
                                                 <li> Haz clic en el botón "Actualizar" para guardar los cambios. </li>
-                                                <li> Abre Telegram y busca a <b>Blissenet_bot</b> en la barra de búsqueda. </li>
+                                                <li> Abre Telegram y busca a <b>Blissenet_bot</b> en la barra de búsqueda.  O Escanea el <a class="cursor-pointer fw-bold text-dark"  data-bs-toggle="modal" data-bs-target="#staticBlissBotQR"> QR aquí. </a>  </li>
                                                 <li> Envía el comando  <b>/start</b> para iniciar la conexión. ¡En breve recibirás un mensaje confirmando que tu cuenta se ha conectado satisfactoriamente! </li> 
                                             
                                             </ol>
@@ -1096,6 +1096,21 @@
                                         </div>
                                         <div class="modal-footer" style="background-image: url('/img/BlissBotBanner1.png'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal QR de BlissBot conexion --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticBlissBotQR" -->
+                            <div class="modal fade" id="staticBlissBotQR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBlissBotQR" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-0 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);" >
+                                    <div class="modal-content p-0">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBlissBotConnect"> BlissBot QR </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body p-0">
+                                            <img src="/img/BlissBot_QR.png" alt="" style="width: 100%;">
                                         </div>
                                     </div>
                                 </div>
@@ -1281,7 +1296,7 @@
                                     </div>
                                 </div>
                             </div> 
-
+                           
                             <div class="col-lg-8 col-md-8 col-sm-12 py-1 px-0 border" style="background-color: #e9ecef;">
                                     
                                     
