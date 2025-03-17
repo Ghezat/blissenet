@@ -504,9 +504,11 @@ routes.post('/message', async(req, res)=>{
             text: Message,
         })
         .then(response => {
+            console.log('--------------------------- BlissBot----------------------------');
             console.log('Mensaje enviado con éxito:', response.data);
         })
         .catch(error => {
+            console.log('--------------------------- BlissBot----------------------------');
             console.error('Error al enviar el mensaje:', error.response.data);
         });
 
@@ -544,6 +546,9 @@ routes.post('/message', async(req, res)=>{
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url 
 
+        console.log("createdArticle :", createdArticle );
+        console.log("type de dato de createdArticle :", typeof createdArticle );
+
         const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
@@ -555,7 +560,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -723,7 +728,7 @@ routes.post('/message', async(req, res)=>{
         const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
         const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
         console.log("chatId ---->", chatId);
-        
+
         if (chatId){
             blissBotNoti()
         }
