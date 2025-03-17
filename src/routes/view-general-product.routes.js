@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const routes = Router()
+const mongoose = require('mongoose');
 
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
@@ -19,6 +20,9 @@ const modelInvoice = require('../models/invoice.js');
 const modelMessages = require('../models/messages.js');
 
 const nodemailer = require('nodemailer');
+      
+//este Token es la KEY del bot de Telegram
+const Token =  process.env.Token_Bot;
 
 const axios = require('axios');
 const fs = require('fs-extra');
@@ -492,10 +496,26 @@ routes.post('/message', async(req, res)=>{
     let minuFormatted = String(minu).padStart(2, '0');
     const times = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
 
+    async function blissBotNoti(titleArticle, chatId){
+        const Message = `Notificación de Blissenet.com:\n\n¡Hola! Tienes una pregunta pendiente sobre tu artículo "${titleArticle}". Tu pronta respuesta es clave para iniciar una exitosa venta. ¡No dejes pasar la oportunidad!`;
+
+        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+            chat_id: chatId,
+            text: Message,
+        })
+        .then(response => {
+            console.log('Mensaje enviado con éxito:', response.data);
+        })
+        .catch(error => {
+            console.error('Error al enviar el mensaje:', error.response.data);
+        });
+
+    }
+
     //console.log(times)
     if (depart == 'raffle'){
         const search = await modelRaffle.findById(productId);
-        const createdArticle = search.user_id;
+        const createdArticle = search.user_id; //aqui esta el id del user
         const ownerStore = search.username;
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url 
@@ -504,6 +524,16 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+        
         res.json(saveMessage);
     }
 
@@ -518,6 +548,16 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+
         res.json(saveMessage);
     }
 
@@ -532,6 +572,16 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+
         res.json(saveMessage);
     }
 
@@ -546,6 +596,16 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+
         res.json(saveMessage);
     }
 
@@ -560,6 +620,18 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+
+        res.json(saveMessage);
+
     }
 
     if (depart == 'realstate'){
@@ -573,6 +645,17 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+
+        res.json(saveMessage)
     }
 
     if (depart == 'nautical'){
@@ -586,6 +669,18 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+
+        res.json(saveMessage);
+
     }
 
     if (depart == 'service'){
@@ -599,6 +694,18 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+
+        if (chatId){
+            blissBotNoti()
+        }
+
+        res.json(saveMessage);
+
     }
 
     if (depart == 'auctions'){
@@ -612,6 +719,16 @@ routes.post('/message', async(req, res)=>{
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
+        //descubrimos el chatId del user de la Tienda si posee
+        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+        const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+        console.log("chatId ---->", chatId);
+        
+        if (chatId){
+            blissBotNoti()
+        }
+
+        res.json(saveMessage);        
     }
 
 

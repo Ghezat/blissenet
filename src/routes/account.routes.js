@@ -2020,8 +2020,7 @@ routes.post('/account/followStore', async(req, res)=>{
                 }
 
                 async function blissBotNoti(){
-                    const Message = `¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también. 
-                    https://blissenet.com`
+                    const Message = `Notificación de Blissenet.com:\n\n¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también.`;
 
                     axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                         chat_id: chatId,
