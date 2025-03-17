@@ -533,7 +533,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
         
         res.json(saveMessage);
@@ -584,7 +584,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -608,7 +608,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -632,7 +632,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -657,7 +657,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage)
@@ -681,7 +681,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -706,7 +706,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -730,7 +730,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti()
+            blissBotNoti(titleArticle, chatId)
         }
 
         res.json(saveMessage);        
