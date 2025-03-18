@@ -4,6 +4,7 @@ const messageSchema = new Schema({
     typeNote : { type : String, default : 'messages' }, //puede ser messages, notes, spread.
     times : { type : String}, //fecha y hora en el momento exacto en que se crea la pregunta.
     titleArticle : { type : String}, //el titulo del articulo en cuestion.
+    titleURL : { type : String },// aqui guardamos el titulo que se usara en el url (SEO) Search Engine Optimization (Optimización para Motores de Búsqueda)
     urlImageArticle : { type : String}, //la primera imagen del articulo.
     objeAvatar : { type : Object }, //este campo solo es para cuando sea de tipo "spread" y "followMe"
     userId : { type : String}, //el Id del que hace la pregunta. (indexed) --->esto es el _id de la colleccion users.

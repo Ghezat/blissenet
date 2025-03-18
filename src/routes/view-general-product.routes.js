@@ -514,15 +514,29 @@ routes.post('/message', async(req, res)=>{
 
     }
 
+    //esta funcion logra crear el titleURL campo anexado para implementacion del SEO 
+    function transformarTitle(titleArticle) {
+        return titleArticle
+            .normalize("NFD") // Elimina acentos
+            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+            .toLowerCase() // Convierte a minúsculas
+            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+            .trim(); // Elimina guiones al inicio y al final
+    }
+
     //console.log(times)
     if (depart == 'raffle'){
         const search = await modelRaffle.findById(productId);
         const createdArticle = search.user_id; //aqui esta el id del user
         const ownerStore = search.username;
         const titleArticle = search.title;
-        const urlImageArticle = search.images[0].url 
+        const urlImageArticle = search.images[0].url
+        
+        const titleURL = transformarTitle(titleArticle);
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -548,8 +562,10 @@ routes.post('/message', async(req, res)=>{
 
         console.log("createdArticle :", createdArticle );
         console.log("type de dato de createdArticle :", typeof createdArticle );
+        
+        const titleURL = transformarTitle(titleArticle);
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const newMessage = new modelMessages ({times, titleArticle, titleURL,  urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -572,8 +588,10 @@ routes.post('/message', async(req, res)=>{
         const ownerStore = search.username;
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url  
+        
+        const titleURL = transformarTitle(titleArticle); 
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -596,8 +614,10 @@ routes.post('/message', async(req, res)=>{
         const ownerStore = search.username;
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url  
+        
+        const titleURL = transformarTitle(titleArticle); 
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -621,7 +641,9 @@ routes.post('/message', async(req, res)=>{
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url  
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const titleURL = transformarTitle(titleArticle); 
+
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -646,7 +668,9 @@ routes.post('/message', async(req, res)=>{
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url  
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const titleURL = transformarTitle(titleArticle); 
+
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -670,7 +694,9 @@ routes.post('/message', async(req, res)=>{
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url  
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const titleURL = transformarTitle(titleArticle); 
+
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -695,7 +721,9 @@ routes.post('/message', async(req, res)=>{
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url  
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const titleURL = transformarTitle(titleArticle); 
+
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
@@ -720,7 +748,9 @@ routes.post('/message', async(req, res)=>{
         const titleArticle = search.title;
         const urlImageArticle = search.images[0].url  
 
-        const newMessage = new modelMessages ({times, titleArticle, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
+        const titleURL = transformarTitle(titleArticle); 
+
+        const newMessage = new modelMessages ({times, titleArticle, titleURL, urlImageArticle, userId, username, question, depart, productId, toCreatedArticleId : createdArticle, ownerStore  });
         //console.log(newMessage);
         const saveMessage = await newMessage.save();
         console.log("Este es el mensage guardado --->", saveMessage);
