@@ -1,5 +1,7 @@
 const { Router } = require('express');
 const hash = require('object-hash');
+const mongoose = require('mongoose');
+
 const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
@@ -16,7 +18,10 @@ const modelAuction = require('../models/auction.js');
 const modelRaffle = require('../models/raffle.js');
 //const { search } = require('./index.routes.js');
 
+//este Token es la KEY del bot de Telegram
+const Token =  process.env.Token_Bot;
 
+const axios = require('axios');
 
 routes.get('/myaccount/messenger', async (req,res)=>{
     let userId;
@@ -80,7 +85,41 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
     const answer = req.body.answer;
     console.log("Esta es la respuesta del anunciante al posible comprador", answer)
     const response = await modelMessages.findByIdAndUpdate(idMesagge, {answer} );
-    console.log("** Aqui el objeto actualizado ***",response)
+    console.log("---------------------- revisar --------------------------");
+    console.log("** Aqui el objeto actualizado ***",response);
+    const createdArticle = response.toCreatedArticleId; //66ab9dc1b8c25e5528f4ea9d -->string
+    const titleArticle = response.titleArticle; //string
+
+    //descubrimos el chatId del user de la Tienda si posee
+    const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+    const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
+    console.log("chatId ---->", chatId);
+
+    if (chatId){
+        blissBotNoti(titleArticle, chatId)
+    }
+
+    async function blissBotNoti(titleArticle, chatId){
+        const Message = `Notificación de Blissenet.com: message\n\n¡Hola! Te han respondido la pregunta que has hecho sobre "${titleArticle}". No pierdas tu artículo mira la respuesta ahora en Blissenet.com`;
+
+        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+            chat_id: chatId,
+            text: Message,
+        })
+        .then(response => {
+            console.log('--------------------------- BlissBot----------------------------');
+            console.log('Mensaje enviado con éxito:', response.data);
+        })
+        .catch(error => {
+            console.log('--------------------------- BlissBot----------------------------');
+            console.error('Error al enviar el mensaje:', error.response.data);
+        });
+
+    }
+
+    //buscamos el user
+
+
 
     res.redirect('/myaccount/messenger')
 })
