@@ -87,11 +87,11 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
     const response = await modelMessages.findByIdAndUpdate(idMesagge, {answer} );
     console.log("---------------------- revisar --------------------------");
     console.log("** Aqui el objeto actualizado ***",response);
-    const createdArticle = response.toCreatedArticleId; //66ab9dc1b8c25e5528f4ea9d -->string
+    const userId = response.userId; //66ab9dc1b8c25e5528f4ea9d -->string
     const titleArticle = response.titleArticle; //string
 
     //descubrimos el chatId del user de la Tienda si posee
-    const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(createdArticle));
+    const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(userId));
     const chatId = searchUserStore.blissBot.chatId; //si la tienda posee chatId esta sincronizada.
     console.log("chatId ---->", chatId);
 
@@ -100,7 +100,7 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
     }
 
     async function blissBotNoti(titleArticle, chatId){
-        const Message = `Notificación de Blissenet.com: message\n\n¡Hola! Te han respondido la pregunta que has hecho sobre "${titleArticle}". No pierdas tu artículo mira la respuesta ahora en Blissenet.com`;
+        const Message = `Notificación de Blissenet.com: Message\n\n¡Hola! Te han respondido la pregunta que has hecho sobre "${titleArticle}". No pierdas tu artículo mira la respuesta ahora en Blissenet.com`;
 
         axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
             chat_id: chatId,
