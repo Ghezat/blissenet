@@ -2753,6 +2753,7 @@ routes.post('/account/soldOut', async (req, res)=>{
                 console.log("imageFirst en blissBotNoti function ---->", imageFirst);
                 console.log("question en blissBotNoti function ---->", question);  
                 console.log("titleArticle en blissBotNoti function ----->", titleArticle);
+                console.log("ownerStore en blissBotNoti function ----->", ownerStore);
                 
                 let messageCount = 0; // Inicializa el contador
             
@@ -2770,12 +2771,12 @@ routes.post('/account/soldOut', async (req, res)=>{
                         if (chatId) {
                             const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                                 chat_id: chatId,
-                                photo: imageFirst,
-                                caption: `Notificación de Blissenet.com: Available\n\n ${question} "${titleArticle}"`
+                                photo: imageFirst, //¡Este artículo ya esta disponible! "Monopatin MK086 (Pro2)"'
+                                caption: `Notificación de Blissenet.com: Available\n\n ${ownerStore} anuncia, ${question} "${titleArticle}"`
                             });
             
                             console.log('--------------------------- BlissBot----------------------------');
-                            console.log('Mensaje enviado con éxito:', response.data);
+                            //console.log('Mensaje enviado con éxito:', response.data);
             
                             messageCount++; // Incrementa el contador solo si se envió exitosamente
                         }
@@ -2790,9 +2791,11 @@ routes.post('/account/soldOut', async (req, res)=>{
             }   
 
             async function resetADS(){
+                console.log("resetADS() ---->")
+                console.log("Esto es id ---->", id)
                 const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });            
                 boxInfo.push(resultSearch);
-                //console.log('esto es resultSearch', resultSearch );
+                console.log('esto es resultSearch debemo sverificar que realmente borro el array purchaseTime', resultSearch );
                 //console.log('esto es boxInfo------->', boxInfo); 
 
                 console.log('esto es boxInfo------->', boxInfo);
@@ -2801,15 +2804,12 @@ routes.post('/account/soldOut', async (req, res)=>{
 
             async function ejecutarFunciones() {
                 try {
-                    console.log("Iniciando sendindNotification()...");
                     await sendindNotification();
                     console.log("sendindNotification ejecutado correctamente.");
             
-                    console.log("Iniciando blissBotNoti...");
                     await blissBotNoti();
                     console.log("blissBotNoti ejecutado correctamente.");
 
-                    console.log("Iniciando resetADS...");
                     await resetADS();
                     console.log("resetADS ejecutado correctamente.");
             
@@ -2897,11 +2897,11 @@ routes.post('/account/soldOut', async (req, res)=>{
                             const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                                 chat_id: chatId,
                                 photo: imageFirst,
-                                caption: `Notificación de Blissenet.com: Available\n\n ${question} "${titleArticle}"`
+                                caption: `Notificación de Blissenet.com: Available\n\n ${ownerStore} anuncia, ${question} "${titleArticle}"`
                             });
             
                             console.log('--------------------------- BlissBot----------------------------');
-                            console.log('Mensaje enviado con éxito:', response.data);
+                            //console.log('Mensaje enviado con éxito:', response.data);
             
                             messageCount++; // Incrementa el contador solo si se envió exitosamente
                         }
@@ -2923,15 +2923,12 @@ routes.post('/account/soldOut', async (req, res)=>{
 
             async function ejecutarFunciones() {
                 try {
-                    console.log("Iniciando sendindNotification()...");
                     await sendindNotification();
                     console.log("sendindNotification ejecutado correctamente.");
-            
-                    console.log("Iniciando blissBotNoti...");
+                   
                     await blissBotNoti();
                     console.log("blissBotNoti ejecutado correctamente.");
 
-                    console.log("Iniciando resetADS...");
                     await resetADS();
                     console.log("resetADS ejecutado correctamente.");
             
