@@ -2762,10 +2762,10 @@ routes.post('/account/soldOut', async (req, res)=>{
 
             //es hora de enviar tegramas.
             async function blissBotNoti() {
-                console.log("imageFirst en blissBotNoti function ---->", imageFirst);
-                console.log("question en blissBotNoti function ---->", question);  
-                console.log("titleArticle en blissBotNoti function ----->", titleArticle);
-                console.log("ownerStore en blissBotNoti function ----->", ownerStore);
+                //console.log("imageFirst en blissBotNoti function ---->", imageFirst);
+                //console.log("question en blissBotNoti function ---->", question);  
+                //console.log("titleArticle en blissBotNoti function ----->", titleArticle);
+                //console.log("ownerStore en blissBotNoti function ----->", ownerStore);
                 
                 let messageCount = 0; // Inicializa el contador
             
@@ -2784,7 +2784,7 @@ routes.post('/account/soldOut', async (req, res)=>{
                             const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                                 chat_id: chatId,
                                 photo: imageFirst, //¡Este artículo ya esta disponible! "Monopatin MK086 (Pro2)"'
-                                caption: `Notificación de Blissenet.com: Available\n\n${ownerStore} anuncio "${titleArticle}" ya se encuestra disponible.`
+                                caption: `Notificación de Blissenet.com: Available\n\n${ownerStore} anuncia "${titleArticle}" ya se encuentra disponible.`
                             });
             
                             console.log('--------------------------- BlissBot----------------------------');
@@ -2884,9 +2884,9 @@ routes.post('/account/soldOut', async (req, res)=>{
 
             //es hora de enviar tegramas.
             async function blissBotNoti() {
-                console.log("imageFirst en blissBotNoti function ---->", imageFirst);
-                console.log("question en blissBotNoti function ---->", question);  
-                console.log("titleArticle en blissBotNoti function ----->", titleArticle);
+                //console.log("imageFirst en blissBotNoti function ---->", imageFirst);
+                //console.log("question en blissBotNoti function ---->", question);  
+                //console.log("titleArticle en blissBotNoti function ----->", titleArticle);
                 
                 let messageCount = 0; // Inicializa el contador
             
@@ -2905,7 +2905,7 @@ routes.post('/account/soldOut', async (req, res)=>{
                             const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                                 chat_id: chatId,
                                 photo: imageFirst,
-                                caption: `Notificación de Blissenet.com: Available\n\n${ownerStore} anuncio "${titleArticle}" ya se encuestra disponible.`
+                                caption: `Notificación de Blissenet.com: Available\n\n${ownerStore} anuncia "${titleArticle}" ya se encuentra disponible.`
                             });
             
                             console.log('--------------------------- BlissBot----------------------------');
