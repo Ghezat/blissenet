@@ -2704,6 +2704,7 @@ routes.post('/account/soldOut', async (req, res)=>{
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
             //console.log('esto es boxInfo------->', boxInfo); 
+            res.json(boxInfo);
 
         }else {
             const result = await modelItems.findByIdAndUpdate( id, { soldOut : false }, { new: true });
@@ -2715,27 +2716,110 @@ routes.post('/account/soldOut', async (req, res)=>{
             const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
             const ownerStore = result.username; const productId = result._id;
             const depart = 'items'; const answer = 'waiting'; const view = 'false';
+            const imageFirst = result.images[0].url; 
 
+            function transformarTitle(titleArticle) {
+                return titleArticle
+                    .normalize("NFD") // Elimina acentos
+                    .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+                    .toLowerCase() // Convierte a minúsculas
+                    .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+                    .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+                    .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+                    .trim(); // Elimina guiones al inicio y al final
+            }
+            
+            const titleURL = transformarTitle(titleArticle);
+            //console.log(titleURL); // "hoverboard-blue-tooth-250w"
+            
 
-            if (PurchaseTime.length !==0){
-                
-                for (const ele of PurchaseTime) {
+            async function sendindNotification(){
+                if (PurchaseTime.length !==0){
                     
-                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
-                    
-                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
-                    console.log("newMessage :", newMessage);
-                    const saveMessage = await newMessage.save();
+                    for (const ele of PurchaseTime) {
+                        
+                        console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                        
+                        const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, titleURL, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                        console.log("newMessage :", newMessage);
+                        const saveMessage = await newMessage.save();
 
+                    }
                 }
+            }    
+
+            //es hora de enviar tegramas.
+            async function blissBotNoti() {
+                console.log("imageFirst en blissBotNoti function ---->", imageFirst);
+                console.log("question en blissBotNoti function ---->", question);  
+                console.log("titleArticle en blissBotNoti function ----->", titleArticle);
+                
+                let messageCount = 0; // Inicializa el contador
+            
+                // Verifica si ya se enviaron 100 mensajes antes de comenzar
+                if (messageCount >= 99) return; 
+            
+                const promises = PurchaseTime.map(async (indexed) => {
+                    if (messageCount >= 99) return; // Detiene si se ha enviado 100 mensajes
+            
+                    try {
+                        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(indexed));
+                        const chatId = searchUserStore.blissBot.chatId;
+                        console.log("chatId ---->", chatId);
+            
+                        if (chatId) {
+                            const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+                                chat_id: chatId,
+                                photo: imageFirst,
+                                caption: `Notificación de Blissenet.com: Available\n\n ${question} "${titleArticle}"`
+                            });
+            
+                            console.log('--------------------------- BlissBot----------------------------');
+                            console.log('Mensaje enviado con éxito:', response.data);
+            
+                            messageCount++; // Incrementa el contador solo si se envió exitosamente
+                        }
+            
+                    } catch (error) {
+                        console.log('--------------------------- BlissBot----------------------------');
+                        console.error('Error al enviar el mensaje:', error.response.data );
+                    }
+                });
+            
+                await Promise.all(promises);
+            }   
+
+            async function resetADS(){
+                const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });            
+                boxInfo.push(resultSearch);
+                //console.log('esto es resultSearch', resultSearch );
+                //console.log('esto es boxInfo------->', boxInfo); 
+
+                console.log('esto es boxInfo------->', boxInfo);
+                res.json(boxInfo);
             }
 
-            const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });            
-            boxInfo.push(resultSearch);
-            //console.log('esto es resultSearch', resultSearch );
-            //console.log('esto es boxInfo------->', boxInfo); 
+            async function ejecutarFunciones() {
+                try {
+                    console.log("Iniciando sendindNotification()...");
+                    await sendindNotification();
+                    console.log("sendindNotification ejecutado correctamente.");
+            
+                    console.log("Iniciando blissBotNoti...");
+                    await blissBotNoti();
+                    console.log("blissBotNoti ejecutado correctamente.");
 
-            console.log('esto es boxInfo------->', boxInfo);  
+                    console.log("Iniciando resetADS...");
+                    await resetADS();
+                    console.log("resetADS ejecutado correctamente.");
+            
+                } catch (error) {
+                    const errorMessage = error.message || "Ha habido un error, intente luego.";
+                }
+            }
+            
+            ejecutarFunciones()
+
         }
         
     } else if ( depart === "arts"){
@@ -2748,7 +2832,9 @@ routes.post('/account/soldOut', async (req, res)=>{
             //es hora de evaluar si el campo purchaseTime del documento arts tiene elementos, estos elementos son indexed de personas que quieren ser avisados para recibir notificacion en su inbox cuando este producto este disponible.
             boxInfo.push(resultSearch);
             //console.log('esto es resultSearch', resultSearch );
-            //console.log('esto es boxInfo------->', boxInfo);   
+            //console.log('esto es boxInfo------->', boxInfo);
+            res.json(boxInfo);
+
         }else {
             const result = await modelArtes.findByIdAndUpdate( id, { soldOut : false }, { new: true });
 
@@ -2757,29 +2843,111 @@ routes.post('/account/soldOut', async (req, res)=>{
             const question = '¡Este artículo ya esta disponible!'; const toCreatedArticleId = result.user_id;
             const ownerStore = result.username; const productId = result._id;
             const depart = 'items'; const answer = 'waiting'; const view = 'false';
+            const imageFirst = result.images[0].url;
 
+            function transformarTitle(titleArticle) {
+                return titleArticle
+                    .normalize("NFD") // Elimina acentos
+                    .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+                    .toLowerCase() // Convierte a minúsculas
+                    .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+                    .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+                    .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+                    .trim(); // Elimina guiones al inicio y al final
+            }
+            
+            const titleURL = transformarTitle(titleArticle);
+            //console.log(titleURL); // "hoverboard-blue-tooth-250w"
 
-            if (PurchaseTime.length !==0){
-                
-                for (const ele of PurchaseTime) {
+            async function sendindNotification(){
+                if (PurchaseTime.length !==0){
                     
-                    console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
-                    
-                    const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
-                    console.log("newMessage :", newMessage);
-                    const saveMessage = await newMessage.save();
+                    for (const ele of PurchaseTime) {
+                        
+                        console.log("usuarios que debemos enviar notificación de que ya esta disponible ->", ele);
+                        
+                        const newMessage = new modelMessage({times, typeNote: 'availability-noti', titleArticle, titleURL, urlImageArticle, userId : ele, question, depart, productId, toCreatedArticleId, ownerStore });
+                        console.log("newMessage :", newMessage);
+                        const saveMessage = await newMessage.save();
 
+                    }
                 }
+            }    
+
+            //es hora de enviar tegramas.
+            async function blissBotNoti() {
+                console.log("imageFirst en blissBotNoti function ---->", imageFirst);
+                console.log("question en blissBotNoti function ---->", question);  
+                console.log("titleArticle en blissBotNoti function ----->", titleArticle);
+                
+                let messageCount = 0; // Inicializa el contador
+            
+                // Verifica si ya se enviaron 100 mensajes antes de comenzar
+                if (messageCount >= 99) return; 
+            
+                const promises = PurchaseTime.map(async (indexed) => {
+                    if (messageCount >= 99) return; // Detiene si se ha enviado 100 mensajes
+            
+                    try {
+                        const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(indexed));
+                        const chatId = searchUserStore.blissBot.chatId;
+                        console.log("chatId ---->", chatId);
+            
+                        if (chatId) {
+                            const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+                                chat_id: chatId,
+                                photo: imageFirst,
+                                caption: `Notificación de Blissenet.com: Available\n\n ${question} "${titleArticle}"`
+                            });
+            
+                            console.log('--------------------------- BlissBot----------------------------');
+                            console.log('Mensaje enviado con éxito:', response.data);
+            
+                            messageCount++; // Incrementa el contador solo si se envió exitosamente
+                        }
+            
+                    } catch (error) {
+                        console.log('--------------------------- BlissBot----------------------------');
+                        console.error('Error al enviar el mensaje:', error.response.data );
+                    }
+                });
+            
+                await Promise.all(promises);
+            }                 
+
+            async function resetADS(){
+                const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
+                boxInfo.push(resultSearch);
+                res.json(boxInfo);
             }
 
-            const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
-            boxInfo.push(resultSearch);
+            async function ejecutarFunciones() {
+                try {
+                    console.log("Iniciando sendindNotification()...");
+                    await sendindNotification();
+                    console.log("sendindNotification ejecutado correctamente.");
+            
+                    console.log("Iniciando blissBotNoti...");
+                    await blissBotNoti();
+                    console.log("blissBotNoti ejecutado correctamente.");
+
+                    console.log("Iniciando resetADS...");
+                    await resetADS();
+                    console.log("resetADS ejecutado correctamente.");
+            
+                } catch (error) {
+                    const errorMessage = error.message || "Ha habido un error, intente luego.";
+                }
+            }
+            
+            ejecutarFunciones()
+
         }
         
     }    
 
     
-    res.json(boxInfo);
+  
 });
  
 
@@ -3009,11 +3177,16 @@ routes.post('/account/spread', async (req, res)=>{
 
     }    
 
-    
-    async function blissBotNoti(){  
+        //primer version funcional
+ /*    async function blissBotNoti(){  
         console.log("imageFirst en blissBotNoti function ---->", imageFirst);
         console.log("Note en blissBotNoti function ---->", Note);  
-        
+        //imaginate luzia que FollowMe es un array con 2000 datos... esto puede ocurrir que perdamos la API de Telegram, Es necesario limitarlo a 100 nada mas.
+        //pero no todos los usuariuos que estan en FollowMe tienen chatId asi que lo que pienso es usar un contador si tiene chatId entonces chat ++ asumiendo que chat inicia en 0
+        //y cuando el contador llega a 99 se detiene la funcion blissBoNoti(). que te parece la idea
+
+        let messageCount = 0; // Inicializa el contador
+
         const promises = FollowMe.map(async (indexed) => {
             try {
                 const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(indexed));
@@ -3042,7 +3215,49 @@ routes.post('/account/spread', async (req, res)=>{
     
         await Promise.all(promises);
     }
+     */
+
+    //segunda version funcional
+    //esta es la nueva version con el contador para cuidar no exceder las politicas de Telegram
+    async function blissBotNoti() {
+        console.log("imageFirst en blissBotNoti function ---->", imageFirst);
+        console.log("Note en blissBotNoti function ---->", Note);  
+        console.log("title en blissBotNoti function ----->", title);
+        
+        let messageCount = 0; // Inicializa el contador
     
+        // Verifica si ya se enviaron 100 mensajes antes de comenzar
+        if (messageCount >= 99) return; 
+    
+        const promises = FollowMe.map(async (indexed) => {
+            if (messageCount >= 99) return; // Detiene si se ha enviado 100 mensajes
+    
+            try {
+                const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(indexed));
+                const chatId = searchUserStore.blissBot.chatId;
+                console.log("chatId ---->", chatId);
+    
+                if (chatId) {
+                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+                        chat_id: chatId,
+                        photo: imageFirst,
+                        caption: `Notificación de Blissenet.com: Spread\n\n ${Note} "${title}"`
+                    });
+    
+                    console.log('--------------------------- BlissBot----------------------------');
+                    console.log('Mensaje enviado con éxito:', response.data);
+    
+                    messageCount++; // Incrementa el contador solo si se envió exitosamente
+                }
+    
+            } catch (error) {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.error('Error al enviar el mensaje:', error.response.data );
+            }
+        });
+    
+        await Promise.all(promises);
+    }    
 
     async function ejecutarFunciones() {
         try {
@@ -3200,14 +3415,6 @@ routes.post('/account/survey/search', async(req, res)=>{
 
     }
 });
-
-//en esta ruta evaluamos si el visitante ha hecho la encuesta y si la ha hecho enviamos al fronted 
-//para que le salte una notificacion de encuesta activa para que la haga.
-routes.post('/account/survey/openStore', async(req, res)=>{
-
-
-
-})
 
 
 //aqui es donde llegan las encustas que hacen los clientes en las tiendas
@@ -3379,7 +3586,6 @@ routes.post('/acount/blissBot/userTelegram', async(req, res)=>{
 
 });
 
-
 // Endpoint para conectar usuarios de Blissenet con Telegram
 routes.post(`/webhook/${Token}`, async(req, res) => {
     const update = req.body;
@@ -3450,8 +3656,6 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
     res.sendStatus(200);
 });
 
-
-
 //aqui si hacemos la consulta de una encuesta predeterminada.
 routes.post('/account/survey/analysisData', async(req, res)=>{
     try {
@@ -3496,3 +3700,5 @@ axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
 */
 
 module.exports = routes;
+
+
