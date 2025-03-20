@@ -807,7 +807,7 @@ routes.get('/department/create/items/searh-edit', async(req, res)=>{
     res.json({data});
 });
  
- routes.post('/department/create/items/edit', async(req, res)=>{
+routes.post('/department/create/items/edit', async(req, res)=>{
     
     
      const {titleToEdit, title, category, sub_category, state_use, tecnicalDescription, generalMessage, price} = req.body

@@ -700,7 +700,7 @@
                                             </div>
                                             <div class="container-fluid p-0 my-2">
                                                 <div class="form-group d-flex">
-                                                    <span class="m-0 bg-warning rounded-1 text-dark fw-bold py-2 px-2"><label class="me-2"> Precio : </label>$ <%= TitleSelect.price %></span>
+                                                    <span class="m-0 bg-warning rounded-1 text-dark fw-bold py-2 ps-2 pe-4" style="clip-path: polygon(88% 0, 100% 50%, 88% 100%, 0 100%, 0 1%);"><label class="me-2"> Precio : </label>$ <%= TitleSelect.price %></span>
                                                 </div>
                                             </div>
                                             <div class="container-fluid p-0 my-2">
@@ -709,37 +709,36 @@
                                                     <% if  (Spreading === false) { %>                                             
                                                     
                                                         <div class="contentSpread" style="width: 100%;">
-                                                            <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                            <div class="alert mx-0 mb-3" style="width: 100%; background-color: rgba(109, 98, 231, 0.2); border: 1px solid #8f4cb3;">
                                                                 <span class="me-2"> Difundir a todos mis seguidores</span> 
-                                                                <button class="btn btn-success px-3 mt-1" id="btnSpread" style="width: 200px;">Listo para Difundir <i class="bi bi-megaphone ms-1"></i> </button>   
-                                                                    <button class="btn btn-success px-3 mt-1 close" id="btnSpreadSpin" style="width: 220px;" disabled>Difundiendo <span class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span> </button>
+                                                                <button class="btn px-3 mt-1" id="btnSpread" style="width: 200px; color: #ffffff; background-color: #8f4cb3;">Listo para Difundir <i class="bi bi-megaphone ms-1"></i> </button>   
+                                                                    <button class="btn px-3 mt-1 close" id="btnSpreadSpin" style="width: 220px;  color: #ffffff; background-color: #8f4cb3;" disabled>Difundiendo <span class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span> </button>
                                                                     <input type="hidden" value="<%= TitleSelect.department %>" id="department_Difundir">
                                                                     <input type="hidden" value="<%= TitleSelect._id %>" id="titleID_Difundir">
                                                                     <input type="hidden" value="<%= TitleSelect.title %>" id="title_Difundir">
                                                             </div>
                                                         </div>
                                                         <div class="contentSpreadUpdate close" style="width: 100%;">
-                                                            <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                            <div class="alert mx-0 mb-3" style="width: 100%; background-color: rgba(109, 98, 231, 0.2); border: 1px solid #8f4cb3;">
                                                                 <span class="me-2"> Difundir a todos mis seguidores</span>
-                                                                <button class="btn btn-primary px-3 mt-1" id="btnSpreadDone" style="width: 200px;" disabled>Anuncio Difundido <i class="bi bi-megaphone ms-1"></i>  </button>
+                                                                <button class="btn px-3 mt-1" id="btnSpreadDone" style="width: 200px; color: #ffffff; background-color: #8f4cb3;" disabled>Anuncio Difundido <i class="bi bi-megaphone ms-1"></i>  </button>
                                                             </div>
                                                         </div>
                                                         <div class="contentSpreadMessage" style="width: 100%;">
                                                             <!-- bloque dinamico -->
-                                                         
                                                         </div>
     
                                                     <% } else { %>
 
-                                                        <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                        <div class="alert mx-0 mb-3" style="width: 100%; background-color: rgba(109, 98, 231, 0.2); border: 1px solid #8f4cb3;">
                                                             <% if (Time) { %>
                                                                 <% let dia = Time.getDate() %> <% let mes = Time.getMonth() +1 %> <% let anio = Time.getFullYear()  %> <% let hora = Time.getHours() %> <% let minu = Time.getMinutes()  %> 
                                                             <div class="contentSpreadDone">
                                                                 <span class="me-2"> <i class="bi bi-megaphone me-1"></i> Difundido el dia :</span>
-                                                                <button class="btn btn-primary px-3 mt-1 me-2" id="btnSpreadDone" style="width: 200px" disabled> <%= dia %>-<%= mes %>-<%= anio %> <%= hora %>:<%= minu %> </button>
+                                                                <button class="btn px-3 mt-1 me-2" id="btnSpreadDone" style="width: 200px; color: #ffffff; background-color: #8f4cb3;" disabled> <%= dia %>-<%= mes %>-<%= anio %> <%= hora %>:<%= minu %> </button>
                                                             </div>
                                                             <% }; %>
-                                                        </div>
+                                                        </div>                                                     
                                                         <div class="alert alert-light alert-dismissible fade show successBannerSon" role="alert" style="width: 100%;">
                                                             <strong class="me-2"> Podrás volver a Difundir en dos (2) semanas.</strong>
                                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

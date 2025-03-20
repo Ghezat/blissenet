@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const hash = require('object-hash');
 const mongoose = require('mongoose');
+
 const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
@@ -21,6 +22,7 @@ const modelCustomerSurvey = require('../models/customerSurvey.js');
 const messages = require('../models/messages.js');
 
 const axios = require('axios');
+const fs = require('fs-extra');
       
 //este Token es la KEY del bot de Telegram
 const Token =  process.env.Token_Bot;
@@ -2900,6 +2902,7 @@ routes.post('/account/spread', async (req, res)=>{
     const { depart, title, titleId } = req.body;
     const Note = `${username} te invita a que veas su nuevo anuncio publicado.`;
     let avatar; let avatarDefault;
+    let imageFirst; //aqui guardamos la imagen que vamos a pasar por el BlissBot y les llegue a telegram. 
 
     //console.log("*******variables*******");
     //console.log("userId", userId); console.log("username", username); console.log("depart", depart); console.log("title", title); console.log("titleId", titleId);
@@ -2912,6 +2915,19 @@ routes.post('/account/spread', async (req, res)=>{
     let minuFormatted = String(minu).padStart(2, '0');
     const dateSend = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
 
+    function transformarTitle(title) {
+        return title
+            .normalize("NFD") // Elimina acentos
+            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
+            .toLowerCase() // Convierte a minúsculas
+            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
+            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
+            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
+            .trim(); // Elimina guiones al inicio y al final
+    }
+    
+    const titleURL = transformarTitle(title);
+    //console.log(titleURL); // "hoverboard-blue-tooth-250w"
     
     // avatarPerfil, mailhash
     //Aqui buscamos el avatar de la tienda que esta difundiendo el anuncio.
@@ -2928,11 +2944,12 @@ routes.post('/account/spread', async (req, res)=>{
 
     //Aqui escaneamos en toda la DB cuales usuarios siguen a esta tienda
     const searchToFollowMe = await modelProfile.find({ indexed : userId } );
-    const FollowMe = searchToFollowMe[0].followMe;
+    const FollowMe = searchToFollowMe[0].followMe; //esto es un array de id de users 
     //console.log("FollowMe ----------->", FollowMe);
     const count = FollowMe.length;
     //console.log("esto es FollowMe", FollowMe); //esto es un array donde estan todas las cuentas que me siguen.
     //console.log("seguiendo esta cuenta", count);
+
 
     async function sendingSpread(){
         for (let i = 0; i < FollowMe.length; i++) {
@@ -2943,53 +2960,112 @@ routes.post('/account/spread', async (req, res)=>{
             const usernameReceive = searchReceive[0].username;
 
             //enviamo el mensaje a este usuario
-            const newMessage = new modelMessage( { typeNote: "spread", times: dateSend, username, question : Note, toCreatedArticleId: indexed,  ownerStore: usernameReceive, depart, titleArticle: title, productId : titleId, objeAvatar : objAvatar } );
+            const newMessage = new modelMessage( { typeNote: "spread", times: dateSend, username, question : Note, toCreatedArticleId: indexed,  ownerStore: usernameReceive, depart, titleArticle: title, titleURL, productId : titleId, objeAvatar : objAvatar } );
             //console.log("newMessage :", newMessage);
             const saveMessage = await newMessage.save();
         }
     }
 
+   
     async function spreadDone(){
         //especificamos cual depart estamos trabajando y al conseguirlo cambiamos el campo "spread" a true.
         // titleId, depart
         if (depart === "arts"){
-            const update =  await modelArtes.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelArtes.findByIdAndUpdate(titleId, { $set: { "spread.spreading" : true, "spread.time": date } },{ new: true } ); // Esta opción devuelve el documento actualizado );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         } else if (depart === "automotive"){
-            const update =  await modelAutomotive.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelAutomotive.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         } else if (depart === "airplanes"){
-            const update =  await modelAirplane.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelAirplane.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         } else if (depart === "auctions"){    
-            const update =  await modelAuction.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelAuction.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
         } else if (depart === "items"){
-            const update =  await modelItems.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelItems.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         } else if (depart === "nautical"){
-            const update =  await modelNautical.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelNautical.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         } else if (depart === "service"){
-            const update =  await modelService.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelService.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         } else if (depart === "raffle"){
-            const update =  await modelRaffle.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelRaffle.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         } else if (depart === "realstate"){
-            const update =  await modelRealstate.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }} );
+            const update =  await modelRealstate.findByIdAndUpdate(titleId, { $set:{ "spread.spreading" : true, "spread.time" : date }}, { new: true } );
+            imageFirst = update.images[0].url;
+            console.log("imageFirst en spreadDone functon ---->", imageFirst);
         }
 
     }    
-    
-    sendingSpread()
-        .then(()=>{
-            spreadDone()
-            .then(()=>{
-                res.json({"response" : "Se ha enviado el mensage a todos nuestros seguidores.", "type" : "success", "followMe" : count });
-            })
-            .catch((error)=>{
-                res.json({"response" : "Ha habido un error, intente luego.", "type" : "error"});
-            })
-    
-            
-        })
-        .catch((error)=>{
-            res.json({"response" : "Ha habido un error, intente luego.", "type" : "error"});
-        })
 
+    
+    async function blissBotNoti(){  
+        console.log("imageFirst en blissBotNoti function ---->", imageFirst);
+        console.log("Note en blissBotNoti function ---->", Note);  
+        
+        const promises = FollowMe.map(async (indexed) => {
+            try {
+                const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(indexed));
+                //index siempre existira y es un string que lo uso para ubicar el user en modelUser
+    
+                const chatId = searchUserStore.blissBot.chatId;
+                console.log("chatId ---->", chatId);
+
+                if (chatId){
+                   
+                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+                        chat_id: chatId,
+                        photo: imageFirst,
+                        caption: `Notificación de Blissenet.com: Spread\n\n ${Note}`
+                    });
+                    console.log('--------------------------- BlissBot----------------------------');
+                    console.log('Mensaje enviado con éxito:', response.data);
+
+                }
+
+            } catch (error) {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
+            }
+        });
+    
+        await Promise.all(promises);
+    }
+    
+
+    async function ejecutarFunciones() {
+        try {
+            console.log("Iniciando sendingSpread...");
+            await sendingSpread();
+            console.log("sendingSpread ejecutado correctamente.");
+    
+            console.log("Iniciando spreadDone...");
+            await spreadDone();
+            console.log("spreadDone ejecutado correctamente.");
+    
+            console.log("Iniciando blissBotNoti...");
+            await blissBotNoti();
+            console.log("blissBotNoti ejecutado correctamente.");
+
+            res.json({ "response": "Se ha enviado el mensaje a todos nuestros seguidores.", "type": "success", "followMe": count });
+        } catch (error) {
+            const errorMessage = error.message || "Ha habido un error, intente luego.";
+            res.json({ "response": errorMessage, "type": "error" });
+        }
+    }
+    
+    ejecutarFunciones()
 
 });
 
@@ -3239,7 +3315,7 @@ routes.post('/account/survey/analysis', async(req, res)=>{
 });
 
 //-------------- controlando las peticiones de BlissBot bot de Telegram
-
+// aqui guardamos el username de telegram en la base de datos
 routes.post('/acount/blissBot/userTelegram', async(req, res)=>{
     
     try {
@@ -3373,6 +3449,8 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
     // Responder a Telegram con un 200 OK
     res.sendStatus(200);
 });
+
+
 
 //aqui si hacemos la consulta de una encuesta predeterminada.
 routes.post('/account/survey/analysisData', async(req, res)=>{
