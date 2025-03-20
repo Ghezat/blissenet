@@ -2748,6 +2748,18 @@ routes.post('/account/soldOut', async (req, res)=>{
                 }
             }    
 
+            async function resetADS(){
+                console.log("resetADS() ---->")
+                console.log("Esto es id ---->", id)
+                const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });            
+                boxInfo.push(resultSearch);
+                console.log('esto es resultSearch debemo sverificar que realmente borro el array purchaseTime', resultSearch );
+                //console.log('esto es boxInfo------->', boxInfo); 
+
+                console.log('esto es boxInfo------->', boxInfo);
+                res.json(boxInfo);
+            }
+
             //es hora de enviar tegramas.
             async function blissBotNoti() {
                 console.log("imageFirst en blissBotNoti function ---->", imageFirst);
@@ -2772,7 +2784,7 @@ routes.post('/account/soldOut', async (req, res)=>{
                             const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                                 chat_id: chatId,
                                 photo: imageFirst, //¡Este artículo ya esta disponible! "Monopatin MK086 (Pro2)"'
-                                caption: `Notificación de Blissenet.com: Available\n\n ${ownerStore} anuncia, ${question} "${titleArticle}"`
+                                caption: `Notificación de Blissenet.com: Available\n\n${ownerStore} anuncio "${titleArticle}" ya se encuestra disponible.`
                             });
             
                             console.log('--------------------------- BlissBot----------------------------');
@@ -2790,28 +2802,18 @@ routes.post('/account/soldOut', async (req, res)=>{
                 await Promise.all(promises);
             }   
 
-            async function resetADS(){
-                console.log("resetADS() ---->")
-                console.log("Esto es id ---->", id)
-                const resultSearch = await modelItems.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });            
-                boxInfo.push(resultSearch);
-                console.log('esto es resultSearch debemo sverificar que realmente borro el array purchaseTime', resultSearch );
-                //console.log('esto es boxInfo------->', boxInfo); 
 
-                console.log('esto es boxInfo------->', boxInfo);
-                res.json(boxInfo);
-            }
 
             async function ejecutarFunciones() {
                 try {
                     await sendindNotification();
                     console.log("sendindNotification ejecutado correctamente.");
-            
-                    await blissBotNoti();
-                    console.log("blissBotNoti ejecutado correctamente.");
 
                     await resetADS();
                     console.log("resetADS ejecutado correctamente.");
+
+                    await blissBotNoti();
+                    console.log("blissBotNoti ejecutado correctamente.");
             
                 } catch (error) {
                     const errorMessage = error.message || "Ha habido un error, intente luego.";
@@ -2874,6 +2876,12 @@ routes.post('/account/soldOut', async (req, res)=>{
                 }
             }    
 
+            async function resetADS(){
+                const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
+                boxInfo.push(resultSearch);
+                res.json(boxInfo);
+            }
+
             //es hora de enviar tegramas.
             async function blissBotNoti() {
                 console.log("imageFirst en blissBotNoti function ---->", imageFirst);
@@ -2897,7 +2905,7 @@ routes.post('/account/soldOut', async (req, res)=>{
                             const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                                 chat_id: chatId,
                                 photo: imageFirst,
-                                caption: `Notificación de Blissenet.com: Available\n\n ${ownerStore} anuncia, ${question} "${titleArticle}"`
+                                caption: `Notificación de Blissenet.com: Available\n\n${ownerStore} anuncio "${titleArticle}" ya se encuestra disponible.`
                             });
             
                             console.log('--------------------------- BlissBot----------------------------');
@@ -2915,22 +2923,18 @@ routes.post('/account/soldOut', async (req, res)=>{
                 await Promise.all(promises);
             }                 
 
-            async function resetADS(){
-                const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
-                boxInfo.push(resultSearch);
-                res.json(boxInfo);
-            }
 
             async function ejecutarFunciones() {
                 try {
                     await sendindNotification();
                     console.log("sendindNotification ejecutado correctamente.");
                    
+                    await resetADS();
+                    console.log("resetADS ejecutado correctamente.");
+
                     await blissBotNoti();
                     console.log("blissBotNoti ejecutado correctamente.");
 
-                    await resetADS();
-                    console.log("resetADS ejecutado correctamente.");
             
                 } catch (error) {
                     const errorMessage = error.message || "Ha habido un error, intente luego.";
