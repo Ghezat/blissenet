@@ -1932,12 +1932,10 @@ routes.post('/account/followStore', async(req, res)=>{
     
             //const elqueSigue = await modelProfile.findOne({ indexed : user });
             // ya tenemos este objeto "searchProfile" asi que no hace falta volverlo a buscar 
-            const tiendaAseguir = await modelProfile.findOne({ indexed : userOfStore }, {username : 1, indexed : 1, bannerPerfil : 1 } );
+            const tiendaAseguir = await modelProfile.findOne({ indexed : userOfStore }, {username : 1, indexed : 1} );
             console.log("-------------------------------------")
             //console.log("elqueSigue >>", searchProfile);
             console.log("tiendaAseguir >>", tiendaAseguir); //esta es la tienda que vamos a seguir
-            const banner = tiendaAseguir.bannerPerfil[0].url;
-            console.log("banner >>", banner); 
 
             const sigoEstaTienda = await modelProfile.findOne({ indexed : user, favoritestores : userOfStore  }, { username: 1, favoritestores: 1 });
             console.log("sigoEstaTienda -------->", sigoEstaTienda); // null o envia un objeto
@@ -1979,6 +1977,7 @@ routes.post('/account/followStore', async(req, res)=>{
 
                 const usernameElqueSigue = searchProfile.username; 
                 const avatar = searchProfile.avatarPerfil[0].url; const avatarDefault = searchProfile.mailhash;
+                const banner = searchProfile.bannerPerfil[0].url;
                 const usernameTiendaAseguir = tiendaAseguir.username; 
                 //userOfStore = al indexed 
                 console.log("Esto es avatar>>", avatar);
