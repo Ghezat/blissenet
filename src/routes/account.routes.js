@@ -2030,7 +2030,7 @@ routes.post('/account/followStore', async(req, res)=>{
                     const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                         chat_id: chatId,
                         photo: banner, //¡Este artículo ya esta disponible! "Monopatin MK086 (Pro2)"'
-                        caption: `Message`
+                        caption: Message
                     })
                     .then(response => {
                         console.log('Mensaje enviado con éxito:', response.data);
