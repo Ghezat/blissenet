@@ -1928,13 +1928,16 @@ routes.post('/account/followStore', async(req, res)=>{
     
          
         if (searchProfile){
+
     
             //const elqueSigue = await modelProfile.findOne({ indexed : user });
             // ya tenemos este objeto "searchProfile" asi que no hace falta volverlo a buscar 
-            const tiendaAseguir = await modelProfile.findOne({ indexed : userOfStore }, {username : 1, indexed : 1} );
-            //console.log("-------------------------------------")
+            const tiendaAseguir = await modelProfile.findOne({ indexed : userOfStore }, {username : 1, indexed : 1, bannerPerfil : 1 } );
+            console.log("-------------------------------------")
             //console.log("elqueSigue >>", searchProfile);
             console.log("tiendaAseguir >>", tiendaAseguir); //esta es la tienda que vamos a seguir
+            const banner = tiendaAseguir.bannerPerfil[0].url;
+            console.log("banner >>", banner); 
 
             const sigoEstaTienda = await modelProfile.findOne({ indexed : user, favoritestores : userOfStore  }, { username: 1, favoritestores: 1 });
             console.log("sigoEstaTienda -------->", sigoEstaTienda); // null o envia un objeto
@@ -1973,7 +1976,6 @@ routes.post('/account/followStore', async(req, res)=>{
 
             } else {
                 console.log("No sigo esta tienda, es hora de seguirla", sigoEstaTienda);
-                
 
                 const usernameElqueSigue = searchProfile.username; 
                 const avatar = searchProfile.avatarPerfil[0].url; const avatarDefault = searchProfile.mailhash;
@@ -2022,11 +2024,13 @@ routes.post('/account/followStore', async(req, res)=>{
                 }
 
                 async function blissBotNoti(){
+                    console.log("banner dentro de blissBotNoti() >>", banner); 
                     const Message = `Notificación de Blissenet.com: Follow me\n\n¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también.`;
 
-                    axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                         chat_id: chatId,
-                        text: Message,
+                        photo: banner, //¡Este artículo ya esta disponible! "Monopatin MK086 (Pro2)"'
+                        caption: `Message`
                     })
                     .then(response => {
                         console.log('Mensaje enviado con éxito:', response.data);
@@ -2041,43 +2045,43 @@ routes.post('/account/followStore', async(req, res)=>{
 
             
                     Follow()
-                    .then(()=>{
-                        Notification()
-                            .then(()=>{
-                                res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
-                            })
-                            .catch((error)=>{
-                                res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
-                            })
-                        
-                    })
-                    .catch((error)=>{
-                        res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
-                    })
+                        .then(()=>{
+                            Notification()
+                                .then(()=>{
+                                    res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
+                                })
+                                .catch((error)=>{
+                                    res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
+                                })
+                            
+                        })
+                        .catch((error)=>{
+                            res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
+                        })
 
                 } else {
 
                     Follow()
-                    .then(()=>{
-                        Notification()
-                            .then(()=>{
-                                blissBotNoti()
-                                    .then(()=>{
-                                        res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
-                                    })
-                                    .catch((error)=>{
-                                        res.json({ "type" : "Error", "message" : "Ha habido un error en  blissBotNotification(), intente luego"});
-                                    })
-                                
-                            })
-                            .catch((error)=>{
-                                res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
-                            })
-                        
-                    })
-                    .catch((error)=>{
-                        res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
-                    })
+                        .then(()=>{
+                            Notification()
+                                .then(()=>{
+                                    blissBotNoti()
+                                        .then(()=>{
+                                            res.json({ "type" : "Following", "note" : "Tienda guardada y siguiendo" });
+                                        })
+                                        .catch((error)=>{
+                                            res.json({ "type" : "Error", "message" : "Ha habido un error en  blissBotNotification(), intente luego"});
+                                        })
+                                    
+                                })
+                                .catch((error)=>{
+                                    res.json({ "type" : "Error", "note" : "Ha habido un error em Notificaction(), intente luego"});        
+                                })
+                            
+                        })
+                        .catch((error)=>{
+                            res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
+                        })
 
                 }    
 

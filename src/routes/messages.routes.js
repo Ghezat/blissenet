@@ -45,6 +45,7 @@ routes.get('/myaccount/messenger', async (req,res)=>{
         const searchMessageInbox1 = await modelMessages.find( { $and: [{ userId : userId }, { typeNote : "availability-noti" }, {answer: "waiting"} ] } );
         
         searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
+        searchBoxMessageInbox.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); //aqui ordenamos de menor a mayor por fecha
         searchMessageInbox = searchBoxMessageInbox; 
         console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchMessageInbox);
        
@@ -52,7 +53,7 @@ routes.get('/myaccount/messenger', async (req,res)=>{
    
         console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
 
-        const searchMessageOutbox = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } );
+        const searchMessageOutbox = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } ).sort({ createdAt: 1 }); // 1 para orden ascendente, -1 para descendente;
         const searchMessageOutboxAlert = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
         countMessagesOutbox = searchMessageOutboxAlert.length;
 

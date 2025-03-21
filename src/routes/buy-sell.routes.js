@@ -15,6 +15,9 @@ const modelNautical = require('../models/nautical.js');
 const modelService = require('../models/services.js');
 const user = require('../models/user.js');
 
+//este Token es la KEY del bot de Telegram
+const Token =  process.env.Token_Bot;
+
 const cloudinary = require('cloudinary').v2;//esto no tendrá cambio
 
 cloudinary.config({
@@ -62,7 +65,7 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
         const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
         const searchProfile = await modelProfile.find({ indexed : user._id });
-
+        
         console.log('He llegado al apartado de buy&sell');
         const buyselle = req.params; //todos los datos necesarios para la compraVenta
         const userBuy = req.params.username; //aqui el username del comprador
@@ -70,8 +73,12 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
         const depart = req.params.depart; //aqui el department
         const idProduct = req.params.id; //aqui el id del articulo, producto o servicio.
         let indexed, emailSell, emailBuy;
-
-
+        let image; //esta variable se declara afuera para luego usar en la funcion de envio de Telegrama.
+        let titleArticle; //esta variable se declara afuera para luego usar en la funcion de envio de Telegrama.
+        
+        //esto lo usare para el envio del telegrama.
+        const chatId = await modelUser.findOne( {username : userSell}, { _id: 0, "blissBot.chatId" : 1 });
+  
         //crear el correo del vendedor y enviarlo, caso artes e items
         function mailSell(emailSell, title){
         
@@ -252,7 +259,7 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
       
         }
 
-
+        //Objetivo de esta funcion es buscar los correos de ambas partes
       async function searchData(){
 
         const searchIndexed = await modelProfile.find( { username : userSell } );
@@ -281,8 +288,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
             const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-            const image = search.images[0].url;
+            image = search.images[0].url;
             //console.log("image ---->", image);
+            titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
             async function downloadImgToUpload(){
@@ -354,8 +362,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
             //console.log("Este es el resultado de la busqueda de la coleccion items, aqui el objeto--->", search);
             
             const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-            const image = search.images[0].url;
+            image = search.images[0].url;
             //console.log("image ---->", image);
+            titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
             async function downloadImgToUpload(){
@@ -426,8 +435,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
             //console.log("Este es el resultado de la busqueda de la coleccion airplane, aqui el objeto--->", search);
             
             const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-            const image = search.images[0].url;
+            image = search.images[0].url;
             //console.log("image ---->", image);
+            titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
             async function downloadImgToUpload(){
@@ -497,8 +507,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
             const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-            const image = search.images[0].url;
+            image = search.images[0].url;
             //console.log("image ---->", image);
+            titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
             async function downloadImgToUpload(){
@@ -568,8 +579,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
             const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-            const image = search.images[0].url;
+            image = search.images[0].url;
             //console.log("image ---->", image);
+            titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
             async function downloadImgToUpload(){
@@ -638,8 +650,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
             const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-            const image = search.images[0].url;
+            image = search.images[0].url;
             //console.log("image ---->", image);
+            titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
             async function downloadImgToUpload(){
@@ -724,8 +737,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
             const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
-            const image = search.images[0].url;
+            image = search.images[0].url;
             //console.log("image ---->", image);
+            titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
             async function downloadImgToUpload(){
@@ -797,8 +811,52 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
           //la invoice es el ultimo producto realizado
     
       }
+
+      async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+          const Message = `Notificación de Blissenet.com: Sell\n\n¡Felicidades! Tienes una venta pendiente de tu artículo "${titleArticle}". Sin dilaciones anda y atiende a tu comprador, y recuerda pedirle te califique al terminar su compra.`;
+    
+          axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+              chat_id: chatId,
+              photo: image,
+              caption: Message
+          })
+          .then(response => {
+              console.log('--------------------------- BlissBot----------------------------');
+              console.log('Mensaje enviado con éxito:', response.data);
+          })
+          .catch(error => {
+              console.log('--------------------------- BlissBot----------------------------');
+              console.error('Error al enviar el mensaje:', error.response.data);
+          });
+  
+      }
       
-      searchData()
+      if (chatId){
+          //aqui activamos las funciones para los vendedores que no tengan chatId
+          searchData()
+          .then(()=>{
+            departEject()
+                .then(()=>{
+                  blissBotNoti()
+                    .then(()=>{
+                      console.log("Compra ejecutada satisfactoriamente");
+                    })
+                    .catch((error)=>{
+                      console.log("Ha ocurrido un error en blissBotNoti()", error);
+                    })
+                  
+                })
+                .catch((error)=>{
+                  console.log("Ha ocurrido un error en departEject()", error);
+                })
+          })
+          .catch((error)=>{
+            console.log("Ha ocurrido un error en searchData()", error);
+          })
+
+      } else {
+        //aqui activamos las funciones para los vendedores que no tengan chatId
+        searchData()
         .then(()=>{
           departEject()
             .then(()=>{
@@ -811,6 +869,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
         .catch((error)=>{
           console.log("Ha ocurrido un error en searchData()", error);
         })
+      }
+
+
 
   
   } catch (error) {
