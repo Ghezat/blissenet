@@ -496,12 +496,14 @@ routes.post('/message', async(req, res)=>{
     let minuFormatted = String(minu).padStart(2, '0');
     const times = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
 
-    async function blissBotNoti(titleArticle, chatId){
+    async function blissBotNoti(titleArticle, urlImageArticle, chatId){
         const Message = `Notificación de Blissenet.com: Message\n\n¡Hola! Tienes una pregunta pendiente sobre tu artículo "${titleArticle}". Tu pronta respuesta es clave para iniciar una exitosa venta. ¡No dejes pasar la oportunidad!`;
 
-        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+
+        axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
             chat_id: chatId,
-            text: Message,
+            photo: urlImageArticle,
+            caption: Message
         })
         .then(response => {
             console.log('--------------------------- BlissBot----------------------------');
@@ -547,7 +549,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
         
         res.json(saveMessage);
@@ -576,7 +578,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -602,7 +604,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -628,7 +630,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -654,7 +656,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -681,7 +683,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage)
@@ -707,7 +709,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -734,7 +736,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage);
@@ -760,7 +762,7 @@ routes.post('/message', async(req, res)=>{
         console.log("chatId ---->", chatId);
 
         if (chatId){
-            blissBotNoti(titleArticle, chatId)
+            blissBotNoti(titleArticle, urlImageArticle, chatId)
         }
 
         res.json(saveMessage);        

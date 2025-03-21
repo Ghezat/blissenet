@@ -89,6 +89,7 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
     console.log("** Aqui el objeto actualizado ***",response);
     const userId = response.userId; //66ab9dc1b8c25e5528f4ea9d -->string
     const titleArticle = response.titleArticle; //string
+    const urlImageArticle = response.urlImageArticle; //url de imagen
 
     //descubrimos el chatId del user de la Tienda si posee
     const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(userId));
@@ -96,15 +97,16 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
     console.log("chatId ---->", chatId);
 
     if (chatId){
-        blissBotNoti(titleArticle, chatId)
+        blissBotNoti()
     }
 
-    async function blissBotNoti(titleArticle, chatId){
+    async function blissBotNoti(){
         const Message = `Notificación de Blissenet.com: Message\n\n¡Hola! Te han respondido la pregunta que has hecho sobre "${titleArticle}". No pierdas tu artículo mira la respuesta ahora en Blissenet.com`;
 
-        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+        axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
             chat_id: chatId,
-            text: Message,
+            photo: urlImageArticle,
+            caption: Message
         })
         .then(response => {
             console.log('--------------------------- BlissBot----------------------------');

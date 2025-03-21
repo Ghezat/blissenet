@@ -2757,7 +2757,7 @@ routes.post('/account/soldOut', async (req, res)=>{
                 //console.log('esto es boxInfo------->', boxInfo); 
 
                 console.log('esto es boxInfo------->', boxInfo);
-                res.json(boxInfo);
+                res.json(boxInfo); //enviamos el resultado rapido para que actualice en el fronted mientras el backend se queda enviando telegramas
             }
 
             //es hora de enviar tegramas.
@@ -2879,7 +2879,7 @@ routes.post('/account/soldOut', async (req, res)=>{
             async function resetADS(){
                 const resultSearch = await modelArtes.findByIdAndUpdate( id, { $set: { purchaseTime: [] } },{ new: true });
                 boxInfo.push(resultSearch);
-                res.json(boxInfo);
+                res.json(boxInfo); //enviamos el resultado rapido para que actualice en el fronted mientras el backend se queda enviando telegramas
             }
 
             //es hora de enviar tegramas.
@@ -3243,7 +3243,7 @@ routes.post('/account/spread', async (req, res)=>{
                         chat_id: chatId,
                         photo: imageFirst,
                         caption: `Notificación de Blissenet.com: Spread\n\n ${Note} "${title}"`
-                    });
+                    })
     
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
