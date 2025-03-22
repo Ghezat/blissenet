@@ -628,8 +628,7 @@
                                   <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="viewRateStore" data-bs-dismiss="modal" aria-label="Close"> 
                                     
                                     <span class="mt-2">
-                                      "¡Hola! Para poder seguir a esta tienda y disfrutar de todas las actualizaciones y ofertas exclusivas, necesitas tener una cuenta en Blissenet. Iniciar sesión te permitirá no solo seguir a tus tiendas favoritas, 
-                                      sino también poder calificarlas, tener contacto directo con ellos y un historial de tus interacciones. ¿Te gustaría crear una cuenta ahora? Es rápido y fácil."
+                                      "¡Hola! Para seguir a esta tienda y disfrutar de actualizaciones y ofertas exclusivas, necesitas una cuenta en Blissenet. Iniciar sesión te permitirá seguir tus tiendas favoritas, calificarlas y tener un historial de interacciones. ¿Te gustaría crear una cuenta ahora? Es rápido y fácil."
                                     </span>
 
                                   </div> 
@@ -637,7 +636,7 @@
                                 </div>
                                 <div class="containerMessage">
                                   <hr>
-                                  <p class="mx-4 py-0"> 
+                                  <p class="mx-3 py-0"> 
                                       Puedes logearte aqui <a href="/myaccount/signin"> Login </a> en caso que no tengas un registro puedes hacerlo en el siguiente enlace <a href="/myaccount/signup"> Registro </a>. 
                                   </p>
                                 
@@ -805,7 +804,7 @@
                         </div>
                       </div>
                       
-                      <!-- Modal encuesta fallida cuando faltan pregunta spro respodner-->
+                      <!-- Modal encuesta fallida cuando faltan preguntas por respodner-->
                       <div class="modal fade" id="staticSurveyFail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticSurveyFail" aria-hidden="true">
                         <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                             <div class="modal-content">
@@ -828,6 +827,32 @@
                             </div>
                         </div>
                       </div>
+
+                      <!-- Modal de encuesta para usuarios NO Logeados -->
+                      <div class="modal fade" id="staticSurveyNoLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticSurveyNoLogin" aria-hidden="true">
+                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="staticComprarLabel">¡No estas Logeado!</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-around align-items-center my-1">
+
+                                  <div class="containerMake d-flex flex-column justify-content-start" > 
+                                    <p>Para hacer encuestas en las tiendas debes estar logeado</p>
+                                    <span class="my-2">
+                                      Puedes logearte aqui <a href="/myaccount/signin"> Login </a> en caso que no tengas un registro puedes hacerlo en el siguiente enlace <a href="/myaccount/signup"> Registro </a>. 
+                                    </span>
+
+                                  </div> 
+
+                                </div>
+
+                            </div>
+                        </div>
+                      </div>
+
+
 
                   <div class="containerWorkSpace"> 
                     <!-- bloque Workspace -->
@@ -1494,20 +1519,7 @@
 
                             <% }; %>  
 
-                      <% } else { %>
-                      
-                        <div class="contentNoUser d-flex flex-column justify-content-center py-4 px-2">
 
-                          <h5 class="mx-4 py-3"> ¡Las encuestas solo podrán ser realizadas por usuarios que esten logeados! </h5>
-                          <p class="mx-4 py-0"> "¡Hola! Para poder hacer encuestas, seguirla y disfrutar de ofertas exclusivas, necesitas tener una cuenta en Blissenet, 
-                            ¿Te gustaría crear una cuenta ahora? Es rápido y fácil."
-                          </p>
-
-                          <p class="mx-4 py-0"> 
-                            Puedes logearte aqui <a href="/myaccount/signin"> Login </a> en caso que no tengas un registro puedes hacerlo en el siguiente enlace <a href="/myaccount/signup"> Registro </a>. 
-                          </p>
-
-                        </div>
                       <% }; %>      
                     
                      </div>
@@ -3696,22 +3708,28 @@ if (btnFaqs){
 }  
 
 if (btnSurvey){
-    const surveyId = document.getElementById('surveyId');
+    const surveyId = document.getElementById('surveyId'); //existira solo cuando alguien este logeado
         
     btnSurvey.addEventListener('click', ()=>{
 
       //aqui vamos hacer la consulta.
       const indexed = store_indexed.value; //dueño de la tienda          
-      const surveyIdValue =  surveyId.value;
+      
 
-      const datos = {
-        indexed,
-        surveyId: surveyIdValue,
-      };
+      //verificamos que el vivitante realmente exista.
 
-      console.log("datos ->", datos);
+      if (surveyId){
+        const surveyIdValue =  surveyId.value; //visitante 
+        //existe un valor en surveyIdValue
 
-      //hacemos una consulta para evaluar si este usuario ya ha realizado la encuesta en el caso que exista.
+            const datos = {
+              indexed,
+              surveyId: surveyIdValue,
+            };
+
+            console.log("datos ->", datos);
+
+            //hacemos una consulta para evaluar si este usuario ya ha realizado la encuesta en el caso que exista.
             fetch('/account/survey/search', {
 
               method: "post",
@@ -3782,7 +3800,7 @@ if (btnSurvey){
 
                     }
 
-           
+          
                 })
               .catch((error)=> {
                 console.log('Ha ocurrido un error')
@@ -3803,11 +3821,21 @@ if (btnSurvey){
                 irATopBar() //nos llevan al lugar que se debe en el DOM
               })    
 
- 
+
               efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
               efectSoundExpan.play().catch(error => {
                   console.error("Error al reproducir el sonido:", error);
               });
+
+      } else {
+        console.log("No hay nadie logeado asi que enviamos un modal");
+        //staticSurveyNoLogin   ->id modal que queremos hacer ver.
+        // Crear una instancia del modal de Bootstrap
+        var myModal = new bootstrap.Modal(document.getElementById('staticSurveyNoLogin'));
+        // Mostrar el modal
+        myModal.show();
+
+      }      
 
     });
   }    
@@ -4424,7 +4452,6 @@ if (purchaseTime){
               if (code === 0){
                 console.log("Como no la ha hecho vamos a ponerle un mensaje en pantalla invitandole hacer la encuesta")
 
-                
                 // Muestra el modal
                 myModal.show();
 

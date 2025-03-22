@@ -77,8 +77,9 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
         let titleArticle; //esta variable se declara afuera para luego usar en la funcion de envio de Telegrama.
         
         //esto lo usare para el envio del telegrama.
-        const chatId = await modelUser.findOne( {username : userSell}, { _id: 0, "blissBot.chatId" : 1 });
-  
+        const searchChatId = await modelUser.findOne( {username : userSell}, { _id: 0, "blissBot.chatId" : 1 });
+        const chatId = searchChatId.blissBot.chatId; //este es el chatId del user.
+
         //crear el correo del vendedor y enviarlo, caso artes e items
         function mailSell(emailSell, title){
         
@@ -813,8 +814,12 @@ routes.get('/buysell-one/direct/:username/:usernameSell/:depart/:id', async(req,
       }
 
       async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
-          const Message = `Notificación de Blissenet.com: Sell\n\n¡Felicidades! Tienes una venta pendiente de tu artículo "${titleArticle}". Sin dilaciones anda y atiende a tu comprador, y recuerda pedirle te califique al terminar su compra.`;
-    
+          console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+          const Message = `Notificación de Blissenet.com: Sell\n\n¡Felicidades! Tienes una venta pendiente de tu artículo "${titleArticle}".  Sin dilaciones anda y atiende a tu comprador, y recuerda pedirle te califique al terminar su compra.`;
+          console.log("titleArticle --->", titleArticle);
+          console.log("image --->", image);
+          console.log("chatId --->", chatId);          
+
           axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
               chat_id: chatId,
               photo: image,

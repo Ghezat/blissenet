@@ -498,7 +498,9 @@ routes.post('/message', async(req, res)=>{
 
     async function blissBotNoti(titleArticle, urlImageArticle, chatId){
         const Message = `Notificación de Blissenet.com: Message\n\n¡Hola! Tienes una pregunta pendiente sobre tu artículo "${titleArticle}". Tu pronta respuesta es clave para iniciar una exitosa venta. ¡No dejes pasar la oportunidad!`;
-
+        console.log("titleArticle --->", titleArticle);
+        console.log("urlImageArticle --->", urlImageArticle);
+        console.log("chatId --->", chatId);
 
         axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
             chat_id: chatId,
