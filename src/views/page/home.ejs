@@ -499,11 +499,11 @@
         let modalGetCountry = new bootstrap.Modal(document.getElementById('staticGetCountry'));
         modalGetCountry.show();
 
-        //hacemos la llamada a la API de tosos los paises.
+        //hacemos la llamada a la API de todos los paises.
         fetch('https://restcountries.com/v3.1/all')
           .then(response => response.json())
           .then(data=> {
-            //console.log("data -->", data)
+            console.log("data -->", data)
             data.sort((a,b)=> {
               if (a.name.common < b.name.common){
                 return -1; //a viene antes que b
@@ -601,7 +601,7 @@
 
     } else {
       //el usuario ya tiene un usuario definido.
-      console.log("el usuario ya tiene un usuario definido.")
+      console.log("el usuario ya tiene un pais definido.")
       console.log("seeMarket -------->", seeMarket)
       countryNav.innerText = seeMarket;
 
