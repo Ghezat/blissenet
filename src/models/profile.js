@@ -9,8 +9,14 @@ const SchemaProfile = new Schema({
     gender : { type : String }, //sexo masculino o femenino
     company : { type : String }, //nombre de la compañia/empresa
     companyRif : { type : String }, //identificacion de la empresa
-    states : { type : String },  //estado o provincia
-    cities : { type : String },  //ciudades o pueblos
+    geolocation : { type : Object}, //objeto donde guardamos las coordenadas geograficas del este susuario.
+    country : { type : String },  //pais
+    countryCode : { type : String },  //codigo del pais
+    state : { type : String },  //estado o provincia
+    quarter : { type : String },
+    cityBlock : { type : String },
+    postCode : { type : String },
+    
     address : { type : String }, //direccion del ususario (dato importante para sus futuras facturas). Ultimo atributo creado. 
     phone : { type : String },
     phoneAlt : { type : String },
@@ -33,7 +39,7 @@ const SchemaProfile = new Schema({
     gallery : { type : Object, default : 
         { carouselOffert : { show : false }, sectionMedia : { show : false, data : [] }, carouselImages : { show : false, data : [] }, carouselBanner : { show : false, data : [] } }}, // Este objeto tiene internamente 4 objetos para poder manejar todos los recursos que estaran en galeria.
     infobliss : { type : Object, default : 
-        { policy : { show : false, data : [] }, faq : { show : false, data : [] }, survey : { show : false, scheme : [] }, map : { show : false, data : [] } }}, // Este objeto tiene internamente 4 objetos para poder manejar todos los recursos que estaran en infobliss.
+        { policy : { show : false, data : [] }, faq : { show : false, data : [] }, survey : { show : false, scheme : [] }, map : { show : false }}}, // Este objeto tiene internamente 4 objetos para poder manejar todos los recursos que estaran en infobliss.
     //dentro de survey.scheme : [ { surveyId: "123478981153", surveyTitle: "Encuesta de satisfaccion 2025", surveyTime: '10-3-2025',  surveyData: [ { question : "pregunta1", boxResponses : ["Si, "No", "Quizas"] }, { question : "pregunta2", boxResponses : ["Likert"] }, {...} ]   } ]
     paused : { type: Boolean, default: false }, //por default nace false. este campo se utilizará para impedir que un usuario moroso con sus impagos pueda crear, editar y eliminar publicaciones. será la unica forma existente para presionar a los usuarios morosos. 
     view : { type : Number, default: 0  }, //este campo permite tener la cantidad de veces que entran en la tienda. 

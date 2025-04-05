@@ -13,6 +13,8 @@
     const linkOptions = document.querySelectorAll('.linkOptions'); 
     
 
+
+
     hColor()
 
     function hColor(){
@@ -24,7 +26,7 @@
             mainTheme.classList.remove('bg-dark');
             navHead.style.backgroundColor = "#f9f9f9";
             navHead.classList.add('navbar-light');
-            logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span>`
+            logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="countryNav ms-1" style="font-size: 12px">  </span> </span>`
             logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
  
             controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'
@@ -46,7 +48,7 @@
             mainTheme.classList.add('bg-dark');
             navHead.style.backgroundColor = "rgb(27, 27, 27)";
             navHead.classList.add('navbar-dark');
-            logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span>`
+            logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="countryNav ms-1" style="font-size: 12px">  </span> </span>`
             logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
            
             controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
@@ -78,7 +80,7 @@
         navHead.style.backgroundColor = "rgb(27, 27, 27)";
         navHead.classList.add('navbar-dark');
         navHead.classList.remove('navbar-light');
-        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span>`
+        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="countryNav ms-1" style="font-size: 12px">  </span> </span>`
         logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
       
         controlHead.innerHTML = '<img src="/img/iconoSun.png" class="me-1"  style="width: 20px;">'
@@ -105,7 +107,7 @@
         navHead.style.backgroundColor = "#f9f9f9";
         navHead.classList.add('navbar-light');
         navHead.classList.remove('navbar-dark');
-        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="ms-1" style="font-size: 12px"> VE </span> </span>`
+        logoBlissenet.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <span> Blissenet  <span class="countryNav ms-1" style="font-size: 12px">  </span> </span>`
         logoBlissenetCom.innerHTML = `<img src="/img/logoBlissenetJonathan.png" style="width: 40px;"> <strong style="font-size: 20px"> Blissenet.com <strong>`;
        
         controlHead.innerHTML = '<img src="/img/iconoMoon.png" class="me-1"  style="width: 20px;">'
@@ -131,6 +133,32 @@
 
     });
 
+
+
+    //siendo este el id del modal "staticGetCountry"
+    //var modalGetCountry = new bootstrap.Modal(document.getElementById('staticGetCountry'));
+    //modalGetCountry.show();
+
+    //alert("hola estoy activo en mercados ");
+    
+
+    //este script coloca el codigo de pais arriba en el logo
+    const seeMarket = document.getElementById('seeMarket').value;
+    const countryNav = document.querySelector('.countryNav');
+
+    console.log("seeMarket ----->", seeMarket)
+
+    if (seeMarket.length === 0) {
+      //el usuario no tiene un seemarket definido. o no tiene un usuario
+    
+    } else {
+
+      //el usuario ya tiene un usuario definido.
+      console.log("el usuario ya tiene un usuario definido.")
+      console.log("seeMarket -------->", seeMarket)
+      countryNav.innerText = seeMarket;
+
+    } 
 
    </script>
 

@@ -1,0 +1,44 @@
+<!-- modal alertGetCountry -->
+<div class="modal fade" id="staticGetCountry" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticGetCountry" aria-hidden="true">
+    <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticGetCountry">Establece tu Mercado</h5>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  -->
+            </div>
+            <div class="modal-body d-flex justify-content-around align-items-center my-1">
+
+                <div class="countrySelect">
+                    <div class="d-flex flex-column justify-content-center align-items-center"> 
+                        <span>
+                            Selecciona el mercado donde vas a trabajar, de esta manera nuestros servidores podrán ofrecerte todos los productos que se comercializan en tu zona.
+                        </span> 
+                    </div> 
+                </div>
+                <div class="countrySelected close">
+                    <div class="d-flex flex-column justify-content-center align-items-center">  
+                        <h5 class="mb-2 mx-3">Mercado seleccionado.</h5>
+                        <img src="/img/checkAnimation.gif" alt="" style="width: 80%">
+                    </div>
+                </div>
+                <div class="containerError close">
+                    <div class="containerFlex d-flex flex-column justify-content-center align-items-center">
+                      <h5 class="my-2 mx-3"> Ha habido un error, intente en unos minutos. </h5>
+                      <img src="/img/error28_2_2025.png" alt="" class="my-2" style="width: 30%">
+                    </div>    
+                </div> 
+
+            </div>
+            <div class="modal-footer selectAndBtn" style="background-image: url(/img/bannerMapaMundy.png);">
+                
+                <div class="input-group d-flex p-2">
+                    <select class="form-control" name="country" id="selectCountry">
+                        <!-- dinamico -->
+                    </select>
+                    <button class="form-control btn btn-primary" id="btnGetCountryMarket"> <i class="bi bi-globe2 me-1"></i> Aceptar </button>
+                </div>
+   
+            </div>
+        </div>
+    </div>
+</div>

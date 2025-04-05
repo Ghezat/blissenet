@@ -93,9 +93,16 @@ width: 100%;
 </style>
 <body class="mainTheme">
     
-
 <main>
 
+  <% if (user) { %>
+    <% const seeMarket = user.seeMarket %>
+    <!-- <% const idUser = user._id %> -->
+    <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+    <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+      <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+  <% }; %>
+  
 <!-- navegador con buscador homologo a navi-simple -->   
 <nav class="navbar navbar-expand-lg py-3" id="navHead">
     <div class="container-fluid mx-4 navSon" style="width: 100%;">
@@ -265,7 +272,7 @@ width: 100%;
             <% if (countNegotiationsBuySell) { %>    
               <a class="nav-link text-secondary" title="Alert of negotiation"  href="/buysell-list">
               <i class="bi bi-briefcase position-relative">
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
               <%= countNegotiationsBuySell %>
               <!-- <span class="visually-hidden">unread messages</span> -->
               </span>

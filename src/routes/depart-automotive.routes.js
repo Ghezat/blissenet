@@ -154,8 +154,11 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
 
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
-        console.log("Aqui el estado --->",searchProfile[0].states)
-        const state = searchProfile[0].states
+        console.log("Aqui el estado --->",searchProfile[0].state)
+        const state = searchProfile[0].state;
+        const country = searchProfile[0].country;
+        const countryCode = searchProfile[0].countryCode;
+
         const { title, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, price, segment } = req.body
     
 
@@ -266,7 +269,7 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
                 
                 async function createAD(){
 
-                    const Automotive =  new modelAutomotive({ title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, state_province : state, segment  }); 
+                    const Automotive =  new modelAutomotive({ title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment  }); 
                     const AutomotiveSave = await Automotive.save()
                     //console.log(AutomotiveSave);
 

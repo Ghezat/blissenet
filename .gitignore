@@ -1,3 +1,5 @@
 node_modules
 .env
 
+#para instalar el node_modules 
+#npm install

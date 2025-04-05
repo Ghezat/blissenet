@@ -3,7 +3,7 @@
 
 <head>
   <%- include('../partials/head.ejs') %>
-    <title>Blissenet Venezuela</title>
+    <title>Blissenet</title>
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Que es Blissenet?">
@@ -229,6 +229,10 @@
 
     <%- include('../partials/navi-simple.ejs') %>
 
+    <%- include('../partials/modalGeolocation.ejs') %>
+
+
+
       <% if (success) { %>
         <%- include('../alert/success.ejs') %>
       <% }; %>
@@ -241,7 +245,13 @@
         <%- include('../alert/dataLocked.ejs') %>
       <% }; %>
 
-
+      <% if (user) { %>
+        <% const seeMarket = user.seeMarket %>
+        <% const idUser = user._id %>
+        <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+        <input type="hidden" value="<%= idUser %>" id= "idUser">
+          <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+      <% }; %>
       
         <div class="carril m-0"  id="afterNavHead">
     
@@ -464,6 +474,142 @@
 
 
  </script> 
+
+<script>
+  window.addEventListener('load', function() {
+    console.log('El documento está completamente cargado');
+
+    const idUser = document.getElementById('idUser');
+    const seeMarket = document.getElementById('seeMarket').value;
+    const countrySelect = document.querySelector('.countrySelect'); //container del modal donde explica porque debe elegir un pais
+    const countrySelected = document.querySelector('.countrySelected'); //container del modal donde muestra que se ha seleccionado satisfactoraimente.
+    const containerError = document.querySelector('.containerError'); //container del modal donde muestra que ha ocurrido un error.
+    const selectAndBtn = document.querySelector('.selectAndBtn'); //container del modal donde estaba el selector de paises y el boton; la idea es luego esconderlo para que muestre el fondo imagen del mundo
+    const selectCountry = document.getElementById('selectCountry'); //esto es el select de opciones que esta en el modalGeolocation
+    const btnGetCountryMarket =  document.getElementById('btnGetCountryMarket'); //este es el boton de envio del valor del pais seleccioando al backend para ser guardado.
+
+    const countryNav = document.querySelector('.countryNav'); //esto es un span que muestra el codigo del pais en el nav !Important
+
+    console.log("seeMarket -------->", seeMarket)
+    console.log("seeMarket.length -------->", seeMarket.length)
+    if (seeMarket.length === 0) {
+        //el usuario no tiene un seemarket definido.
+
+        //siendo este el id del modal "staticGetCountry"
+        let modalGetCountry = new bootstrap.Modal(document.getElementById('staticGetCountry'));
+        modalGetCountry.show();
+
+        //hacemos la llamada a la API de tosos los paises.
+        fetch('https://restcountries.com/v3.1/all')
+          .then(response => response.json())
+          .then(data=> {
+            //console.log("data -->", data)
+            data.sort((a,b)=> {
+              if (a.name.common < b.name.common){
+                return -1; //a viene antes que b
+              }
+              if (a.name.common > b.name.common){
+                return 1; // a viene despues de b
+              }
+              return 0; //son iguales.
+            });
+
+            const countriesWithCodes = data.map(country => {
+              return {
+                pais: country.name.common,
+                code: country.cca2
+              };
+            });
+
+            //aqui el array de todos los paises ordenados en orden alfabetico con su codigo
+            console.log("countriesWithCodes", countriesWithCodes);
+            
+            countriesWithCodes.forEach((ele)=>{
+              let pais = ele.pais;
+              let code = ele.code;
+              
+              selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}"> ${pais} </option>`
+            })
+
+            btnGetCountryMarket.addEventListener('click', ()=> {
+              btnGetCountryMarket.setAttribute("disabled", ""); // aqui aseguramos que no puedan darle dos veces al boton.
+
+              const selectCountryValue = selectCountry.value; //code
+              const selectCountries = selectCountry.options[selectCountry.selectedIndex];
+              const country = selectCountries.getAttribute('data-pais'); //pais
+              const idUserValue = idUser.value; //id User
+
+              console.log("code :", selectCountryValue);
+              console.log("country :", country);
+              console.log("idUserValue :", idUserValue);
+
+              //ahora vamos a mandar los datos de este usuario para de esta forma enviar y actualizar el mercado de este usuario.
+              
+              const datos = {
+                idUser : idUserValue,
+                countryMarket : country,
+                countryMarketCode : selectCountryValue
+              }
+              
+              fetch('/locationMarket', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {
+                  console.log("llegando de localMarket -->", jsonx);
+                  let code = jsonx.code;
+                  let userUpdate = jsonx.msg;
+                  let countryMarketCode = userUpdate.seeMarket.countryMarketCode;
+                  console.log("countryMarketCode ----->", countryMarketCode) 
+         
+                  console.log("code : ", code);
+                  if (code === 1){
+                    // todo ha resultado positivo. debemos enviar el mensaje de proceso satisfactoria y cerrar el modal
+                    countrySelect.classList.add("close");
+                    selectAndBtn.classList.add("close");
+                    countrySelected.classList.remove("close");
+                    countryNav.innerText = countryMarketCode;
+                    setTimeout(() => {
+                      modalGetCountry.hide(); //este es el modal que cerramos con el metodo hide()
+                    }, 3000);
+                    
+
+                  } else if (code === 0){
+                    // ha habido un error, intente luego.
+                    countrySelect.classList.add("close");
+                    selectAndBtn.classList.add("close");
+                    containerError.classList.remove("close")
+
+                    setTimeout(() => {
+                      modalGetCountry.hide(); 
+                    }, 4000);
+                  }
+                
+                })
+                .catch( err => console.log(err));
+
+            })
+            
+
+          })
+          .catch(error => console.error('Error', error));
+
+
+    } else {
+      //el usuario ya tiene un usuario definido.
+      console.log("el usuario ya tiene un usuario definido.")
+      console.log("seeMarket -------->", seeMarket)
+      countryNav.innerText = seeMarket;
+
+    }
+
+  });
+</script>
+
 <script>
   //script que solicita informacion si es un usuario sin perfil. nos interesa saber si tiene o no tiene perfil creado.
 

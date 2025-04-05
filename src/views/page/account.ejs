@@ -411,8 +411,16 @@
 
   <main class="mainTheme" >
     
+    <% if (user) { %>
+      <% const seeMarket = user.seeMarket %>
+      <!-- <% const idUser = user._id %> -->
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+        <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+    <% }; %>
 
     <%- include('../partials/navi-simple.ejs') %>
+   
 
     <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
 
@@ -437,6 +445,8 @@
         <% const faq = infobliss.faq %>
         <% const survey = infobliss.survey %>
         <% const map = infobliss.map %>
+        <% const geolocation = storeProfile.geolocation %>
+
 
         <input type="hidden" id="StorenameValue" value="<%= store_username %>">
 
@@ -625,7 +635,7 @@
                                 </div>
                                 <div class="modal-body d-flex justify-content-around align-items-center my-1">
 
-                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="viewRateStore" data-bs-dismiss="modal" aria-label="Close"> 
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer"> 
                                     
                                     <span class="mt-2">
                                       "¡Hola! Para seguir a esta tienda y disfrutar de actualizaciones y ofertas exclusivas, necesitas una cuenta en Blissenet. Iniciar sesión te permitirá seguir tus tiendas favoritas, calificarlas y tener un historial de interacciones. ¿Te gustaría crear una cuenta ahora? Es rápido y fácil."
@@ -814,7 +824,7 @@
                                 </div>
                                 <div class="modal-body d-flex justify-content-around align-items-center my-1">
 
-                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" id="viewRateStore" data-bs-dismiss="modal" aria-label="Close"> 
+                                  <div class="containerMake d-flex flex-column justify-content-center align-items-center cursor-pointer" > 
                                     
                                     <span class="my-2">
                                       Es fundamental que todas las preguntas de la encuesta sean respondidas para poder avanzar. Agradecemos su comprensión y colaboración.
@@ -854,7 +864,7 @@
 
 
 
-                  <div class="containerWorkSpace"> 
+                  <div class="containerWorkSpace "> 
                     <!-- bloque Workspace -->
                     <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= bGColorWorkspace %>; position: relative;">
 
@@ -957,7 +967,7 @@
                                   <% } else { %>
                                     <!-- el usuario entra sin haberse logeado  -->
                                     <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
-                                      <button class="popover" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Debes estar logeado para poder calificar.">    
+                                      <button class="popoverNoRate" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Debes estar logeado para poder calificar.">
                                         <i class="bi bi-star" style="font-size: 1rem;"></i>
                                       </button>   
                                     </div> 
@@ -967,20 +977,21 @@
                                 
                                   </div>
                                 </div>
-                              </div>  
+                              </div>
+
                             </div>
 
 
                             <div class="containerAdminMain d-flex flex-column justify-content-center align-items-center" style="margin-right: 13px; z-index : 1">
 
-                             
+                              <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Carrito de compra en desarrollo.">
                                 <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
                                   <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
                                 </div>
+                              </button>  
 
 
-
-                              <button style="background-color: transparent; border: none;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="ChatdeBliss en desarrollo.">
+                              <button class="popoverChatDeBliss" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="ChatdeBliss en desarrollo.">
                                 <div class="contentChatMessage border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
                                   <img src="/img/iconChatMessage.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
                                 </div>
@@ -1376,6 +1387,97 @@
                     </div>
                   </div> 
 
+                                    
+                  <div class="containerViewRatesStore border close" style="background-color: white;">
+                    <div class="containert">
+                      <div class="modal-header" style="background-color: white;">
+                        <h6 class="modal-title">Ver Calificaciones y Opiniones</h6>
+                        <i class="bi bi-x-lg cursor-pointer" id= "btnXCloseViewRate"></i>
+                      </div>
+                      
+                      <div class="row m-0 bodyAnalisi d-flex justify-content-between">
+
+                        <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6 p-0 containerPoint d-flex flex-column justify-content-center align-items-center px-2">
+                            
+                            <p class="pountrateView p-0 mb-1" style="font-size: 40px;"> <!-- 4.8 --> </p>
+                            <div class="boxstarView"> <!-- ***** --> </div>
+                            <p class="countrateView"> <!-- 56 --> </p>
+
+                        </div>
+
+                        <div class="col-xl-9 col-lg-9 col-md-6 col-sm-6 p-0 containerRatePercentBar px-3">
+                                                                  
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%;"> <small class="m-0"> 5 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar5" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 4 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar4" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 3 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar3" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 2 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar2" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+
+                              <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 1 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
+                                <div class="progress py-1 mt-1" id="barStar1" style="width: 90%;">
+                                  <!-- dinamico -->
+                                </div>
+
+                              </div>
+                            
+                        </div>
+                        
+                      </div>
+                      <div class="row m-0 my-3">
+                        <div class="col-12 d-flex py-2" style="overflow-x: auto;">
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRateAll" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">Todos <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate5" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">5 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate4" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">4 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate3" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">3 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate2" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">2 <i class="bi bi-star ms-1"></i> </span> </button>
+                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate1" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">1 <i class="bi bi-star ms-1"></i> </span> </button>
+                        </div>
+                      </div>
+
+                      <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
+                        <!-- dinamico -->
+                      </div>
+                      
+
+                      <div class="bodyFooter d-flex justify-content-end my-2">
+                          <button type="button" class="btn btn-success btnCloseViewRate m-2">Cerrar Calificaciones</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+
                   <div class="containerInfoBliss close"  id="infoblis" style="height: auto; background-color: rgba(255, 255, 255, 0.9); color: #131313;">
                     <!-- este contenedor es donde vamos a mostrar todo lo referente a infoblis para esta tienda -->
                      
@@ -1527,19 +1629,29 @@
                      <div class="containerLocation close"> 
                         
                            
-                          <% const dataMap = map.data %>
+                          
 
-                            <% if (dataMap.length !== 0) { %>
+                            <% if (geolocation.lat !== "") { %>
                                
-                              <input type="hidden" id="mapDataLon" value="<%= dataMap[0].lon %>">
-                              <input type="hidden" id="mapDataLat" value="<%= dataMap[0].lat %>">
+                              <input type="hidden" id="mapDataLon" value="<%= geolocation.lon %>">
+                              <input type="hidden" id="mapDataLat" value="<%= geolocation.lat %>">
 
                               <div id="mapStore" style="height: 500px;"></div>
                         
 
                             <% } else { %>
                               
-                                <span> No hay coordenadas </span>
+                              <div class="contentLocation d-flex flex-column  justify-content-center align-items-center ">
+
+                                <div class="d-flex justify-content-center my-2"> <span> <b> <h4> Geolocalización </h4> </b> </span> </div>
+                                <img src="/img/geolocationIcon.png" alt="" style="width: 200px;">
+                                
+                                
+                                <div class="alert alert-primary py-2 px-5">
+                                    <span> <i class="bi bi-geo-alt me-2"></i> Esta Tienda no posee una ubicación geografica. </span>
+                                </div>
+                                
+                              </div>
 
                             <% }; %>
                             
@@ -1554,96 +1666,7 @@
 
                   </div> 
 
-                  
-                  <div class="containerViewRatesStore closed border" style="background-color: white;">
-                    <div class="containert">
-                      <div class="modal-header" style="background-color: white;">
-                        <h6 class="modal-title">Ver Calificaciones y Opiniones</h6>
-                        <i class="bi bi-x-lg cursor-pointer" id= "btnXCloseViewRate"></i>
-                      </div>
-                      
-                      <div class="row m-0 bodyAnalisi d-flex justify-content-between">
 
-                        <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6 p-0 containerPoint d-flex flex-column justify-content-center align-items-center px-2">
-                            
-                            <p class="pountrateView p-0 mb-1" style="font-size: 40px;"> <!-- 4.8 --> </p>
-                            <div class="boxstarView"> <!-- ***** --> </div>
-                            <p class="countrateView"> <!-- 56 --> </p>
-
-                        </div>
-
-                        <div class="col-xl-9 col-lg-9 col-md-6 col-sm-6 p-0 containerRatePercentBar px-3">
-                                                                  
-                              <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                                <span class="p-0 ms-2" style="width: 10%;"> <small class="m-0"> 5 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                                <div class="progress py-1 mt-1" id="barStar5" style="width: 90%;">
-                                  <!-- dinamico -->
-                                </div>
-
-                              </div>
-
-                              <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 4 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                                <div class="progress py-1 mt-1" id="barStar4" style="width: 90%;">
-                                  <!-- dinamico -->
-                                </div>
-
-                              </div>
-
-                              <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 3 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                                <div class="progress py-1 mt-1" id="barStar3" style="width: 90%;">
-                                  <!-- dinamico -->
-                                </div>
-
-                              </div>
-
-                              <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 2 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                                <div class="progress py-1 mt-1" id="barStar2" style="width: 90%;">
-                                  <!-- dinamico -->
-                                </div>
-
-                              </div>
-
-                              <div class="contentBar d-flex my-1" style="height: 25px;">
-
-                                <span class="p-0 ms-2" style="width: 10%; height: 100%;"> <small class="m-0"> 1 <i class="bi bi-star-fill p-0 m-0"></i> </small>  </span>
-                                <div class="progress py-1 mt-1" id="barStar1" style="width: 90%;">
-                                  <!-- dinamico -->
-                                </div>
-
-                              </div>
-                            
-                        </div>
-                        
-                      </div>
-                      <div class="row m-0 my-3">
-                        <div class="col-12 d-flex py-2" style="overflow-x: auto;">
-                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRateAll" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">Todos <i class="bi bi-star ms-1"></i> </span> </button>
-                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate5" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">5 <i class="bi bi-star ms-1"></i> </span> </button>
-                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate4" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">4 <i class="bi bi-star ms-1"></i> </span> </button>
-                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate3" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">3 <i class="bi bi-star ms-1"></i> </span> </button>
-                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate2" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">2 <i class="bi bi-star ms-1"></i> </span> </button>
-                            <button class="btn btn-secondary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate1" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">1 <i class="bi bi-star ms-1"></i> </span> </button>
-                        </div>
-                      </div>
-
-                      <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
-                        <!-- dinamico -->
-                      </div>
-                      
-
-                      <div class="bodyFooter d-flex justify-content-end my-2">
-                          <button type="button" class="btn btn-success btnCloseViewRate m-2">Cerrar Calificaciones</button>
-                      </div>
-                    </div>
-                  </div>
-                  
                   <!-- cierre de storeProfile -->   
                   
               </div>
@@ -1843,8 +1866,9 @@
 
                     <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserImgDetails d-flex justify-content-around align-items-center">
                         <div class="containerYears my-2 rounded-3 d-flex flex-column align-items-center">
-                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-geo-alt me-1"></i> <small><%= storeProfile.states %></small></p>
-                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-geo me-1"></i> <small><%= storeProfile.cities %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"><i class="bi bi-geo-alt me-1"></i> <small><%= storeProfile.country %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <small><%= storeProfile.state %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <small><%= storeProfile.quarter %></small></p>
                         </div>
                     </div>   
                   </div>
@@ -2037,25 +2061,133 @@
     
   </script>
 
+<script>
+  // popover del carrito de compra
+  // Selecciona el botón con la clase 'popoverCarBuy'
+  const popoverCarBuy = document.querySelector('.popoverCarBuy');
+
+  // Inicializa el popover de Bootstrap
+  const popoverInstanceCar = new bootstrap.Popover(popoverCarBuy);
+
+  // Función para mostrar/ocultar el popover
+  function togglePopoverCar() {
+      const isVisible = popoverInstanceCar._isShown;
+      if (isVisible) {
+        popoverInstanceCar.hide();
+      } else {
+        popoverInstanceCar.show();
+      }
+  }
+
+  // Añade evento al botón
+  popoverCarBuy.addEventListener('click', (event) => {
+      event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
+      togglePopoverCar();
+  });
+
+  // Cierra el popover si se hace clic en cualquier parte de la página
+  document.addEventListener('click', () => {
+      popoverInstanceCar.hide();
+  });
+
+</script>
 
 <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        // Crear el popover
-        var popover = new bootstrap.Popover(tooltipTriggerEl);
-        
-        // Agregar evento para cerrar otros popovers al abrir uno nuevo
-        tooltipTriggerEl.addEventListener('click', function () {
-            // Cerrar todos los popovers abiertos
-            tooltipList.forEach(function (otherPopover) {
-                if (otherPopover._element !== tooltipTriggerEl) {
-                    otherPopover.hide();
-                }
-            });
-        });
+  // popover no logeado para calificar la tienda 
+  // Selecciona el botón con la clase 'popoverNoRate'
+  const popoverNoRate = document.querySelector('.popoverNoRate');
 
-        return popover;
+// Inicializa el popover de Bootstrap
+const popoverInstanceNoRate = new bootstrap.Popover(popoverNoRate);
+
+// Función para mostrar/ocultar el popover
+function togglePopoverNoRate() {
+    const isVisible = popoverInstanceNoRate._isShown;
+    if (isVisible) {
+      popoverInstanceNoRate.hide();
+    } else {
+      popoverInstanceNoRate.show();
+    }
+}
+
+// Añade evento al botón
+popoverNoRate.addEventListener('click', (event) => {
+    event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
+    togglePopoverNoRate();
+});
+
+// Cierra el popover si se hace clic en cualquier parte de la página
+document.addEventListener('click', () => {
+  popoverInstanceNoRate.hide();
+});
+
+</script>
+
+
+<script>
+  
+  // popover chat de bliss 
+  // Selecciona el botón con la clase 'popoverChatDeBliss'
+  const popoverButtonChat = document.querySelector('.popoverChatDeBliss');
+
+  // Inicializa el popover de Bootstrap
+  const popoverInstance = new bootstrap.Popover(popoverButtonChat);
+
+  // Función para mostrar/ocultar el popover
+  function togglePopover() {
+      const isVisible = popoverInstance._isShown;
+      if (isVisible) {
+          popoverInstance.hide();
+      } else {
+          popoverInstance.show();
+      }
+  }
+
+  // Añade evento al botón
+  popoverButtonChat.addEventListener('click', (event) => {
+      event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
+      togglePopover();
+  });
+
+  // Cierra el popover si se hace clic en cualquier parte de la página
+  document.addEventListener('click', () => {
+      popoverInstance.hide();
+  });
+
+
+</script>
+
+<script>
+  // Estos son los popover de los corazones de los anuncios de la tienda.
+  // Selecciona todos los botones con la clase 'popover'
+const popoverButtons = document.querySelectorAll('.popover');
+
+// Inicializa los popovers de Bootstrap
+const popoverInstances = Array.from(popoverButtons).map(button => {
+    return new bootstrap.Popover(button);
+});
+
+// Añade evento a cada botón
+popoverButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Cierra todos los popovers abiertos
+        popoverInstances.forEach(popover => {
+            if (popover._element !== button) {
+                popover.hide();
+            }
+        });
+        // Abre el popover del botón clicado
+        const currentPopover = bootstrap.Popover.getInstance(button);
+        if (currentPopover) {
+            currentPopover.toggle();
+        } else {
+            new bootstrap.Popover(button).show();
+        }
     });
+})
+
+
+
 </script>
 
 <script>
@@ -2364,6 +2496,8 @@
         comment : comment
       };
 
+      console.log("datos a enviar al backend", datos)
+
     fetch('/account/storeRate', {
 
       method: "post",
@@ -2372,7 +2506,11 @@
 
     })
       .then(response =>response.json() )
-      .then( jsonx => console.log (jsonx) )
+      .then( jsonx => {
+        console.log (jsonx)
+        //actualizamos la pagina
+        location.reload();
+      })
       .catch( err => console.log(err));
 
 
@@ -2523,20 +2661,21 @@
   const btnXCloseViewRate = document.getElementById('btnXCloseViewRate'); //icono x para cerrar
   const btnCloseViewRate = document.querySelector('.btnCloseViewRate'); //boton verde para cerrar
 
+
   viewRateStore.addEventListener('click', ()=>{
-    containerWorkSpace.classList.add('closed');
-    containerViewRatesStore.classList.remove('closed');
+    containerWorkSpace.classList.add('close');
+    containerViewRatesStore.classList.remove('close');
   })
 
   btnXCloseViewRate.addEventListener('click', ()=>{
-    containerWorkSpace.classList.remove('closed');
-    containerViewRatesStore.classList.add('closed');
+    containerWorkSpace.classList.remove('close');
+    containerViewRatesStore.classList.add('close');
 
   })
 
   btnCloseViewRate.addEventListener('click', ()=>{
-    containerWorkSpace.classList.remove('closed');
-    containerViewRatesStore.classList.add('closed');
+    containerWorkSpace.classList.remove('close');
+    containerViewRatesStore.classList.add('close');
 
   })
   

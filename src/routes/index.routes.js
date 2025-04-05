@@ -183,6 +183,24 @@ routes.get('/alertNotProfile', async (req, res)=>{
 
 });
 
+routes.post('/locationMarket', async (req, res)=>{
+    try {
+        console.log('Estoy llegando a locationMarket');
+        
+        const { idUser, countryMarket, countryMarketCode } = req.body;
+        console.log(`idUser: ${idUser}, countryMarket: ${countryMarket}, countryMarketCode: ${countryMarketCode}`);
+
+        const updateUser = await modelUser.findByIdAndUpdate(idUser, { $set: { seeMarket: { countryMarket, countryMarketCode } } }, {new: true});
+        console.log("updateUser ---->", updateUser);
+        req.session.user = updateUser //aqui actualizamos la session de user
+        res.json({code : 1, msg : updateUser});
+
+    } catch (error) {
+        console.log("Ha ocurrido un error, intente luego.", error);
+        res.json({code : 0, msg : "Ha ocurrido un error"});
+    }
+});
+
 //top 50 de tiendas mas vistas.
 routes.get('/mosaico-store-view', async (req,res)=>{
     const resultStore = await modelProfile.find().sort({ view : -1 }).limit(50);
@@ -1451,8 +1469,11 @@ routes.post('/myaccount/profile', async (req, res)=>{
 
         const user = req.session.user;
         console.log(req.body);      
-        const {names, identification, dateborn, gender, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
+        const {names, identification, dateborn, gender, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
+        console.log("company, companyRif, country, countryCode, state, quarter, cityBlock, postCode");
+        console.log(company, companyRif, country, state, quarter, cityBlock, postCode);
         let messageProfile;
+        const geolocation = { lon, lat };
         const searchBanner = await modelBannerDefault.find();
 
         if (searchBanner.length !== 0){
@@ -1471,7 +1492,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
                 messageProfile = profileMessage;
             }
 
-            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, states, cities,  phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, geolocation, country, countryCode, state, quarter, cityBlock, postCode, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
             const saveProfile =  await newProfile.save();
             console.log("esto es lo que se registro en la DB ----->",saveProfile);
             req.session.profSuccess = '¡ Perfil creado satifactoriamente !'
@@ -1494,6 +1515,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
 
 });
            
+/* aqui llegan los datos para editar el perfil */
 routes.post('/myaccount/edit/:id', async (req, res)=>{
 
     try {
@@ -1501,8 +1523,9 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         //const user = req.session.user;
         const ID = req.params.id;
         console.log("aqui el parametro", ID);
-        const {names, identification, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
+        const {names, identification, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
         let messageProfile;
+        const geolocation = { lon, lat };
         const result = await modelProfile.findById(ID);
         
         if (!profileMessage || profileMessage.trim() === ""){
@@ -1514,7 +1537,7 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         }
 
         if (result) { 
-            const updates = await modelProfile.findByIdAndUpdate(ID, { names, identification, company, companyRif, states, cities, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok})
+            const updates = await modelProfile.findByIdAndUpdate(ID, { names, identification, company, companyRif, geolocation, country, countryCode, state, quarter, cityBlock, postCode, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok})
             req.session.updateSuccess = "Su perfil ha sido actualizado satisfactoriamente";
         } 
             

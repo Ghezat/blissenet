@@ -208,7 +208,13 @@
             <%- include('../alert/catchError.ejs') %> 
          <% }; %>
 
-         
+         <% if (user) { %>
+            <% const seeMarket = user.seeMarket %>
+            <% const idUser = user._id %>
+            <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+            <input type="hidden" value="<%= idUser %>" id= "idUser">
+              <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+        <% }; %>
          
 
          <% if (user) { %>
@@ -300,23 +306,31 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- creación de estados y ciudades/pueblos -->
-                                                <div class="container d-flex justify-content-between p-0 my-2">
-                
-                                                    <div class="form-group" style="width: 50%;">
-                                                        <select name="states" id="estados" class="form-control" required>
-                                                            <option value="no_state" selected>Selecciona el Estado</option>
-                                                            <option value="Foraneo">Foraneo</option>
-                                                            <!-- los option se crean por medio de un script -->
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group ms-1" style="width: 49%;">
-                                                        <select name="cities" id="ciudades" class="form-control" required>
-                                                            <option value="no_state" selected>Selecciona tu Ciudad</option>
-                                                            <!-- los option se crean por medio de un script -->
-                                                        </select>
-                                                    </div>
-                                                    
+
+                                                <div class="form-group d-flex my-2">
+                                                    <button class="form-control btn-sm btn-outline-secondary" id="btnEditGeolo">Obtener Geolocalización</button>
+                                                </div>
+                                                <div class="input-group flex-nowrap my-2">
+                                                    <span class="input-group-text anchorRRSS"> <i class="bi bi-geo-alt-fill"></i> </span>
+                                                    <input type="text" name="country" class="form-control" id="country"  readonly>
+                                                    <input type="hidden" name="lon" id="longitud">
+                                                    <input type="hidden" name="lat" id="latitud">
+                                                    <input type="hidden" name="countryCode" id="countryCode">
+
+                                                </div>
+                                                <div class="input-group flex-nowrap my-2">
+                                                    <input type="text" name="state" class="form-control" id="state"  readonly>
+                                                    <input type="text" name="quarter" class="form-control" id="quarter"  readonly>
+                                                </div>
+
+                                                <div class="input-group flex-nowrap my-2">
+                                                    <input type="text" name="cityBlock" class="form-control" id="city_block" readonly>
+                                                    <input type="text" name="postCode" class="form-control" id="postcode" readonly>
+                                                </div>                                                
+
+                                                <!-- creación de direccion completa -->
+                                                <div class="form-group my-2">
+                                                    <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección." maxlength="100" required></textarea>
                                                 </div>
 
                                                 <div class="container d-flex justify-content-between p-0 my-2">
@@ -329,11 +343,6 @@
                                                         <input type="tel" name="phoneAlt" placeholder="Un número telefonico alt." class="form-control" maxlength="14">
                                                     </div>
 
-                                                </div>
-
-                                                <!-- creación de direccion completa -->
-                                                <div class="form-group my-2">
-                                                    <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección." maxlength="100" required></textarea>
                                                 </div>
                                                             
                                                 <!-- creación de mensaje de perfil -->
@@ -363,6 +372,10 @@
                                                     <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-tiktok"></i> </label>
                                                     <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
                                                         aria-describedby="addon-wrapping">
+                                                </div>
+
+                                                <div class="alert alert-danger mt-2 close" id="lackGeolocation">
+                                                    <span> <i class="bi bi-geo-alt-fill me-2"></i> Falta Geolocalización </span>
                                                 </div>
                                                 
                                                 <div class="form-group my-3">
@@ -468,42 +481,43 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <!-- edit de estados y ciudades/pueblos -->
-                                                    <div class="container d-flex justify-content-between p-0 my-2">
-                    
-                                                            <div class="form-group" style="width: 50%;">
-                                                                <select name="states" id="estadosEdit" class="form-control" required>
-                                                                    <option value="<%= ele.states %>" selected><%= ele.states %></option>
-                                                                    <option value="Foraneo">Foraneo</option>
-                                                                    
-                                                                </select>
-                                                            </div>
-                                                        
-                                                            <div class="form-group" style="width: 49%;">
-                                                                <select name="cities" id="ciudadesEdit" class="form-control" required>
-                                                                    <option value="<%= ele.cities %>" selected><%= ele.cities %></option>
-                                                                    <!-- los option se crean por medio de un script -->
-                                                                </select>
-                                                            </div>
+                                                    <div class="form-group d-flex my-2">
+                                                        <button class="form-control btn-sm btn-outline-secondary" id="btnEditGeolo">Editar Geolocalización</button>
                                                     </div>
-    
-                                                    <!-- edit phone and phoneAlt -->
-                                                    <div class="container d-flex justify-content-between p-0 my-2">
-    
-                                                            <div class="form-group" style="width: 50%;">
-                                                                <input type="tel" name="phone" placeholder="intro your phone" class="form-control" value="<%= ele.phone %>" maxlength="14" required>
-                                                            </div>
-                                                            <div class="form-group" style="width: 49%;">
-                                                                <input type="tel" name="phoneAlt" placeholder="intro your phone alter" class="form-control" value="<%= ele.phoneAlt %>" maxlength="14">
-                                                            </div>
-    
-                                                    </div>    
-    
+                                                    <div class="input-group flex-nowrap my-2">
+                                                        <span class="input-group-text anchorRRSS"> <i class="bi bi-geo-alt-fill"></i> </span>
+                                                        <input type="text" name="country" class="form-control" id="country" value="<%= ele.country %>" readonly>
+                                                        <input type="hidden" name="lon" id="longitud">
+                                                        <input type="hidden" name="lat" id="latitud">
+                                                        <input type="hidden" name="countryCode" id="countryCode">
+                                                    </div>
+                                                    <div class="input-group flex-nowrap my-2">
+                                                        <input type="text" name="state" class="form-control" id="state" value="<%= ele.state %>" readonly>
+                                                        <input type="text" name="quarter" class="form-control" id="quarter" value="<%= ele.quarter %>" readonly>
+                                                    </div>
+
+                                                    <div class="input-group flex-nowrap my-2">
+                                                        <input type="text" name="cityBlock" class="form-control" id="city_block" value="<%= ele.cityBlock %>" readonly>
+                                                        <input type="text" name="postCode" class="form-control" id="postcode" value="<%= ele.postCode %>" readonly>
+                                                    </div>
+                                                        
                                                     <!-- direccion completa -->
                                                     <div class="form-group my-2">
                                                         <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección."
-                                                        maxlength="100"><%= ele.address %></textarea>
+                                                        maxlength="100" required><%= ele.address %></textarea>
                                                     </div>
+
+                                                    <!-- edit phone and phoneAlt -->
+                                                    <div class="container d-flex justify-content-between p-0 my-2">
+
+                                                        <div class="form-group" style="width: 50%;">
+                                                            <input type="tel" name="phone" placeholder="intro your phone" class="form-control" value="<%= ele.phone %>" maxlength="14" required>
+                                                        </div>
+                                                        <div class="form-group" style="width: 49%;">
+                                                            <input type="tel" name="phoneAlt" placeholder="intro your phone alter" class="form-control" value="<%= ele.phoneAlt %>" maxlength="14">
+                                                        </div>
+
+                                                    </div>    
     
                                                     <!-- mensaje de perfil --> 
                                                     <div class="form-group my-2">
@@ -533,7 +547,11 @@
                                                             <input type="text" name="tiktok" class="form-control" placeholder="Here your link"
                                                             value="<%= ele.tiktok %>">
                                                     </div>
-                        
+
+                                                    <div class="alert alert-danger mt-2 close" id="lackGeolocation">
+                                                        <span> <i class="bi bi-geo-alt-fill me-2"></i> Falta Geolocalización  </span>
+                                                    </div>
+
                         
                                                     <div class="form-group my-3">
                                                         <input type="submit" class="form-control btn btn-secondary" id="btnEditProfile" value="Editar Perfil"> 
@@ -672,6 +690,7 @@
                                 <% const indexed = user._id %> <!-- esto es igual al id user -->
                                 <% let userTelegram = user.blissBot.userTelegram %> <!-- esto es igual al id user -->
                                 <% let chatId = user.blissBot.chatId %> <!-- esto es igual al id user -->
+
 
                                 <!-- seccion BlissBot -->
                                 <div class="card my-2">
@@ -817,6 +836,56 @@
                                     </div>
                                 </div>
                                 
+                                <% const seeMarket = user.seeMarket %> <!-- objeto seeMarket -->
+                                
+
+                                <!-- seccion Mercado de paises -->
+                                <div class="card my-2">
+                                    <div class="card-header d-flex justify-content-between">                                
+                                        Explora un nuevo Mercado <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCountryExplorer"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                
+                                            <div class="input-group my-2">
+                                                <span class="input-group-text"> <i class="bi bi-globe2"></i>  </span>
+                                                <input type="text" class="form-control" id="inpSeeMarket" value="<%= seeMarket.countryMarket %>" readonly>
+                                                <input type="hidden" id="inpSeeMarketCode" value="<%= seeMarket.countryMarketCode %>">
+                                                <span class="input-group-text px-4"> <%= seeMarket.countryMarketCode %> </span>
+                                            </div>
+
+                                            <div class="form-group my-2">
+                                                <select id="selectCountry" class="form-control">
+                                                    
+                                                    <option value="no-selected">Cambiar de mercado</option>
+                                                    <!-- option dinamics -->
+
+                                                </select>
+                                            </div>
+                                                
+                                            <div class="containerAlert my-2 p-0" id="alertBlissBot">
+                                                <!-- alertas dinamicos -->
+
+                                                    <div class="alert alert-primary m-0 close" id="alertSeeCountryCode1">
+                                                        <span> <i class="bi bi-check2-circle me-2"></i> Mercado cambiado satisfactoraimente. </span>
+                                                    </div>
+                                                    <div class="alert alert-danger m-0 close" id="alertSeeCountryCode0">
+                                                        <span> <i class="bi bi-exclamation-circle me-2"></i> Ha habido un Error. </span>
+                                                    </div>
+
+                                            </div>
+
+                                            <div class="form-group my-3">
+                                                <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnChangeCountry" disabled>
+                                                <button class="form-control btn btn-dark close" type="button" id="btnChangeCountryLoading" disabled>
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                    Actualizando ...
+                                                </button> 
+                                            </div>
+
+                                    </div>
+                                </div>
+
                                 <!-- seccion nombre de tienda -->
                                 <div class="card my-2">
                                         <div class="card-header d-flex justify-content-between">                                
@@ -1095,6 +1164,39 @@
                                         </div>
                                         <div class="modal-footer" style="background-image: url('/img/BlissBotBanner1.png'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- modal staticCountryExplorer --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCountryExplorer" -->
+                            <div class="modal fade" id="staticCountryExplorer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticCountryExplorer" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticCountryExplorerTitle">Explora un nuevo Mercado</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body d-flex justify-content-around align-items-center my-1">
+
+                                            <div class="countrySelect">
+                                                <div class="d-flex flex-column justify-content-center align-items-center"> 
+                                                    <p>
+                                                        Blissenet es un marketplace global. Puedes expandir tu e-commerce importando insumos y artículos de otros países. No te limites a solo tu país; pierde el miedo y da el primer paso hacia la globalización mercantil.
+                                                    </p> 
+                                                    <p>
+                                                        Selecciona el país que deseas ver y, en segundos, estarás allí. Ve a los departamentos y observa cómo se mueven.
+                                                     </p> 
+                                                </div> 
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer selectAndBtn" style="background-image: url(/img/bannerMapaMundy.png);">
+                                            
+                                            <div class="input-group d-flex justify-content-end p-2">
+                                                <button class=" btn btn-close"> </button>
+                                            </div>
+                            
                                         </div>
                                     </div>
                                 </div>
@@ -1441,8 +1543,8 @@
                                                                 <span class="me-1"><%= ele.names %></span><br>
                                                                 <!-- <span><%= ele.dateborn %></span> <br> -->
                                                                 <!-- <span>Genero: <%= ele.genero %></span> <br> -->
-                                                                <span class="me-1">Estado: <%= ele.states %></span>
-                                                                <span>Telefono: <%= ele.phone %></span> <br>
+                                                                <p class="my-0 me-1">Ubicación: <%= ele.country %> - <%= ele.state %></p>
+                                                                <p>Telefono: <%= ele.phone %></p> 
 
                                                                 <% if (ele.facebook) { %>
                                                                     <span class="me-3 "><i class="bi bi-facebook me-2"></i><%= ele.facebook %></span>
@@ -1536,7 +1638,7 @@
                                                                             <input type="hidden" value="<%= user.username %>" id="urlStore">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="contentMainQR close" style="width: 100%; background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgb(75, 60, 97) 100%);">
+                                                                    <div class="contentMainQR close" style="width: 100%; background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%)">
                                                                         <div class="contentQR d-flex justify-content-center pb-2 closed" style="width: 100%;">
 
                                                                             <div class="ContentParaDescargarEnPerfil shadow">
@@ -1694,19 +1796,10 @@
                                                             <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheGestorADS"> <i class="bi bi-info-circle mx-1"></i> </div>
                                                         </div>
 
-                                                        <div class="containerCRM my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                            <div class="contentSoonCRM d-flex">    
-                                                                <label class="form-check-label no-select p-0 me-2" for="suicheCRM" title="Activa la opción CRM (Customer Relationship Management) debes tener al menos 1 articulos de cualquier departamento publicado">○ Agenda CRM </label>
-                                                                <div class="form-check form-switch">
-                                                                                                                    
-                                                                    <input class="form-check-input" type="checkbox" id="suicheCRM" name="CRM" value="off" disabled>  <i class="bi bi-lock ms-1"></i> 
 
-                                                                </div>
-                                                            </div>
-                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCRM"> <i class="bi bi-info-circle mx-1"></i> </div>    
-                                                        </div>
 
                                                     </div>
+
                                                     <div class="containerIrATienda d-flex justify-content-end">
 
                                                         <div class="row m-0" style="width: 100%; height: 100%;">
@@ -1754,6 +1847,86 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+        <script>
+            //23 de marzo de 2025 trabajando en este codigo geolocalizacion
+            const btnGeolo = document.getElementById("btnEditGeolo");
+            const lonInp = document.getElementById('longitud');
+            const latInp = document.getElementById('latitud');
+            const countryCodeInp = document.getElementById('countryCode');
+            const countryInp = document.getElementById("country");
+            const stateInp = document.getElementById("state");
+            const quarterInp = document.getElementById("quarter");
+            const city_blockInp = document.getElementById("city_block");
+            const postcodeInp = document.getElementById("postcode");
+        
+            let lat, lon; //declaracion de variables vacias 
+            btnGeolo.addEventListener( "click", function(e) {
+                e.preventDefault();
+                if (navigator.geolocation){
+                    navigator.geolocation.getCurrentPosition(function(position){
+                        lat = position.coords.latitude;
+                        lon = position.coords.longitude;
+                        console.log("lat -----", lat);
+                        console.log("lon -----", lon);
+                        latInp.value = lat;
+                        lonInp.value = lon;
+                        getCountry(lat, lon);
+                    }, function(error){
+                        console.error("Error al obtener Geolocalizacion")
+                    });
+                } else {
+                    console.error("La Geolocalizacion no es soportada por este navegador");
+                }
+        
+                
+                //ahora con las variables lat y lon vamos a obtener el pais con una geocodificacion inversa a (OSM) OpenStreetMap.
+                //peticion a nominatin de osm
+                function getCountry(lat, lon){
+                    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+        
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.address){
+                                const country = data.address.country;
+                                const country_code = data.address.country_code.toUpperCase();
+                                const postcode = data.address.postcode;
+                                const state = data.address.state;
+                                const quarter = data.address.quarter;
+                                const city_block = data.address.city_block;
+        
+                                console.log('data.address ---->', data.address);
+                                console.log('pais ---->', country);
+                                console.log('pais_code ---->', country_code);
+                                console.log('postcode ---->', postcode);
+                                console.log('estado ---->', state);
+                                console.log('divStadal ---->', quarter);
+                                console.log('city_block ---->', city_block);
+        
+                                countryInp.value = country;
+                                countryCodeInp.value = country_code 
+                                stateInp.value = state;
+                                quarterInp.value = quarter;
+                                city_blockInp.value = city_block;
+                                postcodeInp.value = postcode;
+        
+                            } else {
+                                console.log('No se puede encontrar el pais')
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error al obtener el pais', error);
+                        });
+                }
+        
+        
+        
+        
+            });
+        
+        
+        </script>
+        
 
         <script>
             /* bloquear botones de crear perfil al darle click para evitar duplicacion de perfiles */
@@ -1765,17 +1938,30 @@
             let formEditePerfil = document.getElementById('formEditePerfil');
             let btnEditProfile = document.getElementById('btnEditProfile');
             let btnEditingLoading = document.getElementById('btnEditingLoading');
+            let lackGeolocation = document.getElementById('lackGeolocation');
 
             //crear perfil seguridad para evitar duplicacion y efecto spinin
             if (formCreateProfile){
                 formCreateProfile.addEventListener('submit', (e)=>{
                     e.preventDefault();
                     console.log("Enviando datos al backend")
+                    console.log("paisInp ---->", countryInp.value)
                     btnCreateLoading.classList.remove('close');
                     btnCreateProfile.classList.add('close');
-                    function enviarPerfil(){
-                        e.target.submit()
+                    if (countryInp.value !== ""){
+                        function enviarPerfil(){
+                            e.target.submit()
+                        }
+                    } else {
+                        console.log("Faltan datos en geolocalizacion");
+                        lackGeolocation.classList.remove('close');
+                        setTimeout(() => {
+                            lackGeolocation.classList.add('close');
+                            btnCreateLoading.classList.add('close');
+                            btnCreateProfile.classList.remove('close');
+                        }, 4000);
                     }
+
 
                     setTimeout(enviarPerfil, 3000)
                 })
@@ -1786,12 +1972,23 @@
                 formEditePerfil.addEventListener('submit', (e)=>{
                     e.preventDefault();
                     console.log("Enviando datos al backend")
+                    console.log("paisInp ---->", countryInp.value)
                     btnEditingLoading.classList.remove('close');
                     btnEditProfile.classList.add('close');
-                    function enviarPerfil(){
-                        e.target.submit()
+                    if (countryInp.value !== ""){
+                        function enviarPerfil(){
+                            e.target.submit()
+                        }
+                    } else {
+                        console.log("Faltan datos en geolocalizacion")
+                        lackGeolocation.classList.remove('close');
+                        setTimeout(() => {
+                            lackGeolocation.classList.add('close');
+                            btnEditingLoading.classList.add('close');
+                            btnEditProfile.classList.remove('close');
+                        }, 4000);
+                        
                     }
-
                     setTimeout(enviarPerfil, 3000)
                 })
             }
@@ -2078,6 +2275,130 @@
 
         </script>
 
+        <script>
+            const inpSeeMarket = document.getElementById('inpSeeMarket'); //este input tiene como valo el pais que esta definido en el momento
+            const inpSeeMarketCode = document.getElementById('inpSeeMarketCode'); //este input tiene el valor del codigo del pais
+            const selectCountry = document.getElementById('selectCountry');
+            const btnChangeCountry = document.getElementById('btnChangeCountry');
+            const btnChangeCountryLoading = document.getElementById('btnChangeCountryLoading');
+            const idUser = document.getElementById('idUser');
+
+            const alertSeeCountryCode0 = document.getElementById('alertSeeCountryCode0'); 
+            const alertSeeCountryCode1 = document.getElementById('alertSeeCountryCode1'); 
+
+            selectCountry.addEventListener('change', ()=>{
+                let inpSeeMarketCodeValue = inpSeeMarketCode.value;
+                console.log("inpSeeMarketCodeValue --->", inpSeeMarketCodeValue);
+                console.log("selectCountry.value --->", selectCountry.value);
+
+                if (selectCountry.value !== inpSeeMarketCodeValue && selectCountry.value !== "no-selected" ){
+                    btnChangeCountry.removeAttribute("disabled") //desactivamos el boton para enviar
+
+                } else {
+                    btnChangeCountry.setAttribute("disabled", "" ) //desactivamos el boton para enviar
+                }
+
+            })
+            
+            //hacemos la llamada a la API de tosos los paises.
+            fetch('https://restcountries.com/v3.1/all')
+            .then(response => response.json())
+            .then(data=> {
+                //console.log("data -->", data)
+                data.sort((a,b)=> {
+                if (a.name.common < b.name.common){
+                    return -1; //a viene antes que b
+                }
+                if (a.name.common > b.name.common){
+                    return 1; // a viene despues de b
+                }
+                return 0; //son iguales.
+                });
+
+                const countriesWithCodes = data.map(country => {
+                return {
+                    pais: country.name.common,
+                    code: country.cca2
+                };
+                });
+
+                //aqui el array de todos los paises ordenados en orden alfabetico con su codigo
+                console.log("countriesWithCodes", countriesWithCodes);
+                
+                countriesWithCodes.forEach((ele)=>{
+                let pais = ele.pais;
+                let code = ele.code;
+                
+                selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}"> ${pais} </option>`
+                })
+
+                //boton de cambio de pais 
+                btnChangeCountry.addEventListener('click', ()=> {
+                    btnChangeCountry.setAttribute("disabled", ""); // aqui aseguramos que no puedan darle dos veces al boton.
+
+                    const selectCountryValue = selectCountry.value; //code
+                    const selectCountries = selectCountry.options[selectCountry.selectedIndex];
+                    const country = selectCountries.getAttribute('data-pais'); //pais
+                    const idUserValue = idUser.value; //id User
+
+                    console.log("code :", selectCountryValue);
+                    console.log("country :", country);
+                    console.log("idUserValue :", idUserValue);
+
+                    //ahora vamos a mandar los datos de este usuario para de esta forma enviar y actualizar el mercado de este usuario.
+                
+                    const datos = {
+                        idUser : idUserValue,
+                        countryMarket : country,
+                        countryMarketCode : selectCountryValue
+                    }
+             
+                    fetch('/locationMarket', {
+
+                        method: "post",
+                        body: JSON.stringify(datos),
+                        headers: {"content-type" : "application/json"}
+
+                        })
+                        .then(response =>response.json() )
+                        .then( jsonx => {
+                        console.log("llegando de localMarket -->", jsonx);
+                        let code = jsonx.code;
+                        let userUpdate = jsonx.msg;
+                        let countryMarketCode = userUpdate.seeMarket.countryMarketCode;
+                        console.log("countryMarketCode ----->", countryMarketCode) 
+                
+                        console.log("code : ", code);
+                        if (code === 1){
+                            // todo ha resultado positivo. debemos enviar el mensaje de proceso satisfactoria y cerrar el modal
+                           
+                            alertSeeCountryCode1.classList.remove('close');
+                            setTimeout(() => {
+                                location.reload(); 
+                            }, 3000);
+                            
+
+                        } else if (code === 0){
+                            // ha habido un error, intente luego.
+                            alertSeeCountryCode0.classList.remove('close');
+                            setTimeout(() => {
+                                alertSeeCountryCode0.classList.add('close');
+                            }, 3000);
+                        }
+                        
+                        })
+                        .catch( err => console.log(err));
+
+                    })
+                 
+
+            })
+            .catch(error => console.error('Error', error));
+
+
+
+        </script>
+
         <!-- para cambiar el banner -->
         <script>
    
@@ -2168,8 +2489,11 @@
 
     <!-- peticion para carga de estados y ciudades de un pais -->
 
+<!-- 
     <script>
         //este script lo desarrolle al cumplir los 9 meses exactamente de desarrollo de este proyecto.
+        //este script me trae todos los estados de venezuela. esto cambiara ya no sera necesario.
+        //pues ahora blissenet se libera de las fronteras.
 
         const estados = document.getElementById('estados');
         const ciudades = document.getElementById('ciudades');
@@ -2293,7 +2617,9 @@
           
 
     </script>
+ -->
 
+ 
     <!-- Script para cambiar username -->
 
     <script>

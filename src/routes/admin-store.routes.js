@@ -760,61 +760,6 @@ routes.post('/infobliss/deleteScheme/survey', async(req, res)=>{
     }
 });
 
-routes.post('/infobliss/addLocation', async(req, res)=>{
-
-    try {
-        
-        const {userId, lat, lon } = req.body;
-        const location = { "lat" : lat, "lon" : lon };
-
-        console.log("LLegando a /infobliss/addLocation");
-        console.log(`user: ${userId}  lat: ${lat} lon: ${lon}`);
-
-        const searchProfile = await modelProfile.findOne({indexed : userId});
-        
-        if (searchProfile){
-
-            if (searchProfile.infobliss.map.data.length !== 0 ){
-                //existe informacion en data, debemos reemplazar
-
-                const updatesProfile = await modelProfile.updateOne(
-                    { indexed: userId },
-                    { $set: { 'infobliss.map.data': [location] } },
-                    { new : true } //opcion para devolver documento actualizado
-                );
-        
-                res.json({ code: 1, response : "Geolocalización de tienda guardada"});
-
-
-            } else {
-                //No existe informacion en data, debemos hacer un push
-                const updatesProfile = await modelProfile.updateOne(
-                    { indexed: userId },
-                    { $push: { 'infobliss.map.data': location } },
-                    { new : true } //opcion para devolver documento actualizado
-                );
-        
-                res.json({ code: 1, response : "Geolocalización de tienda guardada"});
-
-            }
-
-
-
-        } else {
-
-            res.json({ code: 2, response : "Perfil no encontrado"});
-
-        }
-
-
-    } catch (error) {
-        res.json({ code: 0, response : "Ha ocurrido un error al eliminar la encuesta, intente más tarde"});        
-    }        
-
-}) 
-
-
-
 
 
 module.exports = routes;

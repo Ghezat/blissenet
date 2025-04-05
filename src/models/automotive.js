@@ -21,6 +21,8 @@ const SchemaAutomotive = new Schema({
     offer : { type: Boolean, default: false },
     onlyOneAvailable : { type: Boolean, default: false },
     bestProduct : { type: Boolean, default: false },
+    country : { type: String }, //aqui el pais de donde es este anuncio, ejemplo Venezuela, Colombia. 
+    countryCode : { type: String }, //aqui el codigo del pais, si es venezuela seria (ve) y es lo que mostrara cuando el sservidor detecte que estamos en venezuela.
     state_province : { type: String },
     view : { type : Number, default : 0 }, //aqui tenemos la cantidad de vistas que tiene este producto.
     spread : { type : Object, default : { spreading : false, time : null } }, //este campo es para identificar si se ha hecho la accion de "Difundir entre sus seguidores". 

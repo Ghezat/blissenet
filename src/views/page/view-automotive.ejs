@@ -93,8 +93,16 @@
 </style>
 <body class="mainTheme">
       
-
+ 
   <main>
+
+    <% if (user) { %>
+      <% const seeMarket = user.seeMarket %>
+      <!-- <% const idUser = user._id %> -->
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+        <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+    <% }; %>
 
   <!-- navegador con buscador homologo a navi-simple --> 
   <nav class="navbar navbar-expand-lg py-3" id="navHead">
@@ -265,7 +273,7 @@
               <% if (countNegotiationsBuySell) { %>    
                 <a class="nav-link text-secondary" title="Alert of negotiation"  href="/buysell-list">
                 <i class="bi bi-briefcase position-relative">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
                 <%= countNegotiationsBuySell %>
                 <!-- <span class="visually-hidden">unread messages</span> -->
                 </span>
@@ -300,199 +308,199 @@
                 <% if (countSearch) { %> <p> <i class="bi bi-funnel me-1"></i> Anuncios encontrados : <span class="ms-2"><%= countSearch %></span> </p>  <% }; %>
             <% }; %>
                               
-                              
-                <% if (stateGroup) { %>
-                  <div class="contentStatesGroup overflow-auto ps-1" style="max-height: 160px; border-radius: 3px;">
-                    <% stateGroup.forEach((ele)=>{ %>
-
-                        <% if (ele.type == "1") { %>
-
-                            <% if (Searcher) { %>
-                              <a href="/view-automotive/type1/<%= Searcher %>/<%= ele._id %>">
-                                <p class="mb-1">
-                                    <%= ele._id %> (<%= ele.repetido %>)
-                                </p>
-                              </a>
-                            <% } else { %>
-                              <a href="/view-automotive/type1/<%= ele._id %>">
-                                <p class="mb-1">
-                                    <%= ele._id %> (<%= ele.repetido %>)
-                                </p>
-                              </a>
-                            <% }; %>
-
-                        <% } else if (ele.type == "2") { %>
-
-                          <% if (Searcher) { %>
-                            <a href="/view-automotive/type2/<%= Searcher %>/<%= ele.category %>/<%= ele._id %>">
-                              <p class="mb-1">
-                                  <%= ele._id %> (<%= ele.repetido %>)
-                              </p>
-                            </a>
-                          <% } else { %>
-                            <a href="/view-automotive/type2/<%= ele.category %>/<%= ele._id %>">
-                              <p class="mb-1">
-                                  <%= ele._id %> (<%= ele.repetido %>)
-                              </p>
-                            </a>
-                          <% }; %>  
-
-                        <% } else if (ele.type == "3") { %>
-
-                          <% if (Searcher) { %>
-                            <a href="/view-automotive/type3/<%= Searcher %>/<%= ele.category %>/<%= ele.sub_category %>/<%= ele._id %>">
-                              <p class="mb-1">
-                                  <%= ele._id %> (<%= ele.repetido %>)
-                              </p>
-                            </a>
-                          <% } else { %>
-                            <a href="/view-automotive/type3/<%= ele.category %>/<%= ele.sub_category %>/<%= ele._id %>">
-                              <p class="mb-1">
-                                  <%= ele._id %> (<%= ele.repetido %>)
-                              </p>
-                            </a>
-                          <% }; %>
-
-                        <% } %>
-                      
-                    <% }); %>
-                  </div>  
-                <% } %>
-                    
-                <% if (countSearch == 0) { %>  
-              
-                    <span>¡No se ha encontrado nada!</span>
-
-                    <div class="containerImageSinResultados d-flex justify-content-center">
-                        <img src="/img/sinResultados.png" style="width: 150px;">
-                    </div>
             
-                <% }; %>
+            <% if (stateGroup) { %>
+              <div class="contentStatesGroup overflow-auto ps-1" style="max-height: 160px; border-radius: 3px;">
+                <% stateGroup.forEach((ele)=>{ %>
 
-                
-                  <p class="border-bottom border-secondary mt-3"><i class="bi bi-folder2 me-1"></i> Categorias/Sub-Categorias </p>
-                
+                    <% if (ele.type == "1") { %>
 
-                <div class="contentCategory ps-1" style="height: 50%; border-radius: 3px;">
+                        <% if (Searcher) { %>
+                          <a href="/view-automotive/type1/<%= Searcher %>/<%= ele._id %>">
+                            <p class="mb-1">
+                                <%= ele._id %> (<%= ele.repetido %>)
+                            </p>
+                          </a>
+                        <% } else { %>
+                          <a href="/view-automotive/type1/<%= ele._id %>">
+                            <p class="mb-1">
+                                <%= ele._id %> (<%= ele.repetido %>)
+                            </p>
+                          </a>
+                        <% }; %>
 
-                  <div class="mb-2 form-check">
-                    <input class="form-check-input radioCategory" type="radio" name="category" value="All" id="All" checked>
-                    <label class="form-check-label" for="All">Todo</label>
-                  </div>
+                    <% } else if (ele.type == "2") { %>
 
-                  <% if (categoryAndSub) {%>
-
-                    <% if (categoryAndSub.length !== 1) { %>
-
-                      <% categoryAndSub.forEach( (ele, i)=>{ %> 
-                        
-                        <div class="mb-2 form-check">
-                          <label class="form-check-label" for="<%= ele.category %>"> <a href="/view-automotive/type2/<%= ele.category %>"><%= ele.category %></a>  </label>
-                        </div>
-                        
-                        <div class="contentSub closed border border-danger" id="sub-<%= ele.category %>">
-                      
-                            <div class="ms-3 mb-2 form-check">
-                              <input class="form-check-input subAll" type="radio" name="subCategory" value="All" id="subAll-<%= ele.category %>">
-                              <label class="form-check-label" for="subAll-<%= ele.category %>">Todo</label>
-                            </div>
-                      
-                          <% ele.sub_categories.forEach( (elem)=> { %> 
-                      
-                            <div class="ms-3 mb-2 form-check border border-danger"> <!-- // implementar esto en todos los demas -->
-                              <input class="form-check-input" type="radio" name="subCategory" value="<%= elem %>" id="<%= ele.category %><%= elem %>">
-                              <label class="form-check-label" for="<%= ele.category %><%= elem %>"> <a href="view-automotive/type3/<%= elem %>"></a>  </label>
-                            </div>
-                        
-                          <% }); %>
-                        </div>
-                  
-                      <% }); %>
-
-                    <% } else { %> 
-                      
-                     
-                      <% let category = categoryAndSub[0]._id %>
-
-                     
-                        <% if (subCategory !== null ) { %>
-                          <% categoryAndSub.forEach( (ele, i)=>{ %>
-                            
-                            
-                            <div class="mb-2 form-check">
-                              <input class="form-check-input radioCategory" type="radio" name="category" value="<%= ele._id %>" id="<%= ele._id %>" checked>
-                              <label class="form-check-label" for="<%= ele._id %>"><%= ele._id %></label>
-                            </div>
-
-                            <div class="contentSub1" id="sub1-<%= ele.category %>">
-                          
-                                <% if (subCategory == "All") { %>
-                                <div class="ms-3 mb-2 form-check">
-                                  <label class="form-check-label"> <a href="/view-automotive/type2/<%= category %>">Todo</a></label>
-                                </div>
-                                <% } else { %>
-                                <div class="ms-3 mb-2 form-check">
-                                  <label class="form-check-label"><a href="/view-automotive/type2/<%= category %>">Todo</a></label>
-                                </div>
-                                <% };%>  
-                        
-                              <% ele.sub_categories.forEach( (elem)=> { %>
-                      
-                                  <% if (elem == subCategory) { %>
-                                    <div class="ms-3 mb-2 form-check">
-                                      <label class="form-check-label" for="<%= elem %>"><a href="/view-automotive/type3/<%= category %>/<%= elem %>"><%= elem %></a></label>
-                                    </div>
-                                  <% } else { %>
-                              
-                                    
-                                    <div class="ms-3 mb-2 form-check">
-                                      <label class="form-check-label text-light" for="<%= elem %>"> <a href="/view-automotive/type3/<%= category %>/<%= elem %>"><%= elem %></a> </label>
-                                    </div>
-                                  <% }; %>
-                                  
-                              <% }); %>
-    
-                            </div>
-    
-                          <% }); %>  
-                      
-                        <% } else { %>    
-                          <% categoryAndSub.forEach( (ele, i)=>{ %>
-                            <div class="mb-2 form-check">
-                              <input class="form-check-input radioCategory" type="radio" name="category" value="<%= ele.category %>" id="<%= ele.category %>" checked>
-                              <label class="form-check-label" for="<%= ele.category %>"><%= ele.category %></label>
-                            </div>
-  
-                            <div class="contentSub closed" id="sub-<%= ele.category %>">
-                                                                                                                
-                                <% ele.sub_categories.forEach( (elem)=> { %>
-                        
-                                    <div class="ms-3 mb-2 form-check">
-                                      <input class="form-check-input radioSubCategory" type="radio" name="subCategory" value="<%= elem %>" id="<%= elem %>" checked>
-                                      <label class="form-check-label" for="<%= elem %>"><%= elem %></label>
-                                    </div>                               
-                            
-                                <% }); %>
-      
-                            </div>
-                          <% }); %>
-                          
+                      <% if (Searcher) { %>
+                        <a href="/view-automotive/type2/<%= Searcher %>/<%= ele.category %>/<%= ele._id %>">
+                          <p class="mb-1">
+                              <%= ele._id %> (<%= ele.repetido %>)
+                          </p>
+                        </a>
+                      <% } else { %>
+                        <a href="/view-automotive/type2/<%= ele.category %>/<%= ele._id %>">
+                          <p class="mb-1">
+                              <%= ele._id %> (<%= ele.repetido %>)
+                          </p>
+                        </a>
                       <% }; %>  
 
-                    <% }; %>  
-                    
-                  <% }; %>  
-                
+                    <% } else if (ele.type == "3") { %>
+
+                      <% if (Searcher) { %>
+                        <a href="/view-automotive/type3/<%= Searcher %>/<%= ele.category %>/<%= ele.produce %>/<%= ele._id %>">
+                          <p class="mb-1">
+                              <%= ele._id %> (<%= ele.repetido %>)
+                          </p>
+                        </a>
+                      <% } else { %>
+                        <a href="/view-automotive/type3/<%= ele.category %>/<%= ele.produce %>/<%= ele._id %>">
+                          <p class="mb-1">
+                              <%= ele._id %> (<%= ele.repetido %>)
+                          </p>
+                        </a>
+                      <% }; %>
+
+                    <% } %>
                   
-                </div>
+                <% }); %>
+              </div>  
+            <% } %>
+                
+            <% if (countSearch == 0) { %>  
+          
+                <span>¡No se ha encontrado nada!</span>
 
-                <div class="form-group my-3">
-                  <button class="form-control btnEFECT" type="submit" id="btnSearcherAuxiliar" style="width: 100%; height: 100%; background-color : #f0c51e; border: none; height: 100%; width: 100%;">
-                    <i class="bi bi-search" id="iconLupaAuxiliar" style="font-size: larger; color: rgb(58, 58, 58);"></i>
-                  </button>
+                <div class="containerImageSinResultados d-flex justify-content-center">
+                    <img src="/img/sinResultados.png" style="width: 150px;">
                 </div>
+        
+            <% }; %>
 
-    </form> <!-- :::::::::  aqui termine de cerrar el form ::::::::: -->
+            
+              <p class="border-bottom border-secondary mt-3"><i class="bi bi-folder2 me-1"></i> Categorias/Sub-Categorias </p>
+            
+
+            <div class="contentCategory ps-1" style="height: 50%; border-radius: 3px;">
+
+              <div class="mb-2 form-check">
+                <input class="form-check-input radioCategory" type="radio" name="category" value="All" id="All" checked>
+                <label class="form-check-label" for="All">Todo</label>
+              </div>
+
+              <% if (categoryAndSub) {%>
+
+                <% if (categoryAndSub.length !== 1) { %>
+
+                  <% categoryAndSub.forEach( (ele, i)=>{ %> 
+                    
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label" for="<%= ele.category %>"> <a href="/view-automotive/type2/<%= ele.category %>"><%= ele.category %></a>  </label>
+                    </div>
+                    
+                    <div class="contentSub closed border border-danger" id="sub-<%= ele.category %>">
+                  
+                        <div class="ms-3 mb-2 form-check">
+                          <input class="form-check-input subAll" type="radio" name="subCategory" value="All" id="subAll-<%= ele.category %>">
+                          <label class="form-check-label" for="subAll-<%= ele.category %>">Todo</label>
+                        </div>
+                  
+                      <% ele.sub_categories.forEach( (elem)=> { %> 
+                  
+                        <div class="ms-3 mb-2 form-check border border-danger"> <!-- // implementar esto en todos los demas -->
+                          <input class="form-check-input" type="radio" name="subCategory" value="<%= elem %>" id="<%= ele.category %><%= elem %>">
+                          <label class="form-check-label" for="<%= ele.category %><%= elem %>"> <a href="view-automotive/type3/<%= elem %>"></a>  </label>
+                        </div>
+                    
+                      <% }); %>
+                    </div>
+              
+                  <% }); %>
+
+                <% } else { %> 
+                  
+                 
+                  <% let category = categoryAndSub[0]._id %>
+
+                 
+                    <% if (subCategory !== null ) { %>
+                      <% categoryAndSub.forEach( (ele, i)=>{ %>
+                        
+                        
+                        <div class="mb-2 form-check">
+                          <input class="form-check-input radioCategory" type="radio" name="category" value="<%= ele._id %>" id="<%= ele._id %>" checked>
+                          <label class="form-check-label" for="<%= ele._id %>"><%= ele._id %></label>
+                        </div>
+
+                        <div class="contentSub1" id="sub1-<%= ele.category %>">
+                      
+                            <% if (subCategory == "All") { %>
+                            <div class="ms-3 mb-2 form-check">
+                              <label class="form-check-label"> <a href="/view-automotive/type2/<%= category %>">Todo</a></label>
+                            </div>
+                            <% } else { %>
+                            <div class="ms-3 mb-2 form-check">
+                              <label class="form-check-label"><a href="/view-automotive/type2/<%= category %>">Todo</a></label>
+                            </div>
+                            <% };%>  
+                    
+                          <% ele.sub_categories.forEach( (elem)=> { %>
+                  
+                              <% if (elem == subCategory) { %>
+                                <div class="ms-3 mb-2 form-check">
+                                  <label class="form-check-label" for="<%= elem %>"><a href="/view-automotive/type3/<%= category %>/<%= elem %>"><%= elem %></a></label>
+                                </div>
+                              <% } else { %>
+                          
+                                
+                                <div class="ms-3 mb-2 form-check">
+                                  <label class="form-check-label text-light" for="<%= elem %>"> <a href="/view-automotive/type3/<%= category %>/<%= elem %>"><%= elem %></a> </label>
+                                </div>
+                              <% }; %>
+                              
+                          <% }); %>
+
+                        </div>
+
+                      <% }); %>  
+                  
+                    <% } else { %>    
+                      <% categoryAndSub.forEach( (ele, i)=>{ %>
+                        <div class="mb-2 form-check">
+                          <input class="form-check-input radioCategory" type="radio" name="category" value="<%= ele.category %>" id="<%= ele.category %>" checked>
+                          <label class="form-check-label" for="<%= ele.category %>"><%= ele.category %></label>
+                        </div>
+
+                        <div class="contentSub closed" id="sub-<%= ele.category %>">
+                                                                                                            
+                            <% ele.sub_categories.forEach( (elem)=> { %>
+                    
+                                <div class="ms-3 mb-2 form-check">
+                                  <input class="form-check-input radioSubCategory" type="radio" name="subCategory" value="<%= elem %>" id="<%= elem %>" checked>
+                                  <label class="form-check-label" for="<%= elem %>"><%= elem %></label>
+                                </div>                               
+                        
+                            <% }); %>
+  
+                        </div>
+                      <% }); %>
+
+                    <% }; %>
+
+                <% }; %>  
+                
+              <% }; %>   
+            
+              
+            </div>
+
+            <div class="form-group my-3"> 
+              <button class="form-control btnEFECT" type="submit" id="btnSearcherAuxiliar" style="width: 100%; height: 100%; background-color : #f0c51e; border: none; height: 100%; width: 100%;">
+                <i class="bi bi-search" id="iconLupaAuxiliar" style="font-size: larger; color: rgb(58, 58, 58);"></i>
+              </button>
+            </div>
+
+</form> <!-- :::::::::  aqui termine de cerrar el form ::::::::: -->     
 
         </div>
       </div>

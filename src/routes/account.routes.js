@@ -3319,12 +3319,14 @@ routes.post('/account/storeRate', async(req, res)=>{
             console.log("esta persona a calificado esta tienda");
             const updateRate = await modelStoreRate.updateOne({store, logeado}, {markStar, comment, dataLogeado});
             console.log("ya hemos actualizado", updateRate);
+            res.json(updateRate);
 
         } else {
             console.log("esta persona No a calificado esta tienda");
             const newRate = new modelStoreRate({ store, logeado, markStar, comment, storeName, dataLogeado });
             const newRateSave = await newRate.save();
             console.log("Ya ha calificado ", newRateSave);
+            res.json(newRateSave);
         }
 
 

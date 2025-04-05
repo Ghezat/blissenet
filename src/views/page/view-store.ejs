@@ -139,8 +139,7 @@
   
 </style>
 <body class="mainTheme">
-     
-
+ 
   <main>
 
   <!-- navegador con buscador homologo a navi-simple -->   
@@ -303,7 +302,7 @@
                       <% if (countNegotiationsBuySell) { %>    
                         <a class="nav-link text-secondary" title="Alert of negotiation"  href="/buysell-list">
                         <i class="bi bi-briefcase position-relative">
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
                         <%= countNegotiationsBuySell %>
                         <!-- <span class="visually-hidden">unread messages</span> -->
                         </span>
@@ -514,13 +513,15 @@
                 <div class="contentAll d-flex flex-wrap justify-content-start p-3">
                     <% cardArticleStore.docs.forEach( (ele, i)=>{ %>
 
+                      <% const bannerStore = ele.bannerPerfil[0].url  %>
+                        
                         <div class="card cardStore m-2 p-0 shadow cardPublished">
                           
                               <div class="card-body front p-0">
 
                                       <div class="upp d-flex flex-column justify-content-center align-items-start" style="width: 100%; height: 100%;">
-                                          
-                                          <div class="contentTopBar d-flex justify-content-center align-items-center" style="position: relative; width: 100%; height: 51%; background-color: <%= ele.bGColorWorkspace %>;">
+                                        <!--  object-fit: cover; background-image: url(<%= bannerStore %>); -->
+                                          <div class="contentTopBar d-flex justify-content-center align-items-center" style="position: relative; width: 100%; height: 51%;  background-color: <%= ele.bGColorWorkspace %>">
                                                 <% if (user) { %>
                                                 <div class="linkHeart d-flex justify-content-center align-items-center rounded-pill border"><input type="hidden" value="<%= user._id %>"> <input type="hidden" value="<%= ele.indexed %>"><i class="bi bi-bookmark-check Heart"></i></div>
                                                 <% }; %>
@@ -532,11 +533,11 @@
                                                 <% }; %>    
                                           </div>
                                                   
-                                          <div class="contentWorkSpace py-0 px-2" style="width: 100%; height: 49%; background-color: <%= ele.bGColorTopbar %>;">
-                                            <a href="/account/<%= ele.username %>" class="text-decoration-none text-dark d-flex flex-column align-items-start">        
-                                                  <p class="mx-0 my-0 mt-1" style="color:<%= ele.bGColorText %>;"><i class="bi bi-person-workspace me-1"></i><%= ele.username %></p>
-                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo me-1"></i><%= ele.states %></p>
-                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt me-1"></i><%= ele.cities %></p>
+                                          <div class="contentWorkSpace py-0 px-2 d-flex justify-content-start align-items-center" style="width: 100%; height: 49%; background-color: <%= ele.bGColorTopbar %>;">
+                                            <a href="/account/<%= ele.username %>" class="text-decoration-none text-dark d-flex flex-column align-items-start justify-content-center">        
+                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-person-workspace me-1"></i><%= ele.username %></p>
+                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt-fill me-1"></i><%= ele.country %> - <%= ele.state %></p>
+                                                  <!-- <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt me-1"></i><%= ele.state %></p> -->
                                             </a>  
                                           </div>
                                           

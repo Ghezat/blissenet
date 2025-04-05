@@ -59,6 +59,8 @@
                 <% const faq = infobliss.faq %>
                 <% const survey = infobliss.survey %>
                 <% const map = infobliss.map %>
+                <% const geolocation = searchProfile.geolocation %>  
+
 
 
                 <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
@@ -427,64 +429,31 @@
                                             <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
                                               <div class="accordion-body">
   
-                                                  <% const mapData = map.data %>
+                                                 <% if (geolocation.lat ==="") { %>
                                                   
-                                                  
-                                                      <div class="containData mt-2">
-                                                                                                                
-                                                        <% if (mapData.length === 0) { %>
-                                                            <div class="alert alert-primary">
-                                                                <span> El boton abajo captura su ubicación geografica. utilicelo para definir la ubicación real de su tienda.</span>
-                                                            </div>
+                                                    <div class="alert alert-primary py-2 px-2">
+                                                        <span> <i class="bi bi-geo-alt me-1"></i> Sin ubicación, establece una en <b> "Perfil".</b> </span>
+                                                    </div>       
+                                                      
+                                                <% } else { %>
 
-                                                            <div class="alertCreatedLocation">
-                                                                <!-- dinamico -->
-                                                              </div> 
-    
-                                                              <div class="alertLocationError"> 
-                                                                <!-- dinamico -->
-                                                              </div>
-                                                              
-    
-                                                              <div class="form-group my3">
-                                                                <button class="btn-sm btn-dark form-control" id="captureLocation"> Capturar ubicación </button>
-                                                                <button class="btn-sm btn-dark form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
-                                                              </div>
+                                                    <div class="containData mt-2">                      
 
-                                                        <% } else { %>
-
-                                                            <!-- Estos input ocultos estan para almacenar las variable de Longitud y Latitud -->
-                                                            <input type="hidden" value="<%= mapData[0].lon %>" id="mapDataLon">
-                                                            <input type="hidden" value="<%= mapData[0].lat %>" id="mapDataLat">
+                                                        <!-- Estos input ocultos estan para almacenar las variable de Longitud y Latitud -->
+                                                        <input type="hidden" value="<%= geolocation.lon %>" id="mapDataLon">
+                                                        <input type="hidden" value="<%= geolocation.lat %>" id="mapDataLat">
+                                                        
+                                                        <div class="alert alert-secondary">
+                                                            <div class="alert alert-light p-1"> <span><i class="bi bi-geo-alt-fill me-2"></i> <%= searchProfile.country %> - <%= searchProfile.state %> - <%= searchProfile.quarter %> </span> </div>
                                                             
-                                                            <div class="alert alert-secondary">
-                                                                <div class="alert alert-light p-1"> <span><i class="bi bi-geo-alt me-2"></i> Ubicación establecida.</span> </div>
-                                                                
-                                                                <p class="my-1"> Longitud : ( <%= mapData[0].lon %> ) </p>
-                                                                <p class="my-1"> Latitud : ( <%= mapData[0].lat %> ) </p>
-                                                            </div>
+                                                            <p class="my-1"> Longitud : ( <%= geolocation.lon %> ) </p>
+                                                            <p class="my-1"> Latitud : ( <%= geolocation.lat %> ) </p>
+                                                        </div>
+                                                         
+                                                    </div>
 
-                                                            <div class="alertCreatedLocation">
-                                                                <!-- dinamico -->
-                                                              </div> 
-    
-                                                              <div class="alertLocationError"> 
-                                                                <!-- dinamico -->
-                                                              </div>
-                                                              
-    
-                                                              <div class="form-group my3">
-                                                                <button class="btn-sm btn-secondary form-control" id="captureLocation"> Capturar nueva ubicación </button>
-                                                                <button class="btn-sm btn-secondary form-control close" id="captureLocationDisabled" disabled> Capturando Ubicación  <div class="spinner-border spinner-border-sm ms-2" role="status"></div></button>
-                                                              </div>
+                                                <% }; %>
 
-                                                        <% }; %>    
-
-
-  
-
-                                                          
-                                                      </div>                                       
   
                                               </div>
                                             </div>
@@ -857,7 +826,7 @@
                                         </div>
                                         <div class="contentMap close">
 
-                                            <% if (mapData.length === 0) { %>
+                                            <% if (geolocation.lat ==="") { %>
                                             
                                                 <div class="contentLocation d-flex flex-column  justify-content-center align-items-center ">
 
@@ -866,13 +835,12 @@
                                                     
                                                     
                                                     <div class="alert alert-primary py-2 px-5">
-                                                        <span> <i class="bi bi-geo-alt me-2"></i>  "No hay geolocalización disponible. Por favor, establece una en <b> 'Ubicación Geográfica'.</b> " </span>
+                                                        <span> <i class="bi bi-geo-alt me-2"></i> No hay ubicación disponible. Por favor, establece una en <b> "Perfil > Editar Geolocalización".</b></span>
                                                     </div>
                                                     
                                                 </div>
                                                 
 
-                                                
                                             <% } else { %>
                                                     
                                                 <div id="map" style="height: 400px;"></div>     
@@ -1812,123 +1780,7 @@ if (surveyDataInput){
 
 </script>
 
-<script>
-    const captureLocation = document.getElementById('captureLocation');
-    const captureLocationDisabled = document.getElementById('captureLocationDisabled');
 
-    const alertCreatedLocation = document.querySelector('.alertCreatedLocation');
-    const alertLocationError = document.querySelector('.alertLocationError');
-    let lat;
-    let lon;
-
-    captureLocation.addEventListener('click', () => {
-
-        captureLocation.classList.add('close');
-        captureLocationDisabled.classList.remove('close');
-
-        let userId = userID.value;
-    
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                lat = position.coords.latitude;
-                lon = position.coords.longitude;
-                //console.log(`Latitud: ${lat}, Longitud: ${lon}`);
-
-                const datos = {
-                    userId : userId,
-                    lat : lat,
-                    lon : lon 
-                }
-
-                //console.log("Datos a enviar --->", datos );
-        
-
-                fetch('/infobliss/addLocation', {
-
-                method: "post",
-                body: JSON.stringify(datos),
-                headers: {"content-type" : "application/json"}
-
-                })
-                .then(response =>response.json() )
-                .then( jsonx => 
-                  {
-                    //console.log(jsonx)
-                    const code = jsonx.code;
-                    const response = jsonx.response;
-
-                    if (code === 1){
-                        //geolocalizacion guardada con exito
-                        alertCreatedLocation.innerHTML = `
-                            <div class="alert alert-primary py-1 ">
-                                <span> <i class="bi bi-check-circle-fill me-2"></i> ${response} </span>    
-                            </div>`
-
-                        setTimeout(() => {
-                            alertCreatedLocation.innerHTML = "";
-                            location.reload();
-                        }, 4000);    
-
-                    } else if (code === 2){
-                        //Perfil no existe. 
-                        alertLocationError.innerHTML = `
-                            <div class="alert alert-danger py-1 ">
-                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
-                            </div>`
-
-                        setTimeout(() => {
-                            alertLocationError.innerHTML = "";
-                        }, 4000);     
-
-                    } else if (code === 0){
-                        //Ha ocurrido un error, intente luego.
-                        alertLocationError.innerHTML = `
-                            <div class="alert alert-danger py-1 ">
-                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> ${response} </span>    
-                            </div>`
-
-                        setTimeout(() => {
-                            alertLocationError.innerHTML = "";
-                        }, 4000);                             
-                    }
-
-                    captureLocation.classList.remove('close');
-                    captureLocationDisabled.classList.add('close');
-
-                    captureLocation.setAttribute("disabled", "");
-                    setTimeout(() => {
-                        captureLocation.removeAttribute("disabled", "");
-                        //esto es una forma de proteger el sistema y no lo usen para saturar de peticiones el servidor.
-                    }, 5000);
-
-                  })
-                .catch( err => console.log(err));
-                                            
-            }) , function(error) {
-                    switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                console.log("El usuario denegó la solicitud de geolocalización.");
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                console.log("La información de ubicación no está disponible.");
-                                break;
-                            case error.TIMEOUT:
-                                console.log("La solicitud para obtener la ubicación ha expirado.");
-                                break;
-                            case error.UNKNOWN_ERROR:
-                                console.log("Ha ocurrido un error desconocido.");
-                                break;
-                    }            
-                }
-
-        } else {
-
-            console.log('La geolocalización no es soportada por este navegador.')
-
-        }
-    })
-</script>
 
 <script>
 

@@ -6,8 +6,8 @@ const SchemaArtes = new Schema({
     titleURL : { type : String },// aqui guardamos el titulo que se usara en el url (SEO) Search Engine Optimization (Optimización para Motores de Búsqueda)
     department : { type: String, default: 'arts' }, 
     category : { type: String },
-    segment : { type: String }, // normalmente esto seria "All"
     author : { type: String },  //reeplazar "sub_category" por "author" (leer) en este caso no se reemplaza. ver el view-artes
+    segment : { type: String }, // normalmente esto seria "All"
     construcDate: { type: Number },
     tecnicalDescription : { type: String },
     video : { type : Object, default: [] }, //aqui se guardaria un archivo de video con la informacion del lugar donde esta para ser leido o eliminado.
@@ -21,6 +21,8 @@ const SchemaArtes = new Schema({
     delivery : { type: Boolean, default: false },
     soldOut : { type : Boolean, default: false }, //agotado solo para articulos y artes.
     purchaseTime : { type : Object, default : [] }, //este campo solo existe en items y en artes. aqui solo se guardan indexed con la finalidad de que cuando este articulo deje de estar agotado le envie mensajes a todos los que le dieron a "Avisarme cuando este disponible" solo enviará notificaciones al inbox.
+    country : { type: String }, //aqui el pais de donde es este anuncio, ejemplo Venezuela, Colombia. 
+    countryCode : { type: String }, //aqui el codigo del pais, si es venezuela seria (ve) y es lo que mostrara cuando el sservidor detecte que estamos en venezuela.
     state_province : { type: String },
     view : { type : Number, default : 0 }, //aqui tenemos la cantidad de vistas que tiene este producto.
     spread : { type : Object, default : { spreading : false, time : null } }, //este campo es para identificar si se ha hecho la accion de "Difundir entre sus seguidores". 

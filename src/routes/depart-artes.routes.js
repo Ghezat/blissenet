@@ -146,8 +146,12 @@ routes.post('/department/create/artes', async(req,res)=>{
 
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
-        console.log("Aqui el estado --->",searchProfile[0].states)
-        const state = searchProfile[0].states
+        console.log("Aqui el estado --->",searchProfile[0].state)
+        const state = searchProfile[0].state;
+        const country = searchProfile[0].country;
+        const countryCode = searchProfile[0].countryCode;
+        //countryCode: 'VE'
+
         const { title, category, author, construcDate, tecnicalDescription, price, segment } = req.body
 
         function transformarTitle(title) {
@@ -259,7 +263,7 @@ routes.post('/department/create/artes', async(req,res)=>{
                 
                 async function createAD(){
 
-                    const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, price, user_id : user._id, username, state_province : state, segment }) 
+                const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
                     const ArtesSave = await Artes.save()
                     //console.log(ArtesSave);
                     
