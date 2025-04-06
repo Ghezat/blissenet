@@ -5,6 +5,7 @@ const session = require('express-session');
 var methodOverride = require('method-override');
 const morgan = require('morgan');
 const multer = require('multer');
+const cors = require('cors');
 const ejs = require('ejs')
 const path = require('path')
 
@@ -18,7 +19,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 //middleware
-
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended : false }));

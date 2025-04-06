@@ -2301,36 +2301,19 @@
             })
             
             //hacemos la llamada a la API de tosos los paises.
-            fetch('https://restcountries.com/v3.1/all')
+            fetch('/restcountries')
             .then(response => response.json())
-            .then(data=> {
-                //console.log("data -->", data)
-                data.sort((a,b)=> {
-                if (a.name.common < b.name.common){
-                    return -1; //a viene antes que b
-                }
-                if (a.name.common > b.name.common){
-                    return 1; // a viene despues de b
-                }
-                return 0; //son iguales.
-                });
-
-                const countriesWithCodes = data.map(country => {
-                return {
-                    pais: country.name.common,
-                    code: country.cca2
-                };
-                });
-
+            .then(countries=> {
+                console.log("countries ------------------------------------------->", countries);
                 //aqui el array de todos los paises ordenados en orden alfabetico con su codigo
-                console.log("countriesWithCodes", countriesWithCodes);
-                
-                countriesWithCodes.forEach((ele)=>{
-                let pais = ele.pais;
-                let code = ele.code;
-                
-                selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}"> ${pais} </option>`
+
+                countries.forEach((ele)=>{
+                    let pais = ele.pais;
+                    let code = ele.code;
+            
+                    selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}"> ${pais} </option>`
                 })
+
 
                 //boton de cambio de pais 
                 btnChangeCountry.addEventListener('click', ()=> {

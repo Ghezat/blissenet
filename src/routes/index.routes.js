@@ -5,6 +5,8 @@ const routes = Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
+const countries = require('../countries.js');
+
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
 const modelBankUser = require('../models/bankUser.js');
@@ -54,6 +56,7 @@ routes.get('/', async(req, res)=>{
     
     let username;
 
+    
     const user = req.session.user;
     const success = req.session.success;
     const stopped = req.session.stopped; //"Su cuenta ha sido baneada por infringir nuestras normas.";
@@ -65,6 +68,7 @@ routes.get('/', async(req, res)=>{
     delete req.session.stopped;
     delete req.session.dataLocked;
     console.log("Esto es user ->", user);
+
 
     let searchProfile;
     const boxResult = [];
@@ -141,6 +145,16 @@ routes.get('/', async(req, res)=>{
     //console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
 
     res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay})
+});
+
+routes.get('/restcountries', async(req, res)=>{
+    
+    try {
+        res.json(countries)
+    } catch (error) {
+        console.log('Ha ocurrido un error', error);
+    }
+
 });
 
 routes.get('/requireRateUpdate', async(req, res)=>{
