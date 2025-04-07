@@ -837,7 +837,7 @@
                                 </div>
                                 
                                 <% const seeMarket = user.seeMarket %> <!-- objeto seeMarket -->
-                                
+                                <% const flag = seeMarket.flag %>
 
                                 <!-- seccion Mercado de paises -->
                                 <div class="card my-2">
@@ -845,17 +845,20 @@
                                         Explora un nuevo Mercado <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCountryExplorer"> <i class="bi bi-info-circle mx-1"></i> </div>
                                     </div>
                                     
-                                    <div class="card-body">
-                                
-                                            <div class="input-group my-2">
-                                                <span class="input-group-text"> <i class="bi bi-globe2"></i>  </span>
-                                                <input type="text" class="form-control" id="inpSeeMarket" value="<%= seeMarket.countryMarket %>" readonly>
-                                                <input type="hidden" id="inpSeeMarketCode" value="<%= seeMarket.countryMarketCode %>">
-                                                <span class="input-group-text px-4"> <%= seeMarket.countryMarketCode %> </span>
-                                            </div>
+                                    <div class="card-body" style=" width: 100%; height: auto; position: relative" >
+                                      <img src="<%= flag %>" style="width: 100%; max-height: 210px; object-fit: cover;">
+                                        
+                                        <div class="elements" style="width: 90%; position: absolute; top: 20px; left: 50%;  transform: translateX(-50%)">
 
+                                            <div class="input-group my-2">
+                                                <span class="input-group-text" style="opacity: 0.7;"> <i class="bi bi-globe2"></i>  </span>
+                                                <input type="text" class="form-control" id="inpSeeMarket" value="<%= seeMarket.countryMarket %>" style="opacity: 0.7;" readonly >
+                                                <input type="hidden" id="inpSeeMarketCode" value="<%= seeMarket.countryMarketCode %>">
+                                                <span class="input-group-text px-4" style="opacity: 0.8;"> <%= seeMarket.countryMarketCode %> </span>
+                                            </div>
+                                       
                                             <div class="form-group my-2">
-                                                <select id="selectCountry" class="form-control">
+                                                <select id="selectCountry" class="form-control" style="opacity: 0.8;">
                                                     
                                                     <option value="no-selected">Cambiar de mercado</option>
                                                     <!-- option dinamics -->
@@ -866,7 +869,7 @@
                                             <div class="containerAlert my-2 p-0" id="alertBlissBot">
                                                 <!-- alertas dinamicos -->
 
-                                                    <div class="alert alert-primary m-0 close" id="alertSeeCountryCode1">
+                                                    <div class="alert alert-primary m-0 p-1 close" id="alertSeeCountryCode1">
                                                         <span> <i class="bi bi-check2-circle me-2"></i> Mercado cambiado satisfactoraimente. </span>
                                                     </div>
                                                     <div class="alert alert-danger m-0 close" id="alertSeeCountryCode0">
@@ -882,6 +885,8 @@
                                                     Actualizando ...
                                                 </button> 
                                             </div>
+
+                                        </div>
 
                                     </div>
                                 </div>
@@ -2310,8 +2315,10 @@
                 countries.forEach((ele)=>{
                     let pais = ele.pais;
                     let code = ele.code;
+                    let flag = ele.flags;
+                    
             
-                    selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}"> ${pais} </option>`
+                    selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}" data-flag="${flag}"> ${pais} </option>`
                 })
 
 
@@ -2322,10 +2329,14 @@
                     const selectCountryValue = selectCountry.value; //code
                     const selectCountries = selectCountry.options[selectCountry.selectedIndex];
                     const country = selectCountries.getAttribute('data-pais'); //pais
+                    const flag = selectCountries.getAttribute('data-flag'); //flag
+
                     const idUserValue = idUser.value; //id User
 
                     console.log("code :", selectCountryValue);
                     console.log("country :", country);
+                    console.log("flag :", flag);
+
                     console.log("idUserValue :", idUserValue);
 
                     //ahora vamos a mandar los datos de este usuario para de esta forma enviar y actualizar el mercado de este usuario.
@@ -2333,9 +2344,13 @@
                     const datos = {
                         idUser : idUserValue,
                         countryMarket : country,
-                        countryMarketCode : selectCountryValue
+                        countryMarketCode : selectCountryValue,
+                        flag : flag
                     }
+
+                    console.log("este es el dato que va a ir al backend ---->>", datos);
              
+                     
                     fetch('/locationMarket', {
 
                         method: "post",
@@ -2371,7 +2386,7 @@
                         
                         })
                         .catch( err => console.log(err));
-
+ 
                     })
                  
 

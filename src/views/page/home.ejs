@@ -510,10 +510,12 @@
             //aqui el array de todos los paises ordenados en orden alfabetico con su codigo
 
             countries.forEach((ele)=>{
-              let pais = ele.pais;
-              let code = ele.code;
-              
-              selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}"> ${pais} </option>`
+                    let pais = ele.pais;
+                    let code = ele.code;
+                    let flag = ele.flags;
+                    
+            
+                    selectCountry.innerHTML +=`<option value="${code}" data-pais="${pais}" data-flag="${flag}"> ${pais} </option>`
             })
 
             btnGetCountryMarket.addEventListener('click', ()=> {
@@ -522,10 +524,12 @@
               const selectCountryValue = selectCountry.value; //code
               const selectCountries = selectCountry.options[selectCountry.selectedIndex];
               const country = selectCountries.getAttribute('data-pais'); //pais
+              const flag = selectCountries.getAttribute('data-flag'); //flag
               const idUserValue = idUser.value; //id User
 
               console.log("code :", selectCountryValue);
               console.log("country :", country);
+              console.log("flag :", flag);
               console.log("idUserValue :", idUserValue);
 
               //ahora vamos a mandar los datos de este usuario para de esta forma enviar y actualizar el mercado de este usuario.
@@ -533,7 +537,9 @@
               const datos = {
                 idUser : idUserValue,
                 countryMarket : country,
-                countryMarketCode : selectCountryValue
+                countryMarketCode : selectCountryValue,
+                flag : flag
+                
               }
               
               fetch('/locationMarket', {

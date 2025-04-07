@@ -201,10 +201,10 @@ routes.post('/locationMarket', async (req, res)=>{
     try {
         console.log('Estoy llegando a locationMarket');
         
-        const { idUser, countryMarket, countryMarketCode } = req.body;
-        console.log(`idUser: ${idUser}, countryMarket: ${countryMarket}, countryMarketCode: ${countryMarketCode}`);
+        const { idUser, countryMarket, countryMarketCode, flag } = req.body;
+        console.log(`idUser: ${idUser}, countryMarket: ${countryMarket}, countryMarketCode: ${countryMarketCode}, flag: ${flag}`);
 
-        const updateUser = await modelUser.findByIdAndUpdate(idUser, { $set: { seeMarket: { countryMarket, countryMarketCode } } }, {new: true});
+        const updateUser = await modelUser.findByIdAndUpdate(idUser, { $set: { seeMarket: { countryMarket, countryMarketCode, flag } } }, {new: true});
         console.log("updateUser ---->", updateUser);
         req.session.user = updateUser //aqui actualizamos la session de user
         res.json({code : 1, msg : updateUser});
