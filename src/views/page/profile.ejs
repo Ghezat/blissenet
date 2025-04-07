@@ -851,25 +851,16 @@
                                         <div class="elements" style="width: 90%; position: absolute; top: 20px; left: 50%;  transform: translateX(-50%)">
 
                                             <div class="input-group my-2">
-                                                <span class="input-group-text" style="opacity: 0.7;"> <i class="bi bi-globe2"></i>  </span>
-                                                <input type="text" class="form-control" id="inpSeeMarket" value="<%= seeMarket.countryMarket %>" style="opacity: 0.7;" readonly >
+                                                <span class="input-group-text" style="opacity: 0.8;"> <i class="bi bi-globe2"></i>  </span>
+                                                <input type="text" class="form-control" id="inpSeeMarket" value="<%= seeMarket.countryMarket %>" style="opacity: 0.8;" readonly >
                                                 <input type="hidden" id="inpSeeMarketCode" value="<%= seeMarket.countryMarketCode %>">
                                                 <span class="input-group-text px-4" style="opacity: 0.8;"> <%= seeMarket.countryMarketCode %> </span>
                                             </div>
-                                       
-                                            <div class="form-group my-2">
-                                                <select id="selectCountry" class="form-control" style="opacity: 0.8;">
-                                                    
-                                                    <option value="no-selected">Cambiar de mercado</option>
-                                                    <!-- option dinamics -->
-
-                                                </select>
-                                            </div>
-                                                
-                                            <div class="containerAlert my-2 p-0" id="alertBlissBot">
+                                                                                       
+                                            <div class="containerAlert my-2" id="alertBlissBot">
                                                 <!-- alertas dinamicos -->
 
-                                                    <div class="alert alert-primary m-0 p-1 close" id="alertSeeCountryCode1">
+                                                    <div class="alert alert-primary m-0 close" id="alertSeeCountryCode1">
                                                         <span> <i class="bi bi-check2-circle me-2"></i> Mercado cambiado satisfactoraimente. </span>
                                                     </div>
                                                     <div class="alert alert-danger m-0 close" id="alertSeeCountryCode0">
@@ -878,14 +869,23 @@
 
                                             </div>
 
-                                            <div class="form-group my-3">
-                                                <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnChangeCountry" disabled>
-                                                <button class="form-control btn btn-dark close" type="button" id="btnChangeCountryLoading" disabled>
-                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                    Actualizando ...
-                                                </button> 
-                                            </div>
+                                        </div>
 
+                                        <div class="form-group my-2">
+                                            <select id="selectCountry" class="form-control" style="opacity: 1;">
+                                                
+                                                <option value="no-selected">Cambiar de mercado</option>
+                                                <!-- option dinamics -->
+
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group my-3">
+                                            <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnChangeCountry" disabled>
+                                            <button class="form-control btn btn-dark close" type="button" id="btnChangeCountryLoading" disabled>
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                Actualizando ...
+                                            </button> 
                                         </div>
 
                                     </div>
