@@ -68,12 +68,12 @@
     }
 
     .cardPublished{
-      width: 220px;
+      width: 230px;
       transition: 0.3s ease border;
     }
 
     .imgFront{
-      width: 220px; height: auto;
+      width: 230px; height: auto;
       transition: .5s ease width;
     }
 
@@ -81,7 +81,7 @@
       outline: 2px solid lightskyblue;
 
       .imgFront{
-        width: 230px;
+        width: 240px;
       }
     }
 
@@ -524,7 +524,7 @@
       <div class="viewCollection" style="height: auto; background: #fff5cb;">
             
         <% if (cardArticleAirplanes.docs.length !==0 ) {%>
-          <div class="contentAll d-flex flex-wrap justify-content-start p-3">
+          <div class="contentAll d-flex flex-wrap justify-content-center p-3">
           
             <% cardArticleAirplanes.docs.forEach( (ele, i)=>{ %>
 
@@ -535,7 +535,7 @@
                               <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
                                 <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
                                 <div id="carouselExampleControls<%= i %>" class="carousel slide data-bs-ride="carousel" data-bs-interval="false" data-bs-touch="true" >
-                                  <div class="carousel-inner" style="width: 100%; height: 220px;">
+                                  <div class="carousel-inner" style="width: 100%; height: 230px;">
                                     
                                       <% if (ele.offer === true) { %> <!-- etiqueta de oferta arriba a la derecha    -->
                                         <span class="border border-warning" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 

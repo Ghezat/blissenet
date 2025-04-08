@@ -69,12 +69,12 @@
     }
 
     .cardPublished{
-      width: 220px;
+      width: 230px;
       transition: 0.3s ease border;
     }
 
     .imgFront{
-          width: 220px; height: auto;
+          width: 230px; height: auto;
           transition: .5s ease width;
         }
     
@@ -82,7 +82,7 @@
         outline: 2px solid lightskyblue;
 
           .imgFront{
-            width: 230px;
+            width: 240px;
           }
     }
 
@@ -525,7 +525,8 @@
        <div class="viewCollection" style="height: auto; background: #fff5cb;">
             
           <% if (cardArticleArts.docs.length !==0 ) {%>
-              <div class="contentAll d-flex flex-wrap justify-content-start p-3">
+              <div class="contentAll d-flex flex-wrap justify-content-center p-3">
+
                 <% cardArticleArts.docs.forEach( (ele, i)=>{ %>
 
                     <div class="card m-2 p-0 shadow cardPublished">

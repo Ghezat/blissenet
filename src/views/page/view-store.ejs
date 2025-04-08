@@ -69,8 +69,9 @@
     }
 
     .cardPublished{
-      width: 220px;
+      width: 230px;
       transition: 0.3s ease border;
+  
     }
 
     .cardPublished:hover{
@@ -474,7 +475,7 @@
               <div class="containAlert" style="position: sticky; z-index: 100; top: 0px;" > <!-- bloque dinamico --> </div>
             
               <% if (cardArticleStore.docs.length !==0 ) {%>
-                <div class="contentAll d-flex flex-wrap justify-content-start p-3">
+                <div class="contentAll d-flex flex-wrap justify-content-center p-3">
                     <% cardArticleStore.docs.forEach( (ele, i)=>{ %>
 
                       <% const bannerStore = ele.bannerPerfil[0].url  %>
