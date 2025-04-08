@@ -142,6 +142,14 @@
  
   <main>
 
+  <% if (user) { %>
+    <% const seeMarket = user.seeMarket %>
+    <!-- <% const idUser = user._id %> -->
+    <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+    <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+      <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+  <% }; %>
+
   <!-- navegador con buscador homologo a navi-simple -->   
     <nav class="navbar navbar-expand-lg py-3" id="navHead">
       <div class="container-fluid mx-4 navSon" style="width: 100%;">
@@ -324,35 +332,7 @@
                 <div class="contentSearchMain" style="width: 100%; height: 100%;">
                   <form action="/view-store" method="post" class="d-flex justify-content-center flex-wrap formSearch">
 
-                    
-                      <div class="contentSelectPlaces d-flex me-3" style="width: auto; height: 100%;">
-                          <div class="contentStates input-group flex-nowrap" style="width: 100%;">
-                            <span class="input-group-text" id="btnStates"><i class="bi bi-geo me-1"></i></span>
-                            <select class="form-control Geolo" name="states" id="estados" style="border-top-right-radius:0 ; border-bottom-right-radius:0;">
-                            <% if (cacheState) { %>
-                              <option value="<%= cacheState %>"><%= cacheState %></option>
-                              <option value="Todos">Todos</option>
-                            <% } else { %>
-                              <option value="Todos">Todos</option>
-                            <% } %>  
-                                
-                                <!-- option dinamicos -->
-                            </select>
-
-                            <span class="input-group-text" id="btnCities" style="border-top-left-radius: 0; border-top-right-radius: 3px; border-bottom-left-radius: 0; border-bottom-right-radius: 3px;"><i class="bi bi-geo-alt me-1"></i></span>
-                            <select class="form-control Geolo" name="cities" id="ciudades" style="border-top-left-radius:0 ; border-bottom-left-radius:0 ;">
-                            <% if (cacheCities) { %> 
-                              <option value="<%= cacheCities %>"><%= cacheCities %></option>   
-                              <option value="Todos">Todos</option>
-                            <% } else { %>
-                              <option value="Todos">Todos</option>  
-                            <% }; %>   
-                                <!-- option dinamicos -->
-                            </select>
-                          </div>
-                      </div>  
-
-                      <div class="contentSearch d-flex" style="width: 40%; height: 100%;">
+                      <div class="contentSearch d-flex" style="width: 60%; height: 100%;">
                                         
                         <div class="input-group">
                           <% if (cacheSearch) { %>
@@ -389,22 +369,6 @@
         <div class="card mx-0 border border-info cardResultSearch"  style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; ">
           <div class="card-header d-flex justify-content-between"><span>Colección de Tiendas</span> <i class="bi bi-shop-window" style="font-size: 20px;"></i> </div>
           <div class="card-body">
-
-            <div class="contentGeolocation border-bottom border-secondary mb-3">
-              
-              <% if (cacheState) { %>
-                <p><i class="bi bi-geo me-1"></i> Estado : <span id="searcherSpan"> <%= cacheState %> </span> </p>
-              <% } else { %>
-                <p><i class="bi bi-geo me-1"></i> Estado : Todos </p>
-              <% }; %>
-
-              <% if (cacheCities) { %>
-                <p><i class="bi bi-geo-alt me-1"></i> Ciudad : <span  id="searcherSpan"> <%= cacheCities %> </span> </p>
-              <% } else { %>
-                <p><i class="bi bi-geo-alt me-1"></i> Ciudad : Todos </p>
-              <% }; %>
-
-            </div>
               
             <% if (cacheSearch) { %>
               <p><i class="bi bi-search me-1"></i> Buscando : <span  id="searcherSpan"> <%= cacheSearch %> </span> </p>
@@ -536,7 +500,7 @@
                                           <div class="contentWorkSpace py-0 px-2 d-flex justify-content-start align-items-center" style="width: 100%; height: 49%; background-color: <%= ele.bGColorTopbar %>;">
                                             <a href="/account/<%= ele.username %>" class="text-decoration-none text-dark d-flex flex-column align-items-start justify-content-center">        
                                                   <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-person-workspace me-1"></i><%= ele.username %></p>
-                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt-fill me-1"></i><%= ele.country %> - <%= ele.state %></p>
+                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt-fill me-1"></i><%= ele.country %> - <%= ele.state %> - <%= ele.quarter %> </p>
                                                   <!-- <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt me-1"></i><%= ele.state %></p> -->
                                             </a>  
                                           </div>
@@ -778,83 +742,8 @@
 
     
 </script>
-<script>
-  //carga de opciones del selector de estados y ciudades
-  const estados = document.getElementById('estados');
-  const ciudades = document.getElementById('ciudades');
-
-  window.addEventListener('load', ()=>{
-
-      if (estados && ciudades){
-        
-          fetch("/country", {
-              method: "GET",
-              headers: { "Content-Type" : "applications/json"}
-          })
-          .then(response =>response.json() )
-          .then( ve => { 
-              console.log(ve)
-              for (let i = 0; i < ve.length; i++) {
-                  const element = ve[i].estado;
-                  //console.log("estados", element);
-                  estados.innerHTML += `<option value="${element}">${element}</option>`
-              }
-              estados.addEventListener('change', ()=>{
-                  console.log(estados.value);
-                  const edo = estados.value;
-
-                  for (let n = 0; n < ve.length; n++) {
-                      const ele = ve[n].estado;
-                      if (edo == ele){
-                          console.log(ve[n].ciudades)
-                          const cities = ve[n].ciudades;
-                          const capital = ve[n].capital;
-
-                          if (cities !== undefined){
-
-                              ciudades.innerHTML = ""; //aqui limpio todo por si hay algun arreglo
-                              ciudades.innerHTML = `<option value="Todos">Todos</option>`
-                              for (let c = 0; c < cities.length; c++) {
-                                  const city = cities[c];
-                                  ciudades.innerHTML += `<option value="${city}">${city}</option>`
-                              }
-
-                          } else {
-                              
-                              ciudades.innerHTML = ""; //aqui limpio todo por si hay algun arreglo
-                              ciudades.innerHTML += `<option value="${capital}">${capital}</option>`
-                              
-                          }
-
-                      
-                      }
-                      
-                  }
-
-              })
-              
-          })
-          .catch( err => console.log(err));
-
-      }
-      
-  });    
 
 
-</script>
-<script>
-  const btnStates = document.getElementById('btnStates');
-  const btnCities = document.getElementById('btnCities');
-
-  btnStates.addEventListener('click', ()=>{
-    estados.classList.toggle('Geolo');
-  });
-
-  btnCities.addEventListener('click', ()=>{
-    ciudades.classList.toggle('Geolo');
-  });
-
-</script>
 </body>
 </html>
 
