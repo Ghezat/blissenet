@@ -310,6 +310,7 @@
                                                 <div class="form-group d-flex my-2">
                                                     <button class="form-control btn-sm btn-outline-secondary" id="btnEditGeolo">Obtener Geolocalización</button>
                                                 </div>
+
                                                 <div class="input-group flex-nowrap my-2">
                                                     <span class="input-group-text anchorRRSS"> <i class="bi bi-geo-alt-fill"></i> </span>
                                                     <input type="text" name="country" class="form-control" id="country"  readonly>
@@ -326,7 +327,12 @@
                                                 <div class="input-group flex-nowrap my-2">
                                                     <input type="text" name="cityBlock" class="form-control" id="city_block" readonly>
                                                     <input type="text" name="postCode" class="form-control" id="postcode" readonly>
-                                                </div>                                                
+                                                </div>      
+                                                
+                                                <div class="input-group flex-nowrap my-2">
+                                                    <input type="text" name="city" class="form-control" id="city" readonly>
+                                                    <input type="text" name="suburb" class="form-control" id="suburb" readonly>
+                                                </div> 
 
                                                 <!-- creación de direccion completa -->
                                                 <div class="form-group my-2">
@@ -497,9 +503,14 @@
                                                     </div>
 
                                                     <div class="input-group flex-nowrap my-2">
-                                                        <input type="text" name="cityBlock" class="form-control" id="city_block" value="<%= ele.cityBlock %>" readonly>
-                                                        <input type="text" name="postCode" class="form-control" id="postcode" value="<%= ele.postCode %>" readonly>
+                                                        <input type="text" name="cityBlock" class="form-control" id="city_block" value="<%= ele.cityBlock %>" style="width: 80%;"  readonly>
+                                                        <input type="text" name="postCode" class="form-control" id="postcode" value="<%= ele.postCode %>" style="width: 19%;" readonly>
                                                     </div>
+
+                                                    <div class="input-group flex-nowrap my-2">
+                                                        <input type="text" name="city" class="form-control" id="city"  value="<%= ele.city %>" readonly>
+                                                        <input type="text" name="suburb" class="form-control" id="suburb"  value="<%= ele.suburb %>" readonly>
+                                                    </div> 
                                                         
                                                     <!-- direccion completa -->
                                                     <div class="form-group my-2">
@@ -1863,8 +1874,11 @@
             const quarterInp = document.getElementById("quarter");
             const city_blockInp = document.getElementById("city_block");
             const postcodeInp = document.getElementById("postcode");
+            const cityInp = document.getElementById("city");
+            const suburbInp = document.getElementById("suburb");
         
-            let lat, lon; //declaracion de variables vacias 
+            let lat, lon; //declaracion de variables vacias
+
             btnGeolo.addEventListener( "click", function(e) {
                 e.preventDefault();
                 if (navigator.geolocation){
@@ -1897,16 +1911,21 @@
                                 const country_code = data.address.country_code.toUpperCase();
                                 const postcode = data.address.postcode;
                                 const state = data.address.state;
-                                const quarter = data.address.quarter;
-                                const city_block = data.address.city_block;
+                                const quarter = data.address.county;
+                                const city_block = data.address.municipality;
+                                const city = data.address.city;
+                                const suburb = data.address.suburb;
+
         
                                 console.log('data.address ---->', data.address);
                                 console.log('pais ---->', country);
                                 console.log('pais_code ---->', country_code);
                                 console.log('postcode ---->', postcode);
                                 console.log('estado ---->', state);
-                                console.log('divStadal ---->', quarter);
+                                console.log('quarter ---->', quarter);
                                 console.log('city_block ---->', city_block);
+                                console.log('city ---->', city);
+                                console.log('suburb ---->', suburb);
         
                                 countryInp.value = country;
                                 countryCodeInp.value = country_code 
@@ -1914,6 +1933,8 @@
                                 quarterInp.value = quarter;
                                 city_blockInp.value = city_block;
                                 postcodeInp.value = postcode;
+                                cityInp.value = city;
+                                suburbInp.value = suburb;
         
                             } else {
                                 console.log('No se puede encontrar el pais')

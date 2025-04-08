@@ -1483,9 +1483,9 @@ routes.post('/myaccount/profile', async (req, res)=>{
 
         const user = req.session.user;
         console.log(req.body);      
-        const {names, identification, dateborn, gender, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
+        const {names, identification, dateborn, gender, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
         console.log("company, companyRif, country, countryCode, state, quarter, cityBlock, postCode");
-        console.log(company, companyRif, country, state, quarter, cityBlock, postCode);
+        console.log(company, companyRif, country, state, quarter, cityBlock, postCode, city, suburb,);
         let messageProfile;
         const geolocation = { lon, lat };
         const searchBanner = await modelBannerDefault.find();
@@ -1506,7 +1506,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
                 messageProfile = profileMessage;
             }
 
-            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, geolocation, country, countryCode, state, quarter, cityBlock, postCode, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, geolocation, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
             const saveProfile =  await newProfile.save();
             console.log("esto es lo que se registro en la DB ----->",saveProfile);
             req.session.profSuccess = '¡ Perfil creado satifactoriamente !'
@@ -1537,7 +1537,7 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         //const user = req.session.user;
         const ID = req.params.id;
         console.log("aqui el parametro", ID);
-        const {names, identification, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
+        const {names, identification, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
         let messageProfile;
         const geolocation = { lon, lat };
         const result = await modelProfile.findById(ID);
@@ -1551,7 +1551,7 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         }
 
         if (result) { 
-            const updates = await modelProfile.findByIdAndUpdate(ID, { names, identification, company, companyRif, geolocation, country, countryCode, state, quarter, cityBlock, postCode, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok})
+            const updates = await modelProfile.findByIdAndUpdate(ID, { names, identification, company, companyRif, geolocation, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok})
             req.session.updateSuccess = "Su perfil ha sido actualizado satisfactoriamente";
         } 
             
