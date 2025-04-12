@@ -2,12 +2,25 @@
 <html lang="en">
 <head>
     <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
+
     <title>Blissenet Signin-forgottenpassw</title>
 </head>
+<style>
+
+    .toast-success {
+        /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+        background-color: #6f42c1; /* Azul tirando a morado */
+        color: white; /* Color del texto */
+    }   
+
+</style>
 <body class="mainTheme">
     <main>
 
     <%- include('../partials/navi-simple.ejs') %>   
+    
     
     <% if (tokenForgottenPassw) { %>
         <%- include('../alert/tokenForgottenPassw.ejs') %>

@@ -13,6 +13,7 @@
 <style>
 
 .toast-success {
+       /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
        background-color: #6f42c1; /* Azul tirando a morado */
        color: white; /* Color del texto */
 }    
@@ -1057,13 +1058,14 @@
                                 <% } else { %>
                                     <div class="card my-2">
                                         <div class="card-header d-flex justify-content-between">
-                                            Cambiar Contraseña <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangePasswForm"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                            Cambiar Contraseña <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangePassw"> <i class="bi bi-info-circle mx-1"></i> </div>
                                         </div>
                                         <div class="card-body">
                                             <form action="/myaccount/new-password" method="POST" id="newPasswForm">
                                             
                                                 <div class="form-group border my-2">
-                                                    <label for="">Para cambiar su Contraseña se requiere enviar un Token de seguridad a su email. Recomendamos tener su correo abierto antes de dar al botón "Enviar token". </label>
+                                                    <label for="">Para cambiar su Contraseña se requiere enviar un Token de seguridad a su email o a su telegram si esta usando BlissBot.
+                                                    </label>
                                                 </div>
                                                 <div class="form-group my-3">
                                                     <button class="btn btn-dark form-control" id="sendChangePassw"> Enviar Token </button>
@@ -1306,7 +1308,7 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Cambiar contraseña de al botón <span class="fw-bold text-primary">Enviar Token </span> vaya a su correo y recupere el token (Número de 6 digitos) vuelva a la misma sección y coloque el número copiado, debajo la Nueva Contraseña y por ultimo clic en <span class="fw-bold text-primary">Cambiar Contraseña</span>. </p>
+                                            <p>Cambiar contraseña de al botón <span class="fw-bold text-primary">Enviar Token </span> vaya a su correo o a telegram y recupere el token (Número de 6 digitos) vuelva a la misma sección y coloque el número copiado, debajo la Nueva Contraseña y por ultimo clic en <span class="fw-bold text-primary">Cambiar Contraseña</span>. </p>
                                         </div>
                                         <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>

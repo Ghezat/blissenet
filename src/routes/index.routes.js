@@ -907,17 +907,19 @@ routes.get('/myaccount/signin-forgottenpassw', async(req,res)=> {
     const seeBot = req.session.seeBot; //"Espero te hayas divertido con Blissenet.com";
     const recaptchaFail = req.session.recaptchaFail; //"La verificacion de reCAPTCHA ha Fallado";
     const seeBotObjec = req.session.seeBotObjec; // { "message" : "Hemos detectado un posible ataque", "score" : score };
+    const emailNofound = req.session.emailNofound; //"Cuenta no encontrada. Verifique em email con que se registro.";
 
     delete req.session.seeBot;
     delete req.session.recaptchaFail;
     delete req.session.seeBotObjec;
+    delete req.session.emailNofound;
 
 
     if (user === undefined){
         //lo que obtiene esta const es un array con un objeto que posee la imagen de fondo del signIn.
         const signIn = await modelBackgroundSign.find( {active : true, typeBackground : "SignIn"} );
         console.log("Esto es signIn", signIn );
-        res.render('page/signin-forgottenpassw', {user, signIn, recaptchaFail, seeBot, seeBotObjec})
+        res.render('page/signin-forgottenpassw', {user, signIn, recaptchaFail, seeBot, seeBotObjec, emailNofound})
     } else {
         //console.log("ya estas logeado");
         res.redirect('/');
@@ -931,7 +933,8 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
     //   data-sitekey="6LfhgFIlAAAAAODB3P24Ea32aXgbqEHb3iVJGrJP"  --->Esto es la Clave de Sitio esta en el front
     
     const {email, recaptchaResponse} = req.body
-    const emailSearch = await modelUser.findOne({ email })
+
+    const emailSearch = await modelUser.findOne({ email });
     let newToken, newTN; 
     
     //console.log("emailSearch --->", emailSearch);
@@ -969,6 +972,8 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
 
      
                 if (emailSearch) {
+
+                    const chatId = emailSearch.blissBot.chatId; //este es el chatId del user.
                     console.log( `mail encontrado ${emailSearch.email}` );
 
                     async function createToken(){
@@ -1041,34 +1046,94 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
                     
                     }
 
-                    createToken()
-                        .then(()=>{
-                            editToken()
-                                .then(()=>{
-                                    sendToken()
-                                        .then(()=>{
-                                            req.session.email = {email : email};
-                                            console.log("proceso de restauracion por olvido de contraseña OK");
-                                            req.session.tokenForgottenPassw = "¡Token enviado al email para restauración de Contraseña!"
-                                            res.redirect('/myaccount/signin-forgottenpasswToken');
-                                        })
-                                        .catch((error)=>{
-                                            console.log("Ha habido un error sendToken", error);
-                                        })
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error editToken()", error);
-                                })
+                    async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+                        console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+                        const Message = `Notificación de Blissenet.com: Safety\n\nCodigo de seguridad: ${newToken}`;
+                        console.log("chatId --->", chatId);          
+            
+                        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                            chat_id: chatId,
+                            text: Message
                         })
-                        .catch((error)=>{
-                            console.log("Ha habido un error createToken()", error);
+                        .then(response => {
+                            console.log('--------------------------- BlissBot----------------------------');
+                            console.log('Mensaje enviado con éxito:', response.data);
                         })
+                        .catch(error => {
+                            console.log('--------------------------- BlissBot----------------------------');
+                            console.error('Error al enviar el mensaje:', error.response.data);
+                        });
+                
+                    }
+
+
+                    if (chatId){
+
+                        createToken()
+                            .then(()=>{
+                                editToken()
+                                    .then(()=>{
+                                        sendToken()
+                                            .then(()=>{
+                                                blissBotNoti()
+                                                    .then(()=>{
+                                                        req.session.email = {email : email};
+                                                        console.log("proceso de restauracion por olvido de contraseña OK");
+                                                        req.session.tokenForgottenPassw = "¡Token enviado al email para restauración de Contraseña!"
+                                                        res.redirect('/myaccount/signin-forgottenpasswToken');
+                                                    })
+                                                    .catch((error)=>{
+                                                        console.log("Ha habido un error  blissBotNoti()", error);
+                                                    })
+
+                                            })
+                                            .catch((error)=>{
+                                                console.log("Ha habido un error sendToken()", error);
+                                            })
+                                    })
+                                    .catch((error)=>{
+                                        console.log("Ha habido un error editToken()", error);
+                                    })
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error createToken()", error);
+                            })                        
+
+                    } else {
+
+                        createToken()
+                            .then(()=>{
+                                editToken()
+                                    .then(()=>{
+                                        sendToken()
+                                            .then(()=>{
+                                                req.session.email = {email : email};
+                                                console.log("proceso de restauracion por olvido de contraseña OK");
+                                                req.session.tokenForgottenPassw = "¡Token enviado al email para restauración de Contraseña!"
+                                                res.redirect('/myaccount/signin-forgottenpasswToken');
+                                            })
+                                            .catch((error)=>{
+                                                console.log("Ha habido un error sendToken", error);
+                                            })
+                                    })
+                                    .catch((error)=>{
+                                        console.log("Ha habido un error editToken()", error);
+                                    })
+                            })
+                            .catch((error)=>{
+                                console.log("Ha habido un error createToken()", error);
+                            })
+
+                    }
+
+
 
 
 
                     
                 } else {
                     console.log( "mail no found");
+                    req.session.emailNofound = "Cuenta no encontrada. Verifique el email con que se registro.";
                     res.redirect('/myaccount/signin-forgottenpassw'); 
                 };
 
@@ -1302,7 +1367,7 @@ routes.post('/myaccount/new-password', async(req, res)=>{
 
         async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
             console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
-            const Message = `Notificación de Blissenet.com: safety\n\nCodigo de seguridad: "${newToken}"`;
+            const Message = `Notificación de Blissenet.com: Safety\n\nCodigo de seguridad: ${newToken}`;
             console.log("chatId --->", chatId);          
 
             axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
