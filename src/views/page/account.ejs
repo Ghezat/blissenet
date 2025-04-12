@@ -2097,29 +2097,29 @@
   // Selecciona el botón con la clase 'popoverNoRate'
   const popoverNoRate = document.querySelector('.popoverNoRate');
 
-// Inicializa el popover de Bootstrap
-const popoverInstanceNoRate = new bootstrap.Popover(popoverNoRate);
+  // Inicializa el popover de Bootstrap
+  const popoverInstanceNoRate = new bootstrap.Popover(popoverNoRate);
 
-// Función para mostrar/ocultar el popover
-function togglePopoverNoRate() {
-    const isVisible = popoverInstanceNoRate._isShown;
-    if (isVisible) {
-      popoverInstanceNoRate.hide();
-    } else {
-      popoverInstanceNoRate.show();
-    }
-}
+  // Función para mostrar/ocultar el popover
+  function togglePopoverNoRate() {
+      const isVisible = popoverInstanceNoRate._isShown;
+      if (isVisible) {
+        popoverInstanceNoRate.hide();
+      } else {
+        popoverInstanceNoRate.show();
+      }
+  }
 
-// Añade evento al botón
-popoverNoRate.addEventListener('click', (event) => {
-    event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
-    togglePopoverNoRate();
-});
+  // Añade evento al botón
+  popoverNoRate.addEventListener('click', (event) => {
+      event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
+      togglePopoverNoRate();
+  });
 
-// Cierra el popover si se hace clic en cualquier parte de la página
-document.addEventListener('click', () => {
-  popoverInstanceNoRate.hide();
-});
+  // Cierra el popover si se hace clic en cualquier parte de la página
+  document.addEventListener('click', () => {
+    popoverInstanceNoRate.hide();
+  });
 
 </script>
 
@@ -2160,33 +2160,34 @@ document.addEventListener('click', () => {
 <script>
   // Estos son los popover de los corazones de los anuncios de la tienda.
   // Selecciona todos los botones con la clase 'popover'
-const popoverButtons = document.querySelectorAll('.popover');
+ 
+  const popoverButtons = document.querySelectorAll('.popover');
 
-// Inicializa los popovers de Bootstrap
-const popoverInstances = Array.from(popoverButtons).map(button => {
-    return new bootstrap.Popover(button);
-});
+  // Inicializa los popovers de Bootstrap
+  const popoverInstances = Array.from(popoverButtons).map(button => {
+      return new bootstrap.Popover(button);
+  });
 
-// Añade evento a cada botón
-popoverButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Cierra todos los popovers abiertos
-        popoverInstances.forEach(popover => {
-            if (popover._element !== button) {
-                popover.hide();
-            }
-        });
-        // Abre el popover del botón clicado
-        const currentPopover = bootstrap.Popover.getInstance(button);
-        if (currentPopover) {
-            currentPopover.toggle();
-        } else {
-            new bootstrap.Popover(button).show();
-        }
-    });
-})
+  // Añade evento a cada botón
+  popoverButtons.forEach(button => {
+      button.addEventListener('click', () => {
+          // Cierra todos los popovers abiertos
+          popoverInstances.forEach(popover => {
+              if (popover._element !== button) {
+                  popover.hide();
+              }
+          });
+          // Abre el popover del botón clicado
+          const currentPopover = bootstrap.Popover.getInstance(button);
+          if (currentPopover) {
+              currentPopover.toggle();
+          } else {
+              new bootstrap.Popover(button).show();
+          }
+      });
+  })
 
-
+ 
 
 </script>
 

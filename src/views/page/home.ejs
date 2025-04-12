@@ -3,6 +3,9 @@
 
 <head>
   <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
+    
     <title>Blissenet</title>
 
     <meta property="og:type" content="website">
@@ -20,6 +23,11 @@
 
 </head>
 <style>
+
+  .toast-success {
+        background-color: #6f42c1; /* Azul tirando a morado */
+        color: white; /* Color del texto */
+  }    
 
   .textLight{
     /* trabaja en conjunto con themaTextLight */
@@ -234,7 +242,9 @@
 
 
       <% if (success) { %>
+
         <%- include('../alert/success.ejs') %>
+      
       <% }; %>
 
       <% if (stopped) { %>
@@ -280,10 +290,11 @@
                     <a href="/view-services" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-servicioW.png" alt="" title="Servicios" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
                     <a href="/view-auction" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-subastaW.png" alt="" title="Subastas" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
                   </ul>
-                  
                 </div>
+                
 
             </div>
+           
             
             <div class="container-fluid p-0">
               <div class="row rowWidth m-0">

@@ -4,10 +4,18 @@
 <head>
 
     <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
+
         <title>Blissenet Perfil</title>
 
 </head>
 <style>
+
+.toast-success {
+       background-color: #6f42c1; /* Azul tirando a morado */
+       color: white; /* Color del texto */
+}    
 
 .containerBanner{
     transition: 1s all ease;
@@ -1020,7 +1028,7 @@
                                             Cambiar Contraseña <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangePassw"> <i class="bi bi-info-circle mx-1"></i> </div>
                                         </div>
                                         <div class="card-body">
-                                            <form action="/myaccount/change-password" method="POST">
+                                            <form action="/myaccount/change-password" method="POST" id="changePasswForm">
                                                 <div class="input-group my-2">
                                                 <label for="" class="input-group-text">Token :</label>
                                                 <input type="text" class="form-control" name="token" style="letter-spacing: 10px; font-weight: bold; font-size: 18px;" maxlength="6" required>
@@ -1036,25 +1044,35 @@
                                                     <label for=""> <small> Contraseña debe tener mínimo 6 caracteres. </small></label>
                                                 </div>
                                                 <div class="form-group my-3">
-                                                    <button type="submit" class="btn btn-dark form-control">Cambiar Contraseña</button>
+                                                    <button class="btn btn-dark form-control" id="changePassw"> Cambiar Contraseña</button>
+                                                    <button class="btn btn-dark form-control close" id="changePasswClose" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Cambiando Contraseña ...
+                                                    </button>
                                                 </div>
+
                                             </form>
                                         </div>
                                     </div>
                                 <% } else { %>
                                     <div class="card my-2">
                                         <div class="card-header d-flex justify-content-between">
-                                            Cambiar Contraseña <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangePassw"> <i class="bi bi-info-circle mx-1"></i> </div>
+                                            Cambiar Contraseña <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangePasswForm"> <i class="bi bi-info-circle mx-1"></i> </div>
                                         </div>
                                         <div class="card-body">
-                                            <form action="/myaccount/new-password" method="POST">
+                                            <form action="/myaccount/new-password" method="POST" id="newPasswForm">
                                             
                                                 <div class="form-group border my-2">
                                                     <label for="">Para cambiar su Contraseña se requiere enviar un Token de seguridad a su email. Recomendamos tener su correo abierto antes de dar al botón "Enviar token". </label>
                                                 </div>
                                                 <div class="form-group my-3">
-                                                    <button type="submit" class="btn btn-dark form-control">Enviar Token</button>
+                                                    <button class="btn btn-dark form-control" id="sendChangePassw"> Enviar Token </button>
+                                                    <button class="btn btn-dark close form-control" id="sendChangePasswClose" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Enviar Token ...
+                                                    </button>
                                                 </div>
+
 
                                             </form>
                                         </div>
@@ -1309,7 +1327,7 @@
                                         <div class="modal-body">
                                             <p class="mb-1"> <b>¡Bienvenido a la ZonaBliss! </b> </p>
                                             <p>
-                                                Una herramientas innovadora para crear carruseles de banners atractivos, insertar videos cautivadores y subir fotos impresionantes, todo desde un espacio fácil de administrar.     
+                                                Una herramienta innovadora para crear carruseles de banners atractivos, insertar videos cautivadores y subir fotos impresionantes, todo desde un espacio fácil de administrar.     
                                                 Haz que tu tienda brille y atraiga a más usuarios con estilo y creatividad. ¡Descubre el poder de la personalización y eleva tu negocio al siguiente nivel con ZonaBliss! 
                                             </p>
                                             <p> Requerimentos : <span class="alert-success py-1 px-2 rounded-2"> <b>1 Anuncio</b>  </span> </p>
@@ -1343,30 +1361,7 @@
                                     </div>
                                 </div>
                             </div> 
-
-                            <!-- Modal Carrito de Compra --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy" -->
-                            <div class="modal fade" id="staticSuicheCarBuy" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH3" aria-hidden="true">
-                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelH3">Carrito de Compra</h5>
-                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p><span class="fw-bold text-primary">Agrega un carrito de Compra</span>
-                                                "¡Explora nuestra herramienta Carrito de Compra! Agrega fácilmente productos y realiza tu pedido de manera rápida y segura.
-                                                 Ofrecele a tus clientes una experiencia de compra cómoda y eficiente."
-                                            </p>
-                                            <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios de Items</b>  </span> </p>
-                                            <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
-                                        </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
-                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                             
+                         
                             
                             <!-- Modal Gestor ADS --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy" -->
                             <div class="modal fade" id="staticSuicheGestorADS" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
@@ -1728,7 +1723,13 @@
                                                                     <i class="bi bi-brush me-1"></i> Ir a ZonaBliss
                                                                 </a>
                         
-                                                            <% } %>    
+                                                            <% } else { %>
+                                                                
+                                                                <button class="btn btn-dark text-light text-decoration-none rounded-3 w-100 d-block" disabled>
+                                                                    <i class="bi bi-brush me-1"></i> Ir a ZonaBliss
+                                                                </button>
+
+                                                            <% }; %>    
 
                                                         </div>
                                                     </div>     
@@ -1743,7 +1744,7 @@
                                         <div class="card mt-2">
                                             <% searchProfile.forEach( (ele)=> { %>
                                                 <div class="card-header">
-                                                    Herramientas de Tienda
+                                                    Motor de busqueda para tienda
                                                 </div>
                                                 <div class="card-body">
 
@@ -1751,7 +1752,7 @@
                                                         <div class="alert alert-dark" style="border-left: 5px solid #131313;">
                                                             <p class="m-0">
                                                                 <span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> </span> 
-                                                                Importante : "¡Hola! Explora estas herramientas para mejorar la experiencia de tus clientes. Haz clic en el ícono de información para más detalles. <i class="bi bi-info-circle mx-1"></i>"   
+                                                                Importante: "¡Hola! Los motores de búsqueda para tiendas son herramientas poderosas que permiten ubicar anuncios por título y aproximación, presentando resultados de manera inmediata. Utiliza esta herramienta para ofrecer una experiencia excepcional a tus clientes. Requisito para utilizarla: tener al menos 11 anuncios."   
                                                             </p>
                                                         </div>
                                                     </div>
@@ -1787,31 +1788,6 @@
                                                             </div> 
                                                             <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
                                                         </div>
-
-                                                        <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                            <div class="contentSoonCarBuy d-flex">
-                                                                <label class="form-check-label no-select p-0 me-2" for="suicheCarBuy" title="Activa un carrito de compra, debes tener al menos 11 articulos del departamento de Items">○ Carrito de Compra </label>
-                                                                <div class="form-check form-switch">
-                                                                                                                    
-                                                                    <input class="form-check-input" type="checkbox" id="suicheCarBuy" name="Buy" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
-
-                                                                </div>
-                                                            </div>    
-                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy"> <i class="bi bi-info-circle mx-1"></i> </div>
-                                                        </div>
-
-                                                        <div class="containerCarBuy my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                            <div class="contentSoonCarBuy d-flex">
-                                                                <label class="form-check-label no-select p-0 me-2" for="suicheADS" title="Para activar esta opción, debes tener al menos 11 articulos.">○ Gestor de Anuncios </label>
-                                                                <div class="form-check form-switch">
-                                                                                                                    
-                                                                    <input class="form-check-input" type="checkbox" id="suicheADS" name="updateADS" value="off" disabled> <i class="bi bi-lock ms-1"></i> 
-
-                                                                </div>
-                                                            </div>    
-                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticSuicheGestorADS"> <i class="bi bi-info-circle mx-1"></i> </div>
-                                                        </div>
-
 
 
                                                     </div>
@@ -3214,6 +3190,56 @@
         })
 
     </script>
+
+
+<script>
+
+    const newPasswForm = document.getElementById('newPasswForm');
+    const sendChangePassw = document.getElementById('sendChangePassw');
+    const sendChangePasswClose = document.getElementById('sendChangePasswClose');
+
+    //primera parte donde se envia el token al correo
+    if (sendChangePassw){
+
+        sendChangePassw.addEventListener('click', (e) => {
+            e.preventDefault(); // Asegúrate de usar 'e' para prevenir el comportamiento por defecto
+            sendChangePassw.classList.add('close');
+            sendChangePasswClose.classList.remove('close');
+
+            // Si deseas enviar al backend después de dos segundos
+            setTimeout(() => {
+                // Aquí puedes agregar el código para enviar al backend
+                // Por ejemplo: document.getElementById("miFormulario").submit();
+                newPasswForm.submit();
+            }, 2000);
+
+        });
+    }    
+
+    const changePasswForm = document.getElementById('changePasswForm');
+    const changePassw = document.getElementById('changePassw');
+    const changePasswClose = document.getElementById('changePasswClose');
+
+    //segunda parte donde se envia el token al backend y cambiar la contraseña.
+    if (changePassw){
+
+        changePassw.addEventListener('click', (e) => {
+            e.preventDefault(); // Asegúrate de usar 'e' para prevenir el comportamiento por defecto
+            changePassw.classList.add('close');
+            changePasswClose.classList.remove('close');
+
+            // Si deseas enviar al backend después de dos segundos
+            setTimeout(() => {
+                // Aquí puedes agregar el código para enviar al backend
+                // Por ejemplo: document.getElementById("miFormulario").submit();
+                changePasswForm.submit();
+            }, 2000);
+
+        });
+
+    }    
+
+</script>
 
 
        

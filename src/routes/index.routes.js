@@ -5,6 +5,9 @@ const routes = Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
+//este Token es la KEY del bot de Telegram
+const Token =  process.env.Token_Bot;
+
 const countries = require('../countries.js');
 
 const modelUser = require('../models/user.js');
@@ -35,7 +38,7 @@ const modelRateCurrency = require('../models/rateCurrency.js');
 const fetch = require('node-fetch'); //ver: 2.6.1 ultima dependencia instalada. 
 const bcrypt = require('bcryptjs');
 
-
+const axios = require('axios');
 const fs = require('fs-extra');
 const {S3} = require('aws-sdk');
 
@@ -447,7 +450,7 @@ routes.post('/myaccount/signin', async(req,res)=>{
                             if (Stopped == false){
         
                                 //console.log("password acertado, bienvenido")
-                                req.session.success = "Bienvenido a Blissenet.com. ¡Tu red de mercado!";
+                                req.session.success = "¡Bienvenido! Has entrado a Blissenet.com. Tu red mundial de mercado.";
                                 const user = search
                                 req.session.user = user
                                 res.redirect('/')
@@ -1220,7 +1223,9 @@ routes.post('/myaccount/new-password', async(req, res)=>{
     const email = user.email;
 
     const result = await modelUser.findById(user._id)
+    const chatId = result.blissBot.chatId; //este es el chatId del user.
     req.session.result = result
+   
     
         //creacion de Token
         async function createToken(){
@@ -1237,13 +1242,13 @@ routes.post('/myaccount/new-password', async(req, res)=>{
             } 
 
             newToken = `${newTN}`;
-            //console.log("newToken", newToken);
+            console.log("newToken", newToken);
 
             req.session.token = newToken;
 
         }
 
-        //actulizacion de la Data Base
+        //actualizacion de la Data Base
         async function updateDB(){
             const update = await modelUser.findByIdAndUpdate( user._id, { $set: { token : newToken } } );
         }
@@ -1295,26 +1300,83 @@ routes.post('/myaccount/new-password', async(req, res)=>{
         
         }
 
-        createToken()
-            .then(()=>{
-                updateDB()
-                    .then(()=>{
-                        sendToken()
-                            .then(()=>{
-                                console.log("proceso de restauracion de contraseña OK");
-                                res.redirect('profile')
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error sendToken()", error);
-                            })
-                    })
-                    .catch((error)=>{
-                        console.log("Ha habido un error updateDB()", error);
-                    })
+        async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+            console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+            const Message = `Notificación de Blissenet.com: safety\n\nCodigo de seguridad: "${newToken}"`;
+            console.log("chatId --->", chatId);          
+
+            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                chat_id: chatId,
+                text: Message
             })
-            .catch((error)=>{
-                console.log("Ha habido un error createToken()", error);
+            .then(response => {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.log('Mensaje enviado con éxito:', response.data);
             })
+            .catch(error => {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.error('Error al enviar el mensaje:', error.response.data);
+            });
+    
+        }
+
+
+        if (chatId){
+            console.log("Existe chatId, asi que vamos a ejecutar todas las funciones..................... ");
+
+            createToken()
+                .then(()=>{
+                    updateDB()
+                        .then(()=>{
+                            sendToken()
+                                .then(()=>{
+                                    blissBotNoti()
+                                        .then(()=>{
+                                                console.log("proceso de restauracion de contraseña OK");
+                                                res.redirect('profile')
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error blissBotNoti()", error);
+                                        })        
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error sendToken()", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error updateDB()", error);
+                        })
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error createToken()", error);
+                })
+
+        } else {
+
+            createToken()
+                .then(()=>{
+                    updateDB()
+                        .then(()=>{
+                            sendToken()
+                                .then(()=>{
+                                    console.log("proceso de restauracion de contraseña OK");
+                                    res.redirect('profile')
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error sendToken()", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error updateDB()", error);
+                        })
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error createToken()", error);
+                })
+
+        }
+
+
        
 });
 
@@ -1351,7 +1413,7 @@ routes.post('/myaccount/change-password', async(req, res)=>{
                     .then(()=>{
                         updateDB()
                             .then(()=>{
-                                req.session.changePasswSuccess = "¡Change Password Successfully!"
+                                req.session.changePasswSuccess = "¡Contraseña exitosamente cambiada!"
                                 delete req.session.token
                                 res.redirect('/myaccount/profile')
                             })
@@ -1389,7 +1451,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
         const profSuccess = req.session.profSuccess;
         const updateSuccess = req.session.updateSuccess;
         const token = req.session.token;
-        const changePasswSuccess = req.session.changePasswSuccess;
+        const changePasswSuccess = req.session.changePasswSuccess; //
         const errorChange = req.session.errorChange;
         const errorToken = req.session.errorToken;
         const noProfile = req.session.noProfile;
@@ -2801,8 +2863,6 @@ routes.get('/zonabliss/delete_source/gallery/:public_id', async (req, res)=> {
     }    
 
 });
-
-
 
 
 routes.post('/myaccount/filter-search', async(req, res)=>{
