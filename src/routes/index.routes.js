@@ -66,6 +66,7 @@ routes.get('/', async(req, res)=>{
     const dataLocked = req.session.dataLocked // {username, date, ban}; envo estos tres datos para especificar el username cantidad de dias y la fecga de bloqueo
     let countMessages, countMessagesInbox
     let searchBoxMessageInbox = [];
+    let boxOffert = []; //este es el array que contendra todas las trending ofertas.  
 
     delete req.session.success;
     delete req.session.stopped;
@@ -75,10 +76,18 @@ routes.get('/', async(req, res)=>{
 
     let searchProfile;
     const boxResult = [];
+
+
+
         
     if (user){
         //console.log("Esto es user._id ------>", user._id );
         const userId = user._id;
+        const searchCountry = await modelUser.findById(userId);
+        const countryCode = searchCountry.seeMarket.countryMarketCode;
+        console.log("Este es el code de pais -->", countryCode);
+        let countNegotiationsBuySell;
+
         searchProfile = await modelProfile.find({ indexed : userId });
         console.log("Aqui el profile de la cuenta", searchProfile);
         username = user.username;
@@ -108,46 +117,185 @@ routes.get('/', async(req, res)=>{
         req.session.countMessages = totalMessages
         countMessages = req.session.countMessages;
         //:::::::: End of message ::::::::
+
+        const currentBanner = await modelBannerFront.find({ "active" : true, "delete" : false });
+        //console.log("Esto es currentBanner ----->", currentBanner);
+    
+        const currentNewsDay = await modelNewsDay.find({ "active" : true, "delete" : false });
+        //console.log("Esto es currentNewsDay ----->", currentNewsDay);
+    
+
+        async function negotiationsBuySell(){
+            // :::::: Aqui obtengo la cantidad de negotiationsBuySell ::::::::
+            const searchBuy = [];
+            const searchSell = [];
+        
+            const searchOneBuy = await modelBuySell.find({  $and : [{usernameBuy : username},{CommentSeller : 'no_comment'}] });
+            if (searchOneBuy){
+                searchBuy.push(...searchOneBuy);
+            }
+    
+            const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, {CommentBuy : 'no_comment'}] });
+            if (searchOneSell){
+                searchSell.push(...searchOneSell);
+            }
+    
+            const searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username }, { closedContact : false }]} );
+            if (searchTwoBuy){
+                searchBuy.push(...searchTwoBuy);
+            }
+    
+            const searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username }, { closedContact : false }]} );
+            if (searchTwoSell){
+                searchSell.push(...searchTwoSell);
+            }
+    
+            countNegotiationsBuySell = (searchBuy.length + searchSell.length);
+            req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.
+            //Nota: La linea de arriba es la session que guarda la cantidad de negociacione sy buySell que tiene el usuario.
+            //console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
+        }
+
+            
+        //Esta funcion ejecuta una consulta en todos los anuncios que tengan ofertas y las atrapa para 
+        async function searchOffert(){
+            //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+            const respItems = await modelItems.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respItems.length > 0) {
+                boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
+            }
+                
+            const respAerop = await modelAirplane.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respAerop.length > 0){
+                boxOffert.push(...respAerop);
+            }
+
+            const respAutom = await modelAutomotive.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respAutom.length > 0){
+                boxOffert.push(...respAutom);
+            }
+
+            const respArtes = await modelArtes.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respArtes.length > 0){
+                boxOffert.push(...respArtes);
+            }
+
+            const respReals = await modelRealstate.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respReals.length > 0){
+                boxOffert.push(...respReals);
+            }
+
+            const respServi = await modelService.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respServi.length > 0){
+                boxOffert.push(...respServi);
+            }
+
+            const respNauti = await modelNautical.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respNauti.length > 0){
+                boxOffert.push(...respNauti);
+            }
+
+            const respAucti = await modelAuction.find( { $and: [{ offer: true },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respAucti.length > 0){
+                boxOffert.push(...respAucti);
+            }
+
+        }
+
+        negotiationsBuySell()
+            .then(()=>{
+                searchOffert()
+                .then(()=>{
+                    console.log("Aqui lo recaudado de las ofertas");
+                    console.log("boxOffert ----------------con user---------------->",boxOffert);
+                    res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert })
+                    
+                })
+                .catch((err)=>{
+                    console.log("Ha ocurrido un error en la function searchOffert()")
+                    res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert })
+                })
+
+            })
+            .catch((err)=>{
+                console.log("Ha ocurrido un error en la function searchOffert()")
+            })
+
+
+
+    } else {
+
+        const currentBanner = await modelBannerFront.find({ "active" : true, "delete" : false });
+        //console.log("Esto es currentBanner ----->", currentBanner);
+    
+        const currentNewsDay = await modelNewsDay.find({ "active" : true, "delete" : false });
+        //console.log("Esto es currentNewsDay ----->", currentNewsDay);
+
+        //Esta funcion ejecuta una consulta en todos los anuncios que tengan ofertas y las atrapa para 
+        async function searchOffert(){
+            //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+            const respItems = await modelItems.find({ offer: true }).sort( {view : -1} ).limit(10);
+            if (respItems.length > 0) {
+                boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
+            }
+                
+            const respAerop = await modelAirplane.find({ offer : true }).sort( {view : -1} ).limit(10);
+            if (respAerop.length > 0){
+                boxOffert.push(...respAerop);
+            }
+
+            const respAutom = await modelAutomotive.find({ offer : true }).sort( {view : -1} ).limit(10);
+            if (respAutom.length > 0){
+                boxOffert.push(...respAutom);
+            }
+
+            const respArtes = await modelArtes.find({ offer : true }).sort( {view : -1} ).limit(10);
+            if (respArtes.length > 0){
+                boxOffert.push(...respArtes);
+            }
+
+            const respReals = await modelRealstate.find({ offer : true }).sort( {view : -1} ).limit(10);
+            if (respReals.length > 0){
+                boxOffert.push(...respReals);
+            }
+
+            const respServi = await modelService.find({ offer : true }).sort( {view : -1} ).limit(10);
+            if (respServi.length > 0){
+                boxOffert.push(...respServi);
+            }
+
+            const respNauti = await modelNautical.find({ offer : true }).sort( {view : -1} ).limit(10);
+            if (respNauti.length > 0){
+                boxOffert.push(...respNauti);
+            }
+
+            const respAucti = await modelAuction.find({ offer : true }).sort( {view : -1} ).limit(10);
+            if (respAucti.length > 0){
+                boxOffert.push(...respAucti);
+            }
+
+        }
+
+        searchOffert()
+            .then(()=>{
+                console.log("Aqui lo recaudado de las ofertas");
+                console.log("boxOffert ---------------sin user------------------->",boxOffert);
+                res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert })
+                
+            })
+            .catch((err)=>{
+                console.log("Ha ocurrido un error en la function searchOffert()")
+                res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert })
+            })
+
+
     }
 
-    const currentBanner = await modelBannerFront.find({ "active" : true, "delete" : false });
-    //console.log("Esto es currentBanner ----->", currentBanner);
 
-    const currentNewsDay = await modelNewsDay.find({ "active" : true, "delete" : false });
-    //console.log("Esto es currentNewsDay ----->", currentNewsDay);
+
 
 
     
-    // :::::: Aqui obtengo la cantidad de negotiationsBuySell ::::::::
-    const searchBuy = [];
-    const searchSell = [];
-  
-    const searchOneBuy = await modelBuySell.find({  $and : [{usernameBuy : username},{CommentSeller : 'no_comment'}] });
-    if (searchOneBuy){
-        searchBuy.push(...searchOneBuy);
-    }
-
-    const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, {CommentBuy : 'no_comment'}] });
-    if (searchOneSell){
-        searchSell.push(...searchOneSell);
-    }
-
-    const searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username }, { closedContact : false }]} );
-    if (searchTwoBuy){
-        searchBuy.push(...searchTwoBuy);
-    }
-
-    const searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username }, { closedContact : false }]} );
-    if (searchTwoSell){
-        searchSell.push(...searchTwoSell);
-    }
-
-    const countNegotiationsBuySell = (searchBuy.length + searchSell.length);
-    req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.
-    //Nota: La linea de arriba es la session que guarda la cantidad de negociacione sy buySell que tiene el usuario.
-    //console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
-
-    res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay})
 });
 
 routes.get('/restcountries', async(req, res)=>{
@@ -163,18 +311,18 @@ routes.get('/restcountries', async(req, res)=>{
 routes.get('/requireRateUpdate', async(req, res)=>{
     const rateUpdate = await modelRateCurrency.find();
     const rateSort = rateUpdate.reverse()[0];
-    //console.log("Esto es rateSort >>", rateSort);
-    //console.log("******RATE UPDATE******");
+    console.log("Esto es rateSort >>", rateSort);
+    console.log("******RATE UPDATE******");
 
     //vamos a sacar la fecha del servidor
     const date = new Date()
-    const dia = date.getDate(); const mes = date.getMonth() + 1; const anio = date.getFullYear();
-    const hora = date.getHours()
-    const minu = String(date.getMinutes()).padStart(2, '0'); // Asegura que los minutos tengan dos dígitos
-    const segu = String(date.getSeconds()).padStart(2, '0'); // Asegura que los segundos tengan dos dígitos
+    //const dia = date.getDate(); const mes = date.getMonth() + 1; const anio = date.getFullYear();
+    //const hora = date.getHours()
+    //const minu = String(date.getMinutes()).padStart(2, '0'); // Asegura que los minutos tengan dos dígitos
+    //const segu = String(date.getSeconds()).padStart(2, '0'); // Asegura que los segundos tengan dos dígitos
 
-    const timerNowServ = `${dia}-${mes}-${anio} ${hora}:${minu}:${segu}`;
-    const response = { rateSort, "date" : timerNowServ };
+    //const timerNowServ = `${dia}-${mes}-${anio} ${hora}:${minu}:${segu}`;
+    const response = { date };
     //console.log("Esto es response >>", response);
 
     res.json(response);

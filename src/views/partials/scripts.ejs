@@ -83,6 +83,43 @@
 </script>
 
 <script>
+    //consulta la fecha para extraer solo el año en curso para presentarlo en el footer
+    const currentYear  = document.querySelector('.currentYear'); //esta clase existe en el footer buscarlo en el partial
+
+  
+    //al cargar toda la pagina actualizamos date y precio del dolar.
+
+    fetch("/requireRateUpdate", {
+                method: "GET",
+                headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => { 
+        console.log("Esto es requireRateUpdate --------------------------->", jsonx) 
+        const date = jsonx.date;
+        const year = new Date(date).getFullYear();
+        console.log("year -->", year);
+        currentYear.innerText = year
+        //const rateSort = jsonx.rateSort;
+        //const currentPrice = rateSort.currentPrice;
+
+        console.log("date -->", date);
+        // Crear un objeto Date con la hora del servidor
+        const serverDate = new Date(date);
+        console.log("serverDate -->", serverDate);
+
+        // Convertir a la zona horaria local del usuario
+        const localTime = serverDate.toLocaleString(); // Sin especificar idioma, tomará la configuración regional del usuario
+        console.log("localTime -->", localTime);
+
+        dateRateUpdate.innerHTML = `<span class= "fst-italic"> <span class="me-1">Server Time:</span> ${localTime} </span>`
+        })
+        .catch( err => console.log(err));
+
+
+</script>
+
+<script>
     //carga de sonido efecto en iconos
   
     document.addEventListener("DOMContentLoaded", () => {

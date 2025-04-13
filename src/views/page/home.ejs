@@ -241,7 +241,6 @@
     <%- include('../partials/modalGeolocation.ejs') %>
 
 
-
       <% if (success) { %>
 
         <%- include('../alert/success.ejs') %>
@@ -308,7 +307,42 @@
                   </div>  
                   
                 </div>
+
+                <div class="contentOffert p-0" style="position: relative; z-index: 100; height: auto">  
+
+                  <% if (boxOffert) { %>
+
+                    <% if (boxOffert.length >= 5) { %>
+                                    
+                      <div class="carousel-offer p-4">    
+                          <% boxOffert.forEach((ele)=>{ %>
+
+                              <div class="contentCard px-3 d-flex flex-column" style="position: relative;">
+                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" alt="" style="width: 190px; height: 170px; object-fit: cover;"> </a>
+                                    <span class="border border-warning" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                    <span class="bg-warning px-2 py-0" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
+
+                                    <div style="width: 190px; background-color: #fcda57; height: 40px; overflow: hidden">
+                                        <span class="p-2" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
+                                    </div>
+                       
+                              </div>
+                              
+                          <% }) %>
+                      </div>
+                      <div class="titleCarrousel d-flex justify-content-end">
                 
+                        <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingOffert">
+                          <span class="fst-italic me-3"> Trending Offert  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                        </div>
+
+                      </div>
+
+                    <% } %>
+                    
+                  <% } %>
+
+                </div>
 
 
                 <div class="col-12 contentCurrentShowNewsDay my-5" style="height: auto">
@@ -421,6 +455,28 @@
 
               </div>
             </div>
+
+            <!-- Modal trendingOffert --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingOffert" -->
+            <div class="modal fade" id="staticTrendingOffert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
+              <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                  <div class="modal-content text-dark">
+
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="staticBlissBotConnect"> Trending Offert </h5>
+                          <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                      </div>
+                      <div class="modal-body">
+
+                          <p> Las ofertas en tendencias son todos los anuncios que han sido etiquetadas como ofertas y que hayan recibido muchas vistas. Puedes lograr tener un anuncio aquí con un poco de esfuerzo y creatividad. </p>
+                          
+                      </div>
+                      <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
+                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+
         </div>
         
         <%- include('../partials/footer.ejs') %>
@@ -429,8 +485,15 @@
 
   </main>
   
+  <!-- CDN js Slick-carousel --> <!-- Es importante manejar los script del carrousel en el mismo archivo que se van a usar -->
+  <!-- para no interferir en otros script cdn de jquey --> 
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   
+
   <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/carrousel.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simple.ejs') %>
  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -439,6 +502,9 @@
  <script>
 
   const dateRateUpdate = document.getElementById('dateRateUpdate');
+  const currentYear  = document.querySelector('.currentYear'); //esta clase existe en el footer buscarlo en el partial
+
+  
   //al cargar toda la pagina actualizamos date y precio del dolar.
   window.addEventListener('load', ()=>{
     fetch("/requireRateUpdate", {
@@ -447,15 +513,24 @@
         })
         .then(response =>response.json() )
         .then( jsonx => { 
-          console.log("Esto es requireRateUpdate -->", jsonx) 
+          console.log("Esto es requireRateUpdate --------------------------->", jsonx) 
           const date = jsonx.date;
-          const rateSort = jsonx.rateSort;
-          const currentPrice = rateSort.currentPrice;
+          const year = new Date(date).getFullYear();
+          console.log("year -->", year);
+          currentYear.innerText = year
+          //const rateSort = jsonx.rateSort;
+          //const currentPrice = rateSort.currentPrice;
 
           console.log("date -->", date);
-          console.log("currentPrice -->", currentPrice);
+          // Crear un objeto Date con la hora del servidor
+          const serverDate = new Date(date);
+          console.log("serverDate -->", serverDate);
 
-          dateRateUpdate.innerHTML = `<span> <i>${date}</i><span> <span class="bg-warning px-2 rounded-pill"> <i> 1 VES : <i class="bi bi-currency-dollar"></i>${currentPrice}</i><span> `
+          // Convertir a la zona horaria local del usuario
+          const localTime = serverDate.toLocaleString(); // Sin especificar idioma, tomará la configuración regional del usuario
+          console.log("localTime -->", localTime);
+
+          dateRateUpdate.innerHTML = `<span class= "fst-italic"> <span class="me-1">Server Time:</span> ${localTime} </span>`
         })
         .catch( err => console.log(err));
   })
@@ -471,15 +546,25 @@
       })
       .then(response =>response.json() )
       .then( jsonx => { 
-        console.log("Esto es requireRateUpdate -->", jsonx) 
-        const date = jsonx.date;
-        const rateSort = jsonx.rateSort;
-        const currentPrice = rateSort.currentPrice;
+        console.log("Esto es requireRateUpdate --------------------------->", jsonx) 
+          const date = jsonx.date;
+          const year = new Date(date).getFullYear();
+          console.log("year -->", year);
+          currentYear.innerText = year
+          //const rateSort = jsonx.rateSort;
+          //const currentPrice = rateSort.currentPrice;
 
-        console.log("date -->", date);
-        console.log("currentPrice -->", currentPrice);
-        dateRateUpdate.innerHTML = `<span> <i>${date}</i><span> <span class="bg-warning px-2 rounded-pill"> <i> ${currentPrice}</i><span> `
-      })
+          console.log("date -->", date);
+          // Crear un objeto Date con la hora del servidor
+          const serverDate = new Date(date);
+          console.log("serverDate -->", serverDate);
+
+          // Convertir a la zona horaria local del usuario
+          const localTime = serverDate.toLocaleString(); // Sin especificar idioma, tomará la configuración regional del usuario
+          console.log("localTime -->", localTime);
+
+          dateRateUpdate.innerHTML = `<span class= "fst-italic"> <span class="me-1">Server Time:</span> ${localTime} </span>`
+        })
       .catch( err => console.log(err));
       
     }, 60000);
