@@ -502,9 +502,9 @@
                                                     <div class="input-group flex-nowrap my-2">
                                                         <span class="input-group-text anchorRRSS"> <i class="bi bi-geo-alt-fill"></i> </span>
                                                         <input type="text" name="country" class="form-control" id="country" value="<%= ele.country %>" readonly>
-                                                        <input type="hidden" name="lon" id="longitud">
-                                                        <input type="hidden" name="lat" id="latitud">
-                                                        <input type="hidden" name="countryCode" id="countryCode">
+                                                        <input type="hidden" name="lon" id="longitud" value="<%= ele.geolocation.lon %>">
+                                                        <input type="hidden" name="lat" id="latitud" value="<%= ele.geolocation.lat %>">
+                                                        <input type="hidden" name="countryCode" id="countryCode" value="<%= ele.countryCode %>">
                                                     </div>
                                                     <div class="input-group flex-nowrap my-2">
                                                         <input type="text" name="state" class="form-control" id="state" value="<%= ele.state %>" readonly>
@@ -512,8 +512,8 @@
                                                     </div>
 
                                                     <div class="input-group flex-nowrap my-2">
-                                                        <input type="text" name="cityBlock" class="form-control" id="city_block" value="<%= ele.cityBlock %>" style="width: 80%;"  readonly>
-                                                        <input type="text" name="postCode" class="form-control" id="postcode" value="<%= ele.postCode %>" style="width: 19%;" readonly>
+                                                        <input type="text" name="cityBlock" class="form-control" id="city_block" value="<%= ele.cityBlock %>" style="width: 76%;"  readonly>
+                                                        <input type="text" name="postCode" class="form-control" id="postcode" value="<%= ele.postCode %>" style="width: 23%;" readonly>
                                                     </div>
 
                                                     <div class="input-group flex-nowrap my-2">

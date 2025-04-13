@@ -9,7 +9,7 @@ const SchemaProfile = new Schema({
     gender : { type : String }, //sexo masculino o femenino
     company : { type : String }, //nombre de la compañia/empresa
     companyRif : { type : String }, //identificacion de la empresa
-    geolocation : { type : Object}, //objeto donde guardamos las coordenadas geograficas del este susuario.
+    geolocation : { type : Object}, //geolocation: { lon: '', lat: '' } objeto donde guardamos las coordenadas geograficas del este susuario.
     country : { type : String },  //pais
     countryCode : { type : String },  //codigo del pais
     state : { type : String },  //estado o provincia
