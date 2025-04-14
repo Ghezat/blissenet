@@ -61,7 +61,7 @@ routes.get('/', async(req, res)=>{
 
     
     const user = req.session.user;
-    const success = req.session.success;
+    const success = req.session.success; //"¡Bienvenido! Has entrado a Blissenet.com. Tu red de mercado mundial.";
     const stopped = req.session.stopped; //"Su cuenta ha sido baneada por infringir nuestras normas.";
     const dataLocked = req.session.dataLocked // {username, date, ban}; envo estos tres datos para especificar el username cantidad de dias y la fecga de bloqueo
     let countMessages, countMessagesInbox
@@ -598,7 +598,7 @@ routes.post('/myaccount/signin', async(req,res)=>{
                             if (Stopped == false){
         
                                 //console.log("password acertado, bienvenido")
-                                req.session.success = "¡Bienvenido! Has entrado a Blissenet.com. Tu red mundial de mercado.";
+                                req.session.success = "¡Bienvenido! Has entrado a Blissenet.com. Tu red de mercado mundial.";
                                 const user = search
                                 req.session.user = user
                                 res.redirect('/')

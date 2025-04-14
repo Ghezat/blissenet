@@ -317,13 +317,14 @@
                       <div class="carousel-offer p-4">    
                           <% boxOffert.forEach((ele)=>{ %>
 
-                              <div class="contentCard px-3 d-flex flex-column" style="position: relative;">
+                              <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
+
                                     <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" alt="" style="width: 190px; height: 170px; object-fit: cover;"> </a>
-                                    <span class="border border-warning" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
-                                    <span class="bg-warning px-2 py-0" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
+                                    <span class="border border-warning text-dark" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                    <span class="bg-warning px-2 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
 
                                     <div style="width: 190px; background-color: #fcda57; height: 40px; overflow: hidden">
-                                        <span class="p-2" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
+                                        <span class="p-2 text-dark" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
                                     </div>
                        
                               </div>

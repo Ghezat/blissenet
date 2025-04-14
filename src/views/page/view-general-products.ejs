@@ -163,6 +163,8 @@
                        <div class="card-body">
                             <p class="fw-bold"><%= search.title %> </p>
                             <p class="fw-bold mb-1">Categoria: <span class="fw-light ms-1"><%= search.category %></span> </p>
+                            <p class="fw-bold mb-1">Autor: <span class="fw-light ms-1"><%= search.author %></span> </p>
+                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
                             <hr>
                             
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -183,6 +185,7 @@
                             <p class="fw-bold mb-1">Marca : <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
                             <p class="fw-bold mb-1">Modelo : <span class="fw-light ms-1"><%= search.model %> </span> </p>
                             <p class="fw-bold mb-1">Año : <span class="fw-light ms-1"><%= search.construcDate %> </span> </p>
+                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
                             <hr>
         
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -201,6 +204,7 @@
                             <p class="fw-bold"><%= search.title %> </p>
                             <p class="fw-bold mb-1">Categoria : <span class="fw-light ms-1"><%= search.category %></span> </p>
                             <p class="fw-bold mb-1">Sub-Categoria : <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
+                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -220,7 +224,8 @@
                             <p class="fw-bold mb-1">Categoria : <span class="fw-light ms-1"> <%= search.category %></span>  </p>
                             <p class="fw-bold mb-1">Marca : <span class="fw-light ms-1"> <%= search.produce %></span> </p>  
                             <p class="fw-bold mb-1">Modelo : <span class="fw-light ms-1"> <%= search.model %></span> </p> 
-                            <p class="fw-bold mb-1">Año : <span class="fw-light ms-1"> <%= search.construcDate %></span> </p> 
+                            <p class="fw-bold mb-1">Año : <span class="fw-light ms-1"> <%= search.construcDate %></span> </p>
+                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p> 
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -239,7 +244,8 @@
                             <p class="fw-bold"><%= search.title %> </p>
                             <p class="fw-bold mb-1"> Tipo: <span class="fw-light ms-1"><%= search.category %> </span> </p>
                             <p class="fw-bold mb-1"> Oferta: <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
-                            <p class="fw-bold mb-1"> Año: <span class="fw-light ms-1"> <%= search.construcDate %> |</span> Mtrs2:  <span class="fw-light ms-1"><%= search.mtrs2 %> </span> </p> 
+                            <p class="fw-bold mb-1"> Año: <span class="fw-light ms-1"> <%= search.construcDate %> |</span> Mtrs2:  <span class="fw-light ms-1"><%= search.mtrs2 %> </span> </p>
+                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p> 
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -259,6 +265,7 @@
                             <p class="fw-bold mb-1">Tipo : <span class="fw-light ms-1"><%= search.category %></span> </p>
                             <p class="fw-bold mb-1">Oferta : <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
                             <p class="fw-bold mb-1">Año : <span class="fw-light ms-1"> <%= search.construcDate %> |</span> Eslora :<span class="fw-light ms-1"><%= search.length %> </span> </p>
+                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -274,8 +281,10 @@
             <% if (depart == 'service')  { %>
                 <div class="card py-2 px-1" style="max-height: 80vh; overflow-y: auto;">
                     <div class="card-body">
-                        <p class="fw-bold"><%= search.title %> </p>
+                        <p class="fw-bold"><%= search.title %> </p> 
                         <p class="fw-bold mb-1">Categoria: <span class="fw-light ms-1"><%= search.category %></span> </p>
+                        <p class="fw-bold mb-1">Sub-Categoria: <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
+                        <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
                         <hr>
                         
                         <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -295,6 +304,7 @@
                          <p class="fw-bold my-1">Categoria : <span class="fw-light ms-1"><%= search.category %></span> </p>
                          <p class="fw-bold my-1">Politica : <span class="fw-light ms-1"><%= search.raffleClosingPolicy %></span> </p>
                          <p class="fw-bold my-1">Tickets : <span class="fw-light ms-1"><%= search.numTickets %></span> </p>
+                         
                             
                             <% if (search.raffleClosingPolicy === 'byDate'){ %>
                                 <% let date = new Date (search.dateEnd) %>
@@ -311,6 +321,8 @@
                             <% } else { %>
                                 <p class="fw-bold my-1">Fecha Celebración : <span class="fw-light ms-1">Hasta agotarse todos los Tickets.</span> </p>
                             <% } %>
+
+                         <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>   
                          
                          <hr>
 
@@ -322,7 +334,7 @@
                          <!-- con la data en el value la inyecto abajo en un script con setContent ya que es un objeto quilljs -->
                          
                     </div>
-             </div>
+                </div>
             <% }; %>    
             <% if (depart == 'auctions')  { %>
                 <div class="card py-2 px-1" style="max-height: 80vh; overflow-y: auto;">
@@ -331,6 +343,7 @@
                             <p class="fw-bold"><%= search.title %> </p>
                             <p class="fw-bold mb-1">Categoria : <span class="fw-light"><%= search.category %></span> </p>
                             <p class="fw-bold mb-1">Sub-Categoria : <span class="fw-light"><%= search.sub_category %></span> </p>
+                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
                             <hr>
                             
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -348,7 +361,8 @@
                 <div class="card my-2 p-2">
                     <div class="card-body">
 
-                        <p class="bg-warning px-1 py-1 rounded-2" style="font-size: 18px; clip-path: polygon(0% 0%, 75% 0%, 82% 50%, 75% 100%, 0% 100%);">Precio: <i class="bi bi-currency-dollar"></i><%= search.price %></p> <hr>
+                        <span class="bg-warning px-1 py-1 rounded-2 pe-5" style="font-size: 18px; clip-path: polygon(0% 0%, 75% 0%, 82% 50%, 75% 100%, 0% 100%);">Precio: <i class="bi bi-currency-dollar"></i><%= search.price %></span> <hr>
+
                     <% if (user) {  %>        
                         <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
                             <label class="form-check-label" for="flexCheckChecked" style="user-select: none;">
@@ -376,7 +390,7 @@
 
                             <p class="d-flex justify-content-between fw-bold mb-1">
                             
-                                <a href="/terms" class=" text-decoration-none" style="color: #842029;">¿Hay aqui un Problema? <i class="bi bi-info-circle ms-2"></i></a>
+                                <a href="/terms" class=" text-decoration-none" style="color: #842029;">Reporte el problema <i class="bi bi-info-circle ms-2"></i></a>
                             
                                 <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <i class="bi bi-chevron-down" style="color: #842029;"></i> </a>
                             
