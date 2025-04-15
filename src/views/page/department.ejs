@@ -20,11 +20,11 @@
     }
 
    .barrX{
-    background: radial-gradient(circle, rgba(240,228,114,1) 11%, rgba(34,237,201,1) 53%, rgba(73,100,244,1) 91%);
-    background: linear-gradient(90deg, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
-    background: radial-gradient(circle, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
-    background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
-   
+        background: radial-gradient(circle, rgba(240,228,114,1) 11%, rgba(34,237,201,1) 53%, rgba(73,100,244,1) 91%);
+        background: linear-gradient(90deg, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+        background: radial-gradient(circle, rgba(239,230,253,1) 28%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+        background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);
+    
     }
 
     .card{
@@ -54,8 +54,8 @@
     }
 
     .imgDepart{
-       margin: 5px;
-       width: 80px;
+       margin: 4px;
+       width: 60px;
        
     }
 
@@ -94,6 +94,14 @@
 <body class="mainTheme">
     <%- include('../partials/navi-simple.ejs') %>
 
+    <% if (user) { %>
+        <% const seeMarket = user.seeMarket %>
+        <!-- <% const idUser = user._id %> -->
+        <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+        <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+          <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+    <% }; %>
+    
     <main class="d-flex flex-column align-items-center">
         
         <% if (user) { %>
@@ -101,14 +109,15 @@
         <div class="container barrX d-flex text-dark justify-content-end mt-5 shadow">
             <a href="/"><i class="bi bi-x-square text-dark"></i> </a>
         </div>
-        <div class="container d-flex justify-content-center">
+        <div class="container d-flex justify-content-center filters">
         
             <div class="row d-flex justify-content-center filters m-1 shadow">
-                <!-- usuarios sin perfil creados -->
+                <!-- usuarios sin perfil creados --> 
                 <% if (searchProfile.length == 0 ) { %>
                     <%- include('../alert/noExistProfile.ejs') %>
-                    <div class="col-lg-8 col-sm-12" >
-                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap my-3">
+                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap mt-3">
                             <div class="card rounded-pill" style="background-color: transparent">
                                 <div class="card-body rounded-pill">
                                     <a href="#" class="aBorder"><img src="/img/aeronautico.png" alt="" class="imgDepart"></a>
@@ -129,6 +138,9 @@
                                     <a href="#" class="aBorder"><img src="/img/automotriz.png" alt="" class="imgDepart"></a>
                                 </div>
                             </div>
+                        </div>
+                           
+                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap mb-3"> 
                             <div class="card rounded-pill" style="background-color: transparent">
                                 <div class="card-body rounded-pill">
                                     <a href="#" class="aBorder"><img src="/img/bienesRaices.png" alt="" class="imgDepart"></a>
@@ -150,11 +162,13 @@
                                 </div>
                             </div>
                         </div>
+
                     </div> 
                 <!-- usuarios con perfil creados -->    
                 <% } else {  %>
-                    <div class="col-lg-8 col-sm-12">
-                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap my-3">
+                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        
+                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap mt-3">
                             
                             <div class="card rounded-pill" style="background-color: transparent">
                                 <div class="card-body rounded-pill">
@@ -176,6 +190,11 @@
                                     <a href="/department/create/automotive" class="aBorder"><img src="/img/automotriz.png" alt="" class="imgDepart"></a>
                                 </div>
                             </div>
+
+                        </div>    
+
+                        <div class="container-fluid d-flex justify-content-around align-items-center flex-wrap mb-3">    
+
                             <div class="card rounded-pill" style="background-color: transparent">
                                 <div class="card-body rounded-pill">
                                     <a href="/department/create/realstate" class="aBorder"><img src="/img/bienesRaices.png" alt="" class="imgDepart"></a>
@@ -196,7 +215,9 @@
                                     <a href="/department/create/auctions" class="aBorder"> <img src="/img/subasta.png" alt="" class="imgDepart"></a>
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
                 <% } %>    
            

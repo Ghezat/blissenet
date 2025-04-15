@@ -141,7 +141,13 @@
         <%- include('../alert/reportSuccess.ejs') %>
     <% }; %> 
 
-   
+    <% if (user) { %>
+        <% const seeMarket = user.seeMarket %>
+        <!-- <% const idUser = user._id %> -->
+        <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+        <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+          <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+    <% }; %>
     
     <!-- audios disponibles para diferentes acciones -->        
     <!-- <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> -->

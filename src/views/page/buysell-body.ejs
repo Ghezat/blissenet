@@ -11,6 +11,14 @@
   <main>
     <%- include('../partials/navi-simple.ejs') %>
 
+    <% if (user) { %>
+        <% const seeMarket = user.seeMarket %>
+        <% const idUser = user._id %>
+        <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+        <input type="hidden" value="<%= idUser %>" id= "idUser">
+          <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+    <% }; %>
+
     <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
         <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Sala de Negocio </b>  </span>
     </div>  
@@ -122,7 +130,7 @@
                     <% } else if (buySell.usernameBuy == user.username && buySell.pay == false && buySell.cancel === false ) { %>
                         <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4; width: 100%;">
                             <div class="containerP_Button d-flex justify-content-between" style="width: 100%; background-color: rgb(43, 255, 43, 0.5); border-bottom: 1px solid rgb(128, 128, 128, 0.3);">
-                                <p class="m-0 px-1" style="width: 100%;">He comprado, confirmo que he pagado. <input type="hidden" id="pay" value="pagado"> <input type="hidden" id="idOrder" value="<%= buySell._id %>"></p>
+                                <p class="m-0 px-1" style="width: 100%;">Confirmo que he pagado. <input type="hidden" id="pay" value="pagado"> <input type="hidden" id="idOrder" value="<%= buySell._id %>"></p>
                                 <button class="ms-2 btn btn-success btn-sm" id="btnPay" style="width: 90px;">Pagado</button>
                             </div>
                             <div class="containerP_Button d-flex justify-content-between" style="width: 100%;  background-color: rgb(252, 25, 18, 0.5);">

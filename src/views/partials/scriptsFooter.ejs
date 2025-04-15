@@ -1,0 +1,64 @@
+<script>
+    //este script va en todos lados donde va el footer pero no hace falta en el home. 
+    //contola el js del footer
+    const mainMail = document.querySelector('.mainMail');
+    const emaiHidden = document.getElementById('emaiHidden'); 
+    const spnEmail = document.querySelector('.spnEmail');
+    
+    
+    const msgSaveMail = document.querySelector('.msgSaveMail');//contendor oculto importante que dice que se ha guardaddo en portapales
+    
+    if (mainMail){
+
+        mainMail.addEventListener('click', copiar);
+  
+        function copiar(){
+             
+            let email = spnEmail.textContent;
+            navigator.clipboard.writeText(email)
+                .then(() => {
+                    //efecto de poner y quitar el alert
+                    msgSaveMail.classList.remove('close');
+                    setTimeout(hideMsg, 3000);
+                })
+                .catch(err =>{
+                    msgSaveMail.innerHTML += `<div class="alert-danger py-1 px-2 "> 
+                                                <span>No guardado</span>  
+                                                </div>` 
+                })
+
+            function hideMsg(){
+                msgSaveMail.classList.add('close');
+            }
+      
+        }
+
+    }
+ 
+</script>
+
+<script>
+    //consulta la fecha para extraer solo el año en curso para presentarlo en el footer
+    const currentYear  = document.querySelector('.currentYear'); //esta clase existe en el footer buscarlo en el partial
+
+  
+    //al cargar toda la pagina actualizamos date y precio del dolar.
+
+    fetch("/requireRateUpdate", {
+                method: "GET",
+                headers: { "Content-Type" : "applications/json"}
+        })
+        .then(response =>response.json() )
+        .then( jsonx => { 
+        //console.log("Esto es requireRateUpdate --------------------------->", jsonx) 
+       
+        const date = jsonx.date;
+        const year = new Date(date).getFullYear();
+        //console.log("year -->", year);
+        currentYear.innerText = year
+ 
+        })
+        .catch( err => console.log(err));
+
+
+</script>
