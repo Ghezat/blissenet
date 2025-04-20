@@ -857,7 +857,9 @@
                                   </div> 
 
                                 </div>
-
+                                <div class="modal-footer" style="background-image: url('/img/sinUser.jpg'); background-size: cover; background-position: center;">
+                                  <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
                             </div>
                         </div>
                       </div>
@@ -1500,7 +1502,7 @@
                      <div class="containerSurvey close">
                       
                       <% if (user) { %> 
-                        
+                  
                             <% if (survey.scheme.length !==0 ) { %>
                                 <% const surveyId = survey.scheme.surveyId %> <% const surveyTime = survey.scheme.surveyTime %> 
                                 <% const surveyTitle = survey.scheme.surveyTitle %>
@@ -1608,22 +1610,11 @@
                                 </div>   
 
 
-                            <% } else { %>
-                                
-                                <div class="contentNoSurvey">
+                            <% } %>
 
-                                    <div class="d-flex justify-content-center my-2"> <span> <b> <h4> Encuesta </h4> </b> </span> </div>
+                      <% } %>
 
-                                    <div class="alert alert-primary">
-                                        Esta Tienda no posee ninguna encuesta activa.  
-                                    </div>
-                                </div>
-
-                            <% }; %>  
-
-
-                      <% }; %>      
-                    
+                                           
                      </div>
 
                      <div class="containerLocation close"> 
@@ -3849,7 +3840,9 @@ if (btnFaqs){
 }  
 
 if (btnSurvey){
-    const surveyId = document.getElementById('surveyId'); //existira solo cuando alguien este logeado
+
+    //<input type="hidden" value="<#%= surveyId %>" id="surveyId">  esto es un input y esta dentro de una condicion donde solo existira cuando haya un user.
+    const surveyId = document.getElementById('surveyId'); //existira solo cuando alguien este logeado porque esta dentro de un bloque user
         
     btnSurvey.addEventListener('click', ()=>{
 
@@ -3858,7 +3851,7 @@ if (btnSurvey){
       
 
       //verificamos que el vivitante realmente exista.
-
+      //cuando no exista este input no hay user
       if (surveyId){
         const surveyIdValue =  surveyId.value; //visitante 
         //existe un valor en surveyIdValue
@@ -3969,6 +3962,7 @@ if (btnSurvey){
               });
 
       } else {
+
         console.log("No hay nadie logeado asi que enviamos un modal");
         //staticSurveyNoLogin   ->id modal que queremos hacer ver.
         // Crear una instancia del modal de Bootstrap
@@ -3977,7 +3971,7 @@ if (btnSurvey){
         myModal.show();
 
       }      
-
+ 
     });
   }    
 
@@ -4742,7 +4736,7 @@ if (surveyDataInput){
 
         if (totalCard == checkedValues.length){
             
-            //debemos bloquear el boton para que no pueda darle dos vecez y crear dos encuestas.
+            //debemos bloquear el boton para que no pueda darle dos veces y crear dos encuestas.
             btnSendSurvey.setAttribute("disabled", "");
             btnSendSurvey.classList.add('close');
             btnSendSurveyLock.classList.remove('close');

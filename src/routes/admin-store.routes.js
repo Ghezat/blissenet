@@ -560,17 +560,51 @@ routes.post('/infobliss/setupInfo', async(req, res)=>{
         const userId = user._id;
         const { policy, faq, survey, map } = req.body;
 
-       
-        const updatesProfile = await modelProfile.updateOne(
-            { indexed: userId },
-            { $set: { 'infobliss.policy.show': policy,
-                      'infobliss.faq.show': faq,
-                      'infobliss.survey.show': survey,
-                      'infobliss.map.show' : map
-                    } }
-        );
+        console.log("-------------------------------------------------Control de Botones info---------------------------------------------------------");
+        console.log( `policy: ${policy}  faq: ${faq}  survey: ${survey}  map:${map}` ); 
 
-        res.json(updatesProfile);
+        
+
+        const reqSchemeSurvey = await modelProfile.findOne( {indexed : userId } );
+        const Scheme =  reqSchemeSurvey.infobliss.survey.scheme;
+
+        console.log("----------------------------consulta-----------------------------------");
+        console.log( `Scheme: ${Scheme}` );
+        console.log( `Scheme.length: ${Scheme.length}` );  
+
+        if (Scheme.length !== 0){
+
+            console.log("Existe un Scheme ----------------");
+
+            const updatesProfile = await modelProfile.updateOne(
+                { indexed: userId },
+                { $set: { 'infobliss.policy.show': policy,
+                            'infobliss.faq.show': faq,
+                            'infobliss.survey.show': survey,
+                            'infobliss.map.show' : map
+                        } }
+            );
+
+            res.json(updatesProfile);
+
+        } else {
+
+            console.log("No Existe un Scheme ----------------"); 
+
+            const updatesProfile = await modelProfile.updateOne(
+                { indexed: userId },
+                { $set: { 'infobliss.policy.show': policy,
+                            'infobliss.faq.show': faq,
+                            'infobliss.survey.show': false,
+                            'infobliss.map.show' : map
+                        } }
+            );
+
+            res.json(updatesProfile);
+
+        }
+
+
        
     } catch (error) {
         res.json({ response : "Ha ocurrido un error en /infobliss/setupInfo"});
@@ -743,7 +777,7 @@ routes.post('/infobliss/deleteScheme/survey', async(req, res)=>{
 
             const updatesProfile = await modelProfile.updateOne(
                 { indexed: userId },
-                { $set: { 'infobliss.survey.scheme': [] } }, //vaciamos el array
+                { $set: { 'infobliss.survey.scheme': [], 'infobliss.survey.show': false } }, //vaciamos el array y quitamos el boton de se encuesta.
                 { new : true } //opcion para devolver documento actualizado
             );
 
