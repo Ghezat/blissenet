@@ -308,7 +308,7 @@ routes.get('/restcountries', async(req, res)=>{
 
 });
 
-routes.get('/requireRateUpdate', async(req, res)=>{
+routes.get('/requireDate', async(req, res)=>{
     const rateUpdate = await modelRateCurrency.find();
     const rateSort = rateUpdate.reverse()[0];
     console.log("Esto es rateSort >>", rateSort);
