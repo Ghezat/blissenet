@@ -185,108 +185,156 @@ routes.post('/department/create/nautical', async(req,res, next)=>{
         if (req.files.length !== 0) {
             if (req.files.length <= 3) {
                 
-                for (let i = 0; i < req.files.length; i++) {
-                    const element = req.files[i];
-                
-                    if (element.size <= 2000000  && element.mimetype.startsWith("image/")){
+                async function uploadImage(){ 
+
+                    for (let i = 0; i < req.files.length; i++) {
+                        const element = req.files[i];
                     
-                        countImgAcept ++;
-                        console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
-
-                        const folder = department; const ident = new Date().getTime();
-                        const pathField = element.path; const extPart = pathField.split(".");
-                        const ext = extPart[1];
+                        if (element.size <= 2500000  && element.mimetype.startsWith("image/")){
                         
-                        //console.log("Bucket :", bucketName); console.log("folder :", folder);
-                        //console.log("patchField :", pathField); console.log("ext", ext);
-                        
-                        uploadToS3 = async function (bucketName, folder, ident, pathField ){
-                            
-                            const fileContent = fs.readFileSync(pathField);
-                            const key = `${folder}/${ident}.${ext}`;
-                            console.log("key -->", key);
+                            countImgAcept ++;
+                            console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
 
-                            const params = { 
-                                Bucket : bucketName,
-                                Key : key,
-                                Body : fileContent,
-                                ACL : 'public-read' 
-                            };
-        
-                            s3.putObject(params, function(err, data){
+                            const folder = department; const ident = new Date().getTime();
+                            const pathField = element.path; const extPart = pathField.split(".");
+                            const ext = extPart[1];
                             
-                                if (err){
-                                    console.log('Error al subir un archivo', err);
-                                    countFall ++;
-                                } else {
-                                    console.log('La imagen fue subida, Exito', data);
-                                    
-                                    //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
-                                    let format = ext;
-                                    let url = `https://${bucketName}.${endpoint}/${key}`;
-                                    let bytes = element.size;
-                                    let public_id = key;
-                                    
-                                    console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                                    boxImg.push( {url, public_id, bytes, format} );
+                            //console.log("Bucket :", bucketName); console.log("folder :", folder);
+                            //console.log("patchField :", pathField); console.log("ext", ext);
+                            
+                            uploadToS3 = async function (bucketName, folder, ident, pathField ){
+                                
+                                const fileContent = fs.readFileSync(pathField);
+                                const key = `${folder}/${ident}.${ext}`;
+                                console.log("key -->", key);
 
-                                    countSuccess ++;
-                                    console.log( "countSuccess :", countSuccess );
+                                const params = { 
+                                    Bucket : bucketName,
+                                    Key : key,
+                                    Body : fileContent,
+                                    ACL : 'public-read' 
+                                };
+            
+                                s3.putObject(params, function(err, data){
+                                
+                                    if (err){
+                                        console.log('Error al subir un archivo', err);
+                                        countFall ++;
+                                    } else {
+                                        console.log('La imagen fue subida, Exito', data);
                                         
+                                        //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                        let format = ext;
+                                        let url = `https://${bucketName}.${endpoint}/${key}`;
+                                        let bytes = element.size;
+                                        let public_id = key;
+                                        
+                                        console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                                        boxImg.push( {url, public_id, bytes, format} );
+
+                                        countSuccess ++;
+                                        console.log("countSuccess :", countSuccess );
+                                        console.log("countImgAcept :",  "countSuccess" );
+                                        console.log(`${countImgAcept} == ${countSuccess} `);
+
+                                        if (countImgAcept == countSuccess ){
+
+                                            
+                                            if (boxImg.length !==0){
+
+                                                async function createAD(){
+
+                                                    if (countImgAcept !==0){
+
+                                                        countImgAcept = 0 // detenemos la condicion
+
+                                                        const Nautical =  new modelNautical({ title, titleURL, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment  }); 
+                                                        const NauticalSave = await Nautical.save()
+                                                        //console.log(NauticalSave);
+                                        
+                                                        const title_id = NauticalSave._id;
+                                        
+                                                        //ya ha sido creado y guardado todo lo referente al anuncio ahora procedemos a crear y guardar la invoice.
+                                                        const Invoice = new modelInvoice({ usernameSell : username, indexed : user._id, department, title, title_id, price, commission });
+                                                        const InvoiceSave = await Invoice.save();
+                                                
+                                                    }  else {
+                                                        console.log("NO se pudo crear su anuncio por no contar con una imagen");
+                                                    } 
+                                
+                                                }  
+                                               
+
+                                                createAD()
+                                                    .then(()=>{
+                                                        console.log(".......... Anuncio creado satifastoriamente, ¡Felicidades! ");
+                                                        req.session.uploadPublication = "¡Su publicación se ha subido exitosamente!"
+                                                        res.redirect('/department/create/nautical'); //todo ha salido bien
+                                                    })
+                                                    .catch(()=> console.log("Ha habido un error en createAD(), intente luego"))
+
+                                            } else {
+                                                console.log("No tenemos ninguna imagen asi que debemos enviar un mensaje explicando el caso");
+                                                req.session.uploadFall = "¡Su publicación no se pudo crear, No se han podido cargar las imaganes para este proceso. ¡Imagen max. 2.5 MB!"
+                                                res.redirect('/department/create/nautical'); 
+                                            }
+
+                                        }    
+                                    }
+                                    
+                                });
+                                        
+
+                            }
+
+                            // invocamos la funcion uploadToS3 para subir las imaganes
+                            uploadToS3(bucketName, folder, ident, pathField)
+                                .then(() => {
+                                    console.log("Imagen subida al servidor digitalocean SPACES");
+                                })
+                                .catch((err) => {
+                                    console.log("Ha habido un error al subir las fotos:", err);
+                                });
+
+
+                        } else {
+
+                            if (req.files.length == 1) {
+
+                                //solo hay una imagen y esta supera el maximo permitido debemos finalizar la operacion
+                                console.log("Archivo no subido por ser muy pesado o no ser de tipo image");
+                                await fs.unlink(element.path); // element es el archivo de img y el .path tiene la direccion el metodo unlink del objet fs elimina el archivo de donde esta. 
+                                req.session.uploadFall = "¡Su publicación no se pudo crear, Archivo no subido por ser muy pesado o no ser de tipo image!"
+                                res.redirect('/department/create/nautical');
+
+                            } else {
+
+                                countFall ++
+                                while (req.files.length == countFall) {
+                                    countFall = 0;
+
+                                    console.log("Todas las imagenes se han pasado de peso o no son de tipo img");
+                                    req.session.uploadFall = "¡Su publicación no se pudo crear, Archivos no subidos por ser muy pesados o no ser de tipo image!"
+                                    res.redirect('/department/create/nautical');
+
                                 }
                                 
-                            });
-                                        
+                            }  
 
                         }
 
-                        // invocamos la funcion uploadToS3 para subir las imaganes
-                        uploadToS3(bucketName, folder, ident, pathField)
-                            .then(() => {
-                                console.log("Imagen subida al servidor digitalocean SPACES");
-                            })
-                            .catch((err) => {
-                                console.log("Ha habido un error al subir las fotos:", err);
-                            });
-
-                    } else {
-                        console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
-                        await fs.unlink(element.path); // element es el archivo de img y el .path tiene la direccion el metodo unlink del objet fs elimina el archivo de donde esta. 
                     }
-
-                }
-
-                setInterval(reviewUpload, 2000);
-
-                function reviewUpload(){
-
-                    if (countImgAcept === (countSuccess + countFall)) {
-                        countImgAcept ++; //aseguramos con esto detener la funcion reviewUpload
-                        clearInterval(reviewUpload); //detenemos la evaluacion
-                        createAD();
-                    }
-                }         
+ 
+                }     
                 
-                async function createAD(){
 
-                    const Nautical =  new modelNautical({ title, titleURL, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment  }); 
-                    const NauticalSave = await Nautical.save()
-                    //console.log(NauticalSave);
-    
-                    const title_id = NauticalSave._id;
-    
-                    //ya ha sido creado y guardado todo lo referente al anuncio ahora procedemos a crear y guardar la invoice.
-                    const Invoice = new modelInvoice({ usernameSell : username, indexed : user._id, department, title, title_id, price, commission });
-                    const InvoiceSave = await Invoice.save();
+                uploadImage()
 
-                    req.session.uploadPublication = "¡Su publicación se ha subido exitosamente!"
-                    res.redirect('/department/create/nautical'); //todo ha salido bien
-                    
-                }                 
-
-                    
+       
+                                    
             } else {
                 console.log("ha sobrepasado la cantidad de imagenes, puede subir un maximo de 3 imagenes");
+                req.session.uploadFall = "¡Su publicación no se pudo crear, Solo puede subir un maximo de 3 imagenes en la creación del anuncio!"
                 res.redirect('/department/create/nautical');
             }
             
@@ -470,7 +518,7 @@ routes.post('/department/create/nautical/add/first/nautical', async(req, res)=>{
         //console.log("Esto es searchItems.images.length ---->",searchItems.images.length )
 
         if (searchNauti.images.length < 12){
-            if (element.size <= 2000000  && element.mimetype.startsWith("image/")){
+            if (element.size <= 2500000  && element.mimetype.startsWith("image/")){
 
                 //console.log("una imagen aqui aceptada----->", element)
 
@@ -536,14 +584,18 @@ routes.post('/department/create/nautical/add/first/nautical', async(req, res)=>{
 
                 
             } else {
-                console.log("Archivos no subidos por ser muy pesados o no ser de tipo image")
+                console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
+                req.session.uploadFall = "¡Archivo no subido por ser muy pesado o no ser de tipo image!"
                 res.redirect('/department/create/nautical');
             
             }
+
         } else {
             console.log("ya has superado el maximo permitido de subida de imagen.");
+            req.session.uploadFall = "Ha superado el máximo permitido de subida de imagen."
             res.redirect('/department/create/nautical');
-        };
+        }
+
     }catch(error){
         req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
         res.redirect('/department/create/nautical');
@@ -566,7 +618,7 @@ routes.post('/department/create/nautical/add/last/nautical', async(req, res)=>{
         const searchNauti = await modelNautical.findById(TitleSelect);
 
         if (searchNauti.images.length < 12){
-            if (element.size <= 2000000  && element.mimetype.startsWith("image/")){
+            if (element.size <= 2500000  && element.mimetype.startsWith("image/")){
 
                 //console.log("una imagen aqui aceptada----->", element)
 
@@ -633,14 +685,18 @@ routes.post('/department/create/nautical/add/last/nautical', async(req, res)=>{
                         
 
             } else {
-                console.log("Archivos no subidos por ser muy pesados o no ser de tipo image")
+                console.log("Archivos no subidos por ser muy pesados o no ser de tipo image");
+                req.session.uploadFall = "¡Archivo no subido por ser muy pesado o no ser de tipo image!"
                 res.redirect('/department/create/nautical');
             
             }
+            
         } else {
             console.log("ya has superado el maximo permitido de subida de imagen.");
+            req.session.uploadFall = "Ha superado el máximo permitido de subida de imagen."
             res.redirect('/department/create/nautical');
-        };
+        }
+
     }catch(error){
         req.session.catcherro = 'Ha ocurrido un error, intente en unos minutos.';
         res.redirect('/department/create/nautical');
