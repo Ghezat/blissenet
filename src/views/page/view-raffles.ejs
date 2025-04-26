@@ -562,20 +562,32 @@
 
                               
                              
-                              <div class="boxDetail" style="height: 120px; position: relative; background-color: #ffffff;">
+                              <div class="boxDetail" style="height: 130px; position: relative; background-color: #ffffff;">
                                     <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
 
-                                      <div class="containerTitleFavorite d-flex justify-content-between">
+                                      <div class="title d-flex justify-content-start">
+                                                                
                                         <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
                                           style="text-decoration: none;">
                                           <%= ele.title %>
                                         </a>                                            
-                                      
-                                        <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                  
                                       </div>
-  
-                                      <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                      
+    
+                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 45px; left: 0px; padding-left: 8px; padding-right: 8px;">
+    
+                                          <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+                                        
+                                          <% if (user) { %> <!-- control de corazones fascinometro -->
+                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                          <% } else { %>
+                                            <button class="popover text-dark" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="¡No estas logeado!">
+                                              <i class="bi bi-heart ps-2 linkHeart text-dark" style="cursor: pointer;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                            </button>
+                                          <% } %>  
+    
+                                      </div>
+
                                       <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
 
                                         <div class="containerPrice d-flex justify-content-between px-2">
@@ -598,8 +610,7 @@
                                         </div>
 
                                       </div>
-                                     
-  
+                                       
                                     </div>
    
                               </div>
