@@ -240,7 +240,7 @@
                                                     <div class="form-goup my-2">
                                                         <input type="text" name="title"
                                                             placeholder="Coloque un titulo a su publicacion"
-                                                            class="form-control" maxlength="40" required>
+                                                            class="form-control" maxlength="60" required>
                                                     </div>
                                                     <div class="form-group my-2">
                                                         <select name="category" class="form-control" required>
@@ -341,8 +341,8 @@
                                     <div class="accordion-body">
     
                                         <!-- Editar -->
-                                        <div class="card">
-                                            <div class="card-body">
+                                        <div class="card overflow80">
+                                            <div class="card-body px-0">
                                                 <% if (Artes.length !==0) { %>
     
                                                     <form action="/department/create/artes/edit" method="post"
@@ -363,19 +363,16 @@
                                                             </select>
     
                                                         </div>
-                                                        <div
-                                                            class="form-control d-flex align-items-center justify-content-start">
-                                                            <img src="/img/admiracion.png"
-                                                                style=" width : 40px; height: 40px;" class="me-4">
-                                                            <p class="text-secondary m-0"> ¡Aqui puedes editar tu
-                                                                publicación!</p>
+                                                        <div class="form-control d-flex align-items-center justify-content-start" style="background-color: rgba(92, 92, 92, 0.1);">
+                                                            <img src="/img/admiracion.png" style=" width : 40px; height: 40px;" class="me-4">
+                                                            <p class="text-secondary m-0"> ¡Aqui puedes editar tu publicación!</p>
                                                         </div>
     
                                                         <div class="contentElemetEdit close">
 
                                                             <div class="form-group d-flex my-2">
                                                                 <input type="text" name="title" id="titleEdit"
-                                                                placeholder="Editar Titulo" class="form-control" maxlength="40" required>
+                                                                placeholder="Editar Titulo" class="form-control" maxlength="60" required>
                                                             </div>
 
                                                             <div class="form-group d-flex my-2">

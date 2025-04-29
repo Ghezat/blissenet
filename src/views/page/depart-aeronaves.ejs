@@ -223,7 +223,7 @@
         
                                                     <div class="form-goup my-2">
                                                         <input type="text" name="title" placeholder="Coloque un titulo a su publicacion"
-                                                            class="form-control" maxlength="40" required>
+                                                            class="form-control" maxlength="60" required>
                                                     </div>
                                                     <div class="form-goup my-2">
                                                         <select name="category" class="form-control category nivel1" id="category" required>
@@ -336,15 +336,15 @@
                                     <div class="accordion-body">
         
                                         <!-- Editar -->
-                                        <div class="card">
-                                            <div class="card-body">
+                                        <div class="card overflow80">
+                                            <div class="card-body px-0">
                                                 <% if (Airplanes.length !==0) { %>
         
                                                     <form action="/department/create/aeronaves/edit" method="post" id="formEdit">
                                                     
                                                         <div class="form-group d-flex my-2">
         
-                                                            <select name="titleToEdit" id="titleToEdit" class="form-control me-1">
+                                                            <select name="titleToEdit" id="titleToEdit" class="form-control">
                                                                 <option value="no_data">select it</option>
                                                                 <% Airplanes.forEach((ele)=> { %>
                     
@@ -354,7 +354,7 @@
                                                             </select>
                                                             
                                                         </div>                      
-                                                        <div class="form-control d-flex align-items-center justify-content-start">
+                                                        <div class="form-control d-flex align-items-center justify-content-start" style="background-color: rgba(92, 92, 92, 0.1);">
                                                             <img src="/img/admiracion.png" style=" width : 40px; height: 40px;" class="me-4">
                                                             <p class="text-secondary m-0" > ¡Aqui puedes editar tu publicación!</p>
                                                         </div>
@@ -362,7 +362,7 @@
                                                         <div class="contentElemetEdit close">
         
                                                             <div class="form-group d-flex my-2">
-                                                                <input type="text" name="title" id="titleEdit" class="form-control" placeholder="Titulo" maxlength="40" required>
+                                                                <input type="text" name="title" id="titleEdit" class="form-control" placeholder="Titulo" maxlength="60" required>
                                                             </div>
 
                                                             <div class="form-group d-flex my-2">
@@ -1022,7 +1022,8 @@
                             contEleEdit.classList.remove('close');
                             titleEdit.value = MyPublication.title;
                             categoryEdit.value = MyPublication.category;
-                            produceEdit.value = MyPublication.produce;
+                            produceEdit.innerHTML = `<option value="${ MyPublication.produce }"> ${ MyPublication.produce } </option>`;
+                            
                             modelEdit.value = MyPublication.model;
                             yearEdit.value =  MyPublication.construcDate;
                             serialEdit.value = MyPublication.serial;
@@ -1046,7 +1047,7 @@
                              contEleEdit.classList.add('close');
                              titleEdit.value = "";
                              categoryEdit.value = "";
-                             produceEdit.value ="";
+                             produceEdit.innerHTML = "";
                              modelEdit.value = "";
                              yearEdit.value =  "";
                              serialEdit.value = "";

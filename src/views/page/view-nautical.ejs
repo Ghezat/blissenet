@@ -69,12 +69,12 @@
     }
 
     .cardPublished{
-      width: 230px;
+      width: 240px;
       transition: 0.3s ease border;
     }
 
     .imgFront{
-      width: 230px; height: auto;
+      width: 240px; height: auto;
       transition: .5s ease width;
     }
 
@@ -82,7 +82,7 @@
         outline: 2px solid lightskyblue;
 
         .imgFront{
-            width: 240px;
+            width: 250px;
         }
     }
 
@@ -574,8 +574,8 @@
 
                               <!-- esta parte va a cambiar cuando sea oferta -->
                               <% if (ele.offer === false) { %>
-                              <div class="boxDetail" style="height: 130px; position: relative; background-color: #ffffff;">
-                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                              <div class="boxDetail" style="height: 140px; position: relative; background-color: #ffffff;">
+                                    <div class="containerDetails mx-2" style="margin-bottom: 10px; margin-top: 10px;">
 
                                       <div class="title d-flex justify-content-start">
                                                                 
@@ -586,7 +586,7 @@
                                   
                                       </div>
     
-                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 45px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 42px; left: 0px; padding-left: 8px; padding-right: 8px;">
     
                                           <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
                                         
@@ -624,7 +624,7 @@
                                     </div>
                               </div>
                               <% } else { %>
-                              <div class="boxDetail" style="height: 130px; position: relative; background-color: #fcda57;">
+                              <div class="boxDetail" style="height: 140px; position: relative; background-color: #fcda57;">
                                       <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
   
                                         <div class="title d-flex justify-content-start">
@@ -636,7 +636,7 @@
                                     
                                         </div>
       
-                                        <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 45px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                        <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 42px; left: 0px; padding-left: 8px; padding-right: 8px;">
       
                                             <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
                                           
