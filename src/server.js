@@ -38,15 +38,28 @@ app.use(session({
 //**maxAge**: Especifica la duración de la cookie en milisegundos. En tu caso, `24 * 60 * 60 * 1000` es el cálculo para un día (24 horas), donde multiplicas 24 horas por 60 minutos por 60 segundos y luego por 1000 para convertir a milisegundos.
  
 app.use(methodOverride('_method'));
+
 const storage =  multer.diskStorage({
     destination: path.join(__dirname, 'public/uploads'),
     filename: (req, file, cb) =>{
         cb(null, new Date().getTime() + path.extname(file.originalname));
     }
 });
-app.use(multer({storage}).array('fileImg', 10000));
+
+
+app.use(multer({storage}).array('fileImg', 10000));  
 //todos los elementos html como file deben tener en su atributo name un valor "fileImg"
 //name = "fileImg"
+
+const upload = multer({ storage });
+
+// Cambia aquí para usar fields con los nombres deseados implementar en el futuro
+/* app.use(upload.fields([
+    { name: 'fileImg', maxCount: 3 }, //este lo uso en todo mi proyecto no puedo excluir este name
+    { name: 'imgDocument', maxCount: 1 },
+    { name: 'imgSelfie', maxCount: 1 }
+])); */
+
 
 //routes
 app.use(require('./routes/index.routes.js'));

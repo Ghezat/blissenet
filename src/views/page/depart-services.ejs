@@ -451,31 +451,39 @@
     
                             <div class="card-header">
                                 <form action="">
-                                    <div class="form-group d-flex">
-    
-                                        <% if (Service.length !==0) { %>
-    
-                                            <select name="title" id="selectTitle" class="form-control mx-1">
-                                                <option value="">Elegir Anuncio</option>
-                                                <% Service.forEach((ele)=> { %>
-    
-                                                    <option value="<%= ele._id %>">
-                                                        <%= ele.title %>
-                                                    </option>
-    
-                                                    <% }); %>
-                                            </select>
-    
-                                        <% } else { %>
-                                                <select name="title" id="" class="form-control">
-                                                    <option value="no_data">sin publicacion</option>
-                                                </select>
-                                        <% } %>
-    
-                                                <input type="Submit" class="btn btn-primary form-control mx-1"
-                                                value="Mostrar Anuncio">
-    
-                                    </div>
+
+                                        <div class="row m-0">
+                                            <div class="col-lg-6 col-md-12 col-sm-12 p-0">
+
+                                                <% if (Service.length !==0) { %>
+                                                <div class="form-group me-1 mt-1">     
+                                                    <select name="title" id="selectTitle" class="form-control me-1 mt-1">
+                                                        <option value="">Elegir Anuncio</option>
+                                                        <% Service.forEach((ele)=> { %>
+            
+                                                        <option value="<%= ele._id %>"> <%= ele.title %> </option>
+            
+                                                        <% }); %>
+                                                    </select>
+                                                </div>     
+                                                <% } else { %>
+                                                <div class="form-group me-1 mt-1">     
+                                                    <select name="title" id="" class="form-control">
+                                                        <option value="no_data">sin publicacion</option>
+                                                    </select>
+                                                </div> 
+                                                <% } %>
+                                            </div> 
+                                            <div class="col-lg-6 col-md-12 col-sm-12 p-0">  
+                                                <div class="form-group me-1 mt-1">        
+                                                    <input type="Submit" class="btn btn-primary form-control"
+                                                    value="Multimedia y Difusión">
+                                                </div>    
+                                            </div>    
+                                                
+
+                                        </div> 
+
                                 </form>
                             </div>
     

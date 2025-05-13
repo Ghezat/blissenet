@@ -241,6 +241,7 @@
                                                         <option value="Insumos e Implementos de Panaderia/Reposteria">Insumos e Implementos de Reposteria y Panaderia</option>
                                                         <option value="Juguetes">Juguetes</option>
                                                         <option value="Lentes">Lentes</option>
+                                                        <option value="Medicamentos">Medicamentos</option>
                                                         <option value="Merceria">Merceria</option>
                                                         <option value="Vehiculo Movilidad Personal">Vehiculo Movilidad Personal (VMP)</option>
                                                         <option value="Papeleria">Papeleria</option>
@@ -307,6 +308,12 @@
     
                                                     <!--   <img src="" class="preview"> -->
     
+                                                </div>
+
+                                                <div class="input-group my-2">
+                                                    <span class="input-group-text"> Cantidad</span>
+                                                    <input type="number" name="count" 
+                                                        class="form-control" style="font-size: 18px;" step="1" min="1" required>   
                                                 </div>
     
                                                 <div class="input-group my-2">
@@ -394,6 +401,7 @@
                                                                 <option value="Insumos e Implementos de Panaderia/Reposteria">Insumos e Implementos de Reposteria y Panaderia</option>
                                                                 <option value="Juguetes">Juguetes</option>
                                                                 <option value="Lentes">Lentes</option>
+                                                                <option value="Medicamentos">Medicamentos</option>
                                                                 <option value="Merceria">Merceria</option>
                                                                 <option value="Vehiculo Movilidad Personal">Vehiculo Movilidad Personal (VMP)</option>
                                                                 <option value="Papeleria">Papeleria</option>
@@ -422,6 +430,12 @@
                                                         </div>            
                                                         <!-- Campo de entrada oculto -->
                                                         <input type="hidden" id="hiddenInputEdit" name="tecnicalDescription">
+
+                                                        <div class="input-group my-2">
+                                                            <span class="input-group-text"> Cantidad</span>
+                                                            <input type="number" name="count" id="countEdit" 
+                                                                class="form-control" style="font-size: 18px;" step="1" min="1" required>   
+                                                        </div>
 
                                                         <div class="input-group my-2">
                                                             <span class="input-group-text"> Precio</span>
@@ -512,31 +526,43 @@
     
                             <div class="card-header">
                                 <form action="">
-                                    <div class="form-group d-flex">
+                                    
     
-                                        <% if (Items.length !==0) { %>
+                                        <div class="row m-0">
+                                            <div class="col-lg-6 col-md-12 col-sm-12 p-0">
+
+                                                <% if (Items.length !==0) { %>
+                                                <div class="form-group me-1 mt-1">     
+                                                    <select name="title" id="selectTitle" class="form-control me-1 mt-1">
+                                                        <option value="">Elegir Anuncio</option>
+                                                        <% Items.forEach((ele)=> { %>
+            
+                                                            <option value="<%= ele._id %>">
+                                                                <%= ele.title %>
+                                                            </option>
+            
+                                                            <% }); %>
+                                                    </select>
+                                                </div>     
+                                                <% } else { %>
+                                                <div class="form-group me-1 mt-1">     
+                                                    <select name="title" id="" class="form-control">
+                                                        <option value="no_data">sin publicacion</option>
+                                                    </select>
+                                                </div> 
+                                                <% } %>
+                                            </div> 
+                                            <div class="col-lg-6 col-md-12 col-sm-12 p-0">  
+                                                <div class="form-group me-1 mt-1">        
+                                                    <input type="Submit" class="btn btn-primary form-control"
+                                                    value="Multimedia y Difusión">
+                                                </div>    
+                                            </div>    
+                                                 
+
+                                        </div>        
     
-                                            <select name="title" id="selectTitle" class="form-control mx-1">
-                                                <option value="">Elegir Anuncio</option>
-                                                <% Items.forEach((ele)=> { %>
-    
-                                                    <option value="<%= ele._id %>">
-                                                        <%= ele.title %>
-                                                    </option>
-    
-                                                    <% }); %>
-                                            </select>
-    
-                                        <% } else { %>
-                                                <select name="title" id="" class="form-control">
-                                                    <option value="no_data">sin publicacion</option>
-                                                </select>
-                                        <% } %>
-    
-                                                <input type="Submit" class="btn btn-primary form-control mx-1"
-                                                value="Mostrar Anuncio">
-    
-                                    </div>
+                                  
                                 </form>
                             </div>
     
@@ -930,6 +956,7 @@
                         nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
                     }      
 
+
                 } else if ( selected == "Merceria") {
                     nivel2[0].innerHTML = "";
                     for (let i = 0; i < Merceria.length; i++) {
@@ -1128,7 +1155,8 @@
                     for (let i = 0; i < Lentes.length; i++) {
                         const element = Lentes[i];
                         nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
-                    }      
+                    }   
+                     
 
                 } else if ( selected == "Merceria") {
                     nivel2[1].innerHTML = "";
@@ -1334,7 +1362,7 @@
             let inpFile = document.querySelector('.inpFile')
      
 
-             addPhoto.addEventListener('click', ()=>{
+            addPhoto.addEventListener('click', ()=>{
              inpFile.click()
             })
 
@@ -1370,6 +1398,7 @@
     const sub_categoryEdit = document.getElementById('sub_categoryEdit');
     const tecnicalDescripEdit = document.getElementById('tecnicalDescripEdit');
     const generalMessageEdit = document.getElementById('generalMessageEdit');
+    const countEdit = document.getElementById('countEdit');
     const priceEdit = document.getElementById('priceEdit');
     const addObjectImgEdit = document.getElementById('addObjectImgEdit');
 
@@ -1405,6 +1434,7 @@
                             let delta = MyPublication.tecnicalDescription;
                             let Delta = JSON.parse(delta);
                             quillEdit.setContents(Delta);
+                            countEdit.value = MyPublication.count;
                             priceEdit.value = MyPublication.price;
 
                             for (let i = 0; i < myImages.length; i++) {
@@ -1420,6 +1450,7 @@
                             categoryEdit.value = "";
                             sub_categoryEdit.innerHTML ="";
                             quillEdit.setContents("");
+                            countEdit.value = "";
                             priceEdit.value = "";
                         }
                     }

@@ -1781,7 +1781,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
                 messageProfile = profileMessage;
             }
 
-            const newProfile = new modelProfile ({ username: user.username, names, identification, dateborn, gender, geolocation, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+            const newProfile = new modelProfile ({ username: user.username, names, identification, company, companyRif, dateborn, gender, geolocation, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
             const saveProfile =  await newProfile.save();
             console.log("esto es lo que se registro en la DB ----->",saveProfile);
             req.session.profSuccess = '¡ Perfil creado satifactoriamente !'

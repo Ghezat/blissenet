@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+ 
+    <!-- semantic-ui -->
+    <link rel="stylesheet" href="/semantic/semantic.min.css">
+    <script src="/jquery/jquery-3.1.1.min.js"></script> 
+    <script src="/semantic/semantic.min.js"></script>
+
+    <!-- toastr tiene que despues del CDN de bootstrap -->
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> 
+    <script src="/toastr/toastr.min.js"></script>
+
+    <!-- estilos propios -->
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Blissenet Agente de Transporte</title>
+
+</head>
+<style>
+
+
+.step{
+    cursor: pointer;
+}
+
+.contentPicture:hover .btnImageUpload {
+    outline: 1px solid grey; /* Cambia el color y el grosor del borde según lo desees */
+}
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+ 
+}
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    
+    <main class="themaTextLight" style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+        <% if (user) { %>
+
+            
+            <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Agente de Transporte </b>  </span>
+            </div> 
+            
+            <% const seeMarket = user.seeMarket %>
+            <% const idUser = user._id %>
+            <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+            <input type="hidden" value="<%= idUser %>" id= "idUser">
+              <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+            <div class="container-fluid p-0">
+                     
+                <% if (searchProfile) {  %>
+
+                    <% const storeUser = searchProfile.username %> <!-- aqui el store en cuention username-->
+                    <% const storeUserId = searchProfile._id %> <!-- aqui el store en cuention id -->
+                    <% const storeUserIndexed = searchProfile.indexed %> <!-- aqui el store en cuention indexed que es el mismo id del user -->
+                    
+                    <input type="hidden" id="storeUserValue" value="<%= storeUser %>"> 
+
+                    <div class="row m-0 d-flex justify-content-center">
+
+                        <% if (transportAgent) {  %>
+                        
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12">
+                                <div class="card mt-3" style="background-color: rgba(255, 255, 255, 0.5);">
+                                    <div class="card-header text-dark">
+                                       Mis datos
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.names %>" readonly>
+                                        </div>
+                                        <div class="form-group my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.identification %>" readonly>
+                                        </div>
+                                        <div class="form-group d-flex justify-content-between my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.country %>" style="width: 80%;" readonly>
+                                            <input type="text" class="form-control" value="<%= searchProfile.countryCode %>" style="width: 18%;" readonly>
+                                        </div>
+                                        <div class="form-group my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.state %>" readonly>
+                                        </div>
+                                        <div class="form-group my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.quarter %>" readonly>
+                                        </div>
+                                        <div class="form-group my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.cityBlock %>" readonly>
+                                        </div>
+                                        <div class="form-group d-flex justify-content-between my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.phone %>" style="width: 50%;" readonly>
+                                            <input type="text" class="form-control" value="<%= searchProfile.phoneAlt%>" style="width: 49%;" readonly>
+                                        </div>
+
+                                        <div class="alert alert-info">
+                                            <span> <b>¡Importante! </b> Todos estos datos deben ser correctos, si hay alguna informacion que debe ser editado o agregado vaya a perfil.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-12">
+
+                                <ul class="nav nav-tabs mt-3">
+                                    <li class="nav-item">
+                                        <button id="request" class="nav-link active" aria-current="page" href="#">Solicitudes </button>
+                                      </li>
+                                    <li class="nav-item">
+                                      <button id="range" class="nav-link" aria-current="page" href="#"> Rango Mapa </button>
+                                    </li>
+                                    <li class="nav-item">
+                                      <button id="meansTransportation" class="nav-link" href="#">Medios de Transporte </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button id="documents" class="nav-link" href="#">Documentos</button>
+                                    </li>
+                                </ul>
+
+                                <div class="container-fluid border"  style="background-color: rgba(255, 255, 255, 0.5); border-top-left-radius: 0; border-top-right-radius: 0; height: auto;">
+
+                                    <div class="containerRequest">
+                                        <div class="card-body p-0 my-3">
+                                            <div class="ui cards">
+                                                
+                                                <div class="ui card">
+                                                    <div class="content d-flex justify-content-between p-2">
+
+                                                        <img src="/img/steveJob.jpg" alt="" style="width: 60px; height: 60px; object-fit: cover;">
+                                                        <div class="contentRight m-0">
+                                                            <div class="header text-dark">
+                                                                Elliot Fu
+                                                            </div>
+                                                            <div class="meta">
+                                                                Miembro desde el 22-06-2025
+                                                            </div>
+                                                            <div class="extra text-dark">
+                                                                Rating:
+                                                                <div class="ui star rating" data-rating="4" data-max-rating="5"></div>
+                                                            </div>                                                  
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="description text-dark p-2">
+                                                        Elliot solicita traslado de carga (Moto)
+                                                    </div>
+                                                    <div class="extra content p-2">
+                                                    <div class="ui two buttons">
+                                                        <div class="ui inverted violet button">Approve</div>
+                                                        <div class="ui inverted red button">Decline</div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ui card">
+                                                    <div class="content  d-flex justify-content-between p-2">
+
+                                                        <img src="/img/jenny.jpg" alt="" style="width: 60px; height: 60px; object-fit: cover;">
+                                                        <div class="contentRight">
+                                                            <div class="header text-dark">
+                                                                jenny 
+                                                            </div>
+                                                            <div class="meta">
+                                                                Miembro desde el 22-06-2025
+                                                            </div>
+                                                            <div class="extra text-dark">
+                                                                Rating:
+                                                                <div class="ui star rating" data-rating="3" data-max-rating="5"></div>
+                                                            </div> 
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="description text-dark p-2">
+                                                        jenny solicita traslado de carga (Carro)
+                                                    </div>
+                                                    <div class="extra content p-2">
+                                                        <div class="ui two buttons">
+                                                        <div class="ui inverted violet button">Approve</div>
+                                                        <div class="ui inverted red button">Decline</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ui card">
+                                                    <div class="content  d-flex justify-content-between p-2">
+
+                                                    <img src="/img/donnatella.jpg" alt="" style="width: 60px; height: 60px; object-fit: cover;">
+                                                    <div class="contentRight m-0">
+                                                            <div class="header text-dark">
+                                                                Donnatella
+                                                            </div>
+                                                            <div class="meta">
+                                                                Miembro desde el 22-06-2035
+                                                            </div>
+                                                            <div class="extra">
+                                                                <div class="ui star rating" data-rating="4" data-max-rating="5"></div>
+                                                            </div>
+                                                    </div>
+
+                                                    </div>
+                                                    <div class="description text-dark p-2">
+                                                        Elliot solicita traslado de carga (Moto)
+                                                    </div>
+                                                    <div class="extra content p-2">
+                                                    <div class="ui two buttons">
+                                                        <div class="ui inverted violet button">Approve</div>
+                                                        <div class="ui inverted red button">Decline</div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ui card ">
+                                                    <div class="alert alert-info mb-0">
+
+                                                        <b>Estimado usuario,</b>
+
+                                                        <p>Te informamos que la pantalla de solicitudes de deliveries está en desarrollo. A continuación, te mostramos una vista previa de cómo podría verse. Te pedimos paciencia, ya que estará disponible para su uso real en un par de semanas.</p>
+                                                                                                                
+                                                    </div>
+                                                </div>
+                                                                    
+                                            </div>
+                                        </div>    
+                                    </div>
+
+                                    <div class="containerRange close" style="color: black;">
+                                        <div class="card-body p-0 mt-3">
+                                            <% const geolocation = searchProfile.geolocation %>
+                             
+                                            <% if (geolocation.lat !== "") { %>
+                               
+                                                <input type="hidden" id="mapDataLon" value="<%= geolocation.lon %>">
+                                                <input type="hidden" id="mapDataLat" value="<%= geolocation.lat %>">
+                  
+                                                <div id="mapStore" style="height: 400px;"></div>
+                                          
+                  
+                                              <% } else { %>
+                                                
+                                                <div class="contentLocation d-flex flex-column  justify-content-center align-items-center ">
+                  
+                                                  <div class="d-flex justify-content-center my-2"> <span> <b> <h4> Geolocalización </h4> </b> </span> </div>
+                                                  <img src="/img/geolocationIcon.png" alt="" style="width: 200px;">
+                                                  
+                                                  <div class="alert alert-primary py-2 px-5">
+                                                      <span> <i class="bi bi-geo-alt me-2"></i> Esta Tienda no posee una ubicación geografica. </span>
+                                                  </div>
+                                                  
+                                                </div>
+                  
+                                              <% }; %>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="containerMeansTransportation close">
+                                        <div class="card-body p-0 mt-3">
+
+                                                                                           
+                                            <div class="row">
+                                                                    
+                                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                                    <div class="input-group my-2">
+                                                        <span class="input-group-text">  <i class="bi bi-truck"></i> </span>
+                                                        <select id="selectMedioEdit" class="form-control">
+                                                            <option value="<%= transportAgent.transportation[0].medio %>" selected><%= transportAgent.transportation[0].medio %></option>
+                                                            <option value="Bicycle">Bicycle</option>
+                                                            <option value="Motorbike">Motorbike</option>
+                                                            <option value="Automobile">Automobile</option>
+                                                            <option value="Truck">Truck</option>
+                                                            <option value="Heavy Truck">Heavy Truck</option>
+                                                            <option value="Nautical">Nautical</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="input-group my-2">
+                                                        <span class="input-group-text"> <i class="bi bi-pencil-fill"></i> </span>
+                                                        <input type="text" id="descripMedioEdit" class="form-control" value="<%= transportAgent.transportation[0].descrip %>" maxlength="40" required>
+                                                    </div>
+                                                    <div class="input-group my-2"> 
+                                                        <span class="input-group-text"> <i class="bi bi-palette2"></i> </span>
+                                                        <select id="selectColorEdit" class="form-control">
+                                                            <option value="<%= transportAgent.transportation[0].color %>"><%= transportAgent.transportation[0].color %></option>
+                                                            <option value="Black">Black</option>
+                                                            <option value="Blue">Blue</option>
+                                                            <option value="Brown">Brown</option>
+                                                            <option value="Gold">Gold</option>
+                                                            <option value="Grey">Grey</option>
+                                                            <option value="Green">Green</option>
+                                                            <option value="Pink">Pink</option>
+                                                            <option value="Purple">Purple</option>
+                                                            <option value="Red">Red</option>
+                                                            <option value="Silver">Silver</option>
+                                                            <option value="Violet">Violeta</option>
+                                                            <option value="White">White</option>
+                                                            <option value="Yellow">Yellow</option>
+                                                        </select> 
+                                                        <span class="input-group-text"> <i class="bi bi-123"></i> </span>
+                                                        <input type="text" id="placaMedioEdit" class="form-control" value="<%= transportAgent.transportation[0].placa %>" maxlength="10">
+                                                    </div>
+                                                    <div class="form-group my-3">
+                                                        <div class="alert alert-info">
+                                                            <i class="bi bi-exclamation-triangle-fill ms-2"></i> Proporcione detalles que permitan la identificacion del vehiculo utilizado para hacer deliveries.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                                    <div class="contentPicture  d-flex justify-content-center align-items-center m-2 rounded-2  " style="position: relative; height: 200px; ">
+                                                        <img src="<%= transportAgent.transportation[0].image[0].url %>" alt="" class="imageTransEditCurrent rounded-2" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">
+                                                        <button type="button" class="btn btn-light rounded-pill me-1 btnImageUpload" id="btnTransEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20;" > <i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                        <input type="file" class="fileTransEdit invisible" style="position: absolute; top:-20; z-index: 1;">
+                                                        <img class="imageTransEdit rounded-2 close" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">  
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group my-3" style="width: 100%;"> 
+                                                    <input type="submit" class="form-control btn btn-secondary border" id="btnSubmitEdit" value="Editar Medio de Transporte">
+                                                    <button class="form-control btn btn-secondary border close" id="btnSubmitEditing" disabled>
+                                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                                        Guardando Datos ...
+                                                    </button> 
+                                                </div>                                              
+                                            
+                                            </div>
+
+                                        
+                                        </div>
+                                    </div> 
+                                    
+                                    <div class="containerDocuments close">
+                                        <div class="card-body p-0 my-3 d-flex flex-column">
+                                                                             
+                                            <div class="alert alert-info">
+                                                
+                                                <h3> <b>Estimados usuarios,</b> </h3>
+                                                <p>Queremos recordarles la importancia del cuidado de los documentos subidos a blissenet.com. Estos documentos estarán protegidos contra copias y cuentarán con marca de agua, lo que garantizará que, incluso si se captura, no podrán ser utilizados.</p>
+                                                <p>Proporcionar los documentos es fundamental, ya que brinda la confianza necesaria para que nuestros usuarios se sientan seguros al utilizar nuestros servicios como agentes de transporte o deliveries.</p>
+                                                <p>Saludos cordiales, <b> El equipo de Blissenet</b></p>
+
+                                               
+
+                                            </div>
+                                            <div class="row m-1">
+                                                <div class="card-header">Document</div>
+                                                <div class="col-lg-4 col-md-12 col-sm-12 p-0">
+                                                    <img src="<%= transportAgent.docImages.images[0].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
+                                                </div>
+                                                <div class="col-lg-8 col-md-12 col-sm-12 p-0">
+                                                    <div class="alert alert-secondary m-0 rounded-0" style="background-color: rgba(212, 212, 212, 0.2); width: 100%; height: 100%;">
+                                                      <p style="font-size: 15px;"> <b>Es importante </b> que puedas ofrecer a la vista de los usuarios tu documento. Esto crea un mayor compromiso y produce una mayor confianza en los usuarios de blissenet.com. El resto es crear una calificacion y unos buenos comentarios que expresen lo bien que haces el servicio de entregas een tu localidad.</p>
+                                                      <p style="font-size: 15px;"></p> <b> Atención, </b>  Este modulo de transporte esta en desarrollo. Por lo que debes esperar un par de semanas para su uso. </p>
+                                                    </div>
+                                                </div>    
+                                            </div>                                           
+                                            
+                                            <div class="row m-1">
+                                                <div class="card-header">Selfie</div>
+                                                <div class="col-lg-4 col-md-12 col-sm-12 p-0">
+                                                    <img src="<%= transportAgent.docImages.images[1].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
+                                                </div>
+                                                <div class="col-lg-8 col-md-12 col-sm-12 p-0">
+                                                    <div class="alert m-0 rounded-0" style="background-color: rgba(212, 212, 212, 0.2); width: 100%; height: 100%;">
+                                                        <p style="font-size: 15px;"> <b>Es importante </b> que puedas ofrecer a la vista de los usuarios tu documento. Esto crea un mayor compromiso y produce una mayor confianza en los usuarios de blissenet.com. El resto es crear una calificacion y unos buenos comentarios que expresen lo bien que haces el servicio de entregas een tu localidad.</p>
+                                                        <p style="font-size: 15px;"></p> <b> Atención, </b>  Este modulo de transporte esta en desarrollo. Por lo que debes esperar un par de semanas para su uso. </p>
+                                                    </div>
+                                                </div>    
+                                            </div> 
+
+                                        </div>
+                                    </div>
+
+                                </div> 
+
+                            </div>    
+
+                        <% } else { %>
+                             <!-- este contenedor existe cuando el user no es agante de transporte -->
+                            <div class="col-lg-10 col-md-11 col-sm-12 col-12 p-3 my-4 rounded-2 shadow-sm"  style="background-color: rgba(209, 209, 209, 0.2)">
+
+                                <div class="contentainer-fluid welcome">
+
+                                
+                                    <h4>Hola usuario de Blissenet</h4>
+                                    <h6>¡Estamos emocionados de que estés interesado en convertirte en un agente de transporte con Blissenet! Para garantizar un servicio eficiente y seguro, utilizaremos un sistema de seguimiento mediante escaneo de códigos QR. Cuando recibas un paquete, simplemente escanea el código y dirígete a la dirección para confirmar la recepción. Es importante que también proveas algunos documentos para garantizar la seguridad de nuestros clientes, quienes calificarán tu servicio.</h6>
+                                    <h6>El rango de entrega es de aproximadamente 5 km a la redonda, así que puedes hacerlo incluso con una bicicleta o moto. Para envíos con mayor carga, contempla que requieres medios de transporte más grandes como auto, camioneta o camión.</h6>
+                                    <h6>El servicio de Agente de Transporte (AT) es solo interurbano y fácil de realizar.</h6> 
+
+                                    <div class="form-group py-4">
+                                        <button class="btn btn-dark form-control border rounded-pill" id="btnStarProcess"> Iniciar proceso para AT </button>
+                                    </div>
+
+                      
+                                </div>
+
+                                <div class="container-fluid containerStep close">
+
+                                    <div class="container-steps d-flex justify-content-center">
+                                        <div class="ui tiny steps">
+
+                                            <div class="active step" id="stepTerm">
+                                                <i class="file alternate outline icon text-dark"></i>
+                                                <div class="content">
+                                                    <div class="title">Términos y Condiciones</div>
+                                                    <div class="description">Aceptación de Términos</div>
+                                                </div>
+                                            </div> 
+
+                                            <div class="disabled step" id="stepData">
+                                                <i class="info icon text-dark"></i>
+                                                <div class="content">
+                                                    <div class="title">Suministrar Datos</div>
+                                                    <div class="description">Datos y Detalles Requeridos </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="disabled step" id="stepUpload">
+                                                <i class="camera icon text-dark"></i>
+                                                <div class="content">
+                                                    <div class="title">Subida de documentos</div>
+                                                    <div class="description">Imagenes de Documentos y Selfie</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="container-fluid termsAcept close border rounded-2 p-3 mt-5 mb-3"> 
+
+                                    <h3 class="mb-3 fw-bold">Términos y Condiciones para Agentes de Transporte</h3>
+                                    
+                                    <ol>
+                                        <li> Responsabilidad del Agente de Transporte: Desde el momento en que el agente de transporte recibe la carga hasta su entrega final, es completamente responsable de la mercancía. Cualquier daño, pérdida o mal manejo de la carga será considerado como una falta grave.</li>
+                                        
+                                        <li> Identificación del Responsable: Tanto el vendedor como el comprador tendrán acceso a la información del agente de transporte encargado de la entrega. Esto asegura una transparencia total en el proceso y permite que cada parte sepa quién es responsable.</li>
+                                        
+                                        <li> Penalizaciones por Mal Manejo: En caso de que un agente de transporte se apropie indebidamente de la carga o incumpla con sus deberes, podrá enfrentar consecuencias legales, incluyendo denuncias ante las autoridades competentes y posibles acciones penales.</li>
+                                                                                
+                                        <li> Rango de Entrega: Las entregas se realizarán en un rango máximo de 5 kilómetros a la redonda desde el punto de origen. Esto garantiza un control más efectivo sobre la carga y minimiza riesgos.</li> 
+                                        
+                                        <li> Perfil Honesto y Calificado: Se requiere que todos los agentes de transporte mantengan un perfil honesto y profesional. La calidad del servicio depende del compromiso del agente con su trabajo y con el ecosistema de Blissenet.</li>
+                                        
+                                        <li> Proceso de Calificación: Al finalizar la entrega, el agente deberá escanear la carga y solicitar al comprador que califique tanto al vendedor como a él mismo. Esta calificación debe realizarse lo antes posible para cerrar el trabajo formalmente y liberar al agente de responsabilidad sobre la carga.</li>
+
+                                        <li> Cumplimiento Obligatorio: La aceptación de estos términos es obligatoria para todos los agentes de transporte que deseen operar dentro del sistema Blissenet. El incumplimiento podrá resultar en sanciones y exclusión del sistema.</li>
+                                        
+                                    </ol>
+
+                                    <div class="form-check my-3">
+                                                
+                                        <label class="form-check-label" for="checkAcept">
+                                           Acepto los términos y condiciones
+                                        </label>
+
+                                        <input class="form-check-input" type="checkbox" value="" id="checkAcept" >
+    
+                                        <!-- <input class="form-check-input checkColor" type="checkbox" value="" id="checkAcept" checked> -->
+                                    
+                                    </div>
+
+                                    <div class="form-group my-4">
+                                        <button class="form-control btn btn-dark rounded-pill nextAceptOne" disabled> Siguiente </button>
+                                    </div>
+
+                                </div> 
+
+                                <div class="container-fluid dataTransport close border rounded-2 p-3 mt-5 mb-3"> 
+
+                                    <h3 class="mb-2 fw-bold">Registra tu medio de transporte</h3>
+                                    <div class="row">
+
+                                        <div class="card-header">Registra y sube todos los datos de tu medio de transporte</div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+
+                                                <div class="input-group my-2">
+                                                    <span class="input-group-text"> <i class="bi bi-truck"></i> </span>
+                                                    <select id="selectMedio" class="form-control">
+                                                        <option value="">Selecciona el medio</option>
+                                                        <option value="Bicycle">Bicycle</option>
+                                                        <option value="Motorbike">Motorbike</option>
+                                                        <option value="Automobile">Automobile</option>
+                                                        <option value="Truck">Truck</option>
+                                                        <option value="Heavy Truck">Heavy Truck</option>
+                                                        <option value="Nautical">Nautical</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="input-group my-2">
+                                                    <span class="input-group-text"> <i class="bi bi-pencil-fill"></i> </span>
+                                                    <input type="text" id="descripMedio"  class="form-control" placeholder="Zuzuki DT, 2005">
+                                                </div>
+
+                                                <div class="input-group my-2"> 
+                                                    <span class="input-group-text"> <i class="bi bi-palette2"></i> </span>
+                                                    <select  id="selectColor" class="form-control">
+                                                        <option value="">Selecciona el color</option>
+                                                        <option value="Black">Black</option>
+                                                        <option value="Blue">Blue</option>
+                                                        <option value="Brown">Brown</option>
+                                                        <option value="Gold">Gold</option>
+                                                        <option value="Grey">Grey</option>
+                                                        <option value="Green">Green</option>
+                                                        <option value="Pink">Pink</option>
+                                                        <option value="Purple">Purple</option>
+                                                        <option value="Red">Red</option>
+                                                        <option value="Silver">Silver</option>
+                                                        <option value="Violet">Violeta</option>
+                                                        <option value="White">White</option>
+                                                        <option value="Yellow">Yellow</option>
+                                                    </select> 
+                                                    <span class="input-group-text"> <i class="bi bi-123"></i> </span>
+                                                    <input type="text" id="placaMedio" class="form-control" placeholder="Matricula, Placa" maxlength="10">
+                                                </div>
+
+                                                <div class="form-group d-flex justify-content-start my-2 border rounded-2">
+                                                    <div class="add_photo me-2" id="addPhotoTransport" title="Click para subir su documento png o jpg">
+                                                        <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
+                                                    </div>
+                                                    <span class="mx-2 d-flex align-items-center"> Puede subir una (1) imagen de su medio de transporte (Bicicleta, Moto, Auto, etc) </span>
+                                                    <input type="file" name=fileImg class="inpFileDoc form-control" id="inpFileTransport" required>
+                                                </div>
+                                                <div class="my-2 d-flex justify-content-center contentImgs border rounded-2" id="addObjectImgTransport">
+                                                    
+                                                    <!--   <img src="" class="preview"> -->
+        
+                                                </div> 
+
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12 p-0">
+                                            <div class="containerImg border rounded-2 m-2 d-flex justify-content-center align-items-center" style="background-color: rgba(226, 225, 239, 0.8);">
+                                                <img src="/img/medioTransport.png" alt="" style="width: 160px;">
+                                            </div>
+                                            <div class="alert alert-light m-2"> <i class="bi bi-info-circle-fill me-2"></i> Si deseas registrar mas de un medio de transporte podras hacerlo despues que completes este registro.</div>
+                                        </div>
+                                        
+                                    </div>
+
+
+                                    <div class="form-group my-4">
+                                        <button class="form-control btn btn-dark rounded-pill nextTrans" disabled> Siguiente </button>
+                                        
+                                        <button class="form-control btn btn-dark rounded-pill nextTransSpinner close" disabled>
+                                            <span class="spinner-border spinner-border-sm mx-1" role="status" aria-hidden="true"></span>
+                                            Siguiente ...
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="container-fluid uploadDoc close border rounded-2 p-3 mt-5 mb-3"> 
+
+                                    <h3 class="mb-2 fw-bold">Subida de Documentos </h3>
+
+                                    <div class="row">
+
+                                        <div class="card-header">Subir imagen de Documento</div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+
+                                                <div class="form-group d-flex justify-content-start my-2 border rounded-2">
+                                                    <div class="add_photo me-2" id="addPhotoOne" title="Click para subir su documento png o jpg">
+                                                        <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
+                                                    </div>
+                                                    <span class="mx-2 d-flex align-items-center"> Puede subir una (1) imagen de su documento de identidad (Pasaporte o ID "Cedula") </span>
+                                                    <input type="file" name=fileImg class="inpFileDoc form-control" id="inpFileOne" required>
+                                                </div>
+                                                <div class="my-2 d-flex justify-content-center contentImgs border rounded-2" id="addObjectImgOne">
+                                                    
+                                                    <!--   <img src="" class="preview"> -->
+        
+                                                </div>
+
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12 p-0">
+                                            <div class="containerImg border rounded-2 m-2 d-flex justify-content-center align-items-center" style="background-color: rgba(226, 225, 239, 0.8);">
+                                                <img src="/img/exampleDocument.png" alt="" style="width: 160px;">
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="card-header">Subir imagen Selfie con Documento</div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+
+                                            <div class="form-group d-flex justify-content-start my-2 border rounded-2">
+                                                <div class="add_photo me-2" id="addPhotoTwo" title="Click para subir su selfie png o jpg">
+                                                    <span><img src="/img/addPhoto.png" style="width: 60px;"></span>
+                                                </div>
+                                                <span class="mx-2 d-flex align-items-center"> Puede subir una (1) imagen tipo selfie con el mismo documento de identidad que ha subido en la seccion arriba. </span>
+                                                <input type="file" name=fileImg class="inpFileDoc form-control" id="inpFileTwo" required>
+                                            </div>
+                                            <div class="my-2 d-flex justify-content-center contentImgs border rounded-2" id="addObjectImgTwo">
+    
+                                                <!--   <img src="" class="preview"> -->
+    
+                                            </div>
+
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12 p-0">
+                                            <div class="containerImg border rounded-2 m-2 d-flex justify-content-center align-items-center" style="background-color: rgba(226, 225, 239, 0.8);">
+                                                <img src="/img/exampleSelfie.png" alt="" style="width: 160px;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group my-4">
+                                        <button class="form-control btn btn-dark rounded-pill btnUploadDocument" disabled> Siguiente </button>
+                                        <button class="form-control btn btn-dark rounded-pill btnUploadDocumentSpinner close" disabled>
+                                            <span class="spinner-border spinner-border-sm mx-1" role="status" aria-hidden="true"></span>
+                                            Siguiente ...
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        <% }; %>
+
+                    </div>
+
+                <% } else { %>
+                            
+                <% }; %>   
+
+            </div>
+
+         <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+         <% }; %>
+
+    </main>
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+       
+        <script src="/toastr/toastr.min.js"></script>
+</body>
+
+<script>
+
+    const request = document.getElementById('request');
+    const range = document.getElementById('range');
+    const meansTransportation = document.getElementById('meansTransportation');
+    const documents = document.getElementById('documents');
+
+    const containerRequest = document.querySelector('.containerRequest');
+    const containerRange = document.querySelector('.containerRange');
+    const containerMeansTransportation = document.querySelector('.containerMeansTransportation');
+    const containerDocuments = document.querySelector('.containerDocuments');
+
+    const storenameValue = document.querySelector('#storeUserValue');
+
+    request.addEventListener('click', ()=>{
+        request.classList.add('active');
+        range.classList.remove('active');
+        meansTransportation.classList.remove('active');
+        documents.classList.remove('active');
+
+        containerRequest.classList.remove('close');
+        containerRange.classList.add('close');
+        containerMeansTransportation.classList.add('close');
+        containerDocuments.classList.add('close');
+    })
+
+    range.addEventListener('click', ()=>{
+        request.classList.remove('active');
+        range.classList.add('active');
+        meansTransportation.classList.remove('active');
+        documents.classList.remove('active');
+
+        containerRequest.classList.add('close');
+        containerRange.classList.remove('close');
+        containerMeansTransportation.classList.add('close');
+        containerDocuments.classList.add('close');
+
+        createMap()
+    })
+
+    meansTransportation.addEventListener('click', ()=>{
+        request.classList.remove('active');
+        range.classList.remove('active');
+        meansTransportation.classList.add('active');
+        documents.classList.remove('active');
+
+        containerRequest.classList.add('close');
+        containerRange.classList.add('close');
+        containerMeansTransportation.classList.remove('close');
+        containerDocuments.classList.add('close');
+    })
+
+    documents.addEventListener('click', ()=>{
+        request.classList.remove('active');
+        range.classList.remove('active');
+        meansTransportation.classList.remove('active');
+        documents.classList.add('active');
+
+        containerRequest.classList.add('close');
+        containerRange.classList.add('close');
+        containerMeansTransportation.classList.add('close');
+        containerDocuments.classList.remove('close');
+    })
+
+    let map; // Variable global para almacenar la instancia del mapa
+
+    function createMap() {
+     
+        const Lon = document.getElementById('mapDataLon'); 
+        const Lat = document.getElementById('mapDataLat');
+        
+        const storename = storenameValue.value; //username de la tienda
+        console.log("storename :", storename)
+
+        if (Lon && Lat){
+
+            const lon = Lon.value;
+            const lat = Lat.value;
+
+            console.log("lon -->", Lon);
+            console.log("Lat -->", Lat);
+
+            console.log(`Estas variables ya están definidas ---> Latitud: ${lat}, Longitud: ${lon}`);
+
+            // Verifica si el mapa ya ha sido creado
+            if (map) {
+                map.remove(); // Destruye el mapa existente
+            }
+
+            
+            // Crear un nuevo mapa en el div con id "map" instanciar
+            map = L.map('mapStore').setView([lat, lon], 13); // El segundo parámetro es el nivel de zoom
+            
+            //var myMap = L.map('miMapa').setView([latitud, longitud], zoomLevel);
+
+            console.log("map ->", map);
+
+            // Añadir una capa de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Añadir un marcador en las coordenadas especificadas
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup(storename)
+                .openPopup();
+
+            // este array debe ser dinamico y serian las tiendas que tienen peticiones activas por suplir
+            // Array de lugares con coordenadas y nombres donde estan las solicitudes pendientes
+            const lugares = [
+                { lat: 8.29928, lon: -62.7360, nombre: "Elliot Fu" },
+                { lat: 8.26522, lon: -62.72437, nombre: "Donnatella" },
+                { lat: 8.27074, lon: -62.7578, nombre: "jenny" }
+            ];    
+
+            // Definir el radio en metros (6 km)
+            var radius = 6000;
+
+            // Crear una circunferencia alrededor del marcador
+            L.circle([lat, lon], {
+                color: 'blue', // Color de la circunferencia
+                fillColor: '#30f', // Color de relleno
+                fillOpacity: 0.2, // Opacidad del relleno
+                radius: radius // Radio en metros
+            }).addTo(map);    
+
+            // Añadir los demás marcadores desde el array
+            lugares.forEach(lugar => {
+                L.marker([lugar.lat, lugar.lon]).addTo(map)
+                    .bindPopup(lugar.nombre);
+            });
+    
+            
+            const options = {
+                position: 'topleft',
+                primaryLengthUnit: 'kilometers',
+                primaryAreaUnit: 'hectares',
+                activeColor: '#9200FF',
+                completedColor: '#c174fc',
+                // Traducción de los textos
+            };
+
+            const measureControl = new L.Control.Measure(options);
+            map.addControl(measureControl); // Asegúrate de añadir el control al mapa
+
+            L.Control.Measure.include({
+                _setCaptureMarkerIcon: function () {
+                    this._captureMarker.options.autoPanOnFocus = false;
+
+                    this._captureMarker.setIcon(
+                        L.divIcon({
+                            iconSize: this._map.getSize().multiplyBy(2)
+                        })
+                    );
+                },
+            });
+            
+
+        }
+
+
+
+}
+
+</script>
+
+<script>
+
+    
+    const welcome = document.querySelector('.welcome'); //
+    const containerStep = document.querySelector('.containerStep'); //contenedor
+    const btnStarProcess = document.querySelector('#btnStarProcess'); //boton 
+
+    const dataTransport = document.querySelector('.dataTransport'); //contenedor de registro de medio de transporte
+    const nextTrans = document.querySelector('.nextTrans'); //boton siguiente del contenedor registro de transporte
+    const nextTransSpinner = document.querySelector('.nextTransSpinner'); //boton lock del contenedor del registro del medio de transporte.
+    const selectMedio = document.querySelector('#selectMedio');
+    const descripMedio = document.querySelector('#descripMedio'); 
+    const selectColor = document.querySelector('#selectColor');
+    const placaMedio = document.querySelector('#placaMedio'); 
+
+    const addPhotoTransport = document.querySelector('#addPhotoTransport');
+    const inpFileTransport = document.querySelector('#inpFileTransport');
+    const addObjectImgTransport = document.querySelector('#addObjectImgTransport');
+    
+    const termsAcept = document.querySelector('.termsAcept'); //contenedor de terminos y condiciones
+        const checkAcept = document.querySelector('#checkAcept'); //esto es un check
+        const nextAceptOne = document.querySelector('.nextAceptOne'); //boton de terminos y condiciones
+
+    const uploadDoc = document.querySelector('.uploadDoc'); //contenedor de subida de imagenes 
+    const btnUploadDocument = document.querySelector('.btnUploadDocument'); //es un boton que permite subir el documento y el selfie
+    const btnUploadDocumentSpinner = document.querySelector('.btnUploadDocumentSpinner'); //boton spinner de siguiente.
+
+    //-------------------------------------------steps------------------------------------------------
+    const stepTerm = document.getElementById('stepTerm');
+    const stepUpload = document.getElementById('stepUpload');
+    const stepData = document.getElementById('stepData');
+    //-------------------------------------------steps------------------------------------------------
+
+    if (stepTerm){
+        stepTerm.addEventListener('click', ()=>{
+            termsAcept.classList.remove('close'); //hacemos aparecer los terminos
+            dataTransport.classList.add('close'); //hacemos esconder los 
+            uploadDoc.classList.add('close'); //hacemos esconder
+        })
+    }    
+
+    if (stepData){
+        stepData.addEventListener('click', ()=>{
+            termsAcept.classList.add('close'); //hacemos aparecer los terminos
+            dataTransport.classList.remove('close'); //hacemos esconder los 
+            uploadDoc.classList.add('close'); //hacemos esconder
+        })
+    }    
+
+    if (stepUpload){
+        stepUpload.addEventListener('click', ()=>{
+            termsAcept.classList.add('close'); //hacemos aparecer los terminos
+            dataTransport.classList.add('close'); //hacemos esconder los 
+            uploadDoc.classList.remove('close'); //hacemos esconder
+        })
+    }
+
+    if (btnStarProcess){
+        btnStarProcess.addEventListener("click", ()=>{
+        //esconder el contendor welcome
+        welcome.classList.add('close'); //hemos agregado la clase close 
+        containerStep.classList.remove('close'); // ahora quitamos el close y se vera el contenedor de las pasos
+        termsAcept.classList.remove('close'); //hacemos aparecer los terminos
+        })
+    }    
+
+</script>
+
+<script>
+    let fileTrans //variable de alcance mayor que guarda informacion de archivo de tipo file 
+
+    if (checkAcept){
+        checkAcept.addEventListener('change', ()=>{
+            stateCheck()
+        })
+    }    
+
+    function stateCheck(){
+        const valueCheckAcept = checkAcept.checked
+        //console.log("valueCheckAcept -->", valueCheckAcept);
+        if (valueCheckAcept == true ){
+            nextAceptOne.removeAttribute('disabled');
+        } else {
+            nextAceptOne.setAttribute('disabled', "");
+            stepData.classList.remove('active');
+            stepData.classList.add('disabled');
+            stepUpload.classList.remove('active');
+            stepUpload.classList.add('disabled');
+        }
+
+    }
+
+    if(selectMedio){
+        selectMedio.addEventListener("change", ()=>{
+            stateData();
+        })
+    }    
+   
+    if (descripMedio){
+        descripMedio.addEventListener("input", ()=>{
+            const value = descripMedio.value
+            const length = value.length
+            //console.log("length", length)
+            if (length >= 10){
+                //console.log("se activa la funcion")
+                stateData();
+            }
+        })
+    }    
+
+    if(selectColor){
+        selectColor.addEventListener("change", ()=>{
+                stateData();
+        })
+    }    
+
+    if(addPhotoTransport){
+        addPhotoTransport.addEventListener('click', ()=>{
+            inpFileTransport.click()
+        })
+    }    
+
+    if(inpFileTransport){
+        inpFileTransport.addEventListener('change', ()=>{
+
+            let archivoTrans = inpFileTransport.files
+            //console.log("ver que es esto : ",archivoTrans);
+
+            if (! archivoTrans || !archivoTrans.length){
+                preview.src = "";
+                return
+            };
+
+            fileTrans = archivoTrans[0];
+            //console.log(fileTrans)
+            let objectURL = URL.createObjectURL(fileTrans);
+            //console.log(objectURL)
+            addObjectImgTransport.innerHTML = ` <div class="contImg my-2" data-id="${0}"><img src="${objectURL}" class="preview">  <div>`
+    
+            stateData() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir    
+
+        })
+
+    }
+
+    function stateData(){
+        //console.log("Funcion stateData evaluando")
+        if (selectMedio.value !=="" && descripMedio.value.length >=10 && selectColor.value !=="" && fileTrans !== undefined){
+            nextTrans.removeAttribute("disabled");
+            //console.log("fileTrans", fileTrans)
+        } 
+         
+    }
+
+    if(nextAceptOne){
+        nextAceptOne.addEventListener('click', ()=>{
+            console.log("hemos dado click al boton de seguir ")
+
+            stepTerm.classList.remove('active');
+            stepData.classList.add('active');
+            stepData.classList.remove('disabled');
+
+            termsAcept.classList.add('close') //quitamos el contenedor de aceptacion de terminos
+            dataTransport.classList.remove('close'); //colocamos el contenedor descripcion de medio de transporte
+            //uploadDoc.classList.remove('close'); //colocamos el contenedor de la subida de imagenes
+        })
+    }    
+
+
+    if(nextTrans){
+        nextTrans.addEventListener('click', ()=>{
+
+            nextTransSpinner.classList.remove('close'); //aparece el boton spinner
+            nextTrans.classList.add('close'); //se esconde el boton 
+
+            const formData = new FormData();
+            formData.append('CheckAcept', true);
+            formData.append('SelectMedio', selectMedio.value);
+            formData.append('DescripMedio', descripMedio.value);
+            formData.append('SelectColor', selectColor.value);
+            formData.append('PlacaMedio', placaMedio.value);
+            formData.append('fileImg', fileTrans); //image del medio de transporte
+
+            //siempre llega en el mimso orden primero el documento y segundo el selfie
+
+            console.log("Esto es formData", formData);
+
+            fetch('/myaccount/uploadDataTransport', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(jsonx => {
+                console.log("response del backend --->", jsonx);
+
+                const code = jsonx.code;
+                const response = jsonx.response;
+                
+                if (code == "ok"){
+
+                    console.log("ahora si pasamos al siguiente formulario");
+                    console.log("Response: ", response);
+                    //se ha guardado y debemos seguir adelante.
+                    stepTerm.classList.remove('active');
+                    stepUpload.classList.add('active');
+                    stepUpload.classList.remove('disabled');
+                    stepData.classList.remove('active');
+
+                    dataTransport.classList.add('close');
+                    uploadDoc.classList.remove('close');
+                    mostrarToast( response , 'right', 'success', '', true ); // Agrega título aquí
+
+                } else {
+
+                    console.log("Response: ", response);
+                    mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+                    inpFileTransport.value = ""; //limpiamos el input file.
+                    addObjectImgTransport.innerHTML = ""; //quitamos la imagen
+                    nextTrans.setAttribute("disabled", "");
+
+                    nextTransSpinner.classList.add('close'); //escondemos el boton spinner
+                    nextTrans.classList.remove('close'); //aparfece el boton siguiente 
+                }
+            
+                
+
+
+            
+
+            })
+            .catch(err => console.log(err));
+
+        });
+    }    
+    
+</script>
+
+<script>
+
+const addPhotoOne = document.querySelector('#addPhotoOne');
+const inpFileOne = document.querySelector('#inpFileOne');
+const addObjectImgOne = document.querySelector('#addObjectImgOne');
+
+const addPhotoTwo = document.querySelector('#addPhotoTwo');
+const inpFileTwo = document.querySelector('#inpFileTwo');
+const addObjectImgTwo = document.querySelector('#addObjectImgTwo');
+
+
+let fileOne, fileTwo //declaracion de variables para un entorno globlal...
+
+
+    if(addPhotoOne){
+
+        addPhotoOne.addEventListener('click', ()=>{
+            inpFileOne.click()
+        })
+        
+        inpFileOne.addEventListener('change', ()=>{
+
+            let archivoOne = inpFileOne.files
+            console.log("ver que es esto : ",archivoOne);
+
+            if (! archivoOne || !archivoOne.length){
+                preview.src = "";
+                return
+            };
+
+
+            fileOne = archivoOne[0];
+            console.log(fileOne)
+            let objectURL = URL.createObjectURL(fileOne);
+            console.log(objectURL)
+            addObjectImgOne.innerHTML = ` <div class="contImg my-2" data-id="${0}"><img src="${objectURL}" class="preview">  <div>`
+            
+            stateFiles() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir    
+
+        })
+    }
+
+    if(addPhotoTwo){
+        addPhotoTwo.addEventListener('click', ()=>{
+            inpFileTwo.click()
+        })
+
+        inpFileTwo.addEventListener('change', ()=>{
+
+            let archivoTwo = inpFileTwo.files
+            console.log(archivoTwo);
+
+            if (! archivoTwo || !archivoTwo.length){
+                preview.src = "";
+                return
+            };
+
+            fileTwo = archivoTwo[0];
+            console.log(fileTwo)
+            let objectURL = URL.createObjectURL(fileTwo);
+            console.log(objectURL)
+            addObjectImgTwo.innerHTML = ` <div class="contImg my-2" data-id="${0}"><img src="${objectURL}" class="preview">  <div>`
+
+            stateFiles() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir     
+        })
+    }    
+
+        function stateFiles(){
+            console.log('Estamos en la funcion stateFiles')
+            console.log(`fileOne:${fileOne}  fileTwo:${fileTwo}`)
+
+            if (fileOne !== undefined && fileTwo !== undefined){
+                console.log("liberamos el boton para seguir adelante")
+                btnUploadDocument.removeAttribute('disabled');
+            } else {
+                btnUploadDocument.setAttribute('disabled', "");
+            }
+        }
+
+    if(btnUploadDocument){   
+        //fileImg es el name de los file asi debe estar por multer
+        btnUploadDocument.addEventListener('click', () => {
+
+            btnUploadDocumentSpinner.classList.remove('close');
+            btnUploadDocument.classList.add('close');  
+
+            const formData = new FormData();
+            formData.append('fileImg', fileOne); //document
+            formData.append('fileImg', fileTwo); //selfie
+            //siempre llega en el mimso orden primero el documento y segundo el selfie
+
+            console.log("Esto es formData", formData);
+
+            fetch('/myaccount/uploadDocuments', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(jsonx => { 
+                console.log(jsonx)
+                const code = jsonx.code;
+                const response = jsonx.response;
+                mostrarToast( response , 'right', 'success', '', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+
+            })
+            .catch(err => {     
+                console.log(err)
+                mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+
+                inpFileOne.value = ""; //limpiamos el campo file 1.
+                inpFileTwo.value = ""; //limpiamos el campo file 2.
+
+                btnUploadDocumentSpinner.classList.add('close');
+                btnUploadDocument.classList.remove('close');   
+            });
+        });
+
+    }     
+
+</script>
+
+<script>
+
+
+    function mostrarToast(mensaje, posicion, color, titulo = '', conBotonCerrar = false) {
+        // Configuración predeterminada
+        toastr.options = {
+            "closeButton": conBotonCerrar, // Agregar botón de cerrar si se solicita
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": !conBotonCerrar, // Si tiene botón de cerrar, no mostrar barra de progreso
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "600",
+            "hideDuration": "1000",
+            "timeOut": conBotonCerrar ? false : "8000", // No se oculta automáticamente si tiene botón de cerrar
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+  
+        // Configurar la posición
+        switch (posicion) {
+            case 'center':
+                toastr.options.positionClass = 'toast-top-center';
+                break;
+            case 'left':
+                toastr.options.positionClass = 'toast-top-left';
+                break;
+            case 'right':
+                toastr.options.positionClass = 'toast-top-right';
+                break;
+            default:
+                toastr.options.positionClass = 'toast-top-right'; // Posición predeterminada
+        }
+  
+        // Mostrar el mensaje según el color especificado
+        switch (color) {
+            case 'success':
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+                break;
+            case 'info':
+                titulo ? toastr.info(mensaje, titulo) : toastr.info(mensaje);
+                break;
+            case 'warning':
+                titulo ? toastr.warning(mensaje, titulo) : toastr.warning(mensaje);
+                break;
+            case 'danger':
+                titulo ? toastr.error(mensaje, titulo) : toastr.error(mensaje);
+                break;
+            case 'primary':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-primary' }) : toastr.info(mensaje, '', { toastClass: 'toast-primary' });
+                break;
+            case 'dark':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-dark' }) : toastr.info(mensaje, '', { toastClass: 'toast-dark' });
+                break;
+            default:
+                console.warn('Color no válido. Usando el color por defecto (success).');
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+        }
+    }
+  
+  
+
+   //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+  
+</script>
+
+<script> 
+ 
+    const selectMedioEdit = document.getElementById('selectMedioEdit');
+    const descripMedioEdit = document.getElementById('descripMedioEdit');
+    const selectColorEdit = document.getElementById('selectColorEdit');
+    const placaMedioEdit = document.getElementById('placaMedioEdit');
+    
+    const btnSubmitEdit = document.getElementById('btnSubmitEdit');
+    const btnSubmitEditing = document.getElementById('btnSubmitEditing');
+
+    const btnTransEdit = document.querySelector('#btnTransEdit');
+    const fileTransEdit = document.querySelector('.fileTransEdit');
+    const imageTransEditCurrent = document.querySelector('.imageTransEditCurrent'); // este es el img actual que existe
+    const imageTransEdit = document.querySelector('.imageTransEdit'); //este es el img que aparece cuando fileTransEdit le carga un file y luego desaparece el imageTransEditCurrent
+    let fileEdit;
+
+    btnTransEdit.addEventListener('click', ()=>{
+        fileTransEdit.click();
+    });
+
+    fileTransEdit.addEventListener('change', ()=>{
+
+        let File = fileTransEdit.files
+        console.log(File);
+
+        if (! File || !File.length){
+            previewEdit.src = "";
+            return
+        };
+
+        fileEdit = File[0];
+        console.log(fileEdit)
+        let objectURL = URL.createObjectURL(fileEdit);
+        console.log(objectURL)
+        
+        imageTransEdit.src = objectURL;
+        imageTransEdit.classList.remove('close')
+        imageTransEditCurrent.classList.add('close');
+        
+
+        //stateFiles() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+
+    })
+
+
+    if(btnSubmitEdit){
+        btnSubmitEdit.addEventListener('click', ()=>{
+
+            btnSubmitEdit.classList.add('close'); //aparece el boton spinner
+            btnSubmitEditing.classList.remove('close'); //se esconde el boton 
+
+            const formData = new FormData();
+     
+            formData.append('SelectMedio', selectMedioEdit.value); 
+            formData.append('DescripMedio', descripMedioEdit.value);
+            formData.append('SelectColor', selectColorEdit.value);
+            formData.append('PlacaMedio', placaMedioEdit.value);
+            formData.append('fileImg', fileEdit); //image del medio de transporte
+
+            //siempre llega en el mimso orden primero el documento y segundo el selfie
+
+            console.log("Esto es formData", formData);
+
+            fetch('/myaccount/uploadDataTransportEdit', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(jsonx => {
+                console.log("response del backend --->", jsonx);
+ 
+                const code = jsonx.code;
+                const response = jsonx.response;
+                
+                if (code == "ok"){
+                    
+                    setTimeout(() => {
+                        mostrarToast( response , 'right', 'success', '¡Hecho!', true );
+                        btnSubmitEdit.classList.remove('close'); 
+                        btnSubmitEditing.classList.add('close'); 
+                    }, 3000);
+
+                } else {
+                    
+                    setTimeout(() => {
+                        mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+                        btnSubmitEdit.classList.remove('close'); 
+                        btnSubmitEditing.classList.add('close'); 
+                    }, 3000);
+ 
+                }            
+ 
+            })
+            .catch(err => console.log(err));
+
+        });
+    }   
+
+
+   $('.ui.rating').rating();
+
+</script>

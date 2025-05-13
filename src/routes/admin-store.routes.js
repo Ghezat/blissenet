@@ -16,6 +16,22 @@ const modelAuction = require('../models/auction.js');
 const modelRaffle = require('../models/raffle.js');
 
 const modelStoreRate = require('../models/storeRate.js');
+const modelTransportAgent = require('../models/transportAgent.js');
+
+const fs = require('fs-extra');
+const {S3} = require('aws-sdk');
+
+const endpoint = 'nyc3.digitaloceanspaces.com';
+const bucketName = 'bucket-blissve';
+
+const s3 = new S3({
+    endpoint,
+    region : 'us-east-1',
+    credentials : {
+        accessKeyId : process.env.ACCESS_KEY,
+        secretAccessKey : process.env.SECRET_KEY
+    }
+});
 
 // admin-store ---------------------------------------------------------------------v
 //iniciado el 23 de diciembre del 2024
@@ -500,6 +516,586 @@ routes.post('/myaccount/segment-changeGroup', async (req, res)=>{
     //user_id --->este es el campo uno el dato indexed de todos los anuncios 
     //ahora vamos hacer una busqueda simultanea de todos las colecciones de anuncios en simultaneo y actualiamos.
 
+
+});
+
+
+routes.get('/myaccount/transportAgent', async (req, res)=>{
+    try {
+        
+        console.log("********* transportAgent ******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        const countMessages = req.session.countMessages
+        console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile;
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            console.log("searchProfile -->", searchProfile);
+
+            
+            const transportAgent = await modelTransportAgent.findOne( { indexed : user._id, active : true} );
+            console.log("transportAgent :", transportAgent );
+
+            res.render('page/transportAgent', { user, searchProfile, transportAgent, countMessages, countNegotiationsBuySell });
+        }   
+
+        
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de transportAgent", error);
+    }
+});
+
+
+routes.post('/myaccount/uploadDataTransport', async (req, res)=>{
+
+    try{
+
+        console.log('aqui llegamos /myaccount/uploadDataTransport')
+        const department = "transportAgent" 
+        let imgDelet = 0;
+        //console.log("llegando al backend body---->", req.body);
+        //console.log("llegando al backend files---->", req.files);
+
+        const user = req.session.user;
+        console.log("user : ", user._id);
+
+        const checkAcept = req.body.CheckAcept;
+        const selectMedio = req.body.SelectMedio;
+        const descripMedio = req.body.DescripMedio;
+        const selectColor = req.body.SelectColor;
+        const placaMedio = req.body.PlacaMedio;
+        const dataTransport = req.files[0];
+        
+        console.log("checkAcept :", checkAcept ); //true
+        console.log("selectMedio :", selectMedio ); //moto
+        console.log("descripMedio :", descripMedio ); //zusuki DT 1999
+        console.log("selectColor :", selectColor ); //Amarilla
+        console.log("placaMedio :", placaMedio ); //GTE234
+        console.log("dataTransport :", dataTransport ); // todo el file 
+        const element = dataTransport
+
+        let countImgAcept = 0;
+        let countSuccess = 0;
+        let countFall = 0;
+        let boxImg = [];
+
+        const searchData = await modelTransportAgent.findOne({ indexed : user._id});
+
+        if (searchData){
+
+            if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
+                                
+                countImgAcept ++;
+                console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
+
+                console.log("-------------------Proceso de eliminacion de imagen--------------------------")
+                console.log("este usuario ya tiene data creada", searchData);
+                const transportationImage = searchData.transportation[0].image
+                console.log("transportationImage", transportationImage);
+                const public_id = transportationImage[0].public_id;
+                console.log("public_id :", public_id);
+
+                const params = {
+                    Bucket : bucketName,
+                    Key : public_id
+                }
+
+                console.log("params --->", params);
+                
+                s3.deleteObject(params, (err, data)=>{
+                    if (err){
+                        console.error("Error al eliminar el archivo", err);
+                        imgDelet ++ // si no pudo eliminarlo debe seguir las operaciones
+                        addImgToBucket()
+                    } else {
+                        console.log("Archivo eliminado con exito");
+                        imgDelet ++ // si archivo eliminado seguir ahora con la subida de la nueva imagen
+                        addImgToBucket()
+                    }
+                });
+
+                console.log("-------------------Fin Proceso de eliminacion de imagen--------------------------")
+
+                function addImgToBucket(){
+
+                    console.log("hemos eliminado la imagen del bucked de Digital Ocean y ahora podemos vovler a subir una nueva imagen y actualizar todo de nuevo");
+
+                    const folder = department; const ident = new Date().getTime(); //178409487478490 ms
+                    const pathField = element.path; const extPart = pathField.split("."); //algo.png ["algo", "png"]
+                    const ext = extPart[1];
+                    
+                    console.log("Bucket :", bucketName); console.log("folder :", folder);
+                    console.log("patchField :", pathField); console.log("ext", ext);
+        
+                    uploadToS3 = async function (bucketName, folder, ident, pathField ){
+                    
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
+                
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+                
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                                countFall ++;
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                
+                                //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                let format = ext;
+                                let url = `https://${bucketName}.${endpoint}/${key}`;
+                                let bytes = element.size;
+                                let public_id = key;
+                                
+                                console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                                boxImg.push( {url, public_id, bytes, format} );
+        
+                                let Data = { medio: selectMedio, descrip: descripMedio, color: selectColor, placa: placaMedio, image: boxImg };
+                
+                                async function createData(){
+                                    const transportUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: { 'transportation.0': Data } }); 
+                                    console.log("transportUpdate --->", transportUpdate)
+
+                                }
+
+                                createData()
+                                    .then(()=>{
+                                        console.log("Se ha actualizado exitosamente")
+                                        res.json( { "code" : "ok", "response" : "Se ha actualizado exitosamente"} );
+                                    })
+                                    .catch((err)=>{
+                                        console.log("ha habido un error en createData()")
+                                        res.json( { "code" : "error", "response" : "Ha habido un error, intente luego"} );
+                                    })
+                                    
+                            } 
+                            
+                        });
+        
+                    }   
+        
+                    // invocamos la funcion uploadToS3 para subir las imaganes
+                    uploadToS3(bucketName, folder, ident, pathField)
+                        .then(() => {
+                            console.log("Imagen subida al servidor digitalocean SPACES");
+                        })
+                        .catch((err) => {
+                            console.log("Ha habido un error al subir las fotos:", err);
+                        });
+
+                }
+
+            } else {
+                res.json({ "code" : "error", "response" : "¡Oops! El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+            }      
+
+        } else {
+
+            if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
+                                
+   
+                const folder = department; const ident = new Date().getTime(); //178409487478490 ms
+                const pathField = element.path; const extPart = pathField.split("."); //algo.png ["algo", "png"]
+                const ext = extPart[1];
+                
+                console.log("Bucket :", bucketName); console.log("folder :", folder);
+                console.log("patchField :", pathField); console.log("ext", ext);
+
+                uploadToS3 = async function (bucketName, folder, ident, pathField ){
+                
+                    const fileContent = fs.readFileSync(pathField);
+                    const key = `${folder}/${ident}.${ext}`;
+                    console.log("key -->", key);
+            
+                    const params = { 
+                        Bucket : bucketName,
+                        Key : key,
+                        Body : fileContent,
+                        ACL : 'public-read' 
+                    };
+            
+                    s3.putObject(params, function(err, data){
+                    
+                        if (err){
+                            console.log('Error al subir un archivo', err);
+                            countFall ++;
+                        } else {
+                            console.log('La imagen fue subida, Exito', data);
+                            
+                            //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                            let format = ext;
+                            let url = `https://${bucketName}.${endpoint}/${key}`;
+                            let bytes = element.size;
+                            let public_id = key;
+                            
+                            console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                            boxImg.push( {url, public_id, bytes, format} );
+
+                            let Data = [{ medio: selectMedio, descrip: descripMedio, color: selectColor, placa: placaMedio, image: boxImg }];
+            
+                                            
+                            if (boxImg.length !==0){
+        
+                                async function createData(){
+                                                                                                
+                                    const transport =  new modelTransportAgent({ indexed : user._id,  checkAcept : true,  transportation : Data }) 
+                                    const transportSave = await transport.save();            
+            
+                                }  
+        
+                                createData()
+                                    .then(()=>{
+                                        console.log(".......... data creada satifastoriamente, ¡Felicidades! ");
+                                        //req.session.uploadData = "¡Datos subidos exitosamente!"
+                                        res.json({ "code" : "ok",  "response" : "Sus Datos han sido salvados exitosamente, por favor siga adelante con su registro."}) //todo ha salido bien
+                                    })
+                                    .catch(()=> console.log("Ha habido un error en createData(), intente luego"))
+        
+                            } else {
+                                console.log("No tenemos ninguna imagen asi que debemos enviar un mensaje explicando el caso");
+                                //req.session.uploadDataFall = "No se han podido cargar la imagane para este proceso. ¡Imagen max. 5.0 MB!"
+                                res.json({ "code" : "error",  "response" : "Error no se ha cargado imagen"}) //un error de carga
+                            }
+        
+                             
+                        }
+                        
+                    });
+
+                }   
+
+                // invocamos la funcion uploadToS3 para subir las imaganes
+                uploadToS3(bucketName, folder, ident, pathField)
+                    .then(() => {
+                        console.log("Imagen subida al servidor digitalocean SPACES");
+                    })
+                    .catch((err) => {
+                        console.log("Ha habido un error al subir las fotos:", err);
+                    });
+            
+
+            } else {
+                res.json({ "code" : "error", "response" : "¡Oops! El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+            }  
+
+        }
+
+  
+    } catch (error) {
+        res.json({ "code" : "error",  "response" : "Error, Ha habido un error intente más tarde."})
+    }
+
+});
+
+routes.post('/myaccount/uploadDocuments', async (req, res)=>{
+
+    try {
+        
+        console.log('aqui llegamos /myaccount/uploadDocuments')
+        const department = "transportAgent";
+        let boxImg = [];
+      
+        //console.log("llegando al backend files---->", req.files);
+    
+        const user = req.session.user;
+        console.log("user : ", user._id);
+    
+        const Files = req.files; //esto es un array de los dos archivos que han subido;
+
+        //const document = req.files[0];
+        //const selfie = req.files[1];
+        //console.log("document :", document );
+        //console.log("selfie :", selfie );
+
+        const searchData = await modelTransportAgent.findOne({ indexed : user._id});
+
+        if (searchData){
+
+            Files.forEach((element)=>{
+
+                if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
+                                    
+                    function addImgToBucket(){
+
+                        const folder = department; const ident = new Date().getTime(); //178409487478490 ms
+                        const pathField = element.path; const extPart = pathField.split("."); //algo.png ["algo", "png"]
+                        const ext = extPart[1];
+                        
+                        console.log("Bucket :", bucketName); console.log("folder :", folder);
+                        console.log("patchField :", pathField); console.log("ext", ext);
+            
+                        uploadToS3 = async function ( bucketName, folder, ident, pathField ){
+                        
+                            const fileContent = fs.readFileSync(pathField);
+                            const key = `${folder}/${ident}.${ext}`;
+                            console.log("key -->", key);
+                    
+                            const params = { 
+                                Bucket : bucketName,
+                                Key : key,
+                                Body : fileContent,
+                                ACL : 'public-read' 
+                            };
+                    
+                            s3.putObject(params, function(err, data){
+                            
+                                if (err){
+                                    console.log('Error al subir un archivo', err);
+                                    res.json({ "code" : "error", "response" : "¡Oops! Ha habido un error, por favor intenta hacer esta operacion mas tarde"}) //un error de carga
+                                } else {
+                                    console.log('La imagen fue subida, Exito', data);
+                                   
+                                    //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                    let format = ext;
+                                    let url = `https://${bucketName}.${endpoint}/${key}`;
+                                    let bytes = element.size;
+                                    let public_id = key;
+                                    
+                                    console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                                    boxImg.push({url, public_id, bytes, format});
+                                    console.log("boxImg.length :", boxImg.length);
+                                    console.log("typeof boxImg.length :", typeof boxImg.length);
+                            
+                                    if (boxImg.length == 2){
+                                        //Ya tenemos dos elementos en el array boxImg procedemos a ejecutar la funcion createData();
+                                        console.log("Ya boxImg tiene dos elementos, activamos la funcion createData .............")
+
+                                        async function createData(){
+
+                                            const transportUpdate = await modelTransportAgent.updateOne(
+                                                { indexed: user._id }, // Filtra por el usuario
+                                                { 
+                                                    $push: { 'docImages.images': { $each: boxImg } }, // Agrega las imágenes
+                                                    $set: { active: true } // Cambia active a true
+                                                }
+                                            );
+                                            console.log("transportUpdate --->", transportUpdate);
+                                        
+                                        }
+
+                                        createData()
+                                            .then(()=>{
+                                                console.log("Se ha actualizado exitosamente")
+                                                res.json( { "code" : "ok", "response" : "Se ha actualizado exitosamente"} );
+                                            })
+                                            .catch((err)=>{
+                                                console.log("ha habido un error en createData()")
+                                                res.json( { "code" : "error", "response" : "Ha habido un error, intente luego"} );
+                                            })
+
+                                    } 
+
+                                } 
+                                
+                            });
+            
+                        }   
+            
+                        // invocamos la funcion uploadToS3 para subir las imaganes
+                        uploadToS3(bucketName, folder, ident, pathField)
+                            .then(() => {
+                                console.log("Imagen subida al servidor digitalocean SPACES");
+                            })
+                            .catch((err) => {
+                                console.log("Ha habido un error al subir las fotos:", err);
+                            });
+
+                    }
+
+                    addImgToBucket()
+
+                } else {
+                    res.json({ "code" : "error", "response" : "¡Oops! El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+                }  
+
+            })  
+
+        }      
+
+    } catch (error) {
+
+        res.json({ "code" : "error", "response" : ""}) //un error de carga
+    }
+
+
+});
+
+routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
+    console.log('Hemos llegado a : /myaccount/uploadDataTransportEdit')
+    console.log("body :", req.body);
+    console.log("files :", req.files);
+    const department = "transportAgent";
+    const { SelectMedio, DescripMedio, SelectColor, PlacaMedio } = req.body;
+    const element = req.files[0];
+    let boxImg = [];
+
+    const user = req.session.user;
+    console.log("user : ", user._id);
+
+    const searchData = await modelTransportAgent.findOne({ indexed : user._id});
+
+    if (searchData){
+
+        if(element.length !==0){
+
+            if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
+                                
+                console.log("imagen aceptada ------------------------------------------------------>");
+                console.log("-------------------Proceso de eliminacion de imagen------------------->");
+
+                const transportationImage = searchData.transportation[0].image
+                console.log("transportationImage", transportationImage);
+                const public_id = transportationImage[0].public_id;
+                console.log("public_id :", public_id);
+
+                const params = {
+                    Bucket : bucketName,
+                    Key : public_id
+                }
+
+                console.log("params --->", params);
+                
+                s3.deleteObject(params, (err, data)=>{
+                    if (err){
+                        console.error("Error al eliminar el archivo", err);
+                        addImgToBucket()
+                    } else {
+                        console.log("Archivo eliminado con exito");
+                        addImgToBucket()
+                    }
+                });
+
+                console.log("-------------------Fin Proceso de eliminacion de imagen--------------------------")
+
+                function addImgToBucket(){
+
+                    console.log("hemos eliminado la imagen del bucked de Digital Ocean y ahora podemos vovler a subir una nueva imagen y actualizar todo de nuevo");
+
+                    const folder = department; const ident = new Date().getTime(); //178409487478490 ms
+                    const pathField = element.path; const extPart = pathField.split("."); //algo.png ["algo", "png"]
+                    const ext = extPart[1];
+                    
+                    console.log("Bucket :", bucketName); console.log("folder :", folder);
+                    console.log("patchField :", pathField); console.log("ext", ext);
+        
+                    uploadToS3 = async function (bucketName, folder, ident, pathField ){
+                    
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
+                
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+                
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                        
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                
+                                //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                let format = ext;
+                                let url = `https://${bucketName}.${endpoint}/${key}`;
+                                let bytes = element.size;
+                                let public_id = key;
+                                
+                                console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                                boxImg.push( {url, public_id, bytes, format} );
+        
+                                let Data = { medio: SelectMedio, descrip: DescripMedio, color: SelectColor, placa: PlacaMedio, image: boxImg };
+                
+                                async function updateData(){
+                                    const transportUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: { 'transportation.0': Data } }); 
+                                    console.log("transportUpdate --->", transportUpdate)
+
+                                }
+
+                                updateData()
+                                    .then(()=>{
+                                        console.log("Se ha actualizado exitosamente")
+                                        res.json( { "code" : "ok", "response" : "Actualización exitosa."} );
+                                    })
+                                    .catch((err)=>{
+                                        console.log("ha habido un error en updateData()")
+                                        res.json( { "code" : "error", "response" : "Ha habido un error, intente luego."} );
+                                    })
+                                    
+                            } 
+                            
+                        });
+        
+                    }   
+        
+                    // invocamos la funcion uploadToS3 para subir las imaganes
+                    uploadToS3(bucketName, folder, ident, pathField)
+                        .then(() => {
+                            console.log("Imagen subida al servidor digitalocean SPACES");
+                        })
+                        .catch((err) => {
+                            console.log("Ha habido un error al subir las fotos:", err);
+                        });
+
+                }
+
+            } else {
+                res.json({ "code" : "error", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+            } 
+
+        } else {
+
+            console.log("Este es una actualizacion sin imagen.");
+
+             async function updateData(){
+                const transportUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: 
+                                                                { 'transportation.0.medio': SelectMedio, 
+                                                                  'transportation.0.descrip': DescripMedio,
+                                                                  'transportation.0.color': SelectColor,
+                                                                  'transportation.0.placa': PlacaMedio
+                                                                 } });
+
+            //'transportation es un array que tiene un objeto y de esta forma podemos acceder y cambiar su valor
+            //notacion de punto 'transportation.indice.campo': valorDeCampo,
+
+                console.log("transportUpdate --->", transportUpdate)
+
+            }
+
+            updateData()
+                .then(()=>{
+                    console.log("Se ha actualizado exitosamente")
+                    res.json( { "code" : "ok", "response" : "Actualización exitosa."} );
+                })
+                .catch((err)=>{
+                    console.log("ha habido un error en updateData()")
+                    res.json( { "code" : "error", "response" : "Ha habido un error, intente luego."} );
+                })
+               
+
+        }   
+        
+    }      
 
 });
 

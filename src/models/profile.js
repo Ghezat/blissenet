@@ -19,7 +19,7 @@ const SchemaProfile = new Schema({
     city : { type : String },
     suburb : { type : String },
 
-    address : { type : String }, //direccion del ususario (dato importante para sus futuras facturas). Ultimo atributo creado. 
+    address : { type : String }, //direccion del usuario (dato importante para sus futuras facturas). Ultimo atributo creado. 
     phone : { type : String },
     phoneAlt : { type : String },
     profileMessage : { type : String }, //mensaje de la tienda
@@ -46,7 +46,7 @@ const SchemaProfile = new Schema({
     paused : { type: Boolean, default: false }, //por default nace false. este campo se utilizará para impedir que un usuario moroso con sus impagos pueda crear, editar y eliminar publicaciones. será la unica forma existente para presionar a los usuarios morosos. 
     view : { type : Number, default: 0  }, //este campo permite tener la cantidad de veces que entran en la tienda. 
     hashtags : { type : Object , default : [] }, //este campo crea por defecto un objeto vacio, en el se agregara un array con las diferentes palabras claves de la tienda. 
-    indexed :  { type : String }  //este es el id del user.    
+    indexed :  { type : String }  //este es el id del user     
 },{
     timestamps : true
 });

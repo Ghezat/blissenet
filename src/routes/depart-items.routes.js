@@ -153,7 +153,7 @@ routes.post('/department/create/items', async(req,res)=>{
         const country = searchProfile[0].country;
         const countryCode = searchProfile[0].countryCode;
 
-        const { title, category, sub_category, state_use, tecnicalDescription, generalMessage, price, segment } = req.body
+        const { title, category, sub_category, state_use, tecnicalDescription, generalMessage, count, price, segment } = req.body
 
 
         function transformarTitle(title) {
@@ -243,7 +243,7 @@ routes.post('/department/create/items', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Items =  new modelItems({ title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
+                                                        const Items =  new modelItems({ title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, count, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
                                                         const ItemsSave = await Items.save()
                                                         //console.log(ItemsSave);
                                                     }  else {
@@ -873,7 +873,7 @@ routes.get('/department/create/items/searh-edit', async(req, res)=>{
 routes.post('/department/create/items/edit', async(req, res)=>{
     
     
-     const {titleToEdit, title, category, sub_category, state_use, tecnicalDescription, generalMessage, price} = req.body
+     const {titleToEdit, title, category, sub_category, state_use, tecnicalDescription, generalMessage, count, price} = req.body
 
      function transformarTitle(title) {
         return title
@@ -891,7 +891,7 @@ routes.post('/department/create/items/edit', async(req, res)=>{
      const result = await modelItems.findById(titleToEdit)
          
      if (result) {
-         const updates = await modelItems.findByIdAndUpdate(titleToEdit, { title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, price })
+         const updates = await modelItems.findByIdAndUpdate(titleToEdit, { title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, count, price })
          req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
      } else {
          console.log("no existe nada")

@@ -446,6 +446,7 @@ routes.get('/department/create/aeronaves/del/airplanes/:id', async(req, res)=>{
 
         if (result.images.length > 1){
 
+
             const params = {
                 Bucket : bucketName,
                 Key : public_id
@@ -469,8 +470,6 @@ routes.get('/department/create/aeronaves/del/airplanes/:id', async(req, res)=>{
                             }
                         
                         }
-                
-                        
 
                     }
 
@@ -483,6 +482,7 @@ routes.get('/department/create/aeronaves/del/airplanes/:id', async(req, res)=>{
                         })
 
                 }
+
             });
         
     
