@@ -543,6 +543,8 @@ routes.get('/myaccount/transportAgent', async (req, res)=>{
             
             const transportAgent = await modelTransportAgent.findOne( { indexed : user._id, active : true} );
             console.log("transportAgent :", transportAgent );
+            const docImages = transportAgent.docImages;
+            console.log("docImages :", docImages );
 
             res.render('page/transportAgent', { user, searchProfile, transportAgent, countMessages, countNegotiationsBuySell });
         }   
@@ -942,7 +944,10 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
     console.log("files :", req.files);
     const department = "transportAgent";
     const { SelectMedio, DescripMedio, SelectColor, PlacaMedio } = req.body;
-    const element = req.files[0];
+    const Files = req.files; //esto e sun array donde esta la imagen 
+    console.log('Files :', Files);
+    const element = Files[0]; // esto es el objeto propiamente de la imagen 
+    console.log('element :', element);
     let boxImg = [];
 
     const user = req.session.user;
@@ -952,7 +957,7 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
 
     if (searchData){
 
-        if(element.length !==0){
+        if(Files.length !==0){
 
             if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
                                 
@@ -1098,6 +1103,285 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
     }      
 
 });
+
+routes.post('/myaccount/uploadDocumentEdit', async(req, res)=>{
+
+    try {
+        
+        console.log('aqui llegamos /myaccount/uploadDocumentEdit')
+        const department = "transportAgent";
+              
+        //console.log("llegando al backend files---->", req.files);
+    
+        const user = req.session.user;
+        console.log("user : ", user._id);
+    
+        const Files = req.files; //esto es un array con un archivo donde esta el selfie;
+
+        const element = req.files[0];
+        console.log("element :", element );
+
+        const searchData = await modelTransportAgent.findOne({ indexed : user._id});
+
+        if (searchData){
+
+            if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
+
+                console.log("imagen aceptada ------------------------------------------------------>");
+                console.log("-------------------Proceso de eliminacion de imagen------------------->");
+
+                const docImage = searchData.docImages.images[0]
+                console.log("docImage", docImage);
+                const public_id = docImage.public_id;
+                console.log("public_id :", public_id);
+
+                const params = {
+                    Bucket : bucketName,
+                    Key : public_id
+                }
+
+                console.log("params --->", params);
+                
+                s3.deleteObject(params, (err, data)=>{
+                    if (err){
+                        console.error("Error al eliminar el archivo", err);
+                        addImgToBucket()
+                    } else {
+                        console.log("Archivo eliminado con exito");
+                        addImgToBucket()
+                    }
+                });
+
+                console.log("-------------------Fin Proceso de eliminacion de imagen--------------------------")
+
+                function addImgToBucket(){
+
+                    console.log("hemos eliminado la imagen del bucked de Digital Ocean y ahora podemos vovler a subir una nueva imagen y actualizar todo de nuevo");
+
+                    const folder = department; const ident = new Date().getTime(); //178409487478490 ms
+                    const pathField = element.path; const extPart = pathField.split("."); //algo.png ["algo", "png"]
+                    const ext = extPart[1];
+                    
+                    console.log("Bucket :", bucketName); console.log("folder :", folder);
+                    console.log("patchField :", pathField); console.log("ext", ext);
+        
+                    uploadToS3 = async function (bucketName, folder, ident, pathField ){
+                    
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
+                
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+                
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                        
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                
+                                //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                let format = ext;
+                                let url = `https://${bucketName}.${endpoint}/${key}`;
+                                let bytes = element.size;
+                                let public_id = key;
+                                
+                                console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                                const Data = {url, public_id, bytes, format};
+        
+                                                
+                                async function updateData(){
+                                    const documenttUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: { 'docImages.images.0': Data } }); 
+                                    console.log("documenttUpdate --->", documenttUpdate);
+
+                                }
+
+                                updateData()
+                                    .then(()=>{
+                                        console.log("Se ha actualizado exitosamente")
+                                        res.json( { "code" : "ok", "response" : "Actualización exitosa."} );
+                                    })
+                                    .catch((err)=>{
+                                        console.log("ha habido un error en updateData()")
+                                        res.json( { "code" : "error", "response" : "Ha habido un error, intente luego."} );
+                                    })
+                                    
+                            } 
+                            
+                        });
+        
+                    }   
+        
+                    // invocamos la funcion uploadToS3 para subir las imaganes
+                    uploadToS3(bucketName, folder, ident, pathField)
+                        .then(() => {
+                            console.log("Imagen subida al servidor digitalocean SPACES");
+                        })
+                        .catch((err) => {
+                            console.log("Ha habido un error al subir las fotos:", err);
+                        });
+
+                }
+
+            } else {
+                console.log("Supera el tamaño permitido de 5MB")
+                res.json({ "code" : "error", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+            }  
+
+        }      
+
+    } catch (error) {
+
+        res.json({ "code" : "error", "response" : ""}) //un error de carga
+    }
+
+})
+
+routes.post('/myaccount/uploadSelfieEdit', async(req, res)=>{
+
+    try {
+        
+        console.log('aqui llegamos /myaccount/uploadSelfieEdit')
+        const department = "transportAgent";
+              
+        //console.log("llegando al backend files---->", req.files);
+    
+        const user = req.session.user;
+        console.log("user : ", user._id);
+    
+        const Files = req.files; //esto es un array con un archivo donde esta el selfie;
+
+        const element = req.files[0];
+        console.log("element :", element );
+
+        const searchData = await modelTransportAgent.findOne({ indexed : user._id});
+
+        if (searchData){
+
+            if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
+
+                console.log("imagen aceptada ------------------------------------------------------>");
+                console.log("-------------------Proceso de eliminacion de imagen------------------->");
+
+                const docImage = searchData.docImages.images[1]
+                console.log("docImage", docImage);
+                const public_id = docImage.public_id;
+                console.log("public_id :", public_id);
+
+                const params = {
+                    Bucket : bucketName,
+                    Key : public_id
+                }
+
+                console.log("params --->", params);
+                
+                s3.deleteObject(params, (err, data)=>{
+                    if (err){
+                        console.error("Error al eliminar el archivo", err);
+                        addImgToBucket()
+                    } else {
+                        console.log("Archivo eliminado con exito");
+                        addImgToBucket()
+                    }
+                });
+
+                console.log("-------------------Fin Proceso de eliminacion de imagen--------------------------")
+
+                function addImgToBucket(){
+
+                    console.log("hemos eliminado la imagen del bucked de Digital Ocean y ahora podemos vovler a subir una nueva imagen y actualizar todo de nuevo");
+
+                    const folder = department; const ident = new Date().getTime(); //178409487478490 ms
+                    const pathField = element.path; const extPart = pathField.split("."); //algo.png ["algo", "png"]
+                    const ext = extPart[1];
+                    
+                    console.log("Bucket :", bucketName); console.log("folder :", folder);
+                    console.log("patchField :", pathField); console.log("ext", ext);
+        
+                    uploadToS3 = async function (bucketName, folder, ident, pathField ){
+                    
+                        const fileContent = fs.readFileSync(pathField);
+                        const key = `${folder}/${ident}.${ext}`;
+                        console.log("key -->", key);
+                
+                        const params = { 
+                            Bucket : bucketName,
+                            Key : key,
+                            Body : fileContent,
+                            ACL : 'public-read' 
+                        };
+                
+                        s3.putObject(params, function(err, data){
+                        
+                            if (err){
+                                console.log('Error al subir un archivo', err);
+                        
+                            } else {
+                                console.log('La imagen fue subida, Exito', data);
+                                
+                                //variables bucketName & endPoint esta declaradas arriba en las primeras lineas de este archivo.                        
+                                let format = ext;
+                                let url = `https://${bucketName}.${endpoint}/${key}`;
+                                let bytes = element.size;
+                                let public_id = key;
+                                
+                                console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
+                                const Data = {url, public_id, bytes, format};
+        
+                                                
+                                async function updateData(){
+                                    const documenttUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: { 'docImages.images.1': Data } }); 
+                                    console.log("documenttUpdate --->", documenttUpdate);
+
+                                }
+
+                                updateData()
+                                    .then(()=>{
+                                        console.log("Se ha actualizado exitosamente")
+                                        res.json( { "code" : "ok", "response" : "Actualización exitosa."} );
+                                    })
+                                    .catch((err)=>{
+                                        console.log("ha habido un error en updateData()")
+                                        res.json( { "code" : "error", "response" : "Ha habido un error, intente luego."} );
+                                    })
+                                    
+                            } 
+                            
+                        });
+        
+                    }   
+        
+                    // invocamos la funcion uploadToS3 para subir las imaganes
+                    uploadToS3(bucketName, folder, ident, pathField)
+                        .then(() => {
+                            console.log("Imagen subida al servidor digitalocean SPACES");
+                        })
+                        .catch((err) => {
+                            console.log("Ha habido un error al subir las fotos:", err);
+                        });
+
+                }
+
+            } else {
+                res.json({ "code" : "error", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+            }  
+
+        }      
+
+    } catch (error) {
+
+        res.json({ "code" : "error", "response" : ""}) //un error de carga
+    }
+
+});
+
+
 
 //---------------------------InfoBliss--------------------------------
 

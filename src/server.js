@@ -47,7 +47,8 @@ const storage =  multer.diskStorage({
 });
 
 
-app.use(multer({storage}).array('fileImg', 10000));  
+app.use(multer({storage}).array('fileImg', 10000)); 
+ 
 //todos los elementos html como file deben tener en su atributo name un valor "fileImg"
 //name = "fileImg"
 

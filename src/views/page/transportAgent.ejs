@@ -21,10 +21,20 @@
 </head>
 <style>
 
+.textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+}
 
 .step{
     cursor: pointer;
 }
+
+.toast-success {
+       /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+       background-color: #6f42c1; /* Azul tirando a morado */
+       color: white; /* Color del texto */
+} 
 
 .contentPicture:hover .btnImageUpload {
     outline: 1px solid grey; /* Cambia el color y el grosor del borde según lo desees */
@@ -77,7 +87,7 @@
                         
                             <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12">
                                 <div class="card mt-3" style="background-color: rgba(255, 255, 255, 0.5);">
-                                    <div class="card-header text-dark">
+                                    <div class="card-header">
                                        Mis datos
                                     </div>
                                     <div class="card-body">
@@ -105,8 +115,8 @@
                                             <input type="text" class="form-control" value="<%= searchProfile.phoneAlt%>" style="width: 49%;" readonly>
                                         </div>
 
-                                        <div class="alert alert-info">
-                                            <span> <b>¡Importante! </b> Todos estos datos deben ser correctos, si hay alguna informacion que debe ser editado o agregado vaya a perfil.</span>
+                                        <div class="alert alert-info my-3">
+                                            <span> <b>¡Importante! </b> Todos estos datos deben ser correctos, si hay alguna informacion que debe ser editado o agregado vaya a <a href="/myaccount/profile">perfil.</a> </span>
                                         </div>
                                     </div>
                                 </div>
@@ -232,7 +242,7 @@
                                     </div>
 
                                     <div class="containerRange close" style="color: black;">
-                                        <div class="card-body p-0 mt-3">
+                                        <div class="card-body p-0 my-3">
                                             <% const geolocation = searchProfile.geolocation %>
                              
                                             <% if (geolocation.lat !== "") { %>
@@ -282,7 +292,7 @@
                                                     </div>
                                                     <div class="input-group my-2">
                                                         <span class="input-group-text"> <i class="bi bi-pencil-fill"></i> </span>
-                                                        <input type="text" id="descripMedioEdit" class="form-control" value="<%= transportAgent.transportation[0].descrip %>" maxlength="40" required>
+                                                        <input type="text" id="descripMedioEdit" class="form-control" value="<%= transportAgent.transportation[0].descrip %>" placeholder="Mark, model, year" maxlength="40" required>
                                                     </div>
                                                     <div class="input-group my-2"> 
                                                         <span class="input-group-text"> <i class="bi bi-palette2"></i> </span>
@@ -298,12 +308,12 @@
                                                             <option value="Purple">Purple</option>
                                                             <option value="Red">Red</option>
                                                             <option value="Silver">Silver</option>
-                                                            <option value="Violet">Violeta</option>
+                                                            <option value="Violet">Violet</option>
                                                             <option value="White">White</option>
                                                             <option value="Yellow">Yellow</option>
                                                         </select> 
                                                         <span class="input-group-text"> <i class="bi bi-123"></i> </span>
-                                                        <input type="text" id="placaMedioEdit" class="form-control" value="<%= transportAgent.transportation[0].placa %>" maxlength="10">
+                                                        <input type="text" id="placaMedioEdit" class="form-control" value="<%= transportAgent.transportation[0].placa %>" placeholder="Matricula, License Plate" maxlength="10">
                                                     </div>
                                                     <div class="form-group my-3">
                                                         <div class="alert alert-info">
@@ -321,7 +331,7 @@
                                                 </div>
 
                                                 <div class="form-group my-3" style="width: 100%;"> 
-                                                    <input type="submit" class="form-control btn btn-secondary border" id="btnSubmitEdit" value="Editar Medio de Transporte">
+                                                    <input type="submit" class="form-control btn btn-secondary border" id="btnSubmitEdit" value="Editar Medio de Transporte" disabled>
                                                     <button class="form-control btn btn-secondary border close" id="btnSubmitEditing" disabled>
                                                         <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                                                         Guardando Datos ...
@@ -344,39 +354,68 @@
                                                 <p>Proporcionar los documentos es fundamental, ya que brinda la confianza necesaria para que nuestros usuarios se sientan seguros al utilizar nuestros servicios como agentes de transporte o deliveries.</p>
                                                 <p>Saludos cordiales, <b> El equipo de Blissenet</b></p>
 
-                                               
-
                                             </div>
                                             <div class="row m-1">
                                                 <div class="card-header">Document</div>
                                                 <div class="col-lg-4 col-md-12 col-sm-12 p-0">
-                                                    <img src="<%= transportAgent.docImages.images[0].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
+                                                    <div class="contentPicture" style="position: relative; width: 100%;">
+                                                        <img class="documentEdit" src="<%= transportAgent.docImages.images[0].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
+                                                        <button type="button" class="btn btn-light rounded-pill me-1 btnUpload" id="btnDocumentEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20;" > <i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                        <input type="file" class="fileDocumentEdit invisible" style="position: absolute; top:-20; z-index: 1;">
+                                                        <img class="newDocumentEdit rounded-2 close" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">  
+                                                    </div>
+                                                    
                                                 </div>
                                                 <div class="col-lg-8 col-md-12 col-sm-12 p-0">
-                                                    <div class="alert alert-secondary m-0 rounded-0" style="background-color: rgba(212, 212, 212, 0.2); width: 100%; height: 100%;">
+                                                    <div class="alert m-0 rounded-0" style="background-color: rgba(212, 212, 212, 0.2); width: 100%; height: 100%;">
                                                       <p style="font-size: 15px;"> <b>Es importante </b> que puedas ofrecer a la vista de los usuarios tu documento. Esto crea un mayor compromiso y produce una mayor confianza en los usuarios de blissenet.com. El resto es crear una calificacion y unos buenos comentarios que expresen lo bien que haces el servicio de entregas een tu localidad.</p>
                                                       <p style="font-size: 15px;"></p> <b> Atención, </b>  Este modulo de transporte esta en desarrollo. Por lo que debes esperar un par de semanas para su uso. </p>
                                                     </div>
+                                                </div>  
+                                                <div class="form-group my-3 border p-0">
+                                                    <button class="form-control btn btn-secondary border" id="btnSaveDocument" disabled> Guardar Documento </button>
+                                                    <button class="form-control btn btn-secondary border close" id="btnSaveDocumentSpinner" disabled>
+                                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                                        Guardando Datos ...
+                                                    </button> 
                                                 </div>    
                                             </div>                                           
                                             
                                             <div class="row m-1">
                                                 <div class="card-header">Selfie</div>
                                                 <div class="col-lg-4 col-md-12 col-sm-12 p-0">
-                                                    <img src="<%= transportAgent.docImages.images[1].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
+                                                    <div class="contentPicture" style="position: relative; width: 100%;">
+                                                        <img class="selfieEdit" src="<%= transportAgent.docImages.images[1].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
+                                                        <button type="button" class="btn btn-light rounded-pill me-1 btnUpload" id="btnSelfieEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20;" > <i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                        <input type="file" class="fileSelfieEdit invisible" style="position: absolute; top:-20; z-index: 1;">
+                                                        <img class="newSelfieEdit rounded-2 close" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">  
+                                                    </div>
                                                 </div>
                                                 <div class="col-lg-8 col-md-12 col-sm-12 p-0">
                                                     <div class="alert m-0 rounded-0" style="background-color: rgba(212, 212, 212, 0.2); width: 100%; height: 100%;">
                                                         <p style="font-size: 15px;"> <b>Es importante </b> que puedas ofrecer a la vista de los usuarios tu documento. Esto crea un mayor compromiso y produce una mayor confianza en los usuarios de blissenet.com. El resto es crear una calificacion y unos buenos comentarios que expresen lo bien que haces el servicio de entregas een tu localidad.</p>
                                                         <p style="font-size: 15px;"></p> <b> Atención, </b>  Este modulo de transporte esta en desarrollo. Por lo que debes esperar un par de semanas para su uso. </p>
                                                     </div>
-                                                </div>    
+                                                </div> 
+                                                <div class="form-group my-3 border p-0">
+                                                    <button class="form-control btn btn-secondary border" id="btnSaveSelfie" disabled> Guardar Selfie </button>
+                                                    <button class="form-control btn btn-secondary border close" id="btnSaveSelfieSpinner" disabled>
+                                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                                        Guardando Datos ...
+                                                    </button> 
+                                                    
+                                                </div>   
                                             </div> 
 
                                         </div>
                                     </div>
 
                                 </div> 
+                                <div class="card mt-1" style="background-color:rgba(217, 223, 223, 0.2);">
+                                    <div class="card-body d-flex justify-content-center ">
+                                    <a href="/" class="text-decoration-none" style="color: inherit">  <span id="logoBlissenet_com"> </span> </a> 
+                                    </div>
+                                </div>
 
                             </div>    
 
@@ -495,7 +534,7 @@
 
                                                 <div class="input-group my-2">
                                                     <span class="input-group-text"> <i class="bi bi-pencil-fill"></i> </span>
-                                                    <input type="text" id="descripMedio"  class="form-control" placeholder="Zuzuki DT, 2005">
+                                                    <input type="text" id="descripMedio"  class="form-control" placeholder="Mark, model, year">
                                                 </div>
 
                                                 <div class="input-group my-2"> 
@@ -512,12 +551,12 @@
                                                         <option value="Purple">Purple</option>
                                                         <option value="Red">Red</option>
                                                         <option value="Silver">Silver</option>
-                                                        <option value="Violet">Violeta</option>
+                                                        <option value="Violet">Violet</option>
                                                         <option value="White">White</option>
                                                         <option value="Yellow">Yellow</option>
                                                     </select> 
                                                     <span class="input-group-text"> <i class="bi bi-123"></i> </span>
-                                                    <input type="text" id="placaMedio" class="form-control" placeholder="Matricula, Placa" maxlength="10">
+                                                    <input type="text" id="placaMedio" class="form-control" placeholder="Matricula, License Plate" maxlength="10">
                                                 </div>
 
                                                 <div class="form-group d-flex justify-content-start my-2 border rounded-2">
@@ -748,7 +787,7 @@
 
             
             // Crear un nuevo mapa en el div con id "map" instanciar
-            map = L.map('mapStore').setView([lat, lon], 13); // El segundo parámetro es el nivel de zoom
+            map = L.map('mapStore').setView([lat, lon], 12); // El segundo parámetro es el nivel de zoom
             
             //var myMap = L.map('miMapa').setView([latitud, longitud], zoomLevel);
 
@@ -1271,17 +1310,31 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
     const imageTransEdit = document.querySelector('.imageTransEdit'); //este es el img que aparece cuando fileTransEdit le carga un file y luego desaparece el imageTransEditCurrent
     let fileEdit;
 
+    selectMedioEdit.addEventListener('change', ()=>{
+        stateSubmnitEdit()
+    });
+    descripMedioEdit.addEventListener('input', ()=>{
+        stateSubmnitEdit()
+    });
+    selectColorEdit.addEventListener('change', ()=>{
+        stateSubmnitEdit()
+    });
+    placaMedioEdit.addEventListener('input', ()=>{
+        stateSubmnitEdit()
+    })
+
     btnTransEdit.addEventListener('click', ()=>{
         fileTransEdit.click();
     });
 
+    
     fileTransEdit.addEventListener('change', ()=>{
 
         let File = fileTransEdit.files
         console.log(File);
 
         if (! File || !File.length){
-            previewEdit.src = "";
+            imageTransEdit.src = "";
             return
         };
 
@@ -1294,10 +1347,13 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
         imageTransEdit.classList.remove('close')
         imageTransEditCurrent.classList.add('close');
         
-
-        //stateFiles() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+        stateSubmnitEdit()
 
     })
+
+    function stateSubmnitEdit(){
+        btnSubmitEdit.removeAttribute("disabled");
+    }
 
 
     if(btnSubmitEdit){
@@ -1333,17 +1389,27 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
                     
                     setTimeout(() => {
                         mostrarToast( response , 'right', 'success', '¡Hecho!', true );
+
+                        fileTransEdit.value = "" //Limpiamos el file
+                        btnSubmitEdit.setAttribute("disabled", "");
+                        
                         btnSubmitEdit.classList.remove('close'); 
-                        btnSubmitEditing.classList.add('close'); 
-                    }, 3000);
+                        btnSubmitEditing.classList.add('close');
+ 
+                    }, 4000);
 
                 } else {
                     
                     setTimeout(() => {
                         mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+
+                        fileTransEdit.value = "" //Limpiamos el file
+                        btnSubmitEdit.setAttribute("disabled", "");
+
                         btnSubmitEdit.classList.remove('close'); 
-                        btnSubmitEditing.classList.add('close'); 
-                    }, 3000);
+                        btnSubmitEditing.classList.add('close');
+    
+                    }, 4000);
  
                 }            
  
@@ -1356,4 +1422,222 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
    $('.ui.rating').rating();
 
+</script>
+
+
+<script>
+    // aqui cambiamos el documento
+    const btnDocumentEdit = document.querySelector('#btnDocumentEdit');
+    const fileDocumentEdit = document.querySelector('.fileDocumentEdit');
+    const documentEdit = document.querySelector('.documentEdit');
+    const newDocumentEdit = document.querySelector('.newDocumentEdit');
+
+    const btnSaveDocument = document.getElementById('btnSaveDocument') //boton que envia el file al backend para ser guardado
+    const btnSaveDocumentSpinner = document.getElementById('btnSaveDocumentSpinner') //boton lock spinner 
+    let inputDocumentEdit;
+    
+    btnDocumentEdit.addEventListener('click', ()=>{
+        fileDocumentEdit.click();
+    });
+
+    fileDocumentEdit.addEventListener('change', ()=>{
+
+        let File = fileDocumentEdit.files
+        console.log(File);
+
+        if (! File || !File.length){
+            newDocumentEdit.src = "";
+            return
+        };
+
+        inputDocumentEdit = File[0];
+        console.log(inputDocumentEdit)
+        let objectURL = URL.createObjectURL(inputDocumentEdit);
+        console.log(objectURL)
+        
+        newDocumentEdit.src = objectURL;
+        newDocumentEdit.classList.remove('close')
+        documentEdit.classList.add('close');
+        
+
+        stateFileDocument() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+
+    })
+
+    function stateFileDocument(){
+
+        if (inputDocumentEdit !=="" ){
+            //console.log("existe un archivo y significa que se ha cargado un archivo")
+            btnSaveDocument.removeAttribute('disabled'); 
+        }
+
+    }
+
+    //enviamos el documento al backend
+    if(btnSaveDocument){   
+        //fileImg es el name de los file asi debe estar por multer
+        btnSaveDocument.addEventListener('click', () => {
+
+            btnSaveDocumentSpinner.classList.remove('close');
+            btnSaveDocument.classList.add('close');  
+
+            const formData = new FormData();
+            formData.append('fileImg', inputDocumentEdit); //document
+
+            fetch('/myaccount/uploadDocumentEdit', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(jsonx => { 
+                console.log(jsonx)
+                const code = jsonx.code;
+                const response = jsonx.response;
+
+                if (code === "ok"){
+                    mostrarToast( response , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                    fileDocumentEdit.value = ""; //limpiamos el campo file.
+                    btnSaveDocument.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio 
+                    
+                    btnSaveDocumentSpinner.classList.add('close');
+                    btnSaveDocument.classList.remove('close'); 
+
+                } else {
+                    mostrarToast( response , 'right', 'danger', '¡Oops!', true );
+
+                    newDocumentEdit.classList.add('close')
+                    documentEdit.classList.remove('close');
+
+                    fileDocumentEdit.value = ""; //limpiamos el campo file.
+                    btnSaveDocument.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio 
+                    
+                    btnSaveDocumentSpinner.classList.add('close');
+                    btnSaveDocument.classList.remove('close'); 
+                }      
+
+            })
+            .catch(err => {     
+                console.log(err)
+                mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+
+                fileDocumentEdit.value = ""; //limpiamos el campo file.
+                btnSaveDocument.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio 
+
+                btnSaveDocumentSpinner.classList.add('close');
+                btnSaveDocument.classList.remove('close');   
+            });
+        });
+
+    }
+
+</script>
+
+<script>
+    // aqui cambiamos el selfie
+    const btnSelfieEdit = document.querySelector('#btnSelfieEdit');
+    const fileSelfieEdit = document.querySelector('.fileSelfieEdit');
+    const newSelfieEdit = document.querySelector('.newSelfieEdit');
+    const selfieEdit = document.querySelector('.selfieEdit');
+
+    const btnSaveSelfie = document.getElementById('btnSaveSelfie') //bton que envia el file al backend para ser guardado
+    const btnSaveSelfieSpinner = document.getElementById('btnSaveSelfieSpinner'); //boton lock spinner
+    let inputSelfieEdit;
+
+    btnSelfieEdit.addEventListener('click', ()=>{
+        fileSelfieEdit.click();
+    });
+
+    fileSelfieEdit.addEventListener('change', ()=>{
+
+        let File = fileSelfieEdit.files
+        console.log(File);
+
+        if (! File || !File.length){
+            newSelfieEdit.src = "";
+            return
+        };
+
+        inputSelfieEdit = File[0];
+        console.log("inputSelfieEdit : ",inputSelfieEdit)
+        let objectURL = URL.createObjectURL(inputSelfieEdit);
+        console.log(objectURL)
+        
+        newSelfieEdit.src = objectURL;
+        newSelfieEdit.classList.remove('close')
+        selfieEdit.classList.add('close');
+        
+        
+        stateFileSelfie()//esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+
+    })
+
+    function stateFileSelfie(){
+
+        if (inputSelfieEdit !=="" ){
+            //console.log("existe un archivo y significa que se ha cargado un archivo")
+            btnSaveSelfie.removeAttribute('disabled'); 
+        }
+
+    }
+
+//enviamos el selfie al backend
+    if(btnSaveSelfie){   
+        //fileImg es el name de los file asi debe estar por multer
+        btnSaveSelfie.addEventListener('click', () => {
+
+            btnSaveSelfieSpinner.classList.remove('close');
+            btnSaveSelfie.classList.add('close');  
+
+            const formData = new FormData();
+            formData.append('fileImg', inputSelfieEdit); //selfie
+
+            fetch('/myaccount/uploadSelfieEdit', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(jsonx => { 
+                console.log(jsonx)
+                const code = jsonx.code;
+                const response = jsonx.response;
+
+                if (code == "ok"){
+                    mostrarToast( response , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                    fileSelfieEdit.value = ""; //limpiamos el campo file.
+                    btnSaveSelfie.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio 
+
+                    btnSaveSelfieSpinner.classList.add('close');
+                    btnSaveSelfie.classList.remove('close');
+
+                } else {
+                    mostrarToast( response , 'right', 'danger', '¡Oops!', true ); 
+
+                    newSelfieEdit.classList.add('close')
+                    selfieEdit.classList.remove('close');
+
+                    fileSelfieEdit.value = ""; //limpiamos el campo file.
+                    btnSaveSelfie.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio 
+
+                    btnSaveSelfieSpinner.classList.add('close');
+                    btnSaveSelfie.classList.remove('close');
+
+                } 
+
+            })
+            .catch(err => {     
+                console.log(err)
+                mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+
+                fileSelfieEdit.value = ""; //limpiamos el campo file.
+                btnSaveSelfie.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio  
+
+                btnSaveSelfieSpinner.classList.add('close');
+                btnSaveSelfie.classList.remove('close');  
+            });
+        });
+
+    } 
+    
 </script>
