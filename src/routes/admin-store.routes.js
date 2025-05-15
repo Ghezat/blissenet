@@ -1065,8 +1065,8 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
                 }
 
             } else {
-                console.log("Supera el tamaño permitido de 5MB uploadDataTransportEdit-------------------");
-                res.json({ "code" : "problem", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+                //console.log("Esta condicion no deberia de aplicar ya que esta restringida desde el fronted");
+                res.json({ "code" : "problem", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."})
             } 
 
         } else {
@@ -1231,7 +1231,7 @@ routes.post('/myaccount/uploadDocumentEdit', async(req, res)=>{
                 }
 
             } else {
-                console.log("Supera el tamaño permitido de 5MB")
+                //console.log("Esta condicion no deberia de aplicar ya que esta restringida desde el fronted");
                 res.json({ "code" : "problem", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
             }  
 
@@ -1370,7 +1370,7 @@ routes.post('/myaccount/uploadSelfieEdit', async(req, res)=>{
                 }
 
             } else {
-                console.log("El archivo subido supera el peso permitido o no es de tipo image");
+                //console.log("Esta condicion no deberia de aplicar ya que esta restringida desde el fronted");
                 res.json({ "code" : "error", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
             }  
 

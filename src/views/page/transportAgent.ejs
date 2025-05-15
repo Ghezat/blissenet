@@ -1339,15 +1339,28 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
         };
 
         fileEdit = File[0];
-        console.log(fileEdit)
-        let objectURL = URL.createObjectURL(fileEdit);
-        console.log(objectURL)
-        
-        imageTransEdit.src = objectURL;
-        imageTransEdit.classList.remove('close')
-        imageTransEditCurrent.classList.add('close');
-        
-        stateSubmnitEdit()
+        console.log("Ver esto detalles de la imagen cargada",fileEdit)
+        if ( fileEdit.size <= 5000000){
+            console.log("imagen cargada peso :", fileEdit.size);
+
+            let objectURL = URL.createObjectURL(fileEdit);
+            console.log(objectURL)
+            
+            imageTransEdit.src = objectURL;
+            imageTransEdit.classList.remove('close')
+            imageTransEditCurrent.classList.add('close');
+            
+            stateSubmnitEdit()
+        } else {
+
+            const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
+            fileTransEdit.value = "" //Limpiamos el file
+            btnSubmitEdit.setAttribute("disabled", "");
+
+            mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+            //desactivamos el boton
+
+        }
 
     })
 
@@ -1398,27 +1411,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
  
                     }, 4000);
 
-                } else {
-                    
-                    console.log("code", code );
-                    console.log("typeof code", typeof code );
-
-                    setTimeout(() => {
-                        console.log("Se ha activado el setTimeout() en 4 seg.")
-                        mostrarToast( response , 'right', 'danger', '¡Upps!', true );
-
-                        fileTransEdit.value = "" //Limpiamos el file
-                        btnSubmitEdit.setAttribute("disabled", "");
-
-                        btnSubmitEdit.classList.remove('close'); 
-                        btnSubmitEditing.classList.add('close');
-
-                        imageTransEdit.classList.add('close'); //quitammos el img que porta la imagen
-                        imageTransEditCurrent.classList.remove('close') //colocamos la imagen actual
-    
-                    }, 4000);
- 
-                }            
+                }        
  
             })
             .catch(err => console.log(err));
@@ -1459,15 +1452,29 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
         inputDocumentEdit = File[0];
         console.log(inputDocumentEdit)
-        let objectURL = URL.createObjectURL(inputDocumentEdit);
-        console.log(objectURL)
-        
-        newDocumentEdit.src = objectURL;
-        newDocumentEdit.classList.remove('close')
-        documentEdit.classList.add('close');
-        
+        if (inputDocumentEdit.size <= 5000000 ){
 
-        stateFileDocument() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+            let objectURL = URL.createObjectURL(inputDocumentEdit);
+            console.log(objectURL)
+            
+            newDocumentEdit.src = objectURL;
+            newDocumentEdit.classList.remove('close')
+            documentEdit.classList.add('close');
+            
+
+            stateFileDocument() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+
+        } else {
+
+            const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
+            inputDocumentEdit.value = "" //Limpiamos el file
+            btnSaveDocument.setAttribute("disabled", "");
+            
+            mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+            //desactivamos el boton
+
+        }
+
 
     })
 
@@ -1510,18 +1517,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
                     btnSaveDocumentSpinner.classList.add('close');
                     btnSaveDocument.classList.remove('close'); 
 
-                } else {
-                    mostrarToast( response , 'right', 'danger', '¡Oops!', true );
-
-                    newDocumentEdit.classList.add('close')
-                    documentEdit.classList.remove('close');
-
-                    fileDocumentEdit.value = ""; //limpiamos el campo file.
-                    btnSaveDocument.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio 
-                    
-                    btnSaveDocumentSpinner.classList.add('close');
-                    btnSaveDocument.classList.remove('close'); 
-                }      
+                }    
 
             })
             .catch(err => {     
@@ -1567,15 +1563,27 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
         inputSelfieEdit = File[0];
         console.log("inputSelfieEdit : ",inputSelfieEdit)
-        let objectURL = URL.createObjectURL(inputSelfieEdit);
-        console.log(objectURL)
+        if (inputSelfieEdit.size <= 5000000){
         
-        newSelfieEdit.src = objectURL;
-        newSelfieEdit.classList.remove('close')
-        selfieEdit.classList.add('close');
-        
-        
-        stateFileSelfie()//esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+            let objectURL = URL.createObjectURL(inputSelfieEdit);
+            console.log(objectURL)
+            
+            newSelfieEdit.src = objectURL;
+            newSelfieEdit.classList.remove('close')
+            selfieEdit.classList.add('close');
+            
+            stateFileSelfie()//esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+
+        } else {
+
+            const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
+            inputSelfieEdit.value = "" //Limpiamos el file
+            btnSaveSelfie.setAttribute("disabled", "");
+            
+            mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+            //desactivamos el boton
+
+        }
 
     })
 
@@ -1618,19 +1626,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
                     btnSaveSelfieSpinner.classList.add('close');
                     btnSaveSelfie.classList.remove('close');
 
-                } else {
-                    mostrarToast( response , 'right', 'danger', '¡Oops!', true ); 
-
-                    newSelfieEdit.classList.add('close')
-                    selfieEdit.classList.remove('close');
-
-                    fileSelfieEdit.value = ""; //limpiamos el campo file.
-                    btnSaveSelfie.setAttribute("disabled", ""); //desactivamos el boton para que no puedna enviar un input file vacio 
-
-                    btnSaveSelfieSpinner.classList.add('close');
-                    btnSaveSelfie.classList.remove('close');
-
-                } 
+                }
 
             })
             .catch(err => {     
