@@ -1385,7 +1385,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
                 const code = jsonx.code;
                 const response = jsonx.response;
                 
-                if (code == "ok"){
+                if (code === "ok"){
                     
                     setTimeout(() => {
                         mostrarToast( response , 'right', 'success', '¡Hecho!', true );
@@ -1400,7 +1400,11 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
                 } else {
                     
+                    console.log("code", code );
+                    console.log("typeof code", typeof code );
+
                     setTimeout(() => {
+                        console.log("Se ha activado el setTimeout() en 4 seg.")
                         mostrarToast( response , 'right', 'danger', '¡Upps!', true );
 
                         fileTransEdit.value = "" //Limpiamos el file
@@ -1408,6 +1412,9 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
                         btnSubmitEdit.classList.remove('close'); 
                         btnSubmitEditing.classList.add('close');
+
+                        imageTransEdit.classList.add('close'); //quitammos el img que porta la imagen
+                        imageTransEditCurrent.classList.remove('close') //colocamos la imagen actual
     
                     }, 4000);
  
