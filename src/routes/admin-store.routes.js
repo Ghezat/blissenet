@@ -944,10 +944,10 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
     console.log("files :", req.files);
     const department = "transportAgent";
     const { SelectMedio, DescripMedio, SelectColor, PlacaMedio } = req.body;
-    const Files = req.files; //esto e sun array donde esta la imagen 
+    const Files = req.files; //esto es un array donde esta la imagen 
     console.log('Files :', Files);
     const element = Files[0]; // esto es el objeto propiamente de la imagen 
-    console.log('element :', element);
+    //console.log('element :', element);
     let boxImg = [];
 
     const user = req.session.user;
@@ -959,7 +959,7 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
 
         if(Files.length !==0){
 
-            if (element.size <= 5000000  && element.mimetype.startsWith("image/")){
+            if (element.size <= 5000000 && element.mimetype.startsWith("image/")){
                                 
                 console.log("imagen aceptada ------------------------------------------------------>");
                 console.log("-------------------Proceso de eliminacion de imagen------------------->");
@@ -1065,7 +1065,8 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
                 }
 
             } else {
-                res.json({ "code" : "error", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+                console.log("Supera el tamaño permitido de 5MB uploadDataTransportEdit-------------------");
+                res.json({ "code" : "problem", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
             } 
 
         } else {
@@ -1231,7 +1232,7 @@ routes.post('/myaccount/uploadDocumentEdit', async(req, res)=>{
 
             } else {
                 console.log("Supera el tamaño permitido de 5MB")
-                res.json({ "code" : "error", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
+                res.json({ "code" : "problem", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
             }  
 
         }      
@@ -1369,6 +1370,7 @@ routes.post('/myaccount/uploadSelfieEdit', async(req, res)=>{
                 }
 
             } else {
+                console.log("El archivo subido supera el peso permitido o no es de tipo image");
                 res.json({ "code" : "error", "response" : "El archivo que intentaste subir supera el tamaño máximo permitido de 5MB o no es del tipo de imagen. Por favor, verifica e intenta nuevamente."}) //un error de carga
             }  
 
