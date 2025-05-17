@@ -520,6 +520,7 @@ routes.post('/myaccount/segment-changeGroup', async (req, res)=>{
 });
 
 
+
 routes.get('/myaccount/transportAgent', async (req, res)=>{
     try {
         
@@ -543,17 +544,15 @@ routes.get('/myaccount/transportAgent', async (req, res)=>{
             
             const transportAgent = await modelTransportAgent.findOne( { indexed : user._id, active : true} );
             console.log("transportAgent :", transportAgent );
-            const docImages = transportAgent.docImages;
-            console.log("docImages :", docImages );
 
             res.render('page/transportAgent', { user, searchProfile, transportAgent, countMessages, countNegotiationsBuySell });
         }   
 
-        
 
     } catch (error) {
         console.log("Ha habido un error en la carga de transportAgent", error);
     }
+    
 });
 
 

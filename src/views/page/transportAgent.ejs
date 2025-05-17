@@ -14,12 +14,30 @@
     <link rel="stylesheet" href="/toastr/toastr.min.css"> 
     <script src="/toastr/toastr.min.js"></script>
 
+    <!-- cropper para cortar imaganes  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+      
     <!-- estilos propios -->
     <link rel="stylesheet" href="/css/style.css">
     <title>Blissenet Agente de Transporte</title>
 
 </head>
 <style>
+
+   
+.img-cropper {
+       width: 600px!important;
+       height: auto;
+       /*max-width: 100%;  Limita el ancho máximo al 100% del contenedor */
+       border: 2px solid red;
+}
+/* .content-imagen-cropper {
+    display: flex;
+    justify-content: center;  
+    align-items: center; 
+} */
 
 .textLight{
     /* trabaja en conjunto con themaTextLight */
@@ -677,6 +695,31 @@
 
             </div>
 
+            <div class="modal fade" id="cropperTransport" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBlissBotConnect"> Recortar</h5>
+                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                        </div>
+                        <div class="modal-body d-flex border border-danger" style="height: 300px;">
+
+                            <div class="content-imagen-cropper border border-primary" style="width: 70%; height: auto">
+                                <img src="" alt="" class="img-cropper" id="img-cropper" >
+                            </div>
+                            <div class="content-imagen-sample border border-secondary" style="width: 30%; height: auto">
+                                <div class="img-sample" id="img-croppered"></div>
+                            </div>  
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-dark">Recortar</button>
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
          <% } else { %>
             <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
                
@@ -1308,7 +1351,15 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
     const fileTransEdit = document.querySelector('.fileTransEdit');
     const imageTransEditCurrent = document.querySelector('.imageTransEditCurrent'); // este es el img actual que existe
     const imageTransEdit = document.querySelector('.imageTransEdit'); //este es el img que aparece cuando fileTransEdit le carga un file y luego desaparece el imageTransEditCurrent
+    
+    const modalTransport = document.getElementById('cropperTransport');
+    const imageCropper = document.getElementById('img-cropper');  //esta es la img del contenedor que usara cropper
+
+    const modalTransp = new bootstrap.Modal(modalTransport);
+     // se activa el modal asi modalTransp.show();
+  
     let fileEdit;
+    let cropper = null;
 
     selectMedioEdit.addEventListener('change', ()=>{
         stateSubmnitEdit()
@@ -1331,26 +1382,66 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
     fileTransEdit.addEventListener('change', ()=>{
 
         let File = fileTransEdit.files
-        console.log(File);
+        console.log("File :", File);
 
-        if (! File || !File.length){
+        if (!File || !File.length){
             imageTransEdit.src = "";
+            fileTransEdit.value = "" //Limpiamos el file
             return
         };
 
         fileEdit = File[0];
         console.log("Ver esto detalles de la imagen cargada",fileEdit)
-        if ( fileEdit.size <= 5000000){
-            console.log("imagen cargada peso :", fileEdit.size);
+        console.log("name file :", fileEdit.name);
+        //name file : corolla1994.jpg
+        const name = fileEdit.name;
+        const last = name.lastIndexOf('.'); //este metodo me arroja la cantidad de caracteres despues del ultimo punto
+        const ext = name.substring(last + 1); //este metodo corta la cadena mediante la cantidad de caracteres 
+        
+        console.log("ext :", ext); 
 
-            let objectURL = URL.createObjectURL(fileEdit);
-            console.log(objectURL)
+        if ( fileEdit.size <= 5000000 ){
+
+            if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif" ){
+
+
+                //hacemos aparecer el modal con Cropper.js
+                //modalTransp.show();
+
+                let objectURL = URL.createObjectURL(fileEdit);
+                console.log(objectURL)
+                
+                //imageCropper.src = objectURL;
+/* 
+                cropper = new Cropper(imageCropper, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    preview: '.img-sample',
+                    ready(){
+                        document.querySelector('.cropper-container').style.width = '100%'
+                        document.querySelector('.cropper-container').style.height = '100%'
+                    }
+
+                })
+
+ */
+                imageTransEdit.src = objectURL;
+                imageTransEdit.classList.remove('close')
+                imageTransEditCurrent.classList.add('close');    
             
-            imageTransEdit.src = objectURL;
-            imageTransEdit.classList.remove('close')
-            imageTransEditCurrent.classList.add('close');
-            
-            stateSubmnitEdit()
+                stateSubmnitEdit()
+
+            } else {
+
+                console.log("El archivo no es de tipo imagen");
+                const response = "El archivo no es de tipo imagen."
+                fileTransEdit.value = "" //Limpiamos el file
+                btnSubmitEdit.setAttribute("disabled", "");
+
+                mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+                //desactivamos el boton
+            }    
+
         } else {
 
             const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
