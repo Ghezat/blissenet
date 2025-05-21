@@ -5,20 +5,23 @@
 
     <%- include('../partials/head.ejs') %>
  
+
+    <script src="/jquery/jquery-3.1.1.min.js"></script> 
+
+    <!-- cropper para cortar imaganes  -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
     <!-- semantic-ui -->
     <link rel="stylesheet" href="/semantic/semantic.min.css">
-    <script src="/jquery/jquery-3.1.1.min.js"></script> 
     <script src="/semantic/semantic.min.js"></script>
 
     <!-- toastr tiene que despues del CDN de bootstrap -->
     <link rel="stylesheet" href="/toastr/toastr.min.css"> 
     <script src="/toastr/toastr.min.js"></script>
 
-    <!-- cropper para cortar imaganes  -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-      
+
     <!-- estilos propios -->
     <link rel="stylesheet" href="/css/style.css">
     <title>Blissenet Agente de Transporte</title>
@@ -31,13 +34,13 @@
        width: 600px!important;
        height: auto;
        /*max-width: 100%;  Limita el ancho máximo al 100% del contenedor */
-       border: 2px solid red;
 }
-/* .content-imagen-cropper {
-    display: flex;
-    justify-content: center;  
-    align-items: center; 
-} */
+
+
+.cropper-canvas{
+    width: 100%;
+    height: auto;
+}
 
 .textLight{
     /* trabaja en conjunto con themaTextLight */
@@ -57,6 +60,11 @@
 .contentPicture:hover .btnImageUpload {
     outline: 1px solid grey; /* Cambia el color y el grosor del borde según lo desees */
 }
+
+.contentPicture:hover .btnUpload {
+    outline: 1px solid grey; /* Cambia el color y el grosor del borde según lo desees */
+}
+
 
 @media screen and (min-width: 290px) and (max-width: 499px ){
 
@@ -141,15 +149,15 @@
                             </div>
                             <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-12">
 
-                                <ul class="nav nav-tabs mt-3" style="background-color: rgba(233, 233, 233, 0.1); border-top-left-radius: 5px; border-top-right-radius: 5px; height: auto;">
+                                <ul class="nav nav-tabs mt-3" style="background-color: rgba(255, 255, 255, 0.8); border-top-left-radius: 5px; border-top-right-radius: 5px; height: auto;">
                                     <li class="nav-item">
                                         <button id="request" class="nav-link active" aria-current="page" href="#">Solicitudes </button>
-                                      </li>
-                                    <li class="nav-item">
-                                      <button id="range" class="nav-link" aria-current="page" href="#"> Rango Mapa </button>
                                     </li>
                                     <li class="nav-item">
-                                      <button id="meansTransportation" class="nav-link" href="#">Medios de Transporte </button>
+                                        <button id="range" class="nav-link" aria-current="page" href="#"> Rango Mapa </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button id="meansTransportation" class="nav-link" href="#">Medios de Transporte </button>
                                     </li>
                                     <li class="nav-item">
                                         <button id="documents" class="nav-link" href="#">Documentos</button>
@@ -203,7 +211,7 @@
                                                             </div>
                                                             <div class="extra text-dark">
                                                                 Rating:
-                                                                <div class="ui star rating" data-rating="3" data-max-rating="5"></div>
+                                                                <div class="ui star rating" data-rating="5" data-max-rating="5" data-readonly="true"></div>
                                                             </div> 
                                                         </div>
 
@@ -335,16 +343,16 @@
                                                     </div>
                                                     <div class="form-group my-3">
                                                         <div class="alert alert-info">
-                                                            <i class="bi bi-exclamation-triangle-fill ms-2"></i> Proporcione detalles que permitan la identificacion del vehiculo utilizado para hacer deliveries.
+                                                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Proporcione detalles que permitan la identificacion del vehiculo utilizado para hacer deliveries.
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-12 col-sm-12">
-                                                    <div class="contentPicture  d-flex justify-content-center align-items-center m-2 rounded-2  " style="position: relative; height: 200px; ">
-                                                        <img src="<%= transportAgent.transportation[0].image[0].url %>" alt="" class="imageTransEditCurrent rounded-2" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">
-                                                        <button type="button" class="btn btn-light rounded-pill me-1 btnImageUpload" id="btnTransEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20;" > <i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                    <div class="contentPicture d-flex justify-content-center align-items-center rounded-2 my-2" style="position: relative; width: 100%; ">
+                                                        <img src="<%= transportAgent.transportation[0].image[0].url %>" alt="" class="imageTransEditCurrent rounded-2" style="width: 100%; height: auto; object-fit: cover; z-index: 10;">
+                                                        <button type="button" class="btn btn-light rounded-pill d-flex justify-content-center align-items-center me-1 btnImageUpload" id="btnTransEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20; width: 35px; height: 35px;" > <i class="bi bi-image m-0"></i> </button> <!-- primer paso cargar la img con el file -->
                                                         <input type="file" class="fileTransEdit invisible" style="position: absolute; top:-20; z-index: 1;">
-                                                        <img class="imageTransEdit rounded-2 close" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">  
+                                                        <img class="imageTransEdit rounded-2 close" style="width: 100%; height: auto; object-fit: cover; z-index: 10;">  
                                                     </div>
                                                 </div>
 
@@ -378,7 +386,7 @@
                                                 <div class="col-lg-4 col-md-12 col-sm-12 p-0">
                                                     <div class="contentPicture" style="position: relative; width: 100%;">
                                                         <img class="documentEdit" src="<%= transportAgent.docImages.images[0].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
-                                                        <button type="button" class="btn btn-light rounded-pill me-1 btnUpload" id="btnDocumentEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20;" > <i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                        <button type="button" class="btn btn-light rounded-pill d-flex justify-content-center align-items-center me-1 btnUpload" id="btnDocumentEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20; width: 35px; height: 35px;" > <i class="bi bi-image m-0"></i> </button> <!-- primer paso cargar la img con el file -->
                                                         <input type="file" class="fileDocumentEdit invisible" style="position: absolute; top:-20; z-index: 1;">
                                                         <img class="newDocumentEdit rounded-2 close" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">  
                                                     </div>
@@ -404,7 +412,7 @@
                                                 <div class="col-lg-4 col-md-12 col-sm-12 p-0">
                                                     <div class="contentPicture" style="position: relative; width: 100%;">
                                                         <img class="selfieEdit" src="<%= transportAgent.docImages.images[1].url %>" alt="" oncontextmenu="return false;" style="width: 100%;">
-                                                        <button type="button" class="btn btn-light rounded-pill me-1 btnUpload" id="btnSelfieEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20;" > <i class="bi bi-image"></i></button> <!-- primer paso cargar la img con el file -->
+                                                        <button type="button" class="btn btn-light rounded-pill d-flex justify-content-center align-items-center me-1 btnUpload" id="btnSelfieEdit" title="Cambiar la imagen" style="position: absolute; right: 11px; top: 20px; z-index: 20; width: 35px; height: 35px;" > <i class="bi bi-image m-0"></i> </button> <!-- primer paso cargar la img con el file -->
                                                         <input type="file" class="fileSelfieEdit invisible" style="position: absolute; top:-20; z-index: 1;">
                                                         <img class="newSelfieEdit rounded-2 close" style="width: 100%; height: 100%; object-fit: cover; z-index: 10;">  
                                                     </div>
@@ -695,30 +703,50 @@
 
             </div>
 
-            <div class="modal fade" id="cropperTransport" tabindex="-1" role="dialog">
+            <!-- importante la clase "fade" del modal de bootstrap no permite que funcione bien cropper -->
+            <!-- data-bs-backdrop="static" esto es lo que permite el modal sea estatico -->
+            <div class="modal" id="cropperTransport" data-bs-backdrop="static" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBlissBotConnect"> Recortar</h5>
+                            <h5 class="modal-title text-dark" id="staticBlissBotConnect"> Recortar </h5>
                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                         </div>
-                        <div class="modal-body d-flex border border-danger" style="height: 300px;">
+                        <div class="modal-body d-flex my-2" style="width: 100%; height: 300px;">
 
-                            <div class="content-imagen-cropper border border-primary" style="width: 70%; height: auto">
-                                <img src="" alt="" class="img-cropper" id="img-cropper" >
-                            </div>
-                            <div class="content-imagen-sample border border-secondary" style="width: 30%; height: auto">
-                                <div class="img-sample" id="img-croppered"></div>
-                            </div>  
+                            <img class="img-cropper" id="img-cropper" style="width: 100%; height: auto;">  
                             
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-dark">Recortar</button>
+                            <button type="button" class="btn btn-dark" id="cutCropper">Recortar</button>
                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- importante la clase "fade" del modal de bootstrap no permite que funcione bien cropper -->
+            <!-- data-bs-backdrop="static" esto es lo que permite el modal sea estatico -->
+            <div class="modal" id="cropperDoc" data-bs-backdrop="static" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="staticBlissBotConnect"> Recortar </h5>
+                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                        </div>
+                        <div class="modal-body d-flex my-2" style="width: 100%; height: 300px;">
+
+                            <img class="img-cropper" id="img-cropper-doc" style="width: 100%; height: auto;">  
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" id="cutCropperDoc">Recortar</button>
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
          <% } else { %>
             <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
@@ -1354,18 +1382,28 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
     
     const modalTransport = document.getElementById('cropperTransport');
     const imageCropper = document.getElementById('img-cropper');  //esta es la img del contenedor que usara cropper
+    const cutCropper = document.getElementById('cutCropper'); // este es el boton de recortar del modal
 
     const modalTransp = new bootstrap.Modal(modalTransport);
      // se activa el modal asi modalTransp.show();
   
     let fileEdit;
+    let createFile = null; //aqui guardamos el archivo recortado para ser enviado al backend
     let cropper = null;
 
     selectMedioEdit.addEventListener('change', ()=>{
         stateSubmnitEdit()
     });
     descripMedioEdit.addEventListener('input', ()=>{
-        stateSubmnitEdit()
+
+        const descripValue = descripMedioEdit.value;
+        console.log("descripValue.length :", descripValue.length  )
+        if(descripValue.length >= 8){
+            stateSubmnitEdit()
+        } else {
+            btnSubmitEdit.setAttribute("disabled", "");
+        }
+        
     });
     selectColorEdit.addEventListener('change', ()=>{
         stateSubmnitEdit()
@@ -1381,59 +1419,103 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
     
     fileTransEdit.addEventListener('change', ()=>{
 
-        let File = fileTransEdit.files
-        console.log("File :", File);
+        FileEdit = fileTransEdit.files
+        console.log("FileEdit :", FileEdit);
 
-        if (!File || !File.length){
+        if (!FileEdit || !FileEdit.length){
             imageTransEdit.src = "";
             fileTransEdit.value = "" //Limpiamos el file
             return
         };
 
-        fileEdit = File[0];
+        fileEdit = FileEdit[0];
         console.log("Ver esto detalles de la imagen cargada",fileEdit)
         console.log("name file :", fileEdit.name);
         //name file : corolla1994.jpg
         const name = fileEdit.name;
         const last = name.lastIndexOf('.'); //este metodo me arroja la cantidad de caracteres despues del ultimo punto
-        const ext = name.substring(last + 1); //este metodo corta la cadena mediante la cantidad de caracteres 
+        const ext = name.substring(last + 1).toLowerCase(); //este metodo corta la cadena mediante la cantidad de caracteres y tambien la convierte en minuscula importante porque hay momentos donde las extensionews estan en mayusculas. pendiente con esto
         
         console.log("ext :", ext); 
 
-        if ( fileEdit.size <= 5000000 ){
+        if ( fileEdit.size <= 10000000 ){
 
             if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif" ){
 
-
                 //hacemos aparecer el modal con Cropper.js
-                //modalTransp.show();
+                modalTransp.show();
 
                 let objectURL = URL.createObjectURL(fileEdit);
                 console.log(objectURL)
                 
-                //imageCropper.src = objectURL;
-/* 
+                imageCropper.src = objectURL;
+                imageCropper.style.cssText = 'width: 100%';//aseguro que tome el ancho total pero no lo hace
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+
                 cropper = new Cropper(imageCropper, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    preview: '.img-sample',
-                    ready(){
-                        document.querySelector('.cropper-container').style.width = '100%'
-                        document.querySelector('.cropper-container').style.height = '100%'
-                    }
+                    aspectRatio: 16/9,
+                    viewMode: 1
 
                 })
 
- */
-                imageTransEdit.src = objectURL;
-                imageTransEdit.classList.remove('close')
-                imageTransEditCurrent.classList.add('close');    
-            
-                stateSubmnitEdit()
+                //cutCropper este es el elemento boton que hara el corte cropper, ahora que metodo usa cropper para hacer la magia?
+                cutCropper.addEventListener('click', () => {
+                    createFile = ""; //aseguramos que esta variable esta vacia; 
+                    const idImage = new Date().getTime(); //esto es para formar el nombre del nuevo archivo de imagen cortado por cropper.
+
+                    const croppedCanvas = cropper.getCroppedCanvas();
+
+                    // Si deseas convertir el canvas a una imagen
+                    const croppedImage = croppedCanvas.toDataURL('image/jpeg'); // Asegúrate de usar 'image/jpeg' si deseas JPG
+
+                    // Aquí puedes hacer lo que necesites con la imagen recortada, como mostrarla o subirla a un servidor
+                    //Así que, en resumen, tu cadena es una **data URL** que contiene una imagen codificada en Base64. Puedes usarla directamente en un elemento `<img>` como esta:
+                    console.log("croppedImage --> una URL", croppedImage);
+
+                    // Convertir data URL a Blob usando fetch
+                    async function dataURLtoBlob(croppedImage) {
+                        const Blob = await fetch(croppedImage);
+                        console.log("esto es un blob ahora :", Blob);
+                        return await Blob.blob();
+                    }
+
+                    dataURLtoBlob(croppedImage)
+                        .then((Blob) => { 
+                            console.log("conversion data URL con formato base64 a blob Logrado satisfactoriamente");
+
+                            // Crea el archivo a partir del blob
+                            createFile = new File([Blob], `imageCut${idImage}.jpg`, { type: 'image/jpeg' });
+                            //Necesito que este file tenga un name = "fileImg" para poder ser enviado al backend, como puedo hacerlo?
+
+                            // Aquí puedes verificar que se creó correctamente
+                            // la variable createFile es la que usamos para enviar al backend.
+                            console.log("Archivo creado:", createFile);
+                            console.log("Archivo creado:", createFile.size);
+
+                            //verificamos todos los input y liberamos el boton para subir al backebd
+                            stateSubmnitEdit()
+
+                        })
+                        .catch((e) => { 
+                            console.log("No logrado, error", e); 
+                        });
+
+                    // Por ejemplo, para mostrar la imagen (Base64) recortada en otro elemento img 
+                    imageTransEdit.src = croppedImage;
+                    imageTransEdit.classList.remove('close')
+                    imageTransEditCurrent.classList.add('close');
+                   
+                    //cerramos el modal
+                    modalTransp.hide();
+                });
+ 
 
             } else {
 
-                console.log("El archivo no es de tipo imagen");
+                console.log("El archivo no es de tipo imagen o es un formato no aceptado.");
                 const response = "El archivo no es de tipo imagen."
                 fileTransEdit.value = "" //Limpiamos el file
                 btnSubmitEdit.setAttribute("disabled", "");
@@ -1444,7 +1526,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
         } else {
 
-            const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
+            const response = "Esta imagen supera el tamaño máximo permitido de 10MB de peso."
             fileTransEdit.value = "" //Limpiamos el file
             btnSubmitEdit.setAttribute("disabled", "");
 
@@ -1472,7 +1554,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
             formData.append('DescripMedio', descripMedioEdit.value);
             formData.append('SelectColor', selectColorEdit.value);
             formData.append('PlacaMedio', placaMedioEdit.value);
-            formData.append('fileImg', fileEdit); //image del medio de transporte
+            formData.append('fileImg', createFile); //image del medio de transporte
 
             //siempre llega en el mimso orden primero el documento y segundo el selfie
 
@@ -1510,8 +1592,8 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
         });
     }   
 
+    
 
-   $('.ui.rating').rating();
 
 </script>
 
@@ -1523,55 +1605,146 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
     const documentEdit = document.querySelector('.documentEdit');
     const newDocumentEdit = document.querySelector('.newDocumentEdit');
 
+    const cropperDoc = document.getElementById('cropperDoc'); //id del modal que usaremos para el documento
+    const imgCropperDoc = document.getElementById('img-cropper-doc'); //imagen del modal cropper
+    const cutCropperDoc = document.getElementById('cutCropperDoc'); //boton de recorte para este modal
+    
+    const modalDocumemt = new bootstrap.Modal(cropperDoc);
+     // se activa el modal asi modalDocumemt.show();
+
     const btnSaveDocument = document.getElementById('btnSaveDocument') //boton que envia el file al backend para ser guardado
     const btnSaveDocumentSpinner = document.getElementById('btnSaveDocumentSpinner') //boton lock spinner 
-    let inputDocumentEdit;
-    
+    let fileDocEdit;
+ 
     btnDocumentEdit.addEventListener('click', ()=>{
         fileDocumentEdit.click();
     });
 
+          
     fileDocumentEdit.addEventListener('change', ()=>{
 
-        let File = fileDocumentEdit.files
-        console.log(File);
+        let FileEdit = fileDocumentEdit.files
+        console.log("FileEdit :", FileEdit);
 
-        if (! File || !File.length){
+        if (!FileEdit || !FileEdit.length){
             newDocumentEdit.src = "";
+            newDocumentEdit.value = "" //Limpiamos el file
             return
         };
 
-        inputDocumentEdit = File[0];
-        console.log(inputDocumentEdit)
-        if (inputDocumentEdit.size <= 5000000 ){
+        fileDocEdit = FileEdit[0];
+        console.log("Ver esto detalles de la imagen cargada", fileDocEdit);
+        console.log("name file :", fileDocEdit.name);
+        //name file : corolla1994.jpg
+        const name = fileDocEdit.name;
+        const last = name.lastIndexOf('.'); //este metodo me arroja la cantidad de caracteres despues del ultimo punto
+        const ext = name.substring(last + 1).toLowerCase(); //este metodo corta la cadena mediante la cantidad de caracteres y tambien la convierte en minuscula importante porque hay momentos donde las extensionews estan en mayusculas. pendiente con esto
+        
+        console.log("ext :", ext); 
 
-            let objectURL = URL.createObjectURL(inputDocumentEdit);
-            console.log(objectURL)
-            
-            newDocumentEdit.src = objectURL;
-            newDocumentEdit.classList.remove('close')
-            documentEdit.classList.add('close');
-            
+        if ( fileDocEdit.size <= 10000000 ){
 
-            stateFileDocument() //esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+            if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif" ){
+
+                //hacemos aparecer el modal con Cropper.js
+                modalDocumemt.show()
+
+                let objectURL = URL.createObjectURL(fileDocEdit);
+                console.log(objectURL)
+                
+                imgCropperDoc.src = objectURL;
+                imgCropperDoc.style.cssText = 'width: 100%';//aseguro que tome el ancho total pero no lo hace
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                cropper = new Cropper(imgCropperDoc, {
+                    aspectRatio: 0,
+                    viewMode: 1
+                })
+
+                //cutCropper este es el elemento boton que hara el corte cropper, ahora que metodo usa cropper para hacer la magia?
+                cutCropperDoc.addEventListener('click', () => {
+                 
+                    createFile = ""; //aseguramos que esta variable esta vacia; 
+                    const idImage = new Date().getTime(); //esto es para formar el nombre del nuevo archivo de imagen cortado por cropper.
+
+                    const croppedCanvas = cropper.getCroppedCanvas();
+
+                    // Si deseas convertir el canvas a una imagen
+                    const croppedImage = croppedCanvas.toDataURL('image/jpeg'); // Asegúrate de usar 'image/jpeg' si deseas JPG
+
+                    // Aquí puedes hacer lo que necesites con la imagen recortada, como mostrarla o subirla a un servidor
+                    //Así que, en resumen, tu cadena es una **data URL** que contiene una imagen codificada en Base64. Puedes usarla directamente en un elemento `<img>` como esta:
+                    console.log("croppedImage --> una URL", croppedImage);
+
+                    // Convertir data URL a Blob usando fetch
+                    async function dataURLtoBlob(croppedImage) {
+                        const Blob = await fetch(croppedImage);
+                        console.log("esto es un blob ahora :", Blob);
+                        return await Blob.blob();
+                    }
+
+                    dataURLtoBlob(croppedImage)
+                        .then((Blob) => { 
+                            console.log("conversion data URL con formato base64 a blob Logrado satisfactoriamente");
+
+                            // Crea el archivo a partir del blob
+                            createFileDoc = new File([Blob], `imageCut${idImage}.jpg`, { type: 'image/jpeg' });
+                            //Necesito que este file tenga un name = "fileImg" para poder ser enviado al backend, como puedo hacerlo?
+
+                            // Aquí puedes verificar que se creó correctamente
+                            // la variable createFile es la que usamos para enviar al backend.
+                            console.log("Archivo creado:", createFileDoc);
+                            console.log("Archivo creado:", createFileDoc.size);
+
+                            //liberamos el boton para subir al backebd
+                            stateFileDocument()
+
+                        })
+                        .catch((e) => { 
+                            console.log("No logrado, error", e); 
+                        });
+
+                    // Por ejemplo, para mostrar la imagen (Base64) recortada en otro elemento img 
+                    newDocumentEdit.src = croppedImage;
+                    newDocumentEdit.classList.remove('close')
+                    documentEdit.classList.add('close');
+                    
+                   
+                    //cerramos el modal
+                    modalDocumemt.hide();
+                });
+ 
+
+            } else {
+
+                console.log("El archivo no es de tipo imagen");
+                const response = "El archivo no es de tipo imagen o es un formato no aceptado."
+                fileDocumentEdit.value = "" //Limpiamos el file
+                btnSaveDocument.setAttribute("disabled", "");
+
+                mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+                //desactivamos el boton
+            }    
 
         } else {
 
-            const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
-            inputDocumentEdit.value = "" //Limpiamos el file
+            const response = "Esta imagen supera el tamaño máximo permitido de 10MB de peso."
+            fileDocumentEdit.value = "" //Limpiamos el file
             btnSaveDocument.setAttribute("disabled", "");
-            
+
             mostrarToast( response , 'right', 'danger', '¡Upps!', true );
             //desactivamos el boton
 
         }
 
-
     })
 
     function stateFileDocument(){
 
-        if (inputDocumentEdit !=="" ){
+        if (fileDocumentEdit !=="" ){
             //console.log("existe un archivo y significa que se ha cargado un archivo")
             btnSaveDocument.removeAttribute('disabled'); 
         }
@@ -1587,7 +1760,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
             btnSaveDocument.classList.add('close');  
 
             const formData = new FormData();
-            formData.append('fileImg', inputDocumentEdit); //document
+            formData.append('fileImg', createFileDoc); //document
 
             fetch('/myaccount/uploadDocumentEdit', {
                 method: "POST",
@@ -1636,39 +1809,124 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
     const btnSaveSelfie = document.getElementById('btnSaveSelfie') //bton que envia el file al backend para ser guardado
     const btnSaveSelfieSpinner = document.getElementById('btnSaveSelfieSpinner'); //boton lock spinner
-    let inputSelfieEdit;
+    let fileSelfEdit;
 
     btnSelfieEdit.addEventListener('click', ()=>{
         fileSelfieEdit.click();
     });
 
+  
     fileSelfieEdit.addEventListener('change', ()=>{
 
-        let File = fileSelfieEdit.files
-        console.log(File);
+        let FileEdit = fileSelfieEdit.files
+        console.log("FileEdit :", FileEdit);
 
-        if (! File || !File.length){
+        if (!FileEdit || !FileEdit.length){
             newSelfieEdit.src = "";
+            newSelfieEdit.value = "" //Limpiamos el file
             return
         };
 
-        inputSelfieEdit = File[0];
-        console.log("inputSelfieEdit : ",inputSelfieEdit)
-        if (inputSelfieEdit.size <= 5000000){
+
+        fileSelfEdit = FileEdit[0];
+        console.log("Ver esto detalles de la imagen cargada", fileSelfEdit);
+        console.log("name file :", fileSelfEdit.name);
+        //name file : corolla1994.jpg
+        const name = fileSelfEdit.name;
+        const last = name.lastIndexOf('.'); //este metodo me arroja la cantidad de caracteres despues del ultimo punto
+        const ext = name.substring(last + 1).toLowerCase(); //este metodo corta la cadena mediante la cantidad de caracteres y tambien la convierte en minuscula importante porque hay momentos donde las extensionews estan en mayusculas. pendiente con esto
         
-            let objectURL = URL.createObjectURL(inputSelfieEdit);
-            console.log(objectURL)
-            
-            newSelfieEdit.src = objectURL;
-            newSelfieEdit.classList.remove('close')
-            selfieEdit.classList.add('close');
-            
-            stateFileSelfie()//esta funcion revisa si ambos file ya estan llenos y si estan activa al boton de seguir  
+        console.log("ext :", ext); 
+
+        if ( fileSelfEdit.size <= 10000000 ){
+
+            if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif" ){
+
+                //hacemos aparecer el modal con Cropper.js
+                modalTransp.show();
+
+                let objectURL = URL.createObjectURL(fileSelfEdit);
+                console.log(objectURL)
+                
+                imageCropper.src = objectURL;
+                imageCropper.style.cssText = 'width: 100%';//aseguro que tome el ancho total pero no lo hace
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                cropper = new Cropper(imageCropper, {
+                    aspectRatio: 0,
+                    viewMode: 1
+                })
+
+                //cutCropper este es el elemento boton que hara el corte cropper, ahora que metodo usa cropper para hacer la magia?
+                cutCropper.addEventListener('click', () => {
+                    createFile = ""; //aseguramos que esta variable esta vacia; 
+                    const idImage = new Date().getTime(); //esto es para formar el nombre del nuevo archivo de imagen cortado por cropper.
+
+                    const croppedCanvas = cropper.getCroppedCanvas();
+
+                    // Si deseas convertir el canvas a una imagen
+                    const croppedImage = croppedCanvas.toDataURL('image/jpeg'); // Asegúrate de usar 'image/jpeg' si deseas JPG
+
+                    // Aquí puedes hacer lo que necesites con la imagen recortada, como mostrarla o subirla a un servidor
+                    //Así que, en resumen, tu cadena es una **data URL** que contiene una imagen codificada en Base64. Puedes usarla directamente en un elemento `<img>` como esta:
+                    console.log("croppedImage --> una URL", croppedImage);
+
+                    // Convertir data URL a Blob usando fetch
+                    async function dataURLtoBlob(croppedImage) {
+                        const Blob = await fetch(croppedImage);
+                        console.log("esto es un blob ahora :", Blob);
+                        return await Blob.blob();
+                    }
+
+                    dataURLtoBlob(croppedImage)
+                        .then((Blob) => { 
+                            console.log("conversion data URL con formato base64 a blob Logrado satisfactoriamente");
+
+                            // Crea el archivo a partir del blob
+                            createFile = new File([Blob], `imageCut${idImage}.jpg`, { type: 'image/jpeg' });
+                            //Necesito que este file tenga un name = "fileImg" para poder ser enviado al backend, como puedo hacerlo?
+
+                            // Aquí puedes verificar que se creó correctamente
+                            // la variable createFile es la que usamos para enviar al backend.
+                            console.log("Archivo creado:", createFile);
+                            console.log("Archivo creado:", createFile.size);
+
+                            //liberamos el boton para subir al backebd
+                            stateFileSelfie()
+
+                        })
+                        .catch((e) => { 
+                            console.log("No logrado, error", e); 
+                        });
+
+                    // Por ejemplo, para mostrar la imagen (Base64) recortada en otro elemento img 
+                    newSelfieEdit.src = croppedImage;
+                    newSelfieEdit.classList.remove('close')
+                    selfieEdit.classList.add('close');                   
+                   
+                    //cerramos el modal
+                    modalTransp.hide();
+                });
+ 
+
+            } else {
+
+                console.log("El archivo no es de tipo imagen o es un formato no aceptado.");
+                const response = "El archivo no es de tipo imagen."
+                fileSelfieEdit.value = "" //Limpiamos el file
+                btnSaveSelfie.setAttribute("disabled", "");
+
+                mostrarToast( response , 'right', 'danger', '¡Upps!', true );
+                //desactivamos el boton
+            }    
 
         } else {
 
-            const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
-            inputSelfieEdit.value = "" //Limpiamos el file
+            const response = "Esta imagen supera el tamaño máximo permitido de 10MB de peso."
+            fileSelfieEdit.value = "" //Limpiamos el file
             btnSaveSelfie.setAttribute("disabled", "");
             
             mostrarToast( response , 'right', 'danger', '¡Upps!', true );
@@ -1680,7 +1938,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
     function stateFileSelfie(){
 
-        if (inputSelfieEdit !=="" ){
+        if (fileSelfieEdit !=="" ){
             //console.log("existe un archivo y significa que se ha cargado un archivo")
             btnSaveSelfie.removeAttribute('disabled'); 
         }
@@ -1696,7 +1954,7 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
             btnSaveSelfie.classList.add('close');  
 
             const formData = new FormData();
-            formData.append('fileImg', inputSelfieEdit); //selfie
+            formData.append('fileImg', createFile); //selfie
 
             fetch('/myaccount/uploadSelfieEdit', {
                 method: "POST",
@@ -1734,4 +1992,11 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 
     } 
     
+</script>
+
+<script>
+    $(document).ready(function() {
+      /*   $('.ui.rating').rating(); */ // Activa la interacción
+        $('.ui.rating').rating('disable'); // Desactiva la interacción
+    });
 </script>

@@ -3422,7 +3422,6 @@ routes.post('/account/survey/search', async(req, res)=>{
     }
 });
 
-
 //aqui es donde llegan las encustas que hacen los clientes en las tiendas
 routes.post('/account/survey', async(req, res)=>{
         
@@ -3476,7 +3475,6 @@ routes.post('/account/survey', async(req, res)=>{
 
 
 });
-
 
 //aqui es donde consultamos todas las encuestas que hacen los clientes para enviar solo un id con su titulo de cada encuesta para poder crear un selector de opciones en el fronted
 routes.post('/account/survey/analysis', async(req, res)=>{
@@ -3681,6 +3679,12 @@ routes.post('/account/survey/analysisData', async(req, res)=>{
         res.status(500).json({ message: "Error al procesar la solicitud" });
     }
 })
+
+routes.get('/cut', async (req,res)=>{
+
+    res.render('page/cut');
+         
+});
 
 /* 
 
