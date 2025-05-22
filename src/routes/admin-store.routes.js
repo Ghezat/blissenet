@@ -582,6 +582,10 @@ routes.post('/myaccount/uploadDataTransport', async (req, res)=>{
         console.log("selectColor :", selectColor ); //Amarilla
         console.log("placaMedio :", placaMedio ); //GTE234
         console.log("dataTransport :", dataTransport ); // todo el file 
+        
+        let descripMedioTrim = descripMedio.trim(); //primero quita lo sespacio y 
+        let descripMedioCap = descripMedioTrim.charAt(0).toUpperCase() + descripMedioTrim.slice(1); //luego coloca la primera letra en mayuscula y quita lo sposibles espacios
+        let placaMedioTrim = placaMedio.trim();
         const element = dataTransport
 
         let countImgAcept = 0;
@@ -667,7 +671,7 @@ routes.post('/myaccount/uploadDataTransport', async (req, res)=>{
                                 console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
                                 boxImg.push( {url, public_id, bytes, format} );
         
-                                let Data = { medio: selectMedio, descrip: descripMedio, color: selectColor, placa: placaMedio, image: boxImg };
+                                let Data = { medio: selectMedio, descrip: descripMedioCap, color: selectColor, placa: placaMedioTrim, image: boxImg };
                 
                                 async function createData(){
                                     const transportUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: { 'transportation.0': Data } }); 
@@ -748,7 +752,7 @@ routes.post('/myaccount/uploadDataTransport', async (req, res)=>{
                             console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
                             boxImg.push( {url, public_id, bytes, format} );
 
-                            let Data = [{ medio: selectMedio, descrip: descripMedio, color: selectColor, placa: placaMedio, image: boxImg }];
+                            let Data = [{ medio: selectMedio, descrip: descripMedioCap, color: selectColor, placa: placaMedioTrim, image: boxImg }];
             
                                             
                             if (boxImg.length !==0){
@@ -943,6 +947,13 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
     console.log("files :", req.files);
     const department = "transportAgent";
     const { SelectMedio, DescripMedio, SelectColor, PlacaMedio } = req.body;
+    let descripMedioTrim = DescripMedio.trim(); //primero quita lo sespacio y 
+    let descripMedioCap = descripMedioTrim.charAt(0).toUpperCase() + descripMedioTrim.slice(1); //luego coloca la primera letra en mayuscula y quita lo sposibles espacios
+    let placaMedio = PlacaMedio.trim();
+
+    console.log('descripMedioCap :', descripMedioCap);
+    console.log('placaMedio :', placaMedio);
+
     const Files = req.files; //esto es un array donde esta la imagen 
     console.log('Files :', Files);
     const element = Files[0]; // esto es el objeto propiamente de la imagen 
@@ -1027,9 +1038,9 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
                                 
                                 console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
                                 boxImg.push( {url, public_id, bytes, format} );
-        
-                                let Data = { medio: SelectMedio, descrip: DescripMedio, color: SelectColor, placa: PlacaMedio, image: boxImg };
-                
+                                
+                                let Data = { medio: SelectMedio, descrip: descripMedioCap, color: SelectColor, placa: placaMedio, image: boxImg };
+                               
                                 async function updateData(){
                                     const transportUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: { 'transportation.0': Data } }); 
                                     console.log("transportUpdate --->", transportUpdate)
@@ -1075,9 +1086,9 @@ routes.post('/myaccount/uploadDataTransportEdit', async (req, res)=>{
              async function updateData(){
                 const transportUpdate =  await modelTransportAgent.updateOne({ indexed: user._id },{ $set: 
                                                                 { 'transportation.0.medio': SelectMedio, 
-                                                                  'transportation.0.descrip': DescripMedio,
+                                                                  'transportation.0.descrip': descripMedioCap,
                                                                   'transportation.0.color': SelectColor,
-                                                                  'transportation.0.placa': PlacaMedio
+                                                                  'transportation.0.placa': placaMedio
                                                                  } });
 
             //'transportation es un array que tiene un objeto y de esta forma podemos acceder y cambiar su valor
