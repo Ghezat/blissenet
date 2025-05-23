@@ -46,15 +46,16 @@
             <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 col-12">
                 <div class="card formTransp mt-4 rounded-2 shadow">
                     <div class="card-header d-flex justify-content-between">
-                    <span>Reset Password</span> <i class="bi bi-1-square me-1"></i>
+                    <span>Reset Password </span> <i class="bi bi-1-square me-1"></i>
                     </div>
 
                     <% if (!seeBotObjec) {%>
                     <div class="card-body">
 
                         <form action="/myaccount/signin-forgottenpassw" method="POST" id="forgotten">
+                            
                             <div class="form-group my-2">
-                                <input type="email" name="email" placeholder="Enter your email" class="form-control"
+                                <input type="email" name="email" id="emailInput" class="form-control" placeholder="Enter your email" 
                                 autocomplete="off"  required>
                             </div>
                         
@@ -63,8 +64,9 @@
                             </div>
                             
                             <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">
+
                             <div class="form-group my-3">
-                                <button class="g-recaptcha form-control btn btn-dark"  id="btnForgot"
+                                <button class="g-recaptcha form-control btn btn-dark"  id="btnForgot" 
                                     data-sitekey="6LfhgFIlAAAAAODB3P24Ea32aXgbqEHb3iVJGrJP" 
                                     data-callback='forgottenpassw' 
                                     data-action='forgot_password'>
@@ -75,16 +77,19 @@
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                     Send Token ...
                                 </button>
+
+                                <button class="form-control btn btn-dark close" id="btnForgotLock" disabled> <i class="bi bi-lock-fill me-2"></i>  Send Token  </button>
                             </div>
 
                             <div class="form-group my-2 p-1 bg-light rounded-2 text-dark">
-                                <label for="" class="mx-1"><small> Volver a Login <a href="/myaccount/signin" class="text-danger ms-2 fw-bold">¡Clic aquí!</a> </small> </label>
+                                <label for="" class="mx-1"><small> Volver a Login  <a href="/myaccount/signin" class="text-danger ms-2 fw-bold">¡Clic aquí!</a> </small> </label>
                             </div>
 
                         </form>
 
                     </div>
                     <% } else { %>
+
                         <div class="card-body">
 
                             <form>
@@ -109,7 +114,8 @@
     
                             </form>
     
-                        </div>                        
+                        </div>   
+
                     <% }; %>     
                 </div>
             </div>
@@ -121,6 +127,7 @@
     <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
 
     </main>
+
 </body>
 </html>
 <!--
@@ -134,33 +141,134 @@ data-action='forgot_password'
 <script>
     // ir a la pagina > google.com/recaptcha/about/
     // acceder a V3 Admin Console  (hacer esto con la cuenta de google scorpinosred@gmail.com)
-    TokenRecaptacha = document.getElementById('recaptchaResponse');
+    const emailInput = document.getElementById('emailInput');
+    const TokenRecaptacha = document.getElementById('recaptchaResponse');
     const btnForgot = document.getElementById('btnForgot');
     const btnForgotDisabled = document.getElementById('btnForgotDisabled');
+    const btnForgotLock = document.getElementById('btnForgotLock');
+
 
 
     btnForgot.addEventListener('click', forgottenpassw)
 
+    let toastShown = false; // Variable para controlar la visualización del toast
 
     async function forgottenpassw() {
-        let response = grecaptcha.getResponse();
-        //console.log(typeof response);
-        //console.log(response.length );
-        //cuando tenemos el token de reCAPTCHA es cuando lo agregamos en el input hidden
-        // y de esta forma sabemso que todo llegara junto para ser validado en el servidor
-        //y tambien llega una sola vez. 
-        if (response.length !==0){
-            TokenRecaptacha.value = response;
-            //console.log("response -->", response);
 
-            btnForgot.classList.add('close');
-            btnForgotDisabled.classList.remove('close');
-            document.getElementById("forgotten").submit();
-            console.log("enviando al backend");
+        const emailInputValue = emailInput.value;
+        console.log("emailInputValue :",  emailInputValue );
+        console.log("emailInputValue.length : ", emailInputValue.length );
+        btnForgot.classList.add('close');
+
+        if (emailInputValue.length > 10 && emailInputValue.includes('@') ){
+
+            let response = grecaptcha.getResponse();
+            
+            //console.log(typeof response);
+            //console.log(response.length );
+            //cuando tenemos el token de reCAPTCHA es cuando lo agregamos en el input hidden
+            // y de esta forma sabemso que todo llegara junto para ser validado en el servidor
+            //y tambien llega una sola vez. 
+
+            if (response.length !==0){
+                TokenRecaptacha.value = response;
+                //console.log("response -->", response);
+                btnForgotDisabled.classList.remove('close');
+                document.getElementById("forgotten").submit();
+                console.log("enviando al backend");
+            }
+
+        } else {
+
+            console.log("no hay un correo que enviar");
+            if (!toastShown) { // Solo mostrar si no se ha mostrado antes
+                const response = "Coloque un correo valido";
+                mostrarToast(response, 'right', 'danger', '¡Atención!', false);
+                toastShown = true; // Marcar como mostrado
+            }
+
+            btnForgotLock.classList.remove('close');
+
+            setTimeout(() => {
+                btnForgot.classList.remove('close');
+                btnForgotLock.classList.add('close');
+                toastShown = false; // Reiniciar el estado después de un tiempo
+            }, 10000);
+
         }
+
         
         
     }
 
 
+</script>
+
+<script>
+
+
+    function mostrarToast(mensaje, posicion, color, titulo = '', conBotonCerrar = false) {
+        // Configuración predeterminada
+        toastr.options = {
+            "closeButton": conBotonCerrar, // Agregar botón de cerrar si se solicita
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": !conBotonCerrar, // Si tiene botón de cerrar, no mostrar barra de progreso
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "600",
+            "hideDuration": "1000",
+            "timeOut": conBotonCerrar ? false : "8000", // No se oculta automáticamente si tiene botón de cerrar
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+  
+        // Configurar la posición
+        switch (posicion) {
+            case 'center':
+                toastr.options.positionClass = 'toast-top-center';
+                break;
+            case 'left':
+                toastr.options.positionClass = 'toast-top-left';
+                break;
+            case 'right':
+                toastr.options.positionClass = 'toast-top-right';
+                break;
+            default:
+                toastr.options.positionClass = 'toast-top-right'; // Posición predeterminada
+        }
+  
+        // Mostrar el mensaje según el color especificado
+        switch (color) {
+            case 'success':
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+                break;
+            case 'info':
+                titulo ? toastr.info(mensaje, titulo) : toastr.info(mensaje);
+                break;
+            case 'warning':
+                titulo ? toastr.warning(mensaje, titulo) : toastr.warning(mensaje);
+                break;
+            case 'danger':
+                titulo ? toastr.error(mensaje, titulo) : toastr.error(mensaje);
+                break;
+            case 'primary':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-primary' }) : toastr.info(mensaje, '', { toastClass: 'toast-primary' });
+                break;
+            case 'dark':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-dark' }) : toastr.info(mensaje, '', { toastClass: 'toast-dark' });
+                break;
+            default:
+                console.warn('Color no válido. Usando el color por defecto (success).');
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+        }
+    }
+  
+  
+
+   //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+  
 </script>

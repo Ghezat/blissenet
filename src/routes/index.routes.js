@@ -1231,7 +1231,7 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
                                                         res.redirect('/myaccount/signin-forgottenpasswToken');
                                                     })
                                                     .catch((error)=>{
-                                                        console.log("Ha habido un error  blissBotNoti()", error);
+                                                        console.log("Ha habido un error blissBotNoti()", error);
                                                     })
 
                                             })
