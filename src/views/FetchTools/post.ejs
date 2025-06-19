@@ -17,4 +17,19 @@ fetch('/account/myfavorite-stores', {
   .then( jsonx => console.log(jsonx))
   .catch( err => console.log(err));
   
+
+
+
+
+
+  //--------------------------------------
+  //caso cuando usamos formData
+
+  fetch('/myaccount/uploadDataTransport', {
+      method: "POST",
+      body: formData
+  })
+    .then(response =>response.json() )
+    .then( jsonx => console.log(jsonx))
+    .catch( err => console.log(err));
 </script>

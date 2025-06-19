@@ -3,15 +3,26 @@ const { Schema, model } = require('mongoose');
 const buySellSchema = new Schema({
     usernameBuy : { type : String }, //este campo esta tambien en la coleccion profile.
     usernameSell : { type : String }, //este campo esta tambien en la coleccion profile.
-    indexed : { type : String }, //aqui se guardara el id del user (usernameSell); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
+    indexedSell : { type : String }, //aqui se guardara el id del user (usernameSell); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
+    indexedBuy : { type : String }, //aqui se guardara el id del user (usernameBuy); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
     department : { type : String },
     title : { type : String },
     title_id : { type : String },
+    fechaNegotiation : { type : String },
+    deliveryType : { type : String }, //aqui guardamos el tipo de entrega que puede ser una de estas tres (Envio Local, Envio Interurbano, Envio Internacional );
+    deliveryDetails : { type : String, default : "" }, //aqui guardamos el detalle de como se debe enviare el paquete. ejemplo. "Retirar Personalmente en la tienda", o "Reciba su pedido en la puerta de su casa. (Solicitar Delivery)" Nace como string vacio pero luego tendra un valor. lo importante es que ya exista para luego solo actualizar su valor.
+    count : { type : Number }, //cantidad de existencia que hay del articulo.
     tecnicalDescription : { type : String },
     image : { type : Array }, //aqui solo existira dos atributos con sus valores public_id y url. 
-    price : { type : Number }, 
+    voucherImage: { type: Array, default: [ ] },// [ { url: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/voucher/1749994166924.jpg', public_id: 'voucher/1749994166924.jpg', bytes: 63282, format: 'jpg' }]
+    price : { type : Number }, //este es el precio unitario
+    countRequest : { type : Number }, //cantidad de unidades que ha comprado el usuario
+    step :  { type : Number, default : 0 }, //esto es importante para otorgar status de la operacion, importante si el usuairo quiere salir y luego volver a entrar. la ides es asignar pasos o estatus que incian desde 0 hasta 3
     pay : { type : Boolean, default : false },
+    total : { type : Number }, //aqui almacenamos el total a pagar
     confirmPay : { type : String, default : "" }, // este campo puede tener tres valores, 1(sin valor) por default, 2(yes) el vendedor confirma el pago , 3(no) el vendedor confirma que no pago.
+    methodSelected : { type : String, default : "" }, //aqui el metodo que uso para el pago
+    referPay : { type : String, default : ""}, //aqui se guarda la referencia de pago que hizo con comprador cuando ejecuto el pago al vendedor
     written : { type : Array }, //dentro habitara una coleccion de objetos con el campo user y written
     ratingSeller :  { type : String, default : "" }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
     ratingBuy :  { type : String, default : "" }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
@@ -26,7 +37,9 @@ const buySellSchema = new Schema({
     bank : { type : String, default : "no_bank" }, //aqui guarda el vendedor el banco donde hizo el pago de la comision.
     payCommission : { type : Boolean, default : false  }, //aqui guardamos si el usuario pago o no su comision de venta. 
     userDeclare : { type : Boolean, default : false }, //este dato es para registrar que el usuario a declarado su pago, cuando sea true es que el cliente ha declarado su pago.
-    dates : { type : String, default : "no_dates" }// aqui vamos a meter la fecha con el formato necesario. eje. 10-11-2023 esta fecha es el dia que el usuario se dispuso hacer su pago. es la fecha que paga a la plataforma.
+    dates : { type : String, default : "no_dates" },// aqui vamos a meter la fecha con el formato necesario. eje. 10-11-2023 esta fecha es el dia que el usuario se dispuso hacer su pago. es la fecha que paga a la plataforma.
+    closeOperationSeller : { type : Boolean, default : false }, // con este campo manejamos el estado de la operacion de compra. por defecto nace false pero en el proceso puede pasar a ser true que significa que se ha cerrado la operacion. esto no debe confundirse con "cancel". esto es para cerrar la operacion cuando ya no se requiera tener mas comunicacion con la contraparte. se ha cerrado la sala de negociacion.
+    closeOperationBuy : { type : Boolean, default : false } // por defecto nacen con el valor false. cada sala es independiente y cada quien decide cuando cerrarlo
 },{
     timestamps : true
 });

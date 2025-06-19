@@ -152,7 +152,7 @@ routes.post('/department/create/artes', async(req,res)=>{
         const countryCode = searchProfile[0].countryCode;
         //countryCode: 'VE'
 
-        const { title, category, author, construcDate, tecnicalDescription, price, segment } = req.body
+        const { title, category, author, construcDate, tecnicalDescription, price, segment, count } = req.body
 
         function transformarTitle(title) {
             return title
@@ -242,7 +242,7 @@ routes.post('/department/create/artes', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
+                                                        const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, count, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
                                                         const ArtesSave = await Artes.save()
                                                      
                                                     }  else {
@@ -862,7 +862,7 @@ routes.get('/department/create/artes/searh-edit', async(req, res)=>{
 routes.post('/department/create/artes/edit', async(req, res)=>{
    
    
-    const {titleToEdit, title, category, author, construcDate, tecnicalDescription, price} = req.body
+    const {titleToEdit, title, category, author, construcDate, tecnicalDescription, price, count} = req.body
 
     function transformarTitle(title) {
         return title
@@ -880,7 +880,7 @@ routes.post('/department/create/artes/edit', async(req, res)=>{
     const result = await modelArtes.findById(titleToEdit)
         
     if (result) {
-        const updates = await modelArtes.findByIdAndUpdate(titleToEdit, { title, titleURL, category ,author, construcDate, tecnicalDescription, price })
+        const updates = await modelArtes.findByIdAndUpdate(titleToEdit, { title, titleURL, category ,author, construcDate, tecnicalDescription, price, count })
         req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
     } else {
         console.log("no existe nada")

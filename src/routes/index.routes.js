@@ -77,8 +77,6 @@ routes.get('/', async(req, res)=>{
     let searchProfile;
     const boxResult = [];
 
-
-
         
     if (user){
         //console.log("Esto es user._id ------>", user._id );
@@ -130,12 +128,12 @@ routes.get('/', async(req, res)=>{
             const searchBuy = [];
             const searchSell = [];
         
-            const searchOneBuy = await modelBuySell.find({  $and : [{usernameBuy : username},{CommentSeller : 'no_comment'}] });
+            const searchOneBuy = await modelBuySell.find({  $and : [{usernameBuy : username},{ closeOperationBuy : false }] });
             if (searchOneBuy){
                 searchBuy.push(...searchOneBuy);
             }
     
-            const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, {CommentBuy : 'no_comment'}] });
+            const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, { closeOperationSeller : false }] });
             if (searchOneSell){
                 searchSell.push(...searchOneSell);
             }
@@ -1815,7 +1813,10 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         const {names, identification, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
         let messageProfile;
         const geolocation = { lon, lat };
+        const geoData = [parseFloat(geolocation.lon), parseFloat(geolocation.lat)]; //objeto para guardar en location.coordinates; importante para calculos geograficos
+        console.log("geoData : ", geoData); // geoData :  [ -62.736074, 8.2871893 ]
         const result = await modelProfile.findById(ID);
+
         
         if (!profileMessage || profileMessage.trim() === ""){
             //si no coloca nada en mensaje de tienda este debe guardar ¡Sin descripción...!
@@ -1826,7 +1827,8 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         }
 
         if (result) { 
-            const updates = await modelProfile.findByIdAndUpdate(ID, { names, identification, company, companyRif, geolocation, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok})
+            const updates = await modelProfile.findByIdAndUpdate(ID, { $set: { names, identification, company, companyRif, geolocation, "locations.coordinates": geoData, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok}}, {new:true});
+            console.log("updates .........................:", updates);
             req.session.updateSuccess = "Su perfil ha sido actualizado satisfactoriamente";
         } 
             

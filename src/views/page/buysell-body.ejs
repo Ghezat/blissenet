@@ -2,9 +2,63 @@
 <html lang="en">
 <head>
     <%- include('../partials/head.ejs') %>
-    <title>Blissenet Buy&Sell</title>
-</head>
 
+        <!-- semantic-ui -->
+        <link rel="stylesheet" href="/semantic/semantic.min.css">
+        <script src="/semantic/semantic.min.js"></script>
+
+        <!-- toastr tiene que estar despues del CDN de bootstrap -->
+        <link rel="stylesheet" href="/toastr/toastr.min.css"> 
+        <script src="/toastr/toastr.min.js"></script>
+        <title>Blissenet Buy&Sell</title>
+        
+</head>
+<style>
+
+    .controlNumberBody{
+        transition: 1s background-color ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .controlNumberBody:hover{
+        background-color : rgba(146,0,255, .4);
+        border-color:  rgb(78, 0, 138);
+        
+    }
+
+    .controlNumber{
+        cursor: pointer;
+        font-size: 28px;
+        transition: 1s background-color ease;
+    }
+
+    .controlNumber:hover{
+        background-color : rgba(146,0,255, .8);
+        border-color:  rgb(78, 0, 138);
+    }
+
+    .circleDeleteImg{
+        background-color: white;
+        color: black;
+        transition: 1s all ease;
+    }
+
+    .circleDeleteImg:hover{
+        cursor: pointer;
+        background-color: #0d6efd;
+        color: white;
+        box-shadow: 1px 1px 2px 1px gray;
+    }
+
+    .toast-success {
+       /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+       background-color: #6f42c1; /* Azul tirando a morado */
+       color: white; /* Color del texto */
+    } 
+
+</style>
 <body class="mainTheme">
 
      
@@ -17,259 +71,1344 @@
         <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
         <input type="hidden" value="<%= idUser %>" id= "idUser">
           <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+        <input type="hidden" value="<%= user.username %>" id= "username"> <!-- aqui el username  --> 
+        
+        <audio src="/sound/Note-efect.mp3" id="efectSoundNewBid"></audio>
+        <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> 
+       
     <% }; %>
 
     <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
-        <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Sala de Negocio </b>  </span>
+        <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Sala de Negocio </b>  </span> 
     </div>  
    
     
     <div class="contentBuy&sell pe-0 m-0" style="background-color: #e9ecef;">
-        <div class="row px-1 mx-0 d-flex justify-content-around" style="width: 100%; height: auto;">
-            <div class="col-lg-5  my-4 p-0 rounded-1" style="height: 93%;">
+        
+        <div class="row mx-0 my-0">
+            <div class="col-12 px-3 mx-0">
+                <div class="containerId my-1 border p-2 border border rounded-1" style="background-color: #ebecee;"><span>Orden : <%= buySell._id %></span></div> 
+                <input type="hidden" value="<%= buySell._id %>" id="idOrderBuy"> <!-- aqui guardamos el valor de la orden de compra para identifarlo -->
+            </div>
+        </div>
+        <div class="row px-1 m-0 d-flex justify-content-between" style="width: 100%; height: auto;">
+            <div class="col-lg-6 my-2 p-0 rounded-1" style="height: 93%;">
             <% if (user) {  %>    
                 <% if (buySell) { %>
-                <div class="ContainerMessage rounded-1 p-3" style="background-color: #dbdfe4;">
-                    <div class="containerId my-1 border p-2 border rounded-1" style="background-color: #ebecee;"><span>Orden : <%= buySell._id %></span></div>
-                    <img src="<%= buySell.image[0].url %>" alt="" style="width: 60%;"> <br> 
-                    <div class="username"><span>Comprador : <%= buySell.usernameBuy %></span></div>
-                    <div class="username"><span>Vendedor : <%= buySell.usernameSell %></span></div>
-                    <div class="depart"><span>Departamento :<%= buySell.department %></span></div>
-                    <div class="title"><span>Titulo :<%= buySell.title %></span></div>
-                    <div class="title"><span>Precio :<%= buySell.price %></span></div>
-                    <% if (fechaNegotiation){ %>
-                        <div class="dateCreated"><span>Fecha de negociación :<%= fechaNegotiation %> </span></div>
-                    <% }; %>
-                    
-                </div>
-
-                    <% if (buySell.usernameSell == user.username && buySell.pay == false && buySell.cancel === false) { %>  
-                        <div class="ContainerConfirmPay my-2 p-3 alert alert-info border border-info">
-                            <p class="m-0">Provea a su cliente de todos los datos de pagos disponibles. Espere que él informe del pago para que usted pueda confirmarlo.</p>
-                        </div>
-                    <% } else if (buySell.usernameSell === user.username && buySell.pay === true && buySell.cancel === false && buySell.CommentBuy === "no_comment" ) { %>  
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
-                                <p style="background-color: rgb(43, 255, 43, 0.4);" class="rounded-1 p-1">Su cliente a indicado que ha realizado el pago, por favor confirme esta información, si es correcto seleccione <b>Yes</b> de lo contrario de a <b>No</b> y deje un comentario.</p>
-                                <div class="form-group d-flex my-1 me-5">
-
-                                    <input type="hidden" value="<%= buySell._id %>" id="idOrderX">
-
-                                    <select name="confirmPay" id="selectPay" class="form-control me-2" style="width: 50px;">
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-
-                                    <div class="form-check mx-1">
-                                        <input class="form-check-input" type="radio" name="rating" id="Radio1" value="Positivo">
-                                        <label class="form-check-label" for="Radio1"> Positivo </label>
-                                    </div>
-                                    <div class="form-check mx-2">
-                                        <input class="form-check-input" type="radio" name="rating" id="Radio2" value="Neutral">
-                                        <label class="form-check-label" for="Radio2"> Neutral </label>                                          
-                                    </div>
-                                    <div class="form-check mx-2">
-                                        <input class="form-check-input" type="radio" name="rating" id="Radio3" value="Negativo" disabled>
-                                        <label class="form-check-label" for="Radio3"> negativo </label>
-                                    </div>
-
-                                </div>
-                                <div class="form-group my-2">
-                                    <input type="text" class="form-control my-1" id="inputIdComment" maxlength="50" placeholder="Deja aqui un comentario del comprador">
-
-                                    <button class="btn btn-primary btn-sm form-control my-1" id="btnConfirm">Fin</button>
-                                </div>
-                            
-                        </div>
-                    <% } else if (buySell.usernameSell === user.username && buySell.pay === true  && buySell.cancel === false && buySell.CommentBuy !== "no_comment" ) { %>                
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
                 
-                                <div class="form-group my-1">
-                                    <p class="mb-1">Gracias por calificar y comentar.</p>
-                                    <a href="/"><button class="btn btn-primary btn-sm form-control my-2" id="btnBuyerClosed">Cerrar</button></a>
-                                </div>
-                                
-                        </div>    
-                    <% } else if (buySell.usernameSell === user.username && buySell.pay === false  && buySell.cancel === true && buySell.CommentBuy === "no_comment" ) { %>  
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
-                                    <p style="background-color: rgb(252, 25, 18, 0.4);" class="rounded-1 p-1">Su cliente a cancelado la orden. Califique y deje un comentario.</p>
-                                    <div class="form-group d-flex my-1 me-5">
-    
-                                        <input type="hidden" value="<%= buySell._id %>" id="idOrderSellerCancel">
-    
-                                        <div class="form-check mx-1">
-                                            <input class="Radiales-SellerCancel" type="radio" name="rating" id="RadioSellerCancel1" value="Positivo" disabled>
-                                            <label class="form-check-label" for="RadioSellerCancel1"> Positivo </label>
-                                        </div>
-                                        <div class="form-check mx-2">
-                                            <input class="Radiales-SellerCancel" type="radio" name="rating" id="RadioSellerCancel2" value="Neutral">
-                                            <label class="form-check-label" for="RadioSellerCancel2"> Neutral </label>                                          
-                                        </div>
-                                        <div class="form-check mx-2">
-                                            <input class="Radiales-SellerCancel" type="radio" name="rating" id="RadioSellerCancel3" value="Negativo">
-                                            <label class="form-check-label" for="RadioSellerCancel3"> Negativo </label>
-                                        </div>
-    
-                                    </div>
-                                    <div class="form-group my-2">
-                                        <input type="text" class="form-control my-1" id="commentSellerCancel"  maxlength="50" placeholder="Deja aqui un comentario del comprador">
-                                        <button class="btn btn-primary btn-sm form-control my-1" id="btnSellerCancel">Fin</button>
-                                    </div>
-                                
-                        </div>
-                    <% } else if (buySell.usernameSell === user.username && buySell.pay === false  && buySell.cancel === true && buySell.CommentBuy !== "no_comment" ) { %>                
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
-            
-                            <div class="form-group my-1">
-                                <p class="mb-1">Gracias por calificar y comentar.</p>
-                                <a href="/"> <button class="btn btn-primary btn-sm form-control my-2" id="btnBuyerClosed">Cerrar</button></a>
+                    <!-- datos importantes de esta pagina -->
+                    <input type="hidden" class="idUser" value="<%= user._id %>">
+
+                    <input type="hidden" class="idBuysell" value="<%= buySell._id %>">
+
+                    <input type="hidden" class="indexedSell" value="<%= buySell.indexedSell %>">
+                    <input type="hidden" class="indexedBuy" value="<%= buySell.indexedBuy %>">
+
+                    <input type="hidden" class="Price" value="<%= buySell.price %>">
+                    <input type="hidden" class="countRequestData" value="<%= buySell.countRequest %>">
+                    <input type="hidden" class="countMaxData" value="<%= buySell.count %>">
+                    <input type="hidden" class="deliveryType" value="<%= buySell.deliveryType %>">
+                   
+                <% if ( buySell.usernameSell == user.username ) { %>
+                    
+                    <ul class="nav nav-tabs">
+
+                        <li class="nav-item">
+                            <button class="nav-link active" id="information">Información</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="qrEnlace">QR y Enlaces</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="rateBuy">Calificar Comprador</button>
+                        </li>
+
+                    </ul>
+
+
+                    <div class="contentInformation" style="width: 100%; background-color: #dbdfe4;">
+                        <div class="row rounded-1 p-3 m-0 contentData">
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                                <div class="ContainerImage">
+                                    
+                                    <img src="<%= buySell.image[0].url %>" alt="" style="width: 100%;">
+
+                                </div> 
+
                             </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                                <table class="table table-striped">
+                                    <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= buySell.title %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Negociación </td> <td> <%= buySell.fechaNegotiation %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Precio </td> <td> <%= buySell.price %> </td> </tr>
+
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td>  <%= buySell.countRequest %>  </td> </tr>
+                                  
+                                    <tr style="font-size: 18px;"> <th>Total a Pagar </th> <th> <span class="totalPay"> <%= buySell.total %> </span>  </th> </tr>
+                                </table>
+
+                                
+                            </div>  
+                    
+                        </div>
+
+                        <div class="row rounded-1 p-3 m-0 contentDeliveries border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+                        
+                                <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
+
+                                    <div class="form-group my-2 mx-2">
+
+                                        <div class="contentLabel mb-2">
+                                            <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Envio elejido por comprador </label>
+                                            <div class="ui left pointing violet basic label">
+                                                <%= buySell.deliveryType %>
+                                            </div>
+                                        </div>    
+
+                                        
+                                        <% const deliveryDetails = buySell.deliveryDetails %>
+
+                                        <% if (deliveryDetails == "" ) { %>
+
+                                            <div class="alert alert-dark">
+                                                Ayuda a tu comprador con la elección que mejor le sirve.
+                                            </div>
+
+                                        <% } else { %>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" disabled checked>
+                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                    
+                                                    <% if (deliveryDetails === "D01") { %>
+                                                       <span>Retirar Personalmente en la tienda</span> 
+                                                    <% } else if (deliveryDetails === "D02") { %>
+                                                        <span>Retirar Personalmente en algun acordado</span>
+                                                    <% } else if (deliveryDetails === "D03") { %>
+                                                        <span>Reciba su pedido en la puerta de su casa. (Solicitar Delivery)</span>
+                                                    <% } %>    
+
+                                                                                                       
+                                                </label>
+                                            </div>
+
+                                        <% } %>
+
+                                        
+                                    </div> 
+
+                                </div>  
+                            
+                            </div>                             
+                        </div>
+
+
+                        <div class="row rounded-1 p-3 m-0 contentPayment border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
+                            
+                            <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+
+                                <div class="form-group my-2 mx-2">
+
+                                    <div class="contentLabel mb-2">
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Metodo de pago elejido </label>
+                                    </div>    
+
+                                    <!-- aqui debemos iterar para mostar los metodos de pago disponibles por el vendedor -->
+                                    <!--  pero necesitamos un objeto de tipo array, vamos a ello. -->
+                                    <%  if (bankData) { %>
+                                        <% const methodSelected = buySell.methodSelected %>
+                                        <% if (methodSelected !=="" ) { %>
+
+                                            <% const paymentSystem = bankData.paymentSystem %>
+                                            <% paymentSystem.forEach((ele, i)=>{ %>
+                                                
+                                                <% if (ele.methodName == methodSelected ) { %>
+                                            
+                                                    <div class="form-group my-2">
+                                                        <input class="form-check-input me-2" type="radio" checked disabled>
+                                                        <label class="form-check-label">
+                                                            <%= ele.methodName %> 
+                                                        </label>
+                                                    </div>
+                                                        
+                                                    <div class="contentCollapse ms-3">
+
+                                                        <p class="mb-1 ms-4">
+                                                            <%= ele.data1 ? ele.data1 : '' %> 
+                                                            <% if (ele.data1) { %>
+                                                                <i class="bi bi-copy ms-3"></i>
+                                                            <% } %>
+                                                        </p>
+                                                        <p class="mb-1 ms-4">
+                                                            <%= ele.data2 ? ele.data2 : '' %> 
+                                                            <% if (ele.data2) { %>
+                                                                <i class="bi bi-copy ms-3"></i>
+                                                            <% } %>
+                                                        </p>
+                                                        <p class="mb-1 ms-4">
+                                                            <%= ele.data3 ? ele.data3 : '' %> 
+                                                            <% if (ele.data3) { %>
+                                                                <i class="bi bi-copy ms-3"></i>
+                                                            <% } %>
+                                                        </p>
+                                                        <p class="mb-1 ms-4">
+                                                            <%= ele.data4 ? ele.data4 : '' %> 
+                                                            <% if (ele.data4) { %>
+                                                                <i class="bi bi-copy ms-3"></i>
+                                                            <% } %>
+                                                        </p>
+                                                    </div>
+
+                                                <% } %>    
+
+                                            <% }) %>
+
+                                        <% } else { %>
+
+                                            <div class="alert alert-dark">
+                                                 Ayude a su comprador a elegir la mejor forma de pago disponible.
+                                            </div>
+                                        <% }; %>    
+                                
+
+                                    <% } else { %>
+
+                                        <div class="alert alert-dark">
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i> No tienes datos de pago. Te recomendamos vayas a administración y registres al menos uno en <a href="/myaccount/bankData">Datos Bancarios.</a>
+                                        </div>
+
+                                    <% }; %> 
+
+                                </div> 
+
+                            </div>
+                            
+                            <div class="col-lg-12 col-md-12 col-sm-12 px-0 py-1"> 
+
+                                <div class="contentPaymentDetails">
+
+                                    <% if (buySell.referPay !=="") { %>
+
+                                        <div class="contentLabel mb-2">
+                                            <label for="" class="text-secondary my-1 ms-2" style="font-size: 16px;">Referencia de Pago : <span> <%= buySell.referPay %> </span> </label>
+                                        </div>
+                                        
+                                    <% } %>
+                                    
+                                    <% if (buySell.voucherImage.length !== 0) { %>
+
+                                        <div class="preview d-flex justify-content-center align-items-center p-0" style="position: relative; width: 100%;height: 220px; border: 2px dotted grey;">
+                                            <img  alt="" src="<%= buySell.voucherImage[0].url %>" id="imgVouche" style="width: auto; max-height: 200px; padding: 0; margin: 0;">
+                                        </div>
+
+                                    <% } %>
+                                        
+                                </div>
+
+
+                            </div> 
+
+                        </div>
+                
+                    </div>    
+
+                    <div class="row rounded-1 p-3 m-0 contentQREnlace close" style="width: 100%; background-color: #dbdfe4;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+                    
+                            <div class="content" style="height: auto; overflow-y: auto;">
+
+                                <div class="form-group my-2 mx-2">
+                                    <p>Seccion donde se muestra el QR </p>
+                                    <p>Seccion donde se muestra el link </p>
+                                </div> 
+
+                            </div>    
+                        
+                        </div>  
+                    </div>
+
+                    <div class="contentRateBuy close" style="width: 100%; background-color: #dbdfe4;">
+
+                        <div class="form-group p-3" style="width: 100%; background-color: #dbdfe4;">
+                                                        
+                            <% const rating =  buySell.ratingBuy %>  
+
+                                <% if (rating =="") { %> 
+
+                                    <p class="mb-2">Finalice calificando y dejando un comentario a su comprador.</p>
+
+                                    <div class="form-group d-flex my-2">
+        
+                                        <input type="hidden" value="<%= buySell._id %>" id="idOrderBuyerTrue">
+
+                                        <div class="form-check mx-1">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" value="Positivo" checked>
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue1"> Positivo </label>
+                                        </div>
+                                        <div class="form-check mx-2">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue2" value="Neutral">
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue2"> Neutral </label>                                          
+                                        </div>
+                                        <div class="form-check mx-2">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue3" value="Negativo">
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue3"> Negativo </label>
+                                        </div>
+
+                                    </div>
+
+                                    <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="50" placeholder="Deje aquí su comentario del vendedor"></textarea>
+                                    <div class="alert alert-info my-2">
+                                        <p>Deje un comentario conciso de su experiencia como comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
+                                    </div>
+
+                                    <button class="btn btn-primary form-control my-2" id="btnSellTrue">Enviar calificación y comentario</button>
+
+                                    <button class="form-control btn btn-primary my-2 close" id="btnSellTrueSpinner" disabled>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Enviando calificación ...
+                                    </button>
+
+                                <% } else { %>
+
+                                    <h4 class="mb-2 text-secondary">!Ya ha calificado y dejado un comentario!</h4>
+                                    <div class="form-group d-flex my-2">
+        
+                                        <div class="form-check mx-1">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" checked>
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue1"> <%= buySell.ratingBuy %></label>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <textarea class="form-control my-1" rows="3" cols="10" maxlength="50" disabled> <%= buySell.CommentBuy %>  </textarea>
+
+
+                                    <% let closeOperationSeller = buySell.closeOperationSeller %>
+                                    <% if ( closeOperationSeller === false ) { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha dejado una calificación y un comentario sobre este intercambio. Puede Cerra la sala cuando desee. </p>
+                                        </div>
+                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala</button>
+                                    <% } else { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha cerrado esta sala, si requiere contactar con este comprador vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= buySell.usernameBuy %>"><%= buySell.usernameBuy %></a>  </p>
+                                        </div>
+                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
+                                    <% }; %>  
+
+                                <% }; %>   
+
+ 
+
+
+                            
+
+                        </div>
+
+                    </div> 
+
+                <% }; %>    
+
+
+                <% if ( buySell.usernameBuy == user.username && buySell.step == 0 ) { %>
+
+                    <ul class="nav nav nav-pills">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="buyDatos">1. Datos</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="buyDeliverie">2. Envio</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="buyPayment">3. Pagar</button>
+                        </li>
+
+
+                        <!--<li class="nav-item"> 
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li> -->
+                    </ul>
+                        
+                    <div class="row rounded-1 p-3 m-0 contentData" style="width: 100%; background-color: #dbdfe4;">
+
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <div class="ContainerImage">
+                                
+                                <img src="<%= buySell.image[0].url %>" alt="" style="width: 100%;">
+                  
+                            </div> 
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <table class="table table-striped">
+                                <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= buySell.title %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Negociación </td> <td> <%= buySell.fechaNegotiation %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Precio </td> <td> <%= buySell.price %> </td> </tr>
+
+                                <% if ( buySell.usernameSell == user.username ){ %>
+                                    <!-- esto vera el vendedor -->
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td>  <%= buySell.countRequest %>  </td> </tr>
+                                <% } else { %>
+                                    <!-- esto vera el comprador -->
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td class="p-0"> <div class="controlNumberBody" style="font-size: 20px; height: 34px;"> <span class="controlNumber ms-1 dash"> <i class="bi bi-dash-square"></i> </span>   <span class="mx-3 newRequest"> <%= buySell.countRequest %> </span>  <span class="controlNumber me-1 plus"> <i class="bi bi-plus-square"></i> </span> </div>  </td> </tr>
+                                <% }; %>
+                            
+                                <tr style="font-size: 18px;"> <th>Total a Pagar </th> <th> <span class="totalPay"> <%= buySell.total %> </span>  </th> </tr>
+                            </table>
+
                             
                         </div>  
 
+                        <div class="form-group my-3">
+                            <button class="form-control btn btn-primary" id="btn_confirmacion">Confirme</button>
+                        </div>
+                  
+                    </div>
 
-                    <% } else if (buySell.usernameBuy == user.username && buySell.pay == false && buySell.cancel === false ) { %>
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4; width: 100%;">
-                            <div class="containerP_Button d-flex justify-content-between" style="width: 100%; background-color: rgb(43, 255, 43, 0.5); border-bottom: 1px solid rgb(128, 128, 128, 0.3);">
-                                <p class="m-0 px-1" style="width: 100%;">Confirmo que he pagado. <input type="hidden" id="pay" value="pagado"> <input type="hidden" id="idOrder" value="<%= buySell._id %>"></p>
-                                <button class="ms-2 btn btn-success btn-sm" id="btnPay" style="width: 90px;">Pagado</button>
-                            </div>
-                            <div class="containerP_Button d-flex justify-content-between" style="width: 100%;  background-color: rgb(252, 25, 18, 0.5);">
-                                <p class="m-0 px-1" style="width: 100%;">No quiero comprar, cancelo la orden. <input type="hidden" id="cancel" value="cancel"> <input type="hidden" id="idOrderCancel" value="<%= buySell._id %>"></p>
-                                <button class="ms-2 btn btn-danger btn-sm" id="btnCancel" style="width: 90px;">Cancelar</button>
-                            </div>    
-                        </div>   
-                    <% } else if (buySell.usernameBuy == user.username && buySell.pay == true && buySell.cancel === false && buySell.CommentSeller === "no_comment" ) { %>
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
+                    <div class="row rounded-1 p-3 m-0 contentDeliveries close" style="width: 100%; background-color: #dbdfe4;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+                    
+                            <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
 
-                            <div class="form-group my-1">
-                                <p class="mb-1">Finalice calificando y dejando un comentario a su vendedor.</p>
-                                <div class="form-group d-flex my-1">
-    
-                                    <input type="hidden" value="<%= buySell._id %>" id="idOrderBuyerTrue">
+                                <div class="form-group my-2 mx-2">
 
-                                    <div class="form-check mx-1">
-                                        <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" value="Positivo">
-                                        <label class="form-check-label" for="RadioBuyerTrue1"> Positivo </label>
+                                    <div class="contentLabel mb-2">
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elije como deseas retirar </label>
+                                        <div class="ui left pointing violet basic label">
+                                            <%= buySell.deliveryType %>
+                                        </div>
+                                    </div>    
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Retirar Personalmente en la tienda
+                                        </label>
                                     </div>
-                                    <div class="form-check mx-2">
-                                        <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue2" value="Neutral">
-                                        <label class="form-check-label" for="RadioBuyerTrue2"> Neutral </label>                                          
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Retirar Personalmente en algun lugar acordado
+                                        </label>
                                     </div>
-                                    <div class="form-check mx-2">
-                                        <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue3" value="Negativo">
-                                        <label class="form-check-label" for="RadioBuyerTrue3"> Negativo </label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
+                                        <label class="form-check-label" for="flexRadioDefault3">
+                                            Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
+                                        </label>
                                     </div>
-
+                                </div> 
+                                
+                                <div class="form-group my-3">
+                                    <button class="form-control btn btn-primary" id="btn_deliveries">Confirme</button>
                                 </div>
-                                <input type="text my-1" class="form-control" id="commentBuyerTrue"  maxlength="50" placeholder="Deje aquí su comentario del vendedor">
-                                <button class="btn btn-primary btn-sm form-control my-2" id="btnBuyerTrue">Fin</button>
+
+                                <div class="alert alert-info my-2">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>   Elije si deseas servicio de delivery o quieres ir por tu compra personalmente.
+                                </div>
+
+                            </div>    
+                        
+                        </div>  
+                    </div>
+
+                    <div class="row rounded-1 p-3 m-0 contentPayment close" style="width: 100%; background-color: #dbdfe4;">
+
+                        
+                        <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+
+                            <div class="form-group my-2 mx-2">
+
+                                <div class="contentLabel mb-2">
+                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elije el sistema de pago </label>
+                                </div>    
+
+                                <!-- aqui debemos iterar par amostar los metodos de pago disponibles por el vendedor -->
+                                <!--  pero necesitamos un objeto de tipo array, vamos a ello. -->
+                                  <%  if (bankData) { %>
+                                    <% const paymentSystem = bankData.paymentSystem %>
+                                    <% paymentSystem.forEach((ele, i)=>{ %>
+
+                                        
+                                        <div class="form-group my-2">
+                                            <input class="form-check-input me-2" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
+                                            <label class="form-check-label" for= option<%= i + 1 %>>
+                                                 <%= ele.methodName %> 
+                                            </label>
+
+                                        </div>
+                                            
+                                        <div class="contentCollapse<%= i + 1 %> ms-3 close">
+
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data1 ? ele.data1 : '' %> 
+                                                <% if (ele.data1) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data2 ? ele.data2 : '' %> 
+                                                <% if (ele.data2) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data3 ? ele.data3 : '' %> 
+                                                <% if (ele.data3) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data4 ? ele.data4 : '' %> 
+                                                <% if (ele.data4) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            
+                                        </div>
+
+                                    <% }) %>
+                               
+
+                                  <% } else { %>
+
+                                    <div class="alert alert-dark">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Tu vendedor no tienes datos de pago registrados.  
+                                    </div>
+
+                                  <% }; %> 
+
+                            </div> 
+
+                        </div>
+                        
+                        <div class="col-lg-12 col-md-12 col-sm-12 px-0 py-1"> 
+
+                            <div class="contentPaymentDetails">
+
+                                <div class="form-group my-3">
+                                    <label for="">Coloque la referecia del pago si la operación lo amerita.</label>
+                                    <input type="text" class="form-control referPay" placeholder="Numero de referencia">
+                                </div> 
+
+                                <div class="form-group my-3" style="position: relative;">
+                                    <p class="mb-2">Suba el vouche de pago si la operación lo amerita. </p>
+                                    <input type="file" id="fileVouche" style="position: absolute; left: -500px;"> <!-- este stylo lo que hace es que lo saca del front para que no se vea. pero debe existir -->
+                                    <button class="btn btn-primary" id="btnUploadVouche">Subir el Vouche</button>
+                                    <span class="ms-3" id="nameFile">No hay ningun archivo </span>
+                                </div>
+                                <div class="preview d-flex justify-content-center align-items-center p-0" style="position: relative; width: 100%;height: 220px; border: 2px dotted grey;">
+                                    <img  alt="" src="/img/sinImagen.png" id="imgVouche" style="width: auto; max-height: 200px; padding: 0; margin: 0;">
+                                    <div class="circleDeleteImg rounded-pill d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; position: absolute; left: 30px; top: 30px;"> <i class="bi bi-x-lg fw-bold"></i> </div> 
+                                </div>
+
+                                <div class="form-group my-3">
+                                    <button class="bntn btn-primary form-control" id="btnMethodPaySelected" disabled> Registrar Pago </button>
+                                </div>
+                            </div>
+                        </div> 
+
+                    </div>
+
+                <% } else if ( buySell.usernameBuy == user.username && buySell.step == 1 ) { %>
+                    
+                    <ul class="nav nav nav-pills">
+                        <li class="nav-item">
+                            <button class="nav-link" id="buyDatos">1. Datos</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link active" id="buyDeliverie">2. Envio</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="buyPayment">3. Pagar</button>
+                        </li>
+
+
+                        <!--<li class="nav-item"> 
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li> -->
+                    </ul>
+
+                    <div class="row rounded-1 p-3 m-0 contentData close" style="width: 100%; background-color: #dbdfe4;">
+
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <div class="ContainerImage">
+                                
+                                <img src="<%= buySell.image[0].url %>" alt="" style="width: 100%;">
+
+                            </div> 
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <table class="table table-striped">
+                                <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= buySell.title %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Negociación </td> <td> <%= buySell.fechaNegotiation %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Precio </td> <td> <%= buySell.price %> </td> </tr>
+
+                                <% if ( buySell.usernameSell == user.username ){ %>
+                                    <!-- esto vera el vendedor -->
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td>  <%= buySell.countRequest %>  </td> </tr>
+                                <% } else { %>
+                                    <!-- esto vera el comprador -->
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td class="p-0"> <div class="controlNumberBody" style="font-size: 20px; height: 34px;"> <span class="controlNumber ms-1 dash"> <i class="bi bi-dash-square"></i> </span>   <span class="mx-3 newRequest"> <%= buySell.countRequest %> </span>  <span class="controlNumber me-1 plus"> <i class="bi bi-plus-square"></i> </span> </div>  </td> </tr>
+                                <% }; %>
+                            
+                                <tr style="font-size: 18px;"> <th>Total a Pagar </th> <th> <span class="totalPay"> <%= buySell.total %> </span>  </th> </tr>
+                            </table>
+
+                            
+                        </div>  
+
+                        <div class="form-group my-3">
+                            <button class="form-control btn btn-primary" id="btn_confirmacion">Confirme</button>
+                        </div>
+                  
+                    </div>
+
+                    <div class="row rounded-1 p-3 m-0 contentDeliveries" style="width: 100%; background-color: #dbdfe4;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+                    
+                            <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
+
+                                <div class="form-group my-2 mx-2">
+
+                                    <div class="contentLabel mb-2">
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elije como deseas retirar </label>
+                                        <div class="ui left pointing violet basic label">
+                                            <%= buySell.deliveryType %>
+                                        </div>
+                                    </div>    
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Retirar Personalmente en la tienda
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Retirar Personalmente en algun lugar acordado
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
+                                        <label class="form-check-label" for="flexRadioDefault3">
+                                            Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
+                                        </label>
+                                    </div>
+                                </div> 
+                                
+                                <div class="form-group my-3">
+                                    <button class="form-control btn btn-primary" id="btn_deliveries">Confirme</button>
+                                </div>
+
+                                <div class="alert alert-info my-2">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>   Elije si deseas servicio de delivery o quieres ir por tu compra personalmente.
+                                </div>
+
+                            </div>    
+                        
+                        </div>  
+                    </div>
+
+                    <div class="row rounded-1 p-3 m-0 contentPayment close" style="width: 100%; background-color: #dbdfe4;">
+
+                        
+                        <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+
+                            <div class="form-group my-2 mx-2">
+
+                                <div class="contentLabel mb-2">
+                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elije el sistema de pago </label>
+                                </div>    
+
+                                <!-- aqui debemos iterar par amostar los metodos de pago disponibles por el vendedor -->
+                                <!--  pero necesitamos un objeto de tipo array, vamos a ello. -->
+                                  <%  if (bankData) { %>
+                                    <% const paymentSystem = bankData.paymentSystem %>
+                                    <% paymentSystem.forEach((ele, i)=>{ %>
+
+                                        
+                                        <div class="form-group my-2">
+                                            <input class="form-check-input me-2" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
+                                            <label class="form-check-label" for= option<%= i + 1 %>>
+                                                 <%= ele.methodName %> 
+                                            </label>
+
+                                        </div>
+                                            
+                                        <div class="contentCollapse<%= i + 1 %> ms-3 close">
+
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data1 ? ele.data1 : '' %> 
+                                                <% if (ele.data1) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data2 ? ele.data2 : '' %> 
+                                                <% if (ele.data2) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data3 ? ele.data3 : '' %> 
+                                                <% if (ele.data3) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data4 ? ele.data4 : '' %> 
+                                                <% if (ele.data4) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+
+                                        </div>
+
+                                    <% }) %>
+                               
+
+                                  <% } else { %>
+
+                                    <div class="alert alert-dark">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Tu vendedor no tienes datos de pago registrados.  
+                                    </div>
+
+                                  <% }; %> 
+
+                            </div> 
+
+                        </div>
+                        
+                        <div class="col-lg-12 col-md-12 col-sm-12 px-0 py-1"> 
+
+                            <div class="contentPaymentDetails">
+
+                                <div class="form-group my-3">
+                                    <label for="">Coloque la referecia del pago si la operación lo amerita.</label>
+                                    <input type="text" class="form-control referPay" placeholder="Numero de referencia">
+                                </div> 
+
+                                <div class="form-group my-3" style="position: relative;">
+                                    <p class="mb-2">Suba el vouche de pago si la operación lo amerita. </p>
+                                    <input type="file" id="fileVouche" style="position: absolute; left: -500px;"> <!-- este stylo lo que hace es que lo saca del front para que no se vea. pero debe existir -->
+                                    <button class="btn btn-primary" id="btnUploadVouche">Subir el Vouche</button>
+                                    <span class="ms-3" id="nameFile">No hay ningun archivo </span>
+                                </div>
+                                <div class="preview d-flex justify-content-center align-items-center p-0" style="position: relative; width: 100%;height: 220px; border: 2px dotted grey;">
+                                    <img  alt="" src="/img/sinImagen.png" id="imgVouche" style="width: auto; max-height: 200px; padding: 0; margin: 0;">
+                                    <div class="circleDeleteImg rounded-pill d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; position: absolute; left: 30px; top: 30px;"> <i class="bi bi-x-lg fw-bold"></i> </div> 
+                                </div>
+
+                                <div class="form-group my-3">
+                                    <button class="bntn btn-primary form-control" id="btnMethodPaySelected" disabled> Registrar Pago </button>
+                                </div>
+                            </div>
+                        </div> 
+
+                    </div>
+
+                <% } else if ( buySell.usernameBuy == user.username && buySell.step == 2 ) { %>
+                   
+                    <ul class="nav nav nav-pills">
+                        <li class="nav-item">
+                            <button class="nav-link" id="buyDatos">1. Datos</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="buyDeliverie">2. Envio</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link active" id="buyPayment">3. Pagar</button>
+                        </li>
+
+
+                        <!--<li class="nav-item"> 
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li> -->
+                    </ul>
+
+                    <div class="row rounded-1 p-3 m-0 contentData close" style="width: 100%; background-color: #dbdfe4;">
+
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <div class="ContainerImage">
+                                
+                                <img src="<%= buySell.image[0].url %>" alt="" style="width: 100%;">
+
+                            </div> 
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <table class="table table-striped">
+                                <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= buySell.title %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Negociación </td> <td> <%= buySell.fechaNegotiation %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Precio </td> <td> <%= buySell.price %> </td> </tr>
+
+                                <% if ( buySell.usernameSell == user.username ){ %>
+                                    <!-- esto vera el vendedor -->
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td>  <%= buySell.countRequest %>  </td> </tr>
+                                <% } else { %>
+                                    <!-- esto vera el comprador -->
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td class="p-0"> <div class="controlNumberBody" style="font-size: 20px; height: 34px;"> <span class="controlNumber ms-1 dash"> <i class="bi bi-dash-square"></i> </span>   <span class="mx-3 newRequest"> <%= buySell.countRequest %> </span>  <span class="controlNumber me-1 plus"> <i class="bi bi-plus-square"></i> </span> </div>  </td> </tr>
+                                <% }; %>
+                            
+                                <tr style="font-size: 18px;"> <th>Total a Pagar </th> <th> <span class="totalPay"> <%= buySell.total %> </span>  </th> </tr>
+                            </table>
+
+                            
+                        </div>  
+
+                        <div class="form-group my-3">
+                            <button class="form-control btn btn-primary" id="btn_confirmacion">Confirme</button>
+                        </div>
+                  
+                    </div>
+
+                    <div class="row rounded-1 p-3 m-0 contentDeliveries close" style="width: 100%; background-color: #dbdfe4;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+                    
+                            <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
+
+                                <div class="form-group my-2 mx-2">
+
+                                    <div class="contentLabel mb-2">
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elije como deseas retirar </label>
+                                        <div class="ui left pointing violet basic label">
+                                            <%= buySell.deliveryType %>
+                                        </div>
+                                    </div>    
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Retirar Personalmente en la tienda
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Retirar Personalmente en algun lugar acordado
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
+                                        <label class="form-check-label" for="flexRadioDefault3">
+                                            Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
+                                        </label>
+                                    </div>
+                                </div> 
+                                
+                                <div class="form-group my-3">
+                                    <button class="form-control btn btn-primary" id="btn_deliveries">Confirme</button>
+                                </div>
+
+                                <div class="alert alert-info my-2">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>   Elije si deseas servicio de delivery o quieres ir por tu compra personalmente.
+                                </div>
+
+                            </div>    
+                        
+                        </div>  
+                    </div>                    
+
+                    <div class="row rounded-1 p-3 m-0 contentPayment" style="width: 100%; background-color: #dbdfe4;">
+                        
+                        <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+
+                            <div class="form-group my-2 mx-2">
+
+                                <div class="contentLabel mb-2">
+                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elije el sistema de pago </label>
+                                </div>    
+
+                                <!-- aqui debemos iterar par amostar los metodos de pago disponibles por el vendedor -->
+                                <!--  pero necesitamos un objeto de tipo array, vamos a ello. -->
+                                  <%  if (bankData) { %>
+                                    <% const paymentSystem = bankData.paymentSystem %>
+                                    <% paymentSystem.forEach((ele, i)=>{ %>
+
+                                        
+                                        <div class="form-group my-2">
+                                            <input class="form-check-input me-2" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
+                                            <label class="form-check-label" for= option<%= i + 1 %>>
+                                                 <%= ele.methodName %> 
+                                            </label>
+
+                                        </div>
+                                            
+                                        <div class="contentCollapse<%= i + 1 %> ms-3 close">
+
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data1 ? ele.data1 : '' %> 
+                                                <% if (ele.data1) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data2 ? ele.data2 : '' %> 
+                                                <% if (ele.data2) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data3 ? ele.data3 : '' %> 
+                                                <% if (ele.data3) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                            <p class="mb-1 ms-4">
+                                                <%= ele.data4 ? ele.data4 : '' %> 
+                                                <% if (ele.data4) { %>
+                                                    <i class="bi bi-copy ms-3"></i>
+                                                <% } %>
+                                            </p>
+                                        </div>
+
+                                    <% }) %>
+                               
+
+                                  <% } else { %>
+
+                                    <div class="alert alert-dark">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Tu vendedor no tienes datos de pago registrados.  
+                                    </div>
+
+                                  <% }; %> 
+
+                            </div> 
+
+                        </div>
+                        
+                        <div class="col-lg-12 col-md-12 col-sm-12 px-0 py-1"> 
+
+                            <div class="contentPaymentDetails">
+
+                                <div class="form-group my-3">
+                                    <label for="">Coloque la referecia del pago si la operación lo amerita.</label>
+                                    <input type="text" class="form-control referPay" placeholder="Numero de referencia">
+                                </div> 
+
+                                <div class="form-group my-3" style="position: relative;">
+                                    <p class="mb-2">Suba el vouche de pago si la operación lo amerita. </p>
+                                    <input type="file" id="fileVouche" style="position: absolute; left: -500px;"> <!-- este stylo lo que hace es que lo saca del front para que no se vea. pero debe existir -->
+                                    <button class="btn btn-primary" id="btnUploadVouche">Subir el Vouche</button>
+                                    <span class="ms-3" id="nameFile">No hay ningun archivo </span>
+                                </div>
+                                <div class="preview d-flex justify-content-center align-items-center p-0" style="position: relative; width: 100%;height: 220px; border: 2px dotted grey;">
+                                    <img  alt="" src="/img/sinImagen.png" id="imgVouche" style="width: auto; max-height: 200px; padding: 0; margin: 0;">
+                                    <div class="circleDeleteImg rounded-pill d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; position: absolute; left: 30px; top: 30px;"> <i class="bi bi-x-lg fw-bold"></i> </div> 
+                                </div>
+
+                                <div class="form-group my-3">
+                                    <button class="bntn btn-primary form-control" id="btnMethodPaySelected" disabled> Registrar Pago </button>
+                                </div>
+                            </div>
+                        </div> 
+
+                    </div>
+
+                <% } else if ( buySell.usernameBuy == user.username && buySell.step == 3 ) { %>
+
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="detailsBuySell">Detalles de compra</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="rateSell">Calificar Vendedor</button>
+                        </li>
+                    </ul>
+
+                    <div class="contentAllDetails">
+                        <!-- ya en este nivel de el comprador ha eleguido todas las condiciones del intercambio -->
+                        <div class="row rounded-1 p-3 m-0 contentData border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                                <div class="ContainerImage">
+                                    
+                                    <img src="<%= buySell.image[0].url %>" alt="" style="width: 100%;">
+
+                                </div> 
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                                <table class="table table-striped">
+                                    <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= buySell.title %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Negociación </td> <td> <%= buySell.fechaNegotiation %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Precio </td> <td> <%= buySell.price %> </td> </tr>
+
+                                    <tr style="font-size: 18px;"> <td>Cantidad </td> <td>  <%= buySell.countRequest %>  </td> </tr>
+                                
+                                    <tr style="font-size: 18px;"> <th>Total a Pagar </th> <th> <span class="totalPay"> <%= buySell.total %> </span>  </th> </tr>
+                                </table>
+
+                                
+                            </div>  
+                    
+                        </div>
+
+                        <div class="row rounded-1 p-3 m-0 contentDeliveries border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+                        
+                                <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
+
+                                    <div class="form-group my-2 mx-2">
+
+                                        <div class="contentLabel mb-2">
+                                            <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Typo de envio </label>
+                                            <div class="ui left pointing violet basic label">
+                                                <%= buySell.deliveryType %>
+                                            </div>
+                                        </div>    
+
+                                        <% const deliveryDetails = buySell.deliveryDetails %>
+                                        <% let deliveryDetailsString; %>
+
+                                        <% if (deliveryDetails == "D01"){  %>   
+                                            <% deliveryDetailsString = "Retirar Personalmente en la tienda"  %> 
+                                        <% } else if (deliveryDetails == "D02"){  %> 
+                                            <% deliveryDetailsString = "Retirar Personalmente en algun acordado" %>
+                                        <% } else if (deliveryDetails == "D03"){  %>      
+                                            <% deliveryDetailsString = "Reciba su pedido en la puerta de su casa. (Solicitar Delivery)" %>
+                                        <% }; %>    
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked disabled>
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                                <%= deliveryDetailsString %>
+                                            </label>
+                                        </div>
+                                
+                            
+                                    </div> 
+                                
+                                </div>    
+                            
+                            </div>  
+                        </div>
+
+                        <div class="row rounded-1 p-3 m-0 contentPayment border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
+                            
+                            <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+
+                                <div class="form-group my-2 mx-2">
+
+                                    <div class="contentLabel mb-2">
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Metodo de pago elejido </label>
+                                    </div>    
+
+                                    <!-- aqui debemos iterar par amostar los metodos de pago disponibles por el vendedor -->
+                                    <!--  pero necesitamos un objeto de tipo array, vamos a ello. -->
+                                    <%  if (bankData) { %>
+                                        <% const methodSelected = buySell.methodSelected %>
+                                        <% const paymentSystem = bankData.paymentSystem %>
+                                        <% paymentSystem.forEach((ele, i)=>{ %>
+                                            
+                                            <% if (ele.methodName == methodSelected ) { %>
+                                        
+                                                <div class="form-group my-2">
+                                                    <input class="form-check-input me-2" type="radio" checked disabled>
+                                                    <label class="form-check-label">
+                                                        <%= ele.methodName %> 
+                                                    </label>
+                                                </div>
+                                                    
+                                                <div class="contentCollapse ms-3">
+
+                                                    <p class="mb-1 ms-4">
+                                                        <%= ele.data1 ? ele.data1 : '' %> 
+                                                        <% if (ele.data1) { %>
+                                                            <i class="bi bi-copy ms-3"></i>
+                                                        <% } %>
+                                                    </p>
+                                                    <p class="mb-1 ms-4">
+                                                        <%= ele.data2 ? ele.data2 : '' %> 
+                                                        <% if (ele.data2) { %>
+                                                            <i class="bi bi-copy ms-3"></i>
+                                                        <% } %>
+                                                    </p>
+                                                    <p class="mb-1 ms-4">
+                                                        <%= ele.data3 ? ele.data3 : '' %> 
+                                                        <% if (ele.data3) { %>
+                                                            <i class="bi bi-copy ms-3"></i>
+                                                        <% } %>
+                                                    </p>
+                                                    <p class="mb-1 ms-4">
+                                                        <%= ele.data4 ? ele.data4 : '' %> 
+                                                        <% if (ele.data4) { %>
+                                                            <i class="bi bi-copy ms-3"></i>
+                                                        <% } %>
+                                                    </p>
+                                                </div>
+
+                                            <% } %>    
+
+                                        <% }) %>
+                                
+
+                                    <% } else { %>
+
+                                        <div class="alert alert-dark">
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Tu vendedor no tienes datos de pago registrados.  
+                                        </div>
+
+                                    <% }; %> 
+
+                                </div> 
+
                             </div>
                             
-                        </div>
-                    <% } else if (buySell.usernameBuy == user.username && buySell.pay == true && buySell.cancel === false && buySell.CommentSeller !== "no_comment" ) { %>
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
-            
-                                        <div class="form-group my-1">
-                                            <p class="mb-1">Gracias por calificar y comentar.</p>
-                                            <a href="/"><button class="btn btn-primary btn-sm form-control my-2" id="btnBuyerClosed">Cerrar</button></a>
+                            <div class="col-lg-12 col-md-12 col-sm-12 px-0 py-1"> 
+
+                                <div class="contentPaymentDetails">
+
+                                    <% if (buySell.referPay !=="") { %>
+
+                                        <div class="contentLabel mb-2">
+                                            <label for="" class="text-secondary my-1 ms-2" style="font-size: 16px;">Referencia de Pago : <span> <%= buySell.referPay %> </span> </label>
                                         </div>
                                         
-                        </div>        
-                    <% } else if (buySell.usernameBuy == user.username && buySell.pay == false && buySell.cancel === true && buySell.CommentSeller === "no_comment" ) { %>
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
-    
-                                <div class="form-group my-1 me-5">
-                                    <p class="mb-1">Finalice calificando y dejando un comentario a su vendedor.</p>
-                                    <div class="form-group d-flex my-1 me-5">
-        
-                                        <input type="hidden" value="<%= buySell._id %>" id="idOrderBuyerCancel">
-    
-                                        <div class="form-check mx-1">
-                                            <input class="RadialesBuyerCancel" type="radio" name="rating" id="RadioBuyerCancel1" value="Positivo">
-                                            <label class="form-check-label" for="RadioBuyerCancel1"> Positivo </label>
-                                        </div>
-                                        <div class="form-check mx-2">
-                                            <input class="RadialesBuyerCancel" type="radio" name="rating" id="RadioBuyerCancel2" value="Neutral">
-                                            <label class="form-check-label" for="RadioBuyerCancel2"> Neutral </label>                                          
-                                        </div>
-                                        <div class="form-check mx-2">
-                                            <input class="RadialesBuyerCancel" type="radio" name="rating" id="RadioBuyerCancel3" value="Negativo" disabled>
-                                            <label class="form-check-label" for="RadioBuyerCancel3"> Negativo </label>
-                                        </div>
-    
-                                    </div>
-                                    <input type="text my-1" class="form-control" id="commentBuyerCancel"  maxlength="50" placeholder="Deje aquí un comentario del vendedor">
-                                    <button class="btn btn-primary btn-sm form-control my-2" id="btnBuyerCancel">Fin</button>
-                                </div>
-                                
-                        </div>
-                    <% } else if (buySell.usernameBuy == user.username && buySell.pay == false && buySell.cancel === true && buySell.CommentSeller !== "no_comment" ) { %>
-                        <div class="ContainerConfirmPay my-2 p-3" style="background-color: #dbdfe4;">
-        
-                                    <div class="form-group my-1">
-                                        <p class="mb-1">Gracias por calificar y comentar.</p>
-                                        <a href="/"><button class="btn btn-primary btn-sm form-control my-2" id="btnBuyerClosed">Cerrar</button></a>
-                                    </div>
+                                    <% } %>
                                     
-                        </div>
-                    <% }; %>            
+                                    <% if (buySell.voucherImage.length !== 0) { %>
 
-                <% }; %>
+                                        <div class="preview d-flex justify-content-center align-items-center p-0" style="position: relative; width: 100%;height: 220px; border: 2px dotted grey;">
+                                            <img  alt="" src="<%= buySell.voucherImage[0].url %>" id="imgVouche" style="width: auto; max-height: 200px; padding: 0; margin: 0;">
+                                        </div>
+
+                                    <% } %>
+                                        
+                                </div>
+
+
+                            </div> 
+
+                        </div>
+
+                    </div>
+                    <div class="contentRateSell close">
+
+                            <div class="form-group p-3" style="width: 100%; background-color: #dbdfe4;">
+                                                            
+                                <% const rating =  buySell.ratingSeller %>  
+
+                                    <% if (rating =="") { %> 
+
+                                        <p class="mb-2">Finalice calificando y dejando un comentario a su vendedor.</p>
+
+                                        <div class="form-group d-flex my-2">
+            
+                                            <input type="hidden" value="<%= buySell._id %>" id="idOrderBuyerTrue">
+
+                                            <div class="form-check mx-1">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" value="Positivo" checked>
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue1"> Positivo </label>
+                                            </div>
+                                            <div class="form-check mx-2">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue2" value="Neutral">
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue2"> Neutral </label>                                          
+                                            </div>
+                                            <div class="form-check mx-2">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue3" value="Negativo">
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue3"> Negativo </label>
+                                            </div>
+
+                                        </div>
+
+                                        <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="50" placeholder="Deje aquí su comentario del vendedor"></textarea>
+                                        <div class="alert alert-info my-2">
+                                            <p>Deje un comentario conciso de su experiencia como comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
+                                        </div>
+
+                                        <button class="btn btn-primary form-control my-2" id="btnBuyerTrue">Enviar calificación y comentario</button>
+
+                                        <button class="form-control btn btn-primary my-2 close" id="btnBuyerTrueSpinner" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Enviando calificación ...
+                                        </button>
+
+                                    <% } else { %>
+
+                                        <h4 class="mb-2 text-secondary">!Ya ha calificado y dejado un comentario!</h4>
+                                        <div class="form-group d-flex my-2">
+            
+                                            <div class="form-check mx-1">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" checked>
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue1"> <%= buySell.ratingSeller %></label>
+                                            </div>
+                                            
+                                        </div>
+
+                                        <textarea class="form-control my-1" rows="3" cols="10" maxlength="50" disabled> <%= buySell.CommentSeller %>  </textarea>
+
+
+                                    <% let closeOperationBuy = buySell.closeOperationBuy %>
+                                    <% if ( closeOperationBuy === false ) { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha dejado una calificación y un comentario sobre este intercambio. Puede Cerra la sala cuando desee. </p>
+                                        </div>
+                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala</button>
+                                    <% } else { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha cerrado esta sala, si requiere contactar con este vendedor vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= buySell.usernameSell %>"><%= buySell.usernameSell %></a>  </p>
+                                        </div>
+                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
+                                    <% }; %> 
+
+                                <% }; %>   
+
+
+
+
+                                
+
+                            </div>
+                    </div>   
+
+                <% }; %>    
+
+
+            <% }; %>
             </div>
             <!-- seccion del chat -->
-            <div class="col-lg-6  my-4 p-0 rounded-1" style="height: 93%;">
-                <div class="ContainerMessage rounded-1 px-2" style="background-color: #dbdfe4; height: 96%;">
+            <div class="col-lg-5 mx-2 my-2 p-0 rounded-1" style="height: 93%;">
+                <div class="ContainerMessage rounded-1 px-2" style="height: 96%;">
             
-                    <div class="containerWritten p-1" style="width: 100%;">
-                       
 
-                            <h6 class="text-decoration-underline my-2">Hacer una pregunta a tu contraparte.</h6>
-                            <div class="containerTextButton d-flex justify-content-between" style="width: 100%;">
-                                <div class="form-group" style="width: 74%;">
-                                    <% if (buySell.CommentBuy !== 'no_comment' && buySell.CommentSeller !== 'no_comment' ){ %>
-                                        <input type="text" class="form-control" name="questions" id="written"  placeholder="Este chat ha sido desactivado" disabled>
-                                    <% } else { %>
-                                        <input type="text" class="form-control" name="questions" id="written"  placeholder="Escribe aqui tu pregunta">
-                                    <% }; %>  
-                                    <input type="hidden" value="<%= user.username %>" id="user"> <!-- este dato debe ser enviado al backend para armar el objeto que entrara al documento de la compraVenta -->
-                                    <% if (buySell) { %> <input type="hidden" value="<%= buySell._id %>" id="idDocument"><% }; %> <!-- con este Id puedo buscar rapidamente el documento creado la compraVenta -->
-                                </div>
-
-                                <div class="form-group" style="width: 23%;">
-                                    <% if (buySell.CommentBuy !== 'no_comment' && buySell.CommentSeller !== 'no_comment' ){ %>
-                                    <input type="button" class="form-control btn btn-secondary" id="btnSenMessage" value="Enviar">
-                                    <% } else { %>
-                                    <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar">
-                                    <% }; %>     
-                                </div>
-                            </div>
-   
-                      
-                    </div>
-                    <div class="card" style=" background-color: #dbdfe4; height: 80vh;">
-                        <div class="card-body px-0 d-flex flex-column" style="height: 100%; overflow-y: auto;">                           
-                            <div class="card my-1 showMessage border border-success" style="padding-right: 10px;">
+                    <div class="card" style="height: 60vh;">
+                        <div class="card-body p-0  d-flex flex-column" style="height: 100%; overflow-y: auto;">                           
+                            <div class="card showMessage" style="padding-right: 10px; border: transparent">
                                 
-                                <% if (msg) { %>
-                                    <% msg.forEach( (ele)=>{ %>
-
-                                        <% if (user.username == ele.user ){ %>
-                                            <div class="card-body rounded-3 my-1 pb-3 pt-2" style="background-color: #d190be; margin-left: 5px; position: relative;">
-                                                <p class="m-0 mb-1" style="line-height: 20px;"><%= ele.written %></p>
-                                                <p class="m-0" style="position: absolute; right: 0px; bottom: -2px;"><small class="bg-dark text-light rounded-3 px-2" style="font-size: 12px;"> <%= ele.time %> </small></p>
+                                
+                                <% const codeDateSistem = codeDate %> <!-- fecha de hoy formato 2852025 -->
+                                <% let hoyMostrado = false; %>
+                                <% let fechaAnterior = ""; %>  <!-- Variable para almacenar la fecha anterior --> 
+                                
+                                <% if (msgFormat.length !==0) { %>
+                                    <% msgFormat.forEach( (ele)=>{ %>
+                                        
+                                        <!-- span del centro que muestra si es Hoy o una fecha anterior -->
+                                        <% if (ele.codeDate == codeDateSistem && !hoyMostrado) { %>
+                                            <div class="contentDate d-flex justify-content-center py-2"> 
+                                                <span class="text-light rounded-pill px-3 py-1 shadow-sm fst-italic" style="background-color: rgba(56, 56, 56, 1);"> <small>Hoy</small>  </span> 
                                             </div>
+                                            <% hoyMostrado = true %> <!-- Marcamos que "Hoy" ya se mostró -->
+
+                                        <% } else if (ele.codeDate !== codeDateSistem && ele.codeDate !== fechaAnterior) { %>
+                                            <div class="contentDate d-flex justify-content-center py-2"> 
+                                                <span class="text-light rounded-pill px-3 py-1 shadow-sm fst-italic" style="background-color: rgba(56, 56, 56, 1);"> <small><%= ele.date %></small>  </span>
+                                             </div>
+                                            <% fechaAnterior = ele.codeDate; %> <!-- Actualizamos la fecha anterior -->
+
+                                       <% }; %> 
+                                        
+                                       <div class="showMessageNew"> <!-- mensajes dinamicos que se envian via socket--> </div>
+                                        
+                                        <% if (user.username == ele.user ){ %>
+                                            <!-- mensajes dinamicos que se cargan al renderizar la pagina -->
+                                            <div class="card-body d-flex justify-content-end my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: linear-gradient(90deg,rgba(217, 217, 217, 0.5) 0%, rgba(228, 197, 250, 0.5) 50%, rgba(151, 11, 255, 0.5) 100%);">
+                                                   
+                                                    <p style="line-height: 20px; text-align: justify;">  
+                                                        <%- ele.written.replace(/\n/g, "<br>") %>
+                                                        <span style="display: inline-block; white-space: nowrap;">
+                                                            <small class="text-secondary px-2" style="font-size: 12px;"> 
+                                                                <%= ele.time %> <i class="bi bi-check2"></i>
+                                                            </small>
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>
+
                                         <% } else { %>
-                                            <div class="card-body rounded-3 my-1 pb-3 pt-2" style="background-color: #b8b7c2; margin-left: 5px; position: relative">
-                                                <span style="line-height: 2px;"><%= ele.written %></span>
-                                                <p class="m-0" style="position: absolute; right: 0px; bottom: -2px;"><small class="bg-dark text-light rounded-3 px-2" style="font-size: 12px;"><%= ele.time %> </small></p>
-                                            </div>    
+
+                                            <div class="card-body d-flex justify-content-start my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: linear-gradient(90deg,rgba(120, 120, 120, 0.6) 0%, rgba(186, 186, 186, 0.6) 50%, rgba(217, 217, 217, 0.6) 100%);">
+                                                
+                                                    <p style="line-height: 20px; text-align: justify;">  
+                                                        <%- ele.written.replace(/\n/g, "<br>") %>
+                                                        <span style="display: inline-block; white-space: nowrap;">
+                                                            <small class="text-secondary px-2" style="font-size: 12px;"> 
+                                                                <%= ele.time %> <i class="bi bi-check2"></i>
+                                                            </small>
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>  
+
                                         <% }; %>     
     
                                     <% }); %>
+
+                                <% } else { %>
+
+                                    <div class="showMessageNew">  <!-- mensajes dinamicos que se envian via socket cuando no exista elementos en el array msgFormat --> </div>
+
                                 <% }; %>
                                  
                             </div>
                         </div>
+                    </div>
+
+                    <div class="containerWritten p-1" style="width: 100%;">
+                       
+
+                            <h6 class="text-decoration-underline my-2 text-secondary">Hacer una pregunta a tu contraparte. </h6>
+                            <div class="containerTextButton d-flex justify-content-between mb-3" style="width: 100%;">
+
+                                <div class="form-group me-3" style="width: 85%;">
+                                    <% if (buySell.closeOperationBuy !== false && buySell.closeOperationSeller !== false ){ %>
+                                        <input type="search" class="form-control rounded-pill py-2" name="questions" style="font-size: 17px;" id="written"  placeholder="Este chat ha sido desactivado" disabled>
+                                    <% } else { %>
+                                        <!-- <input type="search" class="form-control rounded-pill py-2" name="questions" style="font-size: 17px;" id="written"  placeholder="Escribe aqui tu pregunta"> -->
+                                        <textarea id="written" rows="1" maxlength="300" class="form-control py-2" name="questions" style="font-size: 17px; border-radius: 8px;" placeholder="Escribe aqui tu pregunta"></textarea>
+                                    <% }; %>  
+
+                                        <input type="hidden" value="<%= user.username %>" id="user"> <!-- este dato debe ser enviado al backend para armar el objeto que entrara al documento de la compraVenta -->
+                                        <% if (buySell) { %> <input type="hidden" value="<%= buySell._id %>" id="idDocument"><% }; %> <!-- con este Id puedo buscar rapidamente el documento creado la compraVenta -->
+                                </div>  
+
+                                <div class="form-group me-2">
+                                    <% if (buySell.closeOperationBuy !== false && buySell.closeOperationSeller !== false ){ %>
+                                        <button class="btn btn-secondary rounded-pill me-2" id="btnSenMessage" style="font-size: 17px;"> <i class="bi bi-send-fill"></i> </button>
+                                    <% } else { %>
+                                        <button class="btn rounded-pill me-2" id="btnSenMessage" style="font-size: 16px; width: 40px; height: 40px; color: white; background-color: rgba(146,0,255,1);"> <i class="bi bi-send-fill"></i> </button>
+                                    <% }; %>     
+                                </div>
+
+                            </div>
+   
+                      
                     </div>
             <% }; %>
                 </div>   
@@ -283,18 +1422,590 @@
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
 
+  <!-- con este script conectamos este HTML al servidor socket -->         
+  <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+
   <script>
+
+    const information = document.getElementById('information');
+    const qrEnlace = document.getElementById('qrEnlace');
+    const rateBuy = document.getElementById('rateBuy'); 
+
+    const contentQREnlace = document.querySelector('.contentQREnlace');
+    const contentInformation = document.querySelector('.contentInformation');
+    const contentRateBuy = document.querySelector('.contentRateBuy');
+
+    if (information){
+        information.addEventListener('click', ()=>{
+            information.classList.add('active');
+            qrEnlace.classList.remove('active');
+            rateBuy.classList.remove('active');
+
+            contentQREnlace.classList.add('close');
+            contentInformation.classList.remove('close');
+            contentRateBuy.classList.add('close');
+
+        });
+    }    
+
+    if (qrEnlace){
+        qrEnlace.addEventListener('click', ()=>{
+            information.classList.remove('active');
+            qrEnlace.classList.add('active');
+            rateBuy.classList.remove('active');
+
+            contentQREnlace.classList.remove('close');
+            contentInformation.classList.add('close');
+            contentRateBuy.classList.add('close');
+        });
+    }    
+
+
+    if(rateBuy){
+        rateBuy.addEventListener('click', ()=>{
+            information.classList.remove('active');
+            qrEnlace.classList.remove('active');
+            rateBuy.classList.add('active');
+
+            contentQREnlace.classList.add('close');
+            contentInformation.classList.add('close');
+            contentRateBuy.classList.remove('close');
+        })
+
+    }
     
+
+  </script>
+
+  <script>
+
+    //nuevo
+    /* controles del lado del comprador */
+
+    const data = document.getElementById('data');
+    const deliveries = document.getElementById('deliveries');
+    const payment = document.getElementById('payment');
+    const links = document.getElementById('links');
+    
+
+    const contentData = document.querySelector('.contentData'); 
+    const contentDeliveries = document.querySelector('.contentDeliveries');
+    const contentPayment = document.querySelector('.contentPayment');
+    const contentLinks = document.querySelector('.contentLinks');
+   
+
+    if (data){
+        data.addEventListener('click', ()=>{
+            data.classList.add('active');
+            deliveries.classList.remove('active');
+            links.classList.remove('active');
+            payment.classList.remove('active');
+
+            contentData.classList.remove('close');
+            contentDeliveries.classList.add('close');
+            contentLinks.classList.add('close');
+            contentPayment.classList.add('close');
+        });
+    }    
+
+    if (deliveries){
+        deliveries.addEventListener('click', ()=>{
+            data.classList.remove('active');
+            deliveries.classList.add('active');
+            links.classList.remove('active');
+            payment.classList.remove('active');
+
+            contentData.classList.add('close');
+            contentDeliveries.classList.remove('close');
+            contentLinks.classList.add('close');
+            contentPayment.classList.add('close');
+        });
+    }    
+
+    if (links){
+
+        links.addEventListener('click', ()=>{
+            data.classList.remove('active');
+            deliveries.classList.remove('active');
+            links.classList.add('active');
+            payment.classList.remove('active');
+
+            contentData.classList.add('close');
+            contentDeliveries.classList.add('close');
+            contentLinks.classList.remove('close');
+            contentPayment.classList.add('close');
+        });
+    }
+
+    if (payment){
+        payment.addEventListener('click', ()=>{
+            data.classList.remove('active');
+            deliveries.classList.remove('active');
+            links.classList.remove('active');
+            payment.classList.add('active');
+
+            contentData.classList.add('close');
+            contentDeliveries.classList.add('close');
+            contentLinks.classList.add('close');
+            contentPayment.classList.remove('close');
+
+        })
+    }
+
+  </script>
+
+  <script>
+    //nuevo
+    //este script hace posible que el comprador pueda reconsiderar la cantidad del articulo que quiere comprar
+
+    const price = parseFloat(document.querySelector('.Price').value);
+    const countRequestValue = parseFloat(document.querySelector('.countRequestData').value); //aqui tenemos el valor de la cantidad inicial que el cliente a requerido. 
+    const countMaxValue = parseFloat(document.querySelector('.countMaxData').value); 
+
+    const dash = document.querySelector('.dash');
+    const plus = document.querySelector('.plus');
+    const newRequest = document.querySelector('.newRequest');
+    const totalPay = document.querySelector('.totalPay');
+
+    let newrequest = countRequestValue; 
+    
+    if (dash){
+        dash.addEventListener('click', ()=>{
+
+            if (newrequest > 1){
+
+                newrequest = newrequest - 1;
+                //console.log(newrequest);
+                newRequest.innerText = newrequest;
+                totalPay.innerText =  (newrequest * price).toFixed(2);
+            }    
+
+        })
+    }    
+
+    if (plus){
+
+        plus.addEventListener('click', ()=>{
+
+            if ( newrequest < countMaxValue ){
+                newrequest = newrequest + 1;
+                //console.log(newrequest)
+                newRequest.innerText = newrequest;
+                totalPay.innerText =  (newrequest * price).toFixed(2);
+            }
+
+        })
+    }
+
+
+  </script>
+
+  <script>
+    //nuevo
+    //esto es solo para controlar las pestañas del lado del comprador
+    const buyDatos = document.getElementById('buyDatos'); 
+    const buyDeliverie =  document.getElementById('buyDeliverie');
+    const buyPayment = document.getElementById('buyPayment');
+    //-------------------------------------------------------------
+
+    const btn_confirmacion = document.getElementById('btn_confirmacion');
+    const idBuysell = document.querySelector('.idBuysell'); //aqui tenemos el id de la compra
+
+    if (btn_confirmacion){   
+        btn_confirmacion.addEventListener('click', ()=>{
+            const iDBuysell = idBuysell.value;
+            console.log("iDBuysell :", iDBuysell);
+            console.log("newrequest :", newrequest);
+
+            //vampos a crear el forData para enviar al backend
+
+            const formData = new FormData();
+                formData.append('iD', iDBuysell);
+                formData.append('newrequest', newrequest);
+
+                fetch('/buysell-body/confirm', {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(jsonx => {
+                    console.log("response del backend --->", jsonx);
+
+                    const code = jsonx.code;
+                    const message = jsonx.message;
+
+                    console.log("code : ", code);
+                    console.log("message : ", message);
+                    
+                    if (code == "ok"){
+
+                        console.log("ahora si pasamos al siguiente formulario");
+                          
+                        buyDatos.classList.remove('active');
+                        buyDeliverie.classList.add('active');
+                        buyPayment.classList.remove('active');
+                                          
+                        contentData.classList.add('close');
+                        contentDeliveries.classList.remove('close');
+                        contentPayment.classList.add('close');
+
+                        mostrarToast( message , 'right', 'success', '¡Hecho!', true ); 
+
+                    } else {
+
+                        mostrarToast( message , 'right', 'danger', '¡Upss!', true ); 
+                    
+                    }
+
+                })
+                .catch(err => console.log(err));
+
+        })
+
+    }     
+
+  </script>
+
+  <script>
+    //nuevo
+    //este script registra el tipo de delivery que el cliente selecciona
+    const DeliveryType = document.querySelector('.deliveryType');
+    const IndexedBuy = document.querySelector('.indexedBuy');
+    const IndexedSell = document.querySelector('.indexedSell');
+    
+    const btn_deliveries = document.getElementById('btn_deliveries');
+
+    if ( btn_deliveries){
+
+        btn_deliveries.addEventListener('click', ()=>{
+            const iDBuysell = idBuysell.value;
+            const indexedBuy = IndexedBuy.value;
+            const indexedSell = IndexedSell.value;
+            const deliveryType = DeliveryType.value;
+
+            const radioDetails = document.querySelectorAll('input[name="deliveryDetails"]');
+            let selectedValue;
+
+            radioDetails.forEach(radio => {
+                if (radio.checked) {
+                    selectedValue = radio.value 
+                }
+            });
+
+            console.log("Value del radio seleccionado: ", selectedValue);    
+
+            console.log("iDBuysell : ", iDBuysell);
+            console.log("indexedBuy : ", indexedBuy);
+            console.log("indexedSell : ", indexedSell);
+            console.log("deliveryDetails : ", selectedValue);
+            console.log("deliveryType : ", deliveryType);
+
+            //vampos a crear el forData para enviar al backend
+
+            
+            const formData = new FormData();
+                formData.append('iD', iDBuysell);
+                formData.append('indexedBuy', indexedBuy);
+                formData.append('indexedSell', indexedSell);
+                formData.append('deliveryDetails', selectedValue);
+                formData.append('deliveryType', deliveryType);
+                
+                    
+                fetch('/buysell-body/deliveryPolicy', {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(jsonx => {
+                        console.log("response del backend --->", jsonx);
+
+                        const code = jsonx.code;
+                        const message = jsonx.message;
+                        const data = jsonx.data;
+
+                        //ahora enviamos el arreglo delos resultados de deliveries al socket.
+                        //socket.emit('result:delivery', { 'obje' : data });
+                        
+                        if (code == "ok"){
+
+                            console.log("ahora si pasamos al siguiente formulario donde mostramos ahora el formulario del pago");
+                            //{code: 'ok', message: 'Confirmación realizada con exito.'}
+                            //se ha guardado y debemos seguir adelante.
+                            //data deliveries payment
+                            
+                            buyDatos.classList.remove('active');
+                            buyDeliverie.classList.remove('active');
+                            buyPayment.classList.add('active');
+                                            
+                            contentData.classList.add('close');
+                            contentDeliveries.classList.add('close');
+                            contentPayment.classList.remove('close');
+
+                            mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                        } else {
+
+                            mostrarToast( message , 'right', 'danger', '¡Upps!', true ); // Agrega título aquí
+                        
+                        }
+
+                    })
+                    .catch(err => console.log(err));   
+
+
+                    
+        })
+
+    }
+
+  </script>
+
+
+
+  <script>
+     //nuevo
+     //este es un ejemplo del poder y elasticidad del querySelector() y el querySelectorAll()
+    const referPay = document.querySelector('.referPay'); //aqui esta el input que captura la referencia
+    const inpOptionMethod = document.querySelectorAll('input[type="radio"][name="methodNameSelected"]'); //todos los input radio de seleccion de metodo de pago
+    const btnUploadVouche = document.querySelector('#btnUploadVouche');
+    const nameFile = document.querySelector('#nameFile');
+    const fileVouche = document.querySelector('#fileVouche');
+    const imgVouche = document.querySelector('#imgVouche');
+    const circleDeleteImg = document.querySelector('.circleDeleteImg');
+
+    const btnMethodPaySelected = document.querySelector('#btnMethodPaySelected');
+
+    let file; //aqui guardo el archivo de imagen voucher
+    let methodSelected; //aqui guardo el metodo seleccionado por el usuario
+  
+
+    if (btnUploadVouche){
+
+        btnUploadVouche.addEventListener("click", ()=>{
+         /*    alert("holaaaa") */
+            fileVouche.click();
+        });
+
+        fileVouche.addEventListener('change', ()=>{
+
+            console.log("fileVouche :", fileVouche);
+
+            let archivo = fileVouche.files
+            console.log(archivo);
+
+            if (! archivo || !archivo.length){
+                imgVouche.src = "";
+                return
+            };
+
+            file = archivo[0];
+            //console.log("file :",file);
+            let objectURL = URL.createObjectURL(file);
+
+            imgVouche.src= objectURL;
+            nameFile.innerText = file.name;
+
+            const size = file.size;
+            const name = file.name;
+            const last = name.lastIndexOf('.'); //este metodo me arroja la cantidad de caracteres despues del ultimo punto
+            const ext = name.substring(last + 1).toLowerCase(); //este metodo corta la cadena mediante la cantidad de caracteres y tambien la convierte en minuscula importante porque hay momentos donde las extensionews estan en mayusculas. pendiente con esto
+            
+            console.log("ext :", ext); 
+
+            if ( size <= 5000000 ){
+                //aseguramos que el archivo sea de tipo img y que no supere los 5 mb
+
+                if (ext === "jpg" || ext === "jpeg" || ext === "png" ){
+
+                    //activamos el boton
+                    btnMethodPaySelected.removeAttribute("disabled");
+
+                    
+                } else {
+
+                    const response = "Esta archivo no es de tipo imagen"
+                    file.value = "" //Limpiamos el file
+                    imgVouche.src="/img/sinImagen.png"
+                    //desactivamos el boton
+                    btnMethodPaySelected.setAttribute("disabled", "");
+                    
+                    mostrarToast( response , 'right', 'danger', '¡Upps!', false );
+                    return
+                }   
+
+            } else {
+
+                const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
+                file.value = "" //Limpiamos el file
+                imgVouche.src="/img/sinImagen.png"
+                //desactivamos el boton
+                btnMethodPaySelected.setAttribute("disabled", "");
+                
+                mostrarToast( response , 'right', 'danger', '¡Upps!', false );
+                
+            }        
+            
+            
+            console.log("Este es el peso :", size);
+
+
+        })
+
+    }
+
+
+
+    if (circleDeleteImg) {
+        circleDeleteImg.addEventListener('click', ()=>{
+            archivo ="";
+            nameFile.innerText = "No hay ningun archivo"; 
+            imgVouche.src="/img/sinImagen.png"
+            //activamos el boton para que registre su pago
+            btnMethodPaySelected.removeAttribute("disabled");
+        })
+    }
+
+    if (btnMethodPaySelected) {
+        btnMethodPaySelected.addEventListener('click', ()=>{
+
+            const iDBuysell = idBuysell.value; //esto es el iD del documento buySell
+
+            inpOptionMethod.forEach((ele)=>{
+    
+                if (ele.checked){
+                    //console.log("checkedMethod :", ele.value);
+                    methodSelected = ele.value;
+                    //activamos el boton de registro de pago
+                    btnMethodPaySelected.removeAttribute("disabled");
+                }
+                
+            })
+
+            const referValue = referPay.value;
+            console.log("methodSelected:", methodSelected);
+            console.log('referValue :', referValue)
+            console.log("archivo vouche:", file);
+
+            const formData = new FormData()
+                formData.append('iD', iDBuysell); //este es el id del documento a procesar
+                formData.append('methodSelected', methodSelected); //aqui el method elegido por el usuario
+                formData.append('referValue', referValue); //codigo de referencia del pago si lo amerita
+                formData.append('fileImg', file); //aqui la imagen del vouche si lo amerita.
+                                 
+      
+            fetch('/buysell-body/payRegister', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(jsonx => {
+                console.log("response del backend --->", jsonx);
+
+                const code = jsonx.code;
+                const message = jsonx.message;
+                
+                if (code == "ok"){
+
+                    console.log("El usuario ha terminado de registar el pago y ha sido exitoso ");
+
+                    mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 4000);
+                    
+
+                } else {
+
+                    mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                    console.log("acciones para luego volver a intentarlo");
+                   
+                }
+            
+            
+
+            })
+            .catch(err => console.log(err));
+        })
+    }
+
+
+
+
+  </script>
+
+    <script>
+        //new
+        //este script abre y cierra las opciones de los metodos de pago
+        function toggleCollapse(index) {
+            // Cierra todos los elementos
+            const contents = document.querySelectorAll('[class^="contentCollapse"]');
+            contents.forEach(content => {
+                content.classList.add('close');
+            });
+
+            // Abre el elemento correspondiente
+            const activeContent = document.querySelector('.contentCollapse' + index);
+            activeContent.classList.remove('close');
+            //activamos el boton
+            btnMethodPaySelected.removeAttribute("disabled");
+            
+        }
+
+    // explicacion: '[class^="contentCollapse"]' Este es un selector CSS que busca todos los elementos cuyo atributo `class` comienza (`^=`) con el texto "contentCollapse". El símbolo `^=` es un operador que significa "comienza con". 
+    // Así que, en resumen, esta línea está obteniendo todos los elementos del DOM que tienen una clase que empieza con "contentCollapse", y los almacena en la variable `contents`. Luego, puedes iterar sobre esa lista para aplicarles cambios, como cerrar todos los contenidos.
+    </script>
+
+    <script>
+        //new
+        /* controlador de pestañas step 3 */
+        const detailsBuySell = document.querySelector('#detailsBuySell');
+        const rateSell = document.querySelector('#rateSell');
+
+        const contentAllDetails = document.querySelector('.contentAllDetails');
+        const contentRateSell = document.querySelector('.contentRateSell');
+
+        if (detailsBuySell){
+            detailsBuySell.addEventListener('click', ()=>{
+                detailsBuySell.classList.add('active');
+                rateSell.classList.remove('active');
+                
+                contentAllDetails.classList.remove('close');
+                contentRateSell.classList.add('close');
+            
+            });
+        }    
+
+        if (rateSell){
+            rateSell.addEventListener('click', ()=>{
+                detailsBuySell.classList.remove('active');
+                rateSell.classList.add('active');
+            
+                contentAllDetails.classList.add('close');
+                contentRateSell.classList.remove('close');
+            
+            });
+        }    
+
+
+    </script>
+
+  <script>
+
+    const socket = io();
+
+    const username = document.getElementById('username');
     const btnSenMessage = document.getElementById('btnSenMessage');
     const written = document.getElementById('written');
     const user = document.getElementById('user');
     const idDocument = document.getElementById('idDocument');
 
-    written.value ="";
-    written.focus();
+    written.value =""; //estado incial 
+    written.focus(); //estado inicial 
 
     btnSenMessage.addEventListener('click', ()=>{
        
+        
         let Time;
 
         if ( written.value !== "" ){
@@ -305,18 +2016,31 @@
 
             const dia = date.getDate();
             const mes = date.getMonth()+1;
+            const fullYear = date.getFullYear();
 
-           
-            if (minu <= 9){
-                Time = `${hora}:0${minu} ${dia}-${mes}`
-            } else {
-                Time = `${hora}:${minu} ${dia}-${mes}`
+            function obtenerMes(numero) {
+                const meses = [
+                    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                ];
+                return meses[numero]; 
             }
-               
+
+            if (minu <= 9){
+                Time = `${hora}:0${minu}`
+            } else {
+                Time = `${hora}:${minu}`
+            }
+
+            const monthInLetters = obtenerMes(mes); //devuelve el mes Junio 
+            const dates = `${monthInLetters} ${dia}, ${fullYear}`
+            const codeDate = `${dia}${mes}${fullYear}` //28052025 esto junto parece un codigo numerico se forma con la fecha y nos permite verificar si estamos en el mismo dia para que en le chat podamso saber si es hoy o alguna fecha que se usaria el valor dates
 
             const datos = {
                 user : user.value,
                 written : written.value,
+                date : dates,
+                codeDate : codeDate,
                 time : Time,
                 idDocument : idDocument.value
             };
@@ -329,16 +2053,138 @@
 
             })
             .then(response =>response.json() )
-            .then( jsonx =>{ console.log("Este es la respuesta del fetch post",jsonx)
-                    location.reload();
-                })
+            .then( jsonx =>{ console.log("Este es la respuesta del fetch post",jsonx);
+                socket.emit('creacion:MsgBuysell', { 'obje' : jsonx }) //enviamos al socket para que envia el mensaje con esteroides.
+                           
+                // Limpiar el textarea
+                written.value = '';
+
+                // Contraer el textarea a una sola fila
+                written.rows = 1;
+
+            })
             .catch( err => console.log(err)); 
            
         };
+    
+    
     }); 
  
 
+    // quiero que el textarea vaya expandiendose a medida existan mas lienas pero el maximo debe ser de 5 lineas.
+    written.addEventListener('input', () => {
+        const lineas = written.value.split('\n');
+        console.log("lineas :", lineas.length);
+
+        // Ajustar el número de filas, pero no permitir más de 5 en la expansion del textarea.
+        const row = Math.min(lineas.length, 5);
+        written.rows = row;
+
+    });
+
+    /* Aqui llega el socket que se utilizara para emitir el mensaje de forma automatica */
+    const idOrderBuy = document.getElementById('idOrderBuy');
+    const efectSoundNewNote = document.getElementById('efectSoundNewNote');
+    const showMessageNew = document.querySelector('.showMessageNew');
+    let boxNotes = []; 
+
+    socket.on('refresh:MsgBuysell', (data)=>{
+        const orderBuy = idOrderBuy.value;
+        console.log(":::::::::::::xxxxxxxxx::::::::::");
+        console.log(":::::::::::::Socket Escuchando *refresh:MsgBuysell* ::::::::::");
+
+
+        console.log("Esto es data objeto enviado desde el Servidor Socket ---->", data);
+        let note = data.obje;
+        console.log("note es un objeto con los valores del mensaje unico :", note); 
+       
+        boxNotes.push(note);
+        const Notes = boxNotes
+        console.log("Notes :", Notes);
+
+        if ( showMessageNew.innerHTML !== ""){
+            showMessageNew.innerHTML = "" //limpiamos este elemento de la pantalla
+        }
+        
+        //const longNotes = allNotes.length; //esto es la cantidad de elementos que posee el array allNotes.
+        
+        //******************************************************
+
+        for (let i = Notes.length - 1; i >= 0; i--) { 
+            const ele = Notes[i];
+
+                efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
+                efectSoundNewNote.play().catch(error => {
+                    console.error("Error al reproducir el sonido:", error);
+                })
+            //console.log("ele.idDocument :",  ele.idDocument);
+            //console.log("orderBuy :",  orderBuy);
+
+            if (ele.idDocument == orderBuy){ //esto verifica que sea el mensaje para este chat
+
+
+                if ( username.value == ele.user ){
+  
+                    showMessageNew.innerHTML += `
+                                                <div class="card-body d-flex justify-content-end my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                    <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: linear-gradient(90deg,rgba(217, 217, 217, 0.5) 0%, rgba(228, 197, 250, 0.5) 50%, rgba(151, 11, 255, 0.5) 100%);">
+                                                        <span class="mb-2" style="line-height: 20px; text-align: justify;">  ${formatText(ele.written)}
+                                                            <span style="display: inline-block; white-space: nowrap;">
+                                                                <small class="text-secondary px-2" style="font-size: 12px;"> 
+                                                                    ${ele.time}  <i class="bi bi-check2"></i>
+                                                                </small>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                    `
+
+                } else {
+
+
+                    showMessageNew.innerHTML += `
+                                                <div class="card-body d-flex justify-content-start my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                    <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: linear-gradient(90deg,rgba(120, 120, 120, 0.6) 0%, rgba(186, 186, 186, 0.6) 50%, rgba(217, 217, 217, 0.6) 100%);">
+                                                        <span class="mb-2" style="line-height: 20px; text-align: justify;"> ${formatText(ele.written)} 
+                                                            <span style="display: inline-block; white-space: nowrap;">
+                                                                <small class="text-secondary px-2" style="font-size: 12px;"> 
+                                                                    ${ele.time}  <i class="bi bi-check2"></i>
+                                                                </small>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                    ` 
+                }  
+                
+            
+            }    
+
+        }
+
+        written.focus();
+
+        function formatText(text) {
+            return text.replace(/\n/g, '<br>');
+        }    
+        //******************************************************
+
+    });
+
+
+
   </script>
+
+
+
+
+
+
+
+
+
+
+
 
   <script>
     //esto esta conectado con la linea de codigo 82 aqui el comprador decide pagar.
@@ -537,11 +2383,12 @@
     //vista comprador cuando ha pagado
     //aqui el comprador califica y comenta a su vendedor.
     const btnBuyerTrue = document.getElementById('btnBuyerTrue');
+    const btnBuyerTrueSpinner = document.getElementById('btnBuyerTrueSpinner');
     const idOrderBuyerTrue = document.getElementById('idOrderBuyerTrue');
     const RadialesBuyerTrue = document.querySelectorAll('.Radio-BuyerTrue');
     const commentBuyerTrue = document.getElementById('commentBuyerTrue');
     
-    let radioValueBuyerTrue;                                      
+    let radioValueBuyerTrue = "Positivo";                                      
       
 
      for (let i = 0; i < RadialesBuyerTrue.length; i++) {
@@ -557,29 +2404,251 @@
 
         btnBuyerTrue.addEventListener('click', ()=>{
 
-        //aqui armo el objeto que requiero enviar via fetch
+
+            //bloqueamos el boton y dejamos el boton spinner
+            btnBuyerTrue.classList.add('close');
+            btnBuyerTrueSpinner.classList.remove('close');
+
+            //aqui armo el objeto que requiero enviar via fetch
             const objectBuyerTrue = { idOrder : idOrderBuyerTrue.value,
                                       rating : radioValueBuyerTrue, 
                                       comment : commentBuyerTrue.value   
-                                    };
-            
-            //este dato es enviado por el comprador como ultimo paso para cerrar la orden de compra efectiva.      
-            fetch('/buysell-body/buyerTrue', {
+                                    };                     
 
-                method: "post",
-                body: JSON.stringify(objectBuyerTrue),
-                headers: {"content-type" : "application/json"}
+            if ( objectBuyerTrue.rating !== "" && objectBuyerTrue.comment !=="" ) {
+                console.log("podemos enviar al backend la calificacion y el comentario ");
 
-                })
-                .then(response =>response.json() )
-                .then( jsonx => {console.log("Este es la respuesta del vendedor fetch post",jsonx)
-                        location.reload();
+
+                //este dato es enviado por el comprador como ultimo paso para cerrar la orden de compra efectiva.      
+                fetch('/buysell-body/buyerTrue', {
+
+                    method: "post", 
+                    body: JSON.stringify(objectBuyerTrue),
+                    headers: {"content-type" : "application/json"}
+
                     })
-                .catch( err => console.log(err));           
+                    .then(response =>response.json() )
+                    .then( jsonx => { 
+                        console.log(jsonx) 
+                        const code = jsonx.code;
+                        const message = jsonx.message; 
+                        
+                        if (code === "ok"){
+
+                            mostrarToast( message, 'right', 'success', '¡Bien Hecho!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+
+                                location.reload();
+
+                            }, 5000);
+
+                        } else {
+
+                            mostrarToast( message, 'right', 'danger', '¡Upps!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+                                //activamos el boton nuevamente
+                                btnBuyerTrue.classList.remove('close');
+                                btnBuyerTrueSpinner.classList.add('close');
+
+                            }, 5000);
+
+                        }
+
+                        
+                    })
+                    .catch( err => console.log(err));   
+
+            } else { 
+                console.log("NO podemos enviar al backend la calificacion y el comentario, No hay datos"); 
+                const message = "Debe dejar una calificación y un comentario.";
+                mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                setTimeout(() => {
+
+                    btnBuyerTrue.classList.remove('close');
+                    btnBuyerTrueSpinner.classList.add('close');
+
+                }, 5000);
+            }                       
+            
+        
 
         });
      
     };
+
+</script>
+
+<script>
+    //vista comprador cuando ha pagado
+    //aqui el comprador califica y comenta a su vendedor.
+    const btnSellTrue = document.getElementById('btnSellTrue');
+    const btnSellTrueSpinner = document.getElementById('btnSellTrueSpinner');
+    //const idOrderBuyerTrue = document.getElementById('idOrderBuyerTrue');
+    //const RadialesBuyerTrue = document.querySelectorAll('.Radio-BuyerTrue');
+    //const commentBuyerTrue = document.getElementById('commentBuyerTrue');
+    
+    let radioValueSellTrue ="Positivo";                                      
+      
+
+     for (let i = 0; i < RadialesBuyerTrue.length; i++) {
+            const ele = RadialesBuyerTrue[i];
+
+        ele.addEventListener('click', ()=>{
+            radioValueSellTrue = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
+           // console.log("Valor del radial checked es --->", radioValue);
+        })  
+     }
+        
+    if (btnSellTrue){ 
+
+        btnSellTrue.addEventListener('click', ()=>{
+
+            //bloqueamos el boton y dejamos el boton spinner
+            btnSellTrue.classList.add('close');
+            btnSellTrueSpinner.classList.remove('close');
+
+            //aqui armo el objeto que requiero enviar via fetch
+            const objectBuyerTrue = { idOrder : idOrderBuyerTrue.value,
+                                      rating : radioValueBuyerTrue, 
+                                      comment : commentBuyerTrue.value   
+                                    };
+
+            if ( objectBuyerTrue.rating !== "" && objectBuyerTrue.comment !=="" ) {                        
+            
+                //este dato es enviado por el comprador como ultimo paso para cerrar la orden de compra efectiva.      
+                fetch('/buysell-body/sellTrue', {
+
+                    method: "post", 
+                    body: JSON.stringify(objectBuyerTrue),
+                    headers: {"content-type" : "application/json"}
+
+                    })
+                    .then(response =>response.json() )
+                    .then( jsonx => { 
+                        console.log(jsonx) 
+                        const code = jsonx.code;
+                        const message = jsonx.message; 
+                        
+                        if (code === "ok"){
+
+                            mostrarToast( message, 'right', 'success', '¡Bien Hecho!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+
+                                location.reload();
+
+                            }, 5000);
+
+                        } else {
+
+                            mostrarToast( message, 'right', 'danger', '¡Upps!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+                                //activamos el boton nuevamente
+                                btnSellTrue.classList.remove('close');
+                                btnSellTrueSpinner.classList.add('close');
+
+                            }, 5000);
+
+                        }
+
+                        
+                    })
+                    .catch( err => console.log(err)); 
+                    
+            } else {
+
+                console.log("NO podemos enviar al backend la calificacion y el comentario, No hay datos"); 
+                const message = "Debe dejar una calificación y un comentario.";
+                mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                setTimeout(() => {
+
+                    btnSellTrue.classList.remove('close');
+                    btnSellTrueSpinner.classList.add('close');
+
+                }, 5000);
+
+            }        
+
+        });
+     
+    };
+
+</script>
+
+<script>
+    //nuevo
+    //este boton cierra la sala de negociacion, el acto de cerrar es individual. si el comprador lo cierra solo su sala se cerrara igual pasara con el vendedor
+
+    const btnCloseOperation = document.getElementById('btnCloseOperation');
+    //const IndexedSell = document.querySelector('.indexedSell');
+    //const IndexedBuy = document.querySelector('.indexedBuy');
+
+    const idUser = document.getElementById('idUser');
+
+    if (btnCloseOperation){
+
+        btnCloseOperation.addEventListener('click', ()=>{
+
+            const iDOrder = idBuysell.value;
+            const iDUser = idUser.value;
+            let indexedSell = IndexedSell.value; 
+            let indexedBuy = IndexedBuy.value;
+            
+
+            if (iDUser == indexedSell) {
+                console.log("Eres el vendedor");
+                indexedBuy = "";
+            } else if (iDUser == indexedBuy) {
+                console.log("Eres el comprador");
+                indexedSell = "";
+            }
+
+            console.log("iDUser:", iDUser);
+            console.log("idOrder :", iDOrder);
+            console.log("indexedSell :", indexedSell);
+            console.log("indexedBuy :", indexedBuy);
+
+
+            const formData = new FormData()
+            formData.append('idOrder', iDOrder);
+            formData.append('indexedBuy', indexedBuy);
+            formData.append('indexedSell', indexedSell);
+ 
+            
+            fetch('/buysell-body/closeOperation', {
+                method: "POST",
+                body: formData
+            })
+                .then(response =>response.json() )
+                .then( jsonx => 
+                {
+                    console.log(jsonx)
+                    const code = jsonx.code;
+                    const message = jsonx.message;
+
+                    if (code == "ok"){
+
+                        mostrarToast( message, 'right', 'sucess', '¡Hecho!', true ); 
+
+                    } else {
+
+                        mostrarToast( message, 'right', 'danger', '¡Upps!', false ); 
+
+                    }
+                
+                })
+                .catch( err => console.log(err));    
+ 
+
+        })
+
+
+
+           
+    }        
 
 </script>
 
@@ -633,6 +2702,84 @@
 
 </script>
 
+<script>
+
+    function mostrarToast(mensaje, posicion, color, titulo = '', conBotonCerrar = false) {
+        // Configuración predeterminada
+        toastr.options = {
+            "closeButton": conBotonCerrar, // Agregar botón de cerrar si se solicita
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": !conBotonCerrar, // Si tiene botón de cerrar, no mostrar barra de progreso
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "600",
+            "hideDuration": "1000",
+            "timeOut": conBotonCerrar ? false : "8000", // No se oculta automáticamente si tiene botón de cerrar
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+  
+        // Configurar la posición
+        switch (posicion) {
+            case 'center':
+                toastr.options.positionClass = 'toast-top-center';
+                break;
+            case 'left':
+                toastr.options.positionClass = 'toast-top-left';
+                break;
+            case 'right':
+                toastr.options.positionClass = 'toast-top-right';
+                break;
+            default:
+                toastr.options.positionClass = 'toast-top-right'; // Posición predeterminada
+        }
+  
+        // Mostrar el mensaje según el color especificado
+        switch (color) {
+            case 'success':
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+                break;
+            case 'info':
+                titulo ? toastr.info(mensaje, titulo) : toastr.info(mensaje);
+                break;
+            case 'warning':
+                titulo ? toastr.warning(mensaje, titulo) : toastr.warning(mensaje);
+                break;
+            case 'danger':
+                titulo ? toastr.error(mensaje, titulo) : toastr.error(mensaje);
+                break;
+            case 'primary':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-primary' }) : toastr.info(mensaje, '', { toastClass: 'toast-primary' });
+                break;
+            case 'dark':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-dark' }) : toastr.info(mensaje, '', { toastClass: 'toast-dark' });
+                break;
+            default:
+                console.warn('Color no válido. Usando el color por defecto (success).');
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+        }
+    }
+  
+
+   //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+  
+</script>
+
+
+
+<script>
+    $(document).ready(function() {
+      /*   $('.ui.rating').rating(); */ // Activa la interacción
+        $('.ui.rating').rating('disable'); // Desactiva la interacción
+    });
+</script>
+
 </body>
 </html>
+
+
 

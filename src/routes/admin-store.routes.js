@@ -17,6 +17,7 @@ const modelRaffle = require('../models/raffle.js');
 
 const modelStoreRate = require('../models/storeRate.js');
 const modelTransportAgent = require('../models/transportAgent.js');
+const modelBankUser = require('../models/bankUser.js');
 
 const fs = require('fs-extra');
 const {S3} = require('aws-sdk');
@@ -520,7 +521,6 @@ routes.post('/myaccount/segment-changeGroup', async (req, res)=>{
 });
 
 
-
 routes.get('/myaccount/transportAgent', async (req, res)=>{
     try {
         
@@ -554,6 +554,202 @@ routes.get('/myaccount/transportAgent', async (req, res)=>{
     }
     
 });
+
+
+
+routes.get('/myaccount/bankData', async (req, res)=>{
+    try {
+        
+        console.log("********* bankData ******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        const countMessages = req.session.countMessages
+        console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile;
+        let jsonPaymentSystem; 
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            console.log("searchProfile -->", searchProfile);
+
+            
+            const bankData = await modelBankUser.findOne( { indexed : user._id } );
+            console.log("bankData :", bankData );
+
+            if (bankData){
+
+                const paymentSystem = bankData.paymentSystem;
+                const PaymentSystem = { "paymentSystem": paymentSystem };
+                jsonPaymentSystem = JSON.stringify(PaymentSystem);
+
+            } 
+
+      
+            res.render('page/bankData', { user, searchProfile, bankData, jsonPaymentSystem, countMessages, countNegotiationsBuySell });
+        }   
+
+ 
+    } catch (error) {
+        console.log("Ha habido un error en la carga de Datos Bancarios", error);
+    }
+});
+
+routes.post('/myaccount/bankData/addFirstMethod', async(req, res)=>{
+
+    console.log(".......... /myaccount/bankData/addFirstMethod ............ ");
+    console.log(req.body)
+    const {iD, username, methodName, data1, data2, data3, data4} = req.body;
+    const box = [data1, data2, data3, data4];
+    const idMethod = new Date().getTime(); //aqui creamos el id del methodo de pago, importante para lugeo poder editarlo o eliminarlo
+    const objectData = { methodName, idMethod };
+
+    box.forEach((value, i) => {
+        if (value !== "") {
+            console.log(`valor: ${value} | i: ${i}`);
+            objectData[`data${i + 1}`] = value;  // Asignar el valor a una nueva propiedad
+        }
+    });
+
+   
+    console.log("objectData :", objectData);
+
+    const newDataBank = new modelBankUser({ indexed: iD, username, paymentSystem: [objectData] });
+    const dataSave = await newDataBank.save()
+            .then(()=>{
+                const response = { code : "ok", message : "Datos guardados" };
+                res.json(response)
+            })
+            .catch((err)=>{
+                const response = { code : "error", message : "Ha ocurrido un error, intente mas tarde" };
+                res.json(response)
+            })
+    
+
+});
+
+routes.post('/myaccount/bankData/addOtherMethod', async(req, res)=>{
+
+    console.log(' ...................... /myaccount/bankData/addOtherMethod ............................ ');
+    console.log(req.body);
+    const {iD, username, methodName, data1, data2, data3, data4} = req.body;
+    const box = [data1, data2, data3, data4];
+    const idMethod = new Date().getTime(); //aqui creamos el id del methodo de pago, importante para lugeo poder editarlo o eliminarlo
+    const objectData = { methodName, idMethod };
+
+        box.forEach((value, i) => {
+        if (value !== "") {
+            console.log(`valor: ${value} | i: ${i}`);
+            objectData[`data${i + 1}`] = value;  // Asignar el valor a una nueva propiedad
+        }
+    });
+
+   
+    console.log("objectData :", objectData);
+
+    try {
+        
+        await modelBankUser.findOneAndUpdate({ indexed: iD }, { $push: { 'paymentSystem': objectData } });
+        const response = { message: "Datos guardados" };
+        // Aquí puedes hacer algo con la respuesta, como devolverla
+        res.redirect('/myaccount/bankData');
+
+   } catch (err) {
+
+        const response = { message: "Ha ocurrido un error, intente más tarde" };
+        // Maneja el error aquí, como registrar el error o enviarlo de vuelta
+        res.redirect('/myaccount/bankData');
+
+    }         
+
+});
+
+routes.post('/myaccount/bankData/deleteMethod', async (req, res)=>{
+
+    console.log(' ...................... /myaccount/bankData/deleteMethod ............................ ');
+    console.log(req.body);
+    const { iD,  idMethod } = req.body;
+    const iDMethod = parseInt(idMethod);
+    console.log("iD :", iD);
+    console.log("idMethod:", iDMethod);
+    console.log("idMethod typeof:", typeof iDMethod);
+
+    try {
+
+        const deleteMethod = await modelBankUser.findOneAndUpdate({ indexed: iD }, { $pull: { paymentSystem: { idMethod: iDMethod } } }, {new : true});
+        console.log("deleteMethod :", deleteMethod);
+        const response = { message: "Metodo eliminado" };
+        // Aquí puedes hacer algo con la respuesta, como devolverla
+        setTimeout(() => {
+            res.redirect('/myaccount/bankData');
+        }, 2000);
+        
+
+    } catch (error) {
+
+        const response = { message: "Ha ocurrido un error, intente más tarde" };
+        // Maneja el error aquí, como registrar el error o enviarlo de vuelta
+        setTimeout(() => {
+            res.redirect('/myaccount/bankData');
+        }, 2000);
+
+    }
+
+});
+
+routes.post('/myaccount/bankData/editMethod', async(req, res)=>{
+    console.log('........... /myaccount/bankData/editMethod ............');
+    console.log(req.body);
+    const { iD, idMethod, MethodName, Data1, Data2, Data3, Data4 } = req.body;
+    const iDMethod = parseInt(idMethod);
+    const methodName = MethodName.trim();
+    const data1 = Data1.trim();
+    const data2 = Data2.trim();
+    const data3 = Data3.trim();
+    const data4 = Data4.trim();
+
+    const box = [data1, data2, data3, data4];
+    const objectData = { iDMethod, methodName };
+
+    box.forEach((value, i) => {
+        if (value !== "") {
+            console.log(`valor: ${value} | i: ${i}`);
+            objectData[`data${i + 1}`] = value;  // Asignar el valor a una nueva propiedad
+        }
+    });
+
+    console.log("iD :", iD); //este es mi id del user que es el dato que va con el indexed de esta coleccion, asi los conecto
+    console.log("iDMethod :", iDMethod); //tengo mi idMethod en una constante se cual es el id del elemento 
+    console.log("iDMethod typeof :",  typeof iDMethod); //tengo mi idMethod en una constante se cual es el id del elemento 
+    console.log("objectData :", objectData); //ya tengo aqui mi objeto listo para ser incertado 
+   
+    try {
+        //intento ubicar un elemento del array paymentSystem y tomo dicho elemento por uno de sus campos llamado idMethod y luego le asigno un nuevo elemento que ya habia construio previamente.
+        
+        const updateMethod = await modelBankUser.findOneAndUpdate( { indexed: iD, 'paymentSystem.idMethod': iDMethod }, 
+                           { $set: { 'paymentSystem.$': objectData } }, { new: true });
+
+        console.log("updateMethod :", updateMethod); //respuesta null
+        const message =  "Metodo actualizado";
+        // Aquí puedes hacer algo con la respuesta, como devolverla
+        setTimeout(() => {
+            res.redirect('/myaccount/bankData');
+        }, 2000);
+ 
+    } catch (error) {
+        
+        const message =  "Ha ocurrido un error, intente mas tarde.";
+
+    }
+
+
+});
+
 
 
 routes.post('/myaccount/uploadDataTransport', async (req, res)=>{
@@ -883,6 +1079,10 @@ routes.post('/myaccount/uploadDocuments', async (req, res)=>{
 
                                         async function createData(){
 
+                                            //primero se actualiza el perfil.
+                                            const updateProfile = await modelProfile.findOneAndUpdate({ indexed : user._id }, { $set: { 'transportAgent.deliveryTransport' : true, 'transportAgent.active' : true }}, {new: true} );
+
+                                            //luego se termina de actualizar el documento del modelTransportAgent
                                             const transportUpdate = await modelTransportAgent.updateOne(
                                                 { indexed: user._id }, // Filtra por el usuario
                                                 { 
@@ -1393,7 +1593,144 @@ routes.post('/myaccount/uploadSelfieEdit', async(req, res)=>{
 
 });
 
+routes.post('/myaccount/transportAgent/active', async(req, res)=>{
 
+    try {
+
+        console.log("Hemos llegado a /myaccount/transportAgent/active");
+        console.log("body :", req.body );
+        const {indexed, selectedValue} = req.body;
+        //indexed: '67e41975df0e3da5fc348fbc',
+        //selectedValue: 'false'
+        console.log("selectedValue.................... :", selectedValue );
+        console.log("selectedValue typeof .................... :", typeof selectedValue );
+
+        if ( selectedValue === "false" ){                           
+            const updateProfile = await modelProfile.findOneAndUpdate( {indexed:indexed}, { $set: { 'transportAgent.active' : false } }, {new:true});
+            console.log("updateProfile", updateProfile);
+            const response = { code: "ok", message: "Se ha desactivado su cuenta como agente de transporte."};
+            res.json(response);
+        } else {
+            const updateProfile = await modelProfile.findOneAndUpdate( {indexed:indexed}, { $set: { 'transportAgent.active' : true } }, {new:true});
+            console.log("updateProfile", updateProfile);
+            const response = { code: "ok", message: "Se ha activado su cuenta como agente de transporte."};
+            res.json(response);
+        }
+
+        // transportAgent : { deliveryTransport : false, active: false }
+
+
+    } catch (error) {
+        const response = { code: "err", message: "Ha habido un error. Intente más tarde."};
+        res.json(response);
+    }
+   
+
+});
+
+//esta ruta cancela la cuenta como agente de transporte
+routes.post('/myaccount/transportAgent/cancelAccount', async(req, res)=>{
+
+    try {
+
+        console.log("Hemos llegado a /myaccount/transportAgent/cancelAccount");
+        console.log("body :", req.body );
+        const {indexed, selectedValue} = req.body;
+        //indexed: '67e41975df0e3da5fc348fbc'
+        //selectedValue: 'true'
+
+        if ( selectedValue === "true" ){
+            //Primero debemos eliminar todo los datos de agente de transporte de este usuario.
+            const searchTransportAgent = await modelTransportAgent.findOne({indexed : indexed});
+            console.log("searchTransportAgent : ", searchTransportAgent);
+            const docImages = searchTransportAgent.docImages.images; //esto es un array de dos elementos, esto debemos eliminar.
+            const transportation = searchTransportAgent.transportation; //no es necesario eliminar esta imagen. es la del vehiculo. No hay costo alguno en dejarla y nos ahorramos tiempo de computo del servidor
+            console.log('docImages :', docImages);
+            //console.log('transportation :', transportation);
+
+            //docImages es un arreglo
+            deleteImagesAndDocument(docImages);
+
+            async function deleteImagesAndDocument(docImages) {
+                const deletePromises = docImages.map(async (image) => {
+                    console.log("image.public_id :  ", image.public_id);
+                    const public_id = image.public_id;
+                    console.log("Este es el public_id a eliminar: ", public_id); //transportAgent/1748103562662.jpg
+                    return deleteMedias(public_id);
+                });
+
+                try {
+                    // Espera a que todas las imágenes sean eliminadas
+                    await Promise.all(deletePromises);
+                    console.log("Todas las imágenes han sido eliminadas con éxito..................................");
+
+                    // Ahora puedes llamar a la función para eliminar el documento
+                    console.log("Ahora ya que se han eliminado las imaganes procedemos a eliminar el documento.");
+
+                    await deletedataDB()
+                        .then(()=>{
+                            const response = { code: "ok", message: "Su cuenta como agente de transporte se ha desvinculado."};
+                            console.log("Su cuenta como agente de transporte se ha desvinculado.");
+                            res.json(response);
+                        })
+                        .catch((e)=>{
+                            const response = { code: "err", message: "ha habido un problema inténtalo más tarde."};
+                            console.log("ha habido un problema inténtalo más tarde.");
+                            res.json(response);
+                        })
+
+                } catch (error) {
+                    console.error("Error al eliminar las imágenes:", error);
+                }
+            
+
+                async function deleteMedias(public_id) {
+                    console.log("Esta imagen se va a eliminar :", public_id)
+                    //const public_id = transportAgent/1748103562662.jpg
+                    const params = {
+                        Bucket: bucketName,
+                        Key: public_id
+                    };
+
+                    return new Promise((resolve, reject) => {
+                        s3.deleteObject(params, (err, data) => {
+                            if (err) {
+                                console.error("Error al eliminar el archivo --->", err);
+                                reject(err);
+                            } else {
+                                console.log("Media eliminada con éxito --->", data);
+                                resolve(data);
+                            }
+                        });
+                    });
+                }
+
+                //funcion para eliminar el documento.
+                async function deletedataDB(){
+                    //aqui cambiamos el status del usuario desvinculando su perfil del agente de transporte
+                    console.log("Aqui cambiamos el status del usuario desvinculando su perfil del agente de transporte.....................")
+                    const updateProfile = await modelProfile.findOneAndUpdate({indexed}, { $set: { 'transportAgent.deliveryTransport' : false, 'transportAgent.active' : false  }}, {new: true} );
+                    console.log("Ya hemos actualizado el profile updateProfile :", updateProfile);
+                    //aqui eliminamos el documento 
+                    await modelTransportAgent.findOneAndDelete({indexed});
+                    console.log("Proceso terminado.....................")
+                    console.log("eliminanos el documento....................")
+                }
+
+            }
+        
+        } 
+
+        // transportAgent : { deliveryTransport : false, active: false }
+
+
+    } catch (error) {
+        const response = { code: "err", message: "Ha habido un error. Intente más tarde."};
+        res.json(response);
+    }
+   
+
+})
 
 //---------------------------InfoBliss--------------------------------
 
@@ -1689,3 +2026,4 @@ routes.post('/infobliss/deleteScheme/survey', async(req, res)=>{
 
 
 module.exports = routes;
+

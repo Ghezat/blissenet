@@ -102,9 +102,10 @@
                 <% if (searchProfile) {  %>
 
                     <% const storeUser = searchProfile.username %> <!-- aqui el store en cuention username-->
-                    <% const storeUserId = searchProfile._id %> <!-- aqui el store en cuention id -->
+                    <% const storeUserId = searchProfile.indexed %> <!-- aqui el store en cuention indexed -->
                     <% const storeUserIndexed = searchProfile.indexed %> <!-- aqui el store en cuention indexed que es el mismo id del user -->
                     
+                    <input type="hidden" id="storeId" value="<%= storeUserId %>">
                     <input type="hidden" id="storeUserValue" value="<%= storeUser %>"> 
 
                     <div class="row m-0 d-flex justify-content-center">
@@ -146,7 +147,65 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="card my-2" style="background-color: rgba(255, 255, 255, 0.5);">
+                                    
+                                    <div class="card-header">
+                                        Configuración de Agente de Transporte
+                                    </div>
+                                    <div class="card-body">
+                                                                        
+                                        <div class="form-group my-2">
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="activeTransport" value="true" id="activeTransport1" <%= searchProfile.transportAgent.active ? 'checked' : '' %> >
+                                                <label class="form-check-label" for="activeTransport1">
+                                                    Activado
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="activeTransport" value="false" id="activeTransport2" <%= !searchProfile.transportAgent.active ? 'checked' : '' %> >
+                                                <label class="form-check-label" for="activeTransport2">
+                                                    Desactivado
+                                                </label>
+                                            </div>
+                                            <!-- <span> activo : <%= searchProfile.transportAgent.active %></span> -->
+
+                                        </div>
+                                        <div class="alert alert-info my-2">
+                                            La opción 'desactivar' mantiene su cuenta como agente de transporte, pero no recibirá ninguna solicitud de servicio hasta que active esta opción nuevamente.
+                                        </div>
+                                        <div class="form-group my-3">
+                                            <button class="btn btn-primary form-control" id="activeAcept">Aceptar Cambios</button>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="from-group my-2">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="deliveryTransport">
+                                                <label class="form-check-label" for="deliveryTransport">Darse de baja como agente de transporte</label>
+                                            </div> 
+                              
+                                            <div class="alert alert-info my-2">
+                                                Si selecciona darse de baja, eliminará su cuenta como agente de transporte en blissenet.com. En el futuro, podrá volver a crear una vinculación para ofrecer servicios de delivery nuevamente.
+                                            </div>
+                                        </div>    
+                                        <div class="form-group my-3">
+                                            <button class="btn btn-danger form-control" id="deliveryTransportAcept">Aceptar Cambios</button>
+                                          
+                                            <button class="form-control btn btn-danger close" id="deliveryTransportSpinner" disabled>
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                Actualizando ...
+                                            </button>
+                                        </div>
+                                        
+
+                                    </div>
+
+                                </div>
                             </div>
+
+
                             <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-12">
 
                                 <ul class="nav nav-tabs mt-3" style="background-color: rgba(255, 255, 255, 0.8); border-top-left-radius: 5px; border-top-right-radius: 5px; height: auto;">
@@ -766,6 +825,7 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
        
         <script src="/toastr/toastr.min.js"></script>
+        
 </body>
 
 <script>
@@ -1111,12 +1171,12 @@
             nextTrans.classList.add('close'); //se esconde el boton 
 
             const formData = new FormData();
-            formData.append('CheckAcept', true);
-            formData.append('SelectMedio', selectMedio.value);
-            formData.append('DescripMedio', descripMedio.value);
-            formData.append('SelectColor', selectColor.value);
-            formData.append('PlacaMedio', placaMedio.value);
-            formData.append('fileImg', fileTrans); //image del medio de transporte
+                formData.append('CheckAcept', true);
+                formData.append('SelectMedio', selectMedio.value);
+                formData.append('DescripMedio', descripMedio.value);
+                formData.append('SelectColor', selectColor.value);
+                formData.append('PlacaMedio', placaMedio.value);
+                formData.append('fileImg', fileTrans); //image del medio de transporte
 
             //siempre llega en el mimso orden primero el documento y segundo el selfie
 
@@ -1259,9 +1319,9 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
             btnUploadDocument.classList.add('close');  
 
             const formData = new FormData();
-            formData.append('fileImg', fileOne); //document
-            formData.append('fileImg', fileTwo); //selfie
-            //siempre llega en el mimso orden primero el documento y segundo el selfie
+                formData.append('fileImg', fileOne); //document
+                formData.append('fileImg', fileTwo); //selfie
+                //siempre llega en el mimso orden primero el documento y segundo el selfie
 
             console.log("Esto es formData", formData);
 
@@ -1996,8 +2056,130 @@ let fileOne, fileTwo //declaracion de variables para un entorno globlal...
 </script>
 
 <script>
+    //aqui seleccionamos el estatus de active = false o true
+    const storeId = document.getElementById('storeId');
+    const activeAcept = document.getElementById('activeAcept');
+    //const activeTransport = document.querySelectorAll('input[name="activeTransport"]');
+
+    let selectedValue;
+
+    activeAcept.addEventListener('click', ()=>{
+      
+        const storeIdValue = storeId.value;
+        const activeTransport = document.querySelectorAll('input[name="activeTransport"]');
+                
+        activeTransport.forEach(radio => {
+            if (radio.checked) {
+                selectedValue = radio.value 
+            }
+        });
+
+        console.log("selectedValue :", selectedValue);
+
+
+        const formData = new FormData()
+            formData.append('indexed', storeIdValue);
+            formData.append('selectedValue', selectedValue);
+
+        
+        fetch('/myaccount/transportAgent/active', {
+            method: "POST",
+            body: formData
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log(jsonx)
+                            
+            const code = jsonx.code;
+            const message = jsonx.message;
+
+            if (code == "ok"){
+                mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+            } else {
+                 mostrarToast( message , 'right', 'danger', '¡Hecho!', true ); // Agrega título aquí
+            }
+        
+        })
+        .catch( err =>{ console.log(err)
+            mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+        });
+
+    })
+
+
+   
+
+</script>
+
+<script>
+    const deliveryTransport = document.getElementById('deliveryTransport');
+    const deliveryTransportAcept = document.getElementById('deliveryTransportAcept');
+    const deliveryTransportSpinner = document.getElementById('deliveryTransportSpinner');
+
+
+    //este boton acepta que el usuario se ha dado de baja
+    deliveryTransportAcept.addEventListener('click', ()=>{
+
+        
+
+        const storeIdValue = storeId.value;
+        const deliveryTransportCheked = deliveryTransport.checked; 
+        console.log("deliveryTransportCheked :", deliveryTransportCheked);
+        console.log("deliveryTransportCheked typeof :", typeof deliveryTransportCheked);
+
+        if (deliveryTransportCheked === true ){
+
+            console.log("deliveryTransport :", deliveryTransport)
+            deliveryTransportSpinner.classList.remove('close');
+            deliveryTransportAcept.classList.add('close');
+
+             
+            const formData = new FormData()
+                formData.append('indexed', storeIdValue);
+                formData.append('selectedValue', deliveryTransportCheked);
+
+            fetch('/myaccount/transportAgent/cancelAccount', {
+                method: "POST",
+                body: formData
+            })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                console.log(jsonx)
+                                
+                const code = jsonx.code;
+                const message = jsonx.message;
+
+                if (code == "ok"){
+                    mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+                     mostrarToast( "Actualizando en 4 segundos" , 'right', 'success', '', true ); // Agrega título aquí
+                    //Ahora que esta hecho tenemos que recargar la pagina
+                    setTimeout(() => {
+                         location.reload();
+                    }, 4000);
+                   
+
+                } else {
+                    mostrarToast( message , 'right', 'danger', '¡Hecho!', true ); // Agrega título aquí
+                }
+            
+            })
+            .catch( err =>{ console.log(err)
+                mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+            });
+         
+
+        }    
+
+    })
+
+</script>
+
+<script>
     $(document).ready(function() {
       /*   $('.ui.rating').rating(); */ // Activa la interacción
         $('.ui.rating').rating('disable'); // Desactiva la interacción
     });
+
+   
 </script>

@@ -24,6 +24,14 @@
     <meta name= "twitter:url" content="https://blissenet.com/product/<%= search.department %>/<%= search._id %>/<%= search.titleURL %>">
      
     <%- include('../partials/head.ejs') %>       
+
+     <!-- semantic-ui -->
+    <link rel="stylesheet" href="/semantic/semantic.min.css">
+    <script src="/semantic/semantic.min.js"></script>
+
+    <!-- toastr tiene que estar despues del CDN de bootstrap -->
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> 
+    <script src="/toastr/toastr.min.js"></script>
     
 </head>
 <style>
@@ -117,6 +125,104 @@
         padding: 0;
     }
 
+    .buttonPause{
+      background-color: #9200FF;
+      color: #FEDE05;
+      width: 100%;  
+      position: relative;
+      padding: 15px 20px;
+      overflow: hidden;
+      letter-spacing: 3px;
+      font-weight: 800;
+      font-size: 1em;
+      text-transform: uppercase;
+    }
+
+    /* Estilos del boton processing ------------------------- */
+    .buttonProcessingBuy{
+      width: 100%;  
+      position: relative;
+      padding: 15px 20px;
+      overflow: hidden;
+      letter-spacing: 3px;
+      font-weight: 800;
+      font-size: 1em;
+      text-transform: uppercase;
+      animation: colorChange 3s infinite alternate; /* Cambia la duración y el modo según prefieras */
+    }
+
+    @keyframes colorChange {
+        0% {
+            background-color: blue;
+            box-shadow: 0 0 20px blue;
+        }
+        50% {
+            background-color: #9200FF;
+            box-shadow: 0 0 20px #9200FF;
+        }
+        100% {
+            background-color: blue;
+            box-shadow: 0 0 20px blue;
+        }
+    }
+    /* fin de estilos del boton processing ------------------------- */
+
+/* Css para el boton de compra */
+
+  section.containerBuy_btn{
+    width: 100%;
+    margin: 20px auto;
+    text-align: left;
+  }
+
+  
+    .buttonSlice:hover{
+        cursor: pointer
+    }
+
+    .buttonSlice{
+      width: 100%;  
+      background: transparent; outline: none;
+      background: #9200FF; outline: none;
+      color: #FEDE05;
+      position: relative;
+     /*  border: 2px solid #111; */
+      padding: 15px 20px;
+      overflow: hidden;
+    }
+
+    /*button:before (attr data-hover)*/
+    .buttonSlice:hover:before{opacity: 1; -webkit-transform: translate(0,0); transform: translate(0,0);}
+    .buttonSlice:before{
+      content: attr(data-hover);
+      position: absolute;
+      top: 1.1em; left: 0;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 800;
+      font-size: 1em;
+      opacity: 0;
+      -webkit-transform: translate(-100%,0);
+              transform: translate(-100%,0);
+      -webkit-transition: all .3s ease-in-out;
+      transition: all .3s ease-in-out;
+      color: #FEDE05;
+    }
+      /*button div (button text before hover)*/
+    .buttonSlice:hover div{opacity: 0; -webkit-transform: translate(100%,0); transform: translate(100%,0)}
+    .buttonSlice div{
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 800;
+        font-size: 1em;
+        -webkit-transition: all .3s ease-in-out;
+        transition: all .3s ease-in-out;
+        color: #FEDE05;
+      }
+
+    /* Css para el boton de compra */
+
     @media screen and (min-width: 290px) and (max-width: 499px ){
       .containerShare{
         /* esto pertenece al modulo de compartir */
@@ -147,14 +253,23 @@
         <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
         <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
           <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+    
+        <input type="hidden" value="<%= user._id %>" id="newBTNvisitante"> <!-- aqui el id del visitante -->
+        <input type="hidden" value="<%= search.username %>" id="newBTNanunciante"> <!-- aqui el user anunciante -->
+        <input type="hidden" value="<%= search.user_id %>" id="newBTNid_anunciante"> <!-- aqui el id del anunciante -->
+        <input type="hidden" value="<%= search.department %>" id="newBTNdepart"> <!-- aqui el department -->
+        <input type="hidden" value="<%= search.title %>" id="newBTNtitle"> <!-- aqui el title -->
+        <input type="hidden" value="<%= search._id %>" id="newBTNid_title"> <!-- aqui el id del articulo -->
+    
     <% }; %>
     
     <!-- audios disponibles para diferentes acciones -->        
     <!-- <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> -->
     <audio src="/sound/Note-efect.mp3" id="efectSoundNewBid"></audio>
     <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> 
+     
 
-    <div class="row border border-ligth m-0" style="width: 100%;">
+    <div class="row border border-ligth m-0" style="width: 100%;">      
        <!--  ::::: productId ::::: -->
         <% if (productId) { %>
             <input type="hidden" value="<%= productId %>" id="productId">
@@ -512,9 +627,12 @@
                         <div class="card-body">
                             <% if (user) {  %>
                                 <% if (depart == 'items' || depart == 'arts') { %>
-                                    
-                                    <span>Solo de a comprar si esta seguro de adquirir este producto.</span> <br> <hr>
-                                    <p>Modo compra directa sin seguro</p>
+                                                                         
+                                    <div class="alert alert-light" style="background-color: #E9ECEF;">
+                                        <span> <i class="bi bi-exclamation-triangle-fill me-1"></i> Solo de a comprar si esta seguro de adquirir este producto.</span>
+                                    </div>
+                                    <hr>
+                                    <!-- <p>Modo compra directa sin seguro</p> -->
 
                                 <% }; %>
                                 <% if (depart == 'raffle') { %>
@@ -532,36 +650,178 @@
                                     <% if (user.username !== search.username) { %>
                                         <!-- tercera condicion que el articulo no este pausado -->
                                         <% if (search.paused !== true && search.soldOut !== true   ) { %>
-                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticComprar">
-                                            Comprar
-                                        </button>
-                                        <button class="btn btn-primary form-control invisibleBtn mt-2" type="button" id="btnCreateLoading" disabled>
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                            Comprando...
-                                        </button>
-                                        <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
-                                        <hr>
-                                        <p>Modo compra segura</p>                        
-                                        <button class="btn btn-info mt-2 text-light form-control" data-bs-toggle="modal" data-bs-target="#staticCompraSegura">
-                                            Compra segura  
-                                            <i class="bi bi-shield-check mx-2"></i>
-                                        </button>
-                                        <!-- el modal de este boton esta en la linea 863 -->
-                                        
+<!--                                             
+                                            <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticComprar">
+                                                Comprar
+                                            </button>
+                                            <button class="btn btn-primary form-control invisibleBtn mt-2" type="button" id="btnCreateLoading" disabled>
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                Comprando...
+                                            </button>
+                                           si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
+                                                                                 
+                                            <section class="containerBuy_btn">
+                                                
+                                                <div class="contentPubliRating">
+                                                    <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
+                                                    <div class="meta">
+                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                    </div>
+                                                    <div class="extra text-dark">
+                                                        Rating: 4.4
+                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
+                                                         <div class="contentStart" style="color: gold">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-half"></i>
+
+                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
+                                                         </div>    
+                                                        
+                                                        
+                                                    </div> 
+                                                </div>
+                                                
+                                                <form action="/buysell/direct" method="post" id="form_buysell">
+
+                                                    <p class="m-0">Disponible : <%= search.count %> </p>
+
+                                                    <div class="input-group my-2">
+                                                        <!-- la cantidad que quiere comprar el cliente  -->
+                                                        <div class="input-group-text">Cantidad :</div> 
+                                                        <input class="form-control" name="countRequest" id="countRequest"  type="number" style="font-size: 20px;" value="1" max="<%= search.count %>" min="1">
+                                                    </div>    
+
+                                                    <!-- vendedor, comprador, depart, idProduct, countRequest, unitPrice -->
+                                                 
+                                                    <input type="hidden" name="comprador" value="<%= user._id %>"> <!-- aqui el id del visitante -->
+                                                    <input type="hidden" name="vendedor" value="<%= search.user_id %>"> <!-- aqui el id del anunciante -->
+                                                    <input type="hidden" name="title" value="<%= search.title %>"> <!-- aqui el title -->
+                                                    <input type="hidden" name="depart" value="<%= search.department %>"> <!-- aqui departamento -->
+                                                    <input type="hidden" name="idProduct" value="<%= search._id %>"> <!-- aqui el id del articulo -->
+                                                    <input type="hidden" name="delivery" value="<%= search.delivery %>"> <!-- aqui el estado de delivery -->
+                                                    <input type="hidden" name="unitPrice" class="unitPrice" value="<%= search.price %>"> <!-- aqui el precio --> 
+                                                   
+                                                    <input type="hidden" class="available" value="<%= search.count %>">
+                                                    
+                                                    <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                        <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
+                                                            <i class="bi bi-info-circle text-primary ms-2"></i>
+                                                        </button>   
+                                                    </p>
+                                                    <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                    <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy"><div>¡Compra ahora! </div></button>
+                                                    <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNBuySpinning" style="color: #FEDE05;" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Processing ... 
+                                                    </button>
+                                                
+
+                                                </form>
+
+                                            </section>
+                                            
                                         <% }  else { %>
-                                        <button type="button" class="dataBuy btn btn-secondary mt-2 text-light form-control" disabled>
-                                            Articulo Pausado o Agotado
-                                        </button>
-                                        <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
-                                        <hr>
-                                        <p>Modo compra segura</p>                        
-                                        <button class="btn btn-info mt-2 text-light form-control" disabled>Compra segura Paused <i class="bi bi-shield-check mx-2"></i> </button>    
-                                        <% }; %>
+
+                                            <section class="containerBuy_btn">
+                                                
+                                                <div class="contentPubliRating">
+                                                    <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
+                                                    <div class="meta">
+                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                    </div>
+                                                    <div class="extra text-dark">
+                                                        Rating: 4.4
+                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
+                                                         <div class="contentStart" style="color: gold">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-half"></i>
+
+                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
+                                                         </div>    
+                                                        
+                                                        
+                                                    </div> 
+                                                </div>
+
+                                                <p class="m-0">Disponible : <%= search.count %> </p>
+
+                                                <div class="input-group my-2">
+                                                    <!-- la cantidad que quiere comprar el cliente  -->
+                                                    <div class="input-group-text">Cantidad :</div> 
+                                                    <input class="form-control" id="countRequest" type="number" style="font-size: 20px;" value="1" max="<%= search.count %>" min="1">
+                                                </div>    
+                                                <input type="hidden" class="available" value="<%= search.count %>">
+                                                <input type="hidden" class="unitPrice" value="<%= search.price %>">
+                                                <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                    <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
+                                                        <i class="bi bi-info-circle text-primary ms-2"></i>
+                                                    </button>   
+                                                </p>
+                                                <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                <!-- <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy"><div>¡Compra ahora! </div></button> -->
+                                                <button class="buttonPause rounded-2 btn" disabled>
+                                                     PAUSADO/AGOTADO
+                                                </button>
+
+                                            </section>    
+                                        
+                                         <% }; %>
                                     
                                     <% } else { %>
-                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" disabled>
-                                            Comprar 
-                                        </button>  
+
+                                            <section class="containerBuy_btn">
+                                                
+                                                <div class="contentPubliRating">
+                                                    <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
+                                                    <div class="meta">
+                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                    </div>
+                                                    <div class="extra text-dark">
+                                                        Rating: 4.4
+                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
+                                                         <div class="contentStart" style="color: gold">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-half"></i>
+
+                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
+                                                         </div>    
+                                                        
+                                                        
+                                                    </div> 
+                                                </div>
+
+                                                <p class="m-0">Disponible : <%= search.count %> </p>
+
+                                                <div class="input-group my-2">
+                                                    <!-- la cantidad que quiere comprar el cliente  -->
+                                                    <div class="input-group-text">Cantidad :</div> 
+                                                    <input class="form-control" id="countRequest" type="number" style="font-size: 20px;" value="1" max="<%= search.count %>" min="1">
+                                                </div>    
+
+                                                <input type="hidden" class="available" value="<%= search.count %>">
+                                                <input type="hidden" class="unitPrice" value="<%= search.price %>">
+                                                <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                    <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
+                                                        <i class="bi bi-info-circle text-primary ms-2"></i>
+                                                    </button>   
+                                                </p>
+                                                <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy" disabled><div> ¡Compra ahora! </div></button>
+                                               <!--  <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNBuySpinning" style="color: #FEDE05;" disabled>
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                     Processing ... 
+                                                </button> -->
+                                            </section>
+
                                     <% }; %>
                                 <% }; %>
                                 <!-- primera condicion validar el departamento del anuncio -->
@@ -716,16 +976,67 @@
                             <% } else { %>
                             <!-- esto es si no hay un usuario logeado -->
                                 <% if (depart == 'items' || depart == 'arts') { %>
-                                    <span>Solo de a comprar si esta seguro de adquirir este producto.</span> <br> <hr>
-                                    <p>Modo compra directa sin seguro</p>
-                                    <button type="button" class="btnBuy btn btn-primary mt-2 text-light form-control">
-                                        Comprar
-                                    </button>
+
+                                    <div class="alert alert-light" style="background-color: #E9ECEF;">
+                                        <span> <i class="bi bi-exclamation-triangle-fill me-1"></i> Solo de a comprar si esta seguro de adquirir este producto.</span>
+                                    </div>
+                                    <hr>
 
                                     <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
-                                    <hr>
-                                    <p>Modo compra segura</p>                        
-                                    <button class="btn btn-info mt-2 text-light form-control">Compra segura  <i class="bi bi-shield-check mx-2"></i> </button>
+                                   
+                                            <section class="containerBuy_btn">
+                                                
+                                                <div class="contentPubliRating">
+                                                    <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
+                                                    <div class="meta">
+                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                    </div>
+                                                    <div class="extra text-dark">
+                                                        Rating: 4.4
+                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
+                                                         <div class="contentStart" style="color: gold">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-half"></i>
+
+                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
+                                                         </div>    
+                                                        
+                                                        
+                                                    </div> 
+                                                </div>
+                                                
+                                                <form action="/buysell/direct" method="post" id="form_buysell">
+
+                                                    <p class="m-0">Disponible : <%= search.count %> </p>
+
+                                                    <div class="input-group my-2">
+                                                        <!-- la cantidad que quiere comprar el cliente  -->
+                                                        <div class="input-group-text">Cantidad :</div> 
+                                                        <input class="form-control" name="countRequest" id="countRequest"  type="number" style="font-size: 20px;" value="1" max="<%= search.count %>" min="1">
+                                                    </div>    
+
+                                                    <!-- vendedor, comprador, depart, idProduct, countRequest, unitPrice -->
+
+                                                  
+                                                    <input type="hidden" class="unitPrice" value="<%= search.price %>">
+                                                    <input type="hidden" class="available" value="<%= search.count %>">
+                                                    
+                                                    <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                        <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
+                                                            <i class="bi bi-info-circle text-primary ms-2"></i>
+                                                        </button>   
+                                                    </p>
+                                                    <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                    <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy" disabled ><div>¡Compra ahora! </div></button>
+                                                                                               
+
+                                                </form>
+
+                                            </section>
+
                                 <% }; %>
                                 <% if (depart == 'raffle') { %>
                                     <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> Debe estar Logeado para participar en Sorteos.</div> <hr>
@@ -826,27 +1137,6 @@
                         </div>
                     </div>
 
-                    <!-- Modal Compra Segura -->
-                    <div class="modal fade" id="staticCompraSegura" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticCompraSeguraLabel" aria-hidden="true">
-                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="staticCompraSeguraLabel">Compra Segura (en desarrollo)</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <span>Este botón estará inactivo temporalmente, ya que estamos trabajando en el modulo de Compra Segura. Este sistema
-                                        actuará como arbitro entre compradores y vendedores, garantizando que ambas partes obtengan lo que les corresponde:
-                                        el comprador recibirá su mercancía y el vendedor su pago.
-                                    </span>
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Modal de contactar -->
                     <div class="modal fade" id="staticContactar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticContactarLabel" aria-hidden="true">
@@ -922,6 +1212,9 @@
                     </div>
 
                     <div class="card p-2 mt-2">
+                        <div class="card-header">
+                            Datos de Tienda
+                        </div>
                         <div class="card-body d-flex flex-column">
                             <% if (depart == 'items' || depart == 'arts' || depart == 'auctions' || depart == 'raffle') { %>
                                 <div class="contentScoreTrust d-flex justify-content-between">
@@ -1203,10 +1496,128 @@
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- con este script cconectamos este HTML al servidor socket     -->         
+  <!-- con este script cconectamos este HTML al servidor socket  -->         
   <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+
 </body>
 </html>
+
+<script>
+
+ const form_buysell = document.getElementById('form_buysell');   
+ const Comprador = document.getElementById('newBTNvisitante');
+ const Vendedor = document.getElementById('newBTNanunciante');
+
+ const newBTNdepart = document.getElementById('newBTNdepart');
+ const newBTNtitle = document.getElementById('newBTNtitle');
+ const newBTNid_title = document.getElementById('newBTNid_title');
+ const countRequest = document.getElementById('countRequest');
+ const available = document.querySelector('.available');
+ const unitPrice = document.querySelector('.unitPrice');
+ const totalPay = document.querySelector('.totalPay');
+
+
+ const newBTNBuy = document.getElementById('newBTNBuy'); //boton inicial 
+ const newBTNBuySpinning = document.getElementById('newBTNBuySpinning'); //boton de processing
+ let validPurchase = true;
+
+ countRequest.addEventListener('input', ()=>{
+    const countRequestValue =  parseInt(countRequest.value);
+    const availableValue = parseInt(available.value);
+
+    console.log("unitPrice :", unitPrice.value);
+    console.log("countRequest :", countRequestValue);
+    console.log("available :", availableValue);
+    console.log("typeOf countRequest :", typeof countRequestValue);
+    console.log("typeOf available :", typeof availableValue);
+
+    console.log(`${countRequestValue} < ${availableValue}`)
+
+    if (countRequestValue <= availableValue){
+        console.log("Se puede procesar");
+        countRequest.style.cssText = "color: black;font-size: 20px"
+        totalMount = (unitPrice.value * countRequest.value).toFixed(2)  //limitar dos decimales
+        totalPay.innerText = `$${totalMount}`
+        validPurchase = true;
+    } else {
+        console.log("Has pasado el limite colocarlo en rojo")
+        countRequest.style.cssText = "color: red;font-size: 20px"
+        totalPay.innerText = ""
+        validPurchase = false;
+    }
+
+   
+ })
+
+ newBTNBuy.addEventListener('click', (e)=>{
+    let comprador = Comprador.value;
+    let vendedor = Vendedor.value;
+
+    const countRequestValue =  parseInt(countRequest.value);
+    const availableValue = parseInt(available.value);
+
+    if (comprador !== vendedor){
+        if ( availableValue !== 0 ){
+         
+            if ( availableValue  >= countRequestValue ){
+
+                e.preventDefault(); // Esto previene el envío del formulario
+                // Aquí puedes poner la lógica que quieras antes de enviar el formulario
+                console.log('Botón clicado, pero el formulario no se envió aún.');
+                newBTNBuy.classList.add('close');
+                newBTNBuySpinning.classList.remove('close');
+                console.log("Existe imventario")
+                // Cuando estés listo para enviar, puedes hacerlo manualmente:
+                setTimeout(() => {
+
+                    form_buysell.submit(); 
+                    console.log("Enviamos el formulario para crear la venta");
+
+                }, 2000);
+            
+            }     
+                   
+        } else {
+            //enviar un toast diciendo que no hay disponibilidad
+            console.log("No existe imventario")
+        }
+    }    
+
+ })
+
+</script>
+
+<script>
+   //Script popover de esta pagina.  
+  const popoverCarBuy = document.querySelector('.popoverCarBuy'); 
+
+  // Inicializa el popover de Bootstrap
+  const popoverInstanceCar = new bootstrap.Popover(popoverCarBuy);
+
+  // Función para mostrar/ocultar el popover
+  function togglePopoverCar() {
+      const isVisible = popoverInstanceCar._isShown;
+      if (isVisible) {
+        popoverInstanceCar.hide();
+      } else {
+        popoverInstanceCar.show();
+      }
+  }
+
+  // Añade evento al botón
+  popoverCarBuy.addEventListener('mousemove', (event) => {
+      event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
+      togglePopoverCar();
+  });
+
+
+
+  // Cierra el popover si se hace clic en cualquier parte de la página
+  document.addEventListener('mousemove', () => {
+      popoverInstanceCar.hide();
+  });
+
+</script>
 
 <script>
     //comentario explicativo
@@ -2915,7 +3326,6 @@ const DataFetch = fetch('/extraer')
             });
 
         }   
-
 
                 
         //******************************************************

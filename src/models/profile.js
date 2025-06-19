@@ -10,6 +10,17 @@ const SchemaProfile = new Schema({
     company : { type : String }, //nombre de la compañia/empresa
     companyRif : { type : String }, //identificacion de la empresa
     geolocation : { type : Object}, //geolocation: { lon: '', lat: '' } objeto donde guardamos las coordenadas geograficas del este susuario.
+    locations: {
+           type: {
+               type: String, // 'Point'
+               enum: ['Point'],
+               required: true
+           },
+           coordinates: {
+               type: [Number], // [lon, lat] array location.coordinates
+               required: true
+           }
+    }, //este campo esta creado para optimizar las busquedas de aproximacion geografico
     country : { type : String },  //pais
     countryCode : { type : String },  //codigo del pais
     state : { type : String },  //estado o provincia
@@ -46,14 +57,37 @@ const SchemaProfile = new Schema({
     paused : { type: Boolean, default: false }, //por default nace false. este campo se utilizará para impedir que un usuario moroso con sus impagos pueda crear, editar y eliminar publicaciones. será la unica forma existente para presionar a los usuarios morosos. 
     view : { type : Number, default: 0  }, //este campo permite tener la cantidad de veces que entran en la tienda. 
     hashtags : { type : Object , default : [] }, //este campo crea por defecto un objeto vacio, en el se agregara un array con las diferentes palabras claves de la tienda. 
+    sellPolicy : { type : Object, default : { "Envio Local" : true, "Envio Interurbano" : false, "Envio Internac" : false }}, 
+    buyCar : { type : Boolean , default : false}, //por defecto todos tienen este valor false a menos que desee activarlo y para ello debe tener al menos 11 articulos. SOlo funciona para articulos y artes
+    transportAgent : { type : Object, default : { deliveryTransport : false, active: false } }, //este objeto guarda el estado del perfil esto indica que es un agente de transporte para hacer deliveries para "envios locales"
     indexed :  { type : String }  //este es el id del user     
 },{
     timestamps : true
 });
 
 SchemaProfile.plugin(mongoosePagination);
+
+// Asegúrate de crear un índice 2dsphere para el campo location
+SchemaProfile.index({ locations: '2dsphere' });
 module.exports = model('profileModel', SchemaProfile, "profiles");
 
 
 //politica cambiada por una menos ruda.
 //paused : { type: Boolean, default: false }, //por default nace false quiere decir que se mostrará. Sí este estado cambia no se mostrará en la busqueda. esto es para que admisnitracion pueda pasuar o activar una tienda.
+
+//Si en algún momento necesitas realizar consultas geoespaciales, puedes usar algo como:
+/* 
+javascript
+const nearbyProfiles = await profileModel.find({
+    location: {
+        $near: {
+            $geometry: {
+                type: 'Point',
+                coordinates: [-61.898752, 8.0150528] // ejemplo de coordenadas
+            },
+            $maxDistance: 5000 // distancia máxima en metros
+        }
+    }
+});
+
+ */

@@ -303,6 +303,12 @@
                                                         <!--   <img src="" class="preview"> -->
     
                                                     </div>
+
+                                                    <div class="input-group my-2">
+                                                        <span class="input-group-text"> Cantidad</span>
+                                                        <input type="number" name="count" 
+                                                            class="form-control" style="font-size: 18px;" step="1" min="1" required>   
+                                                    </div>
     
                                                     <div class="input-group my-2">
                                                         <span class="input-group-text"> Precio</span>
@@ -404,12 +410,18 @@
                                                             <!-- Campo de entrada oculto -->
                                                             <input type="hidden" id="hiddenInputEdit" name="tecnicalDescription">    
                                                                     
-                                                        <div class="input-group my-2">
-                                                            <span class="input-group-text"> Precio</span>
-                                                            <input type="number" name="price" id="priceEdit"
-                                                                class="form-control" style="font-size: 18px;" step="0.01" required>
-                                                            <span class="input-group-text"> USD</span>
-                                                        </div>
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text"> Cantidad</span>
+                                                                <input type="number" name="count" id="countEdit" 
+                                                                    class="form-control" style="font-size: 18px;" step="1" min="1" required>   
+                                                            </div>
+
+                                                            <div class="input-group my-2">
+                                                                <span class="input-group-text"> Precio</span>
+                                                                <input type="number" name="price" id="priceEdit"
+                                                                    class="form-control" style="font-size: 18px;" step="0.01" required>
+                                                                <span class="input-group-text"> USD</span>
+                                                            </div>
 
                                                             <div class="my-2 d-flex justify-content-center contentImgs border"
                                                                 id="addObjectImgEdit">
@@ -924,6 +936,7 @@
             const autorEdit = document.getElementById('authorEdit');
             const yearEdit = document.getElementById('yearEdit');
             const tecnicalDescripEdit = document.getElementById('tecnicalDescripEdit');
+            const countEdit = document.getElementById('countEdit');
             const priceEdit = document.getElementById('priceEdit');
             const addObjectImgEdit = document.getElementById('addObjectImgEdit');
             
@@ -958,6 +971,7 @@
                                 let delta = MyPublication.tecnicalDescription;
                                 let Delta = JSON.parse(delta);
                                 quillEdit.setContents(Delta);
+                                countEdit.value = MyPublication.count;
                                 priceEdit.value = MyPublication.price;
 
                                 for (let i = 0; i < myImages.length; i++) {
@@ -974,6 +988,7 @@
                                 autorEdit.value = "";
                                 yearEdit.value = "";
                                 quillEdit.setContents("");
+                                countEdit.value = "";
                                 priceEdit.value = "";
                             }
                         }

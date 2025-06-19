@@ -146,8 +146,7 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
         console.log(user.username)
         const username = user.username; //aqui tengo el username;
         const department = 'realstate'; 
-        const commission = 8; //esto es un precio tasado a dolares luego se convertira en la moneda de curso legal.  
-
+       
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
         console.log("Aqui el estado --->",searchProfile[0].state);
@@ -247,12 +246,7 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
                                                             const Realstate =  new modelRealstate({ title, titleURL, category, sub_category, construcDate, mtrs2, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment  }); 
                                                             const RealstateSave = await Realstate.save();
                                                             //console.log(RealstateSave);
-                                        
-                                                            const title_id = RealstateSave._id;
-                                        
-                                                            //ya ha sido creado y guardado todo lo referente al anuncio ahora procedemos a crear y guardar la invoice.
-                                                            const Invoice = new modelInvoice({ usernameSell : username, indexed : user._id, department, title, title_id, price, commission });
-                                                            const InvoiceSave = await Invoice.save();
+                                                                                
                                                     
                                                         }  else {
                                                             console.log("NO se pudo crear su anuncio por no contar con una imagen");

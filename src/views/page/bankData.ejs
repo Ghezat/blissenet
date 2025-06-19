@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+ 
+
+    <script src="/jquery/jquery-3.1.1.min.js"></script> 
+
+  
+    <!-- semantic-ui -->
+    <link rel="stylesheet" href="/semantic/semantic.min.css">
+    <script src="/semantic/semantic.min.js"></script>
+
+    <!-- toastr tiene que estar despues del CDN de bootstrap -->
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> 
+    <script src="/toastr/toastr.min.js"></script>
+
+
+    <!-- estilos propios -->
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Blissenet Datos Bancarios</title>
+
+</head>
+<style>
+
+   
+
+.textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+}
+
+
+.toast-success {
+       /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+       background-color: #6f42c1; /* Azul tirando a morado */
+       color: white; /* Color del texto */
+} 
+
+
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+ 
+}
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    
+    <main class="themaTextLight" style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+        <% if (user) { %>
+
+            
+            <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Datos Bancarios </b>  </span>
+            </div> 
+            
+            <% const seeMarket = user.seeMarket %>
+            <% const idUser = user._id %>
+            <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+            <input type="hidden" value="<%= idUser %>" id= "idUser">
+              <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+            <div class="container-fluid p-0">
+                     
+                <% if (searchProfile) {  %>
+
+                    <% const storeUser = searchProfile.username %> <!-- aqui el store en cuention username-->
+                    <% const storeUserId = searchProfile.indexed %> <!-- aqui el store en cuention indexed -->
+                    <% const storeUserIndexed = searchProfile.indexed %> <!-- aqui el store en cuention indexed que es el mismo id del user -->
+                    
+                    <input type="hidden" id="storeId" value="<%= storeUserId %>">
+                    <input type="hidden" id="storeUserValue" value="<%= storeUser %>"> 
+    
+                    <div class="row m-0 d-flex justify-content-center">
+
+                        <% if (bankData) {  %>
+                            <input type="hidden" id="objetBankData" value="<%= jsonPaymentSystem %>">
+                        
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12">
+
+                                <div class="card mt-3" style="background-color: rgba(255, 255, 255, 0.5);">
+                                    <div class="card-header">
+                                       Mis datos
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.names %>" readonly>
+                                        </div>
+                                        <div class="form-group my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.identification %>" readonly>
+                                        </div>
+                                        <div class="form-group d-flex justify-content-between my-2">
+                                            <input type="text" class="form-control" value="<%= searchProfile.country %>" style="width: 80%;" readonly>
+                                            <input type="text" class="form-control" value="<%= searchProfile.countryCode %>" style="width: 18%;" readonly>
+                                        </div>
+
+
+                                        <div class="alert alert-info my-3">
+                                            <span> <b>¡Importante! </b> Todos estos datos deben ser correctos, si hay alguna informacion que debe ser editado o agregado vaya a <a href="/myaccount/profile">perfil.</a> </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion accordion-flush border " id="accordionExample">
+            
+                                    <div class="accordion-item" style="background-color: rgba(255, 255, 255, 0.5);">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                            Crear Nuevo Método.
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                            
+                                                <!-- Crear -->
+                                                <div class="card overflow80" style="background-color: rgba(255, 255, 255, 0);">
+                                                
+                                                    <div class="card-body px-0" style="background-color: rgba(255, 255, 255, 0);">
+                
+                                                        <form action="/myaccount/bankData/addOtherMethod" method="POST" id="formNewMethod" style="background-color: rgba(255, 255, 255, 0);">
+                
+                                
+                                                            <input type="hidden" value="<%= storeUserId %>" name="iD">
+                                                            <input type="hidden" value="<%= storeUser %>" name="username">
+
+                                                            <div class="form-goup my-2">
+                                                                <label for="">Nombre del método</label>
+                                                                <input type="text" name="methodName" placeholder="transferencia Bancaria, Zelle, Pago Movil" class="form-control methodName" maxlength="60" required>
+                                                            </div>
+
+                                                            <div class="form-goup my-2">
+                                                                <label for="">Primer Dato</label>
+                                                                <input type="text" name="data1" placeholder="Coloque el primer dato" class="form-control dataFirst" maxlength="60" required>
+                                                            </div>
+
+                                                            <div class="form-goup my-2">
+                                                                <label for="">Segundo Dato</label>
+                                                                <input type="text" name="data2" placeholder="Coloque el segundo dato" class="form-control" maxlength="60">
+                                                            </div>
+
+                                                            <div class="form-goup my-2">
+                                                                <label for="">Tercer Dato</label>
+                                                                <input type="text" name="data3" placeholder="Coloque el Tercer dato" class="form-control" maxlength="60">
+                                                            </div>
+
+                                                            <div class="form-goup my-2">
+                                                                <label for="">Cuarto Dato</label>
+                                                                <input type="text" name="data4" placeholder="Coloque el Cuarto dato" class="form-control" maxlength="60">
+                                                            </div>
+                                                            
+                                                            <div class="form-group my-2">
+                                                                <button type="submit" class="btn btn-dark form-control my-3" id="btnCreate"> Crear Metodo </button>
+                                                                <button class="btn btn-dark form-control close my-3" type="button" id="btnCreateLoading" disabled>
+                                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                    Creando Metodo ...
+                                                                </button>
+                                                            </div>
+
+                                                        </form>
+
+                                                    </div>
+
+                                                </div>
+                
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="accordion-item" style="background-color: rgba(255, 255, 255, 0.5);">
+                                        <h2 class="accordion-header" id="headingTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Editar Método.
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                
+                                                <!-- Editar -->
+                                                <div class="card overflow80" style="background-color: rgba(255, 255, 255, 0);">
+                                                    <div class="card-body px-0" style="background-color: rgba(255, 255, 255, 0);">
+                                                                    
+                                                            <form action="/myaccount/bankData/editMethod" method="post" id="formMethodEdit" style="background-color: rgba(255, 255, 255, 0);">
+                                                            
+                                                                <input type="hidden" name="iD" value="<%= storeUserId %>">
+                                                                <div class="form-group d-flex my-2">
+                                                                    <% const paymentSystemEdit = bankData.paymentSystem %>
+                                                                    <select name="idMethod" id="selectToEdit" class="form-control">
+                                                                        <option value="no_data">Selecciona una opción</option>
+                                                                        <% paymentSystemEdit.forEach((ele)=>{ %>
+
+                                                                            <option value="<%= ele.idMethod %>"> <%= ele.methodName %> </option>
+
+                                                                        <% }) %>
+                                                                    </select>
+                                                                    
+                                                                </div> 
+
+                                                                <div class="form-control d-flex align-items-center justify-content-start">
+                                                                    <img src="/img/admiracion.png" style=" width : 40px; height: 40px;" class="me-4">
+                                                                    <p class="m-0"> ¡Aqui puedes editar tus métodos de pago! </p>
+                                                                </div>
+
+                                                                <div class="contentElementEdit close">
+                                                        
+                                                                    <div class="form-goup mt-3 mb-2">
+                                                                        <label for="">Nombre del método</label>
+                                                                        <input type="text" name="MethodName" placeholder="transferencia Bancaria, Zelle, Pago Movil" class="form-control" id="editMethodName" maxlength="60" required>
+                                                                    </div>
+
+                                                                    <div class="form-goup my-2">
+                                                                        <label for="">Primer Dato</label>
+                                                                        <input type="text" name="Data1" placeholder="Coloque el primer dato" class="form-control" id="editData1" maxlength="60" required>
+                                                                    </div>
+
+                                                                    <div class="form-goup my-2">
+                                                                        <label for="">Segundo Dato</label>
+                                                                        <input type="text" name="Data2" placeholder="Coloque el segundo dato" class="form-control" id="editData2" maxlength="60">
+                                                                    </div>
+
+                                                                    <div class="form-goup my-2">
+                                                                        <label for="">Tercer Dato</label>
+                                                                        <input type="text" name="Data3" placeholder="Coloque el Tercer dato" class="form-control" id="editData3" maxlength="60">
+                                                                    </div>
+
+                                                                    <div class="form-goup my-2">
+                                                                        <label for="">Cuarto Dato</label>
+                                                                        <input type="text" name="Data4" placeholder="Coloque el Cuarto dato" class="form-control" id="editData4" maxlength="60">
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group my-2">
+                                                                        <button type="submit" class="btn btn-dark form-control my-3" id="btnEdit"> Editar Método </button>
+                                                                        <button class="btn btn-dark form-control close my-3" type="button" id="btnEditLoading" disabled>
+                                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                            Editando Método ...
+                                                                        </button>
+                                                                    </div>
+                                                                            
+                                                                </div>
+
+                                                            </form>
+                                                            
+                                                            <!-- <span> ¡No hay documentos a editar!</span> -->
+                                                        
+                                                    </div>
+                                                </div>
+                
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="accordion-item" style="background-color: rgba(255, 255, 255, 0.5);">
+                                        <h2 class="accordion-header" id="headingThree">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            Eliminar Método.
+                                            </button>
+                                        </h2>
+                                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                
+                                                <!-- eliminar -->
+                                                <div class="card" style="background-color: rgba(255, 255, 255, 0);">
+                                                        <div class="card-body px-0" style="background-color: rgba(255, 255, 255, 0);">
+                                                            
+                    
+                                                                <form action="/myaccount/bankData/deleteMethod" method="post" id="formDelete" style="background-color: rgba(255, 255, 255, 0);">
+                                                                
+                                                                    <input type="hidden" value="<%= storeUserId %>" name="iD">
+
+                                                                    <% const paymentSystemDelete = bankData.paymentSystem %>
+                                                                    <% if (paymentSystemDelete.length !== 0) { %>
+
+                                                                        <select name="idMethod" class="form-control my-2">
+                                                                            <option value="no_data">Selecciona una opción</option>
+                                                                            <% paymentSystemDelete.forEach((ele)=>{ %>
+
+                                                                                <option value="<%= ele.idMethod %>"> <%= ele.methodName %> </option>
+
+                                                                            <% }) %>
+                                                                                    
+                                                                        </select>  
+
+                                                                        <div class="form-control d-flex align-items-center justify-content-center">
+                                                                            <img src="/img/admiracion.png" style=" width : 40px; height: 40px;" class="me-3">
+                                                                            <p class=" m-0"> Eliminar su método tomará tiempo. Ejecute esta acción solo si está seguro. </p>
+                                                                        </div>
+                                                                        <input type="submit" class="btn btn-danger form-control my-3" value="Eliminar Método" id="btnDelete">
+                                                                        <button class="btn btn-danger form-control close my-3" type="button" id="btnDeleteLoading" disabled>
+                                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                            Eliminando Método ...
+                                                                        </button>
+
+                                                                    <% } else { %>
+                                                                        
+                                                                                                                                                
+                                                                        <select name="idMethod" class="form-control my-2">
+
+                                                                            <option value="no_data">Sin opción</option>
+                                                                                                                                                        
+                                                                        </select>     
+
+                                                                        <div class="form-control d-flex align-items-center justify-content-center">
+                                                                            <img src="/img/admiracion.png" style=" width : 40px; height: 40px;" class="me-3">
+                                                                            <p class=" m-0">Su cuenta no posee métodos para eliminar. </p>
+                                                                        </div>
+                                                                        <input type="submit" class="btn btn-danger form-control my-3" value="Eliminar Metodo" disabled>
+                                                                
+                                                                    <% }; %> 
+
+                                                                </form>
+                                                                
+                                                    
+                                                          
+                                                        
+                                                        </div>
+                                                </div>
+                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-12">
+
+
+                                <div class="container-fluid border mt-3 d-flex flex-wrap"  style="background-color: rgba(255, 255, 255, 0.5); border-top-left-radius: 0; border-top-right-radius: 0; height: auto;">
+
+                                    <% const paymentSystem = bankData.paymentSystem  %>
+                                    
+                                        
+                                    <% paymentSystem.forEach((method) => { %>
+                                        <div class="card my-3 me-3 p-2 shadow-sm" style="border: 1px solid rgb(192, 192, 192)">
+                                            <div class="card-body p-3" style="color: rgb(90, 90, 90); border: 1px solid rgb(172, 172, 172)">
+
+                                                <p class="mb-2 fw-bold"> <%= method.methodName %> </p>
+                                                <p class="ms-4 mb-1"> <%= method.data1 ? method.data1 : '' %> <i class="bi bi-copy ms-2" style="<%= method.data1 ? '' : 'display:none;' %>"></i> </p>
+                                                <p class="ms-4 mb-1"> <%= method.data2 ? method.data2 : '' %> <i class="bi bi-copy ms-2" style="<%= method.data2 ? '' : 'display:none;' %>"></i> </p>
+                                                <p class="ms-4 mb-1"> <%= method.data3 ? method.data3 : '' %> <i class="bi bi-copy ms-2" style="<%= method.data3 ? '' : 'display:none;' %>"></i> </p>
+                                                <p class="ms-4 mb-1"> <%= method.data4 ? method.data4 : '' %> <i class="bi bi-copy ms-2" style="<%= method.data4 ? '' : 'display:none;' %>"></i> </p>
+                                                <!--   explicacion 
+                                                    - Si `method.data4` tiene un valor (es decir, si no es `null`, `undefined`, o una cadena vacía), entonces se ejecuta la parte `''` (vacío). Esto significa que no se aplicará ningún estilo adicional, y el elemento se mostrará normalmente.
+                                                    - Si `method.data4` no tiene un valor, entonces se ejecuta la parte `'display:none;'`. Esto oculta el elemento al no mostrarlo en la página. -->
+                                            
+                                            </div>
+                                        </div>    
+                                    <% }); %>
+                                        
+                                          
+                                    <div class="alert alert-info shadow-sm mt-2 mb-4">
+                                        <p style="font-size: 16px;"><i class="bi bi-exclamation-triangle-fill me-2"></i>  <b> La información </b> aquí presentada es la que verán tus clientes al momento de realizar el pago. Revisa cuidadosamente todos estos datos. Si deseas editar, puedes hacerlo en la sección <b> "Editar Método" </b>. </p>
+                                    </div>
+                                </div> 
+
+                                <div class="card mt-1" style="background-color:rgba(217, 223, 223, 0.2);">
+                                    <div class="card-body d-flex justify-content-center ">
+                                    <a href="/" class="text-decoration-none" style="color: inherit">  <span id="logoBlissenet_com"> </span> </a> 
+                                    </div>
+                                </div>
+
+                            </div>    
+
+                        <% } else { %>
+                             <!-- este contenedor existe cuando el user no tiene ningun sistema bancario -->
+                            <div class="col-lg-10 col-md-11 col-sm-12 col-12 p-3 my-4 rounded-2 shadow-sm"  style="background-color: rgba(209, 209, 209, 0.2)">
+
+                                <div class="contentainer-fluid welcome">
+
+                                
+                                    <h4>Hola usuario de Blissenet</h4>
+                                    <p>En este módulo podrás agregar todos tus métodos de pago y los datos necesarios para que tus clientes realicen sus pagos. También puedes incluir diversas formas de pago.</p>
+                                    <p>Tienes hasta 5 campos libres para agregar la información que desees. Utilízalos en el orden que prefieras para que aparezcan.</p>
+                                    <p>Desde pagos por transferencias hasta pago en el sitio, si acuerdan la entrega en un lugar determinado. ¡Crea todos los métodos y opciones que ofreces!</p> 
+
+                                    <div class="form-group py-4">
+                                        <button class="btn btn-dark form-control border rounded-pill" id="btnStarProcess"> Agrega la primera opción que ofreces </button>
+                                    </div>
+
+                      
+                                </div>
+
+                                <div class="container-fluid containerFirstData close">
+  
+                                    <div class="row m-0 d-flex justify-content-between">
+                                        <h4 class="p-0">Introduce un método de pago</h4>
+
+                                        <div class="col-lg-6 col-md-12 col-sm-12 p-0">
+                                            <div class="form-group my-2">
+                                                <label for="name">Nombre del metodo de pago</label>
+                                                <input type="text" class="form-control" id="name" placeholder="Ej. Transferencia Bancaria">
+                                            </div>
+                                            <div class="form-group my-2">
+                                                <label for="data2">Primer dato</label>
+                                                <input type="text" class="form-control" id="data1"  placeholder="Ej. Banco de Venezuela">
+                                            </div>
+                                            <div class="form-group my-2">
+                                                <label for="data3">Segundo dato</label>
+                                                <input type="text" class="form-control" id="data2" placeholder="Ej. 0102-0000-0000001234">
+                                            </div>
+                                            <div class="form-group my-2">
+                                                <label for="data4">Tercer dato</label>
+                                                <input type="text" class="form-control" id="data3" placeholder="Ej. 12345678">
+                                            </div>
+                                            <div class="form-group my-2">
+                                                <label for="data5">Cuarto dato</label>
+                                                <input type="text" class="form-control" id="data4" placeholder="Ej. Alan Mathison Turing">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5 col-md-12 col-sm-12 p-0">
+                                            <div class="alert alert-info my-2">
+                                               <p><b>Importante leer:</b> Este formulario es de carácter abierto. Puedes utilizarlo para incluir un sistema de pago que no necesariamente tiene que ser un método de transferencia bancaria. Puedes optar por cualquier opción que desees. Te invitamos a llenar los campos con toda la información necesaria para que tus clientes puedan realizar sus pagos de manera efectiva. Al crear el primer método de pago, podrás incluir otros más.</p>
+                                            </div>
+
+                                            <!-- <div class="alert alert-info my-2">
+                                                <p><b>Importante leer :</b> Provee la información exacta, ya que el sistema le permitirá copiarla directamente para agilizar el proceso. </p>
+                                            </div> -->
+
+                                            
+                                            <div class="form-group mt-4 mb-2">
+                                                <button class="form-control btn btn-primary" id="btnPreview">Previsualización de Datos</button>
+                                            </div>
+                                            <div class="contentPreview rounded-2 border p-2" style="height: auto; background-color: white; color: rgb(90, 90, 90);">
+                                                <p class="mb-2 fw-bold" id="data-methodName">Transferencia Bancaria </p>
+                                                <p class="ms-4 mb-1" id="data-1">Banco de Venezuela <i class="bi bi-copy ms-2"></i> </p>
+                                                <p class="ms-4 mb-1" id="data-2">0102-0000-0000001234 <i class="bi bi-copy ms-2"></i> </p>
+                                                <p class="ms-4 mb-1" id="data-3">12456789 <i class="bi bi-copy ms-2"></i> </p>
+                                                <p class="ms-4 mb-1" id="data-4">Alan Mathison Turing <i class="bi bi-copy ms-2"></i> </p>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="form-group my-5">
+                                        
+                                        <button class="btn btn-dark form-control rounded-pill" id="addFirstMethod">Agregar Método de Pago</button>
+                                        <button class="form-control btn btn-dark close" id="addFirstMethodDisabled" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Agregando Método ...
+                                        </button>
+
+                                    </div>                                  
+
+                                </div>
+
+
+                            </div>
+
+
+
+                        <% }; %>
+
+                    </div>
+
+                <% } else { %>
+                            
+                <% }; %>   
+
+            </div>
+
+
+
+         <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+         <% }; %>
+
+    </main>
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+       
+        <script src="/toastr/toastr.min.js"></script>
+        
+</body>
+
+
+<script>
+
+
+    function mostrarToast(mensaje, posicion, color, titulo = '', conBotonCerrar = false) {
+        // Configuración predeterminada
+        toastr.options = {
+            "closeButton": conBotonCerrar, // Agregar botón de cerrar si se solicita
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": !conBotonCerrar, // Si tiene botón de cerrar, no mostrar barra de progreso
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "600",
+            "hideDuration": "1000",
+            "timeOut": conBotonCerrar ? false : "8000", // No se oculta automáticamente si tiene botón de cerrar
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+  
+        // Configurar la posición
+        switch (posicion) {
+            case 'center':
+                toastr.options.positionClass = 'toast-top-center';
+                break;
+            case 'left':
+                toastr.options.positionClass = 'toast-top-left';
+                break;
+            case 'right':
+                toastr.options.positionClass = 'toast-top-right';
+                break;
+            default:
+                toastr.options.positionClass = 'toast-top-right'; // Posición predeterminada
+        }
+  
+        // Mostrar el mensaje según el color especificado
+        switch (color) {
+            case 'success':
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+                break;
+            case 'info':
+                titulo ? toastr.info(mensaje, titulo) : toastr.info(mensaje);
+                break;
+            case 'warning':
+                titulo ? toastr.warning(mensaje, titulo) : toastr.warning(mensaje);
+                break;
+            case 'danger':
+                titulo ? toastr.error(mensaje, titulo) : toastr.error(mensaje);
+                break;
+            case 'primary':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-primary' }) : toastr.info(mensaje, '', { toastClass: 'toast-primary' });
+                break;
+            case 'dark':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-dark' }) : toastr.info(mensaje, '', { toastClass: 'toast-dark' });
+                break;
+            default:
+                console.warn('Color no válido. Usando el color por defecto (success).');
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+        }
+    }
+  
+  
+
+   //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+  
+</script>
+
+
+<script>
+    const btnStarProcess = document.querySelector('#btnStarProcess');
+    const welcome = document.querySelector('.welcome');
+    const firstData = document.querySelector('.containerFirstData');
+
+    if (btnStarProcess){
+        btnStarProcess.addEventListener('click', ()=>{
+            welcome.classList.add('close');
+            firstData.classList.remove('close');
+        })
+    }    
+
+
+</script>
+
+<script>
+    const storeId = document.querySelector('#storeId');
+    const storeUser = document.querySelector('#storeUserValue');
+    const addFirstMethod = document.getElementById('addFirstMethod');
+    const addFirstMethodDisabled = document.getElementById('addFirstMethodDisabled');
+    const name = document.getElementById('name');
+    const data1 = document.getElementById('data1');
+    const data2 = document.getElementById('data2');
+    const data3 = document.getElementById('data3');
+    const data4 = document.getElementById('data4');
+
+    if (addFirstMethod){
+
+        addFirstMethod.addEventListener('click', ()=>{
+
+            addFirstMethodDisabled.classList.remove('close');
+            addFirstMethod.classList.add('close');
+
+            const iD = storeId.value;
+            const StoreUser = storeUser.value;
+            const Name =  name.value.trim();
+            const Data1 = data1.value.trim();
+            const Data2 = data2.value.trim();
+            const Data3 = data3.value.trim();
+            const Data4 = data4.value.trim();
+
+            if ( Data1 !=="" ){
+                //al menos es necesario que posea un dato, para hacer pagos zelle solo es necesaario un solo dato correo o numero
+
+                const formData = new FormData()
+                    formData.append('iD', iD);
+                    formData.append('username', StoreUser);
+                    formData.append('methodName', Name);
+                    formData.append('data1', Data1);
+                    formData.append('data2', Data2);
+                    formData.append('data3', Data3);
+                    formData.append('data4', Data4);
+
+                fetch('/myaccount/bankData/addFirstMethod', {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(jsonx => {
+                        console.log("response del backend --->", jsonx);
+
+                        const code = jsonx.code;
+                        const message = jsonx.message;
+                        
+                        if (code == "ok"){
+
+                            console.log("ahora si pasamos al siguiente formulario");
+                            console.log("Response: ", jsonx);
+                            //se ha guardado y debemos seguir adelante.
+                            mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 4000);
+                            
+
+                        } else {
+
+                            mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                            setTimeout(() => {
+                                addFirstMethodDisabled.classList.add('close');
+                                addFirstMethod.classList.remove('close');
+                            }, 3000);
+
+                        }
+                    
+                    
+
+                    })
+                    .catch(err => console.log(err));
+
+
+            } else {
+                //no posee ningun dato asi que no enviamos la peticion al backed.
+                const message = "Debe tener al menos 1 dato." 
+                mostrarToast( message, 'right', 'danger', '¡Error!', false ); // Agrega título aquí
+                setTimeout(() => {
+                    addFirstMethodDisabled.classList.add('close');
+                    addFirstMethod.classList.remove('close');
+                }, 3000);
+            }
+
+
+
+        })
+    
+    }
+
+</script>
+
+
+
+<script>
+    const preview = document.getElementById('btnPreview');
+    const dataMethodName = document.getElementById('data-methodName');
+    const prev1 = document.getElementById('data-1');
+    const prev2 = document.getElementById('data-2');
+    const prev3 = document.getElementById('data-3');
+    const prev4 = document.getElementById('data-4');
+
+    if (preview){
+
+        preview.addEventListener('click', ()=>{
+
+            dataMethodName.innerHTML = name.value
+            prev1.innerHTML = `${data1.value} ${data1.value !== "" ? '<i class="bi bi-copy ms-2"></i>' : ''}`;
+            prev2.innerHTML = `${data2.value} ${data2.value !== "" ? '<i class="bi bi-copy ms-2"></i>' : ''}`;
+            prev3.innerHTML = `${data3.value} ${data3.value !== "" ? '<i class="bi bi-copy ms-2"></i>' : ''}`;
+            prev4.innerHTML = `${data4.value} ${data4.value !== "" ? '<i class="bi bi-copy ms-2"></i>' : ''}`;
+        })
+
+    }    
+
+</script>
+
+<script>
+    const formNewMethod = document.getElementById('formNewMethod'); //formulario que debe ser enviado 
+    const btnCreate = document.getElementById('btnCreate'); //boton para enviar
+    const btnCreateLoading = document.getElementById('btnCreateLoading'); //boton de spinner
+    
+    const methodName = document.querySelector('.methodName');
+    const dataFirst = document.querySelector('.dataFirst');
+
+    const btnDeleteLoading = document.getElementById('btnDeleteLoading');
+    const btnDelete = document.getElementById('btnDelete');
+
+    btnCreate.addEventListener('click', (e)=>{
+        e.preventDefault(); // Evita que el formulario se envíe
+
+        const MethodName = methodName.value; //capturamos el valor del input
+        const DataFirst = dataFirst.value; //capturamos el valor del input
+
+        if (MethodName !=="" && DataFirst !==""){
+
+                btnCreate.classList.add('close');
+                btnCreateLoading.classList.remove('close');
+                formNewMethod.submit(); //enviamos el formulario
+
+        } else { 
+            const message = "Requiere llenar el nombre del método y al menos el primer dato."
+            mostrarToast( message, 'right', 'danger', '¡Error!', false ); // Agrega título aquí
+
+        }
+
+    })
+
+    if (btnDelete){
+        btnDelete.addEventListener('click', ()=>{
+            btnDelete.classList.add('close');
+            btnDeleteLoading.classList.remove('close');
+        })
+    }    
+
+</script>
+
+<script>
+
+    const formMethodEdit = document.getElementById('formMethodEdit'); //este es el formulario
+    const selectToEdit = document.getElementById('selectToEdit');
+    const contentElementEdit = document.querySelector('.contentElementEdit');
+    const objetBankData = document.getElementById('objetBankData');
+
+    const editMethodName = document.getElementById('editMethodName');
+    const editData1 = document.getElementById('editData1');
+    const editData2 = document.getElementById('editData2');
+    const editData3 = document.getElementById('editData3');
+    const editData4 = document.getElementById('editData4');
+
+    const btnEdit = document.getElementById('btnEdit'); 
+    const btnEditLoading = document.getElementById('btnEditLoading'); 
+
+    selectToEdit.addEventListener('change', ()=>{
+        const object = objetBankData.value; // Deserializa el string JSON
+        const json = JSON.parse(object);
+        console.log("object --------->", object);
+        console.log("json ..........>", json);
+        const selected = selectToEdit.value; //esto arroja el idMethod.
+        console.log("selected ..........>", selected);
+        json.paymentSystem.forEach((ele)=> {
+            if (ele.idMethod == selected ){
+                console.log("elemento a editar :", ele)
+                contentElementEdit.classList.remove('close');
+
+                const MethodName = ele.methodName;
+                const Data1 = ele.data1;
+                const Data2 = ele.data2;
+                const Data3 = ele.data3;
+                const Data4 = ele.data4;
+                
+                //ahora vamos a inyectarlos en todos los campos para que puedan ser editados.
+                if (MethodName){ editMethodName.value = MethodName; } else { editMethodName.value ="" }
+                if (Data1){ editData1.value = Data1; } else { editData1.value ="" }
+                if (Data2){ editData2.value = Data2; } else { editData2.value ="" }
+                if (Data3){ editData3.value = Data3; } else { editData3.value ="" }
+                if (Data4){ editData4.value = Data4; } else { editData4.value ="" }
+
+                //ahora que hemos inyectado el valor en cada input el usuario puede editar y enviar usando el boton 
+                //
+            }    
+          
+        });
+
+        btnEdit.addEventListener('click', ()=>{
+            btnEditLoading.classList.remove('close');
+            btnEdit.classList.add('close');
+        })
+
+
+    })
+        
+        
+</script>
