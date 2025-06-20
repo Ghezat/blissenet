@@ -261,6 +261,7 @@
         <input type="hidden" value="<%= search.title %>" id="newBTNtitle"> <!-- aqui el title -->
         <input type="hidden" value="<%= search._id %>" id="newBTNid_title"> <!-- aqui el id del articulo -->
     
+
     <% }; %>
     
     <!-- audios disponibles para diferentes acciones -->        
@@ -268,6 +269,15 @@
     <audio src="/sound/Note-efect.mp3" id="efectSoundNewBid"></audio>
     <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> 
      
+
+    <!-- esta variable desgloza la fecha de creacion del anuncio -->
+    <% const creationADS = search.createdAt %>
+ 
+    <% const TDay = creationADS.getDate() %>
+    <% const TMonth = creationADS.getMonth() + 1 %>
+    <% const TYear = creationADS.getFullYear() %>
+            
+    
 
     <div class="row border border-ligth m-0" style="width: 100%;">      
        <!--  ::::: productId ::::: -->
@@ -665,7 +675,7 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos 2
                                                     </div>
                                                     <div class="extra text-dark">
                                                         Rating: 4.4
@@ -730,7 +740,7 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos 2
                                                     </div>
                                                     <div class="extra text-dark">
                                                         Rating: 4.4
@@ -780,7 +790,7 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos 2
                                                     </div>
                                                     <div class="extra text-dark">
                                                         Rating: 4.4
@@ -989,7 +999,7 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado 22-06-2025 | 3 Vendidos
+                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos 2
                                                     </div>
                                                     <div class="extra text-dark">
                                                         Rating: 4.4

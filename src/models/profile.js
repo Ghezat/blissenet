@@ -17,7 +17,7 @@ const SchemaProfile = new Schema({
                required: true
            },
            coordinates: {
-               type: [Number], // [lon, lat] array location.coordinates
+               type: [Number], // [lon, lat] array locations.coordinates
                required: true
            }
     }, //este campo esta creado para optimizar las busquedas de aproximacion geografico
