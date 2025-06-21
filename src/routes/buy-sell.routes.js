@@ -66,14 +66,19 @@ routes.post('/buysell/direct', async(req, res)=>{
         const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
         const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
       
-        
         console.log('He llegado al apartado de buysell/direct ....................................');
         
         const { vendedor, comprador, depart, idProduct, countRequest, unitPrice, delivery } = req.body;
         let chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation, codeDate, image, total, deliveryType;
         let emailSell, emailBuy;
         let titleArticle; //esta variable se declara afuera para luego usar en la funcion de envio de Telegrama. 
-        const searchBuySell = await modelBuysell.findOne({ username : user.id, closeOperationBuy : false } );
+        
+        console.log("idProduct :", idProduct) // primer dato.
+        console.log("user._id :", user._id) // segundo dato.
+        
+        const searchBuySell = await modelBuysell.findOne({ title_id : idProduct, indexedBuy : user._id, closeOperationBuy : false } );
+        
+        console.log("searchBuySell :", searchBuySell); 
 
         if (searchBuySell){
 
@@ -1133,7 +1138,7 @@ routes.post('/buysell-body/confirm', async(req, res)=>{
              //     3             3
           if (newrequest == countExist ){
               //son iguales no ha habido niguna otra oferta 
-              await modelItems.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest } }, { new : true });//restamos el count.
+              await modelItems.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest, sales: newrequest } }, { new : true });//restamos el count.
               await modelBuysell.findByIdAndUpdate(iD, { $set: { countRequest : newrequest, total, step : 1 }}); //actualizamos la cantidad requerida por el compradory cambiamos el valor de confirmBuy
               const response = { "code" : "ok" , "message" : "Confirmación realizada con exito." }
               res.json(response);
@@ -1141,7 +1146,7 @@ routes.post('/buysell-body/confirm', async(req, res)=>{
           } else if (newrequest <= countExist) {
               console.log("El usuario ha cambiado la cantidad y existe el inventaerio");
               //ha habido un cambio en el inventario pero la cantidad solicitada es menor o igual que la requerida.
-              await modelItems.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest } }, { new : true });//restamos el count
+              await modelItems.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest, sales: newrequest } }, { new : true });//restamos el count
               await modelBuysell.findByIdAndUpdate(iD, { $set: { countRequest : newrequest, total, step : 1 }}, {new:true}); //actualizamos la cantidad requerida por el compradory cambiamos el valor de confirmBuy
               const response = { "code" : "ok" , "message" : "Confirmación realizada con exito." }
               res.json(response);
@@ -1170,7 +1175,7 @@ routes.post('/buysell-body/confirm', async(req, res)=>{
           //voy por aqui.
           if (newrequest == countExist ){
               //son iguales no ha habido niguna otra oferta 
-              await modelArtes.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest } }, { new : true });//restamos el count.
+              await modelArtes.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest, sales: newrequest } }, { new : true });//restamos el count.
               await modelBuysell.findByIdAndUpdate(iD, { $set: { countRequest : newrequest, total, step : 1 }}); //actualizamos la cantidad requerida por el compradory cambiamos el valor de confirmBuy
               const response = { "code" : "ok" , "message" : "Confirmación realizada con exito." }
               res.json(response);
@@ -1178,7 +1183,7 @@ routes.post('/buysell-body/confirm', async(req, res)=>{
           } else if (newrequest <= countExist) {
               console.log("El usuario ha cambiado la cantidad y existe el inventaerio");
               //ha habido un cambio en el inventario pero la cantidad solicitada es menor o igual que la requerida.
-              await modelArtes.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest } }, { new : true });//restamos el count
+              await modelArtes.findByIdAndUpdate(idProduct, { $inc: { count: -newrequest, sales: newrequest } }, { new : true });//restamos el count
               await modelBuysell.findByIdAndUpdate(iD, { $set: { countRequest : newrequest, total, step : 1 }}, {new:true}); //actualizamos la cantidad requerida por el compradory cambiamos el valor de confirmBuy
               const response = { "code" : "ok" , "message" : "Confirmación realizada con exito." }
               res.json(response);

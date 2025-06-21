@@ -7,7 +7,7 @@ const buySellSchema = new Schema({
     indexedBuy : { type : String }, //aqui se guardara el id del user (usernameBuy); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
     department : { type : String },
     title : { type : String },
-    title_id : { type : String },
+    title_id : { type : String }, //este es el id del articulo o del arte o del auto o de lo que sea que se este vendiendo o alquilando
     fechaNegotiation : { type : String },
     deliveryType : { type : String }, //aqui guardamos el tipo de entrega que puede ser una de estas tres (Envio Local, Envio Interurbano, Envio Internacional );
     deliveryDetails : { type : String, default : "" }, //aqui guardamos el detalle de como se debe enviare el paquete. ejemplo. "Retirar Personalmente en la tienda", o "Reciba su pedido en la puerta de su casa. (Solicitar Delivery)" Nace como string vacio pero luego tendra un valor. lo importante es que ya exista para luego solo actualizar su valor.
@@ -40,6 +40,7 @@ const buySellSchema = new Schema({
     dates : { type : String, default : "no_dates" },// aqui vamos a meter la fecha con el formato necesario. eje. 10-11-2023 esta fecha es el dia que el usuario se dispuso hacer su pago. es la fecha que paga a la plataforma.
     closeOperationSeller : { type : Boolean, default : false }, // con este campo manejamos el estado de la operacion de compra. por defecto nace false pero en el proceso puede pasar a ser true que significa que se ha cerrado la operacion. esto no debe confundirse con "cancel". esto es para cerrar la operacion cuando ya no se requiera tener mas comunicacion con la contraparte. se ha cerrado la sala de negociacion.
     closeOperationBuy : { type : Boolean, default : false } // por defecto nacen con el valor false. cada sala es independiente y cada quien decide cuando cerrarlo
+  
 },{
     timestamps : true
 });
