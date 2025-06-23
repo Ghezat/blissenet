@@ -54,42 +54,42 @@ routes.get('/account/:account', async (req,res)=>{
 
     async function searchOffert(){
         //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
-        const respItems = await modelItems.find({ user_id: accountID, offer: true });
+        const respItems = await modelItems.find({ user_id: accountID, offer: true }).sort({ view: -1 });
         if (respItems.length > 0) {
             boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
         }
             
-        const respAerop = await modelAirplane.find({user_id : accountID, offer : true });
+        const respAerop = await modelAirplane.find({user_id : accountID, offer : true }).sort({ view: -1 });
         if (respAerop.length > 0){
             boxOffert.push(...respAerop);
         }
 
-        const respAutom = await modelAutomotive.find({user_id : accountID, offer : true });
+        const respAutom = await modelAutomotive.find({user_id : accountID, offer : true }).sort({ view: -1 });
         if (respAutom.length > 0){
             boxOffert.push(...respAutom);
         }
 
-        const respArtes = await modelArtes.find({user_id : accountID, offer : true });
+        const respArtes = await modelArtes.find({user_id : accountID, offer : true }).sort({ view: -1 });
         if (respArtes.length > 0){
             boxOffert.push(...respArtes);
         }
 
-        const respReals = await modelRealstate.find({user_id : accountID, offer : true });
+        const respReals = await modelRealstate.find({user_id : accountID, offer : true }).sort({ view: -1 });
         if (respReals.length > 0){
             boxOffert.push(...respReals);
         }
 
-        const respServi = await modelService.find({user_id : accountID, offer : true });
+        const respServi = await modelService.find({user_id : accountID, offer : true }).sort({ view: -1 });
         if (respServi.length > 0){
             boxOffert.push(...respServi);
         }
 
-        const respNauti = await modelNautical.find({user_id : accountID, offer : true });
+        const respNauti = await modelNautical.find({user_id : accountID, offer : true }).sort({ view: -1 });
         if (respNauti.length > 0){
             boxOffert.push(...respNauti);
         }
 
-        const respAucti = await modelAuction.find({user_id : accountID, offer : true });
+        const respAucti = await modelAuction.find({user_id : accountID, offer : true }).sort({ view: -1 });
         if (respAucti.length > 0){
             boxOffert.push(...respAucti);
         }

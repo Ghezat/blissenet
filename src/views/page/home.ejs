@@ -319,11 +319,11 @@
 
                               <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
 
-                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" alt="" style="width: 190px; height: 170px; object-fit: cover;"> </a>
+                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" alt="" style="width: 220px; height: 210px; object-fit: cover;"> </a>
                                     <span class="border border-warning text-dark" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
-                                    <span class="bg-warning px-2 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px;">  <small> <b>$<%= ele.price %></b>  </small>  </span>
+                                    <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">   <b>$<%= ele.price %></b>   </span>
 
-                                    <div style="width: 190px; background-color: #fcda57; height: 40px; overflow: hidden">
+                                    <div style="width: 220px; background-color: #fcda57; height: 40px; overflow: hidden">
                                         <span class="p-2 text-dark" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
                                     </div>
                        
@@ -412,6 +412,53 @@
 
                 </div>
 
+                <div class="contentBestView p-0" style="height: auto">
+                  <% if (boxBestView) { %>
+
+                    <% if (boxBestView.length >= 5) { %>
+                                    
+                      <div class="carousel-bestView p-4">    
+                          <% boxBestView.forEach((ele)=>{ %>
+                              <% const images = ele.images %>
+                              <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
+
+                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>">
+                                      <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 310px; object-fit: cover;">
+                                      <div class="contentMiniaturas d-flex justify-content-start" style="width: 310px; position: absolute; bottom: 5px; height: auto;">
+                                        
+                               
+                                          <% images.forEach((ele, i)=>{ %>
+                                            <% if ( i > 0) { %>
+                                              <% if (i < 5 ) { %>
+                                               <img src="<%= ele.url %>" alt="" class="m-1 rounded-3 shadow-sm"  style="width: 70px; height: 70px; object-fit: cover;"> 
+                                              <% } %>  
+                                            <% } %>
+                                          <% }) %>
+                                             
+
+                                      </div>
+                                    </a>
+                  
+                                    <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
+
+                       
+                              </div>
+                              
+                          <% }) %>
+                      </div>
+                      <div class="titleCarrousel d-flex justify-content-end">
+                
+                        <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingBestView">
+                          <span class="fst-italic me-3"> Trending ADS  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                        </div>
+
+                      </div>
+
+                    <% } %>
+
+                  <% } %>   
+                </div>
+
                 <div class="row contentMosacicoPorcentMarket m-0 py-5 d-flex justify-content-around">
                     
                     <div class="boxTopStore col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12" style="position: relative">                 
@@ -468,6 +515,28 @@
                       <div class="modal-body">
 
                           <p> Las ofertas en tendencias son todos los anuncios que han sido etiquetadas como ofertas y que hayan recibido muchas vistas. Puedes lograr tener un anuncio aquí con un poco de esfuerzo y creatividad. </p>
+                          
+                      </div>
+                      <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
+                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+
+            
+            <!-- Modal TrendingBestView --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingBestView" -->
+            <div class="modal fade" id="staticTrendingBestView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
+              <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                  <div class="modal-content text-dark">
+
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="staticBlissBotConnect"> Trending ADS </h5>
+                          <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                      </div>
+                      <div class="modal-body">
+
+                          <p> Los anuncios en tendencias son todas las publicaciones que hayan recibido muchas visistas y que no esten etiquetadas como oferta. Puedes lograr tener un anuncio aquí con un poco de esfuerzo y creatividad. </p>
                           
                       </div>
                       <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
@@ -979,6 +1048,7 @@
           
       })
       .catch(err => console.log(err))
+
 
   
 </script>

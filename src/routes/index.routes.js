@@ -67,6 +67,7 @@ routes.get('/', async(req, res)=>{
     let countMessages, countMessagesInbox
     let searchBoxMessageInbox = [];
     let boxOffert = []; //este es el array que contendra todas las trending ofertas.  
+    let boxBestView = []; //este es el array de contendra la lista de los anuncios mas vistos.
 
     delete req.session.success;
     delete req.session.stopped;
@@ -200,23 +201,76 @@ routes.get('/', async(req, res)=>{
 
         }
 
+        //Esta funcion ejecuta una consulta en todos los anuncios que tengan mas vistas y que no esten en oferta
+        async function searchBestView(){
+            //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+            const respItems = await modelItems.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respItems.length > 0) {
+                boxBestView.push(...respItems); // Usar el spread operator para añadir los elementos al array
+            }
+                
+            const respAerop = await modelAirplane.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respAerop.length > 0){
+                boxBestView.push(...respAerop);
+            }
+
+            const respAutom = await modelAutomotive.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respAutom.length > 0){
+                boxBestView.push(...respAutom);
+            }
+
+            const respArtes = await modelArtes.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respArtes.length > 0){
+                boxBestView.push(...respArtes);
+            }
+
+            const respReals = await modelRealstate.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respReals.length > 0){
+                boxBestView.push(...respReals);
+            }
+
+            const respServi = await modelService.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respServi.length > 0){
+                boxBestView.push(...respServi);
+            }
+
+            const respNauti = await modelNautical.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respNauti.length > 0){
+                boxBestView.push(...respNauti);
+            }
+
+            const respAucti = await modelAuction.find( { $and: [{ offer: false },{countryCode}] } ).sort( {view : -1} ).limit(10);
+            if (respAucti.length > 0){
+                boxBestView.push(...respAucti);
+            }
+
+        }
+
+
         negotiationsBuySell()
             .then(()=>{
                 searchOffert()
-                .then(()=>{
-                    console.log("Aqui lo recaudado de las ofertas");
-                    console.log("boxOffert ----------------con user---------------->",boxOffert);
-                    res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert })
-                    
-                })
-                .catch((err)=>{
-                    console.log("Ha ocurrido un error en la function searchOffert()")
-                    res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert })
-                })
+                    .then(()=>{
+                        searchBestView()
+                            .then(()=>{
+                                console.log("Aqui lo recaudado de las ofertas");
+                                console.log("boxOffert ----------------con user---------------->",boxOffert);
+                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                            })
+                            .catch((err)=>{
+                                console.log("Ha ocurrido un error en la function searchBestView()")
+                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                            })
+                   
+                        
+                    })
+                    .catch((err)=>{
+                        console.log("Ha ocurrido un error en la function searchOffert()")
+                    })
 
             })
             .catch((err)=>{
-                console.log("Ha ocurrido un error en la function searchOffert()")
+                console.log("Ha ocurrido un error en la function negotiationsBuySell()")
             })
 
 
@@ -274,16 +328,70 @@ routes.get('/', async(req, res)=>{
 
         }
 
+
+        //Esta funcion ejecuta una consulta en todos los anuncios que tengan mas vistas y que no esten en oferta
+        async function searchBestView(){
+            //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+            const respItems = await modelItems.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respItems.length > 0) {
+                boxBestView.push(...respItems); // Usar el spread operator para añadir los elementos al array
+            }
+                
+            const respAerop = await modelAirplane.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respAerop.length > 0){
+                boxBestView.push(...respAerop);
+            }
+
+            const respAutom = await modelAutomotive.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respAutom.length > 0){
+                boxBestView.push(...respAutom);
+            }
+
+            const respArtes = await modelArtes.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respArtes.length > 0){
+                boxBestView.push(...respArtes);
+            }
+
+            const respReals = await modelRealstate.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respReals.length > 0){
+                boxBestView.push(...respReals);
+            }
+
+            const respServi = await modelService.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respServi.length > 0){
+                boxBestView.push(...respServi);
+            }
+
+            const respNauti = await modelNautical.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respNauti.length > 0){
+                boxBestView.push(...respNauti);
+            }
+
+            const respAucti = await modelAuction.find({ offer: false }).sort( {view : -1} ).limit(10);
+            if (respAucti.length > 0){
+                boxBestView.push(...respAucti);
+            }
+
+        }
+
+      
         searchOffert()
             .then(()=>{
-                console.log("Aqui lo recaudado de las ofertas");
-                console.log("boxOffert ---------------sin user------------------->",boxOffert);
-                res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert })
+                searchBestView()
+                    .then(()=>{
+                        console.log("Aqui lo recaudado de las ofertas");
+                        console.log("boxOffert ---------------sin user------------------->",boxOffert);
+                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                    })
+                    .catch((err)=>{
+                        console.log("Ha ocurrido un error en la function searchOffert()")
+                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                    })
+                
                 
             })
             .catch((err)=>{
-                console.log("Ha ocurrido un error en la function searchOffert()")
-                res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert })
+                
             })
 
 
