@@ -314,18 +314,29 @@
 
                     <% if (boxOffert.length >= 5) { %>
                                     
-                      <div class="carousel-offer p-4">    
-                          <% boxOffert.forEach((ele)=>{ %>
 
+                      <div class="carousel-bestView p-4">    
+                          <% boxOffert.forEach((ele)=>{ %>
+                              <% const images = ele.images %>
                               <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
 
-                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" alt="" style="width: 220px; height: 210px; object-fit: cover;"> </a>
-                                    <span class="border border-warning text-dark" style="background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: 14px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
-                                    <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">   <b>$<%= ele.price %></b>   </span>
-
-                                    <div style="width: 220px; background-color: #fcda57; height: 40px; overflow: hidden">
-                                        <span class="p-2 text-dark" style="display: block; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"> <%= ele.title %> </span>
-                                    </div>
+                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>">
+                                      <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 360px; object-fit: cover;  border-top-left-radius: 6px; border-top-right-radius: 6px;">
+                                      <div class="contentMiniaturas d-flex justify-content-start" style="background-color: rgba(255, 193, 7, 0.8); position: absolute; bottom: 0px; width: 310px; height: auto;">
+                                                                       
+                                          <% images.forEach((ele, i)=>{ %>
+                                            
+                                              <% if (i < 4 ) { %>
+                                               <img src="<%= ele.url %>" alt="" class="m-1 rounded-3 shadow-sm"  style="width: 70px; height: 70px; object-fit: cover;"> 
+                                              <% } %>  
+                                          
+                                          <% }) %>
+                                             
+                                      </div>
+                                    </a>
+                  
+                                    
+                                    <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
                        
                               </div>
                               
@@ -423,24 +434,21 @@
                               <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
 
                                     <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>">
-                                      <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 310px; object-fit: cover;">
-                                      <div class="contentMiniaturas d-flex justify-content-start" style="width: 310px; position: absolute; bottom: 5px; height: auto;">
-                                        
-                               
+                                      <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 360px; object-fit: cover; border-top-left-radius: 6px; border-top-right-radius: 6px;">
+                                      <div class="contentMiniaturas d-flex justify-content-start" style="position: absolute; bottom: 0px; background-color: rgba(255, 255, 255, 0.8); width: 310px; height: auto;">
+                                                                       
                                           <% images.forEach((ele, i)=>{ %>
-                                            <% if ( i > 0) { %>
-                                              <% if (i < 5 ) { %>
+                                      
+                                              <% if (i < 4 ) { %>
                                                <img src="<%= ele.url %>" alt="" class="m-1 rounded-3 shadow-sm"  style="width: 70px; height: 70px; object-fit: cover;"> 
                                               <% } %>  
-                                            <% } %>
+                                      
                                           <% }) %>
                                              
-
                                       </div>
                                     </a>
                   
                                     <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
-
                        
                               </div>
                               
