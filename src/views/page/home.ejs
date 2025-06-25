@@ -112,26 +112,27 @@
 @media screen and (min-width: 1901px) and (max-width: 2600px){
 
 
-.imgStore{
-    width: 60px;
-    height: 60px;
-    transition: 0.3s;
-    margin: 1px;
-    object-fit: cover;
-}
-.imgStore:hover{
-    outline : 2px solid lightseagreen;
-}
+  .imgStore{
+      width: 60px;
+      height: 60px;
+      transition: 0.3s;
+      margin: 1px;
+      object-fit: cover;
+  }
+  .imgStore:hover{
+      outline : 2px solid lightseagreen;
+  }
 
 
-.imgGalley{
-    max-width: 120px;
-}
+  .imgGalley{
+      max-width: 120px;
+  }
 
-.gallery, .galleryMoreView{
-    columns: 10 120px;
-    column-gap: 1px;
-}
+  .gallery, .galleryMoreView{
+      columns: 10 120px;
+      column-gap: 1px;
+  }
+
 
 }
 
@@ -157,6 +158,19 @@
     .gallery, .galleryMoreView{
         columns: 10 120px;
         column-gap: 1px;
+    }
+
+    .contentNewDay{
+      flex-direction: row;
+    }
+
+    .contentImage{
+      width: 35%;
+    }
+
+    .contentDetails{
+      width: 60%;
+      padding: 0px 20px;
     }
 
 }
@@ -193,6 +207,15 @@
       width: 100%;
     }
 
+    .contentNewDay{
+      flex-direction: column;
+    }
+
+    .contentDetails{
+      padding: 20px 0px;
+    }
+
+
 }
 
 @media screen and (min-width: 220px) and (max-width: 450px){
@@ -224,6 +247,13 @@
         column-gap: 1px;
     }
 
+    .contentNewDay{
+      flex-direction: column;
+    }
+
+    .contentDetails{
+      padding: 20px 0px;
+    }
     
 
 }
@@ -356,72 +386,49 @@
 
                 </div>
 
-                <div class="col-12 contentCurrentShowNewsDay my-5" style="height: auto">
+                <div class="contentNewsDay my-5">
+                  <div class="carousel-newDay py-2 m-0" style="width: 100%;">
+                      <% if (currentNewsDay) { %>
 
-                  <% if (currentNewsDay) { %>
-                      <div id="carouselNewsDay" class="carousel slide" style="height: auto;"> <!-- 210px -->
-                          <div class="carousel-indicators">
-                            <% currentNewsDay.forEach((ele, i)=>{  %>
-                                
-                                <% if (i === 0 ) { %>
-                                    <button type="button" data-bs-target="#carouselNewsDay" data-bs-slide-to="<%= i %>" class="active" aria-current="true" aria-label="Slide <%= i + 1 %>" style="background-color: black;"></button>
-                                <% } else { %>
-                                    <button type="button" data-bs-target="#carouselNewsDay" data-bs-slide-to="<%= i %>" aria-label="Slide <%= i + 1 %>" style="background-color: black;"></button>
-                                <% }; %>    
-
-                            <% }); %>                                                
-                          </div>
-
-                          <div class="carousel-inner">
-                          <% currentNewsDay.forEach((ele, i)=>{  %>
-
-                              <% if (i === 0 ) { %>
-                                  <div class="carousel-item active">
-
-                                      <div class="content-item d-flex">
-                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..." style="object-fit: cover; max-height: 200px; max-width: 500px;"></div>
-                                          <div class="contenDetails d-flex flex-column">
-                                              <p style="font-weight: bold; font-size: 24px;"><%= ele.newDayTitle %></p>
-                                              <p style="font-size: 20px;"><%= ele.newDayDetails %></p>
-                                              <div class="contenAuthorDate d-flex justify-content-end my-0" >
-                                                  <span class="me-1 fst-italic"><%= ele.adminName %></span>
-                                                  <span>(<%= ele.simplifiedDate %>)</span>
+                          <% currentNewsDay.forEach((ele, i)=>{  %> 
+                                      
+                                <div class="contentNewDay d-flex py-3 px-4" style="width: 100vw;">
+                                  
+                                      <div class="contentImage">
+                                          <img src="<%= ele.url %>" class="imgNews rounded-3 " alt="..." style="object-fit: cover; width: 100%;" >
+                                      </div>
+                          
+                        
+                                      <div class="contentDetails">
+                                          <p style="font-weight: bold; font-size: 24px;"><%= ele.newDayTitle %></p>
+                                          <p style="font-size: 20px;"><%= ele.newDayDetails %></p>
+                                          
+                                            <div class="contenAuthorDate d-flex justify-content-end my-0" >
+                                              <div class="content">
+                                                  <a class="ui orange label">
+                                                      <span class="me-1 fst-italic"><%= ele.adminName %></span>
+                                                      <span>(<%= ele.simplifiedDate %>)</span>
+                                                  </a>
                                               </div>
-                                          </div>
+                                            </div>
+
                                       </div>
                                     
-                                  </div>
-                              <% } else { %>
-                                  <div class="carousel-item">
-                                      <div class="content-item d-flex">
-                                          <div class="contentImg"><img src="<%= ele.url %>" class="imgNews me-3" alt="..." style="max-height: 200px; max-width: 500px;"></div>
-                                          <div class="contenDetails d-flex flex-column">
-                                              <p style="font-weight: bold; font-size: 24px;"><%= ele.newDayTitle %></p>
-                                              <p style="font-size: 20px;"><%= ele.newDayDetails %></p>
-                                              <div class="contenAuthorDate d-flex justify-content-end my-0">
-                                                  <span class="me-1 fst-italic"><%= ele.adminName %></span>
-                                                  <span>(<%= ele.simplifiedDate %>)</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              <% }; %>    
 
-                          <% }); %>
-                          </div>
+                                </div>       
+                      
+                          <% }); %>  
 
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselNewsDay" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                          </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselNewsDay" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                          </button>
+                        <% }; %>
+                  </div>  
+                  <div class="titleNewDay d-flex justify-content-end">
+                  
+                      <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticNewsDay">
+                        <span class="fst-italic me-3"> News Day  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
                       </div>
-                  <% }; %>
 
-                </div>
+                  </div> 
+                </div>   
 
                 <div class="contentBestView p-0" style="height: auto">
                   <% if (boxBestView) { %>
@@ -532,6 +539,26 @@
               </div>
             </div>
 
+            <!-- Modal NewsDay --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticNewsDay" -->
+            <div class="modal fade" id="staticNewsDay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticNewsDay" aria-hidden="true">
+              <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                  <div class="modal-content text-dark">
+
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="staticBlissBotConnect"> News Day </h5>
+                          <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                      </div>
+                      <div class="modal-body">
+
+                          <p> Este es un espacio publicitario-informativo si quieres colocar un NewsDay escribenos en admin@blissenet.com y dejate descubrir por centenares de personas y empresas. </p>
+                          
+                      </div>
+                      <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
+                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
             
             <!-- Modal TrendingBestView --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingBestView" -->
             <div class="modal fade" id="staticTrendingBestView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
