@@ -525,11 +525,11 @@
           
           <% if (cardArticleAuction.docs.length !==0 ) {%>
 
-            <div class="contentAll d-flex flex-wrap justify-content-center p-3">
+            <div class="contentAll d-flex flex-wrap justify-content-star p-3">
 
               <% cardArticleAuction.docs.forEach( (ele, i)=>{ %>
 
-                    <div class="card m-2 p-0 shadow cardPublished">
+                    <div class="card m-3 shadow cardPublished">
 
                             <div class="card-body d-flex flex-column p-0">
                         
@@ -584,33 +584,35 @@
 
                               <!-- esta parte va a cambiar cuando sea oferta -->
                               <% if (ele.offer === false) { %>
-                              <div class="boxDetail" style="height: 140px; position: relative; background-color: #ffffff;">
-                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                              <div class="boxDetail" style="height: 150px; position: relative; background-color: #ffffff;">
+                                    <div class="containerDetails mx-2" style="margin-bottom: 10px; margin-top: 10px;">
 
                                       <div class="title d-flex justify-content-start">
                                                                 
                                         <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
-                                          style="text-decoration: none;">
+                                          style="text-decoration: none; font-size: 15px;">
                                           <%= ele.title %>
                                         </a>                                            
                                   
                                       </div>
-    
-                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 42px; left: 0px; padding-left: 8px; padding-right: 8px;">
-    
-                                          <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
+
+                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+
                                         
-                                        <% if (user) { %> <!-- control de corazones fascinometro -->
-                                          <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                        <% } %>
-    
+                                          <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+
+                                          <% if (user) { %> <!-- control de corazones fascinometro -->
+                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                          <% } %>
+
                                       </div>
 
-                                      <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                                      <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 15px; left: 0px;">
 
                                         <div class="containerPrice d-flex justify-content-between px-2">
-                                          <p class="m-0 px-1 border border-dark rounded-pill">$ <%= ele.price %>
-                                          </p>
+                                      
+                                          <a class="ui yellow circular label px-1 text-decoration-none"> <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %></a> </span> 
+
                                           <div class="containerDosIconos d-flex">
                                             <div class="containerOnlyOneAvailable">
                                               <% if (ele.onlyOneAvailable === true) {%>
@@ -626,55 +628,58 @@
                                         </div>
 
                                       </div>
-                                       
+                                      
+
                                     </div>
                               </div>
                               <% } else { %>
-                              <div class="boxDetail" style="height: 140px; position: relative; background-color: #fcda57;">
-                                      <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-  
-                                        <div class="title d-flex justify-content-start">
-                                                                
-                                          <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
-                                            style="text-decoration: none;">
-                                            <%= ele.title %>
-                                          </a>                                            
-                                    
-                                        </div>
-      
-                                        <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 42px; left: 0px; padding-left: 8px; padding-right: 8px;">
-      
-                                            <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p>
-                                          
-                                            <% if (user) { %> <!-- control de corazones fascinometro -->
-                                              <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                            <% } %>  
-      
-                                        </div>
+                              <div class="boxDetail" style="height: 150px; position: relative; background-color: #fcda57;">
+                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+
+                                      <div class="title d-flex justify-content-start">
+                                                              
+                                        <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                          style="text-decoration: none; font-size: 15px;">
+                                          <%= ele.title %>
+                                        </a>                                            
+                                  
+                                      </div>
+    
+                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+    
+                                          <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
                                         
-                                        <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
-  
-                                          <div class="containerPrice d-flex justify-content-between px-2">
-                                            <p class="m-0 px-1 border border-dark rounded-pill">
-                                               $ <%= ele.price %>
-                                            </p>
-                                            <div class="containerDosIconos d-flex">
-                                              <div class="containerOnlyOneAvailable">
-                                                <% if (ele.onlyOneAvailable === true) {%>
-                                                  <i class="bi bi-1-square-fill me-1"></i>
-                                                <% }; %>  
-                                              </div>
-                                              <div class="containBestProduct">
-                                                <% if (ele.bestProduct === true) {%>
-                                                  <i class="bi bi-award"></i>
-                                                <% }; %>  
-                                              </div>
+                                          <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+
+                                          <% if (user) { %> <!-- control de corazones fascinometro -->
+                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                          <% } %>
+    
+                                      </div>
+
+                                      <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 15px; left: 0px;">
+
+                                        <div class="containerPrice d-flex justify-content-between px-2">
+
+                                          <a class="ui yellow circular label px-1 text-decoration-none"> <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %></a> </span>
+                                          
+                                          <div class="containerDosIconos d-flex">
+                                            <div class="containerOnlyOneAvailable">
+                                              <% if (ele.onlyOneAvailable === true) {%>
+                                                <i class="bi bi-1-square-fill me-1"></i>
+                                              <% }; %>  
+                                            </div>
+                                            <div class="containBestProduct">
+                                              <% if (ele.bestProduct === true) {%>
+                                                <i class="bi bi-award"></i>
+                                              <% }; %>  
                                             </div>
                                           </div>
-  
                                         </div>
-                                           
+
                                       </div>
+                                          
+                                    </div>
                               </div>  
                               <% }; %>  
 

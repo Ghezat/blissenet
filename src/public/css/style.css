@@ -279,18 +279,19 @@ color: blueviolet;
 .slick-prev{
   z-index: 20;
   left: 30px;
-
-
+  opacity: 0.6;
 }
+
 
 .slick-next{
   z-index: 20;
   right: 40px;
+  opacity: 0.6;
 }
 
 .slick-prev:before, .slick-next:before{
   /* Tamaño de icono para mover */
-  font-size: 20px;
+  font-size: 45px;
 }
 
 .elementPaginate{

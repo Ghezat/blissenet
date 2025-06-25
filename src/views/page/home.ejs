@@ -111,6 +111,9 @@
 
 @media screen and (min-width: 1901px) and (max-width: 2600px){
 
+  .imageBanner{
+    width: 2000px;
+  }
 
   .imgStore{
       width: 60px;
@@ -139,6 +142,9 @@
 
 @media screen and (min-width: 1025px) and (max-width: 1900px){
 
+    .imageBanner{
+      width: 1320px;
+    }
 
     .imgStore{
         width: 60px;
@@ -176,6 +182,10 @@
 }
 
 @media screen and (min-width: 451px) and (max-width: 1024px){
+
+    .imageBanner{
+      width: 860px;
+    }
 
     .imgStore{
         width: 50px;
@@ -219,6 +229,11 @@
 }
 
 @media screen and (min-width: 220px) and (max-width: 450px){
+
+    .imageBanner{
+      width: 430px;
+    }
+
     .imgStore{
         width: 50px;
         height: 50px;
@@ -328,12 +343,26 @@
             
             <div class="container-fluid p-0">
               <div class="row rowWidth m-0">
-                <div class="col-12 p-0" style="position: relative; overflow: hidden;">
-                  
-                    <%- include('../partials/bannerFront.ejs') %>
+
+                <div class="contentBanner p-0" style="position: relative;">
+                  <div class="banners p-0" >
+                      <% if (currentBanner.length !== 0) { %>
+                        <div class="carousel-banners" style="width: 100vw;">
+
+                            <% currentBanner.forEach((ele, i)=>{ %>
+
+                                <div class="bannerHome"> 
+                                  <img src="<%= ele.url %>"  alt="..." class="imageBanner">
+                                </div>
+                                                                            
+                            <% }); %>
+
+                        </div>                           
+                      <% }; %> 
+                  </div> 
 
                   <div class="contentAlert" style="z-index: 200; position: absolute; top: 0; right: -1000px;">
-                    <!-- dinamico -->
+                    <!-- dinamico para alerta cuando no tenga perfil aqui le invita a que lo haga-->
                   </div>  
                   
                 </div>
@@ -375,7 +404,7 @@
                       <div class="titleCarrousel d-flex justify-content-end">
                 
                         <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingOffert">
-                          <span class="fst-italic me-3"> Trending Offert  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                          <span class="fst-italic me-3" style="font-size: 17px"> Trending Offert  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
                         </div>
 
                       </div>
@@ -405,7 +434,7 @@
                                           
                                             <div class="contenAuthorDate d-flex justify-content-end my-0" >
                                               <div class="content">
-                                                  <a class="ui orange label">
+                                                  <a class="ui grey label text-decoration-none">
                                                       <span class="me-1 fst-italic"><%= ele.adminName %></span>
                                                       <span>(<%= ele.simplifiedDate %>)</span>
                                                   </a>
@@ -424,7 +453,7 @@
                   <div class="titleNewDay d-flex justify-content-end">
                   
                       <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticNewsDay">
-                        <span class="fst-italic me-3"> News Day  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                        <span class="fst-italic me-3" style="font-size: 17px"> News Day  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
                       </div>
 
                   </div> 
@@ -464,7 +493,7 @@
                       <div class="titleCarrousel d-flex justify-content-end">
                 
                         <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingBestView">
-                          <span class="fst-italic me-3"> Trending ADS  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                          <span class="fst-italic me-3" style="font-size: 17px"> Trending ADS  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
                         </div>
 
                       </div>
@@ -550,7 +579,7 @@
                       </div>
                       <div class="modal-body">
 
-                          <p> Este es un espacio publicitario-informativo si quieres colocar un NewsDay escribenos en admin@blissenet.com y dejate descubrir por centenares de personas y empresas. </p>
+                          <p> Este es un espacio publicitario informativo, si quieres colocar un NewsDay escribenos en admin@blissenet.com y dejate descubrir por centenares de personas y empresas. </p>
                           
                       </div>
                       <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
