@@ -36,6 +36,11 @@
   <main>
     <%- include('../partials/navi-simple.ejs') %>
     <% if (user) { %>
+      <% const seeMarket = user.seeMarket %>
+      <% const idUser = user._id %>
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <input type="hidden" value="<%= idUser %>" id= "idUser">
+      <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
 
          
     <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">

@@ -343,7 +343,7 @@
 
                                 <% if (rating =="") { %> 
 
-                                    <p class="mb-2">Finalice calificando y dejando un comentario a su comprador.</p>
+                                    <p class="mb-2">Finalice calificando y dejando un comentario a <b><%= buySell.usernameBuy %></b>.</p>
 
                                     <div class="form-group d-flex my-2">
         
@@ -401,7 +401,7 @@
                                         <div class="alert alert-dark my-2">
                                             <p>Usted ya ha cerrado esta sala, si requiere contactar con este comprador vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= buySell.usernameBuy %>"><%= buySell.usernameBuy %></a>  </p>
                                         </div>
-                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
+                                        <button class="btn form-control my-2"  style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
                                     <% }; %>  
 
                                 <% }; %>   
@@ -1222,7 +1222,7 @@
 
                                     <% if (rating =="") { %> 
 
-                                        <p class="mb-2">Finalice calificando y dejando un comentario a su vendedor.</p>
+                                        <p class="mb-2">Finalice calificando y dejando un comentario a <b><%= buySell.usernameSell %></b>..</p>
 
                                         <div class="form-group d-flex my-2">
             
@@ -1280,7 +1280,7 @@
                                         <div class="alert alert-dark my-2">
                                             <p>Usted ya ha cerrado esta sala, si requiere contactar con este vendedor vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= buySell.usernameSell %>"><%= buySell.usernameSell %></a>  </p>
                                         </div>
-                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
+                                        <button class="btn form-control my-2" style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
                                     <% }; %> 
 
                                 <% }; %>   
@@ -2592,6 +2592,8 @@
 
         btnCloseOperation.addEventListener('click', ()=>{
 
+            btnCloseOperation.setAttribute('disabled', ''); //desactivamos el boton.
+            
             const iDOrder = idBuysell.value;
             const iDUser = idUser.value;
             let indexedSell = IndexedSell.value; 
@@ -2632,6 +2634,12 @@
                     if (code == "ok"){
 
                         mostrarToast( message, 'right', 'sucess', '¡Hecho!', true ); 
+
+                        const domain = window.location.origin;//esta variable me indica la primera parte https://blissenet.com o localhost://1263 
+                        console.log("Esto es dommain............................. ", domain);
+                        setTimeout(() => {
+                            window.location.href = `${domain}/buysell-list`;
+                        }, 4000);
 
                     } else {
 

@@ -15,6 +15,7 @@ const SchemaNautico = new Schema({
     video : { type : Object, default: [] }, //aqui se guardaria un archivo de video con la informacion del lugar donde esta para ser leido o eliminado.
     images : { type : Object },
     price: { type: Number , default: 0},
+    scheduleAppointment: { type : Object }, //{ date: [0,1,2,3,4], time: [1200, 2000] } este es un ejemplo del objeto que se requiere para que los usuarios puedan programar una cita para ver el bien. no es limitativo
     paused : { type: Boolean, default: false }, //por default nace false quiere decir que se mostrará. Sí este estado cambia no se mostrará en la busqueda.
     visibleStore : { type: Boolean, default: true }, //este campo guarda el estado de vision en la tienda, por defecto es true que se vea en tienda el articulo.
     offer : { type: Boolean, default: false },

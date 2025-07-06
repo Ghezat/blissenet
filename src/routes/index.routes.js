@@ -139,12 +139,12 @@ routes.get('/', async(req, res)=>{
                 searchSell.push(...searchOneSell);
             }
     
-            const searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username }, { closedContact : false }]} );
+            const searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username }, { closeOperationBuy : false }]} );
             if (searchTwoBuy){
                 searchBuy.push(...searchTwoBuy);
             }
     
-            const searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username }, { closedContact : false }]} );
+            const searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username }, { closeOperationSeller : false }]} );
             if (searchTwoSell){
                 searchSell.push(...searchTwoSell);
             }

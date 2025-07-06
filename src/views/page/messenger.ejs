@@ -49,6 +49,11 @@
   <main style="height: auto;">
     <%- include('../partials/navi-simple.ejs') %>
     <% if (user) { %>
+      <% const seeMarket = user.seeMarket %>
+      <% const idUser = user._id %>
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <input type="hidden" value="<%= idUser %>" id= "idUser">
+      <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
 
   
         <div class="container-fluid d-flex justify-content-between py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
@@ -70,6 +75,11 @@
                          <div class="containerMessage d-flex flex-column p-2 themaTextLight">
                             <div class="containerMain d-flex flex-column">
                                     <!-- mensajes que llegan al messenger -->
+                                    <div class="contentLabel mb-2" style="display: flex; align-items: center;">
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 16px; margin-right: 10px;"> Entrantes </label>
+                                        <hr style="border-top: 1px solid #ccc; flex-grow: 1; margin: 0;">
+                                    </div>
+
                                     <% if (searchMessageInbox.length !== 0 ) { %>
                                         <% searchMessageInbox.forEach((ele)=>{ %>
     
@@ -231,7 +241,7 @@
         </div>
 
         <!-- searchMessageOutbox -->
-        <div class="contentOutbox closed">
+        <div class="contentOutbox">
             <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
 
                 <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-11 my-4 p-0">
@@ -241,6 +251,11 @@
                             <div class="containerMain d-flex flex-column">
 
                                 <!-- mensajes que llegan al outBox -->
+                                <div class="contentLabel mb-2" style="display: flex; align-items: center;">
+                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 16px; margin-right: 10px;"> Salientes </label>
+                                    <hr style="border-top: 1px solid #ccc; flex-grow: 1; margin: 0;">
+                                </div>
+                                
                                 <% if (searchMessageOutbox.length !== 0) {  %>
                                     <% searchMessageOutbox.forEach((ele)=>{ %>
 

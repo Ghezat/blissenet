@@ -157,8 +157,13 @@ routes.post('/department/create/nautical', async(req,res, next)=>{
         const country = searchProfile[0].country;
         const countryCode = searchProfile[0].countryCode;
 
-        const { title, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, price, segment } = req.body
+        const { title, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, price, segment, days, rangeTime } = req.body
 
+        console.log("days :", days);
+        console.log("rangeTime :", rangeTime);
+        const agendaAvailable = { "days" : days, "rangeTime" : rangeTime };
+        console.log("agendaAvailable :", agendaAvailable); //agendaAvailable : { days: [ '0', '1', '2', '3', '4' ], rangeTime: [ '14:00', '18:00' ] }
+        //scheduleAppointment : agendaAvailable;
 
         function transformarTitle(title) {
             return title
@@ -246,7 +251,7 @@ routes.post('/department/create/nautical', async(req,res, next)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Nautical =  new modelNautical({ title, titleURL, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment  }); 
+                                                        const Nautical =  new modelNautical({ title, titleURL, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
                                                         const NauticalSave = await Nautical.save()
                                                         //console.log(NauticalSave);
                                         

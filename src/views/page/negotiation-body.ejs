@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+
+        <!-- semantic-ui -->
+        <link rel="stylesheet" href="/semantic/semantic.min.css">
+        <script src="/semantic/semantic.min.js"></script>
+
+        <!-- toastr tiene que estar despues del CDN de bootstrap -->
+        <link rel="stylesheet" href="/toastr/toastr.min.css"> 
+        <script src="/toastr/toastr.min.js"></script>
+        <title>Blissenet Negotiation</title>
+        
+</head>
+<style>
+
+    .boxDate{
+        width: 30px;
+        height: 30px;
+        outline: 2px solid rgb(122, 28, 122);
+        background-color: rgba(111, 66, 193, 0.5);
+        font-size: 18px;
+        margin: 0;
+    }
+    .controlNumberBody{
+        transition: 1s background-color ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .controlNumberBody:hover{
+        background-color : rgba(146,0,255, .4);
+        border-color:  rgb(78, 0, 138);
+        
+    }
+
+    .controlNumber{
+        cursor: pointer;
+        font-size: 28px;
+        transition: 1s background-color ease;
+    }
+
+    .controlNumber:hover{
+        background-color : rgba(146,0,255, .8);
+        border-color:  rgb(78, 0, 138);
+    }
+
+    .circleDeleteImg{
+        background-color: white;
+        color: black;
+        transition: 1s all ease;
+    }
+
+    .circleDeleteImg:hover{
+        cursor: pointer;
+        background-color: #0d6efd;
+        color: white;
+        box-shadow: 1px 1px 2px 1px gray;
+    }
+
+    .toast-success {
+       /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+       background-color: #6f42c1; /* Azul tirando a morado */
+       color: white; /* Color del texto */
+    } 
+
+</style>
+<body class="mainTheme">
+
+     
+  <main>
+    <%- include('../partials/navi-simple.ejs') %>
+
+    <% if (user) { %>
+        <% const seeMarket = user.seeMarket %>
+        <% const idUser = user._id %>
+        <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+        <input type="hidden" value="<%= idUser %>" id= "idUser">
+          <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+        <input type="hidden" value="<%= user.username %>" id= "username"> <!-- aqui el username  --> 
+        
+        <audio src="/sound/Note-efect.mp3" id="efectSoundNewBid"></audio>
+        <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> 
+       
+    <% }; %>
+
+    <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
+        <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Sala de Negocio </b>  </span> 
+    </div>  
+   
+    
+    <div class="contentBuy&sell pe-0 m-0" style="background-color: #e9ecef;">
+        
+        <div class="row mx-0 my-0">
+            <div class="col-12 px-3 mx-0">
+                <div class="containerId my-1 border p-2 border border rounded-1" style="background-color: #ebecee;"><span>Orden : <%= negotiation._id %></span></div> 
+                <input type="hidden" value="<%= negotiation._id %>" id="idOrderBuy"> <!-- aqui guardamos el valor de la orden de compra para identifarlo -->
+            </div>
+        </div>
+        <div class="row px-1 m-0 d-flex justify-content-between" style="width: 100%; height: auto;">
+            <div class="col-lg-6 my-2 p-0 rounded-1" style="height: 93%;">
+            <% if (user) {  %>    
+                <% if (negotiation) { %>
+                
+                    <!-- datos importantes de esta pagina -->
+                    <input type="hidden" class="idUser" value="<%= user._id %>">
+
+                    <input type="hidden" class="idNegotiation" value="<%= negotiation._id %>">
+
+                    <input type="hidden" class="indexedSell" value="<%= negotiation.indexedSell %>">
+                    <input type="hidden" class="indexedBuy" value="<%= negotiation.indexedBuy %>">
+
+                    <input type="hidden" class="usernameBuy" value="<%= negotiation.usernameBuy %>">
+
+                    <input type="hidden" class="Price" value="<%= negotiation.price %>">
+                    <input type="hidden" class="countRequestData" value="<%= negotiation.countRequest %>">
+                    <input type="hidden" class="countMaxData" value="<%= negotiation.count %>">
+                    <input type="hidden" class="deliveryType" value="<%= negotiation.deliveryType %>">
+
+                    <input type="hidden" class="daysInp" value="<%= negotiation.scheduleAppointment.days %>">
+                    <input type="hidden" class="rangeTimeInp" value="<%= negotiation.scheduleAppointment.rangeTime %>">
+                   <!--  scheduleAppointment: { days: [ '0', '1', '2', '3', '4' ], rangeTime: [ '10:00', '18:00' ] } -->
+                   
+                <% if ( negotiation.usernameSell == user.username ) { %>
+                    
+                    <ul class="nav nav-pills"> <!-- nav-tabs o nav-pills -->
+
+                        <li class="nav-item">
+                            <button class="nav-link active" id="information">Información</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="rateBuy">Calificar Comprador</button>
+                        </li>
+
+                    </ul>
+
+                    <div class="contentInformation" style="width: 100%; background-color: #dbdfe4;">
+                        <div class="row rounded-1 p-3 m-0 contentData">
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                                <div class="ContainerImage">
+                                    
+                                    <img src="<%= negotiation.image[0].url %>" alt="" style="width: 100%;">
+
+                                </div> 
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                                <table class="table table-striped">
+                                    <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= negotiation.usernameBuy %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= negotiation.usernameSell %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= negotiation.department %>  </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= negotiation.title %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Negociación </td> <td> <%= negotiation.fechaNegotiation %> </td> </tr>
+                                    <tr style="font-size: 17px;"> <td>Precio </td> <td> <%= negotiation.price %> </td> </tr>                                 
+                                    
+                                </table>
+
+
+                            </div>  
+
+
+                    
+                        </div>
+
+
+
+                        <div class="row rounded-1 p-3 m-0 contentPayment border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
+                            
+                            <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
+
+                                <div class="form-group my-2 mx-2 border-bottom border-light">
+
+
+                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 15px;"> Agenda disponible para la atención </label>
+                                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 p-0">
+                                        <div class="daysForAppointments">
+                                            
+                                            <div class="input-group my-2">
+                                                <span class="input-group-text">Date Available :</span>
+                                                <% const days = negotiation.scheduleAppointment.days %>
+                                                <% days.forEach((ele) => { %>
+                                                    <% if (ele == 0) { %>
+                                                        <span class="input-group-text">L</span>
+                                                    <% } else if (ele == 1) { %>
+                                                        <span class="input-group-text">M</span>
+                                                    <% } else if (ele == 2) { %>
+                                                        <span class="input-group-text">X</span>
+                                                    <% } else if (ele == 3) { %>
+                                                        <span class="input-group-text">J</span>
+                                                    <% } else if (ele == 4) { %>
+                                                        <span class="input-group-text">V</span>
+                                                    <% } else if (ele == 5) { %>
+                                                        <span class="input-group-text">S</span>
+                                                    <% } else if (ele == 6) { %>     
+                                                        <span class="input-group-text">D</span>
+                                                    <% }; %>      
+                                                <% }) %>                                     
+                                            </div>
+
+                                            <div class="input-group my-2">
+                                                <% const range = negotiation.scheduleAppointment.rangeTime %>
+                                                <span class="input-group-text">Time Available :</span>
+                                                <span class="input-group-text"><%= range[0] %></span>
+                                                <span class="input-group-text">to</span>
+                                                <span class="input-group-text"><%= range[1] %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="contentApointment mb-2">
+                                        <% const appointment = negotiation.appointment %>
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 15px;"> Fecha seleccionada por el interesado. </label>
+                                        <%  if (appointment){ %>
+                                            <div class="input-group">
+                                                <span class="input-group-text">Cita Acordada :</span>
+                                                <span class="input-group-text"><%= appointment %></span>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="alert alert-dark">
+                                                Ayude a su potencial comprador a elegir el dia y la hora para su reunión.
+                                            </div>
+                                        <% } %>
+                                    </div>
+
+                                </div>       
+
+                                    
+                                <%  if (negotiation.closeOperationSeller === false ){ %>
+                                <div class="form-group my-2 mx-2">
+
+                                    <div class="contentLabel my-2">
+                                        <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;"> Agenda actual : </label>
+                                    </div>  
+
+                                    <div class="contentAgenda my-2">
+                                        <!-- lista de agenda dinamica -->
+                                         <table class="table table-striped">
+                                            <theader>
+                                                <tr>
+                                                    <th>Interesado</th> <th>Cita</th><th>Ver</th>
+                                                </tr>
+                                            </header>
+                                            <tbody class="tbodyAgenda">
+                                                <!-- cuerpo de tabla dinamica -->
+                                            </body>
+                                         </table>
+                                    </div>
+
+                                </div> 
+                                <% }; %>
+
+                            </div>
+                            
+                            <div class="col-lg-12 col-md-12 col-sm-12 px-0 py-1"> 
+
+                                <div class="contentPaymentDetails">
+
+                                    <% if (negotiation.referPay !=="") { %>
+<!-- 
+                                        <div class="contentLabel mb-2">
+                                            <label for="" class="text-secondary my-1 ms-2" style="font-size: 16px;">Referencia de Pago : <span> <%= negotiation.referPay %> </span> </label>
+                                        </div> -->
+                                        
+                                    <% } %>
+                                    
+                                    <% if (negotiation.voucherImage.length !== 0) { %>
+
+                                        <div class="preview d-flex justify-content-center align-items-center p-0" style="position: relative; width: 100%;height: 220px; border: 2px dotted grey;">
+                                            <img  alt="" src="<%= negotiation.voucherImage[0].url %>" id="imgVouche" style="width: auto; max-height: 200px; padding: 0; margin: 0;">
+                                        </div>
+
+                                    <% } %>
+                                        
+                                </div>
+
+
+                            </div> 
+
+                        </div>
+                
+                    </div>    
+
+                    <div class="contentRateBuy close" style="width: 100%; background-color: #dbdfe4;">
+
+                        <div class="form-group p-3" style="width: 100%; background-color: #dbdfe4;">
+                                                        
+                            <% const rating =  negotiation.ratingBuy %>  
+
+                                <% if (rating =="") { %> 
+
+                                    <p class="mb-2">Finalice calificando y dejando un comentario a <b><%= negotiation.usernameBuy %></b>.</p>
+
+                                    <div class="form-group d-flex my-2">
+        
+                                        <input type="hidden" value="<%= negotiation._id %>" id="idOrderBuyerTrue">
+
+                                        <div class="form-check mx-1">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" value="Positivo" checked>
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue1"> Positivo </label>
+                                        </div>
+                                        <div class="form-check mx-2">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue2" value="Neutral">
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue2"> Neutral </label>                                          
+                                        </div>
+                                        <div class="form-check mx-2">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue3" value="Negativo">
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue3"> Negativo </label>
+                                        </div>
+
+                                    </div>
+
+                                    <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="50" placeholder="Deje aquí su comentario al Comprador"></textarea>
+                                    <div class="alert alert-info my-2">
+                                        <p>Deje un comentario conciso de su experiencia a su comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
+                                    </div>
+
+                                    <button class="btn btn-primary form-control my-2" id="btnSellTrue">Enviar calificación y comentario</button>
+
+                                    <button class="form-control btn btn-primary my-2 close" id="btnSellTrueSpinner" disabled>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Enviando calificación ...
+                                    </button>
+
+                                <% } else { %>
+
+                                    <h4 class="mb-2 text-secondary">!Ya ha calificado y dejado un comentario!</h4>
+                                    <div class="form-group d-flex my-2">
+        
+                                        <div class="form-check mx-1">
+                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" checked>
+                                            <label class="form-check-label ms-1" for="RadioBuyerTrue1"> <%= negotiation.ratingBuy %></label>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <textarea class="form-control my-1" rows="3" cols="10" maxlength="50" disabled> <%= negotiation.CommentBuy %>  </textarea>
+
+
+                                    <% let closeOperationSeller = negotiation.closeOperationSeller %>
+                                    <% if ( closeOperationSeller === false ) { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha dejado una calificación y un comentario sobre este intercambio. Puede Cerra la sala cuando desee. </p>
+                                        </div>
+                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala</button>
+                                    <% } else { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha cerrado esta sala, si requiere contactar con este comprador vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= negotiation.usernameBuy %>"><%= negotiation.usernameBuy %></a>  </p>
+                                        </div>
+                                        <button class="btn form-control my-2" style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
+                                    <% }; %>  
+
+                                <% }; %>   
+
+ 
+
+
+                            
+
+                        </div>
+
+                    </div> 
+
+                <% }; %>    
+
+
+                <% if ( negotiation.usernameBuy == user.username ) { %>
+
+                    <ul class="nav nav-pills"><!--  nav-tabs o nav-pills -->
+                        <li class="nav-item">
+                            <button class="nav-link active" id="data"> Datos </button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="nav-link" id="rateSell"> Calificar Vendedor</button>
+                        </li>  
+                    </ul>
+                        
+                    <div class="row rounded-1 p-3 m-0 contentData" style="width: 100%; background-color: #dbdfe4;">
+
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <div class="ContainerImage">
+                                
+                                <img src="<%= negotiation.image[0].url %>" alt="" style="width: 100%;">
+                  
+                            </div> 
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+
+                            <table class="table table-striped">
+                                <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= negotiation.usernameBuy %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= negotiation.usernameSell %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= negotiation.department %>  </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= negotiation.title %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Negociación </td> <td> <%= negotiation.fechaNegotiation %> </td> </tr>
+                                <tr style="font-size: 17px;"> <td>Precio </td> <td> <%= negotiation.price %> </td> </tr>
+                            </table>
+
+                        </div>  
+
+                        
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 p-0">
+                            <div class="daysForAppointments">
+
+                                <div class="contentLabel mb-2">
+                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;"> Programar Cita </label>
+                                </div>
+                                <div class="input-group my-2">
+                                    <span class="input-group-text">Date Available :</span>
+                                    <% const days = negotiation.scheduleAppointment.days %>
+                                    <% days.forEach((ele) => { %>
+                                        <% if (ele == 0) { %>
+                                            <span class="input-group-text">L</span>
+                                        <% } else if (ele == 1) { %>
+                                             <span class="input-group-text">M</span>
+                                        <% } else if (ele == 2) { %>
+                                            <span class="input-group-text">X</span>
+                                        <% } else if (ele == 3) { %>
+                                            <span class="input-group-text">J</span>
+                                        <% } else if (ele == 4) { %>
+                                            <span class="input-group-text">V</span>
+                                        <% } else if (ele == 5) { %>
+                                            <span class="input-group-text">S</span>
+                                        <% } else if (ele == 6) { %>     
+                                              <span class="input-group-text">D</span>
+                                        <% }; %>      
+                                    <% }) %>                                     
+                                </div>
+
+                                <div class="input-group my-2">
+                                    <% const range = negotiation.scheduleAppointment.rangeTime %>
+                                    <span class="input-group-text">Time Available :</span>
+                                    <span class="input-group-text"><%= range[0] %></span>
+                                    <span class="input-group-text">to</span>
+                                    <span class="input-group-text"><%= range[1] %></span>
+                                </div>
+
+                                <div class="input-group my-2">
+                                    <% const appointment = negotiation.appointment %>
+                                    <span class="input-group-text">Cita Acordada :</span>
+                                    <% if (appointment){ %>
+                                        <span class="input-group-text" id="appointmentSpan"> <%= appointment %> </span>
+                                    <% } else { %>  
+                                        <span class="input-group-text" id="appointmentSpan"> Programe su cita </span>
+                                    <% }; %>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <%  if (negotiation.closeOperationBuy === false ){ %>
+                        <div class="col-sm-12 col-md-12 col-lg-10 col-xl-10 col-xxl-10 p-0">
+                            <div class="scheduleAppoitment">
+                            
+                                <div class="input-group my-2">
+                                    <span class="input-group-text">Date</span>
+                                    <input type="date" class="form-control" id="myDateInput">
+                                </div>
+
+                                <div class="input-group my-2">
+                                    <% const optionTime = negotiation.optionTime %>
+                                    
+                                    <span class="input-group-text">Hour</span>
+
+                                    <select id="myTimeSelect" class="form-control">
+                                        <option value="no_time"> select time </option>
+                                        <% optionTime.forEach((ele)=>{ %>
+                                            <option value="<%= ele %>"><%= ele %> </option>
+                                        <% });  %>
+                                       
+                                    </select>
+                                    <span class="input-group-text"> <i class="bi bi-clock"></i> </span> 
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-10 col-xl-10 col-xxl-10 p-0">
+                            <div class="form-group my-3">
+                                <input type="button" class="btn btn-primary form-control" id="btnAppointment"  value="Agendar">
+                                <button class="form-control btn btn-primary close" id="btnAppointmentSpinner" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Agendando ...
+                                </button>
+                            </div>
+                        </div>
+                        <% }; %>
+
+                    </div>
+
+                    <div class="contentRateSell close">
+
+                            <div class="form-group p-3" style="width: 100%; background-color: #dbdfe4;">
+                                                            
+                                <% const rating =  negotiation.ratingSeller %>  
+
+                                    <% if (rating =="") { %> 
+
+                                        <p class="mb-2">Finalice calificando y dejando un comentario a <b><%= negotiation.usernameSell %></b>..</p>
+
+                                        <div class="form-group d-flex my-2">
+            
+                                            <input type="hidden" value="<%= negotiation._id %>" id="idOrderBuyerTrue">
+
+                                            <div class="form-check mx-1">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" value="Positivo" checked>
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue1"> Positivo </label>
+                                            </div>
+                                            <div class="form-check mx-2">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue2" value="Neutral">
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue2"> Neutral </label>                                          
+                                            </div>
+                                            <div class="form-check mx-2">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue3" value="Negativo">
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue3"> Negativo </label>
+                                            </div>
+
+                                        </div>
+
+                                        <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="50" placeholder="Deje aquí su comentario al Vendedor"></textarea>
+                                        <div class="alert alert-info my-2">
+                                            <p>Deje un comentario conciso de su experiencia como comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
+                                        </div>
+
+                                        <button class="btn btn-primary form-control my-2" id="btnBuyerTrue">Enviar calificación y comentario</button>
+
+                                        <button class="form-control btn btn-primary my-2 close" id="btnBuyerTrueSpinner" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Enviando calificación ...
+                                        </button>
+
+                                    <% } else { %>
+
+                                        <h4 class="mb-2 text-secondary">!Ya ha calificado y dejado un comentario!</h4>
+                                        <div class="form-group d-flex my-2">
+            
+                                            <div class="form-check mx-1">
+                                                <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" checked>
+                                                <label class="form-check-label ms-1" for="RadioBuyerTrue1"> <%= negotiation.ratingSeller %></label>
+                                            </div>
+                                            
+                                        </div>
+
+                                        <textarea class="form-control my-1" rows="3" cols="10" maxlength="50" disabled> <%= negotiation.CommentSeller %>  </textarea>
+
+
+                                    <% let closeOperationBuy = negotiation.closeOperationBuy %>
+                                    <% if ( closeOperationBuy === false ) { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha dejado una calificación y un comentario sobre este intercambio. Puede Cerra la sala cuando desee. </p>
+                                        </div>
+                                        <button class="btn form-control my-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala</button>
+                                    <% } else { %>
+                                        <div class="alert alert-dark my-2">
+                                            <p>Usted ya ha cerrado esta sala, si requiere contactar con este vendedor vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= negotiation.usernameSell %>"><%= negotiation.usernameSell %></a>  </p>
+                                        </div>
+                                        <button class="btn form-control my-2" style="color: white; background-color: rgba(146,0,255,1);" disabled> Sala Cerrada </button>
+                                    <% }; %> 
+
+                                <% }; %>   
+
+
+
+
+                                
+
+                            </div>
+                    </div>   
+
+                <% }; %>
+                    
+
+
+            <% }; %>
+            </div>
+            <!-- seccion del chat -->
+            <div class="col-lg-5 mx-2 my-2 p-0 rounded-1" style="height: 93%;">
+                <div class="ContainerMessage rounded-1 px-2" style="height: 96%;">
+            
+
+                    <div class="card" style="height: 60vh;">
+                        <div class="card-body p-0  d-flex flex-column" style="height: 100%; overflow-y: auto;">                           
+                            <div class="card showMessage" style="padding-right: 10px; border: transparent">
+                                
+                                
+                                <% const codeDateSistem = codeDate %> <!-- fecha de hoy formato 2852025 -->
+                                <% let hoyMostrado = false; %>
+                                <% let fechaAnterior = ""; %>  <!-- Variable para almacenar la fecha anterior --> 
+                                
+                                <% if (msgFormat.length !==0) { %>
+                                    <% msgFormat.forEach( (ele)=>{ %>
+                                        
+                                        <!-- span del centro que muestra si es Hoy o una fecha anterior -->
+                                        <% if (ele.codeDate == codeDateSistem && !hoyMostrado) { %>
+                                            <div class="contentDate d-flex justify-content-center py-2"> 
+                                                <span class="text-light rounded-pill px-3 py-1 shadow-sm fst-italic" style="background-color: rgba(56, 56, 56, 1);"> <small>Hoy</small>  </span> 
+                                            </div>
+                                            <% hoyMostrado = true %> <!-- Marcamos que "Hoy" ya se mostró -->
+
+                                        <% } else if (ele.codeDate !== codeDateSistem && ele.codeDate !== fechaAnterior) { %>
+                                            <div class="contentDate d-flex justify-content-center py-2"> 
+                                                <span class="text-light rounded-pill px-3 py-1 shadow-sm fst-italic" style="background-color: rgba(56, 56, 56, 1);"> <small><%= ele.date %></small>  </span>
+                                             </div>
+                                            <% fechaAnterior = ele.codeDate; %> <!-- Actualizamos la fecha anterior -->
+
+                                       <% }; %> 
+                                        
+                                       <div class="showMessageNew"> <!-- mensajes dinamicos que se envian via socket--> </div>
+                                        
+                                        <% if (user.username == ele.user ){ %>
+                                            <!-- mensajes dinamicos que se cargan al renderizar la pagina -->
+                                            <div class="card-body d-flex justify-content-end my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: linear-gradient(90deg,rgba(217, 217, 217, 0.5) 0%, rgba(228, 197, 250, 0.5) 50%, rgba(151, 11, 255, 0.5) 100%);">
+                                                   
+                                                    <p style="line-height: 20px; text-align: justify; font-size: 16px;">  
+                                                        <%- ele.written.replace(/\n/g, "<br>") %>
+                                                        <span style="display: inline-block; white-space: nowrap;">
+                                                            <small class="text-secondary px-2" style="font-size: 13px;"> 
+                                                                <%= ele.time %> <i class="bi bi-check-all" style="font-size: 18px;"></i>
+                                                            </small>
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>
+
+                                        <% } else { %>
+
+                                            <div class="card-body d-flex justify-content-start my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: linear-gradient(90deg,rgba(120, 120, 120, 0.6) 0%, rgba(186, 186, 186, 0.6) 50%, rgba(217, 217, 217, 0.6) 100%);">
+                                                
+                                                    <p style="line-height: 20px; text-align: justify; font-size: 16px;">  
+                                                        <%- ele.written.replace(/\n/g, "<br>") %>
+                                                        <span style="display: inline-block; white-space: nowrap;">
+                                                            <small class="text-secondary px-2" style="font-size: 13px;"> 
+                                                                <%= ele.time %> <i class="bi bi-check-all" style="font-size: 18px;"></i>
+                                                            </small>
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>  
+
+                                        <% }; %>     
+    
+                                    <% }); %>
+
+                                <% } else { %>
+
+                                    <div class="showMessageNew">  <!-- mensajes dinamicos que se envian via socket cuando no exista elementos en el array msgFormat --> </div>
+
+                                <% }; %>
+                                 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="containerWritten p-1" style="width: 100%;">
+                       
+
+                            <h6 class="text-decoration-underline my-2 text-secondary">Hacer una pregunta a tu contraparte. </h6>
+                            <div class="containerTextButton d-flex justify-content-between mb-3" style="width: 100%;">
+
+                                <div class="form-group me-3" style="width: 85%;">
+                                    <% if (negotiation.closeOperationBuy !== false && negotiation.closeOperationSeller !== false ){ %>
+                                        <input type="search" class="form-control rounded-pill py-2" name="questions" style="font-size: 17px;" id="written"  placeholder="Este chat ha sido desactivado" disabled>
+                                    <% } else { %>
+                                        <!-- <input type="search" class="form-control rounded-pill py-2" name="questions" style="font-size: 17px;" id="written"  placeholder="Escribe aqui tu pregunta"> -->
+                                        <textarea id="written" rows="1" maxlength="300" class="form-control py-2" name="questions" style="font-size: 17px; border-radius: 8px;" placeholder="Escribe aqui tu pregunta"></textarea>
+                                    <% }; %>  
+
+                                        <input type="hidden" value="<%= user.username %>" id="user"> <!-- este dato debe ser enviado al backend para armar el objeto que entrara al documento de la compraVenta -->
+                                        <% if (negotiation) { %> <input type="hidden" value="<%= negotiation._id %>" id="idDocument"><% }; %> <!-- con este Id puedo buscar rapidamente el documento creado la compraVenta -->
+                                </div>  
+
+                                <div class="form-group me-2">
+                                    <% if (negotiation.closeOperationBuy !== false && negotiation.closeOperationSeller !== false ){ %>
+                                        <button class="btn btn-secondary rounded-pill me-2" id="btnSenMessage" style="font-size: 17px;"> <i class="bi bi-send-fill"></i> </button>
+                                    <% } else { %>
+                                        <button class="btn rounded-pill me-2" id="btnSenMessage" style="font-size: 16px; width: 40px; height: 40px; color: white; background-color: rgba(146,0,255,1);"> <i class="bi bi-send-fill"></i> </button>
+                                    <% }; %>     
+                                </div>
+
+                            </div>
+   
+                      
+                    </div>
+            <% }; %>
+                </div>   
+            </div>
+      </div>
+    </div>
+   
+
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+  <!-- con este script conectamos este HTML al servidor socket -->         
+  <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+
+    <script>
+        //controles de pestaña y contenedores
+        const information = document.getElementById('information');
+        const rateBuy = document.getElementById('rateBuy'); 
+
+        const contentInformation = document.querySelector('.contentInformation');
+        const contentRateBuy = document.querySelector('.contentRateBuy');
+
+        if (information){
+            information.addEventListener('click', ()=>{
+                information.classList.add('active');
+                rateBuy.classList.remove('active');
+
+                contentInformation.classList.remove('close');
+                contentRateBuy.classList.add('close');
+
+            });
+        }    
+
+
+        if(rateBuy){
+            rateBuy.addEventListener('click', ()=>{
+                information.classList.remove('active');
+                rateBuy.classList.add('active');
+
+                contentInformation.classList.add('close');
+                contentRateBuy.classList.remove('close');
+            })
+
+        }
+        
+
+    </script>
+
+    <script>
+
+        //nuevo
+        /* controles del lado del comprador */
+        const data = document.getElementById('data');
+        const rateSell = document.getElementById('rateSell');
+
+        const contentData = document.querySelector('.contentData'); 
+        const contentRateSell = document.querySelector('.contentRateSell');
+    
+
+        if (data){
+            data.addEventListener('click', ()=>{
+                data.classList.add('active');
+                rateSell.classList.remove('active');
+
+                contentData.classList.remove('close');
+                contentRateSell.classList.add('close');
+            });
+        }    
+
+
+        if (rateSell){
+            rateSell.addEventListener('click', ()=>{
+                data.classList.remove('active');
+                rateSell.classList.add('active');
+
+                contentData.classList.add('close');
+                contentRateSell.classList.remove('close');
+            })
+        }
+    </script>
+
+    <script>
+        //aqui haremos una conuslta para buscar en todos los documentos de negociacion el campo appointment con el indexedSell definido actual
+        //para que el comprador y el vendedor puedan saber si esta o no disponible
+        const iDNegoti = document.querySelector('.idNegotiation').value;
+        const usernameBuy = document.querySelector('.usernameBuy').value;
+        const indexedSell = document.querySelector('.indexedSell').value;
+        const tbodyAgenda = document.querySelector('.tbodyAgenda');
+        let searchNegotiations; //aqui esta un array con toda la agenda de citas de este bien o servicio. Muy Importante
+
+        const formData = new FormData()
+            
+            formData.append('indexedSell', indexedSell);
+
+        fetch('/negotiation-appointmentSearchAll/', {
+            method: "POST",
+            body: formData
+        })
+            .then(response =>response.json() ) 
+            .then( jsonx => 
+                {
+                    console.log("jsonx searchNegotiations:", jsonx) 
+                    const code = jsonx.code;
+                    searchNegotiations = jsonx.searchNegotiations;
+
+                    function parseAppointment(str) {
+                        const [date, time] = str.split(' ');
+                        const [day, month, year] = date.split('-').map(Number);
+                        const [hour, minute] = time.split(':').map(Number);
+                        return new Date(year, month - 1, day, hour, minute);
+                    }
+
+                    searchNegotiations.sort((a, b) => parseAppointment(a.appointment) - parseAppointment(b.appointment));
+
+                    console.log(searchNegotiations);
+                    
+                    if (code == "ok"){
+
+                        
+                        searchNegotiations.forEach((ele)=>{
+                            const ele_id = ele._id;
+                            const eleUsernameBuy = ele.usernameBuy; 
+                            //console.log("id :", id)
+                            const appointment = ele.appointment;
+                            const id = ele._id;
+
+                            if (tbodyAgenda){
+                                if (iDNegoti == ele_id){
+                                    tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment} <i class="bi bi-eye-fill ms-2"></i> </td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
+                                } else {
+                                    tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment}</td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
+                                }
+                            }    
+                            
+                                                    
+                        })
+                    } else {
+                        
+                    }
+                
+                })
+            .catch( err => console.log(err));
+
+
+
+    </script>
+
+    <script>
+        const idNegotiation = document.querySelector('.idNegotiation');
+        const daysAvaible = document.querySelector('.daysInp').value;
+        const rangeTimeAvailable = document.querySelector('.rangeTimeInp').value;//14:00,18:00  quiero que se transforme en [1400, 1800] un array con estos numeros quitar ":" para crear un nunemro y que sea de tipo number
+
+        const daysArray = daysAvaible.split(',').map(Number);
+        console.log("daysArray :",  daysArray); // [0, 1, 2, 3, 4]
+        const timeArray = rangeTimeAvailable.split(',').map(time => {
+            return Number(time.replace(':', '')); // quita ":" y convierte a número
+        });
+        console.log("timeArray :", timeArray); // [1400, 1800]
+        //console.log("daysAvaible :", daysAvaible ); //0,1,2,3,4 quiero que eso sea un array con estos datos de tiipo number
+        //console.log("rangeTimeAvailable :", rangeTimeAvailable ); //14:00,18:00 esto tambien quiero que sea un array y tenga estos datos dentro de tipo number
+      
+        const dateInput = document.getElementById('myDateInput');
+        const timeInput = document.getElementById('myTimeSelect');
+        const btnAppointment = document.getElementById('btnAppointment');
+        const btnAppointmentSpinner = document.getElementById('btnAppointmentSpinner');
+        const appointmentSpan = document.getElementById('appointmentSpan');//este es un sopan donde muestra la fecha y hora que se ha elegido
+
+        const range1 = timeArray[0];
+        const range2 = timeArray[1];  
+        let dayApprobe = false;
+        let dateValue, timeValue;
+       
+        if (dateInput){
+            dateInput.addEventListener('change', (event) => {
+                console.log("he seleccionado a un dia", event)
+                const selectedDate = new Date(event.target.value);
+                const dayOfWeek = selectedDate.getDay(); // 0 es (domingo) y 6 es (sábado)
+                console.log("selectedDate -->", selectedDate);
+                
+                console.log("dayOfWeek -->", dayOfWeek); 
+                const today = new Date().getUTCDate(); //este es el dia de hoy
+                const selectedDay =  selectedDate.getUTCDate(); //este es el dia seleccionado
+                
+                console.log("today :", today);
+
+                console.log("today -- selectedDate", today, selectedDay); 
+                if ( today <= selectedDay ){
+
+                    const resultInclude = daysArray.includes(dayOfWeek)
+                    console.log("resultInclude -->", resultInclude);
+                    
+                    if (resultInclude === true ){
+                        console.log("dia aprobado", dateInput.value )
+                        dateValue = dateInput.value;
+                        
+                    } else {
+                        console.log("dia no aprobado")
+                        event.target.value = ''; 
+                        const message = "Este dia no esta libre para crear la cita."
+                        mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                    } 
+
+                } else {
+
+                        console.log("Este dia ya ha pasado")
+                        event.target.value = ''; 
+                        const message = "¡Fecha inválida! No puedes elegir un día que ya pasó. Asegúrate de seleccionar una fecha que sea hoy o en el futuro cercano."
+                        mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                }
+
+
+
+            });
+        }    
+
+        if (btnAppointment){
+            btnAppointment.addEventListener('click', ()=>{
+                
+                const time = timeInput.value;
+                const date = dateInput.value;
+                let existAppointment = false;
+
+                if (time !== "no_time" && date !=="") {
+                    console.log("hay que revisar si este appointment existe ya:", searchNegotiations);
+
+                    const searchNegotiationsFormat = searchNegotiations.map(negotiation => {
+                        const parts = negotiation.appointment.split('-');
+                        const day = parts[0];
+                        const month = parts[1];
+                        const yearAndTime = parts[2].split(' ');
+                        const year = yearAndTime[0];
+                        const time = yearAndTime[1];
+
+                        // Usamos padStart() para asegurar que el día y el mes tengan dos dígitos
+                        const paddedDay = day.padStart(2, '0');
+                        const paddedMonth = month.padStart(2, '0');
+
+                        // Creamos la nueva cadena con el formato deseado dd-mm-yyyy h:m
+                        return `${paddedDay}-${paddedMonth}-${year} ${time}`;
+                    });
+
+                    console.log(searchNegotiationsFormat);
+            
+                    btnAppointmentSpinner.classList.remove('close');
+                    btnAppointment.classList.add('close');
+
+                    const id = idNegotiation.value; //esto es el iD del documento negotiation
+                    const timeValue = timeInput.value; //este es el valor del selector de las horas disponibles
+                    console.log("dateValue :", dateValue); //dateValue : 2025-07-02 este formato debemos acomodar para hacer la comparacion
+                    console.log("timeValue :", timeValue);
+                    const arrayDate = dateValue.split("-");
+                    const diaF = arrayDate[2]; const mesF = arrayDate[1]; const anioF = arrayDate[0]; 
+                    const dateFormat = `${diaF}-${mesF}-${anioF}`;
+                    const newAppointment = `${dateFormat} ${timeValue}`;
+                    console.log("newAppointment:", newAppointment);
+
+                    searchNegotiationsFormat.forEach((ele)=>{
+
+                        const appointment = ele;
+                        console.log(`${appointment} === ${newAppointment}`)
+                        if (appointment === newAppointment){
+                            existAppointment = true;
+                        }
+
+                    });
+
+                    if (existAppointment === false){
+
+                        const formData = new FormData()
+                            formData.append('id', id);
+                            formData.append('date', dateValue);
+                            formData.append('time', timeValue);
+
+                        fetch('/negotiation-appointment/', {
+                            method: "POST",
+                            body: formData
+                        })
+                            .then(response =>response.json() )
+                            .then( jsonx => 
+                                {
+                                    console.log(jsonx) 
+                                    const code = jsonx.code;
+                                    const message = jsonx.message;
+                                    const appointment =jsonx.appointment;
+                   
+
+                                    if (code == "ok"){
+
+                                        setTimeout(() => {
+                                            mostrarToast( message, 'right', 'success', '¡Hecho!', true );
+                                            appointmentSpan.innerText = appointment;
+                                            btnAppointmentSpinner.classList.add('close');
+                                            btnAppointment.classList.remove('close');
+                                        }, 2000);
+
+
+                                    } else {
+                                        setTimeout(() => {
+                                            mostrarToast( message, 'right', 'danger', '¡Upps!', true );
+                                            btnAppointmentSpinner.classList.add('close');
+                                            btnAppointment.classList.remove('close');
+                                        }, 2000);
+                                        
+                                    }
+                                
+                                })
+                            .catch( err => console.log(err));
+
+                    } else {
+
+                        const message = "Fecha ocupada, por favor elija otra.";
+                        btnAppointmentSpinner.classList.add('close');
+                        btnAppointment.classList.remove('close');
+                        mostrarToast( message, 'right', 'danger', '¡Upps!', true );
+
+                    }
+
+                } else {
+
+                    message = "Debe elegir un dia y una hora que este disponible."
+                    mostrarToast( message , 'right', 'danger', '¡Upps!', false );
+                    //console.log("no tiene ni date ni time");
+                    //console.log("time :", time);
+                    //console.log("date :", date);
+
+                }
+
+            });
+        }    
+
+    </script>
+
+  <script>
+     //nuevo
+     //este es un ejemplo del poder y elasticidad del querySelector() y el querySelectorAll()
+    const referPay = document.querySelector('.referPay'); //aqui esta el input que captura la referencia
+    const inpOptionMethod = document.querySelectorAll('input[type="radio"][name="methodNameSelected"]'); //todos los input radio de seleccion de metodo de pago
+    const btnUploadVouche = document.querySelector('#btnUploadVouche');
+    const nameFile = document.querySelector('#nameFile');
+    const fileVouche = document.querySelector('#fileVouche');
+    const imgVouche = document.querySelector('#imgVouche');
+    const circleDeleteImg = document.querySelector('.circleDeleteImg');
+
+    const btnMethodPaySelected = document.querySelector('#btnMethodPaySelected');
+
+    let file; //aqui guardo el archivo de imagen voucher
+    let methodSelected; //aqui guardo el metodo seleccionado por el usuario
+  
+
+    if (btnUploadVouche){
+
+        btnUploadVouche.addEventListener("click", ()=>{
+         /*    alert("holaaaa") */
+            fileVouche.click();
+        });
+
+        fileVouche.addEventListener('change', ()=>{
+
+            console.log("fileVouche :", fileVouche);
+
+            let archivo = fileVouche.files
+            console.log(archivo);
+
+            if (! archivo || !archivo.length){
+                imgVouche.src = "";
+                return
+            };
+
+            file = archivo[0];
+            //console.log("file :",file);
+            let objectURL = URL.createObjectURL(file);
+
+            imgVouche.src= objectURL;
+            nameFile.innerText = file.name;
+
+            const size = file.size;
+            const name = file.name;
+            const last = name.lastIndexOf('.'); //este metodo me arroja la cantidad de caracteres despues del ultimo punto
+            const ext = name.substring(last + 1).toLowerCase(); //este metodo corta la cadena mediante la cantidad de caracteres y tambien la convierte en minuscula importante porque hay momentos donde las extensionews estan en mayusculas. pendiente con esto
+            
+            console.log("ext :", ext); 
+
+            if ( size <= 5000000 ){
+                //aseguramos que el archivo sea de tipo img y que no supere los 5 mb
+
+                if (ext === "jpg" || ext === "jpeg" || ext === "png" ){
+
+                    //activamos el boton
+                    btnMethodPaySelected.removeAttribute("disabled");
+
+                    
+                } else {
+
+                    const response = "Esta archivo no es de tipo imagen"
+                    file.value = "" //Limpiamos el file
+                    imgVouche.src="/img/sinImagen.png"
+                    //desactivamos el boton
+                    btnMethodPaySelected.setAttribute("disabled", "");
+                    
+                    mostrarToast( response , 'right', 'danger', '¡Upps!', false );
+                    return
+                }   
+
+            } else {
+
+                const response = "Esta imagen supera el tamaño máximo permitido de 5MB de peso."
+                file.value = "" //Limpiamos el file
+                imgVouche.src="/img/sinImagen.png"
+                //desactivamos el boton
+                btnMethodPaySelected.setAttribute("disabled", "");
+                
+                mostrarToast( response , 'right', 'danger', '¡Upps!', false );
+                
+            }        
+            
+            
+            console.log("Este es el peso :", size);
+
+
+        })
+
+    }
+
+
+
+    if (circleDeleteImg) {
+        circleDeleteImg.addEventListener('click', ()=>{
+            archivo ="";
+            nameFile.innerText = "No hay ningun archivo"; 
+            imgVouche.src="/img/sinImagen.png"
+            //activamos el boton para que registre su pago
+            btnMethodPaySelected.removeAttribute("disabled");
+        })
+    }
+
+    if (btnMethodPaySelected) {
+        btnMethodPaySelected.addEventListener('click', ()=>{
+
+            const iDBuysell = idNegotiation.value; //esto es el iD del documento negotiation
+
+            inpOptionMethod.forEach((ele)=>{
+    
+                if (ele.checked){
+                    //console.log("checkedMethod :", ele.value);
+                    methodSelected = ele.value;
+                    //activamos el boton de registro de pago
+                    btnMethodPaySelected.removeAttribute("disabled");
+                }
+                
+            })
+
+            const referValue = referPay.value;
+            console.log("methodSelected:", methodSelected);
+            console.log('referValue :', referValue)
+            console.log("archivo vouche:", file);
+
+            const formData = new FormData()
+                formData.append('iD', iDBuysell); //este es el id del documento a procesar
+                formData.append('methodSelected', methodSelected); //aqui el method elegido por el usuario
+                formData.append('referValue', referValue); //codigo de referencia del pago si lo amerita
+                formData.append('fileImg', file); //aqui la imagen del vouche si lo amerita.
+                                 
+      
+            fetch('/buysell-body/payRegister', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(jsonx => {
+                console.log("response del backend --->", jsonx);
+
+                const code = jsonx.code;
+                const message = jsonx.message;
+                
+                if (code == "ok"){
+
+                    console.log("El usuario ha terminado de registar el pago y ha sido exitoso ");
+
+                    mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 4000);
+                    
+
+                } else {
+
+                    mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                    console.log("acciones para luego volver a intentarlo");
+                   
+                }
+            
+            
+
+            })
+            .catch(err => console.log(err));
+        })
+    }
+
+
+
+
+  </script>
+
+    <script>
+        //new
+        //este script abre y cierra las opciones de los metodos de pago
+        function toggleCollapse(index) {
+            // Cierra todos los elementos
+            const contents = document.querySelectorAll('[class^="contentCollapse"]');
+            contents.forEach(content => {
+                content.classList.add('close');
+            });
+
+            // Abre el elemento correspondiente
+            const activeContent = document.querySelector('.contentCollapse' + index);
+            activeContent.classList.remove('close');
+            //activamos el boton
+            btnMethodPaySelected.removeAttribute("disabled");
+            
+        }
+
+    // explicacion: '[class^="contentCollapse"]' Este es un selector CSS que busca todos los elementos cuyo atributo `class` comienza (`^=`) con el texto "contentCollapse". El símbolo `^=` es un operador que significa "comienza con". 
+    // Así que, en resumen, esta línea está obteniendo todos los elementos del DOM que tienen una clase que empieza con "contentCollapse", y los almacena en la variable `contents`. Luego, puedes iterar sobre esa lista para aplicarles cambios, como cerrar todos los contenidos.
+    </script>
+
+
+
+  <script>
+
+    const socket = io();
+
+    const username = document.getElementById('username');
+    const btnSenMessage = document.getElementById('btnSenMessage');
+    const written = document.getElementById('written');
+    const user = document.getElementById('user');
+    const idDocument = document.getElementById('idDocument');
+
+    written.value =""; //estado incial 
+    written.focus(); //estado inicial 
+
+    btnSenMessage.addEventListener('click', ()=>{
+       
+        
+        let Time;
+
+        if ( written.value !== "" ){
+
+            const date = new Date();
+            const hora = date.getHours();
+            const minu = date.getMinutes();
+
+            const dia = date.getDate();
+            const mes = date.getMonth()+1;
+            const fullYear = date.getFullYear();
+
+            function obtenerMes(numero) {
+                const meses = [
+                    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                ];
+                return meses[numero]; 
+            }
+
+            if (minu <= 9){
+                Time = `${hora}:0${minu}`
+            } else {
+                Time = `${hora}:${minu}`
+            }
+
+            const monthInLetters = obtenerMes(mes); //devuelve el mes Junio 
+            const dates = `${monthInLetters} ${dia}, ${fullYear}`
+            const codeDate = `${dia}${mes}${fullYear}` //28052025 esto junto parece un codigo numerico se forma con la fecha y nos permite verificar si estamos en el mismo dia para que en le chat podamso saber si es hoy o alguna fecha que se usaria el valor dates
+
+            const datos = {
+                user : user.value,
+                written : written.value,
+                date : dates,
+                codeDate : codeDate,
+                time : Time,
+                idDocument : idDocument.value
+            };
+            
+            fetch('/negotiation-message/', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx =>{ console.log("Este es la respuesta del fetch post",jsonx);
+                socket.emit('creacion:MsgBuysell', { 'obje' : jsonx }) //enviamos al socket para que envia el mensaje con esteroides.
+                           
+                // Limpiar el textarea
+                written.value = '';
+
+                // Contraer el textarea a una sola fila
+                written.rows = 1;
+
+            })
+            .catch( err => console.log(err)); 
+           
+        };
+    
+    
+    }); 
+ 
+
+    // quiero que el textarea vaya expandiendose a medida existan mas lienas pero el maximo debe ser de 5 lineas.
+    written.addEventListener('input', () => {
+        const lineas = written.value.split('\n');
+        console.log("lineas :", lineas.length);
+
+        // Ajustar el número de filas, pero no permitir más de 5 en la expansion del textarea.
+        const row = Math.min(lineas.length, 5);
+        written.rows = row;
+
+    });
+
+    /* Aqui llega el socket que se utilizara para emitir el mensaje de forma automatica */
+    const idOrderBuy = document.getElementById('idOrderBuy');
+    const efectSoundNewNote = document.getElementById('efectSoundNewNote');
+    const showMessageNew = document.querySelector('.showMessageNew');
+    let boxNotes = []; 
+
+    socket.on('refresh:MsgBuysell', (data)=>{
+        const orderBuy = idOrderBuy.value;
+        console.log(":::::::::::::xxxxxxxxx::::::::::");
+        console.log(":::::::::::::Socket Escuchando *refresh:MsgBuysell* ::::::::::");
+
+
+        console.log("Esto es data objeto enviado desde el Servidor Socket ---->", data);
+        let note = data.obje;
+        console.log("note es un objeto con los valores del mensaje unico :", note); 
+       
+        boxNotes.push(note);
+        const Notes = boxNotes
+        console.log("Notes :", Notes);
+
+        if ( showMessageNew.innerHTML !== ""){
+            showMessageNew.innerHTML = "" //limpiamos este elemento de la pantalla
+        }
+        
+        //const longNotes = allNotes.length; //esto es la cantidad de elementos que posee el array allNotes.
+        
+        //******************************************************
+
+        for (let i = Notes.length - 1; i >= 0; i--) { 
+            const ele = Notes[i];
+
+                efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
+                efectSoundNewNote.play().catch(error => {
+                    console.error("Error al reproducir el sonido:", error);
+                })
+            //console.log("ele.idDocument :",  ele.idDocument);
+            //console.log("orderBuy :",  orderBuy);
+
+            if (ele.idDocument == orderBuy){ //esto verifica que sea el mensaje para este chat
+
+
+                if ( username.value == ele.user ){
+  
+                    showMessageNew.innerHTML += `
+                                                <div class="card-body d-flex justify-content-end my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                    <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: linear-gradient(90deg,rgba(217, 217, 217, 0.5) 0%, rgba(228, 197, 250, 0.5) 50%, rgba(151, 11, 255, 0.5) 100%);">
+                                                        <p style="line-height: 20px; text-align: justify; font-size: 16px;">  ${formatText(ele.written)}
+                                                            <span style="display: inline-block; white-space: nowrap;">
+                                                                <small class="text-secondary px-2" style="font-size: 13px;"> 
+                                                                    ${ele.time} <i class="bi bi-check-all" style="font-size: 18px;"></i>
+                                                                </small>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                    `
+
+                } else {
+
+
+                    showMessageNew.innerHTML += `
+                                                <div class="card-body d-flex justify-content-start my-1 ms-3 pb-3 pt-2" style="position: relative;">
+                                                    <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: linear-gradient(90deg,rgba(120, 120, 120, 0.6) 0%, rgba(186, 186, 186, 0.6) 50%, rgba(217, 217, 217, 0.6) 100%);">
+                                                        <p style="line-height: 20px; text-align: justify; font-size: 16px;"> ${formatText(ele.written)} 
+                                                            <span style="display: inline-block; white-space: nowrap;">
+                                                                <small class="text-secondary px-2" style="font-size: 13px;"> 
+                                                                    ${ele.time}  <i class="bi bi-check-all" style="font-size: 18px;"></i>
+                                                                </small>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                    ` 
+                }  
+                
+            
+            }    
+
+        }
+
+        written.focus();
+
+        function formatText(text) {
+            return text.replace(/\n/g, '<br>');
+        }    
+        //******************************************************
+
+    });
+
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    //esto esta conectado con la linea de codigo 82 aqui el comprador decide pagar.
+    //vista de comprador paga la orden.
+          
+            const btnPay = document.getElementById('btnPay');
+            const idOrder = document.getElementById('idOrder');
+            const pay = document.getElementById('pay');
+
+            //este bloque de codigo es ejecutado cuando el comprador da click en pago
+            if (btnPay){
+
+                btnPay.addEventListener('click', ()=>{
+
+                    let data = {
+                        idOrder : idOrder.value,
+                        pay : pay.value
+                    }
+
+                    //este dato es confirmado por el comprador y es el primero que edita los datos de esta orden. 
+                    fetch('/buysell-body/pay', {
+
+                     method: "post",
+                     body: JSON.stringify(data),
+                     headers: {"content-type" : "application/json"}
+
+                     })
+                     .then(response =>response.json() )
+                     .then( jsonx =>{ console.log("Este es la respuesta del comprador fetch post",jsonx)
+                            location.reload();
+                        })
+                     .catch( err => console.log(err)); 
+
+                });
+
+            };    
+    
+  </script>
+
+<script>
+    //esto esta conectado con la linea de codigo 83 aqui el comprador decide cancelar la orden. NO pagará.
+    //vista de comprador cancela la orden.
+            const btnCancel = document.getElementById('btnCancel');
+            const idOrderCancel = document.getElementById('idOrderCancel');
+            const cancel = document.getElementById('cancel');
+
+            if (btnCancel){
+
+                //este bloque de codigo es ejecutado cuando el comprador da click en pago
+                btnCancel.addEventListener('click', ()=>{
+
+                    let data = {
+                        idOrder : idOrderCancel.value,
+                        pay : cancel.value
+                    }
+
+                    //este dato es confirmado por el comprador y es el primero que edita los datos de esta orden. 
+                    fetch('/buysell-body/cancel', {
+
+                        method: "post",
+                        body: JSON.stringify(data),
+                        headers: {"content-type" : "application/json"}
+
+                        })
+                        .then(response =>response.json() )
+                        .then( jsonx => {console.log("Este es la respuesta del comprador fetch post",jsonx)
+                                location.reload();
+                            })
+                        .catch( err => console.log(err)); 
+
+                });
+            
+            };    
+    
+</script>
+
+<script>
+        //esto es la vista del comprador que ya ha cancelado la orden, deja la calificacion y comentario a su vendedor
+            const btnBuyerCancel = document.getElementById('btnBuyerCancel');
+            const idOrderBuyerCancel = document.getElementById('idOrderBuyerCancel');
+            const commentBuyerCancel = document.getElementById('commentBuyerCancel');
+            const RadialesBuyerCancel = document.querySelectorAll('.RadialesBuyerCancel');
+            
+            let radioValueBuyerCancel;                                      
+      
+
+            for (let i = 0; i < RadialesBuyerCancel.length; i++) {
+                    const ele = RadialesBuyerCancel[i];
+        
+                ele.addEventListener('click', ()=>{
+                    radioValueBuyerCancel = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
+                    console.log("Valor del radial checked es --->", radioValueBuyerCancel);
+                })  
+            }
+
+        if (btnBuyerCancel){ 
+
+            btnBuyerCancel.addEventListener('click', ()=>{
+
+            let data = {
+            idOrder : idOrderBuyerCancel.value,
+            rating : radioValueBuyerCancel,
+            comment : commentBuyerCancel.value
+            }
+
+            //este dato es confirmado por el comprador y es el primero que edita los datos de esta orden. 
+            fetch('/buysell-body/cancel-calicoment', {
+
+                method: "post",
+                body: JSON.stringify(data),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {console.log("Este es la respuesta del comprador fetch post",jsonx)
+                     location.reload()
+                    })
+                .catch( err => console.log(err)); 
+
+            })
+        } 
+           
+  </script>
+
+<script>
+    //vista vendedor confirma el pago, califica y envia comentario
+    const btnConfirm = document.getElementById('btnConfirm');
+    const selectPay = document.getElementById('selectPay');
+    const idOrderX = document.getElementById('idOrderX');
+    const Radiales = document.querySelectorAll('.form-check-input');
+    const inputIdComment = document.getElementById('inputIdComment');
+    const R1 = document.getElementById('Radio1');
+    const R2 = document.getElementById('Radio2');
+    const R3 = document.getElementById('Radio3');
+    let radioValue; 
+
+    if (selectPay){
+
+        selectPay.addEventListener('change', ()=>{
+
+
+            if (selectPay.value == 'Yes'){
+             R3.setAttribute("disabled", "");
+             R1.removeAttribute("disabled");
+            
+            } else if (selectPay.value == 'No'){
+             R1.setAttribute("disabled", "");
+             R3.removeAttribute("disabled");
+            }
+       
+        });                                        
+    }  
+
+     for (let i = 0; i < Radiales.length; i++) {
+            const ele = Radiales[i];
+
+        ele.addEventListener('click', ()=>{
+            radioValue = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
+           // console.log("Valor del radial checked es --->", radioValue);
+        })  
+     }
+        
+    if (btnConfirm){ 
+
+        btnConfirm.addEventListener('click', ()=>{
+
+        //aqui armo el objeto que requiero enviar via fetch
+            const selectValue = { idOrder : idOrderX.value,
+                                  confirm : selectPay.value,
+                                  rating : radioValue, 
+                                  comment : inputIdComment.value   
+                                };
+            
+            //este dato es confirmado por el vendedor el ultimo que edita los datos de esta orden.      
+            fetch('/buysell-body/confirm', {
+
+                method: "post",
+                body: JSON.stringify(selectValue),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {console.log("Este es la respuesta del vendedor fetch post",jsonx)
+                        location.reload(); //refrescamos la pagina cuando se haya recibido los cambios del backend.
+                    })
+                .catch( err => console.log(err));           
+
+        });
+
+    };    
+    
+
+</script>
+
+<script>
+    //vista comprador
+    //aqui el comprador califica y comenta a su vendedor.
+    const btnBuyerTrue = document.getElementById('btnBuyerTrue');
+    const btnBuyerTrueSpinner = document.getElementById('btnBuyerTrueSpinner');
+    const idOrderBuyerTrue = document.getElementById('idOrderBuyerTrue');
+    const RadialesBuyerTrue = document.querySelectorAll('.Radio-BuyerTrue');
+    const commentBuyerTrue = document.getElementById('commentBuyerTrue');
+    
+    let radioValueBuyerTrue = "Positivo";                                      
+      
+
+     for (let i = 0; i < RadialesBuyerTrue.length; i++) {
+            const ele = RadialesBuyerTrue[i];
+
+        ele.addEventListener('click', ()=>{
+            radioValueBuyerTrue = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
+           // console.log("Valor del radial checked es --->", radioValue);
+        })  
+     }
+        
+    if (btnBuyerTrue){ 
+
+        btnBuyerTrue.addEventListener('click', ()=>{
+
+
+            //bloqueamos el boton y dejamos el boton spinner
+            btnBuyerTrue.classList.add('close');
+            btnBuyerTrueSpinner.classList.remove('close');
+
+            //aqui armo el objeto que requiero enviar via fetch
+            const objectBuyerTrue = { idOrder : idOrderBuyerTrue.value,
+                                      rating : radioValueBuyerTrue, 
+                                      comment : commentBuyerTrue.value   
+                                    };                     
+
+            if ( objectBuyerTrue.rating !== "" && objectBuyerTrue.comment !=="" ) {
+                console.log("podemos enviar al backend la calificacion y el comentario ");
+
+
+                //este dato es enviado por el comprador.      
+                fetch('/negotiation-rating/buyerTrue', {
+
+                    method: "post", 
+                    body: JSON.stringify(objectBuyerTrue),
+                    headers: {"content-type" : "application/json"}
+
+                    })
+                    .then(response =>response.json() )
+                    .then( jsonx => { 
+                        console.log(jsonx) 
+                        const code = jsonx.code;
+                        const message = jsonx.message; 
+                        
+                        if (code === "ok"){
+
+                            mostrarToast( message, 'right', 'success', '¡Bien Hecho!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+
+                                location.reload();
+
+                            }, 5000);
+
+                        } else {
+
+                            mostrarToast( message, 'right', 'danger', '¡Upps!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+                                //activamos el boton nuevamente
+                                btnBuyerTrue.classList.remove('close');
+                                btnBuyerTrueSpinner.classList.add('close');
+
+                            }, 5000);
+
+                        }
+
+                        
+                    })
+                    .catch( err => console.log(err));   
+
+            } else { 
+                console.log("NO podemos enviar al backend la calificacion y el comentario, No hay datos"); 
+                const message = "Debe dejar una calificación y un comentario.";
+                mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                setTimeout(() => {
+
+                    btnBuyerTrue.classList.remove('close');
+                    btnBuyerTrueSpinner.classList.add('close');
+
+                }, 5000);
+            }                       
+            
+        
+
+        });
+     
+    };
+
+</script>
+
+<script>
+    //vista vendedor
+    //aqui el vendedor califica y comenta a su comprador.
+    const btnSellTrue = document.getElementById('btnSellTrue');
+    const btnSellTrueSpinner = document.getElementById('btnSellTrueSpinner');
+    //const idOrderBuyerTrue = document.getElementById('idOrderBuyerTrue');
+    //const RadialesBuyerTrue = document.querySelectorAll('.Radio-BuyerTrue');
+    //const commentBuyerTrue = document.getElementById('commentBuyerTrue');
+    
+    let radioValueSellTrue ="Positivo";                                      
+      
+
+     for (let i = 0; i < RadialesBuyerTrue.length; i++) {
+            const ele = RadialesBuyerTrue[i];
+
+        ele.addEventListener('click', ()=>{
+            radioValueSellTrue = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
+           // console.log("Valor del radial checked es --->", radioValue);
+        })  
+     }
+        
+    if (btnSellTrue){ 
+
+        btnSellTrue.addEventListener('click', ()=>{
+
+            //bloqueamos el boton y dejamos el boton spinner
+            btnSellTrue.classList.add('close');
+            btnSellTrueSpinner.classList.remove('close');
+
+            //aqui armo el objeto que requiero enviar via fetch
+            const objectBuyerTrue = { idOrder : idOrderBuyerTrue.value,
+                                      rating : radioValueBuyerTrue, 
+                                      comment : commentBuyerTrue.value   
+                                    };
+
+            if ( objectBuyerTrue.rating !== "" && objectBuyerTrue.comment !=="" ) {                        
+            
+                //este dato es enviado por el comprador como ultimo paso para cerrar la orden de compra efectiva.      
+                fetch('/negotiation-rating/sellTrue', {
+
+                    method: "post", 
+                    body: JSON.stringify(objectBuyerTrue),
+                    headers: {"content-type" : "application/json"}
+
+                    })
+                    .then(response =>response.json() )
+                    .then( jsonx => { 
+                        console.log(jsonx) 
+                        const code = jsonx.code;
+                        const message = jsonx.message; 
+                        
+                        if (code === "ok"){
+
+                            mostrarToast( message, 'right', 'success', '¡Bien Hecho!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+
+                                location.reload();
+
+                            }, 5000);
+
+                        } else {
+
+                            mostrarToast( message, 'right', 'danger', '¡Upps!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+                                //activamos el boton nuevamente
+                                btnSellTrue.classList.remove('close');
+                                btnSellTrueSpinner.classList.add('close');
+
+                            }, 5000);
+
+                        }
+
+                        
+                    })
+                    .catch( err => console.log(err)); 
+                    
+            } else {
+
+                console.log("NO podemos enviar al backend la calificacion y el comentario, No hay datos"); 
+                const message = "Debe dejar una calificación y un comentario.";
+                mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                setTimeout(() => {
+
+                    btnSellTrue.classList.remove('close');
+                    btnSellTrueSpinner.classList.add('close');
+
+                }, 5000);
+
+            }        
+
+        });
+     
+    };
+
+</script>
+
+<script>
+    //nuevo
+    //este boton cierra la sala de negociacion, el acto de cerrar es individual. si el comprador lo cierra solo su sala se cerrara igual pasara con el vendedor
+
+    const btnCloseOperation = document.getElementById('btnCloseOperation');
+    const IndexedSell = document.querySelector('.indexedSell'); 
+    const IndexedBuy = document.querySelector('.indexedBuy');
+
+    const idUser = document.getElementById('idUser');
+
+    if (btnCloseOperation){
+
+        btnCloseOperation.addEventListener('click', ()=>{
+
+            const iDOrder = idNegotiation.value;
+            const iDUser = idUser.value;
+            let indexedSell = IndexedSell.value; 
+            let indexedBuy = IndexedBuy.value;
+            
+
+            if (iDUser == indexedSell) {
+                console.log("Eres el vendedor");
+                indexedBuy = "";
+            } else if (iDUser == indexedBuy) {
+                console.log("Eres el comprador");
+                indexedSell = "";
+            }
+
+            console.log("iDUser:", iDUser);
+            console.log("idOrder :", iDOrder);
+            console.log("indexedSell :", indexedSell);
+            console.log("indexedBuy :", indexedBuy);
+
+
+            const formData = new FormData()
+            formData.append('idOrder', iDOrder);
+            formData.append('indexedBuy', indexedBuy);
+            formData.append('indexedSell', indexedSell);
+ 
+            
+            fetch('/negotiation-rating/closeOperation', {
+                method: "POST",
+                body: formData
+            })
+                .then(response =>response.json() )
+                .then( jsonx => 
+                {
+                    console.log(jsonx)
+                    const code = jsonx.code;
+                    const message = jsonx.message;
+
+                    if (code == "ok"){
+
+                        mostrarToast( message, 'right', 'sucess', '¡Hecho!', true ); 
+                        const domain = window.location.origin;//esta variable me indica la primera parte https://blissenet.com o localhost://1263 
+                        console.log("Esto es dommain............................. ", domain);
+                        setTimeout(() => {
+                            window.location.href = `${domain}/buysell-list`;
+                        }, 4000);
+
+                    } else {
+
+                        mostrarToast( message, 'right', 'danger', '¡Upps!', false ); 
+
+                    }
+                
+                })
+                .catch( err => console.log(err));    
+ 
+
+        })
+
+
+
+           
+    }        
+
+</script>
+
+<script>
+    //vista vendedor califica y comenta despues de que su comprador le haya canceldo la orden.
+    //aqui el vendedor califica y comenta a su comprador.
+    const btnSellerCancel = document.getElementById('btnSellerCancel');
+    const idOrderSellerCancel = document.getElementById('idOrderSellerCancel');
+    const RadialesSellerCancel = document.querySelectorAll('.Radiales-SellerCancel');
+    const commentSellerCancel = document.getElementById('commentSellerCancel');
+    
+    let radioValueSellerCancel;                                      
+      
+
+     for (let i = 0; i < RadialesSellerCancel.length; i++) {
+            const ele = RadialesSellerCancel[i];
+
+        ele.addEventListener('click', ()=>{
+            radioValueSellerCancel = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
+           // console.log("Valor del radial checked es --->", radioValue);
+        })  
+     }
+        
+    if (btnSellerCancel){ 
+
+        btnSellerCancel.addEventListener('click', ()=>{
+
+            //aqui armo el objeto que requiero enviar via fetch
+            const data = { idOrder : idOrderSellerCancel.value,
+                           rating : radioValueSellerCancel, 
+                           comment : commentSellerCancel.value   
+                        };
+            
+            //este dato es enviado por el comprador como ultimo paso para cerrar la orden de compra efectiva.      
+            fetch('/buysell-body/sellerCancel', {
+
+                method: "post",
+                body: JSON.stringify(data),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {console.log("Este es la respuesta del vendedor fetch post",jsonx)
+                        location.reload();
+                    })
+                .catch( err => console.log(err));           
+
+        });
+    
+    };    
+
+</script>
+
+<script>
+
+    function mostrarToast(mensaje, posicion, color, titulo = '', conBotonCerrar = false) {
+        // Configuración predeterminada
+        toastr.options = {
+            "closeButton": conBotonCerrar, // Agregar botón de cerrar si se solicita
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": !conBotonCerrar, // Si tiene botón de cerrar, no mostrar barra de progreso
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "600",
+            "hideDuration": "1000",
+            "timeOut": conBotonCerrar ? false : "8000", // No se oculta automáticamente si tiene botón de cerrar
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+  
+        // Configurar la posición
+        switch (posicion) {
+            case 'center':
+                toastr.options.positionClass = 'toast-top-center';
+                break;
+            case 'left':
+                toastr.options.positionClass = 'toast-top-left';
+                break;
+            case 'right':
+                toastr.options.positionClass = 'toast-top-right';
+                break;
+            default:
+                toastr.options.positionClass = 'toast-top-right'; // Posición predeterminada
+        }
+  
+        // Mostrar el mensaje según el color especificado
+        switch (color) {
+            case 'success':
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+                break;
+            case 'info':
+                titulo ? toastr.info(mensaje, titulo) : toastr.info(mensaje);
+                break;
+            case 'warning':
+                titulo ? toastr.warning(mensaje, titulo) : toastr.warning(mensaje);
+                break;
+            case 'danger':
+                titulo ? toastr.error(mensaje, titulo) : toastr.error(mensaje);
+                break;
+            case 'primary':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-primary' }) : toastr.info(mensaje, '', { toastClass: 'toast-primary' });
+                break;
+            case 'dark':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-dark' }) : toastr.info(mensaje, '', { toastClass: 'toast-dark' });
+                break;
+            default:
+                console.warn('Color no válido. Usando el color por defecto (success).');
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+        }
+    }
+  
+
+   //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+  
+</script>
+
+
+
+<script>
+    $(document).ready(function() {
+      /*   $('.ui.rating').rating(); */ // Activa la interacción
+        $('.ui.rating').rating('disable'); // Desactiva la interacción
+    });
+</script>
+
+</body>
+</html>
+
+
+

@@ -28,6 +28,12 @@
     <%- include('../partials/navi-simple.ejs') %>
     <% if (user) { %>
 
+      <% const seeMarket = user.seeMarket %>
+      <% const idUser = user._id %>
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <input type="hidden" value="<%= idUser %>" id= "idUser">
+      <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
       <div class="container-fluid d-flex justify-content-between py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
         <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Sala de Negocios - Lista </b>  </div>
         
@@ -40,66 +46,107 @@
    
       <div class="contentBuyes">
         <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
-            <div class="col-lg-10  my-4 p-0">
-                      <div class="ContainerMessage rounded-1 p-2" style="background-color: #dbdfe4;">
-                         <% if (searchBuy.length !==0){ %>
+            <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 my-4 p-0">
 
-                            <% searchBuy.forEach((ele)=>{ %>
+              <div class="ContainerMessage rounded-1 p-2 themaTextLight" style="background-color: rgba(56, 61, 66, 0.2);">
 
-                                <% if (ele.department == 'items' || ele.department == 'arts' || ele.department == 'auctions') { %>
-                                <img src="<%= ele.image[0].url %>" alt="" style="width: 40px;">
-                                <span><b>Order :</b> <%= ele._id %> </span>
-                                <span class="ms-2"><b>Seller :</b> <%= ele.usernameSell %></span>
-                                <span class="ms-2"><b>Monto :</b> <%= ele.price %></span> <br>
-                                <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
-                                <br> <hr>
-                                <% } else { %>
-                                <img src="<%= ele.image[0].url %>" alt="" style="width: 40px;">
-                                <span><b>Order :</b> <%= ele._id %> </span>
-                                <span class="ms-2"><b>Seller :</b> <%= ele.usernameBuy %></span>
-                                <span class="ms-2"><b>Monto :</b> <%= ele.price %></span> <br>
-                                <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
-                                <br> <hr>
-                                <% }; %>  
+                  <div class="contentLabel mb-2" style="display: flex; align-items: center;">
+                      <label for="" class="text-secondary my-1 me-2" style="font-size: 16px; margin-right: 10px;"> Compras </label>
+                      <hr style="border-top: 1px solid #ccc; flex-grow: 1; margin: 0;">
+                  </div>
+                  <% if (searchBuy.length !==0){ %>
 
-                            <% }); %>
-                            
-                        
-                          <% }; %>
-                      </div>
+                      <% searchBuy.forEach((ele)=>{ %>
+
+                          <% if (ele.department == 'items' || ele.department == 'arts' || ele.department == 'auctions') { %>
+                          <div class="d-flex">  
+                              <div class="picture">
+                                <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                              </div>
+                              <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                              <div class="details d-flex flex-column" style="font-size: 15px;">
+                                  <span class="ms-2"><b>Seller :</b> <%= ele.usernameSell %></span>
+                                  <span class="ms-2"><b>Monto :</b> <%= ele.price %></span> 
+                              </div>
+                          </div>    
+                          <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
+                          <br> <hr>
+                          <% } else { %>
+                          <div class="d-flex">  
+                              <div class="picture">
+                                <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                              </div>
+                              <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                              <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                  <span class="ms-2"><b>Seller :</b> <%= ele.usernameBuy %></span>
+                                  <span class="ms-2"><b>Monto :</b> <%= ele.price %></span>
+                              </div>
+                          </div>         
+                          <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
+                          <br><hr>
+                          <% }; %>  
+
+                      <% }); %>
+                      
+                  
+                  <% } else { %>
+                    <span class="ms-3"> <i> Sin actividad de compra.</i> </span>
+                  <% }; %>  
+              </div>
+
             </div> 
         </div>
       </div>
 
-      <div class="contentSelles closed">
+      <div class="contentSelles">
         <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
-            <div class="col-lg-10  my-4 p-0">
-                <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
-                    <% if (searchSell.length !==0){ %>
+            <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11 my-4 p-0">
 
-                      <% searchSell.forEach((ele)=>{ %>
+              <div class="ContainerMessage rounded-1 p-2 themaTextLight" style="background-color: rgba(56, 61, 66, 0.2);">
+              
+                  <div class="contentLabel mb-2" style="display: flex; align-items: center;">
+                      <label for="" class="text-secondary my-1 me-2" style="font-size: 16px; margin-right: 10px;"> Ventas </label>
+                      <hr style="border-top: 1px solid #ccc; flex-grow: 1; margin: 0;">
+                  </div>
+                  <% if (searchSell.length !==0){ %>
 
-                          <% if (ele.department == 'items' || ele.department == 'arts' || ele.department == 'auctions') { %>
-                            <img src="<%= ele.image[0].url %>" alt="" style="width: 40px;">
-                            <span><b>Order :</b> <%= ele._id %> </span>
-                            <span class="ms-2"><b>Buyer:</b> <%= ele.usernameBuy %></span>
-                            <span class="ms-2"><b>Monto :</b> <%= ele.price %></span> <br>
-                            <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
-                            <br> <hr>
-                          <% } else { %>
-                            <img src="<%= ele.image[0].url %>" alt="" style="width: 40px;">
-                            <span><b>Order :</b> <%= ele._id %> </span>
-                            <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
-                            <span class="ms-2"><b>Monto :</b> <%= ele.price %></span> <br>
-                            <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
-                            <br> <hr>
-                          <% }; %>  
-                        
-                      <% }); %>
+                    <% searchSell.forEach((ele)=>{ %>
 
-                     <% }; %>
-                </div>
-                
+                        <% if (ele.department == 'items' || ele.department == 'arts' || ele.department == 'auctions') { %>
+                          <div class="d-flex">  
+                              <div class="picture">
+                                  <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                              </div>    
+                              <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                              <div class="details d-flex flex-column" style="font-size: 15px;">
+                                  <span class="ms-2"><b>Buyer:</b> <%= ele.usernameBuy %></span>
+                                  <span class="ms-2"><b>Monto :</b> <%= ele.price %></span>
+                              </div>
+                          </div>      
+                          <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
+                          <br> <hr>
+                        <% } else { %>
+                          <div class="d-flex"> 
+                              <div class="picture">
+                                  <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                              </div>    
+                              <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                              <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                  <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
+                                  <span class="ms-2"><b>Monto :</b> <%= ele.price %></span>
+                              </div>
+                          </div>        
+                          <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
+                          <br> <hr>
+                        <% }; %>  
+                      
+                    <% }); %>
+
+                  <% } else { %>
+                    <span class="ms-3"> <i> Sin actividad de venta.</i> </span>
+                  <% }; %>  
+              </div>
+
             </div>
         </div>
       </div>

@@ -158,8 +158,13 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
         const country = searchProfile[0].country;
         const countryCode = searchProfile[0].countryCode;
 
-        const { title, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, price, segment } = req.body
+        const { title, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, price, segment, days, rangeTime } = req.body
     
+        console.log("days :", days);
+        console.log("rangeTime :", rangeTime);
+        const agendaAvailable = { "days" : days, "rangeTime" : rangeTime };
+        console.log("agendaAvailable :", agendaAvailable); //agendaAvailable : { days: [ '0', '1', '2', '3', '4' ], rangeTime: [ '14:00', '18:00' ] }
+        //scheduleAppointment : agendaAvailable;
 
         function transformarTitle(title) {
             return title
@@ -189,7 +194,7 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
                     for (let i = 0; i < req.files.length; i++) {
                         const element = req.files[i];
                     
-                        if (element.size <= 2500000  && element.mimetype.startsWith("image/")){
+                        if (element.size <= 3000000  && element.mimetype.startsWith("image/")){
                         
                             countImgAcept ++;
                             console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
@@ -247,7 +252,7 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Automotive =  new modelAutomotive({ title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment  }); 
+                                                        const Automotive =  new modelAutomotive({ title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
                                                         const AutomotiveSave = await Automotive.save()
                                                         //console.log(AutomotiveSave);
                                     

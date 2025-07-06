@@ -247,6 +247,7 @@
         <%- include('../alert/reportSuccess.ejs') %>
     <% }; %> 
 
+    <input type="hidden" value="<%= depart %>" id="departAllBody">
     <% if (user) { %>
         <% const seeMarket = user.seeMarket %>
         <!-- <% const idUser = user._id %> -->
@@ -646,11 +647,14 @@
 
                                 <% }; %>
                                 <% if (depart == 'raffle') { %>
-                                    <span>¿Con suerte? Entre y busque un Ticket Ganador. </span> <br> <hr>
+                                    <div class="alert alert-light" style="background-color: #E9ECEF;">
+                                        <span> <i class="bi bi-exclamation-triangle-fill me-1"></i> ¿Con suerte? Entre y busque un Ticket Ganador.</span>
+                                    </div>
                                 <% }; %>
                                 <% if (depart == 'airplanes' || depart == 'automotive' || depart == 'realstate' || depart == 'nautical' || depart == 'service') { %>    
-                                    <span>Solo de a contactar si esta interesado en adquirir este "Bien o Servicio".</span> <br> <hr>
-                                    <p><b>El Contactar</b> le pone en un estado de <b>negociación privada</b>.</p>
+                                    <div class="alert alert-light" style="background-color: #E9ECEF;">
+                                        <span> <i class="bi bi-exclamation-triangle-fill me-1"></i> Solo de a comprar si esta seguro de adquirir este producto.</span>
+                                    </div>    
                                 <% }; %>
                                
                            
@@ -660,15 +664,7 @@
                                     <% if (user.username !== search.username) { %>
                                         <!-- tercera condicion que el articulo no este pausado -->
                                         <% if (search.paused !== true && search.soldOut !== true   ) { %>
-<!--                                             
-                                            <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" id="btnCreate" data-bs-toggle="modal" data-bs-target="#staticComprar">
-                                                Comprar
-                                            </button>
-                                            <button class="btn btn-primary form-control invisibleBtn mt-2" type="button" id="btnCreateLoading" disabled>
-                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                Comprando...
-                                            </button>
-                                           si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
+                                            <!-- en este punto el usuario es diferente al anunciante y el anuncio no esta pausado y no esta agotado -->
                                                                                  
                                             <section class="containerBuy_btn">
                                                 
@@ -784,7 +780,7 @@
                                          <% }; %>
                                     
                                     <% } else { %>
-
+                                            <!-- este es un usuario que esta viendo su mismo anuncio no puede comprarse asi mismo -->
                                             <section class="containerBuy_btn">
                                                 
                                                 <div class="contentPubliRating">
@@ -854,23 +850,84 @@
                                     <% if (user.username !== search.username) { %>
                                         <!-- tercera condicion que el articulo no este pausado -->
                                         <% if (search.paused !== true  ) { %>
-                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" id="btnContact" data-bs-toggle="modal" data-bs-target="#staticContactar">
-                                            Contactar
-                                        </button>
-                                        <button class="btn btn-primary form-control invisibleBtn mt-2" type="button" id="btnContactLoading" disabled>
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                            Contactando...
-                                        </button>
-                                        <% }  else { %>
-                                        <button type="button" class="dataBuy btn btn-secondary mt-2 text-light form-control" disabled>
-                                            Paused Article 
-                                        </button>    
+
+                                            <section class="containerBuy_btn">
+                                                
+                                                <div class="contentPubliRating">
+
+                                                    <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
+                                                    <div class="meta">
+                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> 
+                                                    </div>
+                            
+                                                </div>
+                                                
+                                                <form action="/buysell/direct" method="post" id="form_contact"> 
+
+                                                    <!-- vendedor, comprador, depart, idProduct, unitPrice -->
+                                                 
+                                                    <input type="hidden" name="comprador" value="<%= user._id %>"> <!-- aqui el id del visitante -->
+                                                    <input type="hidden" name="vendedor" value="<%= search.user_id %>"> <!-- aqui el id del anunciante -->
+                                                    <input type="hidden" name="title" value="<%= search.title %>"> <!-- aqui el title -->
+                                                    <input type="hidden" name="depart" value="<%= search.department %>"> <!-- aqui departamento -->
+                                                    <input type="hidden" name="idProduct" value="<%= search._id %>"> <!-- aqui el id del articulo -->
+                                                    <input type="hidden" name="unitPrice" class="unitPrice" value="<%= search.price %>"> <!-- aqui el precio --> 
+                                                   
+                                                    
+                                                    <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                        <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
+                                                            <i class="bi bi-info-circle text-primary ms-2"></i>
+                                                        </button>   
+                                                    </p>
+                                                    
+                                                    <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNContact"><div>¡Contactar ahora! </div> </button>
+                                                    <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNContactSpinning" style="color: #FEDE05;" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Processing ... 
+                                                    </button>
+                                                
+
+                                                </form>
+
+                                            </section>
+
+                                        <% } else { %>
+
+                                            <button type="button" class="dataBuy btn btn-secondary mt-2 text-light form-control" disabled>
+                                                Paused Article 
+                                            </button>   
+
                                         <% }; %>
                                     
                                     <% } else { %>
-                                        <button type="button" class="dataBuy btn btn-primary mt-2 text-light form-control" disabled>
-                                            Contactar 
-                                        </button>  
+                                            <section class="containerBuy_btn">
+                                                
+                                                    <div class="contentPubliRating">
+
+                                                        <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
+                                                        <div class="meta">
+                                                            Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> 
+                                                        </div>
+                                
+                                                    </div>
+                                                
+                                                    <!-- este contenedor muestra el boton disabled porque el anuncio es del usuario -->
+                                                                                                     
+                                                    <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                        <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
+                                                            <i class="bi bi-info-circle text-primary ms-2"></i>
+                                                        </button>   
+                                                    </p>
+                                                    
+                                                    <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNContact" disabled><div> ¡Contactar ahora! </div></button>
+                                                    <!-- <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNContactSpinning" style="color: #FEDE05;" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        Processing ... 
+                                                    </button> -->
+                                                
+
+                                            </section>
+  
                                     <% }; %>
                                 <% }; %>
                                 <% if (depart == 'auctions') { %>
@@ -992,7 +1049,7 @@
                                     </div>
                                     <hr>
 
-                                    <!-- si existe un usuario y el depart es un itens o arte tendrá la opcion de compra segura -->
+                                    <!-- si existe un usuario desconocido y el depart es un itens o arte tendrá la opcion de ver el precio y calcular pero no puede comprar -->
                                    
                                             <section class="containerBuy_btn">
                                                 
@@ -1120,59 +1177,6 @@
                     </div>
 
                                         
-                    
-                    <!-- Modal de comprar data-bs-toggle="modal" data-bs-target="#staticComprar"-->
-                    <div class="modal fade" id="staticComprar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticComprarLabel" aria-hidden="true">
-                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="staticComprarLabel">Proceso de Compra</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                El comprar es una responsabilidad que conlleva al aumento o decremeto de tus puntos como comprador. Si estas seguro y tienes el dinero
-                                de al botón <b>De acuerdo</b>, sino de a <b>Cerrar</b>.  
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <% if (user) { %> <!-- aqui obtengo los datos del objeto user. osea el visitante interesado -->
-                                        <% if (usernameSell){ %> <!-- aqui obtengo los datos del vendedor que ofrece -->
-                                            <% if  (search) { %> <!-- aqui tengo todos los datos del objeto o servicio que esta siendo ofrecido por el vendedor -->
-                                            <a href="/buysell-one/direct/<%= user.username %>/<%= usernameSell %>/<%= search.department %>/<%= search._id %>"><button type="button" class="btn btn-primary buyDirect" data-bs-dismiss="modal">De acuerdo</button></a>
-                                            <% }; %>    
-                                        <% }; %>
-                                    <% }; %>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- Modal de contactar -->
-                    <div class="modal fade" id="staticContactar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticContactarLabel" aria-hidden="true">
-                        <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="staticContactarLabel">Proceso de Contacto</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                El proceso de contactar para adquirir un bien o servicio No aumenta ni decrementa tus puntos como comprador. Si te interesa este Bien 
-                                de al botón <b>De acuerdo</b>, sino de a <b>Cerrar</b>.  
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <% if (user) { %>
-                                        <% if (usernameSell){ %>
-                                            <% if  (search) { %>
-                                            <a href="/buysell-one/direct/<%= user.username %>/<%= usernameSell %>/<%= search.department %>/<%= search._id %>"><button type="button" class="btn btn-primary contactDirect" data-bs-dismiss="modal">De acuerdo</button></a>
-                                            <% }; %>    
-                                        <% }; %>
-                                    <% }; %>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Modal de subasta -->
                     <div class="modal fade" id="staticBid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBidLabel" aria-hidden="true">
@@ -1514,7 +1518,8 @@
 
 <script>
 
- const form_buysell = document.getElementById('form_buysell');   
+ const form_buysell = document.getElementById('form_buysell');
+
  const Comprador = document.getElementById('newBTNvisitante');
  const Vendedor = document.getElementById('newBTNanunciante');
 
@@ -1528,72 +1533,113 @@
 
 
  const newBTNBuy = document.getElementById('newBTNBuy'); //boton inicial 
- const newBTNBuySpinning = document.getElementById('newBTNBuySpinning'); //boton de processing
+ const newBTNBuySpinning = document.getElementById('newBTNBuySpinning'); //boton de processing 
+
  let validPurchase = true;
 
- countRequest.addEventListener('input', ()=>{
-    const countRequestValue =  parseInt(countRequest.value);
-    const availableValue = parseInt(available.value);
+ if (countRequest){
 
-    console.log("unitPrice :", unitPrice.value);
-    console.log("countRequest :", countRequestValue);
-    console.log("available :", availableValue);
-    console.log("typeOf countRequest :", typeof countRequestValue);
-    console.log("typeOf available :", typeof availableValue);
+    countRequest.addEventListener('input', ()=>{
+        const countRequestValue =  parseInt(countRequest.value);
+        const availableValue = parseInt(available.value);
 
-    console.log(`${countRequestValue} < ${availableValue}`)
+        console.log("unitPrice :", unitPrice.value);
+        console.log("countRequest :", countRequestValue);
+        console.log("available :", availableValue);
+        console.log("typeOf countRequest :", typeof countRequestValue);
+        console.log("typeOf available :", typeof availableValue);
 
-    if (countRequestValue <= availableValue){
-        console.log("Se puede procesar");
-        countRequest.style.cssText = "color: black;font-size: 20px"
-        totalMount = (unitPrice.value * countRequest.value).toFixed(2)  //limitar dos decimales
-        totalPay.innerText = `$${totalMount}`
-        validPurchase = true;
-    } else {
-        console.log("Has pasado el limite colocarlo en rojo")
-        countRequest.style.cssText = "color: red;font-size: 20px"
-        totalPay.innerText = ""
-        validPurchase = false;
-    }
+        console.log(`${countRequestValue} < ${availableValue}`)
 
-   
- })
-
- newBTNBuy.addEventListener('click', (e)=>{
-    let comprador = Comprador.value;
-    let vendedor = Vendedor.value;
-
-    const countRequestValue =  parseInt(countRequest.value);
-    const availableValue = parseInt(available.value);
-
-    if (comprador !== vendedor){
-        if ( availableValue !== 0 ){
-         
-            if ( availableValue  >= countRequestValue ){
-
-                e.preventDefault(); // Esto previene el envío del formulario
-                // Aquí puedes poner la lógica que quieras antes de enviar el formulario
-                console.log('Botón clicado, pero el formulario no se envió aún.');
-                newBTNBuy.classList.add('close');
-                newBTNBuySpinning.classList.remove('close');
-                console.log("Existe imventario")
-                // Cuando estés listo para enviar, puedes hacerlo manualmente:
-                setTimeout(() => {
-
-                    form_buysell.submit(); 
-                    console.log("Enviamos el formulario para crear la venta");
-
-                }, 2000);
-            
-            }     
-                   
+        if (countRequestValue <= availableValue){
+            console.log("Se puede procesar");
+            countRequest.style.cssText = "color: black;font-size: 20px"
+            totalMount = (unitPrice.value * countRequest.value).toFixed(2)  //limitar dos decimales
+            totalPay.innerText = `$${totalMount}`
+            validPurchase = true;
         } else {
-            //enviar un toast diciendo que no hay disponibilidad
-            console.log("No existe imventario")
+            console.log("Has pasado el limite colocarlo en rojo")
+            countRequest.style.cssText = "color: red;font-size: 20px"
+            totalPay.innerText = ""
+            validPurchase = false;
         }
-    }    
 
- })
+    
+    });
+
+ }    
+ if (newBTNBuy){
+
+    newBTNBuy.addEventListener('click', (e)=>{
+        let comprador = Comprador.value;
+        let vendedor = Vendedor.value;
+
+        const countRequestValue =  parseInt(countRequest.value);
+        const availableValue = parseInt(available.value);
+
+        if (comprador !== vendedor){
+            if ( availableValue !== 0 ){
+            
+                if ( availableValue  >= countRequestValue ){
+
+                    e.preventDefault(); // Esto previene el envío del formulario
+                    // Aquí puedes poner la lógica que quieras antes de enviar el formulario
+                    console.log('Botón clicado, pero el formulario no se envió aún.');
+                    newBTNBuy.classList.add('close');
+                    newBTNBuySpinning.classList.remove('close');
+                    console.log("Existe imventario")
+                    // Cuando estés listo para enviar, puedes hacerlo manualmente:
+                    setTimeout(() => {
+
+                        form_buysell.submit(); 
+                        console.log("Enviamos el formulario para crear la venta");
+
+                    }, 2000);
+                
+                }     
+                    
+            } else {
+                //enviar un toast diciendo que no hay disponibilidad
+                console.log("No existe imventario")
+            }
+        }    
+
+    })
+
+ }   
+
+
+
+
+</script>
+
+<script>
+
+    const form_contact = document.getElementById('form_contact');
+    const newBTNContact = document.getElementById('newBTNContact'); //boton inicial 
+    const newBTNContactSpinning = document.getElementById('newBTNContactSpinning'); //boton de processing 
+
+    newBTNContact.addEventListener('click', (e)=>{
+        let comprador = Comprador.value;
+        let vendedor = Vendedor.value;
+        console.log("Hemos dado al boton");
+        e.preventDefault(); // Esto previene el envío del formulario
+
+        if (comprador !== vendedor){
+            console.log("he dado al boton");
+            newBTNContact.classList.add('close');
+            newBTNContactSpinning.classList.remove('close');
+    
+            // Cuando estés listo para enviar, puedes hacerlo manualmente:
+            setTimeout(() => {
+
+                form_contact.submit(); 
+                console.log("Enviamos el formulario para crear el contacto en la sala");
+
+            }, 2000);
+        }
+
+    })
 
 </script>
 
@@ -1907,98 +1953,10 @@ const DataFetch = fetch('/extraer')
 </script>  
 
 <script>
-    //este script es para poder enviar al backend la tienda y poder extraer toda la informacion de su Scort y Trust.
-
-    const store = document.querySelector('.store');
-    const trustLevel = document.querySelector('.trustLevel'); //Fiabilidad
-    const scoreLevel = document.querySelector('.scoreLevel');
-    const level = document.querySelector('.level');
-
-    const Store = store.childNodes[2].value;
-    //console.log("Esto es Store ----------->",Store);
-
-    let dato = {
-        store : Store
-      }
-      
-      console.log("Esto es dato ---->",dato)
-      
-      fetch("/record-trust", {
-                    method: "post",
-                    body: JSON.stringify(dato),
-                    headers: { "content-type": "application/json" }
-              })
-              .then(response => response.json())
-              .then(json =>{
-                
-                //console.log("Esto es json record-trust--->",json)
-
-                const raffleHistory = json[0]; 
-                const sellerPositive = json[1].count;
-                const sellerTrust = json[2];
-  
-                let sellerCount = sellerPositive + raffleHistory.countRafflePositivo;
-                //console.log("estamos en consola de navegador")
-                //console.log("esto es sellerCount---->", sellerCount);
-                //console.log("Esto es sellerTrust---->", sellerTrust);
-
-                //aqui sacamos los datos de Ventas y Nivel.
-
-                if ( sellerCount <= 9 ){ // de 0 a 9
-                  //console.log("Estas en el nivel Carbon como comprador");
-                  level.innerText = 'Carbon'
-                  scoreLevel.innerText = sellerCount;
-  
-              } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
-                  //console.log("Estas en el nivel Hierro como vendedor");
-                  level.innerText = 'Hierro'
-                  scoreLevel.innerText = sellerCount;
-                              
-              } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
-                  //console.log("Estas en el nivel Bronce como vendedor");
-                  level.innerText = 'Bronce'
-                  scoreLevel.innerText = sellerCount;
-                              
-              } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
-                  //console.log("Estas en el nivel Plata como vendedor");
-                  level.innerText = 'Plata'
-                  scoreLevel.innerText = sellerCount;
-                              
-              } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
-                  //console.log("Estas en el nivel Oro como vendedor");
-                  level.innerText = 'Oro'
-                  scoreLevel.innerText = sellerCount;
-           
-              } else if ( sellerCount >= 200 ){
-                  //console.log("Estas en el nivel Diamante como vendedor");
-                  level.innerText = 'Diamante'
-                  scoreLevel.innerText = sellerCount;
-             
-              };
-
-              //aqui sacamos los datos de Confianza.
-              let trustPositive = sellerTrust.positive;
-              let trustNegative = sellerTrust.negative;
-              let rafflePositive = raffleHistory.countRafflePositivo;
-              let raffleNegative = raffleHistory.countRaffleNegativo;
-
-              let trustRafflePositive = trustPositive + rafflePositive;
-
-              let trustTotal = trustPositive + trustNegative;
-              let raffleTotal = rafflePositive + raffleNegative;
-
-              const totalOperation = trustTotal + raffleTotal;
-  
-              if (trustRafflePositive !== 0 && totalOperation !== 0 ){
-                const tasaTrustSell = ((trustRafflePositive * 100) / totalOperation).toFixed(0);
-                trustLevel.innerText = tasaTrustSell + '%';
-              } else {
-                trustLevel.innerText = '¡Sin Datos!';
-              }
-
-                })
-              .catch( e => console.log(e))
-
+    //aqui estaba antiguamente el sistema que enviaba y recibia toda la informacion 
+    //del lebvel de la tienda si era carbo o hierro o diamante 
+    //se hacia a traves del fetch con la direccion : fetch("/record-trust"
+    //este antiguo sistema era muy laboriado de mantener asi que se decidio por ser reemplazado por uno nuevo.
 </script>
 
 
@@ -2085,6 +2043,9 @@ const DataFetch = fetch('/extraer')
 <script>
     //consulta periodica cada minuto para evaluar si esta subasta aun existe
     //const bidIDProduct = document.querySelector('.bidIDProduct'); //id del producto data ya declarado arriba
+    const depart = document.getElementById('departAllBody').value;
+
+    if (depart == 'auctions')  { 
 
         const datoId = {
             id : idHidden.value
@@ -2117,6 +2078,7 @@ const DataFetch = fetch('/extraer')
 
         }, 60000);
 
+    }    
 
 </script>
 

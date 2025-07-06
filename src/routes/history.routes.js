@@ -27,8 +27,8 @@ routes.get('/history/', async(req, res)=>{
         searchBuy =  await modelBuysell.find(  {$and : [{ usernameBuy : user.username },{ CommentSeller : { $ne : 'no_comment'}}]}   );
         searchSell = await modelBuysell.find(  {$and : [{ usernameSell : user.username },{ CommentBuy : { $ne : 'no_comment'}}]}  ); 
         
-        searchContactBuy = await modelNegotiation.find( { $and : [{ usernameBuy : user.username }, { closedContact : true} ] } );
-        searchContactSell = await modelNegotiation.find( { $and : [{ usernameSell : user.username }, { closedContact : true} ] } );
+        searchContactBuy = await modelNegotiation.find( { $and : [{ usernameBuy : user.username }, { closeOperationBuy : true} ] } );
+        searchContactSell = await modelNegotiation.find( { $and : [{ usernameSell : user.username }, { closeOperationSeller : true} ] } );
 
         raffleHistory = await modelRaffleHistory.find( { $and : [{anfitrion : user.username}, { celebration : true }]} );
     }

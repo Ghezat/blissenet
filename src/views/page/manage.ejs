@@ -133,6 +133,11 @@
     <%- include('../partials/navi-simple.ejs') %>
   
     <% if (user){ %>
+      <% const seeMarket = user.seeMarket %>
+      <% const idUser = user._id %>
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <input type="hidden" value="<%= idUser %>" id= "idUser">
+      <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
 
       <% if (searchProfile.length !==0) { %>
         <div class="container-fluid p-0" style="height: auto;">

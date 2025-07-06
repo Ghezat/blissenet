@@ -77,14 +77,22 @@ routes.post('/buysell/direct', async(req, res)=>{
         console.log("user._id :", user._id) // segundo dato.
         
         const searchBuySell = await modelBuysell.findOne({ title_id : idProduct, indexedBuy : user._id, closeOperationBuy : false } );
-        
-        console.log("searchBuySell :", searchBuySell); 
+        const searchNegotiation = await modelNegotiation.findOne({ title_id : idProduct, indexedBuy : user._id, closeOperationBuy : false } );
 
+        console.log("searchBuySell :", searchBuySell); 
+        console.log("searchNegotiation :", searchNegotiation);  
+ 
         if (searchBuySell){
 
             const id = searchBuySell._id;
             console.log("ya el documento existe debemos rediriguir");
             res.redirect(`/buysell-body/${id}`);
+
+        } else if (searchNegotiation){    
+
+            const id = searchNegotiation._id;
+            console.log("ya el documento existe debemos rediriguir");
+            res.redirect(`/negotiation-body/${id}`);    
 
         } else {
 
@@ -119,7 +127,7 @@ routes.post('/buysell/direct', async(req, res)=>{
               fechaNegotiation = `${dia}-${mes}-${anio}`
               console.log(fechaNegotiation);
 
-              codeDate = `${dia}${mes}${anio}`;
+              codeDate = `${dia}${mes}${anio}`; //este objeto guarda la fecha y es usado para el chat de bliss importantisimooo
 
               //tenemos que descubir la ubicacion del vendedor y del comprador.
               //Datos requeridos: country, state, city ----------------------------
@@ -173,7 +181,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                   console.log("Ha ocurrido un error en searchData()", error);
                 })
 
-        }    
+        }  
+          
         //-------------------------------------------------------------------
              
         //crear el correo del vendedor y enviarlo, caso artes e items
@@ -558,7 +567,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                 })
                 .catch((err)=>{
                   console.log("ha habido un error en la compra de items", err);
-                  //ha habido un error en la compra de items ReferenceError: chatId is not defined
+                  //ha habido un error en la compra de items
                 })
 
            
@@ -570,9 +579,28 @@ routes.post('/buysell/direct', async(req, res)=>{
             const search = await modelAirplane.findById(idProduct);
             //console.log("Este es el resultado de la busqueda de la coleccion airplane, aqui el objeto--->", search);
             
-            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const {title, tecnicalDescription, price, scheduleAppointment} = search; //esto se llama destructurin todo en una misma linea.
             image = search.images[0].url;
             //console.log("image ---->", image);
+
+            const rangeTime = scheduleAppointment.rangeTime; // [ '14:00', '18:00' ]
+            function generateOptionTime(range) {
+              const [start, end] = range;
+              const startHour = parseInt(start.split(':')[0]);
+              const endHour = parseInt(end.split(':')[0]);
+              const optionTime = [];
+
+              for (let hour = startHour; hour <= endHour; hour++) {
+                // Formatear la hora para que tenga dos dígitos
+                const formattedHour = hour.toString().padStart(2, '0') + ':00';
+                optionTime.push(formattedHour);
+              }
+
+              return optionTime;
+            }
+
+            const optionTime = generateOptionTime(rangeTime); //aqui inicio la funcion con un arreglo como parametro el array solo tiene dos valores de
+            console.log(optionTime); // ['14:00', '15:00', '16:00', '17:00', '18:00']
             titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
@@ -618,15 +646,37 @@ routes.post('/buysell/direct', async(req, res)=>{
 
                     async function saveDB(){
                       
-                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-                      //console.log('Aqui BuySell ---->', BuySell);
-          
-                      mailSellContact(emailSell, title);
-                      mailBuyContact(emailBuy, title);
-          
-                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                        console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
+                        console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
+                        let msgFormat = []; //array vacio 
+                        const searchProfile = await modelProfile.find({ indexed : user._id });  
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                        console.log('Function saveDB ()');
+            
+                        mailSellContact(emailSell, title);
+                        mailBuyContact(emailBuy, title);
+            
+                        console.log("*************************** LISTO *********************************")
+                        console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
+                        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+
+                        console.log("Esto es chatId :", chatId);
+                        
+                        if (chatId){
+                          //aqui activamos las funciones para los vendedores que tengan chatId "blissbot"
+                            
+                          blissBotNoti()
+                            .then(()=>{
+                              console.log("Compra ejecutada satisfactoriamente");
+                            })
+                            .catch((error)=>{
+                              console.log("Ha ocurrido un error en blissBotNoti()", error);
+                            })
+
+                        }
+
                     }
                     
             })
@@ -642,9 +692,28 @@ routes.post('/buysell/direct', async(req, res)=>{
             const search = await modelAutomotive.findById(idProduct);
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
-            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const {title, tecnicalDescription, price, scheduleAppointment} = search; //esto se llama destructurin todo en una misma linea.
             image = search.images[0].url;
             //console.log("image ---->", image);
+
+            const rangeTime = scheduleAppointment.rangeTime; // [ '14:00', '18:00' ]
+            function generateOptionTime(range) {
+              const [start, end] = range;
+              const startHour = parseInt(start.split(':')[0]);
+              const endHour = parseInt(end.split(':')[0]);
+              const optionTime = [];
+
+              for (let hour = startHour; hour <= endHour; hour++) {
+                // Formatear la hora para que tenga dos dígitos
+                const formattedHour = hour.toString().padStart(2, '0') + ':00';
+                optionTime.push(formattedHour);
+              }
+
+              return optionTime;
+            }
+
+            const optionTime = generateOptionTime(rangeTime); //aqui inicio la funcion con un arreglo como parametro el array solo tiene dos valores de
+            console.log(optionTime); // ['14:00', '15:00', '16:00', '17:00', '18:00']
             titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
@@ -678,7 +747,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                           console.log('Error al subir un archivo', err);
                       } else {
                           console.log('La imagen fue subida, Exitooooooooooooooo', data);
-                                  
+                          console.log("La imagen es un vehiculo")      
                           let url = `https://${bucketName}.${endpoint}/${key}`;    
                           let public_id = key;
                           dImage = {public_id, url};
@@ -690,20 +759,42 @@ routes.post('/buysell/direct', async(req, res)=>{
 
                     async function saveDB(){
                       
-                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-                      //console.log('Aqui BuySell ---->', BuySell);
-          
-                      mailSellContact(emailSell, title);
-                      mailBuyContact(emailBuy, title);
-          
-                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                        console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
+                        console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
+                        let msgFormat = []; //array vacio 
+                        const searchProfile = await modelProfile.find({ indexed : user._id });  
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                        console.log('Function saveDB ()');
+            
+                        mailSellContact(emailSell, title);
+                        mailBuyContact(emailBuy, title);
+            
+                        console.log("*************************** LISTO *********************************")
+                        console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
+                        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+
+                        console.log("Esto es chatId :", chatId);
+                        
+                        if (chatId){
+                          //aqui activamos las funciones para los vendedores que tengan chatId "blissbot"
+                            
+                          blissBotNoti()
+                            .then(()=>{
+                              console.log("Compra ejecutada satisfactoriamente");
+                            })
+                            .catch((error)=>{
+                              console.log("Ha ocurrido un error en blissBotNoti()", error);
+                            })
+
+                        }
+
                     }
                     
             })
             .catch((err)=>{
-              console.log("ha habido un error en la compra de automotive", err);
+              console.log("ha habido un error en la creacion de contacto automotive", err);
             })
                   
 
@@ -714,9 +805,28 @@ routes.post('/buysell/direct', async(req, res)=>{
             const search = await modelRealstate.findById(idProduct);
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
-            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const {title, tecnicalDescription, price, scheduleAppointment} = search; //esto se llama destructurin todo en una misma linea.
             image = search.images[0].url;
             //console.log("image ---->", image);
+
+            const rangeTime = scheduleAppointment.rangeTime; // [ '14:00', '18:00' ]
+            function generateOptionTime(range) {
+              const [start, end] = range;
+              const startHour = parseInt(start.split(':')[0]);
+              const endHour = parseInt(end.split(':')[0]);
+              const optionTime = [];
+
+              for (let hour = startHour; hour <= endHour; hour++) {
+                // Formatear la hora para que tenga dos dígitos
+                const formattedHour = hour.toString().padStart(2, '0') + ':00';
+                optionTime.push(formattedHour);
+              }
+
+              return optionTime;
+            }
+
+            const optionTime = generateOptionTime(rangeTime); //aqui inicio la funcion con un arreglo como parametro el array solo tiene dos valores de
+            console.log(optionTime); // ['14:00', '15:00', '16:00', '17:00', '18:00']
             titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
@@ -762,20 +872,46 @@ routes.post('/buysell/direct', async(req, res)=>{
 
                     async function saveDB(){
                       
-                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-                      //console.log('Aqui BuySell ---->', BuySell);
-          
-                      mailSellContact(emailSell, title);
-                      mailBuyContact(emailBuy, title);
-          
-                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                        console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
+                        console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
+                        let msgFormat = []; //array vacio 
+                        const searchProfile = await modelProfile.find({ indexed : user._id });  
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                        console.log('Function saveDB ()');
+
+                        //const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+                        //const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                        //console.log('Aqui BuySell ---->', BuySell);
+            
+                        mailSellContact(emailSell, title);
+                        mailBuyContact(emailBuy, title);
+            
+                        console.log("*************************** LISTO *********************************")
+                        console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
+                        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+
+                        console.log("Esto es chatId :", chatId);
+                        
+                        if (chatId){
+                          //aqui activamos las funciones para los vendedores que tengan chatId "blissbot"
+                            
+                          blissBotNoti()
+                            .then(()=>{
+                              console.log("Compra ejecutada satisfactoriamente");
+                            })
+                            .catch((error)=>{
+                              console.log("Ha ocurrido un error en blissBotNoti()", error);
+                            })
+
+                        }
+
                     }
                     
             })
             .catch((err)=>{
-              console.log("ha habido un error en la compra de automotive", err);
+              console.log("ha habido un error en la creacion de contacto con realstate", err);
             })
             
           }
@@ -785,9 +921,28 @@ routes.post('/buysell/direct', async(req, res)=>{
             const search = await modelNautical.findById(idProduct);
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
-            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const {title, tecnicalDescription, price, scheduleAppointment} = search; //esto se llama destructurin todo en una misma linea.
             image = search.images[0].url;
             //console.log("image ---->", image);
+
+            const rangeTime = scheduleAppointment.rangeTime; // [ '14:00', '18:00' ]
+            function generateOptionTime(range) {
+              const [start, end] = range;
+              const startHour = parseInt(start.split(':')[0]);
+              const endHour = parseInt(end.split(':')[0]);
+              const optionTime = [];
+
+              for (let hour = startHour; hour <= endHour; hour++) {
+                // Formatear la hora para que tenga dos dígitos
+                const formattedHour = hour.toString().padStart(2, '0') + ':00';
+                optionTime.push(formattedHour);
+              }
+
+              return optionTime;
+            }
+
+            const optionTime = generateOptionTime(rangeTime); //aqui inicio la funcion con un arreglo como parametro el array solo tiene dos valores de
+            console.log(optionTime); // ['14:00', '15:00', '16:00', '17:00', '18:00']
             titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
@@ -833,15 +988,37 @@ routes.post('/buysell/direct', async(req, res)=>{
 
                     async function saveDB(){
                       
-                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-                      //console.log('Aqui BuySell ---->', BuySell);
-          
-                      mailSellContact(emailSell, title);
-                      mailBuyContact(emailBuy, title);
-          
-                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                        console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
+                        console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
+                        let msgFormat = []; //array vacio 
+                        const searchProfile = await modelProfile.find({ indexed : user._id });  
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                        console.log('Function saveDB ()');
+            
+                        mailSellContact(emailSell, title);
+                        mailBuyContact(emailBuy, title);
+            
+                        console.log("*************************** LISTO *********************************")
+                        console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
+                        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+
+                        console.log("Esto es chatId :", chatId);
+                        
+                        if (chatId){
+                          //aqui activamos las funciones para los vendedores que tengan chatId "blissbot"
+                            
+                          blissBotNoti()
+                            .then(()=>{
+                              console.log("Compra ejecutada satisfactoriamente");
+                            })
+                            .catch((error)=>{
+                              console.log("Ha ocurrido un error en blissBotNoti()", error);
+                            })
+
+                        }
+
                     }
                     
             })
@@ -849,22 +1026,7 @@ routes.post('/buysell/direct', async(req, res)=>{
               console.log("ha habido un error en la compra de nautical", err);
             })
 
-/*             const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgBuySell'});
-            //console.log("Aqui resultUpload ----->", resultUpload);
-            const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-            const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-            //ya con todos los datos necesarios se procede a guardarlo en la coleccion modelBuysell.
-                  
-            const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-            const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-            //console.log('Aqui BuySell ---->', BuySell);
 
-            mailSellContact(emailSell, title);
-            mailBuyContact(emailBuy, title);
-
-            //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-            res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
-           */
           }
 
           if ( depart == 'service' ) {
@@ -872,9 +1034,28 @@ routes.post('/buysell/direct', async(req, res)=>{
             const search = await modelService.findById(idProduct);
             //console.log("Este es el resultado de la busqueda de la coleccion arts, aqui el objeto--->", search);
             
-            const {title, tecnicalDescription, price} = search; //esto se llama destructurin todo en una misma linea.
+            const {title, tecnicalDescription, price, scheduleAppointment} = search; //esto se llama destructurin todo en una misma linea.
             image = search.images[0].url;
             //console.log("image ---->", image);
+
+            const rangeTime = scheduleAppointment.rangeTime; // [ '14:00', '18:00' ]
+            function generateOptionTime(range) {
+              const [start, end] = range;
+              const startHour = parseInt(start.split(':')[0]);
+              const endHour = parseInt(end.split(':')[0]);
+              const optionTime = [];
+
+              for (let hour = startHour; hour <= endHour; hour++) {
+                // Formatear la hora para que tenga dos dígitos
+                const formattedHour = hour.toString().padStart(2, '0') + ':00';
+                optionTime.push(formattedHour);
+              }
+
+              return optionTime;
+            }
+
+            const optionTime = generateOptionTime(rangeTime); //aqui inicio la funcion con un arreglo como parametro el array solo tiene dos valores de
+            console.log(optionTime); // ['14:00', '15:00', '16:00', '17:00', '18:00']
             titleArticle = title; // titleArticle es una variable que tendremos afuera para luego poder usarla en la funcion de envio de Telegrama
 
             let response;
@@ -920,15 +1101,41 @@ routes.post('/buysell/direct', async(req, res)=>{
 
                     async function saveDB(){
                       
-                      const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
-                      const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
-                      //console.log('Aqui BuySell ---->', BuySell);
-          
-                      mailSellContact(emailSell, title);
-                      mailBuyContact(emailBuy, title);
-          
-                      //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                      res.render('page/buysell-one', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell }); 
+                        console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
+                        console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
+                        let msgFormat = []; //array vacio 
+                        const searchProfile = await modelProfile.find({ indexed : user._id });  
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                        console.log('Function saveDB ()');
+
+                        //const BuySell = new modelNegotiation({ usernameBuy : userBuy, usernameSell : userSell, department : depart, title, title_id : idProduct, tecnicalDescription, image : dImage, price });
+                        //const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
+                        //console.log('Aqui BuySell ---->', BuySell);
+            
+                        mailSellContact(emailSell, title);
+                        mailBuyContact(emailBuy, title);
+            
+                        console.log("*************************** LISTO *********************************")
+                        console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
+                        //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+
+                        console.log("Esto es chatId :", chatId);
+                        
+                        if (chatId){
+                          //aqui activamos las funciones para los vendedores que tengan chatId "blissbot"
+                            
+                          blissBotNoti()
+                            .then(()=>{
+                              console.log("Compra ejecutada satisfactoriamente");
+                            })
+                            .catch((error)=>{
+                              console.log("Ha ocurrido un error en blissBotNoti()", error);
+                            })
+
+                        }
+
                     }
                     
             })
@@ -1048,25 +1255,94 @@ routes.get('/negotiation-body/:id', async(req, res)=>{
         
   //aqui obtengo la cantidad de negotiationsBuySell
   const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
-  console.log(":::: Esto es la cantidad de negotiationsBuySell, estoy en view-artes ::::", countNegotiationsBuySell);
+  console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
   
   console.log('He llegado al apartado de negotiation-body');
   console.log("Este es el parametro ----> ", req.params);
   const negotiationId = req.params.id;
 
-  const buySell =  await modelNegotiation.findById(negotiationId);
-  const msg = buySell.written.reverse(); // aqui se revierte el array written para que el front el forEach() pueda recorrerlo en sentido inverso.
+  const negotiation =  await modelNegotiation.findById(negotiationId);
+  const indexedSell = negotiation.indexedSell;
+  const msgFormat = negotiation.written.reverse(); // aqui se revierte el array written para que el front el forEach() pueda recorrerlo en sentido inverso.
 
-  console.log("negotiation, Que hay aqui? --->", buySell);
-  console.log("msg, Que hay aqui? --->", msg);
-  const fecha =  buySell.createdAt;
+  console.log("msg, Que hay aqui? --->", msgFormat);
+  const fecha =  negotiation.createdAt;
   const dia = fecha.getDate();
   const mes = fecha.getMonth() + 1;
   const anio = fecha.getFullYear();
   const fechaNegotiation = ` ${dia}-${mes}-${anio}`
   console.log(fechaNegotiation);
+
+  //fecha actual
+  const diaNow = new Date().getDate();
+  const mesNow = new Date().getMonth() + 1;
+  const anioNow = new Date().getFullYear();
+  const codeDate = `${diaNow}${mesNow}${anioNow}`;
+  console.log("codeDate :", codeDate);
+
+  //esta consulta es necesaria para poder ofrecer los diferente metodos de pagos ofrecido por el vendedor.
+  const bankData = await modelBankUser.findOne( { indexed : indexedSell } );
+  //res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate, bankData });
+  res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, fechaNegotiation, msgFormat, codeDate, bankData }); 
+});
+
+routes.post('/negotiation-appointmentSearchAll/', async(req, res)=>{
+
+  try {
+
+    console.log("--------------------/negotiation-appointmentSearchAll---------------------")
+    const {indexedSell} = req.body;
+    const searchNegotiations = await modelNegotiation.find({ indexedSell, closeOperationSeller: false, appointment: { $ne: "" } }, { appointment: 1, usernameBuy: 1  });
+    console.log("searchNegotiations :", searchNegotiations);
+    const response = { "code": "ok", "searchNegotiations" : searchNegotiations };
+    res.json(response);
+
+  } catch (error) {
+    
+    const response = { "code": "err", "searchNegotiations" : "Ha ocurrido un error, refresque esta pagina." };
+    res.json(response);
+
+  }
+
+});
+
+routes.post('/negotiation-appointment/', async(req, res)=> {
+
+  try {
+    
+    console.log("............................ negotiation-appointment ..........................")
+    console.log(req.body);
+    const {date, time, id} = req.body;
+    //console.log("id :", id);
+    console.log("date :", date);
+    console.log("time :", time);
+
+    //aqui estara el valor de la cita en este formato. dd-mm-yyy hh:mm
+    const fecha = new Date(date);
+    const dia = fecha.getUTCDate();
+    const mes = fecha.getUTCMonth() + 1;
+    const anio = fecha.getUTCFullYear();
+
+    const nuevaFecha = `${dia}-${mes}-${anio} ${time}`;
+    console.log("nuevaFecha :", nuevaFecha);
+    console.log("----------------------------------");
+    //console.log("nuevaFecha :", nuevaFecha);
+    //console.log("time :", time);
+
+    const searchNegotiation = await modelNegotiation.findByIdAndUpdate(id, { $set: {appointment : nuevaFecha} }, {new:true});
+    console.log("nuevo doc --> searchNegotiation :", searchNegotiation);
+
+    const message = `Cita programada el ${nuevaFecha}`;
+    res.json({ "code" : "ok", "message" : message, "appointment" : nuevaFecha });
+
+  } catch (error) {
+    
+    const message = "Ha ocurrido un error, intente nuevamente en unos minutos";
+    res.json({ "code" : "err", "message" : message });
+
+  }
+
   
-  res.render('page/buysellNegotiation-body', {user, searchProfile, countNegotiationsBuySell, countMessages, buySell, fechaNegotiation, msg }); 
 });
 
 routes.post('/negotiation-body/closed', async(req, res)=>{
@@ -1566,7 +1842,43 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
 
 });
 
-//aqui es donde el vendedor califica el intercambio 
+//aqui es donde el comprador califica el intercambio.
+routes.post('/negotiation-rating/buyerTrue', async(req, res)=>{
+
+  try {
+      console.log(" ................... /negotiation-rating/buyerTrue ..................... ");
+      const body = req.body
+      console.log ("esto es lo que esta llegando al backend", body);
+      const { idOrder, rating, comment } = req.body;
+
+      console.log("Este es el idOrder ---->", idOrder);
+      console.log("Esta es la calificacion del vendedor ---->", rating);
+      console.log("Este es el comentario del vendedor sobre su comprador ---->", comment);
+      
+      async function buyerRating(){
+        await modelNegotiation.findByIdAndUpdate(idOrder, { ratingSeller : rating, CommentSeller : comment }, {new:true});            
+      }
+      
+      buyerRating()
+        .then(()=>{
+          const response = { code: "ok", message: "Calificación y comentario recibido." };
+          res.json(response);
+        })
+        .catch((err)=>{
+          const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
+          res.json(response);
+        })     
+      
+
+  } catch (error) {
+
+      const response = { code: "error", message: "Ha habido un error, intenta nuevamente enviar tu calificación" };
+
+  }  
+
+});
+
+//aqui es donde el vendedor califica el intercambio para items, artes y subasta
 routes.post('/buysell-body/sellTrue', async(req, res)=>{
 
   try {
@@ -1602,7 +1914,41 @@ routes.post('/buysell-body/sellTrue', async(req, res)=>{
 
 });
 
+//aqui es donde el vendedor califica al interesado de algun servicio, auto, avion, propiedad o un nautico
+routes.post('/negotiation-rating/sellTrue', async(req, res)=>{
 
+  try {
+      console.log(" ................... /negotiation-rating/sellTrue ..................... ");
+      const body = req.body
+      console.log ("esto es lo que esta llegando al backend", body);
+      const { idOrder, rating, comment } = req.body;
+
+      console.log("Este es el idOrder ---->", idOrder);
+      console.log("Esta es la calificacion del comprador ---->", rating);
+      console.log("Este es el comentario del comprador sobre su vendedor ---->", comment);
+     
+      async function buyerRating(){
+        await modelNegotiation.findByIdAndUpdate(idOrder, { ratingBuy : rating, CommentBuy : comment }, {new:true});            
+      }
+      
+      buyerRating()
+        .then(()=>{
+          const response = { code: "ok", message: "Calificación y comentario recibido." };
+          res.json(response);
+        })
+        .catch((err)=>{
+          const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
+          res.json(response);
+        })     
+
+
+  } catch (error) {
+
+      const response = { code: "error", message: "Ha habido un error, intenta nuevamente enviar tu calificación" };
+
+  }  
+
+});
 
 routes.post('/buysell-body/closeOperation', async(req, res)=>{
 
@@ -1665,6 +2011,67 @@ routes.post('/buysell-body/closeOperation', async(req, res)=>{
 
 });
 
+routes.post('/negotiation-rating/closeOperation', async(req, res)=>{
+
+  try {
+      console.log(" ................... /negotiation-rating/closeOperation ..................... ");
+      const { idOrder, indexedSell, indexedBuy } = req.body;
+
+      console.log("Este es el idOrder ---->", idOrder);
+      console.log("Este es el indexedSell ---->", indexedSell);
+      console.log("Este es el indexedBuy ---->", indexedBuy);
+
+      if (indexedSell){
+        console.log("el vendedor esta cerrando la sala");
+
+        async function closeOperation(){
+          await modelNegotiation.findByIdAndUpdate(idOrder, { $set: { closeOperationSeller : true }  }, {new:true});            
+        }
+
+        closeOperation()
+          .then(()=>{
+            const response = { code: "ok", message: "Ha cerrado exitosamente la sala, Esta venta quedará registrada en Historiales." };
+            res.json(response);
+          })
+          .catch((err)=>{
+            const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
+            res.json(response);
+          })
+
+
+
+      } else {
+
+          console.log("el comprador esta cerrando la sala");
+
+          async function closeOperation(){
+            await modelNegotiation.findByIdAndUpdate(idOrder, { $set: { closeOperationBuy : true }  }, {new:true});            
+          }
+
+          closeOperation()
+            .then(()=>{
+              const response = { code: "ok", message: "Ha cerrado exitosamente la sala, Esta venta quedará registrada en Historiales." };
+              res.json(response);
+            })
+            .catch((err)=>{
+              const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
+              res.json(response);
+            }) 
+            
+
+      }
+
+
+
+
+  } catch (error) {
+
+      const response = { code: "error", message: "Ha habido un error, intenta nuevamente enviar tu calificación" };
+
+  }  
+
+});
+
 routes.get('/buysell-list/', async(req, res)=>{
   const user = req.session.user;
   let username, searchProfile; 
@@ -1682,7 +2089,7 @@ routes.get('/buysell-list/', async(req, res)=>{
       //console.log("eres el comprador", searchOneBuy);
       searchBuy.push(...searchOneBuy);
     }
-    searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username },{ closedContact : false }]} );
+    searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username },{ closeOperationBuy : false }]} );
     if (searchTwoBuy){
       //console.log("eres el comprador", searchTwoBuy);
       searchBuy.push(...searchTwoBuy);
@@ -1693,13 +2100,14 @@ routes.get('/buysell-list/', async(req, res)=>{
       //console.log("eres el vendedor", searchOneSell);
       searchSell.push(...searchOneSell);
     }  
-    searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username },{ closedContact : false }]} );
+    searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username },{ closeOperationSeller : false }]} );
     if (searchTwoSell){
       //console.log("eres el vendedor", searchTwoSell);
       searchSell.push(...searchTwoSell);
     }
 
     countNegotiationsBuySell = (searchBuy.length + searchSell.length);
+    req.session.countNegotiationsBuySell = countNegotiationsBuySell; //aqui actualizo el valor de esta variable; en todo el sistema
 
   }
  
@@ -1724,13 +2132,13 @@ routes.post('/buysell-message/', async(req, res)=>{
 });
 
 // ruta donde se ingresan los mensajes enviados en el chat de los usuarios en Contact
-routes.post('/buysell-negotiation-message/', async(req, res)=>{ 
+routes.post('/negotiation-message/', async(req, res)=>{ 
   const bodyWritten = req.body;
   console.log(bodyWritten);
-  const {user, written, idDocument, time} = bodyWritten;
-  const objectData = {user, written, time}; 
+  const {user, written, idDocument, time, date, codeDate } = bodyWritten;
+  const objectData = {user, written, idDocument, time, date, codeDate}; 
   console.log("Aqui el objectData---->", objectData);                               
-  const pusheando = await modelNegotiation.findByIdAndUpdate(idDocument, { $push: { written : objectData } });
+  const pusheando = await modelNegotiation.findByIdAndUpdate(idDocument, {  $push: { written : objectData } }, { new: true });
   console.log("Aqui pusheando ---->",pusheando);
   
   res.json(req.body);//importante esto que no se me olvide.
