@@ -919,12 +919,7 @@
                                                         </button>   
                                                     </p>
                                                     
-                                                    <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNContact" disabled><div> ¡Contactar ahora! </div></button>
-                                                    <!-- <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNContactSpinning" style="color: #FEDE05;" disabled>
-                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        Processing ... 
-                                                    </button> -->
-                                                
+                                                    <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNContact" disabled><div> ¡Contactar ahora! </div></button>                                                
 
                                             </section>
   
@@ -1112,11 +1107,32 @@
                                     </button>
                                 <% }; %>
                                 <% if (depart == 'airplanes' || depart == 'automotive' || depart == 'realstate' || depart == 'nautical' || depart == 'service') { %>    
-                                    <span>Solo de a contactar si esta interesado en adquirir este "Bien o Servicio".</span> <br> <hr>
-                                    <p><b>El Contactar</b> le pone en un estado de <b>negociación privada</b>.</p>
-                                    <button type="button" class="btn btn-primary mt-2 text-light form-control">
-                                        Contactar
-                                    </button>
+                                    <div class="alert alert-light" style="background-color: #E9ECEF;">
+                                        <span> <i class="bi bi-exclamation-triangle-fill me-1"></i> "Para comunicar con este anunciante, ¡simplemente inicia sesión y dale a contactar!.</span>
+                                    </div>
+                                    <hr>
+                                    <section class="containerBuy_btn">
+                                        
+                                            <div class="contentPubliRating">
+
+                                                <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
+                                                <div class="meta">
+                                                    Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> 
+                                                </div>
+                        
+                                            </div>
+                                        
+                                            <!-- este contenedor muestra el boton disabled porque el anuncio es del usuario -->
+                                                                                                
+                                            <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
+                                                    <i class="bi bi-info-circle text-primary ms-2"></i>
+                                                </button>   
+                                            </p>
+                                            
+                                            <button data-hover="click me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNContact" disabled><div> ¡Contactar ahora! </div></button>                                                
+
+                                    </section>
                                 <% }; %>
                                 <% if (depart == 'auctions') { %>
                                     <!-- segunda condicion que el articulo no este pausado -->
