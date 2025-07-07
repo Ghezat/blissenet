@@ -68,10 +68,16 @@
                             <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
                               <div class="containerData" style="width: 60%;">
 
-                                <img src="<%= ele.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
-                                <span><b>Order :</b> <%= ele._id %> </span>
-                                <span class="ms-2"><b>Seller :</b> <%= ele.usernameSell %></span>
-                                <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
+                                <div class="d-flex">  
+                                    <div class="picture">
+                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                                    </div>
+                                    <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                                    <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                        <span class="ms-2"><b>Seller:</b> <%= ele.usernameSell %></span>
+                                        <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                    </div>
+                                </div> 
                                 <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
                                 
                               </div>
@@ -130,10 +136,16 @@
                             <div class="containerFlexRow d-flex justify-content-between mb-2" style=" height: auto;">
                               <div class="containerData" style="width: 60%;">
                                            
-                                <img src="<%= ele.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
-                                <span><b>Order :</b> <%= ele._id %> </span>
-                                <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
-                                <span class="ms-2"><b>Amount :</b> <%= ele.price %></span> <br>
+                               <div class="d-flex">  
+                                    <div class="picture">
+                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                                    </div>
+                                    <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                                    <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                        <span class="ms-2"><b>Buyer:</b> <%= ele.usernameBuy %></span>
+                                        <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                    </div>
+                                </div> 
                                 <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
                                 
                               </div>
@@ -191,20 +203,25 @@
                   <% if (searchContactBuy.length !==0){ %>
 
                     <div class="containerFlex d-flex flex-column">
-                          <% searchContactBuy.forEach((elem, i)=>{ %>
+                          <% searchContactBuy.forEach((ele, i)=>{ %>
                                       
-                            <% if (elem.visibleBuy == true ) { %>
+                            <% if (ele.visibleBuy == true ) { %>
                             <div class="containerFlexRow d-flex justify-content-between mb-2" style=" height: auto;">
                               
                               <div class="containerData" style="width: 60%;">
-                                <img src="<%= elem.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
-                                <span><b>Order :</b> <%= elem._id %> </span>
-                                <span class="ms-2"><b>Seller :</b> <%= elem.usernameSell %></span>
-                                <span class="ms-2"><b>Amount:</b> <%= elem.price %></span> <br>
-                                <span><i><a href="/negotiation-body/<%= elem._id %>"><%= elem.title %></a></i></span>
+                                <div class="d-flex">  
+                                    <div class="picture">
+                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                                    </div>
+                                    <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                        <span class="ms-2"><b>Seller:</b> <%= ele.usernameSell %></span>
+                                        <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                    </div>
+                                </div> 
+                                <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
                               </div>
                               <div class="containerDelete me-4 d-flex align-items-center">
-                                <input class="idContact" type="hidden" value="<%= elem._id %>">
+                                <input class="idContact" type="hidden" value="<%= ele._id %>">
                                 <button class="btn btn-small btn-outline-danger btnVisible"> x </button>
                               </div>
                             
@@ -240,10 +257,16 @@
                           <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
                             
                             <div class="containerData" style="width: 60%;">
-                              <img src="<%= ele.image[0].url %>" alt="" style="width: 40px; height: 40px; object-fit: cover">
-                              <span><b>Order :</b> <%= ele._id %> </span>
-                              <span class="ms-2"><b>Buyer :</b> <%= ele.usernameBuy %></span>
-                              <span class="ms-2"><b>Amount:</b> <%= ele.price %></span> <br>
+                              <div class="d-flex">  
+                                  <div class="picture">
+                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                                  </div>    
+                                  <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                                  <div class="details d-flex flex-column" style="font-size: 15px;">
+                                      <span class="ms-2"><b>Buyer:</b> <%= ele.usernameBuy %></span>
+                                      <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                  </div>
+                              </div>  
                               <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
                             </div>
                             <div class="containerDelete me-4 d-flex align-items-center">

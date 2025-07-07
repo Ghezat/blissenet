@@ -683,7 +683,7 @@
 
                                 <div class="form-group me-2">
                                     <% if (negotiation.closeOperationBuy !== false && negotiation.closeOperationSeller !== false ){ %>
-                                        <button class="btn btn-secondary rounded-pill me-2" id="btnSenMessage" style="font-size: 17px;"> <i class="bi bi-send-fill"></i> </button>
+                                        <button class="btn btn-secondary rounded-pill me-2" style="font-size: 17px;"> <i class="bi bi-send-fill"></i> </button>
                                     <% } else { %>
                                         <button class="btn rounded-pill me-2" id="btnSenMessage" style="font-size: 16px; width: 40px; height: 40px; color: white; background-color: rgba(146,0,255,1);"> <i class="bi bi-send-fill"></i> </button>
                                     <% }; %>     
@@ -1333,27 +1333,24 @@
         boxNotes.push(note);
         const Notes = boxNotes
         console.log("Notes :", Notes);
-
+                 
         if ( showMessageNew.innerHTML !== ""){
             showMessageNew.innerHTML = "" //limpiamos este elemento de la pantalla
         }
-        
-        //const longNotes = allNotes.length; //esto es la cantidad de elementos que posee el array allNotes.
-        
         //******************************************************
 
         for (let i = Notes.length - 1; i >= 0; i--) { 
             const ele = Notes[i];
 
-                efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
-                efectSoundNewNote.play().catch(error => {
-                    console.error("Error al reproducir el sonido:", error);
-                })
             //console.log("ele.idDocument :",  ele.idDocument);
             //console.log("orderBuy :",  orderBuy);
 
             if (ele.idDocument == orderBuy){ //esto verifica que sea el mensaje para este chat
 
+                efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
+                efectSoundNewNote.play().catch(error => {
+                    console.error("Error al reproducir el sonido:", error);
+                })
 
                 if ( username.value == ele.user ){
   
