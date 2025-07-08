@@ -11,6 +11,8 @@
     const bodyTheme = document.querySelectorAll('.bodyTheme');
     const themaTextLight = document.querySelectorAll('.themaTextLight'); //esta clase para que funcione debe tener en el style del html la clase .textLight
     const linkOptions = document.querySelectorAll('.linkOptions');
+    const showMessage = document.querySelector('.showMessage');
+    const contentMessage = document.querySelector('.contentMessage');
 
   
     hColor()
@@ -50,8 +52,10 @@
           })
         }
         
-      
-
+        if (contentMessage){
+          contentMessage.style.backgroundColor = "white";
+          showMessage.style.backgroundColor = "white";
+        }  
         
       } else {
         mainTheme.classList.add('bg-dark');
@@ -84,6 +88,10 @@
           })
         }
        
+        if (contentMessage){
+          contentMessage.style.backgroundColor = "#1B1B1B";
+          showMessage.style.backgroundColor = "#1B1B1B";
+        }  
 
           
       }
@@ -129,7 +137,10 @@
           })
       }
      
-    
+      if (contentMessage){
+        contentMessage.style.backgroundColor = "#1B1B1B";
+        showMessage.style.backgroundColor = "#1B1B1B";
+      } 
 
 
       localStorage.setItem("estadoHead", "dark" );
@@ -168,6 +179,11 @@
           })
       }
       
+      if (contentMessage){
+        contentMessage.style.backgroundColor = "white";
+        showMessage.style.backgroundColor = "white";
+      }
+
 
       localStorage.setItem("estadoHead", "light" )
       estadoTheme = localStorage.getItem('theme');
