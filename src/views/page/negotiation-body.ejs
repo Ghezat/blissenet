@@ -600,13 +600,13 @@
                                         
                                         <!-- span del centro que muestra si es Hoy o una fecha anterior -->
                                         <% if (ele.codeDate == codeDateSistem && !hoyMostrado) { %>
-                                            <div class="contentDate d-flex justify-content-center py-2"> 
+                                            <div class="contentDate d-flex justify-content-center py-3"> 
                                                 <span class="text-light rounded-pill px-3 py-1 shadow-sm fst-italic" style="background-color: rgba(56, 56, 56, 1);"> <small>Hoy</small>  </span> 
                                             </div>
                                             <% hoyMostrado = true %> <!-- Marcamos que "Hoy" ya se mostró -->
 
                                         <% } else if (ele.codeDate !== codeDateSistem && ele.codeDate !== fechaAnterior) { %>
-                                            <div class="contentDate d-flex justify-content-center py-2"> 
+                                            <div class="contentDate d-flex justify-content-center py-3"> 
                                                 <span class="text-light rounded-pill px-3 py-1 shadow-sm fst-italic" style="background-color: rgba(56, 56, 56, 1);"> <small><%= ele.date %></small>  </span>
                                              </div>
                                             <% fechaAnterior = ele.codeDate; %> <!-- Actualizamos la fecha anterior -->
@@ -617,10 +617,10 @@
                                         
                                         <% if (user.username == ele.user ){ %>
                                             <!-- mensajes dinamicos que se cargan al renderizar la pagina -->
-                                            <div class="card-body d-flex justify-content-end my-1 ms-3 pb-2 pt-2" style="position: relative;">
-                                                <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: linear-gradient(90deg,rgba(211, 153, 255, 1) 0%, rgba(181, 84, 255, 1) 100%);">
+                                            <div class="card-body d-flex justify-content-end my-0 ms-3 pb-1 pt-1" style="position: relative;">
+                                                <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: rgba(146,0,255,1);">
                                                    
-                                                    <p style="line-height: 20px; text-align: justify; font-size: 16px;">  
+                                                    <p style="line-height: 20px; text-align: justify; font-size: 16px; color: white;">  
                                                         <%- ele.written.replace(/\n/g, "<br>") %>
                                                         <span style="display: inline-block; white-space: nowrap;">
                                                             <small class="px-2" style="font-size: 13px;"> 
@@ -634,10 +634,10 @@
 
                                         <% } else { %>
 
-                                            <div class="card-body d-flex justify-content-start my-1 ms-3 pb-2 pt-2" style="position: relative;">
-                                                <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: linear-gradient(90deg,rgba(186, 186, 186, 1) 0%, rgba(219, 219, 219, 1) 100%);">
+                                            <div class="card-body d-flex justify-content-start my-0 ms-3 pb-1 pt-1" style="position: relative;">
+                                                <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: rgba(56, 56, 56, 1);">
                                                 
-                                                    <p style="line-height: 20px; text-align: justify; font-size: 16px;">  
+                                                    <p style="line-height: 20px; text-align: justify; font-size: 16px; color: white;">  
                                                         <%- ele.written.replace(/\n/g, "<br>") %>
                                                         <span style="display: inline-block; white-space: nowrap;">
                                                             <small class="px-2" style="font-size: 13px;"> 
@@ -1359,9 +1359,9 @@
                 if ( username.value == ele.user ){
   
                     showMessageNew.innerHTML += `
-                                                <div class="card-body d-flex justify-content-end my-1 ms-3 pb-2 pt-2" style="position: relative;">
-                                                    <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: linear-gradient(90deg,rgba(211, 153, 255, 1) 0%, rgba(181, 84, 255, 1) 100%);">
-                                                        <p style="line-height: 20px; text-align: justify; font-size: 16px;">  ${formatText(ele.written)}
+                                                <div class="card-body d-flex justify-content-end my-0 ms-3 pb-1 pt-1" style="position: relative;">
+                                                    <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: rgba(146,0,255,1);">
+                                                        <p style="line-height: 20px; text-align: justify; font-size: 16px; color: white">  ${formatText(ele.written)}
                                                             <span style="display: inline-block; white-space: nowrap;">
                                                                 <small class="px-2" style="font-size: 13px;"> 
                                                                     ${ele.time} <i class="bi bi-check-all" style="font-size: 18px;"></i>
@@ -1376,9 +1376,9 @@
 
 
                     showMessageNew.innerHTML += `
-                                                <div class="card-body d-flex justify-content-start my-1 ms-3 pb-2 pt-2" style="position: relative;">
-                                                    <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: linear-gradient(90deg,rgba(186, 186, 186, 1) 0%, rgba(219, 219, 219, 1) 100%);">
-                                                        <p style="line-height: 20px; text-align: justify; font-size: 16px;"> ${formatText(ele.written)}                                                                                                         
+                                                <div class="card-body d-flex justify-content-start my-0 ms-3 pb-1 pt-1" style="position: relative;">
+                                                    <div class="contentFlexible py-3 ps-3 pe-4 shadow-sm" style="display: inline; border-bottom-left-radius: 0px; border-top-left-radius: 13px; border-bottom-right-radius: 24px; border-top-right-radius: 24px; background: rgba(56, 56, 56, 1);">
+                                                        <p style="line-height: 20px; text-align: justify; font-size: 16px; color: white"> ${formatText(ele.written)}                                                                                                         
                                                             <span style="display: inline-block; white-space: nowrap;">
                                                                 <small class="px-2" style="font-size: 13px;"> 
                                                                     ${ele.time}  <i class="bi bi-check-all" style="font-size: 18px;"></i>
