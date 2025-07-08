@@ -1257,7 +1257,8 @@
                     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
                 ];
-                return meses[numero]; 
+                return meses[numero - 1];
+                
             }
 
             if (minu <= 9){
@@ -1266,6 +1267,7 @@
                 Time = `${hora}:${minu}`
             }
 
+            console.log("mes................................................... : ", mes);
             const monthInLetters = obtenerMes(mes); //devuelve el mes Junio 
             const dates = `${monthInLetters} ${dia}, ${fullYear}`
             const codeDate = `${dia}${mes}${fullYear}` //28052025 esto junto parece un codigo numerico se forma con la fecha y nos permite verificar si estamos en el mismo dia para que en le chat podamso saber si es hoy o alguna fecha que se usaria el valor dates
