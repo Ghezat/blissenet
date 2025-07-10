@@ -492,6 +492,14 @@ a:hover {
     /* vista movil */
   }
 
+  .slick-prev{
+    opacity: 0;
+  }
+
+
+  .slick-next{
+    opacity: 0;
+  }
     /* :::::::::::::::::: */
 
     

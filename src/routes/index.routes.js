@@ -123,6 +123,7 @@ routes.get('/', async(req, res)=>{
         const currentNewsDay = await modelNewsDay.find({ "active" : true, "delete" : false });
         //console.log("Esto es currentNewsDay ----->", currentNewsDay);
     
+        const profileLast = await modelProfile.find({},{ username: 1, country: 1, countryCode: 1, avatarPerfil: 1, mailhash: 1 }).sort({ createdAt : -1 }).limit(6);
 
         async function negotiationsBuySell(){
             // :::::: Aqui obtengo la cantidad de negotiationsBuySell ::::::::
@@ -255,11 +256,11 @@ routes.get('/', async(req, res)=>{
                             .then(()=>{
                                 console.log("Aqui lo recaudado de las ofertas");
                                 console.log("boxOffert ----------------con user---------------->",boxOffert);
-                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                             })
                             .catch((err)=>{
                                 console.log("Ha ocurrido un error en la function searchBestView()")
-                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                             })
                    
                         
@@ -282,6 +283,10 @@ routes.get('/', async(req, res)=>{
     
         const currentNewsDay = await modelNewsDay.find({ "active" : true, "delete" : false });
         //console.log("Esto es currentNewsDay ----->", currentNewsDay);
+
+        const profileLast = await modelProfile.find({},{ username: 1, country: 1, countryCode: 1, avatarPerfil: 1, mailhash: 1 }).sort({ createdAt : -1 }).limit(6);
+        //console.log("--------------------------------------------> :");
+        //console.log("profileLast :", profileLast);
 
         //Esta funcion ejecuta una consulta en todos los anuncios que tengan ofertas y las atrapa para 
         async function searchOffert(){
@@ -380,12 +385,12 @@ routes.get('/', async(req, res)=>{
                 searchBestView()
                     .then(()=>{
                         console.log("Aqui lo recaudado de las ofertas");
-                        console.log("boxOffert ---------------sin user------------------->",boxOffert);
-                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                        //console.log("boxOffert ---------------sin user------------------->",boxOffert);
+                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                     })
                     .catch((err)=>{
-                        console.log("Ha ocurrido un error en la function searchOffert()")
-                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView })
+                        //console.log("Ha ocurrido un error en la function searchOffert()")
+                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                     })
                 
                 

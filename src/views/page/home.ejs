@@ -57,9 +57,21 @@
     background-color: white;
 }
 
+.containerLastStore {
+  animation: blendColors 8s linear infinite;
+}
 
- 
-
+@keyframes blendColors {
+  0% {
+    background-color: rgba(111, 66, 193, 0.9);
+  }
+  50% {
+    background-color: rgba(55, 46, 184, 0.9);
+  }
+  100% {
+   background-color: rgba(111, 66, 193, 0.9);
+  }
+}
 
 /* ///// footerCSS \\\\\ */
 .close{
@@ -107,6 +119,9 @@
 
   color: blueviolet;
 }
+
+
+
 /* end footer */
 
 @media screen and (min-width: 1901px) and (max-width: 2600px){
@@ -526,6 +541,44 @@
                     </div>
 
                 </div>
+
+                <div class="row px-2 py-5 m-0 containerLastStore text-light" style="height: auto;">
+                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 m-0 py-4">
+                    <% if (profileLast) { %>
+
+                      <div class="left-section contentProfileLast d-flex flex-wrap">
+                          <% profileLast.forEach((ele, i)=>{ %>
+                          
+                            <a href="/account/<%= ele.username %>" class="text-decoration-none">
+                              <div class="contentStoreLast d-flex m-2 shadow">
+                                <% if (ele.avatarPerfil[0].url.length === 0 ) { %>
+                                    <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;">   
+                                <% } else { %>
+                                    <img src="<%= ele.avatarPerfil[0].url %>" alt="" style="width: 50px; height: 50px; object-fit: cover;">
+                                <% }; %>
+
+                                <div class="usernameCountry px-2 d-flex align-items-center" style="background-color: #2c2c2c; color:white; font-size: 14px; width: 120px;">
+                                  <p class="mb-1" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><%= ele.username %></p>
+                                  <p class="mb-1 ms-2" style="font-size: 11px;"> (<span><%= ele.countryCode %></span>) </p>
+                                </div>
+                              </div>  
+                            </a>
+
+                          <% }); %>    
+                      </div>
+
+                    <% }; %>
+                  </div>
+                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 m-0 py-4">
+
+                    <div class="right-section">
+                      <p style="font-size: 22px;"> <b>¡Descubre las últimas tiendas creadas en nuestra comunidad!</b> </p>
+                      <p id="texto" style="font-size: 20px;"> "¡Vamos a construir algo increíble juntos! Explora las nuevas tiendas, deja comentarios y ayuda a crear un mercado digital de alto tráfico y dinámico. ¡Cada comentario y seguimiento cuenta!"</p>
+                    </div>  
+                      
+                  </div>
+                </div>
+
                 <div class="gallery-masonry p-2" id="newADS" style="background-color: rgba(255, 255, 255, 0.9);">
                   <div class="textTitle my-3">
                       <span class="text-secondary" style="font-size: 26px;">últimas Publicaciones</span>
@@ -631,6 +684,29 @@
  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+ <script>
+
+  const texto = document.getElementById('texto');
+  const textoArray = texto.textContent.split('');
+  let index = 0;
+
+  function escribirTexto() {
+    if (index < textoArray.length) {
+      texto.textContent = textoArray.slice(0, index + 1).join('');
+      index++;
+      setTimeout(escribirTexto, 50); // Puedes ajustar el tiempo de delay
+    } else {
+      // Cuando se completa el efecto de tipiar todo el texto
+      setTimeout(() => {
+        index = 0; // Reiniciar el índice
+        texto.textContent = ''; // Limpiar el texto
+        escribirTexto(); // Volver a empezar
+      }, 10000); // Esperar 10 segundos
+    }
+  }
+  escribirTexto();
+
+ </script>
 
  <script>
     //este script va en todos lados donde va el footer pero no hace falta en el home. 
