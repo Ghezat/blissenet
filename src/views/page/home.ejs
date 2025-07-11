@@ -551,11 +551,13 @@
                           
                             <a href="/account/<%= ele.username %>" class="text-decoration-none">
                               <div class="contentStoreLast d-flex m-2 shadow">
-                                <% if (ele.avatarPerfil[0].url.length === 0 ) { %>
-                                    <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;">   
-                                <% } else { %>
-                                    <img src="<%= ele.avatarPerfil[0].url %>" alt="" style="width: 50px; height: 50px; object-fit: cover;">
-                                <% }; %>
+                                <div class="contentImg" style="background-color: white;">
+                                  <% if (ele.avatarPerfil[0].url.length === 0 ) { %>
+                                      <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;">   
+                                  <% } else { %>
+                                      <img src="<%= ele.avatarPerfil[0].url %>" alt="" style="width: 50px; height: 50px; object-fit: cover;">
+                                  <% }; %>
+                                </div>  
 
                                 <div class="usernameCountry px-2 d-flex align-items-center" style="background-color: #2c2c2c; color:white; font-size: 14px; width: 120px;">
                                   <p class="mb-1" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><%= ele.username %></p>

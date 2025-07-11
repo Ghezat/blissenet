@@ -66,6 +66,7 @@
        color: white; /* Color del texto */
     } 
 
+
 </style>
 <body class="mainTheme">
 
@@ -589,7 +590,7 @@
 
                     <div class="card" style="height: 60vh; background-color: transparent;">
                         <div class="card-body p-0  d-flex flex-column contentMessage" style="height: 100%; overflow-y: auto;">                           
-                            <div class="card showMessage" style= "padding-right: 10px; border: transparent">
+                            <div class="card showMessage" style= "padding-right: 10px; border: transparent;">
                                                                 
                                 <% const codeDateSistem = codeDate %> <!-- fecha de hoy formato 2852025 -->
                                 <% let hoyMostrado = false; %>
@@ -613,8 +614,7 @@
 
                                        <% }; %> 
                                         
-                                       <div class="showMessageNew"> <!-- mensajes dinamicos que se envian via socket--> </div>
-                                        
+                                                                              
                                         <% if (user.username == ele.user ){ %>
                                             <!-- mensajes dinamicos que se cargan al renderizar la pagina -->
                                             <div class="card-body d-flex justify-content-end my-0 ms-3 pb-1 pt-1" style="position: relative;">
@@ -649,9 +649,13 @@
                                                 </div>
                                             </div>  
 
-                                        <% }; %>     
+                                        <% }; %>  
+                                        
+                                        
     
                                     <% }); %>
+
+                                    <div class="showMessageNew"> <!-- mensajes dinamicos que se envian via socket--> </div>
 
                                 <% } else { %>
 
@@ -773,6 +777,21 @@
                 contentRateSell.classList.remove('close');
             })
         }
+    </script>
+
+    <script>
+        //este script posee una funcion que su unico cometido es actualizar el chat y mostrar siempre el ultimo mensaje.
+        const contenedor = document.querySelector('.contentMessage');
+        const contenido = document.querySelector('.showMessage');
+
+        // Asegurarse de que el contenido se haya renderizado
+        function writtenLast(){
+                if (contenido.scrollHeight > contenedor.clientHeight) {
+                    contenedor.scrollTop = contenedor.scrollHeight;
+                }
+        }        
+
+        writtenLast() //activamos la funcion al renderizar la pagina.
     </script>
 
     <script>
@@ -1245,6 +1264,8 @@
             btnSenMessage.setAttribute("disabled", "");//desactivamos el boton para que solo enviar una sola vez
 
             const date = new Date();
+            const idMsg = date.getTime();
+
             const hora = date.getHours();
             const minu = date.getMinutes();
 
@@ -1278,7 +1299,8 @@
                 date : dates,
                 codeDate : codeDate,
                 time : Time,
-                idDocument : idDocument.value
+                idDocument : idDocument.value,
+                id_msg : idMsg
             };
             
             fetch('/negotiation-message/', {
@@ -1345,7 +1367,7 @@
         }
         //******************************************************
 
-        for (let i = Notes.length - 1; i >= 0; i--) { 
+        for (let i = 0; i < Notes.length; i++) {     
             const ele = Notes[i];
 
             //console.log("ele.idDocument :",  ele.idDocument);
@@ -1397,6 +1419,7 @@
 
         }
 
+        writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
         written.focus();
 
         function formatText(text) {

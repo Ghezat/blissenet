@@ -1206,7 +1206,7 @@ routes.get('/buysell-body/:id', async(req, res)=>{
   const buySellId = req.params.id;
 
   const buySell =  await modelBuysell.findById(buySellId);
-  const msg = buySell.written.reverse(); // aqui se revierte el array written para que el front el forEach() pueda recorrerlo en sentido inverso.
+  const msg = buySell.written; 
   const indexedSell = buySell.indexedSell; // este es el id user
   const bankData = await modelBankUser.findOne( { indexed : indexedSell } );
 
@@ -1263,7 +1263,7 @@ routes.get('/negotiation-body/:id', async(req, res)=>{
 
   const negotiation =  await modelNegotiation.findById(negotiationId);
   const indexedSell = negotiation.indexedSell;
-  const msgFormat = negotiation.written.reverse(); // aqui se revierte el array written para que el front el forEach() pueda recorrerlo en sentido inverso.
+  const msgFormat = negotiation.written; 
 
   console.log("msg, Que hay aqui? --->", msgFormat);
   const fecha =  negotiation.createdAt;
@@ -2072,6 +2072,35 @@ routes.post('/negotiation-rating/closeOperation', async(req, res)=>{
 
 });
 
+
+// ruta donde se ingresan los mensajes enviados en el chat de los usuarios en BuySell
+routes.post('/buysell-message/', async(req, res)=>{ 
+ const bodyWritten = req.body;
+ console.log("bodyWritten ...>", bodyWritten);
+
+ //user, written, date, codeDate, time, idDocument ......datos que recibo
+ const { user, written, date, codeDate, time, idDocument, id_msg } = bodyWritten;
+ const objectData = {user, written, time, date, codeDate, idDocument, id_msg}; 
+ console.log("Aqui el objectData---->", objectData);                               
+ const pusheando = await modelBuysell.findByIdAndUpdate(idDocument, { $push: { written : objectData } }, { new: true });
+ console.log("Aqui pusheando ---->",pusheando);
+ 
+ res.json(objectData);//importante esto que no se me olvide.
+});
+
+// ruta donde se ingresan los mensajes enviados en el chat de los usuarios en Contact
+routes.post('/negotiation-message/', async(req, res)=>{ 
+  const bodyWritten = req.body;
+  console.log(bodyWritten);
+  const {user, written, idDocument, time, date, codeDate, id_msg } = bodyWritten;
+  const objectData = {user, written, idDocument, time, date, codeDate, id_msg}; 
+  console.log("Aqui el objectData---->", objectData);                               
+  const pusheando = await modelNegotiation.findByIdAndUpdate(idDocument, {  $push: { written : objectData } }, { new: true });
+  console.log("Aqui pusheando ---->",pusheando);
+  
+  res.json(req.body);//importante esto que no se me olvide.
+});
+ 
 routes.get('/buysell-list/', async(req, res)=>{
   const user = req.session.user;
   let username, searchProfile; 
@@ -2116,34 +2145,6 @@ routes.get('/buysell-list/', async(req, res)=>{
   res.render('page/buysell-list', {user, searchProfile, countMessages, countNegotiationsBuySell, searchBuy, searchSell}); 
 });
 
-// ruta donde se ingresan los mensajes enviados en el chat de los usuarios en BuySell
-routes.post('/buysell-message/', async(req, res)=>{ 
- const bodyWritten = req.body;
- console.log("bodyWritten ...>", bodyWritten);
-
- //user, written, date, codeDate, time, idDocument ......datos que recibo
- const { user, written, date, codeDate, time, idDocument } = bodyWritten;
- const objectData = {user, written, time, date, codeDate, idDocument}; 
- console.log("Aqui el objectData---->", objectData);                               
- const pusheando = await modelBuysell.findByIdAndUpdate(idDocument, { $push: { written : objectData } }, { new: true });
- console.log("Aqui pusheando ---->",pusheando);
- 
- res.json(objectData);//importante esto que no se me olvide.
-});
-
-// ruta donde se ingresan los mensajes enviados en el chat de los usuarios en Contact
-routes.post('/negotiation-message/', async(req, res)=>{ 
-  const bodyWritten = req.body;
-  console.log(bodyWritten);
-  const {user, written, idDocument, time, date, codeDate } = bodyWritten;
-  const objectData = {user, written, idDocument, time, date, codeDate}; 
-  console.log("Aqui el objectData---->", objectData);                               
-  const pusheando = await modelNegotiation.findByIdAndUpdate(idDocument, {  $push: { written : objectData } }, { new: true });
-  console.log("Aqui pusheando ---->",pusheando);
-  
-  res.json(req.body);//importante esto que no se me olvide.
-});
- 
 
 module.exports = routes;
 
