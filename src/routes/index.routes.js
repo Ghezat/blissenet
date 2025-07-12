@@ -123,7 +123,7 @@ routes.get('/', async(req, res)=>{
         const currentNewsDay = await modelNewsDay.find({ "active" : true, "delete" : false });
         //console.log("Esto es currentNewsDay ----->", currentNewsDay);
     
-        const profileLast = await modelProfile.find({},{ username: 1, country: 1, countryCode: 1, avatarPerfil: 1, mailhash: 1 }).sort({ createdAt : -1 }).limit(6);
+        const profileLast = await modelProfile.find({},{ username: 1, country: 1, countryCode: 1, avatarPerfil: 1, mailhash: 1 }).sort({ createdAt : -1 }).limit(8);
 
         async function negotiationsBuySell(){
             // :::::: Aqui obtengo la cantidad de negotiationsBuySell ::::::::
