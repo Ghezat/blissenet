@@ -149,6 +149,8 @@
     outline: 2px solid white;
   }
 
+  .usernameCountry{ font-size: 14px; width: 120px; }
+
   .imgGalley{
       max-width: 120px;
   }
@@ -188,6 +190,8 @@
     .contentStoreLast:hover{
       outline: 2px solid white;
     }
+
+    .usernameCountry{ font-size: 14px; width: 120px; }
 
     .imgGalley{
         max-width: 120px;
@@ -238,6 +242,8 @@
       outline: 2px solid white;
     }
 
+    .usernameCountry{ font-size: 14px; width: 120px; }
+
     .imgGalley{
         max-width: 100px;
     }
@@ -269,7 +275,7 @@
 
 }
 
-@media screen and (min-width: 220px) and (max-width: 450px){
+@media screen and (min-width: 391px) and (max-width: 450px){
 
     .imageBanner{
       width: 430px;
@@ -294,6 +300,8 @@
       outline: 2px solid white;
     }
     
+    .usernameCountry{ font-size: 14px; width: 120px; }
+
     .content-item{
       flex-direction: column;
     }    
@@ -322,6 +330,117 @@
     
 
 }
+
+@media screen and (min-width: 351px) and (max-width: 390px){
+
+    .imageBanner{
+      width: 430px;
+    }
+
+    .imgStore{
+        width: 50px;
+        height: 50px;
+        transition: 0.3s;
+        margin: 1px;
+    }
+    .imgStore:hover{
+        outline : 2px solid lightseagreen;
+    }
+
+    .contentStoreLast{
+      margin: 6px 4px; 
+      /* el primer valor es el eje y y el segundo es el x */
+    }
+
+    .contentStoreLast:hover{
+      outline: 2px solid white;
+    }
+    
+    .usernameCountry{ font-size: 14px; width: 100px; }
+
+    .content-item{
+      flex-direction: column;
+    }    
+   
+    .imgNews{
+      width: 100%;
+    }
+
+    .imgGalley{
+        max-width: 65px;
+    }
+
+    .gallery, .galleryMoreView, .Top30Stores{
+        /* border: 2px solid rgb(4, 0, 255); */
+        columns: 10 65px;
+        column-gap: 1px;
+    }
+
+    .contentNewDay{
+      flex-direction: column;
+    }
+
+    .contentDetails{
+      padding: 20px 0px;
+    }
+    
+
+}
+
+@media screen and (min-width: 220px) and (max-width: 350px){
+
+    .imageBanner{
+      width: 430px;
+    }
+
+    .imgStore{
+        width: 50px;
+        height: 50px;
+        transition: 0.3s;
+        margin: 1px;
+    }
+    .imgStore:hover{
+        outline : 2px solid lightseagreen;
+    }
+
+    .contentStoreLast{
+      margin: 4px 3px; 
+      /* el primer valor es el eje y y el segundo es el x */
+    }
+
+    .contentStoreLast:hover{
+      outline: 2px solid white;
+    }
+    
+    .usernameCountry{ font-size: 12px; width: 85px; }
+
+    .content-item{
+      flex-direction: column;
+    }    
+   
+    .imgNews{
+      width: 100%;
+    }
+
+    .imgGalley{
+        max-width: 65px;
+    }
+
+    .gallery, .galleryMoreView, .Top30Stores{
+        /* border: 2px solid rgb(4, 0, 255); */
+        columns: 10 65px;
+        column-gap: 1px;
+    }
+
+    .contentNewDay{
+      flex-direction: column;
+    }
+
+    .contentDetails{
+      padding: 20px 0px;
+    }
+
+} 
 
 
 </style>
@@ -594,14 +713,14 @@
                                   <% }; %>
                                 </div>  
 
-                                <div class="usernameCountry px-2 d-flex align-items-center" style="background-color: #2c2c2c; color:white; font-size: 14px; width: 120px;">
+                                <div class="usernameCountry px-2 d-flex align-items-center" style="background-color: #2c2c2c; color:white;">
                                   <p class="mb-1" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><%= ele.username %></p>
                                   <p class="mb-1 ms-2" style="font-size: 11px;"> (<span><%= ele.countryCode %></span>) </p>
                                 </div>
                               </div>  
                             </a>
 
-                          <% }); %>    
+                          <% }); %>  
                       </div>
 
                     <% }; %>
