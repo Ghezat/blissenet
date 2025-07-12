@@ -141,6 +141,13 @@
       outline : 2px solid lightseagreen;
   }
 
+  .contentStoreLast{
+    margin: 8px 8px;
+  }
+
+  .contentStoreLast:hover{
+    outline: 2px solid white;
+  }
 
   .imgGalley{
       max-width: 120px;
@@ -171,6 +178,16 @@
         outline : 2px solid lightseagreen;
     }
 
+    .contentStoreLast{
+      margin: 6px 6px; 
+      /* el primer valor es el eje y y el segundo es el x */
+      transition: 1s ease outline;
+      
+    }
+
+    .contentStoreLast:hover{
+      outline: 2px solid white;
+    }
 
     .imgGalley{
         max-width: 120px;
@@ -210,6 +227,15 @@
     }
     .imgStore:hover{
         outline : 2px solid lightseagreen;
+    }
+
+    .contentStoreLast{
+      margin: 6px 6px; 
+      /* el primer valor es el eje y y el segundo es el x */
+    }
+
+    .contentStoreLast:hover{
+      outline: 2px solid white;
     }
 
     .imgGalley{
@@ -257,6 +283,15 @@
     }
     .imgStore:hover{
         outline : 2px solid lightseagreen;
+    }
+
+    .contentStoreLast{
+      margin: 6px 4px; 
+      /* el primer valor es el eje y y el segundo es el x */
+    }
+
+    .contentStoreLast:hover{
+      outline: 2px solid white;
     }
     
     .content-item{
@@ -550,7 +585,7 @@
                           <% profileLast.forEach((ele, i)=>{ %>
                           
                             <a href="/account/<%= ele.username %>" class="text-decoration-none">
-                              <div class="contentStoreLast d-flex m-2 shadow">
+                              <div class="contentStoreLast d-flex shadow">
                                 <div class="contentImg" style="background-color: white;">
                                   <% if (ele.avatarPerfil[0].url.length === 0 ) { %>
                                       <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;">   
