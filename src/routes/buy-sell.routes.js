@@ -109,8 +109,7 @@ routes.post('/buysell/direct', async(req, res)=>{
               let userSell = vendedor //aqui el username del vendedor --------"Anunciante vendedor esto es el id"
               indexedSell = vendedor;
               indexedBuy = comprador;
-           
-
+                         
               //esto lo usare para el envio del telegrama.
               const searchSell = await modelUser.findById( userSell, { _id: 0, "blissBot.chatId" : 1, username : 1 });
               chatId = searchSell.blissBot.chatId; //este es el chatId del user.
@@ -425,6 +424,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                     async function saveDB(){
             
                       let msgFormat = []; //array vacio 
+                      const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
+
                       const searchProfile = await modelProfile.find({ indexed : user._id });   
                       const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType });
                       console.log("BuySell .......................... :", BuySell);
@@ -439,7 +440,7 @@ routes.post('/buysell/direct', async(req, res)=>{
 
                       console.log("Ahora es hora de renderizar la pagina. mientras sigue el proceso de envios de correos")
                       //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                      res.render('page/buysell-body', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell, msgFormat, codeDate, bankData });
+                      res.render('page/buysell-body', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell, msgFormat, codeDate, bankData, fullScreen });
 
                       console.log("Esto es chatId :", chatId);
                       
@@ -529,6 +530,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                             console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
                             console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
                             let msgFormat = []; //array vacio 
+                            const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
+
                             const searchProfile = await modelProfile.find({ indexed : user._id });   
                             const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType });
                             console.log("BuySell .......................... :", BuySell);
@@ -542,8 +545,9 @@ routes.post('/buysell/direct', async(req, res)=>{
                             const bankData = await modelBankUser.findOne( { indexed : indexedSell } );
 
                             console.log("Ahora es hora de renderizar la pagina. mientras sigue el proceso de envios de correos")
-                            //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                            res.render('page/buysell-body', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell, msgFormat, codeDate, bankData });
+                            //console.log("fullScreen ............... :", fullScreen);
+                            //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.                            
+                            res.render('page/buysell-body', {user, searchProfile, countMessages, countNegotiationsBuySell, buySell, msgFormat, codeDate, bankData, fullScreen });
 
                             console.log("Esto es chatId :", chatId);
                             
@@ -649,6 +653,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
                         console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
                         let msgFormat = []; //array vacio 
+                        const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
+
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
                         const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
@@ -660,7 +666,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("*************************** LISTO *********************************")
                         console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
                         //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate, fullScreen });
 
                         console.log("Esto es chatId :", chatId);
                         
@@ -762,6 +768,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
                         console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
                         let msgFormat = []; //array vacio 
+                        const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
+
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
                         const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
@@ -773,7 +781,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("*************************** LISTO *********************************")
                         console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
                         //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate, fullScreen });
 
                         console.log("Esto es chatId :", chatId);
                         
@@ -875,6 +883,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
                         console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
                         let msgFormat = []; //array vacio 
+                        const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
+
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
                         const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
@@ -890,7 +900,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("*************************** LISTO *********************************")
                         console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
                         //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate, fullScreen });
 
                         console.log("Esto es chatId :", chatId);
                         
@@ -991,6 +1001,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
                         console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
                         let msgFormat = []; //array vacio 
+                        const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
+
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
                         const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
@@ -1002,7 +1014,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("*************************** LISTO *********************************")
                         console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
                         //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate, fullScreen });
 
                         console.log("Esto es chatId :", chatId);
                         
@@ -1104,6 +1116,8 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation");
                         console.log(chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation);
                         let msgFormat = []; //array vacio 
+                        const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
+
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
                         const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
@@ -1119,7 +1133,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         console.log("*************************** LISTO *********************************")
                         console.log("tenemos todo y ahora procedemos a renderizar la sala de negociacion")
                         //la mision de este paso es crear un documento en la coleccion buysell con los datos obtenidos previamente.
-                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate });
+                        res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate, fullScreen });
 
                         console.log("Esto es chatId :", chatId);
                         
@@ -1209,6 +1223,7 @@ routes.get('/buysell-body/:id', async(req, res)=>{
   const msg = buySell.written; 
   const indexedSell = buySell.indexedSell; // este es el id user
   const bankData = await modelBankUser.findOne( { indexed : indexedSell } );
+  const fullScreen = buySell.fullScreen; //false or true // para determinar si el chat esta full screen.
 
   // Función para escapar caracteres especiales
   function escapeHtml(text) {
@@ -1242,8 +1257,29 @@ routes.get('/buysell-body/:id', async(req, res)=>{
   console.log("codeDate :", codeDate);
 
   
-  res.render('page/buysell-body', {user, searchProfile, countNegotiationsBuySell, countMessages, buySell, fechaNegotiation, msgFormat, codeDate, bankData}); 
+  res.render('page/buysell-body', {user, searchProfile, countNegotiationsBuySell, countMessages, buySell, fechaNegotiation, msgFormat, codeDate, bankData, fullScreen}); 
 
+});
+
+routes.post('/buysell-body/fullScreen/', async(req, res)=>{
+
+  try {
+    const { iD, status } = req.body;
+    console.log("Estamos en la ruta para cambiar el status de fullScreen")
+    console.log("iD: ", iD);
+    console.log("status: ", status); 
+    console.log("status typeof:", typeof status);
+
+    const buySell = await modelBuysell.findById(iD);
+    
+    const updateFullScreen = await modelBuysell.findByIdAndUpdate(iD, { fullScreen: status }, { new: true });
+    res.json({ code: "ok", message: `se ha cambiado status a ${status ? 'true' : 'false'}` });
+
+  } catch (error) {
+    console.log("ha ocurrido un error", error);
+    res.status(500).json({ code: "error", message: "Error al actualizar el status" });
+  }
+    
 });
 
 routes.get('/negotiation-body/:id', async(req, res)=>{
@@ -1264,8 +1300,9 @@ routes.get('/negotiation-body/:id', async(req, res)=>{
   const negotiation =  await modelNegotiation.findById(negotiationId);
   const indexedSell = negotiation.indexedSell;
   const msgFormat = negotiation.written; 
+  const fullScreen = negotiation.fullScreen; //false or true // para determinar si el chat esta full screen.
 
-  console.log("msg, Que hay aqui? --->", msgFormat);
+  //console.log("msg, Que hay aqui? --->", msgFormat);
   const fecha =  negotiation.createdAt;
   const dia = fecha.getDate();
   const mes = fecha.getMonth() + 1;
@@ -1283,8 +1320,30 @@ routes.get('/negotiation-body/:id', async(req, res)=>{
   //esta consulta es necesaria para poder ofrecer los diferente metodos de pagos ofrecido por el vendedor.
   const bankData = await modelBankUser.findOne( { indexed : indexedSell } );
   //res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, msgFormat, codeDate, bankData });
-  res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, fechaNegotiation, msgFormat, codeDate, bankData }); 
+  res.render('page/negotiation-body', {user, searchProfile, countMessages, countNegotiationsBuySell, negotiation, fechaNegotiation, msgFormat, codeDate, bankData, fullScreen }); 
 });
+
+routes.post('/negotiation-body/fullScreen/', async(req, res)=>{
+
+  try {
+    const { iD, status } = req.body;
+    console.log("Estamos en la ruta para cambiar el status de fullScreen")
+    console.log("iD: ", iD);
+    console.log("status: ", status); 
+    console.log("status typeof:", typeof status);
+
+    const buySell = await modelNegotiation.findById(iD);
+    
+    const updateFullScreen = await modelNegotiation.findByIdAndUpdate(iD, { fullScreen: status }, { new: true });
+    res.json({ code: "ok", message: `se ha cambiado status a ${status ? 'true' : 'false'}` });
+
+  } catch (error) {
+    console.log("ha ocurrido un error", error);
+    res.status(500).json({ code: "error", message: "Error al actualizar el status" });
+  }
+    
+});
+
 
 routes.post('/negotiation-appointmentSearchAll/', async(req, res)=>{
 

@@ -30,7 +30,8 @@ const negotiationSchema = new Schema({
     payCommission : { type : Boolean, default : false  }, //aqui guardamos si el usuario pago o no su comision de venta. 
     userDeclare : { type : Boolean, default : false }, //este dato es para delcarar que el usuario a declarado su pago cuando sea true es que el cliente ha declarado su pago
     closeOperationSeller : { type : Boolean, default : false }, // con este campo manejamos el estado de la operacion de compra. por defecto nace false pero en el proceso puede pasar a ser true que significa que se ha cerrado la operacion. esto no debe confundirse con "cancel". esto es para cerrar la operacion cuando ya no se requiera tener mas comunicacion con la contraparte. se ha cerrado la sala de negociacion.
-    closeOperationBuy : { type : Boolean, default : false } // por defecto nacen con el valor false. cada sala es independiente y cada quien decide cuando cerrarlo
+    closeOperationBuy : { type : Boolean, default : false }, // por defecto nacen con el valor false. cada sala es independiente y cada quien decide cuando cerrarlo
+    fullScreen : { type : Boolean, default : false } //por defecto es false el chat estara contraido.
 },{
     timestamps : true
 });
