@@ -72,3 +72,26 @@ server {
    include conf.d/includes-optional/cloudflare.conf;
 
 }
+
+
+important:
+el error mas comun es el duplicado del bloque de raiz "/" se resuelve entrando en el siguiente archivo con el editor vim
+
+/etc/nginx/conf.d/users/blissenet/blissenet.conf
+
+como arreglar el problema de duplicado: 
+cd     /etc/nginx/conf.d/users 
+vim --> blissenet.conf   
+
+aqui adentro usar la tecla "i" para poder insertar y luego debes eliminar o comentar el bloque 
+que es duplicado y borrar el el archivo robots.txt y reemplazarlo por este 
+
+    location = /robots.txt {
+       alias /home/blissenet/public_html/robots.txt;
+       allow all;
+       log_not_found off;
+       access_log off;
+    }
+
+ esto seria todo luego sales dando a ":" y "wq"
+ finalmente puedes pobar con el comando nginx -t    

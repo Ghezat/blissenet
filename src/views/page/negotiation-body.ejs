@@ -369,7 +369,7 @@
 
                             <% if ( negotiation.usernameBuy == user.username ) { %>
 
-                                <ul class="nav nav-pills"><!--  nav-tabs o nav-pills -->
+                                <ul class="nav nav-pills border border-danger"><!--  nav-tabs o nav-pills -->
                                     <li class="nav-item">
                                         <button class="nav-link active" id="data"> Datos </button>
                                     </li>
@@ -697,20 +697,18 @@
 
                 <% }; %> <!-- este es el cierre del user  -->
                     
-                
-
-                
             </div>
 
         </div>
 
     <% } else { %>
         
-        <div class="contentFullScreen" style="width: 100%; height: 100vh; background-color: rgba(233, 236, 239, 0.8); overflow-x: auto;">
-
-            <div class="card" style="height: 70%; background-color: transparent; border: transparent;">
-                <div class="card-body p-0  d-flex flex-column contentMessage" style="height: 80%; overflow-y: auto;" id="contentMessageFullScreen">                           
-                    <div class="card showMessage" style="padding-right: 10px; border: transparent" id="showMessageFullScreen">
+        <div class="contentFullScreen" style="width: 100%; height: 92vh; position: relative; background-color: rgba(233, 236, 239, 0.8);  overflow-x: auto;">
+        
+            
+            <div class="card" style="height: 100%; background-color: transparent; border: transparent;">
+                <div class="card-body p-0  d-flex flex-column contentMessage" style="height: 100%; overflow-y: auto;" id="contentMessageFullScreen">                           
+                    <div class="card showMessage" style="margin-bottom: 100px; padding-right: 10px; border: transparent" id="showMessageFullScreen">
                         
                                              
                         <% const codeDateSistem = codeDate %> <!-- fecha de hoy formato 2852025 -->
@@ -786,8 +784,7 @@
                 </div>
             </div>
 
-            <div class="containerWritten p-1" style="width: 100%;">
-                
+            <div class="containerWritten px-1 py-2" style="position: absolute; bottom: 0; left: o; width: 100%;  overflow-x: auto; background-color: rgba(233, 236, 239, 0.8); ">                
 
                     <h6 class="text-decoration-underline my-2 mx-3 px-1 text-secondary">Hacer una pregunta a tu contraparte. </h6>
                     <div class="containerTextButton d-flex justify-content-between mb-3 mt-1 px-4" style="width: 100%;">
@@ -814,7 +811,6 @@
                         </div>
 
                     </div>
-
                 
             </div>
 
@@ -918,252 +914,259 @@
     </script>
 
     <script>
-        //aqui haremos una conuslta para buscar en todos los documentos de negociacion el campo appointment con el indexedSell definido actual
-        //para que el comprador y el vendedor puedan saber si esta o no disponible
-        const iDNegoti = document.querySelector('.idNegotiation').value;
-        const usernameBuy = document.querySelector('.usernameBuy').value;
-        const indexedSell = document.querySelector('.indexedSell').value;
-        const tbodyAgenda = document.querySelector('.tbodyAgenda');
-        let searchNegotiations; //aqui esta un array con toda la agenda de citas de este bien o servicio. Muy Importante
 
-        const formData = new FormData()
-            
-            formData.append('indexedSell', indexedSell);
+        if (fullScreen === "false"){
+            //aqui haremos una conuslta para buscar en todos los documentos de negociacion el campo appointment con el indexedSell definido actual
+            //para que el comprador y el vendedor puedan saber si esta o no disponible
+            const iDNegoti = document.querySelector('.idNegotiation').value;
+            const usernameBuy = document.querySelector('.usernameBuy').value;
+            const indexedSell = document.querySelector('.indexedSell').value;
+            const tbodyAgenda = document.querySelector('.tbodyAgenda');
+            let searchNegotiations; //aqui esta un array con toda la agenda de citas de este bien o servicio. Muy Importante
 
-        fetch('/negotiation-appointmentSearchAll/', {
-            method: "POST",
-            body: formData
-        })
-            .then(response =>response.json() ) 
-            .then( jsonx => 
-                {
-                    console.log("jsonx searchNegotiations:", jsonx) 
-                    const code = jsonx.code;
-                    searchNegotiations = jsonx.searchNegotiations;
-
-                    function parseAppointment(str) {
-                        const [date, time] = str.split(' ');
-                        const [day, month, year] = date.split('-').map(Number);
-                        const [hour, minute] = time.split(':').map(Number);
-                        return new Date(year, month - 1, day, hour, minute);
-                    }
-
-                    searchNegotiations.sort((a, b) => parseAppointment(a.appointment) - parseAppointment(b.appointment));
-
-                    console.log(searchNegotiations);
-                    
-                    if (code == "ok"){
-
-                        
-                        searchNegotiations.forEach((ele)=>{
-                            const ele_id = ele._id;
-                            const eleUsernameBuy = ele.usernameBuy; 
-                            //console.log("id :", id)
-                            const appointment = ele.appointment;
-                            const id = ele._id;
-
-                            if (tbodyAgenda){
-                                if (iDNegoti == ele_id){
-                                    tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment} <i class="bi bi-eye-fill ms-2"></i> </td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
-                                } else {
-                                    tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment}</td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
-                                }
-                            }    
-                            
-                                                    
-                        })
-                    } else {
-                        
-                    }
+            const formData = new FormData()
                 
-                })
-            .catch( err => console.log(err));
+                formData.append('indexedSell', indexedSell);
 
+            fetch('/negotiation-appointmentSearchAll/', {
+                method: "POST",
+                body: formData
+            })
+                .then(response =>response.json() ) 
+                .then( jsonx => 
+                    {
+                        console.log("jsonx searchNegotiations:", jsonx) 
+                        const code = jsonx.code;
+                        searchNegotiations = jsonx.searchNegotiations;
 
+                        function parseAppointment(str) {
+                            const [date, time] = str.split(' ');
+                            const [day, month, year] = date.split('-').map(Number);
+                            const [hour, minute] = time.split(':').map(Number);
+                            return new Date(year, month - 1, day, hour, minute);
+                        }
+
+                        searchNegotiations.sort((a, b) => parseAppointment(a.appointment) - parseAppointment(b.appointment));
+
+                        console.log(searchNegotiations);
+                        
+                        if (code == "ok"){
+
+                            
+                            searchNegotiations.forEach((ele)=>{
+                                const ele_id = ele._id;
+                                const eleUsernameBuy = ele.usernameBuy; 
+                                //console.log("id :", id)
+                                const appointment = ele.appointment;
+                                const id = ele._id;
+
+                                if (tbodyAgenda){
+                                    if (iDNegoti == ele_id){
+                                        tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment} <i class="bi bi-eye-fill ms-2"></i> </td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
+                                    } else {
+                                        tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment}</td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
+                                    }
+                                }    
+                                
+                                                        
+                            })
+                        } else {
+                            
+                        }
+                    
+                    })
+                .catch( err => console.log(err));
+
+        }
 
     </script>
 
     <script>
-        const idNegotiation = document.querySelector('.idNegotiation');
-        const daysAvaible = document.querySelector('.daysInp').value;
-        const rangeTimeAvailable = document.querySelector('.rangeTimeInp').value;//14:00,18:00  quiero que se transforme en [1400, 1800] un array con estos numeros quitar ":" para crear un nunemro y que sea de tipo number
 
-        const daysArray = daysAvaible.split(',').map(Number);
-        console.log("daysArray :",  daysArray); // [0, 1, 2, 3, 4]
-        const timeArray = rangeTimeAvailable.split(',').map(time => {
-            return Number(time.replace(':', '')); // quita ":" y convierte a número
-        });
-        console.log("timeArray :", timeArray); // [1400, 1800]
-        //console.log("daysAvaible :", daysAvaible ); //0,1,2,3,4 quiero que eso sea un array con estos datos de tiipo number
-        //console.log("rangeTimeAvailable :", rangeTimeAvailable ); //14:00,18:00 esto tambien quiero que sea un array y tenga estos datos dentro de tipo number
-      
-        const dateInput = document.getElementById('myDateInput');
-        const timeInput = document.getElementById('myTimeSelect');
-        const btnAppointment = document.getElementById('btnAppointment');
-        const btnAppointmentSpinner = document.getElementById('btnAppointmentSpinner');
-        const appointmentSpan = document.getElementById('appointmentSpan');//este es un sopan donde muestra la fecha y hora que se ha elegido
+        if (fullScreen === "false"){
 
-        const range1 = timeArray[0];
-        const range2 = timeArray[1];  
-        let dayApprobe = false;
-        let dateValue, timeValue;
-       
-        if (dateInput){
-            dateInput.addEventListener('change', (event) => {
-                console.log("he seleccionado a un dia", event)
-                const selectedDate = new Date(event.target.value);
-                const dayOfWeek = selectedDate.getDay(); // 0 es (domingo) y 6 es (sábado)
-                console.log("selectedDate -->", selectedDate);
-                
-                console.log("dayOfWeek -->", dayOfWeek); 
-                const today = new Date().getUTCDate(); //este es el dia de hoy
-                const selectedDay =  selectedDate.getUTCDate(); //este es el dia seleccionado
-                
-                console.log("today :", today);
+            const idNegotiation = document.querySelector('.idNegotiation');
+            const daysAvaible = document.querySelector('.daysInp').value;
+            const rangeTimeAvailable = document.querySelector('.rangeTimeInp').value;//14:00,18:00  quiero que se transforme en [1400, 1800] un array con estos numeros quitar ":" para crear un nunemro y que sea de tipo number
 
-                console.log("today -- selectedDate", today, selectedDay); 
-                if ( today <= selectedDay ){
-
-                    const resultInclude = daysArray.includes(dayOfWeek)
-                    console.log("resultInclude -->", resultInclude);
-                    
-                    if (resultInclude === true ){
-                        console.log("dia aprobado", dateInput.value )
-                        dateValue = dateInput.value;
-                        
-                    } else {
-                        console.log("dia no aprobado")
-                        event.target.value = ''; 
-                        const message = "Este dia no esta libre para crear la cita."
-                        mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
-                    } 
-
-                } else {
-
-                        console.log("Este dia ya ha pasado")
-                        event.target.value = ''; 
-                        const message = "¡Fecha inválida! No puedes elegir un día que ya pasó. Asegúrate de seleccionar una fecha que sea hoy o en el futuro cercano."
-                        mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
-                }
-
-
-
+            const daysArray = daysAvaible.split(',').map(Number);
+            console.log("daysArray :",  daysArray); // [0, 1, 2, 3, 4]
+            const timeArray = rangeTimeAvailable.split(',').map(time => {
+                return Number(time.replace(':', '')); // quita ":" y convierte a número
             });
-        }    
+            console.log("timeArray :", timeArray); // [1400, 1800]
+            //console.log("daysAvaible :", daysAvaible ); //0,1,2,3,4 quiero que eso sea un array con estos datos de tiipo number
+            //console.log("rangeTimeAvailable :", rangeTimeAvailable ); //14:00,18:00 esto tambien quiero que sea un array y tenga estos datos dentro de tipo number
+        
+            const dateInput = document.getElementById('myDateInput');
+            const timeInput = document.getElementById('myTimeSelect');
+            const btnAppointment = document.getElementById('btnAppointment');
+            const btnAppointmentSpinner = document.getElementById('btnAppointmentSpinner');
+            const appointmentSpan = document.getElementById('appointmentSpan');//este es un sopan donde muestra la fecha y hora que se ha elegido
 
-        if (btnAppointment){
-            btnAppointment.addEventListener('click', ()=>{
+            const range1 = timeArray[0];
+            const range2 = timeArray[1];  
+            let dayApprobe = false;
+            let dateValue, timeValue;
+        
+            if (dateInput){
+                dateInput.addEventListener('change', (event) => {
+                    console.log("he seleccionado a un dia", event)
+                    const selectedDate = new Date(event.target.value);
+                    const dayOfWeek = selectedDate.getDay(); // 0 es (domingo) y 6 es (sábado)
+                    console.log("selectedDate -->", selectedDate);
+                    
+                    console.log("dayOfWeek -->", dayOfWeek); 
+                    const today = new Date().getUTCDate(); //este es el dia de hoy
+                    const selectedDay =  selectedDate.getUTCDate(); //este es el dia seleccionado
+                    
+                    console.log("today :", today);
+
+                    console.log("today -- selectedDate", today, selectedDay); 
+                    if ( today <= selectedDay ){
+
+                        const resultInclude = daysArray.includes(dayOfWeek)
+                        console.log("resultInclude -->", resultInclude);
+                        
+                        if (resultInclude === true ){
+                            console.log("dia aprobado", dateInput.value )
+                            dateValue = dateInput.value;
+                            
+                        } else {
+                            console.log("dia no aprobado")
+                            event.target.value = ''; 
+                            const message = "Este dia no esta libre para crear la cita."
+                            mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                        } 
+
+                    } else {
+
+                            console.log("Este dia ya ha pasado")
+                            event.target.value = ''; 
+                            const message = "¡Fecha inválida! No puedes elegir un día que ya pasó. Asegúrate de seleccionar una fecha que sea hoy o en el futuro cercano."
+                            mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
+                    }
+
+
+
+                });
+            }    
+
+            if (btnAppointment){
+                btnAppointment.addEventListener('click', ()=>{
+                    
+                    const time = timeInput.value;
+                    const date = dateInput.value;
+                    let existAppointment = false;
+
+                    if (time !== "no_time" && date !=="") {
+                        console.log("hay que revisar si este appointment existe ya:", searchNegotiations);
+
+                        const searchNegotiationsFormat = searchNegotiations.map(negotiation => {
+                            const parts = negotiation.appointment.split('-');
+                            const day = parts[0];
+                            const month = parts[1];
+                            const yearAndTime = parts[2].split(' ');
+                            const year = yearAndTime[0];
+                            const time = yearAndTime[1];
+
+                            // Usamos padStart() para asegurar que el día y el mes tengan dos dígitos
+                            const paddedDay = day.padStart(2, '0');
+                            const paddedMonth = month.padStart(2, '0');
+
+                            // Creamos la nueva cadena con el formato deseado dd-mm-yyyy h:m
+                            return `${paddedDay}-${paddedMonth}-${year} ${time}`;
+                        });
+
+                        console.log(searchNegotiationsFormat);
                 
-                const time = timeInput.value;
-                const date = dateInput.value;
-                let existAppointment = false;
+                        btnAppointmentSpinner.classList.remove('close');
+                        btnAppointment.classList.add('close');
 
-                if (time !== "no_time" && date !=="") {
-                    console.log("hay que revisar si este appointment existe ya:", searchNegotiations);
+                        const id = idNegotiation.value; //esto es el iD del documento negotiation
+                        const timeValue = timeInput.value; //este es el valor del selector de las horas disponibles
+                        console.log("dateValue :", dateValue); //dateValue : 2025-07-02 este formato debemos acomodar para hacer la comparacion
+                        console.log("timeValue :", timeValue);
+                        const arrayDate = dateValue.split("-");
+                        const diaF = arrayDate[2]; const mesF = arrayDate[1]; const anioF = arrayDate[0]; 
+                        const dateFormat = `${diaF}-${mesF}-${anioF}`;
+                        const newAppointment = `${dateFormat} ${timeValue}`;
+                        console.log("newAppointment:", newAppointment);
 
-                    const searchNegotiationsFormat = searchNegotiations.map(negotiation => {
-                        const parts = negotiation.appointment.split('-');
-                        const day = parts[0];
-                        const month = parts[1];
-                        const yearAndTime = parts[2].split(' ');
-                        const year = yearAndTime[0];
-                        const time = yearAndTime[1];
+                        searchNegotiationsFormat.forEach((ele)=>{
 
-                        // Usamos padStart() para asegurar que el día y el mes tengan dos dígitos
-                        const paddedDay = day.padStart(2, '0');
-                        const paddedMonth = month.padStart(2, '0');
+                            const appointment = ele;
+                            console.log(`${appointment} === ${newAppointment}`)
+                            if (appointment === newAppointment){
+                                existAppointment = true;
+                            }
 
-                        // Creamos la nueva cadena con el formato deseado dd-mm-yyyy h:m
-                        return `${paddedDay}-${paddedMonth}-${year} ${time}`;
-                    });
+                        });
 
-                    console.log(searchNegotiationsFormat);
-            
-                    btnAppointmentSpinner.classList.remove('close');
-                    btnAppointment.classList.add('close');
+                        if (existAppointment === false){
 
-                    const id = idNegotiation.value; //esto es el iD del documento negotiation
-                    const timeValue = timeInput.value; //este es el valor del selector de las horas disponibles
-                    console.log("dateValue :", dateValue); //dateValue : 2025-07-02 este formato debemos acomodar para hacer la comparacion
-                    console.log("timeValue :", timeValue);
-                    const arrayDate = dateValue.split("-");
-                    const diaF = arrayDate[2]; const mesF = arrayDate[1]; const anioF = arrayDate[0]; 
-                    const dateFormat = `${diaF}-${mesF}-${anioF}`;
-                    const newAppointment = `${dateFormat} ${timeValue}`;
-                    console.log("newAppointment:", newAppointment);
+                            const formData = new FormData()
+                                formData.append('id', id);
+                                formData.append('date', dateValue);
+                                formData.append('time', timeValue);
 
-                    searchNegotiationsFormat.forEach((ele)=>{
+                            fetch('/negotiation-appointment/', {
+                                method: "POST",
+                                body: formData
+                            })
+                                .then(response =>response.json() )
+                                .then( jsonx => 
+                                    {
+                                        console.log(jsonx) 
+                                        const code = jsonx.code;
+                                        const message = jsonx.message;
+                                        const appointment =jsonx.appointment;
+                    
 
-                        const appointment = ele;
-                        console.log(`${appointment} === ${newAppointment}`)
-                        if (appointment === newAppointment){
-                            existAppointment = true;
+                                        if (code == "ok"){
+
+                                            setTimeout(() => {
+                                                mostrarToast( message, 'right', 'success', '¡Hecho!', true );
+                                                appointmentSpan.innerText = appointment;
+                                                btnAppointmentSpinner.classList.add('close');
+                                                btnAppointment.classList.remove('close');
+                                            }, 2000);
+
+
+                                        } else {
+                                            setTimeout(() => {
+                                                mostrarToast( message, 'right', 'danger', '¡Upps!', true );
+                                                btnAppointmentSpinner.classList.add('close');
+                                                btnAppointment.classList.remove('close');
+                                            }, 2000);
+                                            
+                                        }
+                                    
+                                    })
+                                .catch( err => console.log(err));
+
+                        } else {
+
+                            const message = "Fecha ocupada, por favor elija otra.";
+                            btnAppointmentSpinner.classList.add('close');
+                            btnAppointment.classList.remove('close');
+                            mostrarToast( message, 'right', 'danger', '¡Upps!', true );
+
                         }
 
-                    });
-
-                    if (existAppointment === false){
-
-                        const formData = new FormData()
-                            formData.append('id', id);
-                            formData.append('date', dateValue);
-                            formData.append('time', timeValue);
-
-                        fetch('/negotiation-appointment/', {
-                            method: "POST",
-                            body: formData
-                        })
-                            .then(response =>response.json() )
-                            .then( jsonx => 
-                                {
-                                    console.log(jsonx) 
-                                    const code = jsonx.code;
-                                    const message = jsonx.message;
-                                    const appointment =jsonx.appointment;
-                   
-
-                                    if (code == "ok"){
-
-                                        setTimeout(() => {
-                                            mostrarToast( message, 'right', 'success', '¡Hecho!', true );
-                                            appointmentSpan.innerText = appointment;
-                                            btnAppointmentSpinner.classList.add('close');
-                                            btnAppointment.classList.remove('close');
-                                        }, 2000);
-
-
-                                    } else {
-                                        setTimeout(() => {
-                                            mostrarToast( message, 'right', 'danger', '¡Upps!', true );
-                                            btnAppointmentSpinner.classList.add('close');
-                                            btnAppointment.classList.remove('close');
-                                        }, 2000);
-                                        
-                                    }
-                                
-                                })
-                            .catch( err => console.log(err));
-
                     } else {
 
-                        const message = "Fecha ocupada, por favor elija otra.";
-                        btnAppointmentSpinner.classList.add('close');
-                        btnAppointment.classList.remove('close');
-                        mostrarToast( message, 'right', 'danger', '¡Upps!', true );
+                        message = "Debe elegir un dia y una hora que este disponible."
+                        mostrarToast( message , 'right', 'danger', '¡Upps!', false );
+                        //console.log("no tiene ni date ni time");
+                        //console.log("time :", time);
+                        //console.log("date :", date);
 
                     }
 
-                } else {
+                });
+            }    
 
-                    message = "Debe elegir un dia y una hora que este disponible."
-                    mostrarToast( message , 'right', 'danger', '¡Upps!', false );
-                    //console.log("no tiene ni date ni time");
-                    //console.log("time :", time);
-                    //console.log("date :", date);
-
-                }
-
-            });
         }    
 
     </script>
@@ -1386,7 +1389,7 @@
         written.addEventListener('input', () => {
             const fullScreenValue = fullScreen.value;
             const writtenValue = written.value;
-            console.log("esto es written :", writtenValue.length);
+            //console.log("esto es written :", writtenValue.length);
             if (writtenValue.length !== 0){
                 
                 btnSenMessage.classList.remove('close'); // Aparece el boton de enviar;
