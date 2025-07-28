@@ -5,6 +5,10 @@
   <%- include('../partials/head.ejs') %>
 
     <meta name="mobile-web-app-capable" content="yes"> <!-- Esta etiqueta se utiliza para indicar al navegador que tu página web puede ser instalada como aplicación --manifest.json -->
+        
+    <link rel="manifest" href="/manifest.json"> <!-- esto es el manifest el encargado de colocar el icono de acceso inicial -->
+
+
     <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
     <script src="/toastr/toastr.min.js"></script>
     
@@ -1148,36 +1152,6 @@
 
 </script>  
 
-<script>
-  //este es el tiempo que tarda en pasar cada diapositiva.
-  /* <div id="carouselNewsDay" class="carousel carousel-fade slide" data-bs-ride="carousel" style="height: auto;"> data-bs-ride este atributo lo hemos quitado para que no interfiera en el movimiento */
-  document.addEventListener("DOMContentLoaded", function(){
-    
-    //tiempo del carousel carouselNewsDay
-    let carouselNewsDay = document.getElementById('carouselNewsDay');
-    
-
-    function nextSlide(carousel, interval){
-      let slides = carousel.querySelectorAll('.carousel-item');
-      //console.log("slides (diapositiva) --->", slides)
-      let currentIndex = 0;
-      
-      setInterval(()=>{
-        //console.log("moviendo el carouselNewsDay");
-        
-        slides[currentIndex].classList.remove('active');
-        currentIndex = (currentIndex + 1) % slides.length;
-        //console.log("currentIndex --->", currentIndex)
-        slides[currentIndex].classList.add('active');
-      }, interval);
-    }
-
-    //configuracion de tiempo 
-    nextSlide(carouselNewsDay, 30000);
-
-});
-
-</script>
 
 <script>
 
