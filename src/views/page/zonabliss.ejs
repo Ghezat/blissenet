@@ -59,6 +59,13 @@
         <!-- a esta seccion solo puede entrar un usuario logeado con perfil y debe pasar una comprobacion en el backen de resto no podra entrar -->
         <% if (user) { %>
 
+            <% const seeMarket = user.seeMarket %>
+            <% const idUser = user._id %>
+            <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+            <input type="hidden" value="<%= idUser %>" id= "idUser">
+            <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+
             <% if (searchProfile) {  %> 
                 <% const bGColorText = searchProfile.bGColorText %> 
                 <% const bGColorTopbar = searchProfile.bGColorTopbar %> 
@@ -1762,97 +1769,98 @@
     const btnDisabledBannerSubiendo = document.querySelector('.btnDisabledBannerSubiendo');
     const contentResponse = document.querySelector('.contentResponse');
 
+    if (galleryBtnSubmit){
+        galleryBtnSubmit.addEventListener('click', () => {
 
-    galleryBtnSubmit.addEventListener('click', () => {
+            let file = galleryFileBanner.files[0]; // Asegúrate de seleccionar un solo archivo
+            console.log("file ->", file)//undefined   sera el valor sino tiene nada
+            if (file !== undefined){
 
-        let file = galleryFileBanner.files[0]; // Asegúrate de seleccionar un solo archivo
-        console.log("file ->", file)//undefined   sera el valor sino tiene nada
-        if (file !== undefined){
+                galleryBtnSubmit.classList.add('close');
+                btnDisabledBannerSubiendo.classList.remove('close');
 
-            galleryBtnSubmit.classList.add('close');
-            btnDisabledBannerSubiendo.classList.remove('close');
+                const datos = new FormData();
+                //            name :  valor
+                datos.append('fileImg', file);
 
-            const datos = new FormData();
-            //            name :  valor
-            datos.append('fileImg', file);
-
-            //console.log("datos -->", datos);
-            for (let [key, value] of datos.entries()) {
-                console.log(key, value);
-            }
-    
-     
-            fetch('/zonabliss/upload/bannerCarousel', {
-                method: "POST",
-                body: datos // Aquí envías el FormData directamente
-            })
-            .then(response => response.json())
-            .then(jsonx => { 
-                
-
-                console.log(jsonx)
-                const code = jsonx.code;
-                const response = jsonx.response;
-                
-                console.log("code -->", code);
-                console.log("response -->", response);
-                //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
-
-                contentResponse.innerHTML = "";
-
-                if (code === 0 ){
-
-                    contentResponse.innerHTML = `<div class="alert alert-danger">
-                                                    <i class="bi bi-x-circle-fill me-1"></i> ${response}
-                                                </div>`
-
-
-                    setTimeout(() => {
-                        contentResponse.innerHTML = "";
-                        addObjectImg.innerHTML = "";
-                        galleryBtnSubmit.classList.remove('close');
-                        btnDisabledBannerSubiendo.classList.add('close');
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-
-                } else if (code === 1 ){
-
-                    contentResponse.innerHTML = ` <div class="alert alert-success">
-                                                    <i class="bi bi-check-circle-fill me-1"></i> ${response}
-                                                </div>`
-                                                
-
-                    setTimeout(() => {
-                        contentResponse.innerHTML = "";
-                        addObjectImg.innerHTML = "";
-                        location.reload(); //refresca la pagina
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-                } else {
-                    contentResponse.innerHTML = ` <div class="alert alert-danger">
-                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
-                                                </div>`
-
-
-                    setTimeout(() => {
-                        contentResponse.innerHTML = "";
-                        addObjectImg.innerHTML = "";
-                        galleryBtnSubmit.classList.remove('close');
-                        btnDisabledBannerSubiendo.classList.add('close');
-                    }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
-
-
-                }           
-
-
-
-
-            })
-            .catch(err => console.log(err));
-
+                //console.log("datos -->", datos);
+                for (let [key, value] of datos.entries()) {
+                    console.log(key, value);
+                }
         
-        }   
-    })    
+        
+                fetch('/zonabliss/upload/bannerCarousel', {
+                    method: "POST",
+                    body: datos // Aquí envías el FormData directamente
+                })
+                .then(response => response.json())
+                .then(jsonx => { 
+                    
+
+                    console.log(jsonx)
+                    const code = jsonx.code;
+                    const response = jsonx.response;
+                    
+                    console.log("code -->", code);
+                    console.log("response -->", response);
+                    //code 1 --> guardado; code 0 --> No guardado por llegar al tope de 6 banner; code -1 --> No guardado por algun error;  
+
+                    contentResponse.innerHTML = "";
+
+                    if (code === 0 ){
+
+                        contentResponse.innerHTML = `<div class="alert alert-danger">
+                                                        <i class="bi bi-x-circle-fill me-1"></i> ${response}
+                                                    </div>`
+
+
+                        setTimeout(() => {
+                            contentResponse.innerHTML = "";
+                            addObjectImg.innerHTML = "";
+                            galleryBtnSubmit.classList.remove('close');
+                            btnDisabledBannerSubiendo.classList.add('close');
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                    } else if (code === 1 ){
+
+                        contentResponse.innerHTML = ` <div class="alert alert-success">
+                                                        <i class="bi bi-check-circle-fill me-1"></i> ${response}
+                                                    </div>`
+                                                    
+
+                        setTimeout(() => {
+                            contentResponse.innerHTML = "";
+                            addObjectImg.innerHTML = "";
+                            location.reload(); //refresca la pagina
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+                    } else {
+                        contentResponse.innerHTML = ` <div class="alert alert-danger">
+                                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> ${response}
+                                                    </div>`
+
+
+                        setTimeout(() => {
+                            contentResponse.innerHTML = "";
+                            addObjectImg.innerHTML = "";
+                            galleryBtnSubmit.classList.remove('close');
+                            btnDisabledBannerSubiendo.classList.add('close');
+                        }, 3000); //esto seolo ocurre cuando se ha guardado de resto solo ofrece el mensaje nada mas                           
+
+
+                    }           
+
+
+
+
+                })
+                .catch(err => console.log(err));
+
+            
+            }   
+        })
+    }        
 
 </script>
 

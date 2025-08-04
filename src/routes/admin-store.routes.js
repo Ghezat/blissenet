@@ -51,6 +51,7 @@ routes.get('/admin-store', async(req, res)=>{
         console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
   
         let searchProfile;
+        let sumCount = 0;
     
         if (user){
             //console.log("Esto es user._id ------>", user._id );
@@ -63,7 +64,29 @@ routes.get('/admin-store', async(req, res)=>{
             console.log("raffle ver --->", Raffle);
             //si tiene entonces lo incluyo en los objetos a enviar al front para anexarlo en el contenedor derecho alargado donde esta el Score y el trust 
     
-            res.render('page/admin-store', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle });
+            //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
+            const countAir = await modelAirplane.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAir; 
+            const countArt = await modelArtes.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countArt; 
+            const countIte = await modelItems.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countIte; 
+            const countAut = await modelAutomotive.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAut; 
+            const countRea = await modelRealstate.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRea; 
+            const countNau = await modelNautical.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countNau; 
+            const countSer = await modelService.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countSer;
+            const countAuc = await modelAuction.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAuc;
+            const countRaf = await modelRaffle.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRaf;
+                            
+                         
+            console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+            res.render('page/admin-store', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
         }   
 
         

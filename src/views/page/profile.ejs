@@ -1705,44 +1705,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- esto es zonaBliss -->
-                                        <div class="card mt-2" style="background-image: url('/img/bannerZonaBliss2.png'); background-size: cover; background-position: center;">
-                                            <div class="card-body">
-
-                                                <div class="row shadow px-2 py-4 m-2 rounded border"> 
-                                                
-                                                                
-                                                               
-                                                    <% if (user) {  %>
-                                                    <div class="col-lg-9 col-md-9 col-sm-11 d-flex justify-align-center justify-content-center">
-                                                        <span class="m-2 p-3 rounded-3 text-light cursor-pointer" style="background-color: rgba(0, 0, 0, 0.9);" data-bs-toggle="modal" data-bs-target="#staticZonaBliss">  ¡Es hora de darle un poco más de estilo a tu Tienda! <i class="bi bi-info-circle mx-1"></i> </span>
-                                                    </div> 
-                                                    <div class="col-lg-3 col-md-3 col-sm-11">       
-                                                        <div class="form-group d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
-
-                                                            <% if(sumCount >= 1) { %>
-                                                                
-                                                                <a href="/zonabliss/<%= user._id %>" class="btn btn-dark text-light text-decoration-none rounded-3 w-100 d-block">
-                                                                    <i class="bi bi-brush me-1"></i> Ir a ZonaBliss
-                                                                </a>
-                        
-                                                            <% } else { %>
-                                                                
-                                                                <button class="btn btn-dark text-light text-decoration-none rounded-3 w-100 d-block" disabled>
-                                                                    <i class="bi bi-brush me-1"></i> Ir a ZonaBliss
-                                                                </button>
-
-                                                            <% }; %>    
-
-                                                        </div>
-                                                    </div>     
-                                                    <% } %>                          
-                                                        
-                                                     
-                                                </div>
-
-                                            </div>
-                                        </div>
 
                                         <div class="card mt-2">
                                             <% searchProfile.forEach( (ele)=> { %>
