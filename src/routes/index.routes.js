@@ -2584,6 +2584,112 @@ routes.get('/tools', async(req, res)=>{
                      
 });
 
+//---------------------------ZonaBliss--------------------------------
+
+routes.get('/zonabliss/:user_id', async(req, res)=>{
+   
+    try {
+        
+        console.log("*********zonabliss******** -->");
+        const user = req.session.user;
+        const userID = user._id;
+        const boxOffert = [];
+        console.log("este es el usuario propietario que esta logeado -->", userID);
+
+        //ahora vamos a obtener el user_id del parametro para hacer una comparacion y de esta forma asegurar que solo el propietario esta accediendo a esta parte.
+        const userIDParam = req.params.user_id; 
+        console.log("este es el usuario propietario que esta logeado -->", userIDParam);
+
+        //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
+        //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
+
+        if (userID === userIDParam){
+            //comprobamos que el usuario logeado es el mismo dueño de la tienda -POR SEGURIDAD-
+
+            const countMessages = req.session.countMessages
+            console.log("esto es countMessages -->", countMessages);
+            //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+            //aqui obtengo la cantidad de negotiationsBuySell
+            const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+            console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+    
+            let searchProfile;
+        
+            if (user){
+                //console.log("Esto es user._id ------>", user._id );
+                searchProfile = await modelProfile.findOne({ indexed : user._id });
+                console.log("searchProfile -->", searchProfile);
+                const searchBanner = searchProfile.bannerPerfil;
+                console.log("searchBanner --->", searchBanner);
+
+
+                async function searchOffert(){
+                    //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
+                    const respItems = await modelItems.find({ user_id: userID, offer: true });
+                    if (respItems.length > 0) {
+                        boxOffert.push(...respItems); // Usar el spread operator para añadir los elementos al array
+                    }
+                        
+                    const respAerop = await modelAirplane.find({user_id : userID, offer : true });
+                    if (respAerop.length > 0){
+                        boxOffert.push(...respAerop);
+                    }
+
+                    const respAutom = await modelAutomotive.find({user_id : userID, offer : true });
+                    if (respAutom.length > 0){
+                        boxOffert.push(...respAutom);
+                    }
+
+                    const respArtes = await modelArtes.find({user_id : userID, offer : true });
+                    if (respArtes.length > 0){
+                        boxOffert.push(...respArtes);
+                    }
+
+                    const respReals = await modelRealstate.find({user_id : userID, offer : true });
+                    if (respReals.length > 0){
+                        boxOffert.push(...respReals);
+                    }
+
+                    const respServi = await modelService.find({user_id : userID, offer : true });
+                    if (respServi.length > 0){
+                        boxOffert.push(...respServi);
+                    }
+
+                    const respNauti = await modelNautical.find({user_id : userID, offer : true });
+                    if (respNauti.length > 0){
+                        boxOffert.push(...respNauti);
+                    }
+
+                    const respAucti = await modelAuction.find({user_id : userID, offer : true });
+                    if (respAucti.length > 0){
+                        boxOffert.push(...respAucti);
+                    }
+
+                }
+
+                searchOffert()
+                    .then(()=>{
+                        console.log("Aqui lo recaudado de las ofertas");
+                        console.log("boxOffert --->",boxOffert);
+                        res.render('page/zonabliss', { user, searchProfile, searchBanner,  countMessages, countNegotiationsBuySell, boxOffert });
+                    })
+                    .catch((err)=>{
+                        console.log("Ha ocurrido un error en la function searchOffert()")
+                    })
+                
+                
+            }   
+
+        } 
+        
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de /zonaBliss/:user_id", error);
+    }
+                     
+    
+});
+
 /* recibir el backgroundColor del Text desde el profile al backend */
 routes.post('/zonabliss/bGColor', async(req, res)=>{
 
