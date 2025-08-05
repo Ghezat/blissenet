@@ -1340,31 +1340,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>                             
-
-                            <!-- Modal Buscador en Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
-                            <div class="modal fade" id="staticCheckSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
-                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelH2">Buscador en tu Tienda</h5>
-                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p><span class="fw-bold text-primary">Agrega un buscador a tu Tienda </span>
-                                                "¡Presentamos nuestro nuevo buscador! Provee a tus clientes de esta poderosa herramienta de busqueda para que puedan conseguir
-                                                 rapidamente lo que buscan."
-                                            </p>
-                                            <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>11 Anuncios</b>  </span> </p>
-                                        </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
-                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-                         
+                            </div>                                                     
                             
                             <!-- Modal Gestor ADS --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheCarBuy" -->
                             <div class="modal fade" id="staticSuicheGestorADS" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
@@ -1642,13 +1618,13 @@
                                                                         </div>  
                                                                         
                             
-                                                                        <button id="btnSubmitZonaBliss" class="btn btn-secondary btn-sm my-1">Aceptar Cambios</button>
+                                                                        <button id="btnSubmitZonaBliss" class="btn btn-secondary btn my-1">Aceptar Cambios</button>
                                                                     </form>
                                                                     
                                                                     <div class="containerAD-QR my-2 rounded" style="width: 100%;">
                                                                         <div class="containerADQR my-0 form-group">
                                                                             Descarga tu Anuncio de tienda virtual y colocalo en un lugar visible. 
-                                                                            <button class="btn btn-secondary btn-sm my-1 form-control" id="adQR"> <i class="bi bi-card-heading mx-2" style="font-size: larger;"></i> Ver Tarjeta  </button>                                                                      
+                                                                            <button class="btn btn-secondary btn my-1 form-control" id="adQR"> <i class="bi bi-card-heading mx-2" style="font-size: larger;"></i> Ver Tarjeta  </button>                                                                      
                                                                             <input type="hidden" value="<%= user.username %>" id="urlStore">
                                                                         </div>
                                                                     </div>
@@ -1684,16 +1660,11 @@
                                                                 
                                                                
                                                                 <% if (user) {  %>
-                                                                <div class="col-lg-9 col-md-9 col-sm-11 d-flex justify-align-center justify-content-center">
+
+                                                                <div class="col-lg-10 col-md-10 col-sm-11 d-flex justify-align-center justify-content-start">
                                                                     <span class="m-2">  <img src="/img/cheched.png" style="width : 45px; height: 45px;"> ¡ Perfil creado exitosamente, puedes editar cuando lo necesites ! </span>
                                                                 </div> 
-                                                                <div class="col-lg-3 col-md-3 col-sm-11">       
-                                                                    <div class="form-group d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
-                                                                        <a href="/account/<%= user.username %>" class="btn btn-primary text-decoration-none rounded-3 w-100 d-block">
-                                                                            <i class="bi bi-shop-window me-1"></i> Ir a mi Tienda
-                                                                        </a>
-                                                                    </div>
-                                                                </div>     
+                                                            
                                                                 <% } %>                          
                                                                     
                                                                  
@@ -1708,54 +1679,8 @@
 
                                         <div class="card mt-2">
                                             <% searchProfile.forEach( (ele)=> { %>
-                                                <div class="card-header">
-                                                    Motor de busqueda para tienda
-                                                </div>
+                                             
                                                 <div class="card-body">
-
-                                                    <div class="container-fluid p-0 mb-3">
-                                                        <div class="alert alert-dark" style="border-left: 5px solid #131313;">
-                                                            <p class="m-0">
-                                                                <span class="ms-2"> <i class="bi bi-exclamation-triangle-fill"></i> </span> 
-                                                                Importante: "¡Hola! Los motores de búsqueda para tiendas son herramientas poderosas que permiten ubicar anuncios por título y aproximación, presentando resultados de manera inmediata. Utiliza esta herramienta para ofrecer una experiencia excepcional a tus clientes. Requisito para utilizarla: tener al menos 11 anuncios."   
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <span class="alert alert-dark rounded-2 p-2" style="border-left: 5px solid #131313;">
-                                                        <span>Anuncios Existentes :</span>
-                                                        <% if(sumCount) { %>  <span class="px-2">  <b><%= sumCount %></b>  </span>  <% } else { %> <span class="px-2"><%= sumCount %> </span> <% } %>
-                                                    </span>
-                                                    
-                                                    <div class="containerTools m-2 p-1 border-bottom ">
-
-
-                                                        <div class="containerSearch my-2 d-flex justify-content-between py-1" style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
-                                                            <div class="contentSoonSearch d-flex">
-                                                            <% if(sumCount >= 11) { %>    
-                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
-                                                                <div class="form-check form-switch">
-                                                                                                                    
-                                                                    <% if (ele.searchFilter === 'on' ){%>  
-                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> <i class="bi bi-unlock ms-1"></i>
-                                                                    <% } else { %>
-                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> <i class="bi bi-unlock ms-1"></i>
-                                                                    <% }; %>
-                                                                    
-                                                                </div>
-                                                            <% } else { %>
-                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
-                                                                <div class="form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
-                                                                </div>
-                                                            <% }; %>
-                                                            </div> 
-                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
-                                                        </div>
-
-
-                                                    </div>
 
                                                     <div class="containerIrATienda d-flex justify-content-end">
 
@@ -1773,6 +1698,7 @@
                                                         </div>
                                                     
                                                     </div>
+
                                                 </div>
                                             <% }) %>
                                         </div>

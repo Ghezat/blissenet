@@ -322,7 +322,6 @@ routes.post('/myaccount/segment-edit', async (req, res)=>{
     // completado). Si alguna de las promesas falla, `Promise.all` rechaza la promesa y lanza un error que puedes manejar en tu bloque `catch`.
 });
 
-
 routes.post('/myaccount/segment-delete', async (req, res)=>{
     const user = req.session.user;    
     console.log("llegando un post a /myaccount/segment-delete");
@@ -404,7 +403,6 @@ routes.post('/myaccount/segment-delete', async (req, res)=>{
     // se detenga hasta que todas las promesas dentro de `Promise.all` se hayan resuelto (es decir, que todas las actualizaciones se hayan
     // completado). Si alguna de las promesas falla, `Promise.all` rechaza la promesa y lanza un error que puedes manejar en tu bloque `catch`.
 });
-
 
 routes.post('/myaccount/segment-editGroup', async (req, res)=>{
     console.log("--------------segment-editGroup--------------");
@@ -543,7 +541,6 @@ routes.post('/myaccount/segment-changeGroup', async (req, res)=>{
 
 });
 
-
 routes.get('/myaccount/transportAgent', async (req, res)=>{
     try {
         
@@ -577,8 +574,6 @@ routes.get('/myaccount/transportAgent', async (req, res)=>{
     }
     
 });
-
-
 
 routes.get('/myaccount/bankData', async (req, res)=>{
     try {
@@ -772,7 +767,6 @@ routes.post('/myaccount/bankData/editMethod', async(req, res)=>{
 
 
 });
-
 
 
 routes.post('/myaccount/uploadDataTransport', async (req, res)=>{

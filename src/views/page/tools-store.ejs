@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+        <title>Blissenet Admin</title>
+
+</head>
+<style>
+
+
+
+@media screen and (min-width: 290px) and (max-width: 499px ){
+
+ 
+}
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    <main class="themaTextLight" style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+
+        <% if (user) { %>
+
+            <% const seeMarket = user.seeMarket %>
+            <% const idUser = user._id %>
+            <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+            <input type="hidden" value="<%= idUser %>" id= "idUser">
+            <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+            <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Herramientas </b>  </span>
+            </div>    
+            
+            <div class="container-fluid p-0">
+                            
+                <div class="row m-0 ">
+                    <!-- style="background-color: #e9ecef;" -->
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-12 pt-3  px-1">
+                                        
+                        <% if (searchProfile) {  %>
+                            <div class="card" style="background-color:  rgba(217, 223, 223, 0.2);">
+                                <div class="card-body">
+
+                                    <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="search"> <div> <img src="/img/icon_search.png" alt="" style="width: 30px; height: 30px;"> <span class="ms-2">Motor de Busqueda</span> </div>   <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="cardBuy"> <div> <img src="/img/iconCardBuy.png" alt="" style="width: 30px; height: 30px;"> <span class="ms-2">Carrito de Compra</span> </div>   <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="gestorADS"> <div><img src="/img/icon_Bank1.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Datos Bancarios</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
+                                    </div>
+                        
+                                </div>
+                            </div>
+                    
+                        <% } else { %>
+                            
+                        <% }; %>
+    
+
+                        
+                        <% const username = user.username %>
+                        <% const indexed = user._id %> <!-- esto es igual al id user -->
+                            
+                    </div>
+
+                        <!-- aqui estaran todos los modales informativos -->
+                                        
+                        <!-- Modal Agenda CRM --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticCRM" -->
+                        <div class="modal fade" id="staticCRM" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH4">Agenda CRM</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Agrega la Agenda CRM</span>
+                                            "¡Presentamos nuestra Agenda CRM! Organiza y gestiona tus contactos de manera eficiente con nuestro <b>Customer Relationship Management o Gestión de Relación con los Clientes</b>. Mantén un seguimiento de tus interacciones y mejora tus relaciones con los clientes, todo en un solo lugar."
+                                        </p>
+                                        <p> Requerimentos : <span class="alert-info py-1 px-2 rounded-2"> <b>1 Anuncio</b>  </span> </p>
+                                        <p class="bg-dark text-info rounded-1 p-2"> <i class="bi bi-hourglass-split me-2"></i> Próximamente estará disponible. </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Gerencia Estado --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticEstado" -->
+                        <div class="modal fade" id="staticEstado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH4" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH4">Gerencia de Análisis.</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Estados de Anuncios</span>
+                                            "Esta sección les permite activar o desactivar anuncios según su necesidad. También pueden ocultar un anuncio de la tienda con un botón invisible, aunque seguirá visible en los mercados. La idea es mantener una tienda objetiva si vendes perfumes y quieres por necesidad anunciar un telefono usado puedes hacerlo sin que aparezca en tu tienda."
+                                        </p>
+                                        <div class="d-flex justify-content-center">
+                                            <img src="/img/icon_Estado.png" alt="" style="width: 70px; height: 70px;">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-12 col-12 pt-3 px-1">
+                            
+                    
+                        <% if (searchProfile) {  %> <!-- cuenta con perfil -->
+                            
+                            <div class="content_search">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+
+                                    <div class="cardSegmen p-3" style="width: 100%;">
+
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/icon_search.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>Motor de Busqueda</b>  </h4>
+                                                        <p> <b> ¡Motor de Busqueda para Tienda! </b> "Mejora la experiencia de tus clientes y haz que encuentren lo que buscan de manera más rápida y sencilla, con el motor de Busqueda" <span class="rounded-3 border px-2 py-0"> <i>Requiere  + 10 Anuncio </i> </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div>
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            <% if (sumCount > 10){ %>
+                                                <a href="/myaccount/search" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                            <% } else { %>
+                                                <a href="#" class="form-control btn btn-dark rounded-pill" > No puedes entrar</a>
+                                            <% }; %> 
+                                        </div>
+
+                                    </div>                        
+
+                                </div>
+
+                            </div>
+
+                            <div class="content_cardBuy close">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+
+                                    <div class="cardZonaBliss p-3" style="width: 100%;">
+
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/iconCardBuy.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>Carrito de Compra</b>  </h4>
+                                                        <p> <b> ¡Carrito de Compra de Tienda! </b> Puedes proveer esta poderosa herramienta para que tus cliente puedan comprar varios articulos en un solo pedido.  <span class="rounded-3 border px-2 py-0"> <i>Requiere + 1 Anuncio </i> </span>  </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div> 
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            <% if (sumCount > 1){ %>
+                                                <a href="#" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                            <% } else { %>
+                                                <a href="#" class="form-control btn btn-dark rounded-pill" > No puedes entrar</a>
+                                            <% }; %>        
+                                        </div>
+
+                                    </div>                        
+
+                                </div>
+
+                            </div> 
+
+                            <div class="content_gestorADS close">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+
+                                    <div class="cardBank p-3" style="width: 100%;">
+
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/icon_Bank1.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>Datos Bancarios </b>  </h4>
+                                                        <p> <b> ¡Registra tus Datos Bancarios y recibe tus pagos! </b> Registra tus Datos Bancarios y empieza a recibir tus pagos de manera fácil y rápida. Antes de realizar ventas, asegúrate de ofrecer a tus clientes todas las formas de pago que tienes disponibles. ¡Haz que comprar sea una experiencia sencilla para ellos!. </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div>
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            <a href="/myaccount/bankData" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                        </div>
+
+                                    </div>  
+
+                                </div>
+                                
+                            </div>     
+
+
+                            <div class="card mt-1" style="background-color:rgba(217, 223, 223, 0.2);">
+                                <div class="card-body d-flex justify-content-center ">
+                                   <a href="/" class="text-decoration-none" style="color: inherit">  <span id="logoBlissenet_com"> </span> </a> 
+                                </div>
+                            </div>
+                            
+                        <% } else { %> <!-- cuenta sin perfil -->
+
+                        <% } %>                                                        
+
+                                        
+                    </div>
+
+                </div>    
+
+            </div>
+
+         <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+         <% }; %>
+
+    </main>
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+       
+
+</body>
+
+
+<script>
+    const search = document.getElementById('search');
+    const cardBuy = document.getElementById('cardBuy');
+    const gestorADS = document.getElementById('gestorADS');
+
+    const content_search = document.querySelector('.content_search');
+    const content_cardBuy = document.querySelector('.content_cardBuy');
+    const content_gestorADS = document.querySelector('.content_gestorADS');
+
+    search.addEventListener('click', ()=>{
+        content_search.classList.remove('close');
+        content_cardBuy.classList.add('close');
+        content_gestorADS.classList.add('close');
+    });
+
+    cardBuy.addEventListener('click', ()=>{
+        content_search.classList.add('close');
+        content_cardBuy.classList.remove('close');
+        content_gestorADS.classList.add('close');
+    });
+
+    gestorADS.addEventListener('click', ()=>{
+        content_search.classList.add('close');
+        content_cardBuy.classList.add('close');
+        content_gestorADS.classList.remove('close');
+    });
+
+    
+</script>
