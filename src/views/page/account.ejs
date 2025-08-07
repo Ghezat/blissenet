@@ -446,6 +446,7 @@
         <% const survey = infobliss.survey %>
         <% const map = infobliss.map %>
         <% const geolocation = storeProfile.geolocation %>
+        <% const shoppingCart = storeProfile.buyCar %>
 
 
         <input type="hidden" id="StorenameValue" value="<%= store_username %>">
@@ -891,7 +892,7 @@
                                       <form  method="get" class="d-flex" id="formSearch">
                                         <input type="hidden" value="<%= store %>" id="storeSearch">
                                         <input type="hidden" value="<%= Segment %>" id="segmentSearch">
-                                        <input class="form-control me-2" type="search" id="elementSearch" placeholder="Puedes buscar cualquier articulo de esta tienda" aria-label="Search" style="border : 1px solid <%= bGColorText %>" >
+                                        <input class="form-control me-2" type="search" id="elementSearch" placeholder="Puedes buscar cualquier articulo de esta Tienda." aria-label="Search" style="border : 1px solid <%= bGColorText %>" >
                                         <button class="btn" id="submitSearch" style="color:<%= bGColorText %>; border : 1px solid <%= bGColorText %>"> <i class="bi bi-search iconoLupa"></i> </button>
                                       </form>
                                      
@@ -986,11 +987,14 @@
 
                             <div class="containerAdminMain d-flex flex-column justify-content-center align-items-center" style="margin-right: 13px; z-index : 1">
 
-                              <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Carrito de compra en desarrollo.">
-                                <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
-                                  <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
-                                </div>
-                              </button>  
+                              <% if (shoppingCart === true ) { %>  
+                                  <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Carrito de compra en desarrollo.">
+                                    <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
+                                      <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                                    </div>
+                                  </button> 
+                              <% }; %>    
+                           
 
 
                               <button class="popoverChatDeBliss" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="ChatdeBliss en desarrollo.">

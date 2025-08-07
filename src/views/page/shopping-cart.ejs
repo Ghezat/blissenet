@@ -6,7 +6,7 @@
     <%- include('../partials/head.ejs') %>
     <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
     <script src="/toastr/toastr.min.js"></script>
-    <title>Blissenet Search</title>
+    <title>Blissenet Car Buy</title>
 
 </head>
 <style>
@@ -45,7 +45,7 @@
             <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
 
             <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
-                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Motor de Busqueda </b>  </span>
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Carrito de Compra </b>  </span>
             </div>    
             
             <div class="container-fluid p-0">
@@ -65,43 +65,49 @@
                    
                                     <div class="col-lg-10 col-md-11 col-sm-12 col-12 p-3 my-4 rounded-2 shadow-sm"  style="background-color: rgba(209, 209, 209, 0.2)">
 
-                                        <div class="contentainer-fluid">
+                                        <div class="contentainer-fluid ">
 
                                               
                                             <div class="card-header">
-                                                <span style="font-size: 17px;">Motor de busqueda para Tienda.</span>
+                                                <span style="font-size: 17px;">Carrito de Compra.</span>
                                             </div>
                                             <div class="card-body">
 
-                                                <% if (searchProfile.searchFilter === 'on' ){%>  
-                                                    <div class="container d-flex p-0 mb-5" style="width: 100%;">
+                                                <% if (searchProfile.buyCar === true ){%>  
+                                                    <div class="container d-flex justify-content-center p-0 mb-5" style="width: 100%;">
                                                         
-                                                        <input class="form-control me-2" type="search" disabled placeholder="Puedes buscar cualquier articulo de esta Tienda." aria-label="Search" style="border : 1px solid black" >
-                                                        <button class="btn" id="submitSearch" style="background-color: white; color:black; border : 1px solid black"> <i class="bi bi-search iconoLupa"></i> </button>
+                                                        <img src="/img/card_Special.png" alt="" style="width: 260px;">
+                                                    
+                                                    </div>
+                                                <% } else { %>
+                                                    <div class="container d-flex justify-content-center p-0 mb-5" style="width: 100%;">
+                                                        
+                                                        <img src="/img/card_Normal.png" alt="" style="width: 260px;">
                                                     
                                                     </div>
                                                 <% }; %>    
                                                 
-                                               
-                                                <div class="containerTools p-0 my-3">
+                                                
+                                                <div class="containerTools p-0 my-2">
 
 
                                                     <div class="containerSearch d-flex justify-content-between p-2 my-3 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
                                                     <!--  cantidad de articulos para habilitar la opcion de busqueda -->
                                                         <div class="contentSoonSearch d-flex">
-                                                        <% if(sumCount > 10) { %>    
+                                                        <% if(sumCount > 1) { %>    
                                                             <label class="form-check-label no-select p-0 me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción">
                                                                 <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                                                     <span class="visually-hidden">Loading...</span>
                                                                 </div>
-                                                                Buscador de Tienda 
+                                                                Carrito de Compra 
                                                             </label>
+                                                            
                                                             <div class="form-check form-switch ms-2">
-                                                                                                                
-                                                                <% if (searchProfile.searchFilter === 'on' ){%>  
-                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="off" checked> 
+                                                                                               
+                                                                <% if (searchProfile.buyCar === true ){%>  
+                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value= false checked> 
                                                                 <% } else { %>
-                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value="on"> 
+                                                                    <input class="form-check-input searchFilter" type="checkbox" id="CheckSearch" name="filter" value= true > 
                                                                 <% }; %>
                                                                 
                                                             </div>
@@ -159,23 +165,23 @@
                                 </div>
                             </div>
 
-                            <!-- Modal Buscador en Tienda --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
+                            <!-- Modal Shopping-cart --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
                             <div class="modal fade" id="staticCheckSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content text-dark">
 
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabelH2">Buscador en tu Tienda</h5>
+                                            <h5 class="modal-title" id="staticBackdropLabelH2">Carrito de Compras</h5>
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p><span class="fw-bold text-primary">Agrega un Buscador a tu Tienda. </span>
-                                                "Provee a tus clientes de esta poderosa herramienta de busqueda para que puedan conseguir
-                                                    rapidamente lo que buscan."
+                                            <p><span class="fw-bold text-primary">Agrega un Carrito de Compras. </span>
+                                                "¡Aprovecha esta función para facilitar las compras de tus clientes!, ofrece esta herramienta para que puedan
+                                                 hacer una compra de varios articulos con un solo pago."
                                             </p>
-                                            <p> <span class="bg-dark py-1 px-2 rounded-2"> <b class="text-info">Requerimento : + 10 Anuncios</b>  </span> </p>
+                                            <p> <span class="bg-dark py-1 px-2 rounded-2"> <b class="text-info">Requerimento : + 1 Anuncios</b>  </span> </p>
                                         </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerSearch.jpg'); background-size: cover; background-position: center;">
+                                        <div class="modal-footer" style="background-image: url('/img/bannerShoopingCart.jpg'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
@@ -229,12 +235,12 @@
             let searchValue = searchFilter.value;
         
             let dato = {
-                searchFilter : searchValue
+                buyCar : searchValue
             }
 
             console.log("dato: ", dato);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-            fetch('/myaccount/search', {
+            fetch('/myaccount/shopping-cart', {
                 method : "POST",
                 body : JSON.stringify(dato),
                 headers : { "content-type" : "application/json"}
@@ -243,18 +249,19 @@
                 .then(json =>{
                     console.log("respuesta del backend -search-->", json);
                     const code = json.code;
-                    const search = json.result.searchFilter;
+                    const buyCar = json.result.buyCar;
 
 
                     console.log("code :", code);
-                    console.log("search :", search);
+                    console.log("buyCar :", buyCar);
+                    console.log("typeof buyCar :", typeof buyCar);
 
                     let response;
 
-                    if (search === "on"){
-                        response= `Motor de busqueda Activado.` 
+                    if (buyCar === true){
+                        response= `Carrito de Compra Activado.` 
                     } else {
-                        response= `Motor de busqueda Desactivado.` 
+                        response= `Carrito de Compra Desactivado.` 
                     }
                     
                     mostrarToast( response , 'right', 'success', '¡Hecho!', true );
@@ -337,5 +344,3 @@
     //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
   
 </script>
-
-<!-- nota: search.ejs es identico a shopping-cart.ejs ambos deben verse muy parecidos.  -->

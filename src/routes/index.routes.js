@@ -3434,7 +3434,7 @@ routes.get('/myaccount/search', async(req, res)=>{
 
 })
 
-routes.post('/myaccount/filter-search', async(req, res)=>{
+routes.post('/myaccount/search', async(req, res)=>{
 
     try {
 
@@ -3442,19 +3442,108 @@ routes.post('/myaccount/filter-search', async(req, res)=>{
         console.log('Has enviado un dato de colocacion de un buscador en la tienda')
         console.log(req.body);
         const searchFilter = req.body.searchFilter;
+        console.log("searchFilter --->" , searchFilter);
         
-        const updateProfile = await modelProfile.findOneAndUpdate( {username : user.username}, { searchFilter : searchFilter} );
-    
-        res.json(searchFilter);
+        const updateProfile = await modelProfile.findOneAndUpdate( {username : user.username}, { searchFilter : searchFilter}, {new : true} );
+        console.log("Esto es updateProfile ---> cambiando el estado de search filter", updateProfile);
+        const response = { code : "Ok", result : updateProfile};
+        res.json(response);
 
     } catch (error) {
-        req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
-        res.redirect('/myaccount/profile');
+        const response = { code : "Error", result : updateProfile};
+        res.json(response);
+
     }
 
     
 });
 
+
+routes.get('/myaccount/shopping-cart', async(req, res)=>{
+
+        try {
+        
+        console.log("*********search******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        const countMessages = req.session.countMessages
+        console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile;
+        let sumCount = 0;
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            console.log("searchProfile -->", searchProfile);
+
+            //hacemos la busqueda de posibles rifa.
+            //aqui busco el id del sorteo. 
+            const Raffle = await modelRaffle.findOne({ user_id : user._id });
+            console.log("raffle ver --->", Raffle);
+            //si tiene entonces lo incluyo en los objetos a enviar al front para anexarlo en el contenedor derecho alargado donde esta el Score y el trust 
+    
+            //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
+            const countAir = await modelAirplane.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAir; 
+            const countArt = await modelArtes.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countArt; 
+            const countIte = await modelItems.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countIte; 
+            const countAut = await modelAutomotive.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAut; 
+            const countRea = await modelRealstate.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRea; 
+            const countNau = await modelNautical.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countNau; 
+            const countSer = await modelService.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countSer;
+            const countAuc = await modelAuction.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAuc;
+            const countRaf = await modelRaffle.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRaf;
+                            
+                         
+            console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+            res.render('page/shopping-cart', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
+        }   
+
+        
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de tools-store", error);
+    }
+
+})
+
+routes.post('/myaccount/shopping-cart', async(req, res)=>{
+
+    try {
+
+        const user = req.session.user;
+        console.log('Has enviado un dato activar o desactivar carrito de compra.')
+        console.log(req.body);
+        const shoppingCart = req.body.buyCar; 
+        console.log("shoppingCart --->" , shoppingCart);
+        console.log("typeof shoppingCart --->" , typeof shoppingCart);
+        
+        const updateProfile = await modelProfile.findOneAndUpdate( {username : user.username}, { $set: { buyCar : shoppingCart } }, {new : true} );
+        console.log("Esto es updateProfile ---> cambiando el estado de buyCar", updateProfile);
+        const response = { code : "Ok", result : updateProfile};
+        res.json(response);
+
+    } catch (error) {
+        const response = { code : "Error", result : updateProfile};
+        res.json(response);
+
+    }
+
+    
+});
 // aqui es donde podemos editar el nombre del username mientras cumpla con los requerimentos.
 // No poseer anuncios ni haya hecho ninguna compra o negociacion .
 routes.post('/myaccount/change-review', async(req, res)=>{
