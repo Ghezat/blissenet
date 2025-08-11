@@ -3488,25 +3488,12 @@ routes.get('/myaccount/shopping-cart', async(req, res)=>{
             //si tiene entonces lo incluyo en los objetos a enviar al front para anexarlo en el contenedor derecho alargado donde esta el Score y el trust 
     
             //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
-            const countAir = await modelAirplane.find({ user_id : user._id  }).count();
-            sumCount = sumCount + countAir; 
+
             const countArt = await modelArtes.find({ user_id : user._id  }).count();
             sumCount = sumCount + countArt; 
             const countIte = await modelItems.find({ user_id : user._id  }).count();
             sumCount = sumCount + countIte; 
-            const countAut = await modelAutomotive.find({ user_id : user._id  }).count();
-            sumCount = sumCount + countAut; 
-            const countRea = await modelRealstate.find({ user_id : user._id  }).count();
-            sumCount = sumCount + countRea; 
-            const countNau = await modelNautical.find({ user_id : user._id  }).count();
-            sumCount = sumCount + countNau; 
-            const countSer = await modelService.find({ user_id : user._id  }).count();
-            sumCount = sumCount + countSer;
-            const countAuc = await modelAuction.find({ user_id : user._id  }).count();
-            sumCount = sumCount + countAuc;
-            const countRaf = await modelRaffle.find({ user_id : user._id  }).count();
-            sumCount = sumCount + countRaf;
-                            
+                                        
                          
             console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
             res.render('page/shopping-cart', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
@@ -3544,6 +3531,82 @@ routes.post('/myaccount/shopping-cart', async(req, res)=>{
 
     
 });
+
+routes.get('/myaccount/sellerType', async (req, res)=>{
+    try {
+        
+        console.log("********* sellerType ******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        const countMessages = req.session.countMessages
+        console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile; 
+        let sumCount = 0;
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            console.log("searchProfile -->", searchProfile);
+
+            //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
+        
+            const countArt = await modelArtes.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countArt; 
+            const countIte = await modelItems.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countIte; 
+                                       
+      
+            res.render('page/sellerType', { user, searchProfile, sumCount, countMessages, countNegotiationsBuySell });
+        }   
+
+ 
+    } catch (error) {
+        console.log("Ha habido un error en la carga de Datos sellerType", error);
+    }
+});
+
+routes.post('/myaccount/sellerType', async (req, res)=>{
+      try {
+  
+        let updateProfile;
+        const user = req.session.user;
+        console.log('Has enviado un dato activar o desactivar un tipo de venta Local, Nacional o Internacional.')
+        console.log("req.body :", req.body);
+        const { sellerType, value, idUser } = req.body;
+        console.log("Este es el iduser :", idUser);
+   
+        if ( sellerType === "local" ){
+            console.log("local", value );
+            updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : value } }, {new : true} );
+            console.log("Esto es updateProfile :", updateProfile);
+        } else if (sellerType === "nacional") {
+            console.log("nacional", value );
+            updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.nacional' : value } }, {new : true} );
+            console.log("Esto es updateProfile :", updateProfile);
+        } else {
+            console.log("internacional", value );
+            updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.internacional' : value } }, {new : true} );
+            console.log("Esto es updateProfile :", updateProfile);
+        }
+          
+        
+          
+        const response = { code : "Ok", result : updateProfile};
+        res.json(response);
+  
+      } catch (error) {
+          const response = { code : "Error", result : updateProfile};
+          res.json(response);
+  
+      }
+});
+
+
 // aqui es donde podemos editar el nombre del username mientras cumpla con los requerimentos.
 // No poseer anuncios ni haya hecho ninguna compra o negociacion .
 routes.post('/myaccount/change-review', async(req, res)=>{

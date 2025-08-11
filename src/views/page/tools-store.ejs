@@ -60,6 +60,9 @@
                                     <div class="form-group my-1">
                                         <button class="form-control d-flex justify-content-between align-items-center" id="gestorADS"> <div><img src="/img/icon_Bank1.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Datos Bancarios</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
                                     </div>
+                                    <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="sellerType"> <div><img src="/img/icon_SellerType.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Tipo de Ventas</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
+                                    </div>
                         
                                 </div>
                             </div>
@@ -218,8 +221,42 @@
 
                                 </div>
                                 
-                            </div>     
+                            </div>   
+                              
+                            <div class="content_sellerType close">
 
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+
+                                    <div class="cardBank p-3" style="width: 100%;">
+
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/icon_SellerType.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>Tipo de Ventas</b>  </h4>
+                                                        <p> <b> ¡Configura los tipos de ventas! </b> Define tu rango de venta aqui. Debes ser resposnable y definir hasta donde estas dispuesto a crear realaciones comerciales pudiendo ser Locales, Interurbana e Internacionales </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div>
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            <a href="/myaccount/sellerType" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                        </div>
+
+                                    </div>  
+
+                                </div>
+                                
+                            </div>   
 
                             <div class="card mt-1" style="background-color:rgba(217, 223, 223, 0.2);">
                                 <div class="card-body d-flex justify-content-center ">
@@ -262,27 +299,39 @@
     const search = document.getElementById('search');
     const cardBuy = document.getElementById('cardBuy');
     const gestorADS = document.getElementById('gestorADS');
+    const sellerType = document.getElementById('sellerType');
 
     const content_search = document.querySelector('.content_search');
     const content_cardBuy = document.querySelector('.content_cardBuy');
     const content_gestorADS = document.querySelector('.content_gestorADS');
+    const content_sellerType = document.querySelector('.content_sellerType');
 
     search.addEventListener('click', ()=>{
         content_search.classList.remove('close');
         content_cardBuy.classList.add('close');
         content_gestorADS.classList.add('close');
+        content_sellerType.classList.add('close');
     });
 
     cardBuy.addEventListener('click', ()=>{
         content_search.classList.add('close');
         content_cardBuy.classList.remove('close');
         content_gestorADS.classList.add('close');
+        content_sellerType.classList.add('close');
     });
 
     gestorADS.addEventListener('click', ()=>{
         content_search.classList.add('close');
         content_cardBuy.classList.add('close');
         content_gestorADS.classList.remove('close');
+        content_sellerType.classList.add('close');
+    });
+
+    sellerType.addEventListener('click', ()=>{
+        content_search.classList.add('close');
+        content_cardBuy.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_sellerType.classList.remove('close');
     });
 
     

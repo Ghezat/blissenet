@@ -193,6 +193,14 @@
       transition: .5s ease width;
     }
 
+    .tagShippingCart{
+      transition: .5s ease outline;
+    }
+
+    .tagShippingCart:hover{
+      outline: 2px solid lightskyblue;
+    }
+
     .cardPublished:hover{
       outline: 2px solid lightskyblue;
 
@@ -247,6 +255,11 @@
       right: 0px;
 
     }
+
+    .cursor-pointer{
+      cursor: pointer;
+    }
+
 
     @keyframes moverLupa {
           0% {
@@ -450,6 +463,9 @@
 
 
         <input type="hidden" id="StorenameValue" value="<%= store_username %>">
+
+        <input type="hidden" id="StoreId" value="<%= store_id %>">
+        <input type="hidden" id="UserId" value="<%= user._id %>"> 
 
         <div class="container-fluid p-0 m-0">
 
@@ -952,7 +968,6 @@
                                                   <i class="bi bi-star-fill" style="font-size: 1rem;"></i>
                                                 </div>
 
-
                                               <% } else { %> <!-- no es el propietario y la tienda no tiene articulos es una tienda vacia -->
                                                
                                                     <div class="containRate border d-flex flex-column align-items-center justify-content-center bg-warning" style="height: 20%; width: 100%; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
@@ -1031,308 +1046,627 @@
                                 <div class="containerCard d-flex flex-wrap justify-content-start p-3" style="width: 100%;" >
 
 
-                                      <% newBox.forEach( (ele, i)=>{ %>
+                                    <% newBox.forEach( (ele, i)=>{ %>
 
+                                        <% if (shoppingCart === false ) { %> 
                                         
-                                        <div class="card m-3 p-0 shadow cardPublished">
+                                          <div class="card m-3 p-0 shadow cardPublished">
 
-                                          <div class="card-body d-flex flex-column p-0">
+                                            <div class="card-body d-flex flex-column p-0">
 
-                                              <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
-                                                <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
+                                                <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
+                                                  <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
 
-                                                  <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
-                                                    data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
+                                                    <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
+                                                      data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
 
-                                                    <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable, Delivery, soldOut -->
-                                                    <% if (user) { %>
+                                                      <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable, Delivery, soldOut -->
+                                                      <% if (user) { %>
 
-                                                        <% if (user.username === storeProfile.username) { %>
-                                                              
-                                                          <% if (ele.department !== 'raffle' ){ %>
+                                                          <% if (user.username === storeProfile.username) { %>
+                                                                
+                                                            <% if (ele.department !== 'raffle' ){ %>
 
-                                                                <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
-                                                                  <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
-                                                                                                        
-                                                                  <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
-                                                                    <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
-                                                                    <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                                    <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
-                                                                    <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
-                                                                      <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                                      <li> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                                    <%  } else { %>
-                                                                      <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                                      <li class="invisible"> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
-                                                                    <% } %>  
-                                                                  </ul>
-                                                                </div>
+                                                                  <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 100; width: 100%;">
+                                                                    <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                          
+                                                                    <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
+                                                                      <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
+                                                                      <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                      <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
+                                                                      <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
+                                                                        <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                        <li> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                      <%  } else { %>
+                                                                        <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                        <li class="invisible"> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                      <% } %>  
+                                                                    </ul>
+                                                                  </div>
 
-                                                              <% if (ele.offer === true) { %>    
-                                                                <span class="border border-warning tagOfferUser" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
-                                                              <% } else { %>
-                                                                <span class="border border-warning tagOfferUser invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
-                                                              <% }; %>  
+                                                                <% if (ele.offer === true) { %>    
+                                                                  <span class="border border-warning tagOfferUser" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                                <% } else { %>
+                                                                  <span class="border border-warning tagOfferUser invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                                <% }; %>  
 
-                                                              <% if (ele.soldOut === true) { %>    
-                                                                <span class="tagSoldOutUser" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
-                                                              <% } else { %>
-                                                                <span class="tagSoldOutUser invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span>
-                                                              <% }; %>
+                                                                <% if (ele.soldOut === true) { %>    
+                                                                  <span class="tagSoldOutUser" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                                <% } else { %>
+                                                                  <span class="tagSoldOutUser invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span>
+                                                                <% }; %>
 
-                                                          <% }; %>
-                                                              
-                                                        <% } else { %> <!-- en el caso de que haya un usuario logeado pero no es el dueño de la tienda --> 
+                                                            <% }; %>
+                                                                
+                                                          <% } else { %> <!-- en el caso de que haya un usuario logeado pero no es el dueño de la tienda --> 
 
-                                                              <% if (ele.department !== 'raffle' ){ %>
-                                                              
-                                                                <% if (ele.soldOut === true) { %>
-                                                                    <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 200; width: 100%;">
-                                                                      <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
-                                                                                                            
-                                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
-                                                                      
-                                                                            <li class="no-select"> <button class="purchaseTime dropdown-item"> <small> Avisarme cuando este disponible </small>  <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>                                                                                                                      
+                                                                <% if (ele.department !== 'raffle' ){ %>
+                                                                
+                                                                  <% if (ele.soldOut === true) { %>
+                                                                      <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 200; width: 100%;">
+                                                                        <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                              
+                                                                          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
                                                                         
-                                                                        </ul>
-                                                              
+                                                                              <li class="no-select"> <button class="purchaseTime dropdown-item"> <small> Avisarme cuando este disponible </small>  <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>                                                                                                                      
+                                                                          
+                                                                          </ul>
+                                                                
 
-                                                                    </div>
-                                                                    <div class="alert alert-light boxDetailPT border border-secondary mx-1 close" style="position: absolute; top: 40px; z-index: 200; width: 96%;">
-                                                                      
-                                                                    </div>
-                                                                <%  }; %>
+                                                                      </div>
+                                                                      <div class="alert alert-light boxDetailPT border border-secondary mx-1 close" style="position: absolute; top: 40px; z-index: 200; width: 96%;">
+                                                                        
+                                                                      </div>
+                                                                  <%  }; %>
 
-                                                              <% }; %>     
+                                                                <% }; %>     
 
-                                                        <% }; %>  
-                                      
-                                            
+                                                          <% }; %>  
+                                        
+                                              
 
-                                                    <% }; %>  
-                                                  
+                                                      <% }; %>  
                                                     
-                                                    <div class="carousel-inner" style="position: relative; width: 100%; height: 220px;  z-index: 1;">
                                                       
-                                                      <% if (ele.offer === true) { %>    
-                                                        <span class="border border-warning tagOffer" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
-                                                      <% } else { %>
-                                                        <span class="border border-warning tagOffer invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
-                                                      <% }; %> 
+                                                      <div class="carousel-inner" style="position: relative; width: 100%; height: 220px;  z-index: 1;">
+                                                        
+                                                        <% if (ele.offer === true) { %>    
+                                                          <span class="border border-warning tagOffer" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
+                                                        <% } else { %>
+                                                          <span class="border border-warning tagOffer invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                        <% }; %> 
 
-                                                      <% if (ele.soldOut === true) { %>    
-                                                        <span class="tagSoldOut" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
-                                                      <% } else { %>
-                                                        <span class="tagSoldOut invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
-                                                      <% }; %> 
+                                                        <% if (ele.soldOut === true) { %>    
+                                                          <span class="tagSoldOut" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 80px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                        <% } else { %>
+                                                          <span class="tagSoldOut invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; right: -3px; border-bottom-left-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                        <% }; %> 
 
-                                                      <div class="carousel-item active">
-                                                        <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> 
-                                                          <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
-                                                        </a>
-                                                      </div>
-                                                      <% for (let x=1; x < ele.images.length; x++) { %>
-                                                        <% const element=ele.images[x] %>
-                                                          <div class="carousel-item">
-                                                            <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> <img src="<%= element.url %>" class="d-block w-100"
-                                                              style="  width: 100%; height: 100%; object-fit: cover;">
-                                                            </a>
-                                                          </div>
-
-                                                      <% }; %>
-                                                    </div>
-
-                                                    <button class="carousel-control-prev" type="button"
-                                                      data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
-                                                      <span class="carousel-control-prev-icon"></span>
-                                                      <span class="visually-hidden">Previous</span>
-                                                    </button>
-                                                    <button class="carousel-control-next" type="button"
-                                                      data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
-                                                      <span class="carousel-control-next-icon"></span>
-                                                      <span class="visually-hidden">Next</span>
-                                                    </button>
-                                                  </div>
-                                      
-                                              </div>
-
-                                              <hr class="m-0">
-
-                                              <!-- esta parte va a cambiar cuando sea oferta -->
-                                              <% if (ele.department !== 'raffle') { %>
-                                                <% if (ele.offer === false) { %>
-                                                <div class="boxDetail" style="height: 140px; position: relative; background-color: #ffffff;">
-                                                        <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-                      
-                                                            <div class="title d-flex align-items-start">
-
-                                                              <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
-                                                                style="text-decoration: none;">
-                                                                <%= ele.title %>
-                                                              </a>                                            
-                                                            
-                                                            </div>
-                        
-                                                            <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
-                          
-                                                                <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
-                                                              
-                                                                <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
-
-                                                              <% if (user) { %> <!-- control de corazones fascinometro -->
-                                                                <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                                              <% } %>
-                          
-                                                            </div>
-                                                            
-                                                            <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
-                      
-                                                              <div class="containerPrice d-flex justify-content-between px-2">
-
-                                                                <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                                  <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
-                                                                </a>
-
-                                                                <div class="containerTresIconos d-flex">
-                                                                  
-                                                                  <div class="containerDelivery">
-                                                                    <% if (ele.delivery === true) {%>
-                                                                      <i class="bi bi-truck me-1"></i>
-                                                                    <% }; %>  
-                                                                  </div>     
-                                                                  <div class="containerOnlyOneAvailable">
-                                                                    <% if (ele.onlyOneAvailable === true) {%>
-                                                                      <i class="bi bi-1-square-fill me-1"></i>
-                                                                    <% }; %>  
-                                                                  </div>
-                                                                  <div class="containBestProduct">
-                                                                    <% if (ele.bestProduct === true) {%>
-                                                                      <i class="bi bi-award"></i>
-                                                                    <% }; %>  
-                                                                  </div>
-                                                                </div>
-                                                              </div>
-                      
-                                                            </div>
-                                                            
-                        
+                                                        <div class="carousel-item active">
+                                                          <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> 
+                                                            <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
+                                                          </a>
                                                         </div>
+                                                        <% for (let x=1; x < ele.images.length; x++) { %>
+                                                          <% const element=ele.images[x] %>
+                                                            <div class="carousel-item">
+                                                              <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> <img src="<%= element.url %>" class="d-block w-100"
+                                                                style="  width: 100%; height: 100%; object-fit: cover;">
+                                                              </a>
+                                                            </div>
+
+                                                        <% }; %>
+                                                      </div>
+
+                                                      <button class="carousel-control-prev" type="button"
+                                                        data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                      </button>
+                                                      <button class="carousel-control-next" type="button"
+                                                        data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                      </button>
+                                                    </div>
+                                        
                                                 </div>
-                                                <% } else { %>
-                                                <div class="boxDetail" style="height: 140px; position: relative; background-color: #fcda57;">
+
+                                                <hr class="m-0">
+
+                                                <!-- esta parte va a cambiar cuando sea oferta -->
+                                                <% if (ele.department !== 'raffle') { %>
+                                                  <% if (ele.offer === false) { %>
+                                                  <div class="boxDetail" style="height: 140px; position: relative; background-color: #ffffff;">
                                                           <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-                      
-                                                            <div class="title d-flex justify-content-start"> 
+                        
+                                                              <div class="title d-flex align-items-start">
+
                                                                 <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
                                                                   style="text-decoration: none;">
                                                                   <%= ele.title %>
                                                                 </a>                                            
-                                                            </div>
-                    
-                                                            <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
-                          
-                                                                <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
                                                               
-                                                                <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
-
-                                                              <% if (user) { %> <!-- control de corazones fascinometro -->
-                                                                <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                                              <% } %>
+                                                              </div>
                           
-                                                            </div>
-                                                                                                                              
-                                                            <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
-                      
-                                                              <div class="containerPrice d-flex justify-content-between px-2">
+                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                            
+                                                                  <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                                                
+                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
 
-                                                                <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                                  <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
-                                                                </a>
+                                                                <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                                  <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                                <% } %>
+                            
+                                                              </div>
+                                                              
+                                                              <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                        
+                                                                <div class="containerPrice d-flex justify-content-between px-2">
 
-                                                                <div class="containerTresIconos d-flex">
+                                                                  <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                  </a>
 
-                                                                  <div class="containerDelivery">
-                                                                    <% if (ele.delivery === true) {%>
-                                                                      <i class="bi bi-truck me-1"></i>
-                                                                    <% }; %>  
-                                                                  </div>
-                                                                  <div class="containerOnlyOneAvailable">
-                                                                    <% if (ele.onlyOneAvailable === true) {%>
-                                                                      <i class="bi bi-1-square-fill me-1"></i>
-                                                                    <% }; %>  
-                                                                  </div>
-                                                                  <div class="containBestProduct">
-                                                                    <% if (ele.bestProduct === true) {%>
-                                                                      <i class="bi bi-award"></i>
-                                                                    <% }; %>  
+                                                                  <div class="containerTresIconos d-flex">
+                                                                    
+                                                                    <div class="containerDelivery">
+                                                                      <% if (ele.delivery === true) {%>
+                                                                        <i class="bi bi-truck me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>     
+                                                                    <div class="containerOnlyOneAvailable">
+                                                                      <% if (ele.onlyOneAvailable === true) {%>
+                                                                        <i class="bi bi-1-square-fill me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                    <div class="containBestProduct">
+                                                                      <% if (ele.bestProduct === true) {%>
+                                                                        <i class="bi bi-award"></i>
+                                                                      <% }; %>  
+                                                                    </div>
                                                                   </div>
                                                                 </div>
+                        
+                                                              </div>
+                                                              
+                          
+                                                          </div>
+                                                  </div>
+                                                  <% } else { %>
+                                                  <div class="boxDetail" style="height: 140px; position: relative; background-color: #fcda57;">
+                                                            <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                        
+                                                              <div class="title d-flex justify-content-start"> 
+                                                                  <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                                                    style="text-decoration: none;">
+                                                                    <%= ele.title %>
+                                                                  </a>                                            
                                                               </div>
                       
-                                                            </div>
-                                                            
-                                                          </div>
-                                                </div>  
-                                                <% }; %>
-                                              <% } else { %>
-                                                <div class="boxDetailRaffle" style="height: 140px; position: relative; background-color: #ffffff;">
-                                                  <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-                                                    
-                                                      <div class="title d-flex justify-content-start">
-                                                          <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
-                                                            style="text-decoration: none;">
-                                                            <%= ele.title %>
-                                                          </a>                                            
-                                                      </div>                
-                                                                                                                  
-                                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
-                    
-                                                          <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
-                                                        
-                                                          <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                            
+                                                                  <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                                                
+                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
 
-                                                        <% if (user) { %> <!-- control de corazones fascinometro -->
-                                                          <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                                        <% } %>
-                    
-                                                      </div>
-
-                                                      <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                                                                <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                                  <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                                <% } %>
+                            
+                                                              </div>
+                                                                                                                                
+                                                              <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
                         
-                                                        <div class="containerPrice d-flex justify-content-between px-2">
-                                                          
-                                                          <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                            <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
-                                                          </a>
+                                                                <div class="containerPrice d-flex justify-content-between px-2">
 
-                                                          <div class="containerTickets">
-                                                            <div class="containerIconCategory">
-                                                              <% if (ele.category == 'Gratis' ) {%>
-                                                              <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
-                                                                <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
-                                                              </span>
-                                                              <% } else { %>
-                                                              <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
-                                                                <i class="bi bi-ticket-fill" style="color: brown;"></i>
-                                                              </span>
-                                                              <% }; %>  
+                                                                  <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                  </a>
+
+                                                                  <div class="containerTresIconos d-flex">
+
+                                                                    <div class="containerDelivery">
+                                                                      <% if (ele.delivery === true) {%>
+                                                                        <i class="bi bi-truck me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                    <div class="containerOnlyOneAvailable">
+                                                                      <% if (ele.onlyOneAvailable === true) {%>
+                                                                        <i class="bi bi-1-square-fill me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                    <div class="containBestProduct">
+                                                                      <% if (ele.bestProduct === true) {%>
+                                                                        <i class="bi bi-award"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                        
+                                                              </div>
+                                                              
+                                                            </div>
+                                                  </div>  
+                                                  <% }; %>
+                                                <% } else { %>
+                                                  <div class="boxDetailRaffle" style="height: 140px; position: relative; background-color: #ffffff;">
+                                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                                                      
+                                                        <div class="title d-flex justify-content-start">
+                                                            <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                                              style="text-decoration: none;">
+                                                              <%= ele.title %>
+                                                            </a>                                            
+                                                        </div>                
+                                                                                                                    
+                                                        <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                      
+                                                            <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                                          
+                                                            <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+
+                                                          <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                          <% } %>
+                      
+                                                        </div>
+
+                                                        <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                          
+                                                          <div class="containerPrice d-flex justify-content-between px-2">
+                                                            
+                                                            <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                                              <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                            </a>
+
+                                                            <div class="containerTickets">
+                                                              <div class="containerIconCategory">
+                                                                <% if (ele.category == 'Gratis' ) {%>
+                                                                <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                                  <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
+                                                                </span>
+                                                                <% } else { %>
+                                                                <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                                  <i class="bi bi-ticket-fill" style="color: brown;"></i>
+                                                                </span>
+                                                                <% }; %>  
+                                                              </div>
                                                             </div>
                                                           </div>
+                  
                                                         </div>
-                
-                                                      </div>
-                                                    
+                                                      
+                                                    </div>
                                                   </div>
-                                                </div>
-                                              <% }; %>  
+                                                <% }; %>  
+
+                                            </div>
 
                                           </div>
 
-                                        </div>
+                                        <% } else { %>
+                                    
+                                          <div class="card m-3 p-0 shadow cardPublished">
 
-                                      <% }); %>
+                                            <div class="card-body d-flex flex-column p-0">
 
-  
+                                                <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
+                                                  <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
+
+                                                    <div id="carouselExampleControls<%= i %>" class="carousel slide" data-bs-ride="carousel"
+                                                      data-bs-interval="false" data-bs-touch="true" style="position: relative; z-index: 1;" >
+
+                                                      <!-- esto es el icono para acceder a las herramientas de offer, bestProduct, onlyOneAvailable, Delivery, soldOut -->
+                                                      <% if (user) { %>
+
+                                                          <% if (ele.soldOut === false) { %>
+                                                            <div class="border border-warning d-flex justify-align-center justify-content-center" style="z-index: 100; background-color: #fcda57; width: 40px; height: 40px; position: absolute; top: 10px; right: 10px; border-radius: 50%;"> 
+
+                                                              <button class="btn tagShippingCart d-flex justify-content-center align-items-center" style="background-color: #fcda57; width: 100%; height: 100%; border-radius: 50%; font-size: 18px;"> 
+
+                                                                <input type="hidden" value="<%= ele._id %>">
+                                                                <input type="hidden" value="<%= ele.department %>">
+                                                                <input type="hidden" value="<%= ele.title %>">
+                                                                <input type="hidden" value="<%= ele.price %>">
+
+                                                                <span > <b>+</b> </span> 
+                                                              </button> 
+
+                                                            </div>
+                                                          <% }; %>  
+
+                                                          <% if (user.username === storeProfile.username) { %>
+                                                                
+                                                            <% if (ele.department !== 'raffle' ){ %>
+
+                                                                  <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 30px; z-index: 100; width: auto">
+                                                                    <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                          
+                                                                    <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
+                                                                      <li> <button class="offer dropdown-item">Oferta <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button> </li>
+                                                                      <li> <button class="bestProduct dropdown-item">Mejor Producto <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                      <li> <button class="onlyOneAvailable dropdown-item" type="button">Unico Disponible <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"> </button></li>
+                                                                      <% if (ele.department === 'arts' || ele.department === 'items' ){ %>
+                                                                        <li> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                        <li> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                      <%  } else { %>
+                                                                        <li class="invisible"> <button class="delivery dropdown-item">Delivery <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                        <li class="invisible"> <button class="soldOut dropdown-item">Agotado <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>
+                                                                      <% } %>  
+                                                                    </ul>
+
+                                                                  </div>
+
+                                                                <% if (ele.offer === true) { %>    
+                                                                  <span class="border border-warning tagOfferUser" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                                <% } else { %>
+                                                                  <span class="border border-warning tagOfferUser invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                                <% }; %>  
+
+                                                                <% if (ele.soldOut === true) { %>    
+                                                                  <span class="tagSoldOutUser" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 80px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                                <% } else { %>
+                                                                  <span class="tagSoldOutUser invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span>
+                                                                <% }; %>
+
+                                                            <% }; %>
+                                                                
+                                                          <% } else { %> <!-- en el caso de que haya un usuario logeado pero no es el dueño de la tienda --> 
+
+                                                                <% if (ele.department !== 'raffle' ){ %>
+                                                                
+                                                                  <% if (ele.soldOut === true) { %>
+                                                                      <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 200; width: 100%;">
+                                                                        <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
+                                                                                                              
+                                                                          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
+                                                                        
+                                                                              <li class="no-select"> <button class="purchaseTime dropdown-item"> <small> Avisarme cuando este disponible </small>  <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>"></button></li>                                                                                                                      
+                                                                          
+                                                                          </ul>
+                                                                
+
+                                                                      </div>
+                                                                      <div class="alert alert-light boxDetailPT border border-secondary mx-1 close" style="position: absolute; top: 40px; z-index: 200; width: 96%;">
+                                                                        
+                                                                      </div>
+                                                                  <%  }; %>
+
+                                                                <% }; %>     
+
+                                                          <% }; %>  
+                                        
+                                              
+
+                                                      <% }; %>  
+                                                    
+                                                      
+                                                      <div class="carousel-inner" style="position: relative; width: 100%; height: 220px;  z-index: 1;">
+                                                        
+                                                        <% if (ele.offer === true) { %>    
+                                                          <span class="border border-warning tagOffer" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
+                                                        <% } else { %>
+                                                          <span class="border border-warning tagOffer invisible" style="z-index: 100; background-color: #fcda57; width: 80px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                                        <% }; %> 
+
+                                                        <% if (ele.soldOut === true) { %>    
+                                                          <span class="tagSoldOut" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 80px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                        <% } else { %>
+                                                          <span class="tagSoldOut invisible" style="z-index: 100; border: 1px solid #520101; background-color: #d30404; width: 90px; height: 20px; position: absolute; top: 0; left: -3px; border-bottom-right-radius: 14px;"> <span style="position: absolute; top: -4px; right: 11px; color: #ffffff;"> <small> Agotado </small> </span> </span> 
+                                                        <% }; %> 
+
+                                                        <div class="carousel-item active">
+                                                          <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> 
+                                                            <img src="<%= ele.images[0].url%>" class="imgFront" alt="...">
+                                                          </a>
+                                                        </div>
+                                                        <% for (let x=1; x < ele.images.length; x++) { %>
+                                                          <% const element=ele.images[x] %>
+                                                            <div class="carousel-item">
+                                                              <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> <img src="<%= element.url %>" class="d-block w-100"
+                                                                style="  width: 100%; height: 100%; object-fit: cover;">
+                                                              </a>
+                                                            </div>
+
+                                                        <% }; %>
+                                                      </div>
+
+                                                      <button class="carousel-control-prev" type="button"
+                                                        data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                      </button>
+                                                      <button class="carousel-control-next" type="button"
+                                                        data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                      </button>
+                                                    </div>
+                                        
+                                                </div>
+
+                                                <hr class="m-0">
+
+                                                <!-- esta parte va a cambiar cuando sea oferta -->
+                                                <% if (ele.department !== 'raffle') { %>
+                                                  <% if (ele.offer === false) { %>
+                                                  <div class="boxDetail" style="height: 140px; position: relative; background-color: #ffffff;">
+                                                          <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                        
+                                                              <div class="title d-flex align-items-start">
+
+                                                                <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                                                  style="text-decoration: none;">
+                                                                  <%= ele.title %>
+                                                                </a>                                            
+                                                              
+                                                              </div>
+                          
+                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                            
+                                                                  <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                                                
+                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+
+                                                                <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                                  <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                                <% } %>
+                            
+                                                              </div>
+                                                              
+                                                              <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                        
+                                                                <div class="containerPrice d-flex justify-content-between px-2">
+
+                                                                  <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                  </a>
+
+                                                                  <div class="containerTresIconos d-flex">
+                                                                    
+                                                                    <div class="containerDelivery">
+                                                                      <% if (ele.delivery === true) {%>
+                                                                        <i class="bi bi-truck me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>     
+                                                                    <div class="containerOnlyOneAvailable">
+                                                                      <% if (ele.onlyOneAvailable === true) {%>
+                                                                        <i class="bi bi-1-square-fill me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                    <div class="containBestProduct">
+                                                                      <% if (ele.bestProduct === true) {%>
+                                                                        <i class="bi bi-award"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                        
+                                                              </div>
+                                                              
+                          
+                                                          </div>
+                                                  </div>
+                                                  <% } else { %>
+                                                  <div class="boxDetail" style="height: 140px; position: relative; background-color: #fcda57;">
+                                                            <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                        
+                                                              <div class="title d-flex justify-content-start"> 
+                                                                  <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                                                    style="text-decoration: none;">
+                                                                    <%= ele.title %>
+                                                                  </a>                                            
+                                                              </div>
+                      
+                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                            
+                                                                  <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                                                
+                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+
+                                                                <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                                  <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                                <% } %>
+                            
+                                                              </div>
+                                                                                                                                
+                                                              <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                        
+                                                                <div class="containerPrice d-flex justify-content-between px-2">
+
+                                                                  <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                  </a>
+
+                                                                  <div class="containerTresIconos d-flex">
+
+                                                                    <div class="containerDelivery">
+                                                                      <% if (ele.delivery === true) {%>
+                                                                        <i class="bi bi-truck me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                    <div class="containerOnlyOneAvailable">
+                                                                      <% if (ele.onlyOneAvailable === true) {%>
+                                                                        <i class="bi bi-1-square-fill me-1"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                    <div class="containBestProduct">
+                                                                      <% if (ele.bestProduct === true) {%>
+                                                                        <i class="bi bi-award"></i>
+                                                                      <% }; %>  
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                        
+                                                              </div>
+                                                              
+                                                            </div>
+                                                  </div>  
+                                                  <% }; %>
+                                                <% } else { %>
+
+                                                  <div class="boxDetailRaffle" style="height: 140px; position: relative; background-color: #ffffff;">
+                                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+                                                      
+                                                        <div class="title d-flex justify-content-start">
+                                                            <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                                              style="text-decoration: none;">
+                                                              <%= ele.title %>
+                                                            </a>                                            
+                                                        </div>                
+                                                                                                                    
+                                                        <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                      
+                                                            <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                                          
+                                                            <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+
+                                                          <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                            <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                          <% } %>
+                      
+                                                        </div>
+
+                                                        <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                          
+                                                          <div class="containerPrice d-flex justify-content-between px-2">
+                                                            
+                                                            <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                                              <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                            </a>
+
+                                                            <div class="containerTickets">
+                                                              <div class="containerIconCategory">
+                                                                <% if (ele.category == 'Gratis' ) {%>
+                                                                <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                                  <i class="bi bi-ticket-fill" style="color: rgb(17, 235, 235);"></i>
+                                                                </span>
+                                                                <% } else { %>
+                                                                <span class="rounded-1 p-0 d-flex justify-content-center align-items-center me-1" style="width: 25px; background-color: #131313;">
+                                                                  <i class="bi bi-ticket-fill" style="color: brown;"></i>
+                                                                </span>
+                                                                <% }; %>  
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                  
+                                                        </div>
+                                                      
+                                                    </div>
+                                                  </div>
+                                                <% }; %>  
+
+                                            </div>
+
+                                          </div>
+
+                                        <% }; %>   
+
+                                    <% }); %>
+
+   
 
                                 </div>
 
@@ -4124,6 +4458,83 @@ function irATopBar() {
 
 <% if ( user !== undefined ) { %>
   <!-- estas son las opciones que estaran cuando SI exista un usuario logeado -->
+
+<script>
+  //controlador de tagShippingCart
+  const tagShippingCart = document.querySelectorAll('.tagShippingCart');
+  const StoreId = document.getElementById('StoreId').value;
+  const UserId = document.getElementById('UserId').value;
+
+  tagShippingCart.forEach((ele)=>{
+
+    ele.addEventListener('click', ()=>{
+      console.log("Este es ele", ele);
+      const son = ele.children;
+      console.log("son : ", son);
+
+      const id = son[0].value;
+      const depart = son[1].value;
+      const title = son[2].value;
+      const price = son[3].value;
+      console.log("depart :", depart);
+      console.log("id :", id);
+      console.log("title :", title);
+      console.log("price :", price); 
+
+      const formData = new FormData()
+          formData.append('StoreId', StoreId);
+          formData.append('UserId', UserId);
+
+          formData.append('depart', depart);
+          formData.append('id', id);
+          formData.append('title', title);
+          formData.append('price', price);
+          
+      fetch('/account/shoppingCart', {
+              method: "POST",
+              body: formData
+          })
+          .then(response => response.json())
+          .then(jsonx => {
+              console.log("response del backend --->", jsonx);
+
+              const code = jsonx.code;
+              const message = jsonx.message;
+              
+              if (code == "ok"){
+
+                  console.log("ahora si pasamos al siguiente formulario");
+                  console.log("Response: ", jsonx);
+                  //se ha guardado y debemos seguir adelante.
+                  mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                  setTimeout(() => {
+                      location.reload();
+                  }, 4000);
+                  
+
+              } else {
+
+                  mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                  setTimeout(() => {
+                      addFirstMethodDisabled.classList.add('close');
+                      addFirstMethod.classList.remove('close');
+                  }, 3000);
+
+              }
+          
+          
+
+          })
+          .catch(err => console.log(err));
+
+
+    })
+
+  })
+
+</script>
+
 <script>
     //este script es para manejar la accion de los favoritos dentro de la tienda.
     const linkHeart = document.querySelectorAll('.linkHeart')

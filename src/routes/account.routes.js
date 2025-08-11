@@ -20,6 +20,7 @@ const modelRaffle = require('../models/raffle.js');
 const modelStoreRate = require('../models/storeRate.js');
 const modelCustomerSurvey = require('../models/customerSurvey.js');
 const messages = require('../models/messages.js');
+const shoppingCart = require('../models/shoppingCart.js');
 
 const axios = require('axios');
 const fs = require('fs-extra');
@@ -49,8 +50,7 @@ routes.get('/account/:account', async (req,res)=>{
     //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
   
     const Account = await modelUser.find({ username : account });
-    const accountID = Account[0]._id;
-    //console.log("Este es la data del account que queremos visitar ...", Account);
+    const accountID = Account[0]._id;    
 
     async function searchOffert(){
         //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.
@@ -118,21 +118,21 @@ routes.get('/account/:account', async (req,res)=>{
 
             const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
             const accountIdString = accountId.toString(); //paso de objectId a String
-            console.log("**********************ver esto**********************************")
-            console.log("Este es el id user del account que queremos visitar ...", accountId);  
-            console.log("typeof accountId ---->", typeof accountId); 
+            //console.log("**********************ver esto**********************************")
+            //console.log("Este es el id user del account que queremos visitar ...", accountId);  
+            //console.log("typeof accountId ---->", typeof accountId); 
             
             //---consultamos si el user que visita esta tienda ya la sigue.     
             const statusFollow = await modelProfile.findOne({ indexed : userId, favoritestores : accountIdString });
-            console.log("statusFollow --->", statusFollow);
+            //console.log("statusFollow --->", statusFollow);
             //-----------------------------------------------------------------
 
             const storeProfile = await modelProfile.findOne({ indexed : accountId });
             const segmentations = storeProfile.segment; // ["All", "Hoverboard"];
             const segmentDefault = segmentations[0];
             //console.log("Aqui el profile de la **Tienda** a visistar --->", storeProfile);
-            console.log("Aqui la segmentations de la Tienda a visistar --->", segmentations);
-            console.log("Aqui el segmentDefault de la Tienda a visistar --->", segmentDefault);
+            //console.log("Aqui la segmentations de la Tienda a visistar --->", segmentations);
+            //console.log("Aqui el segmentDefault de la Tienda a visistar --->", segmentDefault);
 
 
             let view = storeProfile.view; //aqui guardo la cantidad de visitas actuales que tiene la tienda;
@@ -160,45 +160,63 @@ routes.get('/account/:account', async (req,res)=>{
 
             if (storeProfile) { 
                 const searchBanner = storeProfile.bannerPerfil;
-        
-                //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
-                const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ title: 1 });
-                const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ title: 1 });
-                const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
-                const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
-                const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
-                const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
-                const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
-                const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
-                const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
+                const buyCar = storeProfile.buyCar; //esto es para detectar si la tienda tiene activado el carrito de compra. (importante porque el carrito solo muestra items y arte)
+                console.log("...........................ver......................")
+                console.log("Esto es Account: ", Account);
+                console.log("Este es el valor de buyCar ...", buyCar);
+                console.log("Este es el valor de typeof buyCar ...", typeof buyCar);
 
-                if (resultAirplane) {
-                    boxPublisher.push(...resultAirplane)
-                } 
-                if (resultArtes) {
-                    boxPublisher.push(...resultArtes)
-                }
-                if (resultItems) {
-                    boxPublisher.push(...resultItems)
-                }
-                if (resultAutomotive) {
-                    boxPublisher.push(...resultAutomotive)
-                }
-                if (resultRealstate) {
-                    boxPublisher.push(...resultRealstate)
-                }
-                if (resultNautical) {
-                    boxPublisher.push(...resultNautical)
-                }
-                if (resultService) {
-                    boxPublisher.push(...resultService)
-                }
-                if (resultAuction) {
-                    boxPublisher.push(...resultAuction)
-                }
-                if (resultRaffle) {
-                    boxPublisher.push(...resultRaffle)
-                }
+                        //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
+                        const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ title: 1 });
+                        const resultArtes = await modelArtes.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ title: 1 });
+                        const resultItems = await modelItems.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                        const resultAutomotive = await modelAutomotive.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                        const resultRealstate = await modelRealstate.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                        const resultNautical = await modelNautical.find({ $and : [{user_id : accountId} , {visibleStore : true }] }).sort({ title: 1 });
+                        const resultService = await modelService.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
+                        const resultAuction = await modelAuction.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
+                        const resultRaffle = await modelRaffle.find({ $and : [{user_id : accountId} , {visibleStore : true }]}).sort({ title: 1 });
+
+                    if (buyCar === false){
+                        
+                        if (resultAirplane) {
+                            boxPublisher.push(...resultAirplane)
+                        } 
+                        if (resultArtes) {
+                            boxPublisher.push(...resultArtes)
+                        }
+                        if (resultItems) {
+                            boxPublisher.push(...resultItems)
+                        }
+                        if (resultAutomotive) {
+                            boxPublisher.push(...resultAutomotive)
+                        }
+                        if (resultRealstate) {
+                            boxPublisher.push(...resultRealstate)
+                        }
+                        if (resultNautical) {
+                            boxPublisher.push(...resultNautical)
+                        }
+                        if (resultService) {
+                            boxPublisher.push(...resultService)
+                        }
+                        if (resultAuction) {
+                            boxPublisher.push(...resultAuction)
+                        }
+                        if (resultRaffle) {
+                            boxPublisher.push(...resultRaffle)
+                        }
+
+                    } else {
+
+                        if (resultArtes) {
+                            boxPublisher.push(...resultArtes)
+                        }
+                        if (resultItems) {
+                            boxPublisher.push(...resultItems)
+                        }
+
+                    }    
     
                 //console.log("Este es el boxPublisher ------>", boxPublisher);
 
@@ -3024,6 +3042,37 @@ routes.post('/account/purchaseTime', async (req, res)=>{
     }   
 });
 
+
+routes.post('/account/shoppingCart', async(req, res)=>{
+    console.log("......../account/shoppingCart..........");
+    //console.log("req.boy", req.body);
+    const {StoreId, UserId, depart, id, title, price} = req.body;
+    let available;
+
+    //console.log("depart : ", depart);
+    //console.log("id : ", id);
+
+    if (depart === "items"){
+        const searchItems = await modelItems.findById(id, {title: 1, count: 1});
+        //console.log("searchItems", searchItems)
+        available = searchItems.count;
+    } else {
+        const searchArts = await modelArtes.findById(id, {title: 1, count: 1});
+        //console.log("searchArts", searchArts)
+        available = searchItems.count;
+    }
+    
+    if (available !== 0){
+        console.log("Hay disponibilidad podemos meterlo en el carrito")
+        console.log("available :", available);
+        console.log("id, title, price", id, title, price);
+        const searchShoppingCart = await shoppingCart.findOne({ customerId: UserId, sellerId: StoreId });
+        console.log("searchShoppingCart :", searchShoppingCart);
+    }
+    
+
+});
+
 //Sección de manejo de Raffles --------------------------------------------
 routes.get('/raffleModule-admin/:id', async(req, res)=>{
 
@@ -3060,7 +3109,6 @@ routes.get('/raffleModule-admin/:id', async(req, res)=>{
 
     
 });
-
 
 
 // Sección de Difusión de un articulo a los seguidores de una cuenta
