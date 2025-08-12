@@ -3581,25 +3581,49 @@ routes.post('/myaccount/sellerType', async (req, res)=>{
         console.log("Este es el iduser :", idUser);
    
         if ( sellerType === "local" ){
-            console.log("local", value );
-            updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : value } }, {new : true} );
-            console.log("Esto es updateProfile :", updateProfile);
+
+            if (value === "true"){
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : value } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            } else {
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : value, 'sellerType.estadal' : "false", 'sellerType.nacional' : "false" } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            }
+
+        } else if (sellerType === "estadal") {
+
+            if (value === "true" ){
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : "true", 'sellerType.estadal' : value } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            } else {
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.estadal' : "false", 'sellerType.nacional' : "false" } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            }
+
+
         } else if (sellerType === "nacional") {
-            console.log("nacional", value );
-            updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.nacional' : value } }, {new : true} );
-            console.log("Esto es updateProfile :", updateProfile);
+
+            if (value === "true"){
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : "true", 'sellerType.estadal' : "true", 'sellerType.nacional' : value } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            } else {
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.nacional' : "false" } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            }
+            
         } else {
-            console.log("internacional", value );
+
             updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.internacional' : value } }, {new : true} );
             console.log("Esto es updateProfile :", updateProfile);
+            
         }
           
-        
-          
+                  
         const response = { code : "Ok", result : updateProfile};
         res.json(response);
   
       } catch (error) {
+
           const response = { code : "Error", result : updateProfile};
           res.json(response);
   

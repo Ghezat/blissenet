@@ -1370,6 +1370,7 @@
                                                                 <input type="hidden" value="<%= ele.department %>">
                                                                 <input type="hidden" value="<%= ele.title %>">
                                                                 <input type="hidden" value="<%= ele.price %>">
+                                                                <input type="hidden" value="<%= ele.count %>">
 
                                                                 <span > <b>+</b> </span> 
                                                               </button> 
@@ -4464,10 +4465,12 @@ function irATopBar() {
   const tagShippingCart = document.querySelectorAll('.tagShippingCart');
   const StoreId = document.getElementById('StoreId').value;
   const UserId = document.getElementById('UserId').value;
+  const counters = {};   
 
   tagShippingCart.forEach((ele)=>{
 
     ele.addEventListener('click', ()=>{
+
       console.log("Este es ele", ele);
       const son = ele.children;
       console.log("son : ", son);
@@ -4476,10 +4479,42 @@ function irATopBar() {
       const depart = son[1].value;
       const title = son[2].value;
       const price = son[3].value;
-      console.log("depart :", depart);
-      console.log("id :", id);
-      console.log("title :", title);
-      console.log("price :", price); 
+      const count = parseInt(son[4].value);
+
+      // Si no existe el contador para ese id, lo inicializamos en 0
+      if (!counters[id]) {
+        counters[id] = 0;
+      }
+
+      // Ahora incrementamos el contador para ese id
+      counters[id]++;
+
+      //console.log("counters :", counters); //{677095f1244106c28d6a27b0: 2, 678eaa9dd30c9cb0f7745033: 1, 676ff7b1db087c2495cb3e4f: 3}
+      //console.log(`Contador para id ${id}: ${counters[id]}`); //2
+      let request = counters[id];
+      console.log("inventario:", count);
+      console.log("request:", request);
+
+      if (request > count){
+        console.log("No hay inventariuo de este articulo");
+      } else {
+        console.log("Si hay existencia de este articulo");
+      }
+
+
+
+
+      //console.log("depart :", depart);
+      //console.log("id :", id);
+      //console.log("title :", title);
+      //console.log("price :", price);
+      //console.log("count :", count);
+
+      let boxShopping = [];
+
+      const data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 0 }
+
+      console.log("data:", data);
 
       const formData = new FormData()
           formData.append('StoreId', StoreId);
@@ -4490,41 +4525,15 @@ function irATopBar() {
           formData.append('title', title);
           formData.append('price', price);
           
-      fetch('/account/shoppingCart', {
+      fetch('/account/shoppingCart.x', {
               method: "POST",
               body: formData
           })
           .then(response => response.json())
           .then(jsonx => {
               console.log("response del backend --->", jsonx);
-
               const code = jsonx.code;
-              const message = jsonx.message;
-              
-              if (code == "ok"){
-
-                  console.log("ahora si pasamos al siguiente formulario");
-                  console.log("Response: ", jsonx);
-                  //se ha guardado y debemos seguir adelante.
-                  mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
-
-                  setTimeout(() => {
-                      location.reload();
-                  }, 4000);
-                  
-
-              } else {
-
-                  mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
-                  setTimeout(() => {
-                      addFirstMethodDisabled.classList.add('close');
-                      addFirstMethod.classList.remove('close');
-                  }, 3000);
-
-              }
-          
-          
-
+              const message = jsonx.message;        
           })
           .catch(err => console.log(err));
 

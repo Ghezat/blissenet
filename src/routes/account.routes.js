@@ -3047,28 +3047,14 @@ routes.post('/account/shoppingCart', async(req, res)=>{
     console.log("......../account/shoppingCart..........");
     //console.log("req.boy", req.body);
     const {StoreId, UserId, depart, id, title, price} = req.body;
-    let available;
+    let available; 
 
-    //console.log("depart : ", depart);
-    //console.log("id : ", id);
+    //active : { type : Boolean }, //true or false, si esta en true porque esta activo y se vera y si esta en false es porque ya no aparecera porque ya caduco su tiempo de visibilidad. y ya no puede volver a verse. esto es para tener un registro de todo lo que se ha hecho en este departamento.
+    //customerId : { type : String },  //id customer o id del cliente " el comprador"
+    //sellerId : { type : String },  ////id seller o id del seller " el vendedor"
+    //boxShoppingCart : { type : Array},  
+    //paid : { type : Boolean, default : false } //campo que determina si se ha elimando el public en Spaces.   
 
-    if (depart === "items"){
-        const searchItems = await modelItems.findById(id, {title: 1, count: 1});
-        //console.log("searchItems", searchItems)
-        available = searchItems.count;
-    } else {
-        const searchArts = await modelArtes.findById(id, {title: 1, count: 1});
-        //console.log("searchArts", searchArts)
-        available = searchItems.count;
-    }
-    
-    if (available !== 0){
-        console.log("Hay disponibilidad podemos meterlo en el carrito")
-        console.log("available :", available);
-        console.log("id, title, price", id, title, price);
-        const searchShoppingCart = await shoppingCart.findOne({ customerId: UserId, sellerId: StoreId });
-        console.log("searchShoppingCart :", searchShoppingCart);
-    }
     
 
 });

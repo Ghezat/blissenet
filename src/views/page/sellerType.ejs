@@ -75,110 +75,143 @@
                                             </div>
                                             <div class="card-body">
 
-                                                <div class="container d-flex justify-content-center p-0 mb-5" style="width: 100%;">
+                                                <div class="container d-flex justify-content-center p-0 mb-3" style="width: 100%;">
                                                     
                                                     <div class="alert">
                                                         <p>Existen tres tipos de ventas (Locales, Nacional e internacionales) configura tu Tienda para que recibas las ventas que deseas. </p>
-                                                        <p> <span class="bg-secondary rounded-pill text-light px-2">Local :</span> Ventas que puedes tener en tu misma ciudad, son ventas cuyas entregas pueden ser realizadas usando deliveris.</p>
+                                                        <p> <span class="bg-secondary rounded-pill text-light px-2"> Local :</span> Ventas que puedes tener en tu misma Ciudad, son ventas cuyas entregas pueden ser realizadas usando deliveris.</p>
+                                                        <p> <span class="bg-secondary rounded-pill text-light px-2"> Estadal :</span> Ventas que puedes tener en todo el Estado o Provincia, son ventas cuyas entregas requeriras de currier.</p>
                                                         <p> <span class="bg-secondary rounded-pill text-light px-2"> Nacional :</span> Ventas que puedes tener en tu Pais, son ventas cuyas entregas pueden ser realizadas usando currier.</p>
-                                                        <p> <span class="bg-secondary rounded-pill text-light px-2"> Internacional :</span> Ventas que puedes tener en cualquier pais del mundo, son ventas cuyas entregas pueden ser realizadas usnado agentes de cargas o agentes de aduanas.</p>
+                                                        <p> <span class="bg-secondary rounded-pill text-light px-2"> Internacional :</span> Ventas que puedes tener en cualquier País del mundo, son ventas cuyas entregas pueden ser realizadas usando agentes de carga o agentes de aduanales.</p>
                                                     </div>
                                                 
                                                 </div>
-                                                
-                                                
-                                                <div class="containerTools p-0 my-2">
+                                                                                                
+                                                <div class="containerTools p-0 my-1">
 
-
-                                                    <div class="containerSearch d-flex justify-content-between p-2 my-3 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                    <!--  cantidad de articulos para habilitar la opcion de busqueda -->
-                                                        <div class="contentSoonSearch d-flex">
-                                                        <% if(sumCount >= 1) { %>    
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción">
-                                                                <div class="spinner-grow spinner-grow-sm me-2" role="status">
-                                                                    <span class="visually-hidden">Loading...</span>
-                                                                </div>
-                                                                Local
-                                                            </label>
-                                                            
-                                                            <div class="form-check form-switch ms-2">
-                                                                                               
-                                                                <% if ( sellerType.local === "true" ){%>  
-                                                                    <input class="form-check-input localInput" type="checkbox" id="CheckSearch" name="local" value= false checked> 
-                                                                <% } else { %>
-                                                                    <input class="form-check-input localInput" type="checkbox" id="CheckSearch" name="local" value= true > 
-                                                                <% }; %>
+                                                    <div class="borderCountry border rounded-3">
+                                                        <div class="containerSearch d-flex justify-content-between p-2 my-0 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
+                                                            <div class="contentSoonSearch d-flex">
+                                                            <% if(sumCount >= 1) { %>    
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch" title=" Debes tener mas de 11 articulos para habilitar esta opción">
+                                                                    <div class="spinner-grow spinner-grow-sm me-2" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                    Local
+                                                                </label>
                                                                 
-                                                            </div>
-                                                        <% } else { %>
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
-                                                            <div class="form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
-                                                            </div>
-                                                        <% }; %>
-                                                        </div> 
-                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
-                                                    </div>
-
-                                                    <div class="containerSearch d-flex justify-content-between p-2 my-3 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                    <!--  cantidad de articulos para habilitar la opcion de busqueda -->
-                                                        <div class="contentSoonSearch d-flex">
-                                                        <% if(sumCount >= 1) { %>    
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckNacional" title=" Debes tener mas de 11 articulos para habilitar esta opción">
-                                                                <div class="spinner-grow spinner-grow-sm me-2" role="status">
-                                                                    <span class="visually-hidden">Loading...</span>
+                                                                <div class="form-check form-switch ms-2">
+                                                                                                
+                                                                    <% if ( sellerType.local === "true" ){%>  
+                                                                        <input class="form-check-input localInput" type="checkbox" id="CheckSearch" name="local" value= false checked> 
+                                                                    <% } else { %>
+                                                                        <input class="form-check-input localInput" type="checkbox" id="CheckSearch" name="local" value= true > 
+                                                                    <% }; %>
+                                                                    
                                                                 </div>
-                                                                Nacional
-                                                            </label>
-                                                            
-                                                            <div class="form-check form-switch ms-2">
-                                                                                               
-                                                                <% if ( sellerType.nacional === "true" ){%>  
-                                                                    <input class="form-check-input nacionalInput" type="checkbox" id="CheckNacional"  name="nacional" value= false checked> 
-                                                                <% } else { %>
-                                                                    <input class="form-check-input nacionalInput" type="checkbox" id="CheckNacional" name="nacional" value= true > 
-                                                                <% }; %>
-                                                                
-                                                            </div>
-                                                        <% } else { %>
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
-                                                            <div class="form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
-                                                            </div>
-                                                        <% }; %>
-                                                        </div> 
-                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
-                                                    </div>
-
-                                                    <div class="containerSearch d-flex justify-content-between p-2 my-3 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
-                                                    <!--  cantidad de articulos para habilitar la opcion de busqueda -->
-                                                        <div class="contentSoonSearch d-flex">
-                                                        <% if(sumCount >= 1) { %>    
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckInternacional" title=" Debes tener mas de 11 articulos para habilitar esta opción">
-                                                                <div class="spinner-grow spinner-grow-sm me-2" role="status">
-                                                                    <span class="visually-hidden">Loading...</span>
+                                                            <% } else { %>
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
                                                                 </div>
-                                                                Internacional
-                                                            </label>
-                                                            
-                                                            <div class="form-check form-switch ms-2">
-                                                                                               
-                                                                <% if ( sellerType.internacional === "true" ){%>  
-                                                                    <input class="form-check-input internacionalInput" type="checkbox" id="CheckInternacional"  name="internacional" value= false checked> 
-                                                                <% } else { %>
-                                                                    <input class="form-check-input internacionalInput" type="checkbox" id="CheckInternacional" name="internacional" value= true > 
-                                                                <% }; %>
+                                                            <% }; %>
+                                                            </div> 
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckLocal"> <i class="bi bi-info-circle mx-1"></i> </div>       
+                                                        </div>
+
+                                                        <div class="containerSearch d-flex justify-content-between p-2 my-0 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
+                                                            <div class="contentSoonSearch d-flex">
+                                                            <% if(sumCount >= 1) { %>    
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckEstadal" title=" Debes tener mas de 11 articulos para habilitar esta opción">
+                                                                    <div class="spinner-grow spinner-grow-sm me-2" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                    Estadal
+                                                                </label>
                                                                 
-                                                            </div>
-                                                        <% } else { %>
-                                                            <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
-                                                            <div class="form-check form-switch">
-                                                                <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
-                                                            </div>
-                                                        <% }; %>
-                                                        </div> 
-                                                        <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckSearch"> <i class="bi bi-info-circle mx-1"></i> </div>       
-                                                    </div>
+                                                                <div class="form-check form-switch ms-2">
+                                                                                                
+                                                                    <% if ( sellerType.estadal === "true" ){%>  
+                                                                        <input class="form-check-input estadalInput" type="checkbox" id="CheckEstadal" name="estadal" value= false checked> 
+                                                                    <% } else { %>
+                                                                        <input class="form-check-input estadalInput" type="checkbox" id="CheckEstadal" name="estadal" value= true > 
+                                                                    <% }; %>
+                                                                    
+                                                                </div>
+                                                            <% } else { %>
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
+                                                                </div>
+                                                            <% }; %>
+                                                            </div> 
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckEstadal"> <i class="bi bi-info-circle mx-1"></i> </div>       
+                                                        </div>
+
+                                                        <div class="containerSearch d-flex justify-content-between p-2 my-0 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
+                                                            <div class="contentSoonSearch d-flex">
+                                                            <% if(sumCount >= 1) { %>    
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckNacional" title=" Debes tener mas de 11 articulos para habilitar esta opción">
+                                                                    <div class="spinner-grow spinner-grow-sm me-2" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                    Nacional
+                                                                </label>
+                                                                
+                                                                <div class="form-check form-switch ms-2">
+                                                                                                
+                                                                    <% if ( sellerType.nacional === "true" ){%>  
+                                                                        <input class="form-check-input nacionalInput" type="checkbox" id="CheckNacional"  name="nacional" value= false checked> 
+                                                                    <% } else { %>
+                                                                        <input class="form-check-input nacionalInput" type="checkbox" id="CheckNacional" name="nacional" value= true > 
+                                                                    <% }; %>
+                                                                    
+                                                                </div>
+                                                            <% } else { %>
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
+                                                                </div>
+                                                            <% }; %>
+                                                            </div> 
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckNacional"> <i class="bi bi-info-circle mx-1"></i> </div>       
+                                                        </div>
+                                                    </div>    
+
+                                                    <div class="borderOutCountry border rounded-3 my-3">
+                                                        <div class="containerSearch d-flex justify-content-between p-2 my-0 rounded-2 " style="width: 100%; background-color: rgb(228, 228, 228, 0.3);">
+                                                        <!--  cantidad de articulos para habilitar la opcion de busqueda -->
+                                                            <div class="contentSoonSearch d-flex">
+                                                            <% if(sumCount >= 1) { %>    
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckInternacional" title=" Debes tener mas de 11 articulos para habilitar esta opción">
+                                                                    <div class="spinner-grow spinner-grow-sm me-2" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                    Internacional
+                                                                </label>
+                                                                
+                                                                <div class="form-check form-switch ms-2">
+                                                                                                
+                                                                    <% if ( sellerType.internacional === "true" ){%>  
+                                                                        <input class="form-check-input internacionalInput" type="checkbox" id="CheckInternacional"  name="internacional" value= false checked> 
+                                                                    <% } else { %>
+                                                                        <input class="form-check-input internacionalInput" type="checkbox" id="CheckInternacional" name="internacional" value= true > 
+                                                                    <% }; %>
+                                                                    
+                                                                </div>
+                                                            <% } else { %>
+                                                                <label class="form-check-label no-select p-0 me-2" for="CheckSearch"  title=" Debes tener mas de 11 articulos para habilitar esta opción">○ Buscador de Tienda </label>
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input" type="checkbox" disabled> <i class="bi bi-lock ms-1"></i>                                                                      
+                                                                </div>
+                                                            <% }; %>
+                                                            </div> 
+                                                            <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticCheckInternacional"> <i class="bi bi-info-circle mx-1"></i> </div>       
+                                                        </div>
+                                                    </div>    
 
                                                 </div>
 
@@ -203,7 +236,6 @@
                                                 
                                                 </div>
 
-                                         
                                             </div>
                                          
 
@@ -222,8 +254,8 @@
                                 </div>
                             </div>
 
-                            <!-- Modal Shopping-cart --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
-                            <div class="modal fade" id="staticCheckSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
+                            <!-- Modal checkLocal --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
+                            <div class="modal fade" id="staticCheckLocal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
                                 <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                                     <div class="modal-content text-dark">
 
@@ -232,18 +264,83 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p><span class="fw-bold text-primary">Configura el tipo de ventas que quieres realizar en tu Tienda. </span>
-                                                "¡Aprovecha esta función para facilitar las compras de tus clientes!, ofrece esta herramienta para que puedan
-                                                 hacer una compra de varios articulos con un solo pago."
+                                            <p><span class="fw-bold text-primary">Venta de tipo Local. </span>
+                                               "Esta configuración te permite vender únicamente a clientes ubicados en tu misma ciudad, excluyendo el resto. Es ideal para tiendas que no pueden abastecer áreas muy extensas."
                                             </p>
                                             <p> <span class="bg-dark py-1 px-2 rounded-2"> <b class="text-info">Requerimento : 1 Anuncio</b>  </span> </p>
                                         </div>
-                                        <div class="modal-footer" style="background-image: url('/img/bannerShoopingCart.jpg'); background-size: cover; background-position: center;">
+                                        <div class="modal-footer" style="background-image: url('/img/bannerSellerType.jpg'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div> 
+
+                            <!-- Modal checkEstadal --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
+                            <div class="modal fade" id="staticCheckEstadal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content text-dark">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelH2">Tipo de Ventas</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><span class="fw-bold text-primary">Venta de tipo Estadal. </span>
+                                                "Esta configuración te permite vender únicamente a clientes ubicados en tu mismo estado o provincia, excluyendo el resto del país. Es ideal para tiendas que pueden abastecer áreas extensas dentro de esa región, pero no fuera de ella."
+                                            </p>
+                                            <p> <span class="bg-dark py-1 px-2 rounded-2"> <b class="text-info">Requerimento : 1 Anuncio</b>  </span> </p>
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerSellerType.jpg'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal checkNacional --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
+                            <div class="modal fade" id="staticCheckNacional" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content text-dark">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelH2">Tipo de Ventas</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><span class="fw-bold text-primary">Venta de tipo Nacional. </span>
+                                                "Esta configuración te permite vender a clientes ubicados dentro de tu mismo país. Es ideal para tiendas que pueden abastecer a todo el territorio nacional."
+                                            </p>
+                                            <p> <span class="bg-dark py-1 px-2 rounded-2"> <b class="text-info">Requerimento : 1 Anuncio</b>  </span> </p>
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerSellerType.jpg'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal checkInteracional --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
+                            <div class="modal fade" id="staticCheckInternacional" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content text-dark">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabelH2">Tipo de Ventas</h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><span class="fw-bold text-primary">Venta de tipo Internacional. </span>
+                                               Esta configuración te permite vender a clientes en cualquier parte del mundo. Es ideal para tiendas que ofrecen productos digitales o para empresas que cuentan con los permisos necesarios para exportar."
+                                            </p>
+                                            <p> <span class="bg-dark py-1 px-2 rounded-2"> <b class="text-info">Requerimento : 1 Anuncio</b>  </span> </p>
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerSellerType.jpg'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
                         <% } else { %> <!-- cuenta sin perfil -->
 
@@ -282,6 +379,7 @@
                   
         const idUser = document.getElementById('idUser').value;
         const localInput = document.querySelector('.localInput');
+        const estadalInput = document.querySelector('.estadalInput');
         const nacionalInput = document.querySelector('.nacionalInput');
         const internacionalInput = document.querySelector('.internacionalInput');
         
@@ -324,6 +422,59 @@
                         response= `Venta de tipo Local Activado.` 
                     } else {
                         response= `Venta de tipo Local Desactivado.` 
+                    }
+                    
+                    mostrarToast( response , 'right', 'success', '¡Hecho!', true );
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 5000);
+                })
+
+                .catch(err => console.error(err));
+            });
+
+        }
+
+        if(estadalInput){
+
+            estadalInput.addEventListener('change', ()=>{
+
+            //bloqueamos el suiche para que no puedan volver a darle.
+            estadalInput.setAttribute("disabled", "");
+
+            let estadalValue = estadalInput.value;
+        
+            let dato = {
+                idUser : idUser,
+                sellerType : "estadal",
+                value : estadalValue
+            }
+
+            console.log("dato: ", dato);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            fetch('/myaccount/sellerType', {
+                method : "POST",
+                body : JSON.stringify(dato),
+                headers : { "content-type" : "application/json"}
+            })
+                .then(response => response.json())
+                .then(json =>{
+                    console.log("respuesta del backend -local-->", json);
+                    const code = json.code;
+                    const estadal = json.result.sellerType.estadal;
+
+
+                    console.log("code :", code);
+                    console.log("estadal :", estadal);
+                    console.log("typeof local :", typeof estadal);
+
+                    let response;
+
+                    if (estadal === "true"){
+                        response= `Venta de tipo Estadal Activado.` 
+                    } else {
+                        response= `Venta de tipo Estadal Desactivado.` 
                     }
                     
                     mostrarToast( response , 'right', 'success', '¡Hecho!', true );

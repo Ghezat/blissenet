@@ -93,5 +93,5 @@ que es duplicado y borrar el el archivo robots.txt y reemplazarlo por este
        access_log off;
     }
 
- esto seria todo luego sales dando a ":" y "wq"
+ esto seria todo luego sales dando a escape, luego  ":" y finalmente "wq"
  finalmente puedes pobar con el comando nginx -t    
