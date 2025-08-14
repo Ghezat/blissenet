@@ -1,34 +1,19 @@
                                      
-  // ir a la pagina > google.com/recaptcha/about/
-  // acceder a V3 Admin Console  (hacer esto con la cuenta de google scorpinosred@gmail.com)
 
- /*  reCaptchat  */
+// Instalación del SW
+self.addEventListener('install', event => {
+  console.log('Service Worker instalado');
+  self.skipWaiting(); // Para activar SW inmediatamente
+});
 
-/*   function forgottenpassw(token) { 
-      let response = grecaptcha.getResponse();
-      document.getElementById("forgotten").submit(); //este id es el id del formulario, cuando reciba la respuesta de google recatchar este envia el formulario.
-  } */
+// Activación del SW
+self.addEventListener('activate', event => {
+  console.log('Service Worker activado');
+  return self.clients.claim(); // Para tomar control rápido de las páginas
+});
 
-/* 
-  function onSubmitSignup(token) {
-      let response = grecaptcha.getResponse();
-      document.getElementById("signup").submit();
-  }
-
-  function signinAdmin(token) {
-    let response = grecaptcha.getResponse();
-    document.getElementById("signinAdmin").submit();
-  }
-
-  function signupAdmin(token) {
-    let response = grecaptcha.getResponse();
-    document.getElementById("signupAdmin").submit();
-  }
-
-
- */
-
-/*  reCaptchat  */
-
-
+// Fetch simple: solo responde con la red (sin caché por ahora)
+self.addEventListener('fetch', event => {
+  // Puedes dejar vacío o simplemente pasar la petición
+});
 

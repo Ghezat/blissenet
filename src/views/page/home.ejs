@@ -7,10 +7,8 @@
     <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
     <script src="/toastr/toastr.min.js"></script>
 
-    <!-- <link rel="manifest" href="/manifest.json">  -->
-    <!-- <link rel="manifest" href="https://blissenet.com/manifest.json"> -->
     <link rel="manifest" href="/manifest.json">
-    <!--  esto coloca el icono para que puedas descargar un icono de acceso de la app -->
+    <!--  por algun arazon no hay errores pero aun no me sale el boton para descargar y menos en los telefonos -->
     
     <title>Blissenet</title>
 
@@ -1325,7 +1323,26 @@
   
 </script>
 
+<script>
 
+  if (window.location.protocol === 'https:'  || window.location.hostname === 'localhost') {
+  // Registro SW
+    console.log("Estás en HTTPS");
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/js/index.js') 
+          .then(reg => console.log('Service Worker registrado.', reg))
+          .catch(err => console.log('Error en el registro del Service Worker:', err));
+      });
+    }
+
+  } else {
+    console.log("No estás en HTTPS");
+  }
+
+
+</script>
 
 </body>
 

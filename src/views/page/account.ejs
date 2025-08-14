@@ -16,6 +16,8 @@
 
         
     <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
     <title>Blissenet Account</title>
 </head>
 <style>
@@ -42,6 +44,13 @@
     z-index: 110; /* valor que necesites */
     /*para que z-index funcione debe ir acompañado de un valor en la propiedad position*/
   }
+
+  .toast-success {
+        /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+        background-color: #6f42c1; /* Azul tirando a morado */
+        color: white; /* Color del texto */
+  } 
+
 
   .boderBtn{
     cursor: pointer;
@@ -193,11 +202,11 @@
       transition: .5s ease width;
     }
 
-    .tagShippingCart{
-      transition: .5s ease outline;
+    .CartMenos, .CartMas {
+      transition: outline 0.5s ease;
     }
 
-    .tagShippingCart:hover{
+    .CartMenos:hover, .CartMas:hover {
       outline: 2px solid lightskyblue;
     }
 
@@ -260,6 +269,22 @@
       cursor: pointer;
     }
 
+    .lightCartShopping {
+      animation: alarmaVisual 1.5s ease-in-out infinite;
+    }
+
+    @keyframes alarmaVisual {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 5px 2px rgba(255, 0, 0, 0.8);
+      }
+      50% {
+        transform: scale(1.3);
+        opacity: 0.6;
+        box-shadow: 0 0 15px 6px rgba(255, 0, 0, 0.4);
+      }
+    }
 
     @keyframes moverLupa {
           0% {
@@ -428,7 +453,8 @@
       <% const seeMarket = user.seeMarket %>
       <!-- <% const idUser = user._id %> -->
       <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
-      <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+      <input type="hidden" id="UserId" value="<%= user._id %>"> 
+      
         <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
     <% }; %>
 
@@ -465,8 +491,7 @@
         <input type="hidden" id="StorenameValue" value="<%= store_username %>">
 
         <input type="hidden" id="StoreId" value="<%= store_id %>">
-        <input type="hidden" id="UserId" value="<%= user._id %>"> 
-
+        
         <div class="container-fluid p-0 m-0">
 
           <div class="row rowWidth mx-0 p-0">
@@ -1003,14 +1028,14 @@
                             <div class="containerAdminMain d-flex flex-column justify-content-center align-items-center" style="margin-right: 13px; z-index : 1">
 
                               <% if (shoppingCart === true ) { %>  
-                                  <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="Carrito de compra en desarrollo.">
+                                  <div class="containerCartList" style="position: relative;">
+                                    <div class="lightCartShopping close" style="position: absolute; top: -3px; right: 4px; background-color: #d30404; width: 15px; height: 15px; border-radius: 50%;"></div>
                                     <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
                                       <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
                                     </div>
-                                  </button> 
+                                  </div> 
                               <% }; %>    
                            
-
 
                               <button class="popoverChatDeBliss" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="ChatdeBliss en desarrollo.">
                                 <div class="contentChatMessage border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
@@ -1037,8 +1062,7 @@
                         </div>
 
                         
-
-             
+            
                         <div class="Workspace" style="width: 96%;">
 
                               <% if (newBox.length !==0) {%>
@@ -1362,18 +1386,21 @@
                                                       <% if (user) { %>
 
                                                           <% if (ele.soldOut === false) { %>
-                                                            <div class="border border-warning d-flex justify-align-center justify-content-center" style="z-index: 100; background-color: #fcda57; width: 40px; height: 40px; position: absolute; top: 10px; right: 10px; border-radius: 50%;"> 
+                                                            <div class="containerCart rounded-pill shadow-sm" style="background-color: #fcda57; z-index: 100; width: auto; position: absolute; top: 10px; right: 10px;"> 
 
-                                                              <button class="btn tagShippingCart d-flex justify-content-center align-items-center" style="background-color: #fcda57; width: 100%; height: 100%; border-radius: 50%; font-size: 18px;"> 
+                                                              <div class="tagShippingCart contentButton d-flex" style="height: 35px;">
 
-                                                                <input type="hidden" value="<%= ele._id %>">
-                                                                <input type="hidden" value="<%= ele.department %>">
-                                                                <input type="hidden" value="<%= ele.title %>">
-                                                                <input type="hidden" value="<%= ele.price %>">
-                                                                <input type="hidden" value="<%= ele.count %>">
+                                                                  <input type="hidden" value="<%= ele._id %>"> <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele.title %>"> <input type="hidden" value="<%= ele.price %>"> <input type="hidden" value="<%= ele.count %>">
+                                                                  <button class="btn CartMenos d-flex justify-content-center align-items-center" style="background-color: #fcda57; width: 30px; height: 30px; height: 100%; border-radius: 50%; font-size: 18px;"> 
+                                                                    <span > <b>-</b> </span> 
+                                                                  </button> 
+                                                                  <span class="countTag d-flex align-items-center mx-1 py-0" style="font-size: 18px;"> 0 </span>
+                                                                  <button class="btn CartMas d-flex justify-content-center align-items-center" style="background-color: #fcda57; width: 30px; height: 30px; height: 100%; border-radius: 50%; font-size: 18px;"> 
+                                                                    <span > <b>+</b> </span> 
+                                                                  </button> 
 
-                                                                <span > <b>+</b> </span> 
-                                                              </button> 
+                                                              </div>
+
 
                                                             </div>
                                                           <% }; %>  
@@ -1443,7 +1470,7 @@
 
                                                       <% }; %>  
                                                     
-                                                      
+
                                                       <div class="carousel-inner" style="position: relative; width: 100%; height: 220px;  z-index: 1;">
                                                         
                                                         <% if (ele.offer === true) { %>    
@@ -1739,10 +1766,52 @@
                               
                         </div>
 
+
+
                     </div>
                   </div> 
 
-                                    
+                           
+                  <!-- este es el popup lista de compras -->
+                  <div class="close" id="popupCart" style="position: fixed; top: 50px; right: 10px; width: 350px; max-height: 500px; background: rgba(255, 255, 255, 0.8); border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 15px; overflow-y: auto; z-index: 500;">
+                    
+                    <div class="title d-flex justify-content-between">
+                      <h3>Lista de compra</h3>   <span class="closePopupCartList cursor-pointer"> <i class="bi bi-x-lg"></i> </span> 
+                    </div>
+                    
+
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th style="text-align: left;">Descrip.</th>
+                            <th style="text-align: center;">Cant.</th>
+                            <th style="text-align: right;">P. Unit.</th>
+                            <th style="text-align: right;">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody id="cartItems">
+                          <!-- Aquí agregas las filas con JS -->
+
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td colspan="3" style="text-align: right; font-weight: bold; border-top: 1px solid #ccc;">Total a pagar:</td>
+                            <td id="totalPagar" style="font-size: 17px; text-align: right; font-weight: bold; border-top: 1px solid #ccc;">$0.00</td>
+                          </tr>
+                        </tfoot>
+                    </table>
+
+                    <div class="alert alert-info">
+
+                      <b>Leer: </b> "Este módulo de carrito de compras está en desarrollo. Muy pronto estará listo para que puedas usarlo."
+                    </div>
+
+                    <div class="contentButtonClose d-flex justify-content-end">
+                      <button class="btn btn-danger rounded-2" id="closePopup">Cerrar</button>
+                    </div>
+                    
+                  </div>
+
                   <div class="containerViewRatesStore border close" style="background-color: white;">
                     <div class="containert">
                       <div class="modal-header" style="background-color: white;">
@@ -2719,13 +2788,13 @@
               let sellerCount = sellerBuySell + countRafflePositivo;
   
               if ( sellerCount <= 9 ){ // de 0 a 9
-                  console.log("Estas en el nivel Carbon como comprador");
+                  //console.log("Estas en el nivel Carbon como comprador");
                   level.innerText = 'Carbon'
                   imgLevel.innerHTML +=  '<img src="/img/MineralCarbonClean.png" class="m-0" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
   
               } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
-                  console.log("Estas en el nivel Hierro como vendedor");
+                  //console.log("Estas en el nivel Hierro como vendedor");
                   level.innerText = 'Hierro'
                   imgLevel.innerHTML +=  '<img src="/img/MineralHierroClean.png" style="width: 40px;">'
                   scoreLevel.innerText = sellerCount;
@@ -4460,87 +4529,218 @@ function irATopBar() {
 <% if ( user !== undefined ) { %>
   <!-- estas son las opciones que estaran cuando SI exista un usuario logeado -->
 
+
+
+
 <script>
   //controlador de tagShippingCart
   const tagShippingCart = document.querySelectorAll('.tagShippingCart');
+  const cartMenos = document.querySelectorAll('.CartMenos');
+  const cartMas = document.querySelectorAll('.CartMas');
+  const countTag = document.querySelectorAll('.countTag'); //es el span que muestra la cantidad de pedido por el cliente
+  
+  const containerCartList = document.querySelector('.containerCartList'); //este es el icono de cartShopping dodne las personas podran con un click ver su lista de compra.
+  const lightCartShopping = document.querySelector('.lightCartShopping'); //luz parpadeante identificadora de carrito activo
+  const cartItems = document.getElementById('cartItems'); // el la tabla donde vamos a inyectar los datos de la lista de compra                         
+  const totalPagar = document.getElementById('totalPagar'); //es el total a pagar del carrito de compras.
+
   const StoreId = document.getElementById('StoreId').value;
   const UserId = document.getElementById('UserId').value;
   const counters = {};   
 
-  tagShippingCart.forEach((ele)=>{
+  //exploramos si en el localStorage ya hay un cart si existe es porque ya tenemos un boxShopping y no hace falta crearlo sino actualizarlo.
+  const cart = JSON.parse(localStorage.getItem(`cart_${UserId}`)) || [];
+  console.log("esto es el cart del localstorage", cart);
+  let boxShopping = []; //este es el array dodne se guardan todos los elementos del carrito.
 
-    ele.addEventListener('click', ()=>{
+  //si cart tiene elementos 
+  if (cart.length !==0){
+    boxShopping.push(...cart);
+  }
+  console.log("boxShopping :", boxShopping );
 
-      console.log("Este es ele", ele);
-      const son = ele.children;
-      console.log("son : ", son);
+  //----- Esta funcion coloca un identificador al boton de cartShopping----
+  lightCart();
 
-      const id = son[0].value;
-      const depart = son[1].value;
-      const title = son[2].value;
-      const price = son[3].value;
-      const count = parseInt(son[4].value);
+  function lightCart(){
+    if (boxShopping.length !==0){
+      lightCartShopping.classList.remove('close');
 
-      // Si no existe el contador para ese id, lo inicializamos en 0
-      if (!counters[id]) {
-        counters[id] = 0;
+      cartItems.innerHTML = "" //limpiamos e inyectamos 
+      let totalPay = 0;
+
+      //inyectamos los datos en la tabla
+      boxShopping.forEach((ele)=>{
+
+        const total = parseFloat((ele.price * ele.countRequest).toFixed(2));
+
+        totalPay = totalPay + total; //aqui sumamos cada total
+
+        cartItems.innerHTML += `
+          <tr>
+            <th style="text-align: left;"> ${ ele.title } </th>
+            <th style="text-align: center;">${ ele.countRequest }</th>
+            <th style="text-align: right;">${ ele.price }</th>
+            <th style="text-align: right;">${ total }</th>
+          </tr>
+        `
+      })
+
+      totalPagar.innerText = totalPay.toFixed(2);
+     
+
+    } else {
+      lightCartShopping.classList.add('close');
+    } //solo para cuando carga la pagina o se refresca.
+  }  
+  //----------------------------------------------------------------------
+  
+  tagShippingCart.forEach((ele, i)=>{
+
+    //console.log("Este es ele", ele);
+    const son = ele.children;
+    //console.log("son : ", son);
+
+    const id = son[0].value;
+    const depart = son[1].value;
+    const title = son[2].value;
+    const price = son[3].value;
+    const count = parseInt(son[4].value);
+    
+    boxShopping.forEach((elemento)=>{
+      const idElemento = elemento.id;
+
+      if (idElemento === id){
+        console.log("idElemento === id", idElemento + "  " + id);
+        countTag[i].innerText = `${elemento.countRequest}`
       }
-
-      // Ahora incrementamos el contador para ese id
-      counters[id]++;
-
-      //console.log("counters :", counters); //{677095f1244106c28d6a27b0: 2, 678eaa9dd30c9cb0f7745033: 1, 676ff7b1db087c2495cb3e4f: 3}
-      //console.log(`Contador para id ${id}: ${counters[id]}`); //2
-      let request = counters[id];
-      console.log("inventario:", count);
-      console.log("request:", request);
-
-      if (request > count){
-        console.log("No hay inventariuo de este articulo");
-      } else {
-        console.log("Si hay existencia de este articulo");
-      }
-
-
-
-
-      //console.log("depart :", depart);
-      //console.log("id :", id);
-      //console.log("title :", title);
-      //console.log("price :", price);
-      //console.log("count :", count);
-
-      let boxShopping = [];
-
-      const data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 0 }
-
-      console.log("data:", data);
-
-      const formData = new FormData()
-          formData.append('StoreId', StoreId);
-          formData.append('UserId', UserId);
-
-          formData.append('depart', depart);
-          formData.append('id', id);
-          formData.append('title', title);
-          formData.append('price', price);
-          
-      fetch('/account/shoppingCart.x', {
-              method: "POST",
-              body: formData
-          })
-          .then(response => response.json())
-          .then(jsonx => {
-              console.log("response del backend --->", jsonx);
-              const code = jsonx.code;
-              const message = jsonx.message;        
-          })
-          .catch(err => console.log(err));
-
 
     })
 
-  })
+    cartMenos[i].addEventListener('click', ()=>{
+
+          //console.log( "quiero retar unidades de este articulo", title );
+          //console.log("boxShopping :", boxShopping);
+         
+          const index = boxShopping.findIndex(ele => ele.id === id);
+          //console.log("boxShopping[index]", boxShopping[index]);
+
+          if (index !== -1) {
+            //tiene el indice, existe el articulo
+            const countRequest = boxShopping[index].countRequest;
+            
+            if (countRequest > 1){
+              boxShopping[index].countRequest--;
+              countTag[i].innerText = countRequest - 1; //actualizamos en tiempo real
+            } else {
+              boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
+              countTag[i].innerText = 0; //actualizamos en tiempo real
+              const message = "Eliminado del carrito.";
+              mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+            }
+
+            localStorage.setItem(`cart_${UserId}`, JSON.stringify(boxShopping));
+          } else {
+            console.log("Elemento no encontrado en boxShopping");
+          }
+
+           lightCart();
+
+    })
+
+    cartMas[i].addEventListener('click', ()=>{
+      
+        let requestExist;
+        boxShopping = JSON.parse(localStorage.getItem(`cart_${UserId}`)) || [];
+
+        console.log("boxShopping........... :", boxShopping);
+
+        if ( boxShopping.length !== 0 ){
+          const index = boxShopping.findIndex(elem => elem.id === id);
+
+          if (index !== -1){
+            requestExist = boxShopping[index].countRequest;
+
+              if (requestExist < count){
+                console.log("requestExist :", requestExist);
+                console.log("typeof requestExist :", typeof requestExist);
+                const request = requestExist + 1;
+                countTag[i].innerText = request; //actualizamos en tiempo real
+                // Existe, actualizar datos
+                let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": request };
+                boxShopping[index] = data;
+                console.log("Artículo actualizado en el carrito:", data);
+              } else {
+                const message = "Articulo sin existencia.";
+                mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+              }  
+
+          } else {
+            // No existe, agregar nuevo
+            console.log("Esto es count", count);
+            if ( 1  <= count){
+              countTag[i].innerText = 1;
+              let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1 };
+              boxShopping.push(data);
+              console.log("Artículo agregado al carrito:", data);
+              const message = "Agregado al carrito.";
+              mostrarToast( message , 'right', 'success', '', false ); // Agrega título aquí
+            } else {
+              const message = "Articulo sin existencia.";
+              mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+            }  
+            
+          } 
+
+        } else {
+
+          if (count >= 1){
+            countTag[i].innerText = 1;
+            let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1 };
+            boxShopping.push(data);
+            const message = "Agregado al carrito.";
+            mostrarToast( message , 'right', 'success', '', false ); // Agrega título aquí
+          } else {
+            const message = "Articulo sin existencia.";
+            mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+          }
+          
+        }
+
+              
+          localStorage.setItem(`cart_${UserId}`, JSON.stringify(boxShopping));
+        
+          console.log("---------Save in the localStorage");
+          lightCart();
+
+    })  
+
+ })
+      
+         
+       
+
+
+ //boton de lista de compra que hace aparecer o desaparecer el popup de lista de compra
+    
+const popupCart = document.getElementById('popupCart');
+const closePopup = document.getElementById('closePopup');
+const closePopupCartList = document.querySelector('.closePopupCartList');
+
+containerCartList.addEventListener('click', () => {
+  popupCart.classList.remove('close');
+});
+
+closePopup.addEventListener('click', () => {
+  popupCart.classList.add('close'); // Cerrar el popup desde abano boton cerrar
+});
+
+closePopupCartList.addEventListener('click', ()=>{
+    popupCart.classList.add('close'); // Cerrar el popup desde arriba icono x
+})
+ 
+
+
 
 </script>
 
@@ -4780,7 +4980,7 @@ function irATopBar() {
   //este es el controlador de los delivery
    const delivery = document.querySelectorAll('.delivery');
    const containerDelivery = document.querySelectorAll('.containerDelivery');
-   console.log("------- containerDelivery ---------", containerDelivery);
+   //console.log("------- containerDelivery ---------", containerDelivery);
   
 
    for (let i = 0; i < delivery.length; i++) {
@@ -5262,9 +5462,76 @@ if (surveyDataInput){
 
   })
 
-
-
 </script>
+
+
+<script>
+
+
+    function mostrarToast(mensaje, posicion, color, titulo = '', conBotonCerrar = false) {
+        // Configuración predeterminada
+        toastr.options = {
+            "closeButton": conBotonCerrar, // Agregar botón de cerrar si se solicita
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": !conBotonCerrar, // Si tiene botón de cerrar, no mostrar barra de progreso
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "600",
+            "hideDuration": "1000",
+            "timeOut": conBotonCerrar ? false : "8000", // No se oculta automáticamente si tiene botón de cerrar
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+  
+        // Configurar la posición
+        switch (posicion) {
+            case 'center':
+                toastr.options.positionClass = 'toast-top-center';
+                break;
+            case 'left':
+                toastr.options.positionClass = 'toast-top-left';
+                break;
+            case 'right':
+                toastr.options.positionClass = 'toast-top-right';
+                break;
+            default:
+                toastr.options.positionClass = 'toast-top-right'; // Posición predeterminada
+        }
+  
+        // Mostrar el mensaje según el color especificado
+        switch (color) {
+            case 'success':
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+                break;
+            case 'info':
+                titulo ? toastr.info(mensaje, titulo) : toastr.info(mensaje);
+                break;
+            case 'warning':
+                titulo ? toastr.warning(mensaje, titulo) : toastr.warning(mensaje);
+                break;
+            case 'danger':
+                titulo ? toastr.error(mensaje, titulo) : toastr.error(mensaje);
+                break;
+            case 'primary':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-primary' }) : toastr.info(mensaje, '', { toastClass: 'toast-primary' });
+                break;
+            case 'dark':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-dark' }) : toastr.info(mensaje, '', { toastClass: 'toast-dark' });
+                break;
+            default:
+                console.warn('Color no válido. Usando el color por defecto (success).');
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+        }
+    }
+  
+    //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+  
+</script>
+
 
 <% }; %>
 

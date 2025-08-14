@@ -80,8 +80,8 @@ el error mas comun es el duplicado del bloque de raiz "/" se resuelve entrando e
 /etc/nginx/conf.d/users/blissenet/blissenet.conf
 
 como arreglar el problema de duplicado: 
-cd     /etc/nginx/conf.d/users 
-vim --> blissenet.conf   
+cd  /etc/nginx/conf.d/users 
+vim  blissenet.conf   
 
 aqui adentro usar la tecla "i" para poder insertar y luego debes eliminar o comentar el bloque 
 que es duplicado y borrar el el archivo robots.txt y reemplazarlo por este 
