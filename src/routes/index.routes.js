@@ -3533,6 +3533,8 @@ routes.post('/myaccount/shopping-cart', async(req, res)=>{
 });
 
 routes.get('/myaccount/sellerType', async (req, res)=>{
+    //Este ruta renderiza la pantalla para que los usuarios o tiendas puedan redefirnir el rango de las ventas,
+    //pudiendo ser de tipo : Local, Estadal, Nacional e Internacional. Solo basta con que tenga 1 anuncio para activar estos controles
     try {
         
         console.log("********* sellerType ******** -->");
@@ -3555,10 +3557,24 @@ routes.get('/myaccount/sellerType', async (req, res)=>{
 
             //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
         
+            const countAir = await modelAirplane.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAir; 
             const countArt = await modelArtes.find({ user_id : user._id  }).count();
             sumCount = sumCount + countArt; 
             const countIte = await modelItems.find({ user_id : user._id  }).count();
             sumCount = sumCount + countIte; 
+            const countAut = await modelAutomotive.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAut; 
+            const countRea = await modelRealstate.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRea; 
+            const countNau = await modelNautical.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countNau; 
+            const countSer = await modelService.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countSer;
+            const countAuc = await modelAuction.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAuc;
+            const countRaf = await modelRaffle.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRaf;     
                                        
       
             res.render('page/sellerType', { user, searchProfile, sumCount, countMessages, countNegotiationsBuySell });

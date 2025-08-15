@@ -51,6 +51,13 @@
                             <div class="card" style="background-color:  rgba(217, 223, 223, 0.2);">
                                 <div class="card-body">
 
+
+                                    <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="segment"> <div> <img src="/img/icon_Segment.png" alt="" style="width: 30px; height: 30px;"> <span class="ms-2">Segmentación</span> </div>   <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
+                                    </div>
+                                    <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="zonaBliss"> <div> <img src="/img/iconZonaBliss.png" alt="" style="width: 30px; height: 30px;"> <span class="ms-2">ZonaBliss</span> </div>   <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
+                                    </div>                                    
                                     <div class="form-group my-1">
                                         <button class="form-control d-flex justify-content-between align-items-center" id="search"> <div> <img src="/img/icon_search.png" alt="" style="width: 30px; height: 30px;"> <span class="ms-2">Motor de Busqueda</span> </div>   <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
                                     </div>
@@ -110,7 +117,82 @@
                     
                         <% if (searchProfile) {  %> <!-- cuenta con perfil -->
                             
-                            <div class="content_search">
+
+                            <div class="content_segment">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+
+                                    <div class="cardSegmen p-3" style="width: 100%;">
+
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/icon_Segment.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>Segmentar</b>  </h4>
+                                                        <p> <b> ¡Segmenta tus publicaciones! </b> "Organiza tus anuncios en categorías personalizadas para facilitar la navegación en tu tienda virtual. Mejora la experiencia de tus clientes y haz que encuentren lo que buscan de manera más rápida y sencilla." </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div>
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            <a href="/myaccount/segment" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                        </div>
+
+                                    </div>                        
+
+                                </div>
+
+                            </div>
+
+                            <div class="content_zonaBliss close">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+
+                                    <div class="cardZonaBliss p-3" style="width: 100%;">
+
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/iconZonaBliss.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>ZonaBLiss</b>  </h4>
+                                                        <p> <b> ¡Bienvenido a la ZonaBliss! </b> Descubre el poder de la personalización, crea carruseles de banners atractivos, inserta videos cautivadores y sube fotos impresionantes, todo desde un espacio fácil de administrar. Haz que tu tienda brille y atraiga a más usuarios con estilo y creatividad.  <span class="rounded-3 border px-2 py-0"> <i>Requiere 1 Anuncio </i> </span>  </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div> 
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            <% if (sumCount >= 1){ %>
+                                                <a href="/zonabliss/<%= idUser %>" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                            <% } else { %>
+                                                <a href="#" class="form-control btn btn-dark rounded-pill" > No puedes entrar</a>
+                                            <% }; %>        
+                                        </div>
+
+                                    </div>                        
+
+                                </div>
+
+                            </div> 
+
+                            <div class="content_search close">
 
                                 <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
 
@@ -241,7 +323,7 @@
                                                 <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
                                                     <div class="contentLeft mx-2 d-flex align-items-start flex-column">
                                                         <h4> <b>Tipo de Ventas</b>  </h4>
-                                                        <p> <b> ¡Configura los tipos de ventas! </b> Define tu rango de venta aqui. Debes ser resposnable y definir hasta donde estas dispuesto a crear realaciones comerciales pudiendo ser Locales, Interurbana e Internacionales </p>
+                                                        <p> <b> ¡Configura los tipos de ventas! </b> Define el alcance de tus ventas aquí. Puedes comenzar en un rango local e ir escalando poco a poco, fortaleciendo tu tienda y ampliando tus relaciones comerciales hasta llegar a niveles estatal, nacional o internacional. <span class="rounded-3 border px-2 py-0"> <i>Requiere 1 Anuncio </i> </span> </p>
                                                     </div>
                                                 </div>    
 
@@ -249,7 +331,11 @@
 
                                         </div>
                                         <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
-                                            <a href="/myaccount/sellerType" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                            <% if (sumCount >= 1){ %>
+                                                <a href="/myaccount/sellerType" class="form-control btn btn-dark rounded-pill"> Entrar </a>
+                                            <% } else { %>
+                                                <a href="#" class="form-control btn btn-dark rounded-pill" > No puedes entrar</a>
+                                            <% }; %> 
                                         </div>
 
                                     </div>  
@@ -296,17 +382,41 @@
 
 
 <script>
+    const segment = document.getElementById('segment');
+    const zonaBliss = document.getElementById('zonaBliss');
     const search = document.getElementById('search');
     const cardBuy = document.getElementById('cardBuy');
     const gestorADS = document.getElementById('gestorADS');
     const sellerType = document.getElementById('sellerType');
 
+    const content_segment = document.querySelector('.content_segment');
+    const content_zonaBliss = document.querySelector('.content_zonaBliss');
     const content_search = document.querySelector('.content_search');
     const content_cardBuy = document.querySelector('.content_cardBuy');
     const content_gestorADS = document.querySelector('.content_gestorADS');
     const content_sellerType = document.querySelector('.content_sellerType');
 
+    segment.addEventListener('click', ()=>{
+        content_segment.classList.remove('close');
+        content_zonaBliss.classList.add('close');
+        content_search.classList.add('close');
+        content_cardBuy.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_sellerType.classList.add('close');
+    });
+
+    zonaBliss.addEventListener('click', ()=>{
+        content_segment.classList.add('close');
+        content_zonaBliss.classList.remove('close');
+        content_search.classList.add('close');
+        content_cardBuy.classList.add('close');
+        content_gestorADS.classList.add('close');
+        content_sellerType.classList.add('close');
+    });    
+
     search.addEventListener('click', ()=>{
+        content_segment.classList.add('close');
+        content_zonaBliss.classList.add('close');
         content_search.classList.remove('close');
         content_cardBuy.classList.add('close');
         content_gestorADS.classList.add('close');
@@ -314,6 +424,8 @@
     });
 
     cardBuy.addEventListener('click', ()=>{
+        content_segment.classList.add('close');
+        content_zonaBliss.classList.add('close');
         content_search.classList.add('close');
         content_cardBuy.classList.remove('close');
         content_gestorADS.classList.add('close');
@@ -321,6 +433,8 @@
     });
 
     gestorADS.addEventListener('click', ()=>{
+        content_segment.classList.add('close');
+        content_zonaBliss.classList.add('close');        
         content_search.classList.add('close');
         content_cardBuy.classList.add('close');
         content_gestorADS.classList.remove('close');
@@ -328,6 +442,8 @@
     });
 
     sellerType.addEventListener('click', ()=>{
+        content_segment.classList.add('close');
+        content_zonaBliss.classList.add('close');        
         content_search.classList.add('close');
         content_cardBuy.classList.add('close');
         content_gestorADS.classList.add('close');

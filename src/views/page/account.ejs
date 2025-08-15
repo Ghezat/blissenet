@@ -282,7 +282,7 @@
       50% {
         transform: scale(1.3);
         opacity: 0.6;
-        box-shadow: 0 0 15px 6px rgba(255, 0, 0, 0.4);
+        box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.4);
       }
     }
 
@@ -1028,8 +1028,8 @@
                             <div class="containerAdminMain d-flex flex-column justify-content-center align-items-center" style="margin-right: 13px; z-index : 1">
 
                               <% if (shoppingCart === true ) { %>  
-                                  <div class="containerCartList" style="position: relative;">
-                                    <div class="lightCartShopping close" style="position: absolute; top: -3px; right: 4px; background-color: #d30404; width: 15px; height: 15px; border-radius: 50%;"></div>
+                                  <div class="containerCartList cursor-pointer" style="position: relative;">
+                                    <div class="lightCartShopping close" style="position: absolute; top: -3px; right: 7px; background-color: #d30404; width: 12px; height: 12px; border-radius: 50%;"></div>
                                     <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
                                       <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
                                     </div>
@@ -4549,8 +4549,8 @@ function irATopBar() {
   const counters = {};   
 
   //exploramos si en el localStorage ya hay un cart si existe es porque ya tenemos un boxShopping y no hace falta crearlo sino actualizarlo.
-  const cart = JSON.parse(localStorage.getItem(`cart_${UserId}`)) || [];
-  console.log("esto es el cart del localstorage", cart);
+  const cart = JSON.parse(localStorage.getItem(`cart_${UserId}+${StoreId}`)) || [];
+  console.log("esto es el cart de este usuario en esta tienda. Extraido localstorage", cart);
   let boxShopping = []; //este es el array dodne se guardan todos los elementos del carrito.
 
   //si cart tiene elementos 
@@ -4631,15 +4631,28 @@ function irATopBar() {
             
             if (countRequest > 1){
               boxShopping[index].countRequest--;
+              console.log("ver boxShopping :", boxShopping);
               countTag[i].innerText = countRequest - 1; //actualizamos en tiempo real
             } else {
-              boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
-              countTag[i].innerText = 0; //actualizamos en tiempo real
-              const message = "Eliminado del carrito.";
-              mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
-            }
+              if (boxShopping.length > 1){ //cuando el array tiene mas de un elemento
+                boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
+                console.log("boxShopping ultimo dato:", boxShopping);
+                countTag[i].innerText = 0; //actualizamos en tiempo real
+                const message = "Eliminado del carrito.";
+                mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+              } else { //cuando el array tiene solo un (1) elemento.
+                boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
+                cartItems.innerHTML = ""; //limpiamos toda la lista
+                totalPagar.innerText = "$0.00"; //iniciamos el monto en $0.00
+                console.log("ver boxShopping ultimo dato:", boxShopping);
+                countTag[i].innerText = 0; //actualizamos en tiempo real
+                const message = "Eliminado del carrito.";
+                mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+              }
 
-            localStorage.setItem(`cart_${UserId}`, JSON.stringify(boxShopping));
+            }
+            //salvamos la informacion
+            localStorage.setItem(`cart_${UserId}+${StoreId}`, JSON.stringify(boxShopping));
           } else {
             console.log("Elemento no encontrado en boxShopping");
           }
@@ -4651,14 +4664,14 @@ function irATopBar() {
     cartMas[i].addEventListener('click', ()=>{
       
         let requestExist;
-        boxShopping = JSON.parse(localStorage.getItem(`cart_${UserId}`)) || [];
+        boxShopping = JSON.parse(localStorage.getItem(`cart_${UserId}+${StoreId}`)) || [];
 
         console.log("boxShopping........... :", boxShopping);
 
         if ( boxShopping.length !== 0 ){
           const index = boxShopping.findIndex(elem => elem.id === id);
 
-          if (index !== -1){
+          if (index !== -1){ //consigue el indice
             requestExist = boxShopping[index].countRequest;
 
               if (requestExist < count){
@@ -4675,7 +4688,7 @@ function irATopBar() {
                 mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
               }  
 
-          } else {
+          } else { //no existe el indice
             // No existe, agregar nuevo
             console.log("Esto es count", count);
             if ( 1  <= count){
@@ -4707,8 +4720,8 @@ function irATopBar() {
           
         }
 
-              
-          localStorage.setItem(`cart_${UserId}`, JSON.stringify(boxShopping));
+          //salvamos la informacion    
+          localStorage.setItem(`cart_${UserId}+${StoreId}`, JSON.stringify(boxShopping));
         
           console.log("---------Save in the localStorage");
           lightCart();
