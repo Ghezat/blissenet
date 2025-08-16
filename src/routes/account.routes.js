@@ -20,7 +20,7 @@ const modelRaffle = require('../models/raffle.js');
 const modelStoreRate = require('../models/storeRate.js');
 const modelCustomerSurvey = require('../models/customerSurvey.js');
 const messages = require('../models/messages.js');
-const shoppingCart = require('../models/shoppingCart.js');
+const modelShoppingCart = require('../models/shoppingCart.js');
 
 const axios = require('axios');
 const fs = require('fs-extra');
@@ -3043,19 +3043,56 @@ routes.post('/account/purchaseTime', async (req, res)=>{
 });
 
 
-routes.post('/account/shoppingCart', async(req, res)=>{
-    console.log("......../account/shoppingCart..........");
-    //console.log("req.boy", req.body);
-    const {StoreId, UserId, depart, id, title, price} = req.body;
-    let available; 
+routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
-    //active : { type : Boolean }, //true or false, si esta en true porque esta activo y se vera y si esta en false es porque ya no aparecera porque ya caduco su tiempo de visibilidad. y ya no puede volver a verse. esto es para tener un registro de todo lo que se ha hecho en este departamento.
-    //customerId : { type : String },  //id customer o id del cliente " el comprador"
-    //sellerId : { type : String },  ////id seller o id del seller " el vendedor"
-    //boxShoppingCart : { type : Array},  
-    //paid : { type : Boolean, default : false } //campo que determina si se ha elimando el public en Spaces.   
+    try {
+        
+        console.log("......../send_shoppingCart/consolidate..........");
+        //console.log("req.boy", req.body);
+        
+        const {boxShopping, StoreId, UserId} = req.body;
+        
+        console.log("boxShopping :", boxShopping);
+        console.log("StoreId :", StoreId);
+        console.log("UserId :", UserId);
 
-    
+        const date = new Date();
+        const cartId = date.getTime(); //codigo para identificar el carrito.
+
+        const hour = date.getHours(); const minut = date.getMinutes();
+        const dd = date.getDate(); const mm = date.getMonth() +1; const yyyy = date.getFullYear();
+        
+        const ddFormatted = String(dd).padStart(2, '0');
+        const mmFormatted = String(mm).padStart(2, '0');
+        const hourFormatted = String(hour).padStart(2, '0');
+        const minuteFormatted = String(minut).padStart(2, '0');
+
+        const time = `${ddFormatted}-${mmFormatted}-${yyyy} ${hourFormatted}:${minuteFormatted}`;
+
+        console.log("time :", time); //time : 16-8-2025 11:47 
+
+        const searchCustomer = await modelProfile.findOne({indexed : UserId}, {username: 1});
+        const client = searchCustomer.username;
+        // _id: new ObjectId("689f989e2b989d4c1df8a043"),
+        //  username: 'DigitalMarket'
+        const newShoppingCart = new modelShoppingCart({  cartId,
+                                                         customerId : UserId,
+                                                         customerName : client,
+                                                         sellerId : StoreId,
+                                                         boxShoppingCart : boxShopping,
+                                                         date : time
+                                                        });
+        
+        const saveShoppingCart  = await newShoppingCart.save();
+
+        const response = { code : "ok", message : "Pedido creado y en espera de ser consolidado" };
+        res.json(response);
+        
+    } catch (error) {
+        console.log("Ha habido un error en el endPoint")
+        const response = { code : "err", message : "Ha habido un error, intente mas tarde." };
+        res.json(response);
+    }
 
 });
 

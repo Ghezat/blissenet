@@ -53,37 +53,27 @@
 
 
                                     <div class="form-group my-1">
-                                        <button class="form-control d-flex justify-content-between align-items-center" id="tools" ><div><img src="/img/icon_Tools.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Mas Herramientas</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="cartBuyes"> <div> <img src="/img/iconCartBuyes.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Carritos de compras</span> </div>  <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
+                                    </div>                                      
+                                    <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="tools" ><div><img src="/img/icon_Tools.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Herramientas</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
                                     </div>
                                     <div class="form-group my-1">
                                         <button class="form-control d-flex justify-content-between align-items-center" id="gestorADS"> <div><img src="/img/icon_GestorADS1.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Gestor ADS</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
                                     </div>
                                     <div class="form-group my-1">
+                                        <button class="form-control d-flex justify-content-between align-items-center" id="tracking"><div><img src="/img/icon_Tracking.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Tracking</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
+                                    </div>  
+                                    <div class="form-group my-1">
                                         <button class="form-control d-flex justify-content-between align-items-center" id="raffle"><div><img src="/img/icon_Tickets.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Rifa</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
-                                    </div>
-                                    <div class="form-group my-1">
-                                        <button class="form-control d-flex justify-content-between align-items-center" id="tracking"><div><img src="/img/iconTracking.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Tracking</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
-                                    </div>
-                                    <div class="form-group my-1">
-                                        <button class="form-control d-flex justify-content-between align-items-center" id="infoBliss"><div><img src="/img/icon_InfoBliss.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">InfoBliss</span>  </div> <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" > </button>
-                                    </div>
-                                    
-                                    <div class="form-group my-1">
-                                        <button class="form-control d-flex justify-content-between align-items-center" id="cartBuyes"> <div> <img src="/img/iconCartBuyes.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Carritos de compras</span> </div>  <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
-                                    </div>                                     
+                                    </div>                                 
                                     <div class="form-group my-1">
                                         <button class="form-control d-flex justify-content-between align-items-center" id="manager"> <div> <img src="/img/icon_Analisis.png" alt="" style="width: 30px; height: 30px;">  <span class="ms-2">Gerencia de Análisis</span> </div>  <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
                                     </div> 
 
                                 </div>
                             </div>
-                            <div class="card mt-1" style="background-color:  rgba(217, 223, 223, 0.2);">
-                                <div class="card-body">
-                                    <div class="form-group my-1">
-                                        <button class="form-control d-flex justify-content-between align-items-center" id="transport"> <div> <img src="/img/iconTransport.png" alt="" style="width: 30px; height: 30px;"> <span class="ms-2">Agente de Transporte</span> </div>   <img  class="iconsAdmin" src="/img/right_arrow_icon.png" alt="" ></button>
-                                    </div>
-                                </div>
-                            </div>
+
                         <% } else { %>
                             
                         <% }; %>
@@ -150,7 +140,42 @@
                     
                         <% if (searchProfile) {  %> <!-- cuenta con perfil -->
                             
-                            <div class="content_tools">
+
+                            <div class="content_cartBuyes">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+                                    <div class="cardManage p-3" style="width: 100%;">
+                                        
+                                                                                
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/iconCartBuyes.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>Carritos de Compras</b>  </h4>
+                                                        <p> Aqui podrás ver todas las compras de carritos hechas a tu Tienda. Consolida cada compra revisando el inventario y permitiendo que tus clientes puedan pagar por sus compras. </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div>
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            <a href="#" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                        </div>                                        
+
+
+                                    </div>
+                                </div>
+                                
+                            </div>                            
+                            <div class="content_tools close">
 
                                 <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
 
@@ -213,7 +238,7 @@
                                         </div> 
                                         <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
                                             
-                                            <a href="#" class="form-control btn btn-dark rounded-pill"> Entrar</a>
+                                            <a href="#" class="form-control btn btn-dark rounded-pill"> Muy pronto... </a>
        
                                         </div>
 
@@ -221,7 +246,43 @@
 
                                 </div>
                                 
-                            </div>                           
+                            </div> 
+                            <div class="content_tracking close">
+
+                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
+
+                                    <div class="cardZonaBliss p-3" style="width: 100%;">
+
+                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
+                                            
+                                            <div class="row">
+                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
+                                                    <div class="contentRight mx-2 p-1">
+                                                        <img src="/img/icon_Tracking.png" alt="" style="width: 110px; height: 110px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
+                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
+                                                        <h4> <b>Tracking</b>  </h4>
+                                                        <p> <b>¡Consulta el estado de tu pedido!</b> Aquí podrás monitorear el progreso de tu compra, especialmente si la tienda donde realizaste la compra se encuentra fuera de tu región. </p>
+                                                    </div>
+                                                </div>    
+
+                                            </div>    
+
+                                        </div> 
+                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
+                                            
+                                            <a href="#" class="form-control btn btn-dark rounded-pill"> Muy pronto... </a>
+       
+                                        </div>
+
+                                    </div>  
+
+                                </div>
+                                
+                            </div>                          
                             <div class="content_raffle close">
 
                                 <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
@@ -290,91 +351,6 @@
                                 </div>
                                 
                             </div>
-                            <div class="content_tracking close">
-
-                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);"> 
-                                    <div class="card-body p-2 m-3 d-flex flex-column justify-content-center align-items-center rounded-2 border">
-
-                                        <h3>Estamos trabajando</h3>
-                                        <h5 style="text-align: center;">Próximamente estará disponible.</h5>
-                                        <h6 style="text-align: center;">Tracking</h6>
-                                        
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <div class="content_iconInfoBliss close">
-
-                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);"> 
-                                    <div class="cardInfoBliss p-3" style="width: 100%;">
-                                        
-                                                                                
-                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
-                                            
-                                            <div class="row">
-                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
-                                                    <div class="contentRight mx-2 p-1">
-                                                        <img src="/img/icon_InfoBliss.png" alt="" style="width: 110px; height: 110px;">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
-                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
-                                                        <h4> <b>Info Bliss</b> </h4>
-                                                        <p> ¡Crea las Políticas de tu Tienda y una sección de Preguntas y Respuestas Frecuentes (FAQ)! También puedes diseñar encuestas y mostrar un mapa geográfico para que tus clientes te ubiquen fácilmente. Ofrece toda la información necesaria para que se sientan cómodos al usar tu tienda y sepan cómo navegar en ella.</p>
-                                                    </div>
-                                                </div>    
-
-                                            </div>    
-
-                                        </div>
-                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
-                                            <!-- /infobliss/:user_id -->
-                                            <a href="/infobliss/<%= indexed %>" class="form-control btn btn-dark rounded-pill"> Entrar</a>
-                                        </div>                                        
-
-
-                                    </div>
-                                </div>
-
-                                
-                            </div>
-                            
-                            <div class="content_cartBuyes close">
-
-                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
-                                    <div class="cardManage p-3" style="width: 100%;">
-                                        
-                                                                                
-                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
-                                            
-                                            <div class="row">
-                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
-                                                    <div class="contentRight mx-2 p-1">
-                                                        <img src="/img/iconCartBuyes.png" alt="" style="width: 110px; height: 110px;">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
-                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
-                                                        <h4> <b>Carritos de Compras</b>  </h4>
-                                                        <p> Aqui podrás ver todas las compras de carritos hechas a tu Tienda. Consolida cada compra revisando el inventario y permitiendo que tus clientes puedan pagar por sus compras. </p>
-                                                    </div>
-                                                </div>    
-
-                                            </div>    
-
-                                        </div>
-                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
-                                            <a href="#" class="form-control btn btn-dark rounded-pill"> Entrar</a>
-                                        </div>                                        
-
-
-                                    </div>
-                                </div>
-                                
-                            </div>
-
                             <div class="content_manager close">
 
                                 <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
@@ -406,41 +382,6 @@
 
 
                                     </div>
-                                </div>
-                                
-                            </div>
-
-                            <div class="content_transport close">
-
-                                <div class="card" style="background-color:rgba(217, 223, 223, 0.2);">
-
-                                    <div class="cardSegmen p-3" style="width: 100%;">
-
-                                        <div class="contentTitle d-flex justify-content-center border rounded-2 mx-2 p-2 cardAdmin">
-                                            
-                                            <div class="row">
-                                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12 d-flex justify-content-center ">
-                                                    <div class="contentRight mx-2 p-1">
-                                                        <img src="/img/iconTransport.png" alt="" style="width: 110px; height: 110px;">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-12 col-12 ">
-                                                    <div class="contentLeft mx-2 d-flex align-items-start flex-column">
-                                                        <h4> <b>Agente de Transporte</b>  </h4>
-                                                        <p> <b> ¡Trabaja como Agente de Transporte! </b> "Puedes agregarte para trabajar como agente de tranposte que es el perfil de las personas que hacen los despachos de manera interurbana" </p>
-                                                    </div>
-                                                </div>    
-
-                                            </div>    
-
-                                        </div>
-                                        <div class="form-group d-flex justify-content-center mt-1 px-2 py-3">
-                                            <a href="/myaccount/transportAgent" class="form-control btn btn-dark rounded-pill"> Entrar</a>
-                                        </div>
-
-                                    </div>                        
-
                                 </div>
                                 
                             </div>
@@ -484,120 +425,85 @@
 
 <script>
  
+    const cartBuyes = document.getElementById('cartBuyes');
     const gestorADS = document.getElementById('gestorADS');
     const tools = document.getElementById('tools');
     const raffle = document.getElementById('raffle');
     const manager = document.getElementById('manager');
     const tracking = document.getElementById('tracking');
-    const infoBliss = document.getElementById('infoBliss');
-    const transport = document.getElementById('transport');
-    const cartBuyes = document.getElementById('cartBuyes');
+    
 
+    const content_cartBuyes = document.querySelector('.content_cartBuyes');
     const content_gestorADS = document.querySelector('.content_gestorADS');
     const content_tools = document.querySelector('.content_tools');
     const content_raffle = document.querySelector('.content_raffle');
     const content_manager = document.querySelector('.content_manager');
     const content_tracking = document.querySelector('.content_tracking');
-    const content_iconInfoBliss = document.querySelector('.content_iconInfoBliss');
-    const content_transport = document.querySelector('.content_transport');
-    const content_cartBuyes = document.querySelector('.content_cartBuyes');
+
   
 
+
+    cartBuyes.addEventListener('click', ()=>{
+        content_cartBuyes.classList.remove('close');
+        content_gestorADS.classList.add('close');
+        content_tools.classList.add('close');
+        content_raffle.classList.add('close');
+        content_manager.classList.add('close');
+        content_tracking.classList.add('close');
+        
+    })
+
     gestorADS.addEventListener('click', ()=>{
+        content_cartBuyes.classList.add('close');
         content_gestorADS.classList.remove('close');
         content_tools.classList.add('close');
         content_raffle.classList.add('close');
         content_manager.classList.add('close');
         content_tracking.classList.add('close');
-        content_iconInfoBliss.classList.add('close');
-        content_transport.classList.add('close');
-        content_cartBuyes.classList.add('close');
+      
    
     });
 
     tools.addEventListener('click', ()=>{
+        content_cartBuyes.classList.add('close');
         content_gestorADS.classList.add('close');
         content_tools.classList.remove('close');
         content_raffle.classList.add('close');
         content_manager.classList.add('close');
         content_tracking.classList.add('close');
-        content_iconInfoBliss.classList.add('close');
-        content_transport.classList.add('close');
-        content_cartBuyes.classList.add('close');
     
     });
 
     raffle.addEventListener('click', ()=>{
+        content_cartBuyes.classList.add('close');
         content_gestorADS.classList.add('close');
         content_tools.classList.add('close');
         content_raffle.classList.remove('close');
         content_manager.classList.add('close');
         content_tracking.classList.add('close');
-        content_iconInfoBliss.classList.add('close');
-        content_transport.classList.add('close');
-        content_cartBuyes.classList.add('close');
  
     });
 
     manager.addEventListener('click', ()=>{
+        content_cartBuyes.classList.add('close');
         content_gestorADS.classList.add('close');
         content_tools.classList.add('close');
         content_raffle.classList.add('close');
         content_manager.classList.remove('close');
         content_tracking.classList.add('close');
-        content_iconInfoBliss.classList.add('close');
-        content_transport.classList.add('close');
-        content_cartBuyes.classList.add('close');
  
     });
 
     tracking.addEventListener('click', ()=>{
+        content_cartBuyes.classList.add('close');
         content_gestorADS.classList.add('close');
         content_tools.classList.add('close');
         content_raffle.classList.add('close');
         content_manager.classList.add('close');
         content_tracking.classList.remove('close');
-        content_iconInfoBliss.classList.add('close');
-        content_transport.classList.add('close');
-        content_cartBuyes.classList.add('close');
-  
+          
     });
 
-    infoBliss.addEventListener('click', ()=>{
-        content_gestorADS.classList.add('close');
-        content_tools.classList.add('close');
-        content_raffle.classList.add('close');
-        content_manager.classList.add('close');
-        content_tracking.classList.add('close');
-        content_iconInfoBliss.classList.remove('close');
-        content_transport.classList.add('close');
-        content_cartBuyes.classList.add('close');
-    
-    })
-
-    transport.addEventListener('click', ()=>{
-        content_gestorADS.classList.add('close');
-        content_tools.classList.add('close');
-        content_raffle.classList.add('close');
-        content_manager.classList.add('close');
-        content_tracking.classList.add('close');
-        content_iconInfoBliss.classList.add('close');
-        content_transport.classList.remove('close');
-        content_cartBuyes.classList.add('close');
-     
-    })
-
-    cartBuyes.addEventListener('click', ()=>{
-        content_gestorADS.classList.add('close');
-        content_tools.classList.add('close');
-        content_raffle.classList.add('close');
-        content_manager.classList.add('close');
-        content_tracking.classList.add('close');
-        content_iconInfoBliss.classList.add('close');
-        content_transport.classList.add('close');
-        content_cartBuyes.classList.remove('close');
-     
-    })
 
 
 </script>

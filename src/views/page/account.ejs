@@ -1803,12 +1803,16 @@
 
                     <div class="alert alert-info">
 
-                      <b>Leer: </b> "Este módulo de carrito de compras está en desarrollo. Muy pronto estará listo para que puedas usarlo."
+                      <small> <b> El módulo de carrito de compras</b> está en proceso de creación y estará disponible pronto para su uso. </small>
                     </div>
 
-                    <div class="contentButtonClose d-flex justify-content-end">
-                      <button class="btn btn-danger rounded-2" id="closePopup">Cerrar</button>
+                    <div class="form-group">
+                      <button class="form-control btn btn-primary rounded-2" id="consolidate">
+                        Consolidar Pedido
+                      </button>
                     </div>
+
+
                     
                   </div>
 
@@ -4737,24 +4741,62 @@ function irATopBar() {
  //boton de lista de compra que hace aparecer o desaparecer el popup de lista de compra
     
 const popupCart = document.getElementById('popupCart');
-const closePopup = document.getElementById('closePopup');
 const closePopupCartList = document.querySelector('.closePopupCartList');
+const consolidate = document.getElementById('consolidate');
 
 containerCartList.addEventListener('click', () => {
   popupCart.classList.remove('close');
+
 });
 
-closePopup.addEventListener('click', () => {
-  popupCart.classList.add('close'); // Cerrar el popup desde abano boton cerrar
-});
 
 closePopupCartList.addEventListener('click', ()=>{
     popupCart.classList.add('close'); // Cerrar el popup desde arriba icono x
 })
  
+consolidate.addEventListener('click', ()=>{
+  console.log("Esto es consolidate ..............")
+  console.log("boxShopping :", boxShopping);
+  console.log("typeof boxShopping :", typeof boxShopping);
+  console.log("Id Tienda :", StoreId);
+  console.log("Id Cliente :", UserId);  
 
+        const datos = {
+          boxShopping: boxShopping,
+          StoreId: StoreId,
+          UserId: UserId
+        }
 
+        console.log("esto es datos", datos);
+/* 
+        fetch('/send_shoppingCart/consolidate', {
 
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: { "content-type": "application/json" }
+
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            console.log("Carrito creado");
+            console.log(jsonx)
+                            
+            const code = jsonx.code;
+            const message = jsonx.message;
+
+            if (code == "ok"){
+                mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+            } else {
+                 mostrarToast( message , 'right', 'danger', '¡Hecho!', true ); // Agrega título aquí
+            }
+        
+        })
+        .catch( err =>{ console.log(err)
+            mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+        });
+  */
+})
 </script>
 
 <script>
