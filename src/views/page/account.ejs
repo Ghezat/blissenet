@@ -84,7 +84,15 @@
 
   }
 
- 
+  .delItemCart{
+    cursor: pointer;
+    transition: .5s ease color;
+  }
+
+  .delItemCart:hover{
+    color: red;
+  }
+
   .starData{
     opacity: 0;
     transition: 1s all ease;
@@ -286,6 +294,10 @@
       }
     }
 
+    .listShoppingCart{
+      width: 390px;
+    }
+
     @keyframes moverLupa {
           0% {
               transform: rotate(0deg);
@@ -439,6 +451,10 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
+    }
+
+    .listShoppingCart{
+      width: 96%;
     }
 
   }
@@ -1446,7 +1462,7 @@
                                                                 <% if (ele.department !== 'raffle' ){ %>
                                                                 
                                                                   <% if (ele.soldOut === true) { %>
-                                                                      <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 10px; z-index: 200; width: 100%;">
+                                                                      <div class="dropdown d-flex justify-content-start" style="position: absolute; top: 30px; z-index: 200; width: 100%;">
                                                                         <i class="bi bi-three-dots-vertical mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>
                                                                                                               
                                                                           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="background-color: rgba(255, 255, 255, 0.9)">
@@ -1773,47 +1789,47 @@
 
                            
                   <!-- este es el popup lista de compras -->
-                  <div class="close" id="popupCart" style="position: fixed; top: 50px; right: 10px; width: 350px; max-height: 500px; background: rgba(255, 255, 255, 0.8); border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 15px; overflow-y: auto; z-index: 500;">
+                  <div class="listShoppingCart close" id="popupCart" 
+                  style="position: fixed; top: 50px; right: 10px; max-height: 500px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 15px; overflow-y: auto; z-index: 500;">
                     
-                    <div class="title d-flex justify-content-between">
-                      <h3>Lista de compra</h3>   <span class="closePopupCartList cursor-pointer"> <i class="bi bi-x-lg"></i> </span> 
-                    </div>
-                    
+                      <div class="title d-flex justify-content-between">s
+                        <h3>Lista de compra </h3>   <span class="closePopupCartList cursor-pointer"> <i class="bi bi-x-lg"></i> </span> 
+                      </div>
+                      
 
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th style="text-align: left;">Descrip.</th>
-                            <th style="text-align: center;">Cant.</th>
-                            <th style="text-align: right;">P. Unit.</th>
-                            <th style="text-align: right;">Total</th>
-                          </tr>
-                        </thead>
-                        <tbody id="cartItems">
-                          <!-- Aquí agregas las filas con JS -->
+                      <table class="table">
+                          <thead>
+                            <tr style="font-size: 16px">
+                              <th style="text-align: left;"> <i class="bi bi-bag-x-fill"></i> </th>
+                              <th style="text-align: left;">Descrip.</th>
+                              <th style="text-align: center;">Cant.</th>
+                              <th style="text-align: right;">P.&nbsp;Unit.</th>
+                              <th style="text-align: right;">Total</th>
+                            </tr>
+                          </thead>
+                          <tbody id="cartItems">
+                            <!-- Aquí agregas las filas con JS -->
 
-                        </tbody>
-                        <tfoot>
-                          <tr>
-                            <td colspan="3" style="text-align: right; font-weight: bold; border-top: 1px solid #ccc;">Total a pagar:</td>
-                            <td id="totalPagar" style="font-size: 17px; text-align: right; font-weight: bold; border-top: 1px solid #ccc;">$0.00</td>
-                          </tr>
-                        </tfoot>
-                    </table>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="4" style="font-size: 16px; text-align: right; font-weight: bold; border-top: 1px solid #ccc;">Total a pagar:</td>
+                              <td id="totalPagar" style="font-size: 16px; text-align: right; font-weight: bold; border-top: 1px solid #ccc;">$0.00</td>
+                            </tr>
+                          </tfoot>
+                      </table>
 
-                    <div class="alert alert-info">
+                      <div class="alert alert-info">
 
-                      <small> <b> El módulo de carrito de compras</b> está en proceso de creación y estará disponible pronto para su uso. </small>
-                    </div>
+                        <small> <b> El módulo de carrito de compras</b> está en proceso de creación y estará disponible pronto para su uso. </small>
+                      </div>
 
-                    <div class="form-group">
-                      <button class="form-control btn btn-primary rounded-2" id="consolidate">
-                        Consolidar Pedido
-                      </button>
-                    </div>
+                      <div class="form-group">
+                        <button class="form-control btn btn-primary rounded-2" id="consolidate">
+                          Consolidar Pedido
+                        </button>
+                      </div>
 
-
-                    
                   </div>
 
                   <div class="containerViewRatesStore border close" style="background-color: white;">
@@ -4543,6 +4559,7 @@ function irATopBar() {
   const cartMas = document.querySelectorAll('.CartMas');
   const countTag = document.querySelectorAll('.countTag'); //es el span que muestra la cantidad de pedido por el cliente
   
+  
   const containerCartList = document.querySelector('.containerCartList'); //este es el icono de cartShopping dodne las personas podran con un click ver su lista de compra.
   const lightCartShopping = document.querySelector('.lightCartShopping'); //luz parpadeante identificadora de carrito activo
   const cartItems = document.getElementById('cartItems'); // el la tabla donde vamos a inyectar los datos de la lista de compra                         
@@ -4556,7 +4573,7 @@ function irATopBar() {
   const cart = JSON.parse(localStorage.getItem(`cart_${UserId}+${StoreId}`)) || [];
   console.log("esto es el cart de este usuario en esta tienda. Extraido localstorage", cart);
   let boxShopping = []; //este es el array dodne se guardan todos los elementos del carrito.
-
+  
   //si cart tiene elementos 
   if (cart.length !==0){
     boxShopping.push(...cart);
@@ -4582,6 +4599,7 @@ function irATopBar() {
 
         cartItems.innerHTML += `
           <tr>
+            <th style="text-align: left;"> <span class="delItemCart">  <input type="hidden" value="${ ele.id }"> <i class="bi bi-file-x" style="font-size: 18px"></i> </span> </th>
             <th style="text-align: left;"> ${ ele.title } </th>
             <th style="text-align: center;">${ ele.countRequest }</th>
             <th style="text-align: right;">${ ele.price }</th>
@@ -4590,7 +4608,67 @@ function irATopBar() {
         `
       })
 
+
       totalPagar.innerText = totalPay.toFixed(2);
+
+      const delItem = document.querySelectorAll('.delItemCart')  
+    
+      delItem.forEach((ele)=>{
+        ele.addEventListener('click', ()=>{
+          const son = ele.children;
+          const id = son[0].value
+          console.log("Este es el id :", id);
+          const index = boxShopping.findIndex(ele => ele.id === id);
+
+          if (index !== -1) {
+            //tiene el indice, existe el articulo
+            
+              if (boxShopping.length > 1){ //cuando el array tiene mas de un elemento
+                boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
+                console.log("boxShopping ultimo dato:", boxShopping);
+                  tagShippingCart.forEach((ele, i)=>{
+                    //console.log("Este es ele", ele);
+                    const son = ele.children;
+                    const idEle = son[0].value;
+                    if (idEle === id){
+                      countTag[i].innerText = 0; //actualizamos en tiempo real
+                    }
+                  })
+               
+                  const message = "Eliminado del carrito.";
+                  mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+                  lightCart()
+
+              } else { //cuando el array tiene solo un (1) elemento.
+                boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
+                tagShippingCart.forEach((ele, i)=>{
+                  //console.log("Este es ele", ele);
+                  const son = ele.children;
+                  const idEle = son[0].value;
+                  if (idEle === id){
+                    countTag[i].innerText = 0; //actualizamos en tiempo real
+                  }
+                })
+                cartItems.innerHTML = ""; //limpiamos toda la lista
+                totalPagar.innerText = "$0.00"; //iniciamos el monto en $0.00
+                console.log("ver boxShopping ultimo dato:", boxShopping);
+                //countTag[i].innerText = 0; //actualizamos en tiempo real
+                const message = "Eliminado del carrito.";
+                mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+                lightCart()
+              }
+            
+            //salvamos la informacion
+            localStorage.setItem(`cart_${UserId}+${StoreId}`, JSON.stringify(boxShopping));
+
+          } else {
+            console.log("Elemento no encontrado en boxShopping");
+          }
+
+
+        })
+    })
+
      
 
     } else {
@@ -4598,7 +4676,9 @@ function irATopBar() {
     } //solo para cuando carga la pagina o se refresca.
   }  
   //----------------------------------------------------------------------
-  
+
+
+
   tagShippingCart.forEach((ele, i)=>{
 
     //console.log("Este es ele", ele);
@@ -4732,9 +4812,11 @@ function irATopBar() {
 
     })  
 
+
+
  })
-      
-         
+
+    
        
 
 
