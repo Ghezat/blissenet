@@ -312,8 +312,12 @@
 
                                                 <div class="input-group my-2">
                                                     <span class="input-group-text"> Cantidad</span>
-                                                    <input type="number" name="count" 
-                                                        class="form-control" style="font-size: 18px;" step="1" min="1" required>   
+                                                    <input type="number" name="count" class="form-control" style="font-size: 18px;" step="1" min="1" required> 
+                                                    <span class="input-group-text"> Presentación</span>
+                                                    <select class="form-control" name="presentation">
+                                                        <option value="integer">Entero</option>
+                                                        <option value="fraction">Fracción</option>
+                                                    </select>     
                                                 </div>
     
                                                 <div class="input-group my-2">
@@ -433,8 +437,12 @@
 
                                                         <div class="input-group my-2">
                                                             <span class="input-group-text"> Cantidad</span>
-                                                            <input type="number" name="count" id="countEdit" 
-                                                                class="form-control" style="font-size: 18px;" step="1" min="0" required>   
+                                                            <input type="number" name="count" id="countEdit" class="form-control" style="font-size: 18px;" step="1" min="0" required>
+                                                            <span class="input-group-text"> Presentación</span>
+                                                            <select class="form-control" name="presentation" id="presentationEdit">
+                                                                <option value="integer">Entero</option>
+                                                                <option value="fraction">Fracción</option>
+                                                            </select>   
                                                         </div>
 
                                                         <div class="input-group my-2">
@@ -1399,6 +1407,7 @@
     const tecnicalDescripEdit = document.getElementById('tecnicalDescripEdit');
     const generalMessageEdit = document.getElementById('generalMessageEdit');
     const countEdit = document.getElementById('countEdit');
+    const presentationEdit = document.getElementById('presentationEdit');
     const priceEdit = document.getElementById('priceEdit');
     const addObjectImgEdit = document.getElementById('addObjectImgEdit');
 
@@ -1435,6 +1444,7 @@
                             let Delta = JSON.parse(delta);
                             quillEdit.setContents(Delta);
                             countEdit.value = MyPublication.count;
+                            presentationEdit.value = MyPublication.presentation;
                             priceEdit.value = MyPublication.price;
 
                             for (let i = 0; i < myImages.length; i++) {

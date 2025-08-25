@@ -1405,7 +1405,7 @@
 
                                                               <div class="tagShippingCart contentButton d-flex" style="height: 35px;">
 
-                                                                  <input type="hidden" value="<%= ele._id %>"> <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele.title %>"> <input type="hidden" value="<%= ele.price %>"> <input type="hidden" value="<%= ele.count %>">
+                                                                  <input type="hidden" value="<%= ele._id %>"> <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele.title %>"> <input type="hidden" value="<%= ele.price %>"> <input type="hidden" value="<%= ele.count %>"> <input type="hidden" value="<%= ele.presentation %>">
                                                                   <button class="btn CartMenos d-flex justify-content-center align-items-center" style="background-color: #fcda57; width: 30px; height: 30px; height: 100%; border-radius: 50%; font-size: 18px;"> 
                                                                     <span > <b>-</b> </span> 
                                                                   </button> 
@@ -4607,7 +4607,7 @@ function irATopBar() {
   //exploramos si en el localStorage ya hay un cart si existe es porque ya tenemos un boxShopping y no hace falta crearlo sino actualizarlo.
   const cart = JSON.parse(localStorage.getItem(`cart_${UserId}+${StoreId}`)) || [];
   console.log("esto es el cart de este usuario en esta tienda. Extraido localstorage", cart);
-  let boxShopping = []; //este es el array dodne se guardan todos los elementos del carrito.
+  let boxShopping = []; //este es el array donde se guardan todos los elementos del carrito.
   
   //si cart tiene elementos 
   if (cart.length !==0){
@@ -4725,7 +4725,8 @@ function irATopBar() {
     const title = son[2].value;
     const price = son[3].value;
     const count = parseInt(son[4].value);
-    
+    const presentation = son[5].value;
+
     boxShopping.forEach((elemento)=>{
       const idElemento = elemento.id;
 
@@ -4799,7 +4800,7 @@ function irATopBar() {
                 const request = requestExist + 1;
                 countTag[i].innerText = request; //actualizamos en tiempo real
                 // Existe, actualizar datos
-                let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": request };
+                let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": request, "presentation": presentation };
                 boxShopping[index] = data;
                 console.log("Artículo actualizado en el carrito:", data);
               } else {
@@ -4812,7 +4813,7 @@ function irATopBar() {
             console.log("Esto es count", count);
             if ( 1  <= count){
               countTag[i].innerText = 1;
-              let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1 };
+              let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1, "presentation": presentation };
               boxShopping.push(data);
               console.log("Artículo agregado al carrito:", data);
               const message = "Agregado al carrito.";
@@ -4828,7 +4829,7 @@ function irATopBar() {
 
           if (count >= 1){
             countTag[i].innerText = 1;
-            let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1 };
+            let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1, "presentation": presentation };
             boxShopping.push(data);
             const message = "Agregado al carrito.";
             mostrarToast( message , 'right', 'success', '', false ); // Agrega título aquí

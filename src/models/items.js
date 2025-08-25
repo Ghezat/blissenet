@@ -14,6 +14,7 @@ const SchemaItems = new Schema({
     video : { type : Object, default: [] }, //aqui se guardaria un archivo de video con la informacion del lugar donde esta para ser leido o eliminado.
     images : { type : Object },
     count : { type : Number }, // aqui la cantidad de unidades disponibles de este articulo.
+    presentation : { type : String }, // "integer" o "fraction" aqui se configura entero o fracciones Esto es mas que todo para poder consolidar con exactitud las cosas que requieran fracciones como el peso del queso o la carne o entero como una mayonesa o un par de zapatos. 
     price: { type: Number , default: 0 },
     paused : { type: Boolean, default: false }, //por default nace false quiere decir que se mostrará. Sí este estado cambia no se mostrará en la busqueda.
     visibleStore : { type: Boolean, default: true }, //este campo guarda el estado de vision en la tienda, por defecto es true que se vea en tienda el articulo.

@@ -91,12 +91,15 @@
                                                         <% const date = ele.date %>
                                                         <% const amount = ele.amount %>
                                                         <% const boxShoppingCart = ele.boxShoppingCart %>
+                                                        <% const purchaseReceiver = ele.purchaseReceiver %>
+
                                                         
                                                         <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
                                                             <input type="hidden" class="iDCart" value="<%= iDCart %>"> 
                                                             <input type="hidden" class="customerNameData" value="<%= customerName %>">
                                                             <input type="hidden" class="amount" value="<%= amount %>">  
-                                                            <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>"> 
+                                                            <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
+                                                            <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
 
                                                             <div class="listLeft">
                                                                 <img src="/img/iconCartBuyes.png" alt="" style="width: 35px; height: 35px;">
@@ -156,6 +159,15 @@
                                                     </tfoot>
                                                 </table>
                                                 
+                                                <div class="form-group my-2 d-flex flex-wrap" style="font-size: 16px;">
+                                                    <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Nombre: </b> <span class="clientNames"></span>  </span> 
+                                                    <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Documento: </b> <span class="clientDocument"></span> </span>
+                                                    <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Teléfono:</b> <span class="clientPhone"></span> </span>
+                                                </div>
+
+                                                <div class="form-group my-0 px-3 py-2 mb-3" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-radius: 10px;">
+                                                    <span style="white-space: 16px;"> <b>Dirección:</b> <span class="clientAddress"></span> </span>
+                                                </div>
 
                                                 <div class="btn-group btnControl close" style="width: 100%;" role="group" aria-label="Basic outlined example">
                                                     <button type="button" class="btn btn-dark btnConsolidate"> <i class="bi bi-check2-square text-primary me-1"></i> Consolidar</button>
@@ -238,12 +250,18 @@
     const iDCart = document.querySelectorAll('.iDCart');
     const customerNameData = document.querySelectorAll('.customerNameData');
     const amount = document.querySelectorAll('.amount');
-    const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData');
-   
+    const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData'); 
+    const purchaseReceiverData = document.querySelectorAll('.purchaseReceiverData');
+
     //para inyectar
     const customerName = document.querySelector('.customerName');
     const listShoppingCart = document.querySelector('.listShoppingCart');
     const totalPayDinamic = document.querySelector('.totalPayDinamic');
+
+    const clientNamesSpan = document.querySelector('.clientNames');
+    const clientDocumentSpan = document.querySelector('.clientDocument');
+    const clientPhoneSpan = document.querySelector('.clientPhone');
+    const clientAddressSpan = document.querySelector('.clientAddress');
 
     const btnControl = document.querySelector('.btnControl'); //botones consolidar y eliminar.
 
@@ -259,12 +277,20 @@
     listCart.forEach((ele, i)=>{
 
         ele.addEventListener('click', ()=>{
-            console.log("Valor del id del carrito :");
+            console.log("Valor del id del carrito :", ele);
             console.log(iDCart[i].value);
             const IDCart = iDCart[i].value;
             const clientName = customerNameData[i].value;
+            const receiverTxt = purchaseReceiverData[i].value; 
+            const receiver = JSON.parse(receiverTxt);
             const Amount = amount[i].value;
-            console.log(clientName);
+
+            console.log("receiver..........:", receiver);
+            const clientNames = receiver.clientName;
+            const clientIndentification = receiver.clientIndentification;
+            const clientPhone = receiver.clientPhone;
+            const clientAddress = receiver.clientAddress; 
+
             
             const boxShopping = boxShoppingCartData[i].value;
             const arrayParse = JSON.parse(boxShopping);
@@ -288,13 +314,27 @@
             listShoppingCart.innerHTML =""; //limpiamos el body
             arrayParse.forEach((ele)=>{
                         const total = (ele.countRequest * ele.price).toFixed(2);
-                        listShoppingCart.innerHTML += `                                                       
-                                                <tr> 
-                                                    <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=0.01 style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
-                                                </tr> 
-                                        `
+
+                        if (ele.presentation == "fraction"){
+                            listShoppingCart.innerHTML += `                                                       
+                                                    <tr> 
+                                                        <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=0.01 min="0" style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
+                                                    </tr> 
+                                            `
+                        } else {
+                            listShoppingCart.innerHTML += `                                                       
+                                                    <tr> 
+                                                        <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=1 min="0" style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
+                                                    </tr> 
+                                            `
+                        }                    
 
             })
+
+            clientNamesSpan.innerText = clientNames;
+            clientDocumentSpan.innerText = clientIndentification;
+            clientPhoneSpan.innerText = clientPhone;
+            clientAddressSpan.innerText = clientAddress;
 
             amountDinamic = document.querySelectorAll(".amountDinamic");
             priceDinamic = document.querySelectorAll(".priceDinamic");
