@@ -33,6 +33,8 @@ const modelBannerDefault = require('../models/bannerUserDefault.js');
 const modelBackgroundSign = require('../models/backgroundSign.js');
 const modelStoreRate = require('../models/storeRate.js');
 
+const modelShoppingCart = require('../models/shoppingCart.js');
+
 const modelRateCurrency = require('../models/rateCurrency.js');
 
 const fetch = require('node-fetch'); //ver: 2.6.1 ultima dependencia instalada. 
@@ -3531,6 +3533,45 @@ routes.post('/myaccount/shopping-cart', async(req, res)=>{
 
     
 });
+
+routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
+
+        try {
+        
+        console.log("*********/myaccount/shopping-cart-admin******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        const countMessages = req.session.countMessages
+        console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile;
+        let sumCount = 0;
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            console.log("searchProfile -->", searchProfile);
+
+            //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
+            const shoppingCartPending = await modelShoppingCart.find({ sellerId: user._id });
+            sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
+                                        
+            console.log("shoppingCartPending.......................... ", shoppingCartPending);             
+            console.log('Esto es sumCount contamos todos los carritos por consolidar-->', sumCount);
+            res.render('page/shopping-cart-admin', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartPending, sumCount });
+        }   
+
+        
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de /myaccount/shopping-cart-admin", error);
+    }
+
+})
 
 routes.get('/myaccount/sellerType', async (req, res)=>{
     //Este ruta renderiza la pantalla para que los usuarios o tiendas puedan redefirnir el rango de las ventas,

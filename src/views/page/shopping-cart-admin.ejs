@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
+    <title>Blissenet Shopping-Cart Admin </title>
+
+</head>
+<style>
+
+
+    .toast-success {
+        /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+        background-color: #6f42c1; /* Azul tirando a morado */
+        color: white; /* Color del texto */
+    } 
+
+    .textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+    }
+
+    @media screen and (min-width: 290px) and (max-width: 499px ){
+
+    
+    }
+
+</style>
+
+<body class="mainTheme" style="max-width: 100vw; min-height: 100vh;">
+    <main class="themaTextLight" style="max-width: 100% !important;">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        
+        <%# if (catchError){ %>
+            <%#- include('../alert/catchError.ejs') %> 
+        <%# }; %>
+
+
+        <% if (user) { %>
+
+            <% const seeMarket = user.seeMarket %>
+            <% const idUser = user._id %>
+            <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+            <input type="hidden" value="<%= idUser %>" id= "idUser">
+            <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+            <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Administración de Carritos </b>  </span>
+            </div>    
+            
+            <div class="container-fluid p-0">
+                            
+            
+                <div class="ShoppingCart-Admin p-0">
+                        
+                    <% const username = user.username %>
+                    <% const indexed = user._id %> <!-- esto es igual al id user -->
+
+                    <% if (searchProfile) {  %> <!-- cuenta con perfil -->
+                        
+                        <div class="content_search">
+
+                            <div class="row d-flex justify-content-around m-0 " style="background-color:rgba(217, 223, 223, 0.2);">
+                
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-12 p-0 my-4 rounded-2"  style="background-color: rgba(209, 209, 209, 0.2)">
+
+                                    <div class="contentainer-fluid ">
+
+                                            
+                                        <div class="card-header">
+                                            <span style="font-size: 16px;">Carrito de Compra</span>
+                                        </div>
+                                        <div class="card-body">
+
+                                            <div class="requests mb-2">
+                                                <span style="font-size: 16px;"> Solicitudes:  <span class="bg-secondary text-light rounded-3 px-2 ms-3"> <%= sumCount %> </span>   </span> 
+                                            </div>
+                                            
+
+                                            <% if (sumCount !==0){ %>
+
+                                                
+                                                    <% shoppingCartPending.forEach((ele)=>{  %>
+                                                        <% const iDCart = ele._id %>
+                                                        <% const customerName = ele.customerName %>
+                                                        <% const date = ele.date %>
+                                                        <% const amount = ele.amount %>
+                                                        <% const boxShoppingCart = ele.boxShoppingCart %>
+                                                        
+                                                        <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
+                                                            <input type="hidden" class="iDCart" value="<%= iDCart %>"> 
+                                                            <input type="hidden" class="customerNameData" value="<%= customerName %>">
+                                                            <input type="hidden" class="amount" value="<%= amount %>">  
+                                                            <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>"> 
+
+                                                            <div class="listLeft">
+                                                                <img src="/img/iconCartBuyes.png" alt="" style="width: 35px; height: 35px;">
+                                                                <span class="me-1"><%= customerName  %></span> <span class="px-2 rounded-3" style="white-space: nowrap"> <i class="bi bi-currency-dollar"></i>(<%= amount  %>)</span> 
+                                                            </div> 
+
+                                                            <div class="listRight d-flex align-items-center">
+                                                                <span class="me-2 bg-light rounded-3 px-2 text-dark shadow-sm" style="font-size: 14px; white-space: nowrap">
+                                                                   <i><%= date %></i> 
+                                                                </span>
+                                                            </div>
+                                                            
+                                                        </div>    
+                                                    <% }); %>    
+                                                
+                                         
+                                            <% } else { %>
+                                                <span>no hay carritos pendientes</span>
+                                            <% }; %>    
+
+                                        
+                                        </div>
+                                        
+
+                        
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-7 col-md-7 col-sm-12 col-12 p-0 my-4 rounded-2"  style="background-color: rgba(209, 209, 209, 0.2)">
+
+                                    <div class="contentainer-fluid">
+
+                                            <div class="card-header">
+                                               <span style="font-size: 16px;">Datos y Lista de Compra</span>
+                                            </div>    
+                                            <div class="card-body">
+
+                                                <div class="bg-secondary rounded-3 px-2 text-light" style="font-size: 16px;">
+                                                    <span class="customerName" style="font-size: 16px;"> </span>
+                                                </div>
+                                                
+                                                <table class="table themaTextLight">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Descrip.</th> <th>Cant.</th> <th style="white-space: nowrap;">P. Unit.</th> <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="listShoppingCart">
+                                                        <!-- tabla dinamica -->
+                                                    </tbody>
+                                                    <tfoot style="font-size: 16px; background-color: rgb(0, 0, 0, 0.1);">
+                                                        <tr>
+                                                            <th colspan="3">Total a Pagar ..........</th>
+                                                            <th><span class="totalPayDinamic"> </span></th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                                
+
+                                                <div class="btn-group btnControl close" style="width: 100%;" role="group" aria-label="Basic outlined example">
+                                                    <button type="button" class="btn btn-dark btnConsolidate"> <i class="bi bi-check2-square text-primary me-1"></i> Consolidar</button>
+                                                    <button type="button" class="btn btn-dark btnDelete"> <i class="bi bi-x-square text-danger me-1"></i> Eliminar</button>
+                                                </div>
+
+                                            </div>
+                        
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>  
+
+
+                        <div class="card mt-1" style="background-color:rgba(217, 223, 223, 0.2);">
+                            <div class="card-body d-flex justify-content-center ">
+                                <a href="/" class="text-decoration-none" style="color: inherit">  <span id="logoBlissenet_com"> </span> </a> 
+                            </div>
+                        </div>
+                        
+                        <!-- Modal Shopping-cart --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticSuicheSegment" -->
+                        <div class="modal fade" id="staticCheckSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelH2" aria-hidden="true">
+                            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                <div class="modal-content text-dark">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabelH2">Carrito de Compras</h5>
+                                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="fw-bold text-primary">Agrega un Carrito de Compras. </span>
+                                            "¡Aprovecha esta función para facilitar las compras de tus clientes!, ofrece esta herramienta para que puedan
+                                                hacer una compra de varios articulos con un solo pago."
+                                        </p>
+                                        <p> <span class="bg-dark py-1 px-2 rounded-2"> <b class="text-info">Requerimento : + 1 Anuncios</b>  </span> </p>
+                                    </div>
+                                    <div class="modal-footer" style="background-image: url('/img/bannerShoopingCart.jpg'); background-size: cover; background-position: center;">
+                                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        
+                    <% } else { %> <!-- cuenta sin perfil -->
+
+                    <% } %>                                                        
+
+                                    
+                </div>
+    
+
+            </div>
+
+
+
+         <% } else { %>
+            <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+               
+                <%- include('../partials/noLogin.ejs') %>
+
+            </div>  
+         <% }; %>
+
+    </main>
+        <%- include('../partials/scripts.ejs') %>
+        <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+        <!-- este cnd es el constructor de QR  se encuentra en https://cdnjs.com/libraries/qrious -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script> esta sirve tambien pero deje la de abajo, no se cual es la diferencia entre ambas pero este es la cdn para crear los QR-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+       
+
+</body>
+
+<script>
+    const listCart = document.querySelectorAll('.listCart');
+    const iDCart = document.querySelectorAll('.iDCart');
+    const customerNameData = document.querySelectorAll('.customerNameData');
+    const amount = document.querySelectorAll('.amount');
+    const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData');
+   
+    //para inyectar
+    const customerName = document.querySelector('.customerName');
+    const listShoppingCart = document.querySelector('.listShoppingCart');
+    const totalPayDinamic = document.querySelector('.totalPayDinamic');
+
+    const btnControl = document.querySelector('.btnControl'); //botones consolidar y eliminar.
+
+    let iDDinamic; //variable de id del articulo.
+    let departDinamic; //variable de departamento del articulo.
+    let titleDinamic; //variable del titulo del articulo.
+    let amountDinamic; //variable de cantidad requerida por el cliente.
+    let priceDinamic; //variable del precio del articulo.
+    let totalDinamic; //variable del total del articulo. 
+    let datos; //datos del boxShopping que peude ser el original o el actualizado si se llegara a cambiar alguna cantidad.
+    let boxConsolidate; //variable que contendra un objeto que poseera toda la informacion real de lo que se puede despachar.
+
+    listCart.forEach((ele, i)=>{
+
+        ele.addEventListener('click', ()=>{
+            console.log("Valor del id del carrito :");
+            console.log(iDCart[i].value);
+            const IDCart = iDCart[i].value;
+            const clientName = customerNameData[i].value;
+            const Amount = amount[i].value;
+            console.log(clientName);
+            
+            const boxShopping = boxShoppingCartData[i].value;
+            const arrayParse = JSON.parse(boxShopping);
+            console.log("boxShopping original:", arrayParse);
+                       
+
+            datos = {
+                iDCart : IDCart,
+                clientName : clientName,
+                boxShopping : arrayParse,
+                total : Amount
+            }
+            boxConsolidate = datos;
+
+            //aqui ahora inyectamos los datos 
+            customerName.innerText = clientName;
+
+             
+            //{depart: 'items', id: '68a087e3f91f4e94c93be043', title: 'Sala de Tomate Pampero 397gr.', price: '2.35', countRequest: 1} 
+
+            listShoppingCart.innerHTML =""; //limpiamos el body
+            arrayParse.forEach((ele)=>{
+                        const total = (ele.countRequest * ele.price).toFixed(2);
+                        listShoppingCart.innerHTML += `                                                       
+                                                <tr> 
+                                                    <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=0.01 style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
+                                                </tr> 
+                                        `
+
+            })
+
+            amountDinamic = document.querySelectorAll(".amountDinamic");
+            priceDinamic = document.querySelectorAll(".priceDinamic");
+            totalDinamic = document.querySelectorAll(".totalDinamic");
+
+
+            //aqui calculamos el total a pagar sin cambiar datos de cantidad, que es el total original.......
+                let totalPayOriginal = 0;
+                amountDinamic.forEach((ele, i) => {
+
+                    const total = Number(totalDinamic[i].textContent.trim());
+
+                    // Sumar el total a totalPay
+                    totalPayOriginal += total;
+                });
+                console.log("totalPayOriginal............. :", totalPayOriginal)
+                totalPayDinamic.innerHTML = `<span style="white-space: nowrap"> <i class="bi bi-currency-dollar"></i>${totalPayOriginal.toFixed(2)} </span>`;
+            // ----------------------------------------------------
+
+
+            console.log("amountDinamic :", amountDinamic);
+
+            if (amountDinamic){
+                console.log("existe elementos amountDinamic y podemos mostrar los botones consolidar y eliminar");
+                btnControl.classList.remove('close');
+
+                //aqui uso amountDinamic que es una clase de amount que es un nodo lo he tomado usando un querySelectorAll();
+                //con esto tengo el control de todos los item y con la variable i puedo tomar el control de cada item y saber el precio para tener el total
+                amountDinamic.forEach((ele, i)=>{ //aqui es cuando manipulo el input de las cantidades.
+
+                    ele.addEventListener("input", ()=>{
+                        let totalPay = 0;
+                        console.log("ver aqui..............")
+                        //console.log("amount ...............:", ele.value)
+                        //console.log("price :", priceDinamic[i].textContent);
+                        //console.log("total :", totalDinamic[i].textContent);
+                        const amount = ele.value;
+                        const price = priceDinamic[i].textContent;
+                        const total = (amount * price).toFixed(2);
+                        
+                        totalDinamic[i].innerText = total //aqui actualizo el total del items
+                        console.log("total.......... :", total);
+                        console.log("amount.......... :", amount);
+                        console.log("se esta actualizando el elemento......:", i);
+                        
+                        arrayParse[i].countRequest = amount;
+                        console.log("boxShopping actualizado.........:", arrayParse);
+
+
+                        amountDinamic.forEach((ele, i) => {
+                            // Asegurarse de obtener los valores numéricos
+                            const amount = Number(ele.value); // si es input, usar .value y convertir a número
+                            const price = Number(priceDinamic[i].textContent.trim());
+                            const total = Number(totalDinamic[i].textContent.trim());
+
+                            // Sumar el total a totalPay
+                            totalPay += total;
+
+                        });
+
+                        datos.boxShopping = arrayParse; //actualizamos el boxShopping
+                        datos.total = totalPay.toFixed(2); //actualizamos el total del articulo modificado
+                        boxConsolidate = datos; //guardamos el objeto datos dentro del boxConsolidate
+
+                        console.log("totalPay............. :", totalPay)
+                        totalPayDinamic.innerHTML = `<span style="white-space: nowrap"> <i class="bi bi-currency-dollar"></i>${totalPay.toFixed(2)} </span>`; 
+                        
+                    })
+
+                })
+            }
+
+        })    
+    
+
+    })
+
+
+
+    
+
+</script>
+
+<script>
+    const btnConsolidate = document.querySelector('.btnConsolidate');
+    const btnDelete = document.querySelector('.btnDelete');
+
+    btnConsolidate.addEventListener('click', ()=>{
+        console.log("Solicitud de pedido conolidado");
+        console.log("boxConsolidate :", boxConsolidate);
+        //aqui deben enviar los nuevos datos a la tienda donde se espera la consolidacion
+    })
+
+    btnDelete.addEventListener('click', ()=>{
+        console.log("Solicitud de pedido eliminado");
+        console.log("boxConsolidate :", boxConsolidate);
+        //aqui deben enviar los nuevos datos a la tienda donde se espera la consolidacion y la noticia de eliminacion
+    })
+
+</script>
+
+<script>
+
+
+    function mostrarToast(mensaje, posicion, color, titulo = '', conBotonCerrar = false) {
+        // Configuración predeterminada
+        toastr.options = {
+            "closeButton": conBotonCerrar, // Agregar botón de cerrar si se solicita
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": !conBotonCerrar, // Si tiene botón de cerrar, no mostrar barra de progreso
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "600",
+            "hideDuration": "1000",
+            "timeOut": conBotonCerrar ? false : "8000", // No se oculta automáticamente si tiene botón de cerrar
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+  
+        // Configurar la posición
+        switch (posicion) {
+            case 'center':
+                toastr.options.positionClass = 'toast-top-center';
+                break;
+            case 'left':
+                toastr.options.positionClass = 'toast-top-left';
+                break;
+            case 'right':
+                toastr.options.positionClass = 'toast-top-right';
+                break;
+            default:
+                toastr.options.positionClass = 'toast-top-right'; // Posición predeterminada
+        }
+  
+        // Mostrar el mensaje según el color especificado
+        switch (color) {
+            case 'success':
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+                break;
+            case 'info':
+                titulo ? toastr.info(mensaje, titulo) : toastr.info(mensaje);
+                break;
+            case 'warning':
+                titulo ? toastr.warning(mensaje, titulo) : toastr.warning(mensaje);
+                break;
+            case 'danger':
+                titulo ? toastr.error(mensaje, titulo) : toastr.error(mensaje);
+                break;
+            case 'primary':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-primary' }) : toastr.info(mensaje, '', { toastClass: 'toast-primary' });
+                break;
+            case 'dark':
+                titulo ? toastr.info(mensaje, titulo, { toastClass: 'toast-dark' }) : toastr.info(mensaje, '', { toastClass: 'toast-dark' });
+                break;
+            default:
+                console.warn('Color no válido. Usando el color por defecto (success).');
+                titulo ? toastr.success(mensaje, titulo) : toastr.success(mensaje);
+        }
+    }
+  
+    //mostrarToast( response , 'right', 'danger', '', true ); // Agrega título aquí
+  
+</script>

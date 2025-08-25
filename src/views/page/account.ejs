@@ -467,10 +467,9 @@
     
     <% if (user) { %>
       <% const seeMarket = user.seeMarket %>
-      <!-- <% const idUser = user._id %> -->
       <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
       <input type="hidden" id="UserId" value="<%= user._id %>"> 
-      
+
         <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
     <% }; %>
 
@@ -924,7 +923,7 @@
 
 
 
-                  <div class="containerWorkSpace "> 
+                  <div class="containerWorkSpace"> 
                     <!-- bloque Workspace -->
                     <div class="WorkspaceMain closed d-flex flex-column justify-content-center align-items-center" style="height: auto; background-color:<%= bGColorWorkspace %>; position: relative;">
 
@@ -1790,7 +1789,7 @@
                            
                   <!-- este es el popup lista de compras -->
                   <div class="listShoppingCart close" id="popupCart" 
-                  style="position: fixed; top: 50px; right: 10px; max-height: 500px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 15px; overflow-y: auto; z-index: 500;">
+                  style="position: fixed; top: 50px; right: 10px; max-height: 510px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 15px; overflow-y: auto; z-index: 500;">
                     
                       <div class="title d-flex justify-content-between">
                         <h3>Lista de compra </h3>   <span class="closePopupCartList cursor-pointer"> <i class="bi bi-x-lg"></i> </span> 
@@ -1800,7 +1799,7 @@
                       <table class="table">
                           <thead>
                             <tr style="font-size: 16px">
-                              <th style="text-align: left;"> <i class="bi bi-bag-x-fill"></i> </th>
+                              <th style="text-align: left; font-size: 17px;"> <i class="bi bi-x-square-fill"></i> </th>
                               <th style="text-align: left;">Descrip.</th>
                               <th style="text-align: center;">Cant.</th>
                               <th style="text-align: right;">P.&nbsp;Unit.</th>
@@ -1819,12 +1818,47 @@
                           </tfoot>
                       </table>
 
-                      <div class="alert alert-info">
 
-                        <small> <b> El módulo de carrito de compras</b> está en proceso de creación y estará disponible pronto para su uso. </small>
+
+                      <% if (searchProfile.length !==0 ) { %>
+
+                          <!-- este es el perfil del usuario visitante o cliente -->
+                          <% clientName = searchProfile[0].names %>
+                          <% clientIndentification = searchProfile[0].identification %>
+                          <% clientPhone = searchProfile[0].phone %>
+                          <% clientAddress = searchProfile[0].address %>
+
+                          <div class="alert alert-info">
+                            <b> ¡Requerimento! </b> Es obligatorio los datos de la persona quien recibe esta compra.
+                          </div>  
+
+                          <div class="form-group my-2">
+                            <input type="text" class="form-control" id="clientName" value="<%= clientName %>" placeholder="Nombre de quien recibirá la compra">
+                          </div>
+
+                          <div class="d-flex justify-content-between form-group my-2">
+                            <input type="text" class="form-control" id="clientIndentification" style="width: 49%;" value="<%= clientIndentification %>" placeholder="Documento">
+                            <input type="text" class="form-control" id="clientPhone" style="width: 49%;" value="<%= clientPhone %>" placeholder="Telefono">
+                          </div>
+
+                          <div class="form-group my-2">
+                            <textarea class="form-control"  id="clientAddress" rows="2" placeholder="Dirección a donde va esta compra"><%= clientAddress %></textarea>
+                          </div>
+
+                      <% } else { %> 
+
+                      <div class="alert alert-info">
+                        <b> ¡Importante! </b> Para gestionar compras, requiere perfil. <b> <i> <a href="/myaccount/profile">Ingrese aquí</a> </i>  </b>
+                      </div>  
+
+                      <% } %>
+
+                      
+                      <div class="dataMissing">
+                       <!--  alert dinamico -->
                       </div>
 
-                      <div class="form-group">
+                      <div class="form-group my-3">
                         <button class="form-control btn btn-primary rounded-2" id="consolidate">
                           Consolidar Pedido
                         </button>
@@ -4568,6 +4602,7 @@ function irATopBar() {
   const StoreId = document.getElementById('StoreId').value;
   const UserId = document.getElementById('UserId').value;
   const counters = {};   
+  let totalPay = 0; // esta variable es global la necesitamos en varios lugares.
 
   //exploramos si en el localStorage ya hay un cart si existe es porque ya tenemos un boxShopping y no hace falta crearlo sino actualizarlo.
   const cart = JSON.parse(localStorage.getItem(`cart_${UserId}+${StoreId}`)) || [];
@@ -4588,8 +4623,8 @@ function irATopBar() {
       lightCartShopping.classList.remove('close');
 
       cartItems.innerHTML = "" //limpiamos e inyectamos 
-      let totalPay = 0;
-
+      totalPay = 0; //comenzamos en 0 sino se concatena dando sumas locas, ya que sumara incluso sino hay existencia.
+      
       //inyectamos los datos en la tabla
       boxShopping.forEach((ele)=>{
 
@@ -4599,7 +4634,7 @@ function irATopBar() {
 
         cartItems.innerHTML += `
           <tr>
-            <th style="text-align: left;"> <span class="delItemCart">  <input type="hidden" value="${ ele.id }"> <i class="bi bi-file-x" style="font-size: 18px"></i> </span> </th>
+            <th style="text-align: left;"> <span class="delItemCart">  <input type="hidden" value="${ ele.id }">  <i class="bi bi-x-square" style="font-size: 17px"></i> </span> </th>
             <th style="text-align: left;"> ${ ele.title } </th>
             <th style="text-align: center;">${ ele.countRequest }</th>
             <th style="text-align: right;">${ ele.price }</th>
@@ -4820,11 +4855,16 @@ function irATopBar() {
        
 
 
- //boton de lista de compra que hace aparecer o desaparecer el popup de lista de compra
-    
-const popupCart = document.getElementById('popupCart');
+ //boton de lista de compra que hace aparecer o desaparecer el popup de lista de compra     
+const popupCart = document.getElementById('popupCart'); //esta es la lista propiamente
 const closePopupCartList = document.querySelector('.closePopupCartList');
 const consolidate = document.getElementById('consolidate');
+const dataMissing = document.querySelector('.dataMissing');
+
+const clientAddress = document.getElementById('clientAddress');
+const clientPhone = document.getElementById('clientPhone');
+const clientIndentification = document.getElementById('clientIndentification');
+const clientName = document.getElementById('clientName');
 
 containerCartList.addEventListener('click', () => {
   popupCart.classList.remove('close');
@@ -4839,18 +4879,28 @@ closePopupCartList.addEventListener('click', ()=>{
 consolidate.addEventListener('click', ()=>{
   console.log("Esto es consolidate ..............")
   console.log("boxShopping :", boxShopping);
-  console.log("typeof boxShopping :", typeof boxShopping);
-  console.log("Id Tienda :", StoreId);
-  console.log("Id Cliente :", UserId);  
+  //console.log("Id Tienda :", StoreId);
+  //console.log("Id Cliente :", UserId);  
+  const clientNameV = clientName.value; const clientIndentificationV = clientIndentification.value;
+  const clientPhoneV = clientPhone.value; const clientAddressV = clientAddress.value;
 
+  TotalPay = totalPay.toFixed(2);
+
+  if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="") {
+ 
         const datos = {
           boxShopping: boxShopping,
           StoreId: StoreId,
-          UserId: UserId
+          UserId: UserId,
+          Amount: TotalPay,
+          clientAddress: clientAddressV,
+          clientPhone: clientPhoneV,
+          clientIndentification: clientIndentificationV,
+          clientName: clientNameV
         }
 
-        console.log("esto es datos", datos);
-/* 
+        console.log("esto es datos", datos); 
+ 
         fetch('/send_shoppingCart/consolidate', {
 
           method: "post",
@@ -4860,24 +4910,41 @@ consolidate.addEventListener('click', ()=>{
         })
         .then(response =>response.json() )
         .then( jsonx => {
-            console.log("Carrito creado");
-            console.log(jsonx)
+            console.log(jsonx) //const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
                             
             const code = jsonx.code;
             const message = jsonx.message;
 
             if (code == "ok"){
                 mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
-
+            } else if (code == "info"){
+                mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
             } else {
-                 mostrarToast( message , 'right', 'danger', '¡Hecho!', true ); // Agrega título aquí
+                mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
             }
         
         })
         .catch( err =>{ console.log(err)
             mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
         });
-  */
+
+  } else {
+    //alert("faltan datos de receptor de esta compra.")
+    dataMissing.innerHTML = `                        
+                            <div class="alert alert-danger">
+                              <b>
+                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor. </span>
+                              </b> 
+                            </div>
+                            `;
+
+    setTimeout(() => {
+      dataMissing.innerHTML = "" // limpiamos el alert
+    }, 5000);    
+                            
+
+  }     
+  
 })
 </script>
 

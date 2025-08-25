@@ -110,7 +110,7 @@ routes.get('/account/:account', async (req,res)=>{
         //console.log("Esto es user._id ------>", user._id );
         const userId = user._id; //usaremos con el indexed en la coleccion profile.
         searchProfile = await modelProfile.find({ indexed : userId });
-        //console.log("Aqui el profile de la cuenta", searchProfile);
+        console.log("Aqui el profile de la cuenta", searchProfile);
 
 
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ejecuta el bloque siguiente)
@@ -3050,11 +3050,18 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         console.log("......../send_shoppingCart/consolidate..........");
         //console.log("req.boy", req.body);
         
-        const {boxShopping, StoreId, UserId} = req.body;
+        const {boxShopping, StoreId, UserId, Amount, clientAddress, clientPhone, clientIndentification, clientName } = req.body;
         
         console.log("boxShopping :", boxShopping);
         console.log("StoreId :", StoreId);
         console.log("UserId :", UserId);
+
+        const boxReceiver = {
+            clientAddress, 
+            clientPhone,
+            clientIndentification,
+            clientName
+        }
 
         const date = new Date();
         const cartId = date.getTime(); //codigo para identificar el carrito.
@@ -3071,22 +3078,151 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
         console.log("time :", time); //time : 16-8-2025 11:47 
 
-        const searchCustomer = await modelProfile.findOne({indexed : UserId}, {username: 1});
-        const client = searchCustomer.username;
-        // _id: new ObjectId("689f989e2b989d4c1df8a043"),
-        //  username: 'DigitalMarket'
-        const newShoppingCart = new modelShoppingCart({  cartId,
-                                                         customerId : UserId,
-                                                         customerName : client,
-                                                         sellerId : StoreId,
-                                                         boxShoppingCart : boxShopping,
-                                                         date : time
-                                                        });
-        
-        const saveShoppingCart  = await newShoppingCart.save();
+        const searchStore = await modelProfile.findOne({indexed : StoreId}, {username: 1, countryCode: 1, country:1, state:1, city: 1, sellerType: 1 });
+        const store = searchStore;
+        console.log("store:", store);
+        const SellerType = searchStore.sellerType;
 
-        const response = { code : "ok", message : "Pedido creado y en espera de ser consolidado" };
-        res.json(response);
+        const searchCustomer = await modelProfile.findOne({indexed : UserId}, {username: 1, countryCode: 1, state:1, city: 1 });
+        let client;
+        let CustomerName;
+
+        if (searchCustomer){
+            client = searchCustomer;
+            CustomerName = client.username;
+            console.log("cliente:", client);
+            console.log("CustomerName:", CustomerName);
+
+            
+            const existShoppingCart = await modelShoppingCart.findOne({ customerId : UserId, sellerId : StoreId });
+
+            console.log("existShoppingCart :", existShoppingCart);
+
+            if (!existShoppingCart){
+                //No existe, entonces se crea, es null
+                console.log("no existe es null")
+                if (SellerType.internacional === "false"){
+                    console.log("esta tienda tiene la opcion internacional desabilitada")
+                    console.log("SellerType.nacional :", SellerType.nacional);
+                    console.log("typeof SellerType.nacional :", typeof SellerType.nacional);
+
+
+                    //La tienda tiene restricciones de vender.
+                    if (SellerType.nacional === "true" && SellerType.estadal === "true" && SellerType.local ==="true"){ //nacional es el pais, por eso evaluo el codigo del pais.
+                        //solo se evalua el pais nada mas porque al seleccionar esta opcion tiene estadal y city activas
+                        console.log("La opcion nacional esta activada en true");
+                        if (searchStore.countryCode === searchCustomer.countryCode){
+                            //se puede ejecutar la venta
+                            console.log("estamos la rama de internacionl:false, nacional:true");
+                            console.log("estamos en el mismo pais y podemos seguir adelante con la consolidacion");
+                            const newShoppingCart = new modelShoppingCart({  cartId,
+                                customerId : UserId,
+                                customerName : CustomerName,
+                                sellerId : StoreId,
+                                boxShoppingCart : boxShopping,
+                                date : time,
+                                amount : Amount,
+                                purchaseReceiver : boxReceiver
+                            });
+                            const saveShoppingCart  = await newShoppingCart.save();
+                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                            res.json(response); 
+                        } else {
+                            //seguimos evaluando si podemos sacar esta venta adelante
+                            console.log("estamos la rama de internacionl:false");
+                            console.log("El pais es diferente no podemos ejecutar la consolidacion");
+                            const response = { code: "err", message: `Esta tienda solo vende en el interior del pais: ${searchStore.country}`};
+                            res.json(response);
+                        }
+                        
+                    }
+
+                    if (SellerType.nacional === "false" && SellerType.estadal === "true" && SellerType.local ==="true"){
+
+                        if (searchStore.state === searchCustomer.state){
+                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:true");
+                            console.log("estamos en el mismo estado y podemos seguir adelante con la consolidacion");
+                            const newShoppingCart = new modelShoppingCart({  cartId,
+                                customerId : UserId,
+                                customerName : CustomerName,
+                                sellerId : StoreId,
+                                boxShoppingCart : boxShopping,
+                                date : time,
+                                amount : Amount,
+                                purchaseReceiver : boxReceiver
+                            });
+                            const saveShoppingCart  = await newShoppingCart.save();
+                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                            res.json(response); 
+                        } else {
+                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:true");
+                            console.log("El estado es diferente no podemos ejecutar la consolidacion");
+                            const response = { code: "err", message: `Esta tienda solo vende en el interior del Estado: ${searchStore.state}, Pais: ${searchStore.country}. `};
+                            res.json(response);
+                        }
+
+                    } 
+                        
+                    if (SellerType.nacional === "false" && SellerType.estadal === "false" && SellerType.local ==="true"){
+                        
+                        if (searchStore.city === searchCustomer.city){
+                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:false y city:true");
+                            console.log("estamos en la misma ciudad y podemos seguir adelante con la consolidacion");
+                            const newShoppingCart = new modelShoppingCart({  cartId,
+                                                        customerId : UserId,
+                                                        customerName : CustomerName,
+                                                        sellerId : StoreId,
+                                                        boxShoppingCart : boxShopping,
+                                                        date : time,
+                                                        amount : Amount,
+                                                        purchaseReceiver : boxReceiver
+                                                    });
+                            const saveShoppingCart  = await newShoppingCart.save();
+                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                            res.json(response);                       
+                        } else {
+                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:false y city:true");
+                            console.log("La ciudad es diferente no podemos ejecutar la consolidacion");
+                            const response = { code: "err", message: `Esta tienda solo vende en la ciudad de ${searchStore.city} de ${searchStore.state}, Pais: ${searchStore.city}`};
+                        }
+                        
+                    }    
+
+                } else {
+
+                    //La tienda es libre de vender sin restricciones a todo el mundo.
+                    const newShoppingCart = new modelShoppingCart({  cartId,
+                                                            customerId : UserId,
+                                                            customerName : CustomerName,
+                                                            sellerId : StoreId,
+                                                            boxShoppingCart : boxShopping,
+                                                            date : time,
+                                                            amount : Amount,
+                                                            purchaseReceiver : boxReceiver
+                                                        });
+                
+                    const saveShoppingCart  = await newShoppingCart.save();
+                    const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                    res.json(response); 
+                }
+
+                    
+            } else {
+                //existe, entonces se envia un mensaje de calma y que debe esperar la consolidación.
+                console.log("si existe el carrito y esta siendo consolidado")
+                const response = { code: "info", message: "En proceso de consolidación, espere por favor."}
+                res.json(response); 
+            }
+
+        } else {
+            //el cliente no tiene perfil
+            console.log("Este proceso requiere perfil.")
+            const response = { code: "info", message: "Este proceso requiere Perfil."}
+            res.json(response); 
+        }
+
+
+
         
     } catch (error) {
         console.log("Ha habido un error en el endPoint")
