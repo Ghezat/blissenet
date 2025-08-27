@@ -3956,7 +3956,14 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                                     .then(()=>{
                                         editMessages()
                                             .then(()=>{
-                                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                editAllADS()
+                                                    .then(()=>{
+                                                         res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                    })
+                                                    .catch((error)=>{
+                                                        console.log("Ha habido un error en editAllADS()", error);
+                                                    })
+                                               
                                             })
                                             .catch((error)=>{
                                                 console.log("Ha habido un error en editMessages", error);
@@ -3978,12 +3985,19 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                                 editProfile()
                                     .then(()=>{
                                         editStoreRate()
-                                        .then(()=>{
-                                            res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                        })
-                                        .catch((error)=>{
-                                            console.log("Ha habido un error en editStoreRate", error);
-                                        })
+                                            .then(()=>{
+                                                editAllADS()
+                                                    .then(()=>{
+                                                        res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                    })
+                                                    .catch((error)=>{
+                                                        console.log("Ha habido un error en editAllADS", error);
+                                                    })
+                                                
+                                            })
+                                            .catch((error)=>{
+                                                console.log("Ha habido un error en editStoreRate", error);
+                                            })
                                     })
                                     .catch((error)=>{
                                         console.log("Ha habido un error en editProfile", error);
@@ -4000,7 +4014,14 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                             .then(()=>{
                                 editProfile()
                                     .then(()=>{
-                                        res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                        editAllADS()
+                                            .then(()=>{
+                                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                            })
+                                            .catch((error)=>{
+                                                console.log("Ha habido un error en editAllADS", error);
+                                            })
+                                                
                                     })
                                     .catch((error)=>{
                                         console.log("Ha habido un error en editProfile", error);
