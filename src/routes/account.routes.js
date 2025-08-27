@@ -1001,8 +1001,8 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
         
 
     } else {
-        //console.log("No hay usuario visitante.")
-
+        //console.log("Usuarios sin Logearse.")
+        searchProfile = [];
         const Account = await modelUser.find({ username : account });
         //console.log("Este es la data del account que queremos visitar ...", Account);
 
@@ -1410,7 +1410,9 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
             userId = user._id; //usaremos con el indexed en la coleccion profile.
             searchProfile = await modelProfile.find({ indexed : userId });
             //console.log("Aqui el profile de la cuenta", searchProfile);
-        };    
+        } else {
+            searchProfile = [];
+        }    
         
         const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
         const storeID = accountId;
