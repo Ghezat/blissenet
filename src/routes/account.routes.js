@@ -112,7 +112,7 @@ routes.get('/account/:account', async (req,res)=>{
         searchProfile = await modelProfile.find({ indexed : userId });
         console.log("Aqui el profile de la cuenta", searchProfile);
 
-
+        
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ejecuta el bloque siguiente)
 
 
@@ -351,6 +351,7 @@ routes.get('/account/:account', async (req,res)=>{
 
     } else {
         //console.log("No hay usuario visitante.")
+        searchProfile = []; 
 
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ehecuta el bloque siguiente)
 
@@ -3495,7 +3496,7 @@ routes.post('/account/spread', async (req, res)=>{
 
 });
 
-
+// Aqui es donde dejamos la calificacion y el comentario a las Tiendas. 
 routes.post('/account/storeRate', async(req, res)=>{
 
     console.log("Estamos llegando con estos datos al backend");
@@ -3503,7 +3504,7 @@ routes.post('/account/storeRate', async(req, res)=>{
     const {store, logeado, markStar, comment} = req.body;
     console.log(`store: ${store} logeado: ${logeado} markStar: ${markStar} comment: ${comment}`);
     
-    if (store !== logeado){
+    if (store !== logeado){ //estos son id
 
         //primero obtener el nombre de la tienda que se esta calificando;
         const searchStoreName = await modelUser.findById(store);

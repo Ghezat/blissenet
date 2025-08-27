@@ -1212,7 +1212,7 @@
                                                 </div>
 
                                                 <hr class="m-0">
-
+                                                <!-- parte baja de la tarjeta descripcion precio y favoritos -->
                                                 <!-- esta parte va a cambiar cuando sea oferta -->
                                                 <% if (ele.department !== 'raffle') { %>
                                                   <% if (ele.offer === false) { %>
@@ -1275,58 +1275,58 @@
                                                   </div>
                                                   <% } else { %>
                                                   <div class="boxDetail" style="height: 140px; position: relative; background-color: #fcda57;">
-                                                            <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
-                        
-                                                              <div class="title d-flex justify-content-start"> 
-                                                                  <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
-                                                                    style="text-decoration: none;">
-                                                                    <%= ele.title %>
-                                                                  </a>                                            
-                                                              </div>
+                                                          <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
                       
-                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
-                            
-                                                                  <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
-                                                                
-                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                            <div class="title d-flex justify-content-start"> 
+                                                                <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                                                  style="text-decoration: none;">
+                                                                  <%= ele.title %>
+                                                                </a>                                            
+                                                            </div>
+                    
+                                                            <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                          
+                                                                <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                                              
+                                                                <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
 
-                                                                <% if (user) { %> <!-- control de corazones fascinometro -->
-                                                                  <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                                                <% } %>
-                            
-                                                              </div>
-                                                                                                                                
-                                                              <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
-                        
-                                                                <div class="containerPrice d-flex justify-content-between px-2">
+                                                              <% if (user) { %> <!-- control de corazones fascinometro -->
+                                                                <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                                              <% } %>
+                          
+                                                            </div>
+                                                                                                                              
+                                                            <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 10px; left: 0px;">
+                      
+                                                              <div class="containerPrice d-flex justify-content-between px-2">
 
-                                                                  <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
-                                                                  </a>
+                                                                <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                                                  <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                </a>
 
-                                                                  <div class="containerTresIconos d-flex">
+                                                                <div class="containerTresIconos d-flex">
 
-                                                                    <div class="containerDelivery">
-                                                                      <% if (ele.delivery === true) {%>
-                                                                        <i class="bi bi-truck me-1"></i>
-                                                                      <% }; %>  
-                                                                    </div>
-                                                                    <div class="containerOnlyOneAvailable">
-                                                                      <% if (ele.onlyOneAvailable === true) {%>
-                                                                        <i class="bi bi-1-square-fill me-1"></i>
-                                                                      <% }; %>  
-                                                                    </div>
-                                                                    <div class="containBestProduct">
-                                                                      <% if (ele.bestProduct === true) {%>
-                                                                        <i class="bi bi-award"></i>
-                                                                      <% }; %>  
-                                                                    </div>
+                                                                  <div class="containerDelivery">
+                                                                    <% if (ele.delivery === true) {%>
+                                                                      <i class="bi bi-truck me-1"></i>
+                                                                    <% }; %>  
+                                                                  </div>
+                                                                  <div class="containerOnlyOneAvailable">
+                                                                    <% if (ele.onlyOneAvailable === true) {%>
+                                                                      <i class="bi bi-1-square-fill me-1"></i>
+                                                                    <% }; %>  
+                                                                  </div>
+                                                                  <div class="containBestProduct">
+                                                                    <% if (ele.bestProduct === true) {%>
+                                                                      <i class="bi bi-award"></i>
+                                                                    <% }; %>  
                                                                   </div>
                                                                 </div>
-                        
                                                               </div>
-                                                              
+                      
                                                             </div>
+                                                            
+                                                          </div>
                                                   </div>  
                                                   <% }; %>
                                                 <% } else { %>
@@ -1532,6 +1532,7 @@
 
                                                 <hr class="m-0">
 
+                                                <!-- parte baja de la tarjeta donde esta la descripcion y el favorito -->
                                                 <!-- esta parte va a cambiar cuando sea oferta -->
                                                 <% if (ele.department !== 'raffle') { %>
                                                   <% if (ele.offer === false) { %>
@@ -1649,7 +1650,6 @@
                                                   </div>  
                                                   <% }; %>
                                                 <% } else { %>
-
                                                   <div class="boxDetailRaffle" style="height: 140px; position: relative; background-color: #ffffff;">
                                                     <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
                                                       
@@ -1821,7 +1821,7 @@
 
 
                       <% if (searchProfile.length !==0 ) { %>
-
+                          <!-- este usuario tiene perfil -->
                           <!-- este es el perfil del usuario visitante o cliente -->
                           <% clientName = searchProfile[0].names %>
                           <% clientIndentification = searchProfile[0].identification %>
@@ -1845,24 +1845,35 @@
                             <textarea class="form-control"  id="clientAddress" rows="2" placeholder="Dirección a donde va esta compra"><%= clientAddress %></textarea>
                           </div>
 
-                      <% } else { %> 
+                          <div class="dataMissing">
+                          <!--  alert dinamico -->
+                          </div>
 
+                          <div class="form-group my-3">
+                            <button class="form-control btn btn-primary rounded-2" id="consolidate">
+                              Consolidar Pedido
+                            </button>
+                          </div>
+
+                      <% } else { %> 
+                      <!-- este usuario tiene perfil -->
                       <div class="alert alert-info">
                         <b> ¡Importante! </b> Para gestionar compras, requiere perfil. <b> <i> <a href="/myaccount/profile">Ingrese aquí</a> </i>  </b>
                       </div>  
 
-                      <% } %>
-
-                      
                       <div class="dataMissing">
-                       <!--  alert dinamico -->
+                      <!--  alert dinamico -->
                       </div>
 
                       <div class="form-group my-3">
-                        <button class="form-control btn btn-primary rounded-2" id="consolidate">
+                        <button class="form-control btn btn-primary rounded-2" id="noConsolidate">
                           Consolidar Pedido
                         </button>
                       </div>
+
+                      <% } %>
+
+                    
 
                   </div>
 
@@ -2464,11 +2475,12 @@
       
       
         const datos = {
-            user : User,
-            userOfStore : UserTienda
+            user : User, //este es el id del user
+            userOfStore : UserTienda //este es el id de la tienda
         };
           
-               
+        //console.log("datos :", datos);
+
         fetch('/account/followStore', {
 
           method: "post",
@@ -2962,7 +2974,7 @@
         comment : comment
       };
 
-      console.log("datos a enviar al backend", datos)
+      //console.log("datos a enviar al backend", datos)
 
     fetch('/account/storeRate', {
 
@@ -4860,6 +4872,7 @@ function irATopBar() {
 const popupCart = document.getElementById('popupCart'); //esta es la lista propiamente
 const closePopupCartList = document.querySelector('.closePopupCartList');
 const consolidate = document.getElementById('consolidate');
+const noConsolidate = document.getElementById('noConsolidate'); // boton cuando no el usuario no tenga perfil
 const dataMissing = document.querySelector('.dataMissing');
 
 const clientAddress = document.getElementById('clientAddress');
@@ -4877,76 +4890,105 @@ closePopupCartList.addEventListener('click', ()=>{
     popupCart.classList.add('close'); // Cerrar el popup desde arriba icono x
 })
  
-consolidate.addEventListener('click', ()=>{
-  console.log("Esto es consolidate ..............")
-  console.log("boxShopping :", boxShopping);
-  //console.log("Id Tienda :", StoreId);
-  //console.log("Id Cliente :", UserId);  
-  const clientNameV = clientName.value; const clientIndentificationV = clientIndentification.value;
-  const clientPhoneV = clientPhone.value; const clientAddressV = clientAddress.value;
+if (consolidate){
 
-  TotalPay = totalPay.toFixed(2);
+  consolidate.addEventListener('click', ()=>{
+      console.log("Esto es consolidate ..............")
+      console.log("boxShopping :", boxShopping);
+      //console.log("Id Tienda :", StoreId);
+      //console.log("Id Cliente :", UserId);  
+      const clientNameV = clientName.value; const clientIndentificationV = clientIndentification.value;
+      const clientPhoneV = clientPhone.value; const clientAddressV = clientAddress.value;
 
-  if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="") {
- 
-        const datos = {
-          boxShopping: boxShopping,
-          StoreId: StoreId,
-          UserId: UserId,
-          Amount: TotalPay,
-          clientAddress: clientAddressV,
-          clientPhone: clientPhoneV,
-          clientIndentification: clientIndentificationV,
-          clientName: clientNameV
-        }
+      TotalPay = totalPay.toFixed(2);
 
-        console.log("esto es datos", datos); 
- 
-        fetch('/send_shoppingCart/consolidate', {
-
-          method: "post",
-          body: JSON.stringify(datos),
-          headers: { "content-type": "application/json" }
-
-        })
-        .then(response =>response.json() )
-        .then( jsonx => {
-            console.log(jsonx) //const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                            
-            const code = jsonx.code;
-            const message = jsonx.message;
-
-            if (code == "ok"){
-                mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
-            } else if (code == "info"){
-                mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
-            } else {
-                mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+      if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="") {
+    
+            const datos = {
+              boxShopping: boxShopping,
+              StoreId: StoreId,
+              UserId: UserId,
+              Amount: TotalPay,
+              clientAddress: clientAddressV,
+              clientPhone: clientPhoneV,
+              clientIndentification: clientIndentificationV,
+              clientName: clientNameV
             }
-        
-        })
-        .catch( err =>{ console.log(err)
-            mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
-        });
 
-  } else {
-    //alert("faltan datos de receptor de esta compra.")
+            console.log("esto es datos", datos); 
+    
+            fetch('/send_shoppingCart/consolidate', {
+
+              method: "post",
+              body: JSON.stringify(datos),
+              headers: { "content-type": "application/json" }
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx => {
+                console.log(jsonx) //const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                
+                const code = jsonx.code;
+                const message = jsonx.message;
+
+                if (code == "ok"){
+                    mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+                } else if (code == "info"){
+                    mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
+                } else {
+                    mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                }
+            
+            })
+            .catch( err =>{ console.log(err)
+                mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+            });
+
+      } else {
+        //alert("faltan datos de receptor de esta compra.")
+        dataMissing.innerHTML = `                        
+                                <div class="alert alert-danger">
+                                  <b>
+                                    <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor. </span>
+                                  </b> 
+                                </div>
+                                `;
+
+        setTimeout(() => {
+          dataMissing.innerHTML = "" // limpiamos el alert
+        }, 5000);    
+                                
+
+      }   
+    
+
+  })
+
+
+}
+
+if (noConsolidate){
+  noConsolidate.addEventListener('click', ()=>{
+
+    noConsolidate.setAttribute("disabled", "");
     dataMissing.innerHTML = `                        
-                            <div class="alert alert-danger">
-                              <b>
-                                <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor. </span>
-                              </b> 
-                            </div>
-                            `;
+                        <div class="alert alert-danger">
+                          <b>
+                            <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Debe crear su perfil. </span>
+                          </b> 
+                        </div>
+                        `;
 
-    setTimeout(() => {
-      dataMissing.innerHTML = "" // limpiamos el alert
-    }, 5000);    
-                            
+     setTimeout(() => {
+      noConsolidate.removeAttribute("disabled");
+      dataMissing.innerHTML = ""
+     }, 4000);                    
 
-  }     
+  })
+}
+
   
-})
+
 </script>
 
 <script>

@@ -995,7 +995,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
 
                 } else {
                     console.log('No cumple con la condicion de carcateres su usuario');
-                    req.session.usernameErr = "¡Su username debe tener entre 6 y 20 caracteres!"
+                    req.session.usernameErr = "¡Su username debe tener entre 6 y 22 caracteres!"
                     res.redirect('/myaccount/signup')
                 }    
 
@@ -3708,90 +3708,60 @@ routes.post('/myaccount/change-review', async(req, res)=>{
         console.log("searchProfile", searchProfile);
 
         if ( searchProfile.length !==0 ){
-            console.log("Esta cuenta posee perfil");
-            //el user tiene perfil, se debe verificar si tiene anuncio, si posee anuncio no podra ser editado. si este no posee anuncio se procede a verificar si tiene alguna negociacion o buySell si no tiene se procede
-            //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
-            const countAir = await modelAirplane.find({ user_id : indexed }).count();
-            sumCount = sumCount + countAir; 
-            const countArt = await modelArtes.find({ user_id : indexed }).count();
-            sumCount = sumCount + countArt; 
-            const countIte = await modelItems.find({ user_id : indexed }).count();
-            sumCount = sumCount + countIte; 
-            const countAut = await modelAutomotive.find({ user_id : indexed }).count();
-            sumCount = sumCount + countAut; 
-            const countRea = await modelRealstate.find({ user_id : indexed }).count();
-            sumCount = sumCount + countRea; 
-            const countNau = await modelNautical.find({ user_id : indexed }).count();
-            sumCount = sumCount + countNau; 
-            const countSer = await modelService.find({ user_id : indexed }).count();
-            sumCount = sumCount + countSer;
-            const countAuc = await modelAuction.find({ user_id : indexed }).count();
-            sumCount = sumCount + countAuc;
-            const countRaf = await modelRaffle.find({ user_id : indexed }).count();
-            sumCount = sumCount + countRaf;
 
-            console.log("Esta tienda tiene actualmente esta cantidad de anuncion ----->", sumCount);
-
-
-            if (sumCount !==0){
-                //esta cuenta con pèrfil ya tiene anuncios creados no puede editar el username.
-                console.log("Esta cuenta posee anuncios creados, no puede editar el username");
-                const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario posee anuncios por lo tanto No es posible cambiar su username." };
-                res.json(status); 
-            }else {
-                //esta cuenta con perfil no tiene anuncios puede pasar a la siguiente verificacion negociacion y compra/venta.
-                const negotiationCount = await modelNegotiation.find({usernameBuy : username}).count();
-                const buySellCount = await modelBuySell.find({usernameBuy : username}).count();
-                console.log(`negotiationCount-> ${negotiationCount}    buySellCount-> ${buySellCount}`);
-                console.log(`typeof negotiationCount-> ${typeof negotiationCount}   typeof buySellCount-> ${typeof buySellCount}`);
-                if (negotiationCount === 0 && buySellCount === 0 ){
-                    //como no tiene negociacion o compras lo que se ejcuta es la verificacion de preguntas y calificaciones.
-                    const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
-                    if ( searchMessageCount !==0 ){
-                        // este user ha hecho preguntas.
-                        // verificamos si ha realizado calificacion y opinion
-                        const searchStoreRate = await modelStoreRate.find({logeado : indexed});
-                        if (searchStoreRate.length !==0){
-                            console.log("Hemos llegado a la ultima condicion y verificacion");
-                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras. Ha hecho preguntas y ha calificado");
-                            console.log("searcStoreRate", searchStoreRate);
-                            const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages_storeRate", note : "Este usuario requiere editar la coleccion user, profile, messages y storeRate" };
-                            res.json(status);
-                        } else {
-                            console.log("Hemos llegado a la ultima condicion y verificacion");
-                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras. solo ha hecho preguntas y NO ha calificado");
-                            console.log("searcStoreRate", searchStoreRate);
-                            const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages", note : "Este usuario requiere editar la coleccion user, profile y messages" };
-                            res.json(status);
-                        }
-                        
+            //esta cuenta con perfil no tiene anuncios puede pasar a la siguiente verificacion negociacion y compra/venta.
+            const negotiationCount = await modelNegotiation.find({usernameBuy : username}).count();
+            const buySellCount = await modelBuySell.find({usernameBuy : username}).count();
+            console.log(`negotiationCount-> ${negotiationCount}    buySellCount-> ${buySellCount}`);
+            console.log(`typeof negotiationCount-> ${typeof negotiationCount}   typeof buySellCount-> ${typeof buySellCount}`);
+            if (negotiationCount === 0 && buySellCount === 0 ){
+                //como no tiene negociacion o compras lo que se ejcuta es la verificacion de preguntas y calificaciones.
+                const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
+                if ( searchMessageCount !==0 ){
+                    // este user ha hecho preguntas.
+                    // verificamos si ha realizado calificacion y opinion
+                    const searchStoreRate = await modelStoreRate.find({logeado : indexed});
+                    if (searchStoreRate.length !==0){
+                        console.log("Hemos llegado a la ultima condicion y verificacion");
+                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras. Ha hecho preguntas y ha calificado");
+                        console.log("searcStoreRate", searchStoreRate);
+                        const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages_storeRate", note : "Este usuario requiere editar la coleccion user, profile, messages y storeRate" };
+                        res.json(status);
                     } else {
-                        // este user NO ha hecho preguntas.
-                        // verificamos si ha realizado calificacion y opinion
-                        const searchStoreRate = await modelStoreRate.find({logeado : indexed});
-                        if (searchStoreRate.length !==0){
-                            console.log("Hemos llegado a la ultima condicion y verificacion");
-                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas solo ha calificado");
-                            console.log("searcStoreRate", searchStoreRate);
-                            const status = { edit : true, msg : "Edite su Username", code : "user_profile_storeRate", note : "Este usuario requiere editar la coleccion user, profile y storeRate" };
-                            res.json(status);
-
-                        } else {
-                            console.log("Hemos llegado a la ultima condicion y verificacion");
-                            console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas y NO ha calificado");
-                            console.log("searcStoreRate", searchStoreRate);
-                            const status = { edit : true, msg : "Edite su Username", code : "user_profile", note : "Este usuario requiere editar la coleccion user y profile" };
-                            res.json(status);
-
-                        }
+                        console.log("Hemos llegado a la ultima condicion y verificacion");
+                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras. solo ha hecho preguntas y NO ha calificado");
+                        console.log("searcStoreRate", searchStoreRate);
+                        const status = { edit : true, msg : "Edite su Username", code : "user_profile_messages", note : "Este usuario requiere editar la coleccion user, profile y messages" };
+                        res.json(status);
                     }
-        
+                    
                 } else {
-                    console.log("esta cuenta posee negociacion o compras realizadas, no puede editar el username");
-                    const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado compras por lo tanto No es posible cambiar su username." };
-                    res.json(status);
-                } 
-            }
+                    // este user NO ha hecho preguntas.
+                    // verificamos si ha realizado calificacion y opinion
+                    const searchStoreRate = await modelStoreRate.find({logeado : indexed});
+                    if (searchStoreRate.length !==0){
+                        console.log("Hemos llegado a la ultima condicion y verificacion");
+                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas solo ha calificado");
+                        console.log("searcStoreRate", searchStoreRate);
+                        const status = { edit : true, msg : "Edite su Username", code : "user_profile_storeRate", note : "Este usuario requiere editar la coleccion user, profile y storeRate" };
+                        res.json(status);
+
+                    } else {
+                        console.log("Hemos llegado a la ultima condicion y verificacion");
+                        console.log("Este usuario SI posee perfil, NO posee negocion NI compras, NO ha hecho preguntas y NO ha calificado");
+                        console.log("searcStoreRate", searchStoreRate);
+                        const status = { edit : true, msg : "Edite su Username", code : "user_profile", note : "Este usuario requiere editar la coleccion user y profile" };
+                        res.json(status);
+
+                    }
+                }
+    
+            } else {
+                console.log("esta cuenta posee negociacion o compras realizadas, no puede editar el username");
+                const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado compras por lo tanto No es posible cambiar su username." };
+                res.json(status);
+            } 
+        
             
         } else {
             //el user no tiene perfil, es de suponer que no puede crear anuncios asi que directamente se evalua si ha realizado alguna compra o negociacion?
@@ -3842,16 +3812,24 @@ routes.post('/myaccount/change-username', async(req, res)=>{
 
     try{
         console.log("-----change username------");
-        console.log(req.body);
+        //console.log(req.body);
         const { indexed, username, newName, code, password } = req.body;
         //console.log("indexed", indexed); console.log("username", username); console.log("newName", newName); console.log("code", code); console.log("password", password);
 
-        // debemos tomar newName y formatearlo para asegurar que no tiene espacios en blanco ni delante ni detras ni en ningun lado.
-        let newNameParse = newName.replace(/\s+/g, '').trim(); // Quitamos todos los espacios.
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
 
+        // debemos tomar newName y formatearlo para asegurar que no tiene espacios en blanco ni delante ni detras ni en ningun lado.
+        const newNameParse = newName.replace(/\s+/g, ''); // quita todos los espacios
+        const escaped = escapeRegex(newNameParse);
         //hacemos una busqueda en la coleccion user para revisar si el newName ya existe
-        const searchNewName = await modelUser.find({username : newNameParse});
-        console.log("searchNewName--->", searchNewName);
+        const searchNewName = await modelUser.findOne({ username: { $regex: `^${escaped}$`, $options: 'i' }}).lean();
+        
+        //console.log("Esto es searchNewName ......:", searchNewName);
+
+        //searchNewName si no encuentra una coincidencia---> null
+        //searchUser -> 
 
         //Conjunto de funciones que estaran activas para su ejecucion.
         async function editUser(){
@@ -3870,6 +3848,55 @@ routes.post('/myaccount/change-username', async(req, res)=>{
             const editStoreRate = await modelStoreRate.updateMany({logeado : indexed}, { $set: {'dataLogeado.username' : newNameParse} });
         }
 
+        async function editAllADS(){
+            const itemsExit = await modelItems.find({user_id: indexed});
+                await Promise.all( itemsExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelItems.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const artesExit = await modelArtes.find({user_id: indexed});
+                await Promise.all( artesExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelArtes.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const airplaneExit = await modelAirplane.find({user_id: indexed});
+                await Promise.all( airplaneExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelAirplane.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const automotiveExit = await modelAutomotive.find({user_id: indexed});
+                await Promise.all( automotiveExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelAutomotive.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));   
+            const realstateExit = await modelRealstate.find({user_id: indexed});
+                await Promise.all( realstateExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelRealstate.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));  
+            const nauticalExit = await modelNautical.find({user_id: indexed});
+                await Promise.all( nauticalExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelNautical.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const serviceExit = await modelService.find({user_id: indexed});
+                await Promise.all( serviceExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelService.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));     
+            const raffleExit = await modelRaffle.find({user_id: indexed});
+                await Promise.all( raffleExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelRaffle.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                })); 
+            const auctionExit = await modelAuction.find({user_id: indexed});
+                await Promise.all( auctionExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelAuction.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));                                                                                           
+        }
+
+
         const searchUser = await modelUser.findOne({_id : indexed});
         console.log("searchUser ->", searchUser);
         const hashPassword = searchUser.password;
@@ -3881,7 +3908,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
             if (compares === true) {
         
                 //vamos a comprobar que el nuevo nombre no este siendo usado.
-                if (searchNewName.length === 0){
+                if (!searchNewName){
 
                     if ( code === 'user_profile_messages_storeRate' ){
                         console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
@@ -3894,7 +3921,14 @@ routes.post('/myaccount/change-username', async(req, res)=>{
                                             .then(()=>{
                                                 editStoreRate()
                                                     .then(()=>{
-                                                        res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                        editAllADS()
+                                                            .then(()=>{
+                                                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                            })
+                                                            .catch((error)=>{
+                                                                console.log("Ha habido un error en editAllADS", error);
+                                                            })
+                                                        
                                                     })
                                                     .catch((error)=>{
                                                         console.log("Ha habido un error en editStoreRate", error);

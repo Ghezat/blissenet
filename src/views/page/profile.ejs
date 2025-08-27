@@ -928,7 +928,7 @@
                                                 </div>
                                                 <div class="input-group my-1">
                                                     <span class="input-group-text"> <i class="bi bi-person"></i> </span>
-                                                    <input type="text" class="form-control" id="newName" placeholder="Nuevo nombre" maxlength="20" disabled>
+                                                    <input type="text" class="form-control" id="newName" placeholder="Nuevo nombre" maxlength="22" disabled>
                                                 </div>
                                                 <div class="input-group my-1">
                                                     <span class="input-group-text"> <i class="bi bi-key"></i> </span>
@@ -1265,12 +1265,11 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p> Por temas de seguridad solo podrás editar el nombre de tu Cuenta o Tienda mientras cumplas con estos requisitos.</p>
+                                            <p> Por temas de seguridad solo podrás editar el nombre de tu Cuenta o Tienda mientras cumplas con un requisito.</p>
                                             <ul>
                                                 <li>No haber tenido negociación ni compra alguna. </li>
-                                                <li>No poseer anuncios.</li>
                                             </ul>
-                                            <p>Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Editar </span> para saber si tu cuenta admite esta edición. Introduce el nuevo nombre que quieres y finalmente da clic a <span class="fw-bold text-primary">Actualizar</span>. El sistema actualizará su nuevo nombre de Cuenta/Tienda y en 3 segundos será deslogeado. Vuelva a entrar y todos los cambios estarán listos.  </p>
+                                            <p>Utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Editar </span> Para verificar si tu cuenta permite esta edición, introduce el nuevo nombre y haz clic en <span class="fw-bold text-dark">Actualizar</span>. Si la edición está permitida, el sistema actualizará el nombre de tu Cuenta/Tienda. En ese caso, se cerrará tu sesión en aproximadamente 3 segundos; luego podrás volver a iniciar sesión y encontrarás todos los cambios aplicados.  </p>
                                         </div>
                                         <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
@@ -1291,7 +1290,7 @@
                                         <div class="modal-body">
                                             <p> <span class="fw-bold"> ¡Añade hasta 9 palabras clave! </span> Así, tu tienda aparecerá cuando los usuarios busquen con esos términos en <span class="fw-bold">Tiendas</span>. ¡Haz que te encuentren fácilmente!</p>
 
-                                            <p> Agrega la palabra clave <span class="fw-bold">sin usar el #</span> y luego utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Añadir </span> repite esta acción hasta tener todas las palabras que deseas y finalmente da clic en <span class="fw-bold text-primary">Actualizar</span>. </p>
+                                            <p> Agrega la palabra clave <span class="fw-bold">sin usar el #</span> y luego utiliza el botón <span class="px-2 py-0 rounded-2 border border-secondary me-1"> Añadir </span> repite esta acción hasta tener todas las palabras que deseas y finalmente da clic en <span class="fw-bold text-dark">Actualizar</span>. </p>
                                         </div>
                                         <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
@@ -1310,7 +1309,7 @@
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Cambiar contraseña de al botón <span class="fw-bold text-primary">Enviar Token </span> vaya a su correo o a telegram y recupere el token (Número de 6 digitos) vuelva a la misma sección y coloque el número copiado, debajo la Nueva Contraseña y por ultimo clic en <span class="fw-bold text-primary">Cambiar Contraseña</span>. </p>
+                                            <p>Cambiar contraseña de al botón <span class="fw-bold text-dark">Enviar Token </span> vaya a su correo o a telegram y recupere el token (Número de 6 digitos) vuelva a la misma sección y coloque el número copiado, debajo la Nueva Contraseña y por ultimo clic en <span class="fw-bold text-dark">Cambiar Contraseña</span>. </p>
                                         </div>
                                         <div class="modal-footer" style="background-image: url('/img/bannerPerfil.png'); background-size: cover; background-position: center;">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
@@ -2553,68 +2552,84 @@
                         //Ahora que tenemos las colecciones que se deben cambiar enviamos un fecth post al backend
                         //con el nombre que queremos. 
                         btnChangeUsername.addEventListener('click', ()=>{
+
+                            btnChangeUsername.setAttribute("disabled", "");
+
                             alertEditName.innerHTML = "";
                             const NewName = newName.value;
-                            const data = {
-                                indexed : indexed.value,
-                                username : username.value,
-                                newName : NewName,
-                                password : passwordKey.value, 
-                                code : code
-                            }
 
-                            console.log("Esto es la informacion que enviaremos al backend", data);
-                            //enviamos el fetch con los datos
-                            fetch('/myaccount/change-username', {
+                            if (NewName.length > 5){
 
-                                method: "post",
-                                body: JSON.stringify(data),
-                                headers: {"content-type" : "application/json"}
+                                const data = {
+                                    indexed : indexed.value,
+                                    username : username.value,
+                                    newName : NewName,
+                                    password : passwordKey.value, 
+                                    code : code
+                                }
+                                
 
-                                })
-                                .then(response =>response.json() )
-                                .then( jsonx => {
-                                    
-                                    console.log(jsonx)
-                                    const edit = jsonx.edit; const msg = jsonx.msg;
+                                console.log("Esto es la informacion que enviaremos al backend", data);
+                                //enviamos el fetch con los datos
+                                fetch('/myaccount/change-username', {
 
-                                    if (edit === true){
-                                        unlockUsername.setAttribute('disabled', "");
-                                        newName.setAttribute('disabled', "");
-                                        passwordKey.setAttribute('disabled', "");
-                                        btnChangeUsername.setAttribute('disabled', "");
-                                        alertEditName.innerHTML = ` <div class="alert-success p-2">
-                                                                        <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
-                                                                    </div>
-                                                                    <div class="alert-success p-2">
-                                                                        <i class="bi bi-door-closed-fill mx-1"></i> Cerrando session en 3 segundos... 
-                                                                    </div>
-                                                                    `
-                                        //ahora vamos a cerrar session......................................................
-                                        setTimeout(() => {
-                                            // Crear el elemento <a>
-                                            const logoutLink = document.createElement('a');
-                                            // Establecer el atributo href
-                                            logoutLink.href = '/myaccount/logout';
-                                            // Simular un clic en el enlace (sin agregarlo al DOM)
-                                        logoutLink.click();                                            
-                                        }, 3000);
-                                                       
+                                    method: "post",
+                                    body: JSON.stringify(data),
+                                    headers: {"content-type" : "application/json"}
 
+                                    })
+                                    .then(response =>response.json() )
+                                    .then( jsonx => {
+                                        
+                                        console.log(jsonx)
+                                        const edit = jsonx.edit; const msg = jsonx.msg;
 
-                                    } else {
-                                        unlockUsername.setAttribute('disabled', "");
-                                        alertEditName.innerHTML = ` <div class="alert-danger p-2">
-                                                                        <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
-                                                                    </div>`
-                                    }
+                                        if (edit === true){
+                                            unlockUsername.setAttribute('disabled', "");
+                                            newName.setAttribute('disabled', "");
+                                            passwordKey.setAttribute('disabled', "");
+                                            alertEditName.innerHTML = ` <div class="alert-success p-2">
+                                                                            <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
+                                                                        </div>
+                                                                        <div class="alert-success p-2">
+                                                                            <i class="bi bi-door-closed-fill mx-1"></i> Cerrando session en 3 segundos... 
+                                                                        </div>
+                                                                        `
+                                            //ahora vamos a cerrar session......................................................
+                                            setTimeout(() => {
+                                                // Crear el elemento <a>
+                                                const logoutLink = document.createElement('a');
+                                                // Establecer el atributo href
+                                                logoutLink.href = '/myaccount/logout';
+                                                // Simular un clic en el enlace (sin agregarlo al DOM)
+                                            logoutLink.click();                                            
+                                            }, 3000);
+                                                        
 
 
-                                })
-                                .catch( err => console.log(err));
+                                        } else {
+                                            btnChangeUsername.removeAttribute('disabled');
+                                            unlockUsername.setAttribute('disabled', "");
+                                            alertEditName.innerHTML = ` <div class="alert-danger p-2">
+                                                                            <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
+                                                                        </div>`
+                                        }
 
-                            })                            
 
+                                    })
+                                    .catch( err => console.log(err));
+ 
+                            } else {
+                                const msg = "Su username debe tener entre 6 a 22 carácteres."
+                                alertEditName.innerHTML = ` <div class="alert-danger p-2">
+                                                                <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
+                                                            </div>`
+                                btnChangeUsername.removeAttribute("disabled");
+                            }            
+
+                        })
+                            
+                                
 
                     } else {
                         console.log("estamos aqui en ", edit);
