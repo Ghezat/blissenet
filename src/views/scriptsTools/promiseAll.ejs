@@ -1,0 +1,55 @@
+    
+    <script>
+
+    //este script muestra una funcion que ejecuta consultas que a su vez son procesadas en promesas que se ejcutan de manera simultanea
+    //aumentando la velocidad de sus ejecución. Volviendolo mas eficiente.
+    async function editAllADS(){
+            const itemsExit = await modelItems.find({user_id: indexed});
+                await Promise.all( itemsExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelItems.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const artesExit = await modelArtes.find({user_id: indexed});
+                await Promise.all( artesExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelArtes.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const airplaneExit = await modelAirplane.find({user_id: indexed});
+                await Promise.all( airplaneExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelAirplane.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const automotiveExit = await modelAutomotive.find({user_id: indexed});
+                await Promise.all( automotiveExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelAutomotive.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));   
+            const realstateExit = await modelRealstate.find({user_id: indexed});
+                await Promise.all( realstateExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelRealstate.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));  
+            const nauticalExit = await modelNautical.find({user_id: indexed});
+                await Promise.all( nauticalExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelNautical.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));
+            const serviceExit = await modelService.find({user_id: indexed});
+                await Promise.all( serviceExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelService.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));     
+            const raffleExit = await modelRaffle.find({user_id: indexed});
+                await Promise.all( raffleExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelRaffle.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                })); 
+            const auctionExit = await modelAuction.find({user_id: indexed});
+                await Promise.all( auctionExit.map(async (ele) => {
+                    // Aquí actualizas el campo username de cada documento
+                    await modelAuction.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                }));                                                                                           
+        }
+
+
+</script>
