@@ -3088,13 +3088,16 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         console.log("store:", store);
         const SellerType = searchStore.sellerType;
 
-        const searchCustomer = await modelProfile.findOne({indexed : UserId}, {username: 1, countryCode: 1, state:1, city: 1 });
+        const searchCustomer = await modelProfile.findOne({indexed : UserId});
         let client;
         let CustomerName;
 
         if (searchCustomer){
             client = searchCustomer;
             CustomerName = client.username;
+            const avatar = client.avatarPerfil[0].url;
+            const avatarDefault = client.avatarPerfil[0].url;
+
             console.log("cliente:", client);
             console.log("CustomerName:", CustomerName);
 
@@ -3120,18 +3123,52 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                             //se puede ejecutar la venta
                             console.log("estamos la rama de internacionl:false, nacional:true");
                             console.log("estamos en el mismo pais y podemos seguir adelante con la consolidacion");
-                            const newShoppingCart = new modelShoppingCart({  cartId,
-                                customerId : UserId,
-                                customerName : CustomerName,
-                                sellerId : StoreId,
-                                boxShoppingCart : boxShopping,
-                                date : time,
-                                amount : Amount,
-                                purchaseReceiver : boxReceiver
-                            });
-                            const saveShoppingCart  = await newShoppingCart.save();
-                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                            res.json(response); 
+
+                            async function createShoppingCart(){
+                                const newShoppingCart = new modelShoppingCart({  cartId,
+                                                            customerId : UserId,
+                                                            customerName : CustomerName,
+                                                            sellerId : StoreId,
+                                                            boxShoppingCart : boxShopping,
+                                                            date : time,
+                                                            amount : Amount,
+                                                            purchaseReceiver : boxReceiver
+                                                        });
+                                const saveShoppingCart  = await newShoppingCart.save();
+                            }      
+
+                            async function Notification(){
+                                //enviar mensaje al usuario que lo estan siguiendo.
+                                const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                                                                            times: time,
+                                                                            objeAvatar : {avatar, avatarDefault},
+                                                                            username: CustomerName,
+                                                                            question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
+                                                                            toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
+                                                                            answer: 'waiting',
+                                                                            view: false } );
+                                console.log("newNotification ------>", newNotification);
+
+                                const saveMessage = await newNotification.save();
+                                console.log("se ha creado la notificacion de creación de un carrito");
+                            }
+
+                            createShoppingCart()
+                                .then(()=>{
+                                    Notification()
+                                        .then(()=>{
+                                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                            res.json(response);  
+                                        })
+                                        .catch(error => {
+                                            console.error('Error al ejecutar la funcion Notification', error.response.data);
+                                        });
+
+                                })
+                                .catch(error => {
+                                    console.error('Error al ejecutar la funcion createShoppingCart', error.response.data);
+                                });
+
                         } else {
                             //seguimos evaluando si podemos sacar esta venta adelante
                             console.log("estamos la rama de internacionl:false");
@@ -3147,18 +3184,52 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                         if (searchStore.state === searchCustomer.state){
                             console.log("estamos la rama de internacionl:false, nacional:false, estadal:true");
                             console.log("estamos en el mismo estado y podemos seguir adelante con la consolidacion");
-                            const newShoppingCart = new modelShoppingCart({  cartId,
-                                customerId : UserId,
-                                customerName : CustomerName,
-                                sellerId : StoreId,
-                                boxShoppingCart : boxShopping,
-                                date : time,
-                                amount : Amount,
-                                purchaseReceiver : boxReceiver
-                            });
-                            const saveShoppingCart  = await newShoppingCart.save();
-                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                            res.json(response); 
+                           
+                            async function createShoppingCart(){
+                                const newShoppingCart = new modelShoppingCart({  cartId,
+                                                            customerId : UserId,
+                                                            customerName : CustomerName,
+                                                            sellerId : StoreId,
+                                                            boxShoppingCart : boxShopping,
+                                                            date : time,
+                                                            amount : Amount,
+                                                            purchaseReceiver : boxReceiver
+                                                        });
+                                const saveShoppingCart  = await newShoppingCart.save();
+                            }      
+
+                            async function Notification(){
+                                //enviar mensaje al usuario que lo estan siguiendo.
+                                const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                                                                            times: time,
+                                                                            objeAvatar : {avatar, avatarDefault},
+                                                                            username: CustomerName,
+                                                                            question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
+                                                                            toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
+                                                                            answer: 'waiting',
+                                                                            view: false } );
+                                console.log("newNotification ------>", newNotification);
+
+                                const saveMessage = await newNotification.save();
+                                console.log("se ha creado la notificacion de creación de un carrito");
+                            }
+
+                            createShoppingCart()
+                                .then(()=>{
+                                    Notification()
+                                        .then(()=>{
+                                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                            res.json(response);  
+                                        })
+                                        .catch(error => {
+                                            console.error('Error al ejecutar la funcion Notification', error.response.data);
+                                        });
+
+                                })
+                                .catch(error => {
+                                    console.error('Error al ejecutar la funcion createShoppingCart', error.response.data);
+                                });
+
                         } else {
                             console.log("estamos la rama de internacionl:false, nacional:false, estadal:true");
                             console.log("El estado es diferente no podemos ejecutar la consolidacion");
@@ -3173,18 +3244,53 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                         if (searchStore.city === searchCustomer.city){
                             console.log("estamos la rama de internacionl:false, nacional:false, estadal:false y city:true");
                             console.log("estamos en la misma ciudad y podemos seguir adelante con la consolidacion");
-                            const newShoppingCart = new modelShoppingCart({  cartId,
-                                                        customerId : UserId,
-                                                        customerName : CustomerName,
-                                                        sellerId : StoreId,
-                                                        boxShoppingCart : boxShopping,
-                                                        date : time,
-                                                        amount : Amount,
-                                                        purchaseReceiver : boxReceiver
-                                                    });
-                            const saveShoppingCart  = await newShoppingCart.save();
-                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                            res.json(response);                       
+                                                            
+                            async function createShoppingCart(){
+                                const newShoppingCart = new modelShoppingCart({  cartId,
+                                                            customerId : UserId,
+                                                            customerName : CustomerName,
+                                                            sellerId : StoreId,
+                                                            boxShoppingCart : boxShopping,
+                                                            date : time,
+                                                            amount : Amount,
+                                                            purchaseReceiver : boxReceiver
+                                                        });
+                                const saveShoppingCart  = await newShoppingCart.save();
+                            }      
+
+                            async function Notification(){
+                                //enviar mensaje al usuario que lo estan siguiendo.
+                                const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                                                                            times: time,
+                                                                            objeAvatar : {avatar, avatarDefault},
+                                                                            username: CustomerName,
+                                                                            question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
+                                                                            toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
+                                                                            answer: 'waiting',
+                                                                            view: false } );
+                                console.log("newNotification ------>", newNotification);
+
+                                const saveMessage = await newNotification.save();
+                                console.log("se ha creado la notificacion de creación de un carrito");
+                            }
+
+                            createShoppingCart()
+                                .then(()=>{
+                                    Notification()
+                                        .then(()=>{
+                                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                            res.json(response);  
+                                        })
+                                        .catch(error => {
+                                            console.error('Error al ejecutar la funcion Notification', error.response.data);
+                                        });
+
+                                })
+                                .catch(error => {
+                                    console.error('Error al ejecutar la funcion createShoppingCart', error.response.data);
+                                });
+
+                     
                         } else {
                             console.log("estamos la rama de internacionl:false, nacional:false, estadal:false y city:true");
                             console.log("La ciudad es diferente no podemos ejecutar la consolidacion");
@@ -3196,19 +3302,51 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 } else {
 
                     //La tienda es libre de vender sin restricciones a todo el mundo.
-                    const newShoppingCart = new modelShoppingCart({  cartId,
-                                                            customerId : UserId,
-                                                            customerName : CustomerName,
-                                                            sellerId : StoreId,
-                                                            boxShoppingCart : boxShopping,
-                                                            date : time,
-                                                            amount : Amount,
-                                                            purchaseReceiver : boxReceiver
-                                                        });
-                
-                    const saveShoppingCart  = await newShoppingCart.save();
-                    const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                    res.json(response); 
+                    async function createShoppingCart(){
+                        const newShoppingCart = new modelShoppingCart({  cartId,
+                                                    customerId : UserId,
+                                                    customerName : CustomerName,
+                                                    sellerId : StoreId,
+                                                    boxShoppingCart : boxShopping,
+                                                    date : time,
+                                                    amount : Amount,
+                                                    purchaseReceiver : boxReceiver
+                                                });
+                        const saveShoppingCart  = await newShoppingCart.save();
+                    }      
+
+                    async function Notification(){
+                        //enviar mensaje al usuario que lo estan siguiendo.
+                        const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                                                                    times: time,
+                                                                    objeAvatar : {avatar, avatarDefault},
+                                                                    username: CustomerName,
+                                                                    question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
+                                                                    toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
+                                                                    answer: 'waiting',
+                                                                    view: false } );
+                        console.log("newNotification ------>", newNotification);
+
+                        const saveMessage = await newNotification.save();
+                        console.log("se ha creado la notificacion de creación de un carrito");
+                    }
+
+                    createShoppingCart()
+                        .then(()=>{
+                            Notification()
+                                .then(()=>{
+                                    const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                    res.json(response);  
+                                })
+                                .catch(error => {
+                                    console.error('Error al ejecutar la funcion Notification', error.response.data);
+                                });
+
+                        })
+                        .catch(error => {
+                            console.error('Error al ejecutar la funcion createShoppingCart', error.response.data);
+                        });
+
                 }
 
                     
@@ -3281,13 +3419,12 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
 
         async function Notification(){
             //enviar mensaje al usuario que lo estan siguiendo.
-            const newNotification = new modelMessage( { typeNote: 'delete-shoppingCart',
+            const newNotification = new modelMessage( { typeNote: 'shoppingCart',
                                                         times: timeNow,
                                                         objeAvatar : {avatar, avatarDefault},
-                                                        username: customerName,
+                                                        username: sellerUsername,
                                                         question: `¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber la razón.`,
-                                                        toCreatedArticleId : sellerId,
-                                                        ownerStore  : sellerUsername,
+                                                        toCreatedArticleId : customerId, //el id de la cuenta donde debe llegar la notificacion
                                                         answer: 'waiting',
                                                         view: false } );
             console.log("newNotification ------>", newNotification);

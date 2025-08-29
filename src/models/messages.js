@@ -105,7 +105,7 @@ module.exports = model('messageModel', messageSchema, 'messages');
 },
 
 {
-  typeNote: 'delete-shoppingCart',
+  typeNote: 'shoppingCart',
   times: '29-08-2025 14:50',
   objeAvatar: { avatar: '', avatarDefault: 'dd7ee795a010fe7953f74ba1547055ad' },
   username: 'develop-test1',
