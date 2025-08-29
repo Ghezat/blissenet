@@ -102,6 +102,19 @@ module.exports = model('messageModel', messageSchema, 'messages');
     "createdAt" : ISODate("2025-01-21T21:45:10.965Z"),
     "updatedAt" : ISODate("2025-01-21T21:45:10.965Z"),
     "__v" : 0
+},
+
+{
+  typeNote: 'delete-shoppingCart',
+  times: '29-08-2025 14:50',
+  objeAvatar: { avatar: '', avatarDefault: 'dd7ee795a010fe7953f74ba1547055ad' },
+  username: 'develop-test1',
+  question: '¡Hola! develop-test1 ha eliminado tu compra. Puedes comunicarte con ellos para saber la razón.',
+  toCreatedArticleId: '66ab9dc1b8c25e5528f4ea9d',
+  ownerStore: 'develop-test1',
+  answer: 'waiting',
+  view: false,
+  _id: new ObjectId("68b1f663b5a6eebfc0fcad4d")
 }
 */
 
@@ -112,4 +125,5 @@ module.exports = model('messageModel', messageSchema, 'messages');
 //3. note
 //4. messages
 //5. availability-noti
+//6. delete-shoppingCart
 

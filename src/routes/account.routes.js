@@ -27,6 +27,7 @@ const fs = require('fs-extra');
       
 //este Token es la KEY del bot de Telegram
 const Token =  process.env.Token_Bot;
+//console.log("este es el Token de telegram :", Token);
 
 routes.get('/account/:account', async (req,res)=>{
     //console.log("Este es el parametroooo ---->",req.params);
@@ -3046,6 +3047,7 @@ routes.post('/account/purchaseTime', async (req, res)=>{
 });
 
 
+//envio de solicitud de consolidacion
 routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
     try {
@@ -3234,6 +3236,137 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
     }
 
 });
+
+routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
+
+    try {
+
+        console.log("......../delete_shoppingCart/consolidate..........");
+        console.log("req.boy :", req.body);
+        const { iDCart, clientName } = req.body;
+        //iDCart: '68b0ea6644cc07b2d398f89f',
+        //clientName: 'develop-test1'
+
+        let date = new Date();
+        let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+        let hora = date.getHours(); let minu = date.getMinutes();
+
+        let mesFormatted = String(mes).padStart(2, '0');
+        let minuFormatted = String(minu).padStart(2, '0');
+        const timeNow = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
+
+        //console.log("timeNow :", timeNow);
+
+        const searchShoppingCart = await modelShoppingCart.findById(iDCart);
+
+        console.log("Esto es searchShoppingCart :", searchShoppingCart);
+        const customerId = searchShoppingCart.customerId;
+        const customerName = searchShoppingCart.customerName;
+        const sellerId = searchShoppingCart.sellerId;
+
+        //busco en el perfil del vendedor el avatar 
+        const searchProfileSeller = await modelProfile.findOne({ indexed : sellerId });
+        console.log("searchProfileSeller....:", searchProfileSeller);
+
+        const sellerUsername = searchProfileSeller.username;
+        const avatar = searchProfileSeller.avatarPerfil[0].url; const avatarDefault = searchProfileSeller.mailhash;
+        console.log("Este es el avatar :", avatar);
+        console.log("Este es el avatarDefault :", avatarDefault);
+
+        const searchUserClient = await modelUser.findById(customerId);
+        const chatId = searchUserClient.blissBot.chatId
+
+        console.log("searchUserClient..............:", searchUserClient);
+        console.log("chatId..............:", chatId);
+
+        async function Notification(){
+            //enviar mensaje al usuario que lo estan siguiendo.
+            const newNotification = new modelMessage( { typeNote: 'delete-shoppingCart',
+                                                        times: timeNow,
+                                                        objeAvatar : {avatar, avatarDefault},
+                                                        username: customerName,
+                                                        question: `¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber la razón.`,
+                                                        toCreatedArticleId : sellerId,
+                                                        ownerStore  : sellerUsername,
+                                                        answer: 'waiting',
+                                                        view: false } );
+            console.log("newNotification ------>", newNotification);
+
+            const saveMessage = await newNotification.save();
+            console.log("se ha creado la notificacion de eliminación del carrito");
+        }
+
+        async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+            console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+
+            const Message = `Notificación de Blissenet.com: Delete Shopping Cart\n\n¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber la razón.`;
+            console.log("chatId --->", chatId);          
+
+            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                chat_id: chatId,
+                text: Message,
+            })
+            .then(response => {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.log('Mensaje enviado con éxito:', response.data);
+            })
+            .catch(error => {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.error('Error al enviar el mensaje:', error.response.data);
+            });
+    
+        }
+
+        async function deleteShoppingcart() {
+            await modelShoppingCart.findByIdAndDelete(iDCart);
+        }
+
+        Notification()
+            .then(()=>{
+
+                if (chatId){
+
+                    blissBotNoti()
+                        .then(()=>{
+                            deleteShoppingcart()
+                                .then(()=>{
+                                    const message = "Solicitud de Compra eliminado.";
+                                    const response = { "code" : "ok", "message" : message};
+                                    res.json(response);
+                                })
+                                .catch(error => {
+                                    console.error('Error al ejecutar la funcion deleteShoppingcart', error.response.data);
+                                });
+                        })
+                        .catch(error => {
+                            console.error('Error al ejecutar la funcion blissBotNoti', error.response.data);
+                        });
+
+                } else {
+
+                    deleteShoppingcart()
+                        .then(()=>{
+                            const message = "Solicitud de Compra eliminado.";
+                            const response = { "code" : "ok", "message" : message};
+                            res.json(response);
+                        })
+                        .catch(error => {
+                            console.error('Error al ejecutar la funcion deleteShoppingcart', error.response.data);
+                        });
+
+                }
+            })
+            .catch(error => {
+                console.error('Error al ejecutar la funcion Notification()', error.response.data);
+            });
+
+
+    } catch (error) {
+        console.log("error :", error);
+    }
+
+});
+
 
 //Sección de manejo de Raffles --------------------------------------------
 routes.get('/raffleModule-admin/:id', async(req, res)=>{
@@ -3735,6 +3868,33 @@ routes.post('/account/survey/analysis', async(req, res)=>{
 
 });
 
+//aqui si hacemos la consulta de una encuesta predeterminada.
+routes.post('/account/survey/analysisData', async(req, res)=>{
+    try {
+
+        console.log("*----------------------- Extraccion de datos de Encuesta ----------------------------*");
+        console.log("/account/survey/analysisData");
+        const { surveyId } = req.body;
+
+        const searchSurveyData = await modelCustomerSurvey.find({ surveyId });
+        console.log("**************** searchSurveyData *************");
+        console.log(searchSurveyData);
+
+        res.json({ searchSurveyData });
+
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Error al procesar la solicitud" });
+    }
+})
+
+routes.get('/cut', async (req,res)=>{
+
+    res.render('page/cut');
+         
+});
+
+
 //-------------- controlando las peticiones de BlissBot bot de Telegram
 // aqui guardamos el username de telegram en la base de datos
 routes.post('/acount/blissBot/userTelegram', async(req, res)=>{
@@ -3803,7 +3963,9 @@ routes.post('/acount/blissBot/userTelegram', async(req, res)=>{
 // Endpoint para conectar usuarios de Blissenet con Telegram
 routes.post(`/webhook/${Token}`, async(req, res) => {
     const update = req.body;
-
+    console.log("....................Telegram ....................:");
+    console.log("update de Telegram ....................:", update );
+    
     // Verificar si es un mensaje y contiene el comando /start
     if (update.message && update.message.text === '/start') {
         const chatId = update.message.chat.id;
@@ -3868,32 +4030,6 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
 
     // Responder a Telegram con un 200 OK
     res.sendStatus(200);
-});
-
-//aqui si hacemos la consulta de una encuesta predeterminada.
-routes.post('/account/survey/analysisData', async(req, res)=>{
-    try {
-
-        console.log("*----------------------- Extraccion de datos de Encuesta ----------------------------*");
-        console.log("/account/survey/analysisData");
-        const { surveyId } = req.body;
-
-        const searchSurveyData = await modelCustomerSurvey.find({ surveyId });
-        console.log("**************** searchSurveyData *************");
-        console.log(searchSurveyData);
-
-        res.json({ searchSurveyData });
-
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).json({ message: "Error al procesar la solicitud" });
-    }
-})
-
-routes.get('/cut', async (req,res)=>{
-
-    res.render('page/cut');
-         
 });
 
 /* 

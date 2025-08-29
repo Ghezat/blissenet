@@ -4893,6 +4893,7 @@ closePopupCartList.addEventListener('click', ()=>{
 if (consolidate){
 
   consolidate.addEventListener('click', ()=>{
+
       console.log("Esto es consolidate ..............")
       console.log("boxShopping :", boxShopping);
       //console.log("Id Tienda :", StoreId);
@@ -4902,65 +4903,71 @@ if (consolidate){
 
       TotalPay = totalPay.toFixed(2);
 
-      if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="") {
-    
-            const datos = {
-              boxShopping: boxShopping,
-              StoreId: StoreId,
-              UserId: UserId,
-              Amount: TotalPay,
-              clientAddress: clientAddressV,
-              clientPhone: clientPhoneV,
-              clientIndentification: clientIndentificationV,
-              clientName: clientNameV
-            }
+      if (boxShopping.length !==0){
 
-            console.log("esto es datos", datos); 
-    
-            fetch('/send_shoppingCart/consolidate', {
+        if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="") {
+      
+              const datos = {
+                boxShopping: boxShopping,
+                StoreId: StoreId,
+                UserId: UserId,
+                Amount: TotalPay,
+                clientAddress: clientAddressV,
+                clientPhone: clientPhoneV,
+                clientIndentification: clientIndentificationV,
+                clientName: clientNameV
+              }
 
-              method: "post",
-              body: JSON.stringify(datos),
-              headers: { "content-type": "application/json" }
+              console.log("esto es datos", datos); 
+      
+              fetch('/send_shoppingCart/consolidate', {
 
-            })
-            .then(response =>response.json() )
-            .then( jsonx => {
-                console.log(jsonx) //const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                
-                const code = jsonx.code;
-                const message = jsonx.message;
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: { "content-type": "application/json" }
 
-                if (code == "ok"){
-                    mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
-                } else if (code == "info"){
-                    mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
-                } else {
-                    mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
-                }
-            
-            })
-            .catch( err =>{ console.log(err)
-                mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
-            });
+              })
+              .then(response =>response.json() )
+              .then( jsonx => {
+                  console.log(jsonx) //const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                  
+                  const code = jsonx.code;
+                  const message = jsonx.message;
 
+                  if (code == "ok"){
+                      mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+                  } else if (code == "info"){
+                      mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
+                  } else {
+                      mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                  }
+              
+              })
+              .catch( err =>{ console.log(err)
+                  mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+              });
+
+        } else {
+          //alert("faltan datos de receptor de esta compra.")
+          dataMissing.innerHTML = `                        
+                                  <div class="alert alert-danger">
+                                    <b>
+                                      <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor. </span>
+                                    </b> 
+                                  </div>
+                                  `;
+
+          setTimeout(() => {
+            dataMissing.innerHTML = "" // limpiamos el alert
+          }, 5000);    
+                                  
+        }   
       } else {
-        //alert("faltan datos de receptor de esta compra.")
-        dataMissing.innerHTML = `                        
-                                <div class="alert alert-danger">
-                                  <b>
-                                    <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor. </span>
-                                  </b> 
-                                </div>
-                                `;
 
-        setTimeout(() => {
-          dataMissing.innerHTML = "" // limpiamos el alert
-        }, 5000);    
-                                
+        const message = "El carrito esta vacio."
+        mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
 
-      }   
-    
+      }
 
   })
 

@@ -429,9 +429,44 @@
     })
 
     btnDelete.addEventListener('click', ()=>{
-        console.log("Solicitud de pedido eliminado");
-        console.log("boxConsolidate :", boxConsolidate);
-        //aqui deben enviar los nuevos datos a la tienda donde se espera la consolidacion y la noticia de eliminacion
+        //console.log("Solicitud de pedido eliminado");
+        //console.log("boxConsolidate :", boxConsolidate);
+
+        const dato = {
+            box : boxConsolidate
+        }
+
+        console.log("dato :", dato)
+        
+        fetch('/delete_shoppingCart/consolidate', {
+
+        method: "post",
+        body: JSON.stringify(datos),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response => response.json())
+        .then( jsonx => {
+            console.log("jsonx :",  jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+         
+            mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+            setTimeout(() => {
+                mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    location.reload();    
+                }, 3000);
+
+            }, 1000);
+                        
+            
+        })
+        .catch( err => console.log(err))
+
+        
     })
 
 </script>

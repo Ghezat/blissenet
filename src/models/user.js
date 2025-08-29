@@ -12,6 +12,6 @@ const userSchema = new Schema({
     seeMarket : { type : Object, default : { countryMarket : "", countryMarketCode : "", flag : "" } } // aqui se guarda la informacion del mercado que quiere ver el usuario. esto es muy importante. Todos deben tener un mercado de vista definido en Blissenet. Este campo puede cambiar a discrecion del usuario cuando lo decida.
 },{
     timestamps : true
-});
+}); 
 
 module.exports = model('userModel', userSchema, 'users');

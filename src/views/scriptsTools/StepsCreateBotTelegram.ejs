@@ -15,5 +15,43 @@
    nombre : BlissBot
    username : BlissRobot_bot
    token: 7299388374:AAGKT18rdi8jR7kTBUib440rT4C6i0UZxuY
- */
+
+4. **Configura el Webhook**:
+    Abre tu navegador o usa una herramienta como Postman y envía una solicitud a la siguiente URL:
+    ```
+    https://api.telegram.org/bot<TOKEN>/setWebhook?url=<YOUR_WEBHOOK_URL>   
+    ```
+    Reemplaza `<TOKEN>` con el token de tu nuevo bot y `<YOUR_WEBHOOK_URL>` con la URL donde está tu endpoint (por ejemplo, `https://tu-dominio.com/webhook/<TOKEN>`).
+    https://api.telegram.org/bot7299388374:AAGKT18rdi8jR7kTBUib440rT4C6i0UZxuY/setWebhook?url=https://blissenet.com/webhook/7299388374:AAGKT18rdi8jR7kTBUib440rT4C6i0UZxuY 
+    
+    **Verifica la Respuesta**:
+    Después de realizar la solicitud, deberías recibir una respuesta de Telegram que confirme que el webhook se ha configurado correctamente. Si hay un error, revisa el mensaje de error.
+    {"ok":true,"result":true,"description":"Webhook is already set"} // significa que esta hecho    
+
+    */
+</script>
+
+<script>
+
+//ejemplo de mensaje mas imagen
+
+/* 
+axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+    chat_id: chatId,
+    photo: fs.createReadStream(imagePath), // Usando fs para leer el archivo
+    caption: message // El mensaje que quieres enviar junto a la imagen
+})
+    
+//ejemplo de solo mensaje
+axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+    chat_id: chatId,
+    text: Message,
+})
+.then(response => {
+    console.log('Mensaje enviado con éxito:', response.data);
+})
+.catch(error => {
+    console.error('Error al enviar el mensaje:', error.response.data);
+}); */
+
 </script>

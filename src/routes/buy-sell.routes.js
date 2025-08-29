@@ -1169,7 +1169,7 @@ routes.post('/buysell/direct', async(req, res)=>{
     
       }
 
-      async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+      async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
           console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
           const Message = `Notificación de Blissenet.com: Sell\n\n¡Felicidades! Tienes una venta pendiente de tu artículo "${titleArticle}".  Sin dilaciones anda y atiende a tu comprador, y recuerda pedirle te califique al terminar su compra.`;
           console.log("titleArticle --->", titleArticle);
