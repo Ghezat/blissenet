@@ -3088,9 +3088,16 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         console.log("store:", store);
         const SellerType = searchStore.sellerType;
 
+        const storeChatId = await modelUser.findById(StoreId);
+        const chatId = storeChatId.blissBot.chatId
+
+        console.log("storeChatId..............:", storeChatId);
+        console.log("chatId..............:", chatId); //es la tienda que recibe el telegrama 
+
         const searchCustomer = await modelProfile.findOne({indexed : UserId});
         let client;
         let CustomerName;
+
 
         if (searchCustomer){
             client = searchCustomer;
@@ -3139,7 +3146,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
                             async function Notification(){
                                 //enviar mensaje al usuario que lo estan siguiendo.
-                                const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                                const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
                                                                             times: time,
                                                                             objeAvatar : {avatar, avatarDefault},
                                                                             username: CustomerName,
@@ -3157,8 +3164,23 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                                 .then(()=>{
                                     Notification()
                                         .then(()=>{
-                                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                            res.json(response);  
+
+                                            if (chatId){
+                                                blissBotNoti()
+                                                    .then(()=>{
+                                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                                        res.json(response);  
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Error al ejecutar la funcion blissBotNoti', error.response.data);
+                                                    });  
+
+                                            } else {
+                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                                res.json(response);
+                                            }
+
+
                                         })
                                         .catch(error => {
                                             console.error('Error al ejecutar la funcion Notification', error.response.data);
@@ -3200,7 +3222,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
                             async function Notification(){
                                 //enviar mensaje al usuario que lo estan siguiendo.
-                                const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                                const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
                                                                             times: time,
                                                                             objeAvatar : {avatar, avatarDefault},
                                                                             username: CustomerName,
@@ -3218,8 +3240,22 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                                 .then(()=>{
                                     Notification()
                                         .then(()=>{
-                                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                            res.json(response);  
+                                            
+                                            if (chatId){
+                                                blissBotNoti()
+                                                    .then(()=>{
+                                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                                        res.json(response);  
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Error al ejecutar la funcion blissBotNoti', error.response.data);
+                                                    });
+
+                                            } else {
+                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                                res.json(response);
+                                            }
+
                                         })
                                         .catch(error => {
                                             console.error('Error al ejecutar la funcion Notification', error.response.data);
@@ -3260,7 +3296,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
                             async function Notification(){
                                 //enviar mensaje al usuario que lo estan siguiendo.
-                                const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                                const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
                                                                             times: time,
                                                                             objeAvatar : {avatar, avatarDefault},
                                                                             username: CustomerName,
@@ -3278,8 +3314,23 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                                 .then(()=>{
                                     Notification()
                                         .then(()=>{
-                                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                            res.json(response);  
+                                            
+                                            if (chatId){
+                                                blissBotNoti()
+                                                    .then(()=>{
+                                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                                        res.json(response);  
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Error al ejecutar la funcion blissBotNoti', error.response.data);
+                                                    });    
+
+                                            } else {
+                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                                res.json(response);
+                                            }
+
+
                                         })
                                         .catch(error => {
                                             console.error('Error al ejecutar la funcion Notification', error.response.data);
@@ -3317,7 +3368,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
                     async function Notification(){
                         //enviar mensaje al usuario que lo estan siguiendo.
-                        const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+                        const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
                                                                     times: time,
                                                                     objeAvatar : {avatar, avatarDefault},
                                                                     username: CustomerName,
@@ -3335,8 +3386,23 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                         .then(()=>{
                             Notification()
                                 .then(()=>{
-                                    const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                    res.json(response);  
+                                    
+                                    if (chatId){
+                                        blissBotNoti()
+                                            .then(()=>{
+                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                                res.json(response);  
+                                            })
+                                            .catch(error => {
+                                                console.error('Error al ejecutar la funcion blissBotNoti', error.response.data);
+                                            });
+
+                                    } else {
+                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                        res.json(response);
+                                    }
+
+
                                 })
                                 .catch(error => {
                                     console.error('Error al ejecutar la funcion Notification', error.response.data);
@@ -3357,14 +3423,34 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 res.json(response); 
             }
 
+            async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+                console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+
+                const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} te ha realizado una compra.`;
+                console.log("chatId --->", chatId);          
+
+                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                    chat_id: chatId,
+                    text: Message,
+                })
+                .then(response => {
+                    console.log('--------------------------- BlissBot----------------------------');
+                    console.log('Mensaje enviado con éxito:', response.data);
+                })
+                .catch(error => {
+                    console.log('--------------------------- BlissBot----------------------------');
+                    console.error('Error al enviar el mensaje:', error.response.data);
+                });
+        
+            }
+
+
         } else {
             //el cliente no tiene perfil
             console.log("Este proceso requiere perfil.")
             const response = { code: "info", message: "Este proceso requiere Perfil."}
             res.json(response); 
         }
-
-
 
         
     } catch (error) {
@@ -3419,11 +3505,11 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
 
         async function Notification(){
             //enviar mensaje al usuario que lo estan siguiendo.
-            const newNotification = new modelMessage( { typeNote: 'shoppingCart',
+            const newNotification = new modelMessage( { typeNote: 'shoppingCart-Del',
                                                         times: timeNow,
                                                         objeAvatar : {avatar, avatarDefault},
                                                         username: sellerUsername,
-                                                        question: `¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber la razón.`,
+                                                        question: `¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber el motivo.`,
                                                         toCreatedArticleId : customerId, //el id de la cuenta donde debe llegar la notificacion
                                                         answer: 'waiting',
                                                         view: false } );
@@ -3436,7 +3522,7 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
         async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
             console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
-            const Message = `Notificación de Blissenet.com: Delete Shopping Cart\n\n¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber la razón.`;
+            const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber el motivo.`;
             console.log("chatId --->", chatId);          
 
             axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {

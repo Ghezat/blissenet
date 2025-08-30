@@ -105,11 +105,37 @@ module.exports = model('messageModel', messageSchema, 'messages');
 },
 
 {
-  typeNote: 'shoppingCart',
+  typeNote: 'shoppingCart-Del',
   times: '29-08-2025 14:50',
   objeAvatar: { avatar: '', avatarDefault: 'dd7ee795a010fe7953f74ba1547055ad' },
   username: 'develop-test1',
-  question: '¡Hola! develop-test1 ha eliminado tu compra. Puedes comunicarte con ellos para saber la razón.',
+  question: '¡Hola! develop-test1 ha eliminado tu compra.',
+  toCreatedArticleId: '66ab9dc1b8c25e5528f4ea9d',
+  ownerStore: 'develop-test1',
+  answer: 'waiting',
+  view: false,
+  _id: new ObjectId("68b1f663b5a6eebfc0fcad4d")
+}
+
+{
+  typeNote: 'shoppingCart-Con',
+  times: '29-08-2025 14:50',
+  objeAvatar: { avatar: '', avatarDefault: 'dd7ee795a010fe7953f74ba1547055ad' },
+  username: 'develop-test1',
+  question: '¡Hola! develop-test1 te ha hecho una compra',
+  toCreatedArticleId: '66ab9dc1b8c25e5528f4ea9d',
+  ownerStore: 'develop-test1',
+  answer: 'waiting',
+  view: false,
+  _id: new ObjectId("68b1f663b5a6eebfc0fcad4d")
+}
+
+{
+  typeNote: 'shoppingCart-Pay',
+  times: '29-08-2025 14:50',
+  objeAvatar: { avatar: '', avatarDefault: 'dd7ee795a010fe7953f74ba1547055ad' },
+  username: 'develop-test1',
+  question: '¡Exito! develop-test1 ha definido un tipo de pago. Revisalo y prosigue con el despacho',
   toCreatedArticleId: '66ab9dc1b8c25e5528f4ea9d',
   ownerStore: 'develop-test1',
   answer: 'waiting',
