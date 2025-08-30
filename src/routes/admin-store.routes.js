@@ -15,6 +15,8 @@ const modelService = require('../models/services.js');
 const modelAuction = require('../models/auction.js');
 const modelRaffle = require('../models/raffle.js');
 
+const modelShoppingCart = require('../models/shoppingCart.js');
+
 const modelStoreRate = require('../models/storeRate.js');
 const modelTransportAgent = require('../models/transportAgent.js');
 const modelBankUser = require('../models/bankUser.js');
@@ -2041,6 +2043,48 @@ routes.post('/infobliss/deleteScheme/survey', async(req, res)=>{
 });
 
 
+// ---------------- pay shooping cart ---------------------
 
+// /payShoppingCart ---------------------------------------------------------------------v
+//iniciado el 23 de diciembre del 2024
+routes.get('/payShoppingCart', async(req, res)=>{
+
+    try {
+        
+        console.log("*********/payShoppingCart******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        const countMessages = req.session.countMessages
+        console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile;
+        let sumCount = 0;
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            console.log("searchProfile -->", searchProfile);
+
+            
+            //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
+            const shoppingCartPending = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { consolidate: "true" } ]  });
+            sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
+                                        
+            console.log("shoppingCartPending.......................... ", shoppingCartPending);             
+            console.log('Esto es sumCount contamos todos los carritos por consolidar-->', sumCount);
+            res.render('page/payShoppingCart', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartPending, sumCount });
+        }   
+
+        
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de /payShoppingCart", error);
+    }
+
+});
 module.exports = routes;
 

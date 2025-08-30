@@ -4894,6 +4894,8 @@ if (consolidate){
 
   consolidate.addEventListener('click', ()=>{
 
+      consolidate.setAttribute("disabled", ""); //desactivamos el boton.
+
       console.log("Esto es consolidate ..............")
       console.log("boxShopping :", boxShopping);
       //console.log("Id Tienda :", StoreId);
@@ -4935,16 +4937,36 @@ if (consolidate){
                   const message = jsonx.message;
 
                   if (code == "ok"){
+
+                      setTimeout(() => {
+                        consolidate.removeAttribute("disabled"); //activamos el boton.
+                      }, 5000);
                       mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
                   } else if (code == "info"){
+
                       mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
+                      setTimeout(() => {
+                        consolidate.removeAttribute("disabled"); //activamos el boton.
+                      }, 5000);
+                      
                   } else {
+
+                      setTimeout(() => {
+                        consolidate.removeAttribute("disabled"); //activamos el boton.
+                      }, 5000);
                       mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+
                   }
               
               })
               .catch( err =>{ console.log(err)
+
+                  setTimeout(() => {
+                    consolidate.removeAttribute("disabled"); //activamos el boton.
+                  }, 5000);
                   mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+
               });
 
         } else {
@@ -4970,7 +4992,6 @@ if (consolidate){
       }
 
   })
-
 
 }
 

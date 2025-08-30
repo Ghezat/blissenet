@@ -115,7 +115,7 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
         })
         .catch(error => {
             console.log('--------------------------- BlissBot----------------------------');
-            console.error('Error al enviar el mensaje:', error.response.data);
+            console.error('Error al enviar el mensaje:', error);
         });
 
     }
@@ -137,7 +137,7 @@ routes.get('/myaccount/messenger/view/:id', async(req, res)=>{
     console.log("*********************************************** ver ********************************************************");
     console.log("Esto es result result.typeNote -->", result.typeNote );
 
-    if (result.typeNote === "notes" || result.typeNote === "spread" || result.typeNote === "followMe" || result.typeNote === "availability-noti" || result.typeNote ===  "shoppingCart-Cre" || result.typeNote ===  "shoppingCart-Del" ){ 
+    if (result.typeNote === "notes" || result.typeNote === "spread" || result.typeNote === "followMe" || result.typeNote === "availability-noti" || result.typeNote ===  "shoppingCart-Cre" || result.typeNote ===  "shoppingCart-Del" || result.typeNote ===  "shoppingCart-Con" ){ 
         
         const change = await modelMessages.findByIdAndUpdate(idMessage, { view : true, answer : 'process' } );
 

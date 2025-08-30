@@ -1322,7 +1322,7 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
                         })
                         .catch(error => {
                             console.log('--------------------------- BlissBot----------------------------');
-                            console.error('Error al enviar el mensaje:', error.response.data);
+                            console.error('Error al enviar el mensaje:', error);
                         });
                 
                     }
@@ -1641,7 +1641,7 @@ routes.post('/myaccount/new-password', async(req, res)=>{
             })
             .catch(error => {
                 console.log('--------------------------- BlissBot----------------------------');
-                console.error('Error al enviar el mensaje:', error.response.data);
+                console.error('Error al enviar el mensaje:', error);
             });
     
         }
@@ -3536,7 +3536,7 @@ routes.post('/myaccount/shopping-cart', async(req, res)=>{
 
 routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
 
-        try {
+    try {
         
         console.log("*********/myaccount/shopping-cart-admin******** -->");
         const user = req.session.user;
@@ -3557,7 +3557,7 @@ routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
             console.log("searchProfile -->", searchProfile);
 
             //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
-            const shoppingCartPending = await modelShoppingCart.find({ sellerId: user._id });
+            const shoppingCartPending = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { consolidate: "false" } ]  });
             sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
                                         
             console.log("shoppingCartPending.......................... ", shoppingCartPending);             
