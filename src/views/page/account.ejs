@@ -4983,11 +4983,15 @@ if (consolidate){
             dataMissing.innerHTML = "" // limpiamos el alert
           }, 5000);    
                                   
-        }   
+        }  
+
       } else {
 
         const message = "El carrito esta vacio."
         mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+        setTimeout(() => {
+          consolidate.removeAttribute("disabled"); //activamos el boton.
+        }, 5000);
 
       }
 
