@@ -293,7 +293,7 @@
 
             
             const boxShopping = boxShoppingCartData[i].value;
-            const arrayParse = JSON.parse(boxShopping);
+            let arrayParse = JSON.parse(boxShopping);
             console.log("boxShopping original:", arrayParse);
                        
 
@@ -307,7 +307,6 @@
 
             //aqui ahora inyectamos los datos 
             customerName.innerText = clientName;
-
              
             //{depart: 'items', id: '68a087e3f91f4e94c93be043', title: 'Sala de Tomate Pampero 397gr.', price: '2.35', countRequest: 1} 
 
@@ -359,7 +358,7 @@
 
             if (amountDinamic){
                 console.log("existe elementos amountDinamic y podemos mostrar los botones consolidar y eliminar");
-                btnControl.classList.remove('close');
+                btnControl.classList.remove('close'); //es el set de botones Consolidar y Eliminar
 
                 //aqui uso amountDinamic que es una clase de amount que es un nodo lo he tomado usando un querySelectorAll();
                 //con esto tengo el control de todos los item y con la variable i puedo tomar el control de cada item y saber el precio para tener el total
@@ -376,12 +375,13 @@
                         const total = (amount * price).toFixed(2);
                         
                         totalDinamic[i].innerText = total //aqui actualizo el total del items
-                        console.log("total.......... :", total);
                         console.log("amount.......... :", amount);
+                        console.log("total.......... :", total);
+                        
                         console.log("se esta actualizando el elemento......:", i);
                         
                         arrayParse[i].countRequest = amount;
-                        console.log("boxShopping actualizado.........:", arrayParse);
+                        console.log("arrayParse actualizado.........:", arrayParse);
 
 
                         amountDinamic.forEach((ele, i) => {
@@ -423,7 +423,7 @@
     const btnDelete = document.querySelector('.btnDelete');
 
     btnConsolidate.addEventListener('click', ()=>{
-        console.log("Solicitud de pedido conolidado");
+        console.log("Solicitud de pedido consolidado");
         console.log("boxConsolidate :", boxConsolidate);
         //aqui deben enviar los nuevos datos a la tienda donde se espera la consolidacion
 

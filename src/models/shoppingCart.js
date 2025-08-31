@@ -6,6 +6,7 @@ const shoppingCart = new Schema({
     customerName : { type : String }, // aqui tenemos el nombre del cliente "comprador"
     purchaseReceiver : { type : Object }, // es un objeto que posee los datos de quien recibe la compra. No necesariamente es el mismo comprador.
     sellerId : { type : String },  //id seller o id del seller " el vendedor"
+    sellerName : { type : String }, //el username del vendedor (Store Username).
     boxShoppingCart : { type : Array}, //este array contendra los siguientes objetos : [ { depart, title, titleId, countrequest, price } ]; 
     consolidate : { type : String, default : "false" }, //consolidado significa una validacion por parte de la tienda donde verifica el pedido que sera despachado. Es donde la Tienda podria manipular para arreglar el pedido y donde el cliente puede agregar mas articulos. No podra actualizar su compra si ya se ha consolidado. 
     amount : { type : Number }, //aqui el monto del valor del carrito, esto puede cambiar

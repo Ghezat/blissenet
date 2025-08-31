@@ -231,7 +231,7 @@
                                                             <div class="contentImgTitle d-flex">
                                                                 <% if (ele.objeAvatar.avatar ==="") { %>
                                                                     <div> <img src="https://www.gravatar.com/avatar/<%= ele.objeAvatar.avatarDefault %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
-                                                                   
+                                                                    
                                                                 <% } else { %>
                                                                     <div> <img src="<%= ele.objeAvatar.avatar %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div> 
                                                                 <% }; %>        
@@ -289,7 +289,7 @@
                                                 <div class="bodyTheme">
 
                                                     <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
-                                                    <div class="containerImgTitle d-flex justify-content-between">
+                                                    <div class="containerImgTitle d-flex justify-content-star">
   
                                                         <div class="contentImgTitle d-flex flex-column">
                                                             <div class="contentImgTitle d-flex">
@@ -303,12 +303,10 @@
                                                                 <div class="d-flex align-items-end"> <a href="/account/<%= ele.username %> "> <p class="m-0" style="font-size: 18px;"> <%= ele.username %></p> </a> </div>
                                                             </div>
 
-                                                            <div>  <p style="font-size: 18px;"> <%= ele.question %> Puede proceder a gestionar <a href="/payShoppingCart">el pago aquí.</a> </p> </div>
+                                                            <div>  <p style="font-size: 18px;"> <%= ele.question %> gestione <a href="/payShoppingCart"> <i>su pago aquí.</i> </a> </p> </div>
                                                         </div>
                                                         <div class="contentView">
-                                                            <% if (ele.answer === 'waiting'){  %>
-                                                                <a href="/myaccount/messenger/view/<%= ele._id %>"><button class="btn btn-primary btn-sm">Visto</button></a>
-                                                            <% }; %>    
+                                                           <!--  NO existe el boton view -->
                                                         </div>
                                             
                                                     </div>

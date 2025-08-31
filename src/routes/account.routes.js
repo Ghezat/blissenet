@@ -3059,7 +3059,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         
         console.log("boxShopping :", boxShopping);
         console.log("StoreId :", StoreId);
-        console.log("UserId :", UserId);
+        console.log("UserId :", UserId); //comprador
 
         const boxReceiver = {
             clientAddress, 
@@ -3086,6 +3086,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         const searchStore = await modelProfile.findOne({indexed : StoreId}, {username: 1, countryCode: 1, country:1, state:1, city: 1, sellerType: 1 });
         const store = searchStore;
         console.log("store:", store);
+        const sellerName = store.username;
         const SellerType = searchStore.sellerType;
 
         const storeChatId = await modelUser.findById(StoreId);
@@ -3103,7 +3104,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
             client = searchCustomer;
             CustomerName = client.username;
             const avatar = client.avatarPerfil[0].url;
-            const avatarDefault = client.avatarPerfil[0].url;
+            const avatarDefault = client.mailhash;
 
             console.log("cliente:", client);
             console.log("CustomerName:", CustomerName);
@@ -3130,35 +3131,6 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                             //se puede ejecutar la venta
                             console.log("estamos la rama de internacionl:false, nacional:true");
                             console.log("estamos en el mismo pais y podemos seguir adelante con la consolidacion");
-
-                            async function createShoppingCart(){
-                                const newShoppingCart = new modelShoppingCart({  cartId,
-                                                            customerId : UserId,
-                                                            customerName : CustomerName,
-                                                            sellerId : StoreId,
-                                                            boxShoppingCart : boxShopping,
-                                                            date : time,
-                                                            amount : Amount,
-                                                            purchaseReceiver : boxReceiver
-                                                        });
-                                const saveShoppingCart  = await newShoppingCart.save();
-                            }      
-
-                            async function Notification(){
-                                //enviar mensaje al usuario que lo estan siguiendo.
-                                const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
-                                                                            times: time,
-                                                                            objeAvatar : {avatar, avatarDefault},
-                                                                            username: CustomerName,
-                                                                            question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
-                                                                            toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
-                                                                            answer: 'waiting',
-                                                                            view: false } );
-                                console.log("newNotification ------>", newNotification);
-
-                                const saveMessage = await newNotification.save();
-                                console.log("se ha creado la notificacion de creación de un carrito");
-                            }
 
                             createShoppingCart()
                                 .then(()=>{
@@ -3206,35 +3178,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                         if (searchStore.state === searchCustomer.state){
                             console.log("estamos la rama de internacionl:false, nacional:false, estadal:true");
                             console.log("estamos en el mismo estado y podemos seguir adelante con la consolidacion");
-                           
-                            async function createShoppingCart(){
-                                const newShoppingCart = new modelShoppingCart({  cartId,
-                                                            customerId : UserId,
-                                                            customerName : CustomerName,
-                                                            sellerId : StoreId,
-                                                            boxShoppingCart : boxShopping,
-                                                            date : time,
-                                                            amount : Amount,
-                                                            purchaseReceiver : boxReceiver
-                                                        });
-                                const saveShoppingCart  = await newShoppingCart.save();
-                            }      
-
-                            async function Notification(){
-                                //enviar mensaje al usuario que lo estan siguiendo.
-                                const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
-                                                                            times: time,
-                                                                            objeAvatar : {avatar, avatarDefault},
-                                                                            username: CustomerName,
-                                                                            question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
-                                                                            toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
-                                                                            answer: 'waiting',
-                                                                            view: false } );
-                                console.log("newNotification ------>", newNotification);
-
-                                const saveMessage = await newNotification.save();
-                                console.log("se ha creado la notificacion de creación de un carrito");
-                            }
+                               
 
                             createShoppingCart()
                                 .then(()=>{
@@ -3280,35 +3224,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                         if (searchStore.city === searchCustomer.city){
                             console.log("estamos la rama de internacionl:false, nacional:false, estadal:false y city:true");
                             console.log("estamos en la misma ciudad y podemos seguir adelante con la consolidacion");
-                                                            
-                            async function createShoppingCart(){
-                                const newShoppingCart = new modelShoppingCart({  cartId,
-                                                            customerId : UserId,
-                                                            customerName : CustomerName,
-                                                            sellerId : StoreId,
-                                                            boxShoppingCart : boxShopping,
-                                                            date : time,
-                                                            amount : Amount,
-                                                            purchaseReceiver : boxReceiver
-                                                        });
-                                const saveShoppingCart  = await newShoppingCart.save();
-                            }      
-
-                            async function Notification(){
-                                //enviar mensaje al usuario que lo estan siguiendo.
-                                const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
-                                                                            times: time,
-                                                                            objeAvatar : {avatar, avatarDefault},
-                                                                            username: CustomerName,
-                                                                            question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
-                                                                            toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
-                                                                            answer: 'waiting',
-                                                                            view: false } );
-                                console.log("newNotification ------>", newNotification);
-
-                                const saveMessage = await newNotification.save();
-                                console.log("se ha creado la notificacion de creación de un carrito");
-                            }
+                                                                 
 
                             createShoppingCart()
                                 .then(()=>{
@@ -3353,34 +3269,6 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 } else {
 
                     //La tienda es libre de vender sin restricciones a todo el mundo.
-                    async function createShoppingCart(){
-                        const newShoppingCart = new modelShoppingCart({  cartId,
-                                                    customerId : UserId,
-                                                    customerName : CustomerName,
-                                                    sellerId : StoreId,
-                                                    boxShoppingCart : boxShopping,
-                                                    date : time,
-                                                    amount : Amount,
-                                                    purchaseReceiver : boxReceiver
-                                                });
-                        const saveShoppingCart  = await newShoppingCart.save();
-                    }      
-
-                    async function Notification(){
-                        //enviar mensaje al usuario que lo estan siguiendo.
-                        const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
-                                                                    times: time,
-                                                                    objeAvatar : {avatar, avatarDefault},
-                                                                    username: CustomerName,
-                                                                    question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
-                                                                    toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
-                                                                    answer: 'waiting',
-                                                                    view: false } );
-                        console.log("newNotification ------>", newNotification);
-
-                        const saveMessage = await newNotification.save();
-                        console.log("se ha creado la notificacion de creación de un carrito");
-                    }
 
                     createShoppingCart()
                         .then(()=>{
@@ -3437,6 +3325,36 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
             }
 
+            async function createShoppingCart(){
+                const newShoppingCart = new modelShoppingCart({  cartId,
+                                            customerId : UserId,
+                                            customerName : CustomerName,
+                                            sellerId : StoreId,
+                                            sellerName : sellerName,
+                                            boxShoppingCart : boxShopping,
+                                            date : time,
+                                            amount : Amount,
+                                            purchaseReceiver : boxReceiver
+                                        });
+                const saveShoppingCart  = await newShoppingCart.save();
+            }  
+            
+            async function Notification(){
+                //enviar mensaje al usuario que lo estan siguiendo.
+                const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
+                                                            times: time,
+                                                            objeAvatar : {avatar, avatarDefault},
+                                                            username: CustomerName,
+                                                            question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
+                                                            toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
+                                                            answer: 'waiting',
+                                                            view: false } );
+                console.log("newNotification ------>", newNotification);
+
+                const saveMessage = await newNotification.save();
+                console.log("se ha creado la notificacion de creación de un carrito");
+            }            
+
             async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
@@ -3457,7 +3375,6 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 });
         
             }
-
 
         } else {
             //el cliente no tiene perfil
@@ -3500,12 +3417,14 @@ routes.post('/done_shoppingCart/consolidate', async(req, res)=>{
 
         //console.log("timeNow :", timeNow);
 
+        //Primero ubicamos el carrito.
         const searchShoppingCart = await modelShoppingCart.findById(iDCart);
 
         //console.log("Esto es searchShoppingCart :", searchShoppingCart);
         //IMPORTANTE evaluar que exista informacion de searchShoppingCart
         if (searchShoppingCart) {
 
+            
             const customerId = searchShoppingCart.customerId;
             const customerName = searchShoppingCart.customerName;
             const sellerId = searchShoppingCart.sellerId;
@@ -3563,7 +3482,7 @@ routes.post('/done_shoppingCart/consolidate', async(req, res)=>{
             }
 
             async function doneShoppingcart() {
-                await modelShoppingCart.findByIdAndUpdate(iDCart, { consolidate : "true" });
+                await modelShoppingCart.findByIdAndUpdate(iDCart, { boxShoppingCart: boxShopping, amount: total, consolidate : "true" },{ new: true });
             }
 
             Notification()

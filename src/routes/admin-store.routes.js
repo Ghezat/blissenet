@@ -2046,7 +2046,7 @@ routes.post('/infobliss/deleteScheme/survey', async(req, res)=>{
 // ---------------- pay shooping cart ---------------------
 
 // /payShoppingCart ---------------------------------------------------------------------v
-//iniciado el 23 de diciembre del 2024
+//iniciado el 31 de Agosto del 2025
 routes.get('/payShoppingCart', async(req, res)=>{
 
     try {
@@ -2070,19 +2070,43 @@ routes.get('/payShoppingCart', async(req, res)=>{
             console.log("searchProfile -->", searchProfile);
 
             
-            //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
-            const shoppingCartPending = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { consolidate: "true" } ]  });
-            sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
+            //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
+            const shoppingCartforPay = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { consolidate: "true" } ]  });
+            sumCount = shoppingCartforPay.length; //aqui tomamos la cantidad de carritos pendientes
                                         
-            console.log("shoppingCartPending.......................... ", shoppingCartPending);             
+            console.log("shoppingCartforPay.......................... ", shoppingCartforPay);             
             console.log('Esto es sumCount contamos todos los carritos por consolidar-->', sumCount);
-            res.render('page/payShoppingCart', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartPending, sumCount });
+            res.render('page/payShoppingCart', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartforPay, sumCount });
         }   
 
         
 
     } catch (error) {
         console.log("Ha habido un error en la carga de /payShoppingCart", error);
+    }
+
+});
+
+routes.post('/payShoppingCart/bankStore', async(req, res)=>{
+
+    try {
+        console.log("............./payShoppingCart/bankStore............")
+        console.log("req.body :", req.body);
+        //{ IDCart: '68b48402382931d238242cb2' }
+        const {IDCart} = req.body;
+
+        const searchSeller = await modelShoppingCart.findById(IDCart);
+        const sellerId = searchSeller.sellerId;
+        console.log("sellerId :", sellerId); //sellerId : 67e2fe3c34c69a33c17f7b0e
+
+        const searchBankStore = await modelBankUser.findOne( {indexed: sellerId} );
+        console.log("searchBankStore :", searchBankStore);
+        
+        res.json({ "searchBankStore" : searchBankStore });
+
+
+    } catch (error) {
+        console.log("ha habido un error en /payShoppingCart/bankStore", error);
     }
 
 });
