@@ -3055,7 +3055,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         console.log("......../send_shoppingCart/consolidate..........");
         //console.log("req.boy", req.body);
         
-        const {boxShopping, StoreId, UserId, Amount, clientAddress, clientPhone, clientIndentification, clientName } = req.body;
+        const {boxShopping, StoreId, UserId, Amount, clientAddress, clientPhone, clientIndentification, clientName, deliveryOptionV } = req.body;
         
         console.log("boxShopping :", boxShopping);
         console.log("StoreId :", StoreId);
@@ -3067,7 +3067,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
             clientIndentification,
             clientName
         }
-
+ 
         const date = new Date();
         const cartId = date.getTime(); //codigo para identificar el carrito.
 
@@ -3334,7 +3334,8 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                                             boxShoppingCart : boxShopping,
                                             date : time,
                                             amount : Amount,
-                                            purchaseReceiver : boxReceiver
+                                            purchaseReceiver : boxReceiver,
+                                            deliveryOptions : deliveryOptionV
                                         });
                 const saveShoppingCart  = await newShoppingCart.save();
             }  

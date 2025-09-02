@@ -3688,6 +3688,123 @@ routes.post('/myaccount/sellerType', async (req, res)=>{
 });
 
 
+
+//aqui se ejecuta el deliveryOptions
+routes.get('/myaccount/deliveryOptions', async (req, res)=>{
+    //Este ruta renderiza la pantalla para que los usuarios o tiendas puedan redefirnir el tipo de entregas,
+    //Solo basta con que tenga 1 anuncio para activar estos controles
+    //pudiendo ser de tres tipo :
+    // D01 Retiro en tienda. ()
+    // D02 Retiro en lugar acordado. ()
+    // D03 Envio en la puerta del cliente. ()
+
+    try {
+        
+        console.log("********* deliveryOptions ******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        const countMessages = req.session.countMessages
+        console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile; 
+        let sumCount = 0;
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            console.log("searchProfile -->", searchProfile);
+
+            //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
+        
+            const countAir = await modelAirplane.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAir; 
+            const countArt = await modelArtes.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countArt; 
+            const countIte = await modelItems.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countIte; 
+            const countAut = await modelAutomotive.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAut; 
+            const countRea = await modelRealstate.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRea; 
+            const countNau = await modelNautical.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countNau; 
+            const countSer = await modelService.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countSer;
+            const countAuc = await modelAuction.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countAuc;
+            const countRaf = await modelRaffle.find({ user_id : user._id  }).count();
+            sumCount = sumCount + countRaf;     
+                                       
+      
+            res.render('page/deliveryOptions', { user, searchProfile, sumCount, countMessages, countNegotiationsBuySell });
+        }   
+
+ 
+    } catch (error) {
+        console.log("Ha habido un error en la carga de Datos optionDelivery", error);
+    }
+});
+
+routes.post('/myaccount/deliveryOptions', async (req, res)=>{
+      try {
+  
+        let updateProfile;
+        const user = req.session.user;
+        console.log('Has enviado un dato activar o desactivar un tipo de venta Local, Nacional o Internacional.')
+        console.log("req.body :", req.body);
+        const { deliveryOptions, value, idUser } = req.body;
+        console.log("Este es el iduser :", idUser);
+   
+        //pickupInStore: "true", pickupAtAgreedPlace: "false", shippingToCustomer: "false"
+        if ( deliveryOptions === "D01" ){
+
+            if (value === "true"){
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'deliveryOptions.pickupInStore' : value } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            } else {
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'deliveryOptions.pickupInStore' : "false", 'deliveryOptions.pickupAtAgreedPlace' : "false", 'deliveryOptions.shippingToCustomer' : "false" } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            }
+
+        } else if ( deliveryOptions === "D02" ) {
+
+            if (value === "true" ){
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'deliveryOptions.pickupAtAgreedPlace' : value } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            } else {
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'deliveryOptions.pickupAtAgreedPlace' : "false" } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            }
+
+
+        } else if ( deliveryOptions === "D03" ) {
+
+            if (value === "true"){
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'deliveryOptions.shippingToCustomer' : value } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            } else {
+                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'deliveryOptions.shippingToCustomer' : "false" } }, {new : true} );
+                console.log("Esto es updateProfile :", updateProfile);
+            }
+            
+        } 
+          
+                  
+        const response = { code : "Ok", result : updateProfile};
+        res.json(response);
+  
+      } catch (error) {
+
+          const response = { code : "Error", result : updateProfile};
+          res.json(response);
+  
+      }
+});
+
 // aqui es donde podemos editar el nombre del username mientras cumpla con los requerimentos.
 // No poseer anuncios ni haya hecho ninguna compra o negociacion .
 routes.post('/myaccount/change-review', async(req, res)=>{

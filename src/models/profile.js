@@ -61,6 +61,7 @@ const SchemaProfile = new Schema({
     buyCar : { type : Boolean , default : false}, //por defecto todos tienen este valor false a menos que desee activarlo y para ello debe tener al menos 11 articulos. SOlo funciona para articulos y artes
     transportAgent : { type : Object, default : { deliveryTransport : false, active: false } }, //este objeto guarda el estado del perfil esto indica que es un agente de transporte para hacer deliveries para "envios locales"
     sellerType : { type : Object, default: { local: "true", estadal: "false", nacional: "false", internacional: "false" } }, //aqui guardamos los valores de estas tres variables  (Interurbano, Nacional, Internacional ), Esto es para otorgar al vendedor la capacidad de decidir si quiere vender en su misma ciudad, en ciudades de otros estados o provincias e incluso poder hacer comercio en otros paises. Este sera un valor que se usara como criterio para el vendedor no para el comprador.
+    deliveryOptions : { type : Object, default : { pickupInStore: "true", pickupAtAgreedPlace: "false", shippingToCustomer: "false", shippingAgentsAffiliated: [] } }, //shippingAgentsAffiliated --> este array guarda los indexed de lo sperfiles que se han afiliado a esta tienda para ser las entregas.  Estas opciones pueden ser : (pickupInStore (D01), shippingToCustomer (D02), shippingToCustomer (D03) )
     indexed :  { type : String }  //este es el id del user     
 },{
     timestamps : true

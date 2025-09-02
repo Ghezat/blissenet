@@ -501,7 +501,7 @@
         <% const map = infobliss.map %>
         <% const geolocation = storeProfile.geolocation %>
         <% const shoppingCart = storeProfile.buyCar %>
-
+        <% const deliveryOptions = storeProfile.deliveryOptions %>
 
         <input type="hidden" id="StorenameValue" value="<%= store_username %>">
 
@@ -1827,6 +1827,7 @@
                           <% clientIndentification = searchProfile[0].identification %>
                           <% clientPhone = searchProfile[0].phone %>
                           <% clientAddress = searchProfile[0].address %>
+                         
 
                           <div class="alert alert-info">
                             <b> ¡Requerimento! </b> Es obligatorio los datos de la persona quien recibe esta compra.
@@ -1845,9 +1846,29 @@
                             <textarea class="form-control"  id="clientAddress" rows="2" placeholder="Dirección a donde va esta compra"><%= clientAddress %></textarea>
                           </div>
 
+                          <div class="form-group my-2">
+                            <select id="selectDeliveryOptions" class="form-control">
+
+                              <option value="" style="font-style: italic;"> -- Elija una opción. -- </option>
+
+                              <% if (deliveryOptions.pickupInStore === "true"){ %>
+                                <option value="D01">Retiro en Tienda.</option>
+                              <% } %>  
+                              
+                              <% if (deliveryOptions.pickupAtAgreedPlace === "true"){ %>
+                                <option value="D02">Entrega en lugar acordado.</option>
+                              <% }; %>  
+
+                              <% if (deliveryOptions.shippingToCustomer === "true"){ %>
+                                <option value="D03">Delivery en la puerta del cliente.</option>
+                              <% }; %>  
+                              
+                            </select>
+                          </div>
+
                           <div class="dataMissing">
                           <!--  alert dinamico -->
-                          </div>
+                          </div>                          
 
                           <div class="form-group my-3">
                             <button class="form-control btn btn-primary rounded-2" id="consolidate">
@@ -4879,6 +4900,7 @@ const clientAddress = document.getElementById('clientAddress');
 const clientPhone = document.getElementById('clientPhone');
 const clientIndentification = document.getElementById('clientIndentification');
 const clientName = document.getElementById('clientName');
+const selectDeliveryOptions = document.getElementById('selectDeliveryOptions');
 
 containerCartList.addEventListener('click', () => {
   popupCart.classList.remove('close');
@@ -4902,12 +4924,14 @@ if (consolidate){
       //console.log("Id Cliente :", UserId);  
       const clientNameV = clientName.value; const clientIndentificationV = clientIndentification.value;
       const clientPhoneV = clientPhone.value; const clientAddressV = clientAddress.value;
+      const deliveryOptV = selectDeliveryOptions.value;
+      console.log("deliveryOptV ....................:", deliveryOptV)
 
       TotalPay = totalPay.toFixed(2);
 
       if (boxShopping.length !==0){
 
-        if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="") {
+        if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="" && deliveryOptV !=="" ) {
       
               const datos = {
                 boxShopping: boxShopping,
@@ -4917,7 +4941,8 @@ if (consolidate){
                 clientAddress: clientAddressV,
                 clientPhone: clientPhoneV,
                 clientIndentification: clientIndentificationV,
-                clientName: clientNameV
+                clientName: clientNameV,
+                deliveryOptionV: deliveryOptV
               }
 
               console.log("esto es datos", datos); 
@@ -4974,16 +4999,17 @@ if (consolidate){
           dataMissing.innerHTML = `                        
                                   <div class="alert alert-danger">
                                     <b>
-                                      <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor. </span>
+                                      <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor o Delivery. </span>
                                     </b> 
                                   </div>
                                   `;
 
           setTimeout(() => {
             dataMissing.innerHTML = "" // limpiamos el alert
+            consolidate.removeAttribute("disabled"); //activamos el boton.
           }, 5000);    
                                   
-        }  
+        } 
 
       } else {
 
