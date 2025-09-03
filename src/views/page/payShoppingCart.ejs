@@ -60,11 +60,10 @@
                 
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-12 p-0 my-4 rounded-2"  style="background-color: rgba(209, 209, 209, 0.2)">
 
-                                    <div class="contentainer-fluid ">
-
+                                    <div class="container-fluid p-0">
                                             
                                         <div class="card-header">
-                                            <span style="font-size: 16px;">Carrito de Compra</span>
+                                            <span style="font-size: 16px;">Carrito de Compra por pagar</span>
                                         </div>
                                         <div class="card-body">
 
@@ -85,6 +84,8 @@
                                                         <% const boxShoppingCart = ele.boxShoppingCart %>
                                                         <% const purchaseReceiver = ele.purchaseReceiver %>
                                                         <% const deliveryOptions = ele.deliveryOptions %>
+                                                        <% const regPay = ele.regPay %>
+                                                        <% const dataRegPay = ele.dataRegPay %>
 
                                                         
                                                         <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
@@ -94,6 +95,8 @@
                                                             <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
                                                             <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
                                                             <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
+                                                            <input type="hidden" class="regPay" value="<%= regPay %>">
+                                                            <input type="hidden" class="dataRegPay" value="<%= JSON.stringify(dataRegPay) %>"> 
                                                          
 
                                                             <div class="listLeft">
@@ -117,9 +120,7 @@
 
                                         
                                         </div>
-                                        
-
-                        
+                                                                
                                     </div>
 
                                 </div>
@@ -168,9 +169,14 @@
                                                     <span style="white-space: 16px;"> <b>Delivery:</b> <span class="delivery bg-dark text-light rounded-pill px-3 py-1"> </span> </span>
                                                 </div>                                                
 
-                                                <div class="btn-group btnControl close" style="width: 100%;" role="group" aria-label="Basic outlined example">
+
+                                                <div class="btnControl btn-group  close" style="width: 100%;" role="group" aria-label="Basic outlined example">
                                                     <button type="button" class="btn btn-dark btnDelete"> <i class="bi bi-x-square text-danger me-1"></i> Eliminar</button>
                                                     <button type="button" class="btn btn-dark btnPay"> <i class="bi bi-check2-square text-primary me-1"></i> Pagar</button>
+                                                </div>
+
+                                                <div class="dataRegisterPay close" style="background-color: rgba(0, 0, 0, 0.4); width: 100%; font-size: 15px;">
+                                                    <!-- dinamico -->
                                                 </div>
 
                                             </div>
@@ -199,7 +205,7 @@
 
                                         </div>
 
-                                        <div class="btn-group btnControl mb-3" style="width: 100%;" role="group" aria-label="Basic outlined example">
+                                        <div class="btn-group mb-3" style="width: 100%;" role="group" aria-label="Basic outlined example">
                                             <button type="button" class="btn btn-dark btnMyShoppingCart"> <i class="bi bi-arrow-up-left-square text-light me-1"></i> Mi Compra </button>
                                             <button type="button" class="btn btn-dark btnRegPay"> <i class="bi bi-check2-square text-primary me-1"></i> Registrar Pago</button>
                                         </div> 
@@ -281,6 +287,8 @@
     const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData'); 
     const purchaseReceiverData = document.querySelectorAll('.purchaseReceiverData');
     const deliveryOption = document.querySelectorAll('.deliveryOptions');
+    const regPay = document.querySelectorAll('.regPay');
+    const dataRegPay = document.querySelectorAll('.dataRegPay');
 
     //para inyectar
     const customerName = document.querySelector('.customerName');
@@ -294,7 +302,9 @@
     const clientPhoneSpan = document.querySelector('.clientPhone');
     const clientAddressSpan = document.querySelector('.clientAddress');
 
+    const dataRegisterPay = document.querySelector('.dataRegisterPay'); //contenedor que muestra el metodo de pago y detalle del pago
     const btnControl = document.querySelector('.btnControl'); //botones consolidar y eliminar.
+    
 
     let iDDinamic; //variable de id del articulo.
     let departDinamic; //variable de departamento del articulo.
@@ -316,10 +326,14 @@
             const receiverTxt = purchaseReceiverData[i].value; 
             const receiver = JSON.parse(receiverTxt);
             const Amount = amount[i].value;
-            const deliveryOpt = deliveryOption[i].value; 
+            const deliveryOpt = deliveryOption[i].value;
+            const RegPay = regPay[i].value; 
+            const DataRegPay = dataRegPay[i].value;
+            const dataRegister = JSON.parse(DataRegPay);
 
             console.log("receiver..........:", receiver);
             console.log("deliveryOpt.......:", deliveryOpt);
+            console.log("dataRegister........:", dataRegister); //{methodPay: 'Transferencia Bancaria', detailPay: '00001126268390099366388 '}
 
             let DeliveryOption;
 
@@ -331,6 +345,9 @@
                 DeliveryOption = "Delivery en la puerta del cliente."
             }
             
+            const methodPay = dataRegister.methodPay;
+            const detailPay = dataRegister.detailPay
+
             const clientNames = receiver.clientName;
             const clientIndentification = receiver.clientIndentification;
             const clientPhone = receiver.clientPhone;
@@ -352,9 +369,7 @@
 
             //aqui ahora inyectamos los datos 
             customerName.innerText = clientName;
-             
-            //{depart: 'items', id: '68a087e3f91f4e94c93be043', title: 'Sala de Tomate Pampero 397gr.', price: '2.35', countRequest: 1} 
-            
+                         
             listShoppingCart.innerHTML =""; //limpiamos el body
             arrayParse.forEach((ele)=>{
                         const total = (ele.countRequest * ele.price).toFixed(2);
@@ -401,15 +416,23 @@
             // ----------------------------------------------------
 
 
-            console.log("amountDinamic :", amountDinamic);
-
-            if (amountDinamic){
-                console.log("existe elementos amountDinamic y podemos mostrar los botones consolidar y eliminar");
+            if (RegPay === "false"){
+                console.log("Pago no registrado ....................");
+                dataRegisterPay.classList.add('close')
                 btnControl.classList.remove('close');
 
-                //aqui uso amountDinamic que es una clase de amount que es un nodo lo he tomado usando un querySelectorAll();
-                //con esto tengo el control de todos los item y con la variable i puedo tomar el control de cada item y saber el precio para tener el total
+            } else {
+                console.log("este pago ya ha sido registrado........")
+                dataRegisterPay.classList.remove('close')
+                btnControl.classList.add('close');
 
+                console.log("methodPay :", methodPay);
+                console.log("detailPay :", detailPay);
+                dataRegisterPay.innerHTML = ` 
+                                    <div class="alert" style="color: rgb(0, 0, 0);">
+                                        <p> <b> Método de pago :</b> ${methodPay} </p>
+                                        <p> <b> Detalle de pago :</b> ${detailPay} </p>
+                                    </div>`
             }
 
         })    
@@ -603,11 +626,67 @@
     });
 
     btnRegPay.addEventListener('click', ()=>{        
-        const textDetailPayValue = textDetailPay.value;
-        console.log("IDCart :", IDCart);
-        console.log("methodNameValue :", methodNameValue);
-        console.log("textDetailPayValue :", textDetailPayValue);
-        alert("En breve podrás registar el pago.")
+
+        if (textDetailPay){
+            const textDetailPayValue = textDetailPay.value;
+            console.log("IDCart :", IDCart);
+            console.log("methodNameValue :", methodNameValue);
+            console.log("textDetailPayValue :", textDetailPayValue);
+            
+
+            if (textDetailPayValue !==""){
+
+                const datos = {
+                    IDCart : IDCart,
+                    methodName : methodNameValue,
+                    textDetailPay : textDetailPayValue
+                }
+
+                console.log("datos :", datos);
+            
+                fetch('/done_shoppingCart/registerPay', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response => response.json())
+                .then( jsonx => {
+                    console.log("jsonx :",  jsonx)
+                    const code = jsonx.code;
+                    const message = jsonx.message;
+                
+                    if (code === "ok"){
+                        mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                        setTimeout(() => {
+                            mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+                                location.reload();    
+                            }, 3000);
+
+                        }, 1000);
+                    } else {
+                        const message = "Ha habido un error, por favor ¡intente más tarde!."
+                        mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                    }    
+                                    
+                    
+                })
+                .catch( err => console.log(err))
+
+            } else {
+                const message = "Debe colocar el detalle o el codigo de confirmación del pago."
+                mostrarToast( message, 'right', 'info', '', true ); // Agrega título aquí
+            }    
+
+        } else {
+            const message = "Debe elegir un método de pago."
+            mostrarToast( message, 'right', 'info', '', true ); // Agrega título aquí
+        }
+
     })
 </script>
 

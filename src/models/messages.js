@@ -13,6 +13,7 @@ const messageSchema = new Schema({
     toCreatedArticleId : { type : String}, //el id del creador del articulo dato extraido de cada coleccion de departamentos. "Quien recibe la pregunte"
     ownerStore  : { type : String}, // este es el username del creador del anuncio. "Quien recibe la pregunte"
     productId : { type : Schema.ObjectId }, //el id del producto en cuestion
+    cartId : { type : String }, //esto solo funiona para lo smensajes de notificacion de carritos de compra.
     depart : { type : String }, //departamento 
     answer : { type : String,  default: 'waiting' }, //esta respuesta la otorga el dueño del articulo 
     view : { type : Boolean, default: false } //con este campo puedo firmar cuando el usuario haya visto el mensaje enviado por el anunciante y desaparezca de su buson de salida (outbox)
@@ -104,6 +105,21 @@ module.exports = model('messageModel', messageSchema, 'messages');
     "__v" : 0
 },
 
+{
+  _id: ObjectId('68b842dcf69ce3516065ebc9'),
+  typeNote: 'shoppingCart-Cre', typeNote : 'shoppingCart-Con', typeNote : 'shoppingCart-dell', typeNote : 'shoppingCart-RPay', 
+  times: '03-09-2025 09:30',
+  objeAvatar: { avatar: '', avatarDefault: '332b4823f0219bc69bbf84f6d4df41ee' },
+  username: 'Lorenzobastardo',
+  question: '¡Hola! Lorenzobastardo te ha realizado una compra.',
+  toCreatedArticleId: '66ec3ad3ceacc8a916d29e59',
+  cartId: '1756906203753',
+  answer: 'waiting',
+  view: false,
+  createdAt: ISODate('2025-09-03T13:30:04.279Z'),
+  updatedAt: ISODate('2025-09-03T13:30:04.279Z'),
+  __v: 0
+},
 {
   typeNote: 'shoppingCart-Del',
   times: '29-08-2025 14:50',

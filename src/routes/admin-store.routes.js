@@ -2071,9 +2071,9 @@ routes.get('/payShoppingCart', async(req, res)=>{
 
             
             //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
-            const shoppingCartforPay = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { consolidate: "true" } ]  });
+            const shoppingCartforPay = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { consolidate: "true" }, { paid: "false"} ]  });
             sumCount = shoppingCartforPay.length; //aqui tomamos la cantidad de carritos pendientes
-                                        
+           
             console.log("shoppingCartforPay.......................... ", shoppingCartforPay);             
             console.log('Esto es sumCount contamos todos los carritos por consolidar-->', sumCount);
             res.render('page/payShoppingCart', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartforPay, sumCount });

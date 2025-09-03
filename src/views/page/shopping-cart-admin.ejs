@@ -92,6 +92,7 @@
                                                         <% const amount = ele.amount %>
                                                         <% const boxShoppingCart = ele.boxShoppingCart %>
                                                         <% const purchaseReceiver = ele.purchaseReceiver %>
+                                                        <% const deliveryOptions = ele.deliveryOptions %>
 
                                                         
                                                         <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
@@ -100,6 +101,7 @@
                                                             <input type="hidden" class="amount" value="<%= amount %>">  
                                                             <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
                                                             <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
+                                                            <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
 
                                                             <div class="listLeft">
                                                                 <img src="/img/iconCartBuyes.png" alt="" style="width: 35px; height: 35px;">
@@ -169,9 +171,13 @@
                                                     <span style="white-space: 16px;"> <b>Dirección:</b> <span class="clientAddress"></span> </span>
                                                 </div>
 
+                                                <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.4); width: auto; border-radius: 4px;">
+                                                    <span style="white-space: 16px;"> <b>Delivery:</b> <span class="delivery bg-dark text-light rounded-pill px-3 py-1"> </span> </span>
+                                                </div>                                                  
+
                                                 <div class="btn-group btnControl close" style="width: 100%;" role="group" aria-label="Basic outlined example">
-                                                    <button type="button" class="btn btn-dark btnConsolidate"> <i class="bi bi-check2-square text-primary me-1"></i> Consolidar</button>
                                                     <button type="button" class="btn btn-dark btnDelete"> <i class="bi bi-x-square text-danger me-1"></i> Eliminar</button>
+                                                    <button type="button" class="btn btn-dark btnConsolidate"> <i class="bi bi-check2-square text-primary me-1"></i> Consolidar</button>
                                                 </div>
 
                                             </div>
@@ -252,12 +258,15 @@
     const amount = document.querySelectorAll('.amount');
     const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData'); 
     const purchaseReceiverData = document.querySelectorAll('.purchaseReceiverData');
+    const deliveryOption = document.querySelectorAll('.deliveryOptions');
 
     //para inyectar
     const customerName = document.querySelector('.customerName');
     const listShoppingCart = document.querySelector('.listShoppingCart');
     const totalPayDinamic = document.querySelector('.totalPayDinamic');
 
+    const containerDelivery = document.querySelector('.containerDelivery');
+    const deliverySpan = document.querySelector('.delivery');
     const clientNamesSpan = document.querySelector('.clientNames');
     const clientDocumentSpan = document.querySelector('.clientDocument');
     const clientPhoneSpan = document.querySelector('.clientPhone');
@@ -284,8 +293,21 @@
             const receiverTxt = purchaseReceiverData[i].value; 
             const receiver = JSON.parse(receiverTxt);
             const Amount = amount[i].value;
+            const deliveryOpt = deliveryOption[i].value; 
 
             console.log("receiver..........:", receiver);
+            console.log("deliveryOpt.......:", deliveryOpt);
+
+            let DeliveryOption;
+
+            if (deliveryOpt === "D01"){
+                DeliveryOption = "Retiro en Tienda."
+            } else if (deliveryOpt === "D02"){
+                DeliveryOption = "Entrega en lugar acordado."
+            } else {
+                DeliveryOption = "Delivery en la puerta del cliente."
+            }
+
             const clientNames = receiver.clientName;
             const clientIndentification = receiver.clientIndentification;
             const clientPhone = receiver.clientPhone;
@@ -330,6 +352,8 @@
 
             })
 
+            containerDelivery.classList.remove("close"); //hacemos aparecer el contenedor.
+            deliverySpan.innerText = DeliveryOption            
             clientNamesSpan.innerText = clientNames;
             clientDocumentSpan.innerText = clientIndentification;
             clientPhoneSpan.innerText = clientPhone;

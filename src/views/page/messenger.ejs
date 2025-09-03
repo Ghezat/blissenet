@@ -225,7 +225,7 @@
                                                 <div class="bodyTheme">
 
                                                     <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
-                                                    <div class="containerImgTitle d-flex justify-content-between">
+                                                    <div class="containerImgTitle d-flex justify-content-start">
   
                                                         <div class="contentImgTitle d-flex flex-column">
                                                             <div class="contentImgTitle d-flex">
@@ -240,11 +240,6 @@
                                                             </div>
                                                                                                 
                                                             <div>  <p style="font-size: 18px;"> <%= ele.question %> Ir a la <a href="/myaccount/shopping-cart-admin"> Administración de carritos. </a> </p> </div>
-                                                        </div>
-                                                        <div class="contentView">
-                                                            <% if (ele.answer === 'waiting'){  %>
-                                                                <a href="/myaccount/messenger/view/<%= ele._id %>"><button class="btn btn-primary btn-sm">Visto</button></a>
-                                                            <% }; %>    
                                                         </div>
                                             
                                                     </div>

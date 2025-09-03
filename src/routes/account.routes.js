@@ -3326,7 +3326,8 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
             }
 
             async function createShoppingCart(){
-                const newShoppingCart = new modelShoppingCart({  cartId,
+                const newShoppingCart = new modelShoppingCart({  
+                                            cartId,
                                             customerId : UserId,
                                             customerName : CustomerName,
                                             sellerId : StoreId,
@@ -3343,13 +3344,15 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
             async function Notification(){
                 //enviar mensaje al usuario que lo estan siguiendo.
                 const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
+                                                            cartId,
                                                             times: time,
                                                             objeAvatar : {avatar, avatarDefault},
                                                             username: CustomerName,
                                                             question: `¡Hola! ${CustomerName} te ha realizado una compra.`,
                                                             toCreatedArticleId : StoreId, //el id de la cuenta donde debe llegar la notificacion
                                                             answer: 'waiting',
-                                                            view: false } );
+                                                            view: false, 
+                                                        } );
                 console.log("newNotification ------>", newNotification);
 
                 const saveMessage = await newNotification.save();
@@ -3425,10 +3428,11 @@ routes.post('/done_shoppingCart/consolidate', async(req, res)=>{
         //IMPORTANTE evaluar que exista informacion de searchShoppingCart
         if (searchShoppingCart) {
 
-            
+            const cartId = searchShoppingCart.cartId; //identificador de carrito para poder eliminar el mensaje shoppingCart-Cre
             const customerId = searchShoppingCart.customerId;
             const customerName = searchShoppingCart.customerName;
             const sellerId = searchShoppingCart.sellerId;
+            const sellerName = searchShoppingCart.sellerName;
 
             //busco en el perfil del vendedor el avatar 
             const searchProfileSeller = await modelProfile.findOne({ indexed : sellerId });
@@ -3446,7 +3450,11 @@ routes.post('/done_shoppingCart/consolidate', async(req, res)=>{
             console.log("chatId..............:", chatId);
 
             async function Notification(){
-                //enviar mensaje al usuario que lo estan siguiendo.
+
+                //eliminamos el mensaje de shoppingCart-Cre, para mantener el inbox limpio de mensajes innesarios
+                await modelMessage.deleteOne({ typeNote: 'shoppingCart-Cre' }, {cartId: cartId});
+
+                //enviar mensaje de que su pedido ha sido consolidado
                 const newNotification = new modelMessage( { typeNote: 'shoppingCart-Con',
                                                             times: timeNow,
                                                             objeAvatar : {avatar, avatarDefault},
@@ -3564,7 +3572,8 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
         const searchShoppingCart = await modelShoppingCart.findById(iDCart);
         if (searchShoppingCart){
        
-            console.log("Esto es searchShoppingCart :", searchShoppingCart);
+            //console.log("Esto es searchShoppingCart :", searchShoppingCart);
+            const cartId = searchShoppingCart.cartId; //identificador de carrito para poder eliminar el mensaje shoppingCart-Cre
             const customerId = searchShoppingCart.customerId;
             const customerName = searchShoppingCart.customerName;
             const sellerId = searchShoppingCart.sellerId;
@@ -3585,7 +3594,11 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
             console.log("chatId..............:", chatId);
 
             async function Notification(){
-                //enviar mensaje al usuario que lo estan siguiendo.
+
+                //eliminamos el mensaje de shoppingCart-Cre, para mantener el inbox limpio de mensajes innesarios
+                await modelMessage.deleteOne({ typeNote: 'shoppingCart-Cre' }, {cartId: cartId});
+
+                //enviar mensaje al comprador de que su pedido ha sido eliminado, por alguna razon.
                 const newNotification = new modelMessage( { typeNote: 'shoppingCart-Del',
                                                             times: timeNow,
                                                             objeAvatar : {avatar, avatarDefault},
@@ -3674,6 +3687,147 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
 
 });
 
+routes.post('/done_shoppingCart/registerPay', async(req, res)=>{
+
+    try {
+
+        console.log("......../done_shoppingCart/registerPay..........");
+        console.log("req.boy................ :", req.body);
+        const { IDCart, methodName,  textDetailPay } = req.body;
+        
+
+        console.log("IDCart :", IDCart);
+
+        let date = new Date();
+        let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+        let hora = date.getHours(); let minu = date.getMinutes();
+
+        let mesFormatted = String(mes).padStart(2, '0');
+        let minuFormatted = String(minu).padStart(2, '0');
+        const timeNow = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
+
+        //console.log("timeNow :", timeNow);
+
+        //Primero ubicamos el carrito.
+        const searchShoppingCart = await modelShoppingCart.findById(IDCart);
+
+        //console.log("Esto es searchShoppingCart :", searchShoppingCart);
+        //IMPORTANTE evaluar que exista informacion de searchShoppingCart
+        if (searchShoppingCart) {
+
+            const cartId = searchShoppingCart.cartId; //identificador de carrito para poder eliminar el mensaje shoppingCart-Cre
+            const customerId = searchShoppingCart.customerId;
+            const customerName = searchShoppingCart.customerName;
+            const sellerId = searchShoppingCart.sellerId;
+            const sellerName = searchShoppingCart.sellerName;
+
+            //busco en el perfil del comprador el avatar 
+            const searchProfileCustomer = await modelProfile.findOne({ indexed : customerId });
+            //console.log("searchProfileSeller....:", searchProfileSeller);
+
+            const avatar = searchProfileCustomer.avatarPerfil[0].url; 
+            const avatarDefault = searchProfileCustomer.mailhash;
+            //console.log("Este es el avatar :", avatar);
+            //console.log("Este es el avatarDefault :", avatarDefault);
+
+            const searchUserSeller = await modelUser.findById(sellerId);
+            const chatId = searchUserSeller.blissBot.chatId
+
+            //console.log("searchUserSeller..............:", searchUserSeller);
+            console.log("chatId..............:", chatId);
+
+            async function Notification(){
+
+                //enviar mensaje de que su pedido ha sido consolidado
+                const newNotification = new modelMessage( { typeNote: 'shoppingCart-RPay',
+                                                            cartId,
+                                                            times: timeNow,
+                                                            objeAvatar : {avatar, avatarDefault},
+                                                            username: customerName,
+                                                            question: `¡Hola! ${customerName} notifica que ha registrado un pago, verifica y procesa su pago.`,
+                                                            toCreatedArticleId : sellerId, //el id de la cuenta donde debe llegar la notificacion
+                                                            answer: 'waiting',
+                                                            view: false } );
+                console.log("newNotification ------>", newNotification);
+
+                const saveMessage = await newNotification.save();
+                console.log("se ha creado la notificacion del registro de pago del carrito");
+            }
+
+            async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al comprador. Que debe ser avisado de inmediato.
+                console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+
+                const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${customerName} notifica que su pedido a sido consolidado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para gestionar el pago.`;
+                console.log("chatId --->", chatId);          
+
+                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                    chat_id: chatId,
+                    text: Message,
+                })
+                .then(response => {
+                    console.log('--------------------------- BlissBot----------------------------');
+                    console.log('Mensaje enviado con éxito:', response.data);
+                })
+                .catch(error => {
+                    console.log('--------------------------- BlissBot----------------------------');
+                    console.error('Error al enviar el mensaje:', error.response.data);
+                });
+        
+            }
+
+            async function regPayShoppingcart() {
+                await modelShoppingCart.findByIdAndUpdate(IDCart, { regPay : "true", 'dataRegPay.methodPay' : methodName, 'dataRegPay.detailPay' : textDetailPay  },{ new: true });
+            }
+
+            Notification()
+                .then(()=>{
+
+                    if (chatId){
+
+                        blissBotNoti()
+                            .then(()=>{
+                                regPayShoppingcart()
+                                    .then(()=>{
+                                        const message = "Pago registrado y notificado a la tienda para su revisión y proceso.";
+                                        const response = { "code" : "ok", "message" : message};
+                                        res.json(response);
+                                    })
+                                    .catch(error => {
+                                        console.error('Error al ejecutar la funcion doneShoppingcart', error);
+                                    });
+                            })
+                            .catch(error => {
+                                console.error('Error al ejecutar la funcion blissBotNoti', error);
+                            });
+
+                    } else {
+
+                        regPayShoppingcart()
+                            .then(()=>{
+                                const message = "Pago registrado y notificado a la tienda para su revisión y proceso.";
+                                const response = { "code" : "ok", "message" : message};
+                                res.json(response);
+                            })
+                            .catch(error => {
+                                console.error('Error al ejecutar la funcion deleteShoppingcart', error);
+                            });
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al ejecutar la funcion Notification()....', error);
+                });
+
+        } else {
+            console.log("No existe el carrito que se quiere consolidar");
+        }        
+
+
+    } catch (error) {
+        console.log("error :", error);
+    }
+
+});
 
 //Sección de manejo de Raffles --------------------------------------------
 routes.get('/raffleModule-admin/:id', async(req, res)=>{

@@ -11,6 +11,8 @@ const shoppingCart = new Schema({
     consolidate : { type : String, default : "false" }, //consolidado significa una validacion por parte de la tienda donde verifica el pedido que sera despachado. Es donde la Tienda podria manipular para arreglar el pedido y donde el cliente puede agregar mas articulos. No podra actualizar su compra si ya se ha consolidado. 
     amount : { type : Number }, //aqui el monto del valor del carrito, esto puede cambiar
     active : { type : String, default : "true" }, //true or false, si esta en true porque esta activo y se vera y si esta en false es porque ya no aparecera porque ya caduco su tiempo de visibilidad. y ya no puede volver a verse. esto es para tener un registro de todo lo que se ha hecho en este departamento.
+    regPay : { type : String, default : "false"}, //aqui se registra el pago por parte del cliente.
+    dataRegPay : { type : Object, default : {methodPay : "", detailPay : "" } }, //aqui se registra el metodo y el detalle del pago.
     paid : { type : String, default : "false" }, //campo que determina si se ha elimando el public en Spaces.
     deliveryOptions : { type : String }, //guardamos el modo de entrega que ha elejido el cliente. Estas opciones pueden ser : (D01, D02, D03)
     date : { type : String } //aqui guardamos la fecha en que el cliente envio para ser consolidado.
