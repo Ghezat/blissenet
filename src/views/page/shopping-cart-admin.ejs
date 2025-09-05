@@ -73,7 +73,7 @@
 
                                             
                                         <div class="card-header">
-                                            <span style="font-size: 16px;">Carrito de Compra</span>
+                                            <span style="font-size: 18px;">Carrito de Compra</span>
                                         </div>
                                         <div class="card-body">
 
@@ -93,6 +93,9 @@
                                                         <% const boxShoppingCart = ele.boxShoppingCart %>
                                                         <% const purchaseReceiver = ele.purchaseReceiver %>
                                                         <% const deliveryOptions = ele.deliveryOptions %>
+                                                        <% const consolidate = ele.consolidate %>
+                                                        <% const regPay = ele.regPay %>
+                                                        <% const dataRegPay = ele.dataRegPay %>
 
                                                         
                                                         <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
@@ -102,6 +105,10 @@
                                                             <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
                                                             <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
                                                             <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
+                                                            <input type="hidden" class="consolidate" value="<%= consolidate %>">
+                                                            <input type="hidden" class="regPay" value="<%= regPay %>">
+                                                            <input type="hidden" class="dataRegPay" value="<%= JSON.stringify(dataRegPay) %>"> 
+                                                            
 
                                                             <div class="listLeft">
                                                                 <img src="/img/iconCartBuyes.png" alt="" style="width: 35px; height: 35px;">
@@ -136,12 +143,16 @@
                                     <div class="contentainer-fluid">
 
                                             <div class="card-header">
-                                               <span style="font-size: 16px;">Datos y Lista de Compra</span>
+                                               <span style="font-size: 18px;">Datos y Lista de Compra</span>
                                             </div>    
                                             <div class="card-body">
 
                                                 <div class="bg-secondary rounded-3 px-2 text-light" style="font-size: 16px;">
                                                     <span class="customerName" style="font-size: 16px;"> </span>
+                                                </div>
+
+                                                <div class="CUSTOMERName rounded-3 text-light mb-2" style="font-size: 18px;">
+                                                    <!-- dato inyectado dinamicamente -->
                                                 </div>
                                                 
                                                 <table class="table themaTextLight">
@@ -171,14 +182,27 @@
                                                     <span style="white-space: 16px;"> <b>Dirección:</b> <span class="clientAddress"></span> </span>
                                                 </div>
 
-                                                <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.4); width: auto; border-radius: 4px;">
-                                                    <span style="white-space: 16px;"> <b>Delivery:</b> <span class="delivery bg-dark text-light rounded-pill px-3 py-1"> </span> </span>
+                                                <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                                                    <span style="white-space: 16px;"> <b>Delivery:</b> </span> <span class="delivery bg-secondary text-light rounded-pill ms-1 px-3 py-1" style="white-space: nowrap;"> </span> 
                                                 </div>                                                  
 
                                                 <div class="btn-group btnControl close" style="width: 100%;" role="group" aria-label="Basic outlined example">
                                                     <button type="button" class="btn btn-dark btnDelete"> <i class="bi bi-x-square text-danger me-1"></i> Eliminar</button>
                                                     <button type="button" class="btn btn-dark btnConsolidate"> <i class="bi bi-check2-square text-primary me-1"></i> Consolidar</button>
                                                 </div>
+
+                                                <div class="dataRegisterPay close pb-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); width: 100%; font-size: 15px; border-bottom-right-radius: 9px; border-bottom-left-radius: 9px;">
+                                                    <div class="insertDataRegistePay">
+                                                       <!--  datos dinamico -->
+                                                    </div>
+                                                    <div class="btnOptions close">
+                                                        <div class="d-flex justify-content-between p-3" style="font-size: 20px;">
+                                                            <button class="btn btn-danger rounded-pill py-2 px-4 btnDecline" style="width: 45%;"> <b> <i class="bi bi-x-circle me-1"></i> Declinar </b>  </button>
+                                                            <button class="btn btn-primary rounded-pill py-2 px-4 btnApprove" style="width: 45%;"> <b> <i class="bi bi-check-circle me-1"></i> Aprovar </b>  </button>
+                                                        </div>
+                                                    </div>    
+                                                </div>
+
 
                                             </div>
                         
@@ -259,9 +283,12 @@
     const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData'); 
     const purchaseReceiverData = document.querySelectorAll('.purchaseReceiverData');
     const deliveryOption = document.querySelectorAll('.deliveryOptions');
+    const consolidateData = document.querySelectorAll('.consolidate'); // "true" or "false"
+    const regPayData = document.querySelectorAll('.regPay'); // "true" or "false"
+    const dataRegPay = document.querySelectorAll('.dataRegPay');
 
-    //para inyectar
-    const customerName = document.querySelector('.customerName');
+    //para inyectar  
+    const CUSTOMERName = document.querySelector('.CUSTOMERName');
     const listShoppingCart = document.querySelector('.listShoppingCart');
     const totalPayDinamic = document.querySelector('.totalPayDinamic');
 
@@ -272,7 +299,13 @@
     const clientPhoneSpan = document.querySelector('.clientPhone');
     const clientAddressSpan = document.querySelector('.clientAddress');
 
+    const dataRegisterPay = document.querySelector('.dataRegisterPay'); //contenedor que muestra el metodo de pago y detalle del pago
+    const insertDataRegistePay = document.querySelector('.insertDataRegistePay'); //contenedor donde inyectamos los datos de pago
+    const btnOptions = document.querySelector('.btnOptions'); //aqui en donde estan los dos botones de Declinar y Aprobar
     const btnControl = document.querySelector('.btnControl'); //botones consolidar y eliminar.
+
+    const btnDecline = document.querySelector('.btnDecline');
+    const btnApprove = document.querySelector('.btnApprove');
 
     let iDDinamic; //variable de id del articulo.
     let departDinamic; //variable de departamento del articulo.
@@ -282,6 +315,7 @@
     let totalDinamic; //variable del total del articulo. 
     let datos; //datos del boxShopping que peude ser el original o el actualizado si se llegara a cambiar alguna cantidad.
     let boxConsolidate; //variable que contendra un objeto que poseera toda la informacion real de lo que se puede despachar.
+    
 
     listCart.forEach((ele, i)=>{
 
@@ -294,9 +328,16 @@
             const receiver = JSON.parse(receiverTxt);
             const Amount = amount[i].value;
             const deliveryOpt = deliveryOption[i].value; 
+            const ConsolidateData = consolidateData[i].value;
+            const RegPayData = regPayData[i].value;
+            const DataRegPay = dataRegPay[i].value;
+            const dataRegister = JSON.parse(DataRegPay);
+          
 
-            console.log("receiver..........:", receiver);
-            console.log("deliveryOpt.......:", deliveryOpt);
+            //console.log("receiver..........:", receiver);
+            //console.log("deliveryOpt.......:", deliveryOpt);
+            console.log("ConsolidateData.....:", ConsolidateData);
+            console.log("RegPayData..........:", RegPayData); 
 
             let DeliveryOption;
 
@@ -306,6 +347,19 @@
                 DeliveryOption = "Entrega en lugar acordado."
             } else {
                 DeliveryOption = "Delivery en la puerta del cliente."
+            }
+
+            console.log("-------------------ver--------------------")
+            console.log("dataRegister..............:", dataRegister); //esto es un array
+
+            if (dataRegister.length > 0){
+
+                const lastIndexRegister = dataRegister.length -1; //porque em da error y dice que length no es una funcion ?
+                console.log("lastIndexRegister.........:", lastIndexRegister); //shopping-cart-admin:867 Uncaught TypeError: dataRegister.length is not a function
+
+                const methodPay = dataRegister[lastIndexRegister].methodPay;
+                const detailPay = dataRegister[lastIndexRegister].detailPay;
+
             }
 
             const clientNames = receiver.clientName;
@@ -327,8 +381,12 @@
             }
             boxConsolidate = datos;
 
-            //aqui ahora inyectamos los datos 
-            customerName.innerText = clientName;
+            //aqui ahora inyectamos los datos ...................................................
+        
+            CUSTOMERName.innerHTML =   `<div class="bg-light rounded-pill text-secondary" style="height: auto; width: auto">        
+                                            <img src="/img/iconCartBuyes.png" alt="" style="width: 30px; height: 30px;">
+                                            <span class="ms-2"> <b> ${clientName} </b> </span>  
+                                        </div>`
              
             //{depart: 'items', id: '68a087e3f91f4e94c93be043', title: 'Sala de Tomate Pampero 397gr.', price: '2.35', countRequest: 1} 
 
@@ -336,20 +394,31 @@
             arrayParse.forEach((ele)=>{
                         const total = (ele.countRequest * ele.price).toFixed(2);
 
-                        if (ele.presentation == "fraction"){
-                            listShoppingCart.innerHTML += `                                                       
-                                                    <tr> 
-                                                        <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=0.01 min="0" style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
-                                                    </tr> 
-                                            `
-                        } else {
-                            listShoppingCart.innerHTML += `                                                       
-                                                    <tr> 
-                                                        <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=1 min="0" style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
-                                                    </tr> 
-                                            `
-                        }                    
+                        if (ConsolidateData === "false" && RegPayData ==="false"){
 
+                            if (ele.presentation == "fraction"){
+                                listShoppingCart.innerHTML += `                                                       
+                                                        <tr> 
+                                                            <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=0.01 min="0" style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
+                                                        </tr> 
+                                                `
+                            } else {
+                                listShoppingCart.innerHTML += `                                                       
+                                                        <tr> 
+                                                            <td> ${ele.title} </td> <td> <input class="amountDinamic" type="number" step=1 min="0" style="width: 50px" value="${ele.countRequest}"> </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
+                                                        </tr> 
+                                                `
+                            }
+                                    
+
+                        } else {
+
+                                listShoppingCart.innerHTML += `                                                       
+                                                        <tr>  
+                                                            <td> ${ele.title} </td> <td class="amountDinamic"> ${ele.countRequest} </td> <td class="priceDinamic"> ${ele.price} </td> <td class="totalDinamic"> ${total} </td>
+                                                        </tr> 
+                                                        `
+                        }   
             })
 
             containerDelivery.classList.remove("close"); //hacemos aparecer el contenedor.
@@ -380,11 +449,12 @@
 
             console.log("amountDinamic :", amountDinamic);
 
-            if (amountDinamic){
+            if (ConsolidateData === "false" && RegPayData ==="false"){
+       
                 console.log("existe elementos amountDinamic y podemos mostrar los botones consolidar y eliminar");
+                dataRegisterPay.classList.add('close')
                 btnControl.classList.remove('close'); //es el set de botones Consolidar y Eliminar
 
-                //aqui uso amountDinamic que es una clase de amount que es un nodo lo he tomado usando un querySelectorAll();
                 //con esto tengo el control de todos los item y con la variable i puedo tomar el control de cada item y saber el precio para tener el total
                 amountDinamic.forEach((ele, i)=>{ //aqui es cuando manipulo el input de las cantidades.
 
@@ -429,7 +499,57 @@
                     })
 
                 })
+
+            } else {
+
+                let lastStatus;
+                console.log("este pago ha sido registrado........")
+                dataRegisterPay.classList.remove('close')
+                btnControl.classList.add('close');
+
+                console.log("dataRegister........", dataRegister);
+
+                if (dataRegister.length > 0){
+                    const lastIndex = dataRegister.length -1;
+                    lastStatus = dataRegister[lastIndex].response;
+                    console.log("lastStatus .......:", lastStatus);
+
+                    insertDataRegistePay.innerHTML = "";
+
+                    dataRegister.forEach((ele, i)=>{
+                        const method = ele.methodPay;
+                        const detail = ele.detailPay;
+                        const status = ele.response;
+
+                        let statusMessage = ""; // Inicializa una variable para el mensaje de estatus
+
+                        if (status === "") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-light ms-1 text-dark"> <b>Esperando Validación...</b> </span>`;
+                        } else if (status === "error") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-danger ms-1 text-light"> <b>Error en Registro</b> </span>`; // Cambia esto según lo que quieras mostrar si hay un estatus
+                        }
+
+                        
+                        insertDataRegistePay.innerHTML += ` 
+                                                <div class="alert">
+                                                    <p class="mb-1"> <b> Método de pago: </b> ${method} </p>
+                                                    <p class="mb-1"> <b> Detalle de pago: </b> ${detail} </p>
+                                                    <p class="mb-1"> <b> Estatus: </b> ${statusMessage} </p>                              
+                                                </div>`
+                    })
+
+                }   
+                
+                console.log("VER lastStatus .......:", lastStatus);
+                if (lastStatus == "error" ){
+                     btnOptions.classList.add('close');
+                } else {
+                     btnOptions.classList.remove('close');
+                }                
+
             }
+
+
 
         })    
     
@@ -438,7 +558,111 @@
 
 
 
+    //--------------------------------------------------------------------------------------
+    //Declinar
+    btnDecline.addEventListener('click', ()=>{
+        
+    btnDecline.setAttribute("disabled", "");
+    btnApprove.setAttribute("disabled", "");
+
+         const dato = {
+            box : boxConsolidate
+        }
+
+        console.log("dato :", dato)
+
+        fetch('/done_shoppingCart/registerPay/unpaid', {
+
+        method: "post",
+        body: JSON.stringify(dato),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response => response.json())
+        .then( jsonx => {
+            console.log("jsonx :",  jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+         
+            if (code === "ok"){
+                mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+
+                    setTimeout(() => {
+                        location.reload();    
+                    }, 3000);
+
+                }, 1000);
+            } else {
+                const message = "Ha habido un error, por favor ¡intente más tarde!."
+                mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    btnDecline.removeAttribute("disabled", "");
+                    btnApprove.removeAttribute("disabled", "");
+                },5000);                
+            }    
+                            
+            
+        })
+        .catch( err => console.log(err))
+
+    })
     
+    //Approve
+    btnApprove.addEventListener('click', ()=>{
+        
+        btnApprove.setAttribute("disabled", ""); //desactivamos el boton
+        btnDecline.setAttribute("disabled", ""); //desactivamos el boton de decline tambien
+
+        const dato = {
+            box : boxConsolidate
+        }
+        
+        console.log("dato :", dato);
+        
+        fetch('/done_shoppingCart/registerPay/paid', {
+
+        method: "post",
+        body: JSON.stringify(dato),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response => response.json())
+        .then( jsonx => {
+            console.log("jsonx :",  jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+         
+            if (code === "ok"){
+                mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+
+                    setTimeout(() => {
+                        location.reload();    
+                    }, 3000);
+
+                }, 1000);
+            } else {
+                const message = "Ha habido un error, por favor ¡intente más tarde!."
+                mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    btnDecline.removeAttribute("disabled", "");
+                    btnApprove.removeAttribute("disabled", "");
+                },5000);
+            }    
+                            
+            
+        })
+        .catch( err => console.log(err))
+
+
+    })
 
 </script>
 
@@ -448,8 +672,10 @@
 
     btnConsolidate.addEventListener('click', ()=>{
         console.log("Solicitud de pedido consolidado");
-        console.log("boxConsolidate :", boxConsolidate);
         //aqui deben enviar los nuevos datos a la tienda donde se espera la consolidacion
+
+        btnConsolidate.setAttribute("disabled", ""); //desactivamos el boton consolidar
+        btnDelete.setAttribute("disabled", ""); //desactivamos el boton de eliminar tambien.
 
         const dato = {
             box : boxConsolidate
@@ -485,6 +711,11 @@
             } else {
                 const message = "Ha habido un error, por favor ¡intente más tarde!."
                 mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    btnConsolidate.removeAttribute("disabled");
+                    btnDelete.removeAttribute("disabled");
+                }, 3000);
             }    
                             
             
@@ -497,7 +728,9 @@
     btnDelete.addEventListener('click', ()=>{
         //console.log("Solicitud de pedido eliminado");
         //console.log("boxConsolidate :", boxConsolidate);
-
+        btnDelete.setAttribute("disabled", ""); //desactivamos el boton de eliminar.
+        btnConsolidate.setAttribute("disabled", ""); //desactivamos el boton consolidar tambien.
+        
         const dato = {
             box : boxConsolidate
         }
@@ -530,7 +763,15 @@
                         
             
         })
-        .catch( err => console.log(err))
+        .catch( err =>  {
+            console.log(err)
+
+            setTimeout(() => {
+                btnDelete.removeAttribute("disabled"); //desactivamos el boton de eliminar.
+                btnConsolidate.removeAttribute("disabled"); //desactivamos el boton consolidar tambien.
+            }, 2000);
+
+        }) 
 
     })
 

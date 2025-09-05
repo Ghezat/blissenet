@@ -137,7 +137,7 @@ routes.get('/myaccount/messenger/view/:id', async(req, res)=>{
     console.log("*********************************************** ver ********************************************************");
     console.log("Esto es result result.typeNote -->", result.typeNote );
 
-    if (result.typeNote === "notes" || result.typeNote === "spread" || result.typeNote === "followMe" || result.typeNote === "availability-noti" || result.typeNote ===  "shoppingCart-Cre" || result.typeNote ===  "shoppingCart-Del" || result.typeNote ===  "shoppingCart-Con" ){ 
+    if (result.typeNote === "notes" || result.typeNote === "spread" || result.typeNote === "followMe" || result.typeNote === "availability-noti" || result.typeNote ===  "shoppingCart-Del" || result.typeNote ===  "shoppingCart-Paid" || result.typeNote ===  "shoppingCart-unPaid" ){ 
         
         const change = await modelMessages.findByIdAndUpdate(idMessage, { view : true, answer : 'process' } );
 

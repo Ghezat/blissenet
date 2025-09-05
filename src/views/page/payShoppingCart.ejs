@@ -63,7 +63,7 @@
                                     <div class="container-fluid p-0">
                                             
                                         <div class="card-header">
-                                            <span style="font-size: 16px;">Carrito de Compra por pagar</span>
+                                            <span style="font-size: 18px;">Carrito de Compra por pagar</span>
                                         </div>
                                         <div class="card-body">
 
@@ -86,19 +86,22 @@
                                                         <% const deliveryOptions = ele.deliveryOptions %>
                                                         <% const regPay = ele.regPay %>
                                                         <% const dataRegPay = ele.dataRegPay %>
+                                                        <% const paid = ele.paid %>
 
                                                         
                                                         <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
                                                             <input type="hidden" class="iDCart" value="<%= iDCart %>"> 
                                                             <input type="hidden" class="customerNameData" value="<%= customerName %>">
+                                                            <input type="hidden" class="sellerNameData" value="<%= sellerName %>">
                                                             <input type="hidden" class="amount" value="<%= amount %>">  
                                                             <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
                                                             <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
                                                             <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
                                                             <input type="hidden" class="regPay" value="<%= regPay %>">
                                                             <input type="hidden" class="dataRegPay" value="<%= JSON.stringify(dataRegPay) %>"> 
+                                                            <input type="hidden" class="paid" value="<%= paid %>">
                                                          
-
+                                                            
                                                             <div class="listLeft">
                                                                 <img src="/img/iconCartBuyes.png" alt="" style="width: 35px; height: 35px;">
                                                                 <span class="me-1"><%= sellerName  %> </span> <span class="px-2 rounded-3" style="white-space: nowrap"> <i class="bi bi-currency-dollar"></i>(<%= amount  %>)</span> 
@@ -130,12 +133,12 @@
                                     <div class="contentainer-fluid containerBoxShop">
 
                                             <div class="card-header">
-                                               <span style="font-size: 16px;">Datos y Lista de Compra</span>
+                                               <span style="font-size: 18px;">Datos y Lista de Compra</span>
                                             </div>    
                                             <div class="card-body">
 
-                                                <div class="bg-secondary rounded-3 px-2 text-light" style="font-size: 16px;">
-                                                    <span class="customerName" style="font-size: 16px;"> </span>
+                                                <div class="SELLERName rounded-3 text-light mb-2" style="font-size: 18px;">
+                                                    <!-- dato inyectado dinamicamente -->
                                                 </div>
                                                 
                                                 <table class="table themaTextLight">
@@ -165,35 +168,31 @@
                                                     <span style="white-space: 16px;"> <b>Dirección:</b> <span class="clientAddress"></span> </span>
                                                 </div>
 
-                                                <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.4); width: auto; border-radius: 4px;">
-                                                    <span style="white-space: 16px;"> <b>Delivery:</b> <span class="delivery bg-dark text-light rounded-pill px-3 py-1"> </span> </span>
-                                                </div>                                                
+                                                <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: 100%; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 9px; border-top-right-radius: 9px; ">
+                                                    <span style="white-space: 16px;"> <b>Delivery:</b> </span> <span class="delivery bg-secondary text-light rounded-pill ms-1 px-3 py-1" style="white-space: nowrap;"> </span> 
+                                                </div> 
 
+                                                <div class="dataRegisterPay close" style="background-color: rgba(0, 0, 0, 0.1); width: 100%; font-size: 15px; border-bottom-right-radius: 9px; border-bottom-left-radius: 9px;">
+                                                    <!-- dinamico -->
+                                                </div>
 
-                                                <div class="btnControl btn-group  close" style="width: 100%;" role="group" aria-label="Basic outlined example">
+                                                <div class="btnControl btn-group  close" style="width: 100%;">
                                                     <button type="button" class="btn btn-dark btnDelete"> <i class="bi bi-x-square text-danger me-1"></i> Eliminar</button>
                                                     <button type="button" class="btn btn-dark btnPay"> <i class="bi bi-check2-square text-primary me-1"></i> Pagar</button>
                                                 </div>
 
-                                                <div class="dataRegisterPay close" style="background-color: rgba(0, 0, 0, 0.4); width: 100%; font-size: 15px;">
-                                                    <!-- dinamico -->
-                                                </div>
+
 
                                             </div>
                         
                                     </div>
 
                                     <div class="container-fluid containerDataBank close">
-                                                                                
+                                                                     
+
                                         <div class="cardBank my-3">
                                             <!-- tarjetas dinamicas --> 
-                                             
-<!--                                              <div class="my-2 alert border d-flex justify-content-between" style="background-color: rgba(128, 128, 128, 0.4);">
-                                                <label for="data1" class="pe-3"> <b>Pago Movil</b> </label>
-                                                <input type="radio" name="radioMethod" id="data1" style="width: 16px;">
-                                             </div>
-                                              -->
-                                                                                       
+                                                                                                                                    
                                         </div>
 
                                         <div class="containerDetailsMethod">
@@ -283,15 +282,18 @@
     const listCart = document.querySelectorAll('.listCart');
     const iDCart = document.querySelectorAll('.iDCart');
     const customerNameData = document.querySelectorAll('.customerNameData');
+    const sellerNameData = document.querySelectorAll('.sellerNameData');
     const amount = document.querySelectorAll('.amount');
     const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData'); 
     const purchaseReceiverData = document.querySelectorAll('.purchaseReceiverData');
     const deliveryOption = document.querySelectorAll('.deliveryOptions');
     const regPay = document.querySelectorAll('.regPay');
     const dataRegPay = document.querySelectorAll('.dataRegPay');
+    const paid =  document.querySelectorAll('.paid');
 
     //para inyectar
     const customerName = document.querySelector('.customerName');
+    const SELLERName = document.querySelector('.SELLERName');
     const listShoppingCart = document.querySelector('.listShoppingCart');
     const totalPayDinamic = document.querySelector('.totalPayDinamic');
 
@@ -323,6 +325,7 @@
             console.log(iDCart[i].value);
             IDCart = iDCart[i].value;
             const clientName = customerNameData[i].value;
+            const sellerStoreNameData = sellerNameData[i].value;
             const receiverTxt = purchaseReceiverData[i].value; 
             const receiver = JSON.parse(receiverTxt);
             const Amount = amount[i].value;
@@ -330,10 +333,12 @@
             const RegPay = regPay[i].value; 
             const DataRegPay = dataRegPay[i].value;
             const dataRegister = JSON.parse(DataRegPay);
+            const Paid = paid[i].value;
 
             console.log("receiver..........:", receiver);
             console.log("deliveryOpt.......:", deliveryOpt);
-            console.log("dataRegister........:", dataRegister); //{methodPay: 'Transferencia Bancaria', detailPay: '00001126268390099366388 '}
+            console.log("dataRegister........:", dataRegister); // [{methodPay: 'Transferencia Bancaria', detailPay: '00001126268390099366388', response: ""}];
+            console.log("Paid..........", Paid);
 
             let DeliveryOption;
 
@@ -344,9 +349,10 @@
             } else {
                 DeliveryOption = "Delivery en la puerta del cliente."
             }
-            
-            const methodPay = dataRegister.methodPay;
-            const detailPay = dataRegister.detailPay
+
+
+            //const methodPay = dataRegister.methodPay;
+            //const detailPay = dataRegister.detailPay
 
             const clientNames = receiver.clientName;
             const clientIndentification = receiver.clientIndentification;
@@ -367,8 +373,11 @@
             }
             boxConsolidate = datos;
 
-            //aqui ahora inyectamos los datos 
-            customerName.innerText = clientName;
+            //aqui ahora inyectamos los datos............................................................ 
+            SELLERName.innerHTML = `<div class="bg-light rounded-pill text-secondary" style="height: auto; width: auto">        
+                                        <img src="/img/iconCartBuyes.png" alt="" style="width: 30px; height: 30px;">
+                                        <span class="ms-2"> <b> ${sellerStoreNameData} </b> </span>  
+                                    </div>`
                          
             listShoppingCart.innerHTML =""; //limpiamos el body
             arrayParse.forEach((ele)=>{
@@ -416,23 +425,79 @@
             // ----------------------------------------------------
 
 
-            if (RegPay === "false"){
+            if (Paid === "false"){
+                let lastStatus;
                 console.log("Pago no registrado ....................");
-                dataRegisterPay.classList.add('close')
-                btnControl.classList.remove('close');
+               
+                dataRegisterPay.classList.remove('close');
+                console.log("dataRegister...............:", dataRegister);
+
+                if (dataRegister.length > 0){
+                    const lastIndex = dataRegister.length -1;
+                    lastStatus = dataRegister[lastIndex].response;
+                    console.log("lastStatus .......:", lastStatus);
+
+                    dataRegisterPay.innerHTML = ""; //limpiamos el contenedor, para que no se concatene
+
+                    dataRegister.forEach((ele, i)=>{
+                        const method = ele.methodPay;
+                        const detail = ele.detailPay;
+                        const status = ele.response;
+
+                        let statusMessage = ""; // Inicializa una variable para el mensaje de estatus
+
+                        if (status === "") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-light ms-1 text-dark"> <b>Esperando Validación...</b> </span>`;
+                        } else if (status === "error") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-danger ms-1 text-light"> <b>Error en Registro</b> </span>`; // Cambia esto según lo que quieras mostrar si hay un estatus
+                        }
+
+                        dataRegisterPay.innerHTML += ` 
+                                                <div class="alert mb-0">
+                                                    <p class="mb-1"> <b> Método de pago: </b> ${method} </p>
+                                                    <p class="mb-1"> <b> Detalle de pago: </b> ${detail} </p>
+                                                    <p class="mb-1"> <b> Estatus: </b> ${statusMessage} </p>                              
+                                                </div>`
+                    })
+
+                }  
+                
+                if (lastStatus === ""){
+                     btnControl.classList.add('close');
+                } else {
+                     btnControl.classList.remove('close');
+                }
+               
 
             } else {
-                console.log("este pago ya ha sido registrado........")
+                console.log("este pago ha sido registrado........")
                 dataRegisterPay.classList.remove('close')
                 btnControl.classList.add('close');
+                console.log("dataRegister...............:", dataRegister);
+                //console.log("methodPay :", methodPay);
+                //console.log("detailPay :", detailPay);
 
-                console.log("methodPay :", methodPay);
-                console.log("detailPay :", detailPay);
-                dataRegisterPay.innerHTML = ` 
-                                    <div class="alert" style="color: rgb(0, 0, 0);">
-                                        <p> <b> Método de pago :</b> ${methodPay} </p>
-                                        <p> <b> Detalle de pago :</b> ${detailPay} </p>
-                                    </div>`
+                dataRegister.forEach((ele, i)=>{
+                    const method = ele.methodPay;
+                    const detail = ele.detailPay;
+                    const status = ele.response;
+
+                    let statusMessage = ""; // Inicializa una variable para el mensaje de estatus
+
+                    if (status === "") {
+                        statusMessage = `<span class="rounded-pill px-2 bg-light ms-1 text-dark"> <b>Esperando Validación...</b> </span>`;
+                    } else if (status === "error") {
+                        statusMessage = `<span class="rounded-pill px-2 bg-danger ms-1 text-light"> <b>Error en Registro</b> </span>`; // Cambia esto según lo que quieras mostrar si hay un estatus
+                    }
+
+                    dataRegisterPay.innerHTML = ` 
+                                            <div class="alert">
+                                                <p class="mb-1"> <b> Método de pago: </b> ${method} </p>
+                                                <p class="mb-1"> <b> Detalle de pago: </b> ${detail} </p>
+                                                <p class="mb-1"> <b> Estatus: </b> ${statusMessage} </p>                              
+                                            </div>`
+                })
+
             }
 
         })    
@@ -537,7 +602,7 @@
                                 ${paymentSys.reponse ? 
                                    "" : ` <div class="numConfirma form-group my-2">
                                                 <label for="" class="mt-2 pe-2"> Num. confirmación/Detalle </label>
-                                                <input type="text" class="form-control textDetailPay">
+                                                <input type="text" maxlength="20" class="form-control textDetailPay">
                                          </div>` }
 
                             </div>
@@ -627,6 +692,8 @@
 
     btnRegPay.addEventListener('click', ()=>{        
 
+        btnRegPay.setAttribute("disabled", "");
+        
         if (textDetailPay){
             const textDetailPayValue = textDetailPay.value;
             console.log("IDCart :", IDCart);
@@ -658,19 +725,27 @@
                     const message = jsonx.message;
                 
                     if (code === "ok"){
-                        mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
 
                         setTimeout(() => {
-                            mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+                            
+                            containerDataBank.innerHTML = "" //limpiamos todo el contenedor 
+                            containerDataBank.innerHTML = `
+                                                            <div class="containerImg p-5 d-flex justify-content-center align-items-center">
+                                                                <img src="/img/checkAnimation.gif" alt="" class="rounded-2" style=" width: 90%;">                                              
+                                                            </div>` //metemos la amimacion gif de check 
 
                             setTimeout(() => {
-                                location.reload();    
-                            }, 3000);
-
-                        }, 1000);
+                                location.reload();
+                            }, 6000); 
+                            
+                        }, 2000);    
+                         
                     } else {
                         const message = "Ha habido un error, por favor ¡intente más tarde!."
                         mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                        setTimeout(() => {
+                            btnRegPay.removeAttribute("disabled");
+                        }, 2000);
                     }    
                                     
                     
@@ -680,14 +755,22 @@
             } else {
                 const message = "Debe colocar el detalle o el codigo de confirmación del pago."
                 mostrarToast( message, 'right', 'info', '', true ); // Agrega título aquí
+                setTimeout(() => {
+                    btnRegPay.removeAttribute("disabled");
+                }, 2000);
+
             }    
 
         } else {
             const message = "Debe elegir un método de pago."
             mostrarToast( message, 'right', 'info', '', true ); // Agrega título aquí
+            setTimeout(() => {
+                btnRegPay.removeAttribute("disabled");
+            }, 2000);
         }
 
     })
+
 </script>
 
 <script>

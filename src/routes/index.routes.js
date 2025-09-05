@@ -3550,6 +3550,7 @@ routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
   
         let searchProfile;
         let sumCount = 0;
+        let shoppingCartPending = [];
     
         if (user){
             //console.log("Esto es user._id ------>", user._id );
@@ -3557,9 +3558,13 @@ routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
             console.log("searchProfile -->", searchProfile);
 
             //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
-            const shoppingCartPending = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { consolidate: "false" } ]  });
+            const shoppingCart = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { consolidate: "false" }, {paid : "false"} ] });
+            const shoppingCartRegPay = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { consolidate: "true" }, { regPay : "true"}, {paid : "false"} ] });
+            
+            shoppingCartPending.push(...shoppingCart, ...shoppingCartRegPay);
+
             sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
-                                        
+
             console.log("shoppingCartPending.......................... ", shoppingCartPending);             
             console.log('Esto es sumCount contamos todos los carritos por consolidar-->', sumCount);
             res.render('page/shopping-cart-admin', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartPending, sumCount });

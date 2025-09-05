@@ -107,7 +107,7 @@ module.exports = model('messageModel', messageSchema, 'messages');
 
 {
   _id: ObjectId('68b842dcf69ce3516065ebc9'),
-  typeNote: 'shoppingCart-Cre', typeNote : 'shoppingCart-Con', typeNote : 'shoppingCart-dell', typeNote : 'shoppingCart-RPay', 
+  typeNote: 'shoppingCart-Cre', typeNote : 'shoppingCart-Con', typeNote : 'shoppingCart-del', typeNote : 'shoppingCart-RPay', 
   times: '03-09-2025 09:30',
   objeAvatar: { avatar: '', avatarDefault: '332b4823f0219bc69bbf84f6d4df41ee' },
   username: 'Lorenzobastardo',
