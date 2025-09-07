@@ -467,56 +467,107 @@ routes.get('/admin/signin', (req,res)=>{
     const lockedAdmin = req.session.lockedAdmin;
     const noAccount = req.session.noAccount;
     const errorPassw = req.session.errorPassw;
+    const seeBot = req.session.seeBot;
 
     delete req.session.lockedAdmin;
     delete req.session.noAccount;
     delete req.session.errorPassw;
+    delete req.session.seeBot;
 
-    res.render('admin/signin', {userAdmin, lockedAdmin, noAccount, errorPassw});
+    res.render('admin/signin', {userAdmin, lockedAdmin, noAccount, errorPassw, seeBot});
     
 });
 
 routes.post('/admin/signin', async (req,res)=>{
-    const {email, password } = req.body;
+    const {email, password, recaptchaResponse } = req.body;
+    const secretKey = '6LfiYtEmAAAAAJijFJXY0QI0amKJORxHJhTLT_Ti';
     const searchAdmin = await modelUserAdmin.find({email});
-    console.log("Esto es searchAdmin --->", searchAdmin);
 
-    if (searchAdmin.length !== 0 ){
+    console.log("......................'/admin/signin'.........................");
 
-        if (searchAdmin[0].locked === false && searchAdmin[0].emailVerify === true){    
+    const datos = {
+        secret : secretKey,
+        response : recaptchaResponse
+    };
 
-            const hashPassword = searchAdmin[0].password;
-            Compare();
-            async function Compare(){
-                const compares = await bcrypt.compare(password, hashPassword);
-                console.log("resul de la comparacion--->",compares) //true or false;
+        fetch('https://www.google.com/recaptcha/api/siteverify', {
+            method: "post",
+            body: new URLSearchParams(datos),
+            headers: {"content-type" : "application/x-www-form-urlencoded"}
+      
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            //console.log("--------------reCAPTCHA-------------------");
+            //console.log("enviando feth a google reCAPTCHA");
+            //console.log(jsonx);
+            const success = jsonx.success;
+            const score = jsonx.score;
+            //const score = 0.4; para test 
+            console.log(`success -> ${success} | score -> ${score}`);
+    
+            if (success === true){
+                if (score >= 0.5){
+                    console.log("Es un humano");
+    
+                    console.log("Esto es searchAdmin --->", searchAdmin);
+                    
+                    if (searchAdmin.length !== 0 ){
 
-                if ( compares == true ){
-                    console.log("¡Session iniciado con exito!");
-                    req.session.userAdmin = searchAdmin; //aqui creo la sesion y la expando a todo el sistema.
-                    req.session.success_session = "¡Session iniciado con exito!";
-                    res.redirect('/admin');
+                        if (searchAdmin[0].locked === false && searchAdmin[0].emailVerify === true){    
+
+                            const hashPassword = searchAdmin[0].password;
+                           
+                            async function Compare(){
+                                const compares = await bcrypt.compare(password, hashPassword);
+                                console.log("resul de la comparacion--->",compares) //true or false;
+
+                                if ( compares == true ){
+                                    console.log("¡Session iniciado con exito!");
+                                    req.session.userAdmin = searchAdmin; //aqui creo la sesion y la expando a todo el sistema.
+                                    req.session.success_session = "¡Session iniciado con exito!";
+                                    res.redirect('/admin');
+                                } else {
+                                    console.log("¡Password errado!");
+                                    console.log("hashPassword ......:", hashPassword);
+                                    req.session.errorPassw = "¡Password Errado!";
+                                    res.redirect('/admin/signin');
+                                };
+
+                            };
+
+                            Compare();
+                        
+                        } else {
+                            req.session.lockedAdmin = "¡Su cuenta administrativa ha sido Bloqueada o no tiene los permisos requeridos!"
+                            console.log("No existe esta cuenta")
+                            res.redirect('/admin/signin');
+                        }   
+                            
+                    } else {
+                        req.session.noAccount = "¡No existe esta cuenta!";
+                        console.log("¡No existe esta cuenta!");
+                        res.redirect('/admin/signin');
+                    }
+                    
+                        
                 } else {
-                    console.log("¡Password errado!");
-                    req.session.errorPassw = "¡Password Errado!";
+                    //req.session.seeBotObjec = { "message" : "Hemos detectado un posible ataque", "score" : score };
+                    req.session.seeBot = "Hemos detectado un comportamiento inusual en Blissenet.com";
                     res.redirect('/admin/signin');
-                };
-
-            };
-        
-        } else {
-            req.session.lockedAdmin = "¡Su cuenta administrativa ha sido Bloqueada o no tiene los permisos requeridos!"
-            console.log("No existe esta cuenta")
-            res.redirect('/admin/signin');
-        }   
-            
-    } else {
-        req.session.noAccount = "¡No existe esta cuenta!";
-        console.log("¡No existe esta cuenta!");
-        res.redirect('/admin/signin');
-    }
-
-          
+                    console.log("Eres un fucking bot");
+                }    
+            } else {
+                
+                //req.session.recaptchaFail = "La verificacion de reCAPTCHA ha Fallado";
+                res.redirect('/admin/signin');
+                console.log("La verificacion de reCAPTCHA ha Fallado");
+            }
+    
+        })
+        .catch( err => console.log(err));       
+    
+           
     
 });
 
@@ -4796,27 +4847,52 @@ routes.post('/admin/stopped-search-block', async (req, res)=>{
 //ruta para bannear de forma temporal o definitiva a usuarios que violen las reglas
 routes.post('/admin/stopped-ban', async (req, res)=>{
 
-    const userAdmin = req.session.userAdmin;
-    const admin = userAdmin[0].adminName;
-    const {user, id, ban, resume} = req.body;
-    console.log('******* stopped-ban ******* ')
-    console.log("ver", user, id, ban, resume);
-    console.log("admin", admin);
-   
-
-    if (userAdmin){
+    try {
         
-        const stopped = new modelStopped({indexed : id, username: user, ban, adminLocked : admin, resume});
-        const stoppedSave = await stopped.save();
-        
-        const findUserAndStopped = await modelUser.findByIdAndUpdate(id, {stopped : true});       
-        const response = { response : true };
-        res.json(response);
+        const userAdmin = req.session.userAdmin;
+        const admin = userAdmin[0].adminName;
+        const {user, id, ban, resume} = req.body;
+        console.log('******* stopped-ban ******* ')
+        console.log("ver", user, id, ban, resume);
+        console.log("admin", admin);
+    
+        //proceso para actualizar el estatus del usuario y poder luego deslogearlo para sacarlo del sistema.
+        if (userAdmin){
+            
 
+            updateToLock()
+                .then(()=>{
+                    const response = { code : "ok", message : `Se ha bloqueado el usuario con el username ${user}` };
+                    res.json(response);
+                })
+                .catch( error =>{
+                    console.log("Ha habido un error con la funcion updateUser()");
+                    const response = { code : "error", message : `Un error no ha podido bloquear al usuario: ${user}` };
+                    res.json(response);
+                })
+
+
+            async function updateToLock(){
+
+                const stopped = new modelStopped({indexed : id, username: user, ban, adminLocked : admin, resume});
+                const stoppedSave = await stopped.save();
+
+                const findUserAndStopped = await modelUser.findByIdAndUpdate(id, {stopped : true}); 
+                //ahora quiero deslogear al usuario con este id 
+            }
+
+
+
+        }
+
+    
+    } catch (error) {
+        console.log("Ha habido un error, error");
     }
-      
 
 });
+
+
 
 //ruta para desbloquear un usuario bloqueado
 routes.post('/admin/stopped-ban-unlock', async (req, res)=>{
@@ -4828,12 +4904,22 @@ routes.post('/admin/stopped-ban-unlock', async (req, res)=>{
     console.log("ver", user, id);
     console.log("admin", admin);
 
-    const stopped =  await modelStopped.updateOne({indexed : id}, { adminUnlocked : admin, status : "unlocked" });
+    async function unlocked(){
+        const stopped =  await modelStopped.updateOne({indexed : id}, { adminUnlocked : admin, status : "unlocked" });
+        const findUserAndStopped = await modelUser.findByIdAndUpdate(id, {stopped : false});  
+    }        
 
-    const findUserAndStopped = await modelUser.findByIdAndUpdate(id, {stopped : false});       
-    const response = { response : true };
+    unlocked()
+        .then(()=>{
+            const response = { code : "ok", message : `Se ha desbloqueado el usuario con el username ${user}` };
+            res.json(response);
+        })
+        .catch(err =>{
+            const response = { code : "err", message : `Ha ocurrido un error, intente mas tarde.` };
+            res.json(response);
+        })
 
-    res.json(response);
+
 
 });
 

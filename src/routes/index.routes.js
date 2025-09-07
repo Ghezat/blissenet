@@ -701,6 +701,7 @@ routes.post('/myaccount/signin', async(req,res)=>{
                     let id = search._id;
                     let hashPassword = search.password;
                     let Stopped = search.stopped;
+                    let idSession = search.idSession;
         
                     async function hashing(){
                         const compares = await bcrypt.compare(password, hashPassword);
@@ -713,8 +714,28 @@ routes.post('/myaccount/signin', async(req,res)=>{
                                 //console.log("password acertado, bienvenido")
                                 req.session.success = "¡Bienvenido! Has entrado a Blissenet.com. Tu red de mercado mundial.";
                                 const user = search
-                                req.session.user = user
-                                res.redirect('/')
+                                req.session.user = user;
+                                const idSession = req.session.id;
+                                console.log("idSession..... :", idSession); 
+                                //idSession..... : nDdqjNvsjqatZl3k4gP3tRb_osItbenV
+                                //idSession..... : BW4C3P8qtW9N2tp_tSEOPAbBwqNGMN_C
+                                //cada session es diferente asi sea el mismo usuario asi que los id siempre seran difernetes. 
+                                //siempre debemos guardar este id
+
+                                async function saveIdSession(){
+                                    await modelUser.findByIdAndUpdate(id, { $set : { idSession }});
+                                }
+                                
+                                saveIdSession()
+                                    .then(()=>{
+                                        console.log("Se ha guardado satisfactoriamente el idSession");
+                                        res.redirect('/')
+                                    })
+                                    .catch(err =>{
+                                        console.log("Ha habido un error");
+                                        res.redirect('/')
+                                    })    
+                                
         
                             } else {
         

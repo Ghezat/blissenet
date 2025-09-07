@@ -19,6 +19,10 @@
         <% if (errorPassw) { %>
             <%- include('../alertAdmin/errorPassw.ejs') %>
         <% }; %>
+
+        <% if (seeBot) { %>
+            <%- include('../alertAdmin/seeBot.ejs') %>
+        <% }; %>    
       
        <div class="containerSignup">
             <div class="row d-flex justify-content-center my-5 mx-0 p-2 border border-light">
@@ -34,15 +38,16 @@
                                     id="admin_user" autocomplete="off"  required>
                                 </div>
                                 <div class="form-group my-2">
+                                    
                                     <input type="password" name="password" placeholder="Enter your password" class="form-control"
                                     id="admin_passw"  autocomplete="off"  minlength="7" maxlength="20" style="letter-spacing: 3px;" required>
                                 </div>
                                
-                                <div class="form-group my-3">                                      
-                                    <button class="g-recaptcha form-control btn btn-dark" 
+                                <div class="form-group my-3">  
+                                    <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">                                    
+                                    <button class="g-recaptcha form-control btn btn-dark" id="btnSingAdmin"
                                         data-sitekey="6LfiYtEmAAAAALTQNN9yzyt_sRzqsr-6xVQTeEg8" 
-                                        data-callback='signinAdmin' 
-                                        data-action='submit'>
+                                        data-callback='signinAdmin'  data-action='submit'>
                                         Login
                                     </button>
                                 <!-- clave secreta 6LfiYtEmAAAAAJijFJXY0QI0amKJORxHJhTLT_Ti -->
@@ -69,7 +74,31 @@
         const adminUser = document.getElementById('admin_user');
         const adminPassw = document.getElementById('admin_passw');
 
+
         adminUser.value= "Solo Administradores 🔒";
         adminPassw.value= "";
     })
+</script>
+<script>
+
+const TokenRecaptacha = document.getElementById('recaptchaResponse');    
+const btnSingAdmin = document.getElementById('btnSingAdmin');
+
+btnSingAdmin.addEventListener('click', signinAdmin) 
+
+async function signinAdmin(){
+ 
+     let response = grecaptcha.getResponse();
+     //console.log("response :", response);
+
+    if (response.length !==0){
+        TokenRecaptacha.value = response;
+        //console.log("response -->", response);
+
+        document.getElementById("signinAdmin").submit();
+        //console.log("enviando al backend");
+
+    }
+}
+   
 </script>
