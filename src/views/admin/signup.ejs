@@ -30,7 +30,7 @@
                         </div>
                         <div class="card-body">
                         
-                            <form action="/admin/signup" method="POST" id="signupAdmin">
+                            <form action="/admin/signup" method="POST" id="signupAdminForm">
                                 <div class="form-group my-2">
                                         <input type="text" name="adminName" placeholder="Admin enter your username" class="form-control" minlength="6" maxlength="14" required >
                                 </div>
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="form-group my-2">
                                     <select name="rol" id="rol" class="form-control">
-                                        <option value="adminAdmin">Admin</option>
+                                        <option value="adminAdmin">Financy</option>
                                         <option value="adminReport">Report</option>
                                         <option value="adminMarketing">Marketing</option>
                                         <option value="adminMaster">Master</option>
@@ -52,10 +52,11 @@
                                         <input type="password" name="confirmPassword" placeholder="Confirm your password" class="form-control"   minlength="7" maxlength="20" style="letter-spacing: 3px;" autocomplete="off"  required>
                                 </div>
                                                                   
-                                <div class="form-group my-3">                                      
-                                        <button class="g-recaptcha form-control btn btn-dark" 
+                                <div class="form-group my-3">   
+                                        <input type="hidden" name="recaptchaResponse" id="recaptchaResponse">                                    
+                                        <button class="g-recaptcha form-control btn btn-dark" id="btnSignupAdmin" 
                                             data-sitekey="6LdfbNEmAAAAADLoxUXtqIh5I6vw7XP3kDcRoC-v" 
-                                            data-callback='signupAdmin' 
+                                            data-callback='signupAdminFnct' 
                                             data-action='submit'>
                                                 Register
                                         </button>
@@ -79,3 +80,28 @@
     </main>
 </body>
 </html>
+
+<script>
+
+const TokenRecaptacha = document.getElementById('recaptchaResponse');    
+const btnSignupAdmin = document.getElementById('btnSignupAdmin');
+
+btnSignupAdmin.addEventListener('click', signupAdminFnct)
+
+async function signupAdminFnct(){
+ 
+     let response = grecaptcha.getResponse();
+     //console.log("response :", response);
+
+    if (response.length !==0){
+        TokenRecaptacha.value = response;
+        
+        //console.log("response -->", response);
+        //console.log("TokenRecaptacha -->", TokenRecaptacha);
+        document.getElementById("signupAdminForm").submit();
+        //console.log("enviando al backend");
+
+    }
+}
+   
+</script>

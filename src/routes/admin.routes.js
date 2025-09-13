@@ -106,170 +106,228 @@ routes.get('/admin/signup', (req,res)=>{
 routes.post('/admin/signup', async (req,res)=>{
     //console.log("esto es el cuerpo de la peticion",req.body);
     
-    const {adminName, email, rol, password, confirmPassword } = req.body
-    console.log("estos son los datos que llegan del front al back-end")
+    const {adminName, email, rol, password, confirmPassword, recaptchaResponse } = req.body
+    //console.log("estos son los datos que llegan del front al back-end")
+    const secretKey = "6LdfbNEmAAAAAJ_fJWvKiDg5HfmooDmnVWH-zt-4"; 
     let count;
     const search = await modelUserAdmin.find();
 
-    if (search.length !==0){
-        //console.log("********* Test ***********");
-        //console.log("Esto es search", search);
-        //console.log("search.length --->", search.length);
-        const ultimateNum = search[search.length - 1].workerNumber;
-        //console.log("ultimateNum :", ultimateNum );
-        count = ultimateNum + 1;
-    } else {
-        //esta virgen la DB y no hay ningun administrador
-        count = 1
-    }
-    
- 
-    if (password === confirmPassword){
-       
-        if (password.length <= 6) {
-            console.log('el password es muy corto debe tener al menos 7 caracteres');
-            req.session.shortPassword = 'El password es muy corto debe tener al menos 7 caracteres';
-            res.redirect('/admin/signup');
-        } else {
-            const searchEmail = await modelUserAdmin.find({email});
-            console.log("Este es searchEmail ---->", searchEmail)
-            if (searchEmail.length !== 0){
-                console.log('Este correo ya esta siendo utilizado por otro admin');
-                req.session.emailInUse = 'Este email ya esta siendo utilizado';
-                res.redirect('/admin/signup');
-            } else {
-                const searchadminName = await modelUserAdmin.find({adminName});
-                if (searchadminName.length !==0 ){
-                    console.log ('Este nombre de admin ya esta siendo utilizado, el nombre debe ser unico');
-                    req.session.adminNameInUse = 'Este nombre de admin ya esta siendo utilizado, El nombre debe ser unico';
-                    res.redirect('/admin/signup');
-                } else {
-                    let hashPassword;
-                    let newTN, newToken; 
+    console.log("......................'/admin/signup'.........................");
 
-                    //declarado arriba 
-                    console.log("mail_master-->", mail_master);
-                    
+    const datos = {
+        secret : secretKey,
+        response : recaptchaResponse
+    };
 
-                    //funcion para crear token
-                    async function createToken(){
-                        createNewToken()
-                        function createNewToken(){
-                            let ran = Math.random();
-                            let random = Math.ceil(ran * 1000000);
-                            newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 6;
-                        }    
-            
-                        while(newTN.length < 6){
-                            createNewToken()
-                        } 
-            
-                        newToken = `${newTN}`;
-                        //console.log("newToken", newToken);
-            
-                    }
+        fetch('https://www.google.com/recaptcha/api/siteverify', {
+            method: "post",
+            body: new URLSearchParams(datos),
+            headers: {"content-type" : "application/x-www-form-urlencoded"}
+      
+        })
+        .then(response =>response.json() )
+        .then( jsonx => {
+            //console.log("--------------reCAPTCHA-------------------");
+            //console.log("enviando feth a google reCAPTCHA");
+            //console.log(jsonx);
+            const success = jsonx.success;
+            const score = jsonx.score;
+            //const score = 0.4; para test 
+            console.log(`success -> ${success} | score -> ${score}`);
 
-                    //encriptar contraseñas
-                    async function hashing(){
-                        hashPassword = await bcrypt.hash(password, 6);
-                        console.log("Este es el hash del password--->",hashPassword);
-                        /* const compares = await bcrypt.compare(password, hashPassword);
-                        console.log("resul de la compracion--->",compares) */
+            if (success === true){   
 
-                        //---------- fecha de registro en formato dd-mm-yyy -----------
-                        let dateNow = new Date();
-                        let dia = dateNow.getDate();
-                        let mes = dateNow.getMonth() +1;
-                        let anio = dateNow.getFullYear();
+                if (score >= 0.5){
+                    console.log("Es un humano");
 
-                        let date = `${dia}-${mes}-${anio}`;
-                        //--------------------------------------------------------------
-
-                        const admin = new modelUserAdmin({adminName, email, rol, password: hashPassword, dates: date, workerNumber : count, token: newToken });
-                        const adminSave = await admin.save();
-                        console.log("aqui admin en la base de datos ---->",adminSave);
+                    if (search.length !==0){
+                        //console.log("********* Test ***********");
+                        //console.log("Esto es search", search);
+                        //console.log("search.length --->", search.length);
+                        const ultimateNum = search[search.length - 1].workerNumber;
+                        //console.log("ultimateNum :", ultimateNum );
+                        count = ultimateNum + 1;
+                    } else {
+                        //esta virgen la DB y no hay ningun administrador
+                        count = 1
                     }
                     
-                    //enviar correo con token de seguridad
-                    async function sendToken(){
-                        
-                        const message = "Confirmación de creación de Cuenta Administrativa"
-                        const contentHtml = `
-                        <h2 style="color: black"> Se esta creando una nueva Cuenta Administrativa. </h2>
-                        <ul style="color: black"> 
-                            <li> cuenta : ${mail_master} </li> 
-                            <li> asunto : ${message} </li>
-                        <ul>
-                        <h2 style="color: black"> ${newToken} </h2>
-                        <p> <b> Estimado administrador, </b> Si usted no ha solicitado crear nueva cuenta admisnitrativa, Pongase en contacto con sus superiores e informe la situación.</p>
-                        `
-            
-                        //enviar correo
-                        //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
-                        const emailMessage = {
-                            from: "Blissenet<sistemve@blissenet.com>", //remitente
-                            to: mail_master,
-                            subject: "🔑 Creación de nueva cuenta administrativa - Blissenet", //objeto
-                            text: message,
-                            html: contentHtml
-                        };
-            
-                        //añadir las credenciales
-                        const transport = nodemailer.createTransport({
-                            host: "mail.blissenet.com",
-                            port: 465,
-                            auth: {
-                                user: "sistemve@blissenet.com",
-                                pass: process.env.pass_sistemve
-                            }
-                        });
-            
-                        transport.sendMail(emailMessage, (error, info) => {
-                            if (error) {
-                                console.log("Error enviando email")
-                                console.log(error.message)
-                            } else {
-                                console.log("Email enviado")
-                                
-                            }
-                        }) 
-                    
-                    }
-
-                    //ejecucion de funciones
-                    createToken()
-                        .then(()=>{
-                            hashing()
-                                .then(()=>{
-                                    sendToken()
-                                        .then(()=>{
-                                            req.session.newAdmin = adminName; //este es el userAdmin del nuevo admin que se desea registrar
-                                            console.log("proceso inicial de registro OK")                                        
-                                            res.redirect('/admin/signup-verify');
-                                        })
-                                        .catch((error)=>{
-                                            console.log("Ha habido un error sendToken()")
-                                        })
-                                })
-                                .catch((error)=>{
-                                    console.log("Ha habido un error hashing()")
-                                })
-                        })
-                        .catch((error)=>{
-                            console.log("Ha habido un error createToken()")
-                        })
-
-                }
                 
-            }
-            
-        }
-       
-    } else {
-        console.log ('Error al confirmar el password');
-        res.redirect('/admin/signup');
-    }
- 
+                    if (password === confirmPassword){
+                    
+                        if (password.length <= 6) {
+                            console.log('el password es muy corto debe tener al menos 7 caracteres');
+                            req.session.shortPassword = 'El password es muy corto debe tener al menos 7 caracteres';
+                            res.redirect('/admin/signup');
+                        } else {
+
+                            search.forEach((ele, i)=>{
+                                const Email = ele.email;
+                                
+                                if (Email === email){
+                                    console.log('Este correo ya esta siendo utilizado por otro admin');
+                                    req.session.emailInUse = 'Este email ya esta siendo utilizado';
+                                    res.redirect('/admin/signup');
+                                } else {
+                                 
+                                    search.forEach((ele)=>{
+                                        const AdminName= ele.adminName;
+
+                                        if (AdminName === adminName){
+                                            console.log ('Este nombre de admin ya esta siendo utilizado, el nombre debe ser unico');
+                                            req.session.adminNameInUse = 'Este nombre de admin ya esta siendo utilizado, El nombre debe ser unico';
+                                            res.redirect('/admin/signup');
+                                        } else {
+                                            let hashPassword;
+                                            let newTN, newToken; 
+
+                                            //declarado arriba 
+                                            console.log("mail_master-->", mail_master);
+                                            
+
+                                            //funcion para crear token
+                                            async function createToken(){
+                                                createNewToken()
+                                                function createNewToken(){
+                                                    let ran = Math.random();
+                                                    let random = Math.ceil(ran * 1000000);
+                                                    newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 6;
+                                                }    
+                                    
+                                                while(newTN.length < 6){
+                                                    createNewToken()
+                                                } 
+                                    
+                                                newToken = `${newTN}`;
+                                                //console.log("newToken", newToken);
+                                    
+                                            }
+
+                                            //encriptar contraseñas
+                                            async function hashing(){
+                                                hashPassword = await bcrypt.hash(password, 6);
+                                                console.log("Este es el hash del password--->",hashPassword);
+                                                /* const compares = await bcrypt.compare(password, hashPassword);
+                                                console.log("resul de la compracion--->",compares) */
+
+                                                //---------- fecha de registro en formato dd-mm-yyy -----------
+                                                let dateNow = new Date();
+                                                let dia = dateNow.getDate();
+                                                let mes = dateNow.getMonth() +1;
+                                                let anio = dateNow.getFullYear();
+
+                                                let date = `${dia}-${mes}-${anio}`;
+                                                //--------------------------------------------------------------
+
+                                                const admin = new modelUserAdmin({adminName, email, rol, password: hashPassword, dates: date, workerNumber : count, token: newToken });
+                                                const adminSave = await admin.save();
+                                                console.log("aqui admin en la base de datos ---->",adminSave);
+                                            }
+                                            
+                                            //enviar correo con token de seguridad
+                                            async function sendToken(){
+                                                
+                                                const message = "Confirmación de creación de Cuenta Administrativa"
+                                                const contentHtml = `
+                                                <h2 style="color: black"> Se esta creando una nueva Cuenta Administrativa. </h2>
+                                                <ul style="color: black"> 
+                                                    <li> cuenta : ${mail_master} </li> 
+                                                    <li> asunto : ${message} </li>
+                                                <ul>
+                                                <h2 style="color: black"> ${newToken} </h2>
+                                                <p> <b> Estimado administrador, </b> Si usted no ha solicitado crear nueva cuenta admisnitrativa, Pongase en contacto con sus superiores e informe la situación.</p>
+                                                `
+                                    
+                                                //enviar correo
+                                                //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
+                                                const emailMessage = {
+                                                    from: "Blissenet<sistemve@blissenet.com>", //remitente
+                                                    to: mail_master,
+                                                    subject: "🔑 Creación de nueva cuenta administrativa - Blissenet", //objeto
+                                                    text: message,
+                                                    html: contentHtml
+                                                };
+                                    
+                                                //añadir las credenciales
+                                                const transport = nodemailer.createTransport({
+                                                    host: "mail.blissenet.com",
+                                                    port: 465,
+                                                    auth: {
+                                                        user: "sistemve@blissenet.com",
+                                                        pass: process.env.pass_sistemve
+                                                    }
+                                                });
+                                    
+                                                transport.sendMail(emailMessage, (error, info) => {
+                                                    if (error) {
+                                                        console.log("Error enviando email")
+                                                        console.log(error.message)
+                                                    } else {
+                                                        console.log("Email enviado")
+                                                        
+                                                    }
+                                                }) 
+                                            
+                                            }
+
+                                            //ejecucion de funciones
+                                            createToken()
+                                                .then(()=>{
+                                                    hashing()
+                                                        .then(()=>{
+                                                            sendToken()
+                                                                .then(()=>{
+                                                                    req.session.newAdmin = adminName; //este es el userAdmin del nuevo admin que se desea registrar
+                                                                    console.log("proceso inicial de registro OK")                                        
+                                                                    res.redirect('/admin/signup-verify');
+                                                                })
+                                                                .catch((error)=>{
+                                                                    console.log("Ha habido un error sendToken()")
+                                                                })
+                                                        })
+                                                        .catch((error)=>{
+                                                            console.log("Ha habido un error hashing()")
+                                                        })
+                                                })
+                                                .catch((error)=>{
+                                                    console.log("Ha habido un error createToken()")
+                                                })
+
+                                        }
+
+                                    })
+
+                                    
+                                }
+
+
+                            })
+
+
+                            
+                        }
+                    
+                    } else {
+                        console.log ('Error al confirmar el password');
+                        res.redirect('/admin/signup');
+                    }
+
+
+                } else {
+                    req.session.seeBot = "Hemos detectado un comportamiento inusual en Blissenet.com";
+                    res.redirect('/admin/signup');
+                    console.log("Eres un fucking bot");
+                }    
+
+            } else {
+                res.redirect('/admin/signup');
+                console.log("La verificacion de reCAPTCHA ha Fallado");
+            }  
+
+        })
+        .catch( err => console.log(err));       
+                    
+    
     
 });
 

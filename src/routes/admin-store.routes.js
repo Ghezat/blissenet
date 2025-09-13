@@ -45,8 +45,8 @@ routes.get('/admin-store', async(req, res)=>{
         console.log("*********admin-store******** -->");
         const user = req.session.user;
         console.log("este es el usuario propietario -->", user);
-        const countMessages = req.session.countMessages
-        console.log("esto es countMessages -->", countMessages);
+        //const countMessages = req.session.countMessages
+        //console.log("esto es countMessages -->", countMessages);
         //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
         //aqui obtengo la cantidad de negotiationsBuySell
         const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
@@ -54,18 +54,21 @@ routes.get('/admin-store', async(req, res)=>{
   
         let searchProfile;
         let sumCount = 0;
+        let countMessages;
     
         if (user){
+            const userID = user._id;
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
             console.log("searchProfile -->", searchProfile);
-
+            
             //hacemos la busqueda de posibles rifa.
             //aqui busco el id del sorteo. 
             const Raffle = await modelRaffle.findOne({ user_id : user._id });
             console.log("raffle ver --->", Raffle);
             //si tiene entonces lo incluyo en los objetos a enviar al front para anexarlo en el contenedor derecho alargado donde esta el Score y el trust 
     
+
             //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
             const countAir = await modelAirplane.find({ user_id : user._id  }).count();
             sumCount = sumCount + countAir; 
@@ -86,9 +89,16 @@ routes.get('/admin-store', async(req, res)=>{
             const countRaf = await modelRaffle.find({ user_id : user._id  }).count();
             sumCount = sumCount + countRaf;
                             
-                         
-            console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
-            res.render('page/admin-store', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
+            searchMessages(userID, req) //---> nueva funcion;
+               .then( Messages => 
+                {
+                    countMessages = Messages;
+                    console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+                    res.render('page/admin-store', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
+                }  
+            ) 
+
+
         }   
 
         
@@ -98,6 +108,8 @@ routes.get('/admin-store', async(req, res)=>{
     }
 
 });
+
+
 
 routes.get('/myaccount/segment', async (req, res)=>{
     try {
@@ -2071,9 +2083,9 @@ routes.get('/payShoppingCart', async(req, res)=>{
 
             
             //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
-            const shoppingCartforPay = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { consolidate: "true" }, { paid: "false"} ]  });
+            const shoppingCartforPay = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentSeller: "no_comment" } ]  });
             sumCount = shoppingCartforPay.length; //aqui tomamos la cantidad de carritos pendientes
-           
+                                                     
             console.log("shoppingCartforPay.......................... ", shoppingCartforPay);             
             console.log('Esto es sumCount contamos todos los carritos por consolidar-->', sumCount);
             res.render('page/payShoppingCart', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartforPay, sumCount });
@@ -2110,5 +2122,48 @@ routes.post('/payShoppingCart/bankStore', async(req, res)=>{
     }
 
 });
+
+async function searchMessages(userID, req){
+    console.log("estamos dentro de la funcion global de actualizar la cantidad de messages.......")
+    //primer paso ubicar todos los mensajes que tenga el usuario logeado y que el campo answer diga waiting.
+    const searchBoxMessageInbox = [];
+    let searchMessageInbox;
+    let countMessagesInbox;
+    let countMessagesOutbox;
+    let totalMessages;
+    let countMessages;
+
+    const searchMessageInbox0 = await modelMessage.find( { $and: [{ toCreatedArticleId : userID },{answer: "waiting"}, { typeNote: { $ne: "availability-noti" } } ] } );
+    const searchMessageInbox1 = await modelMessage.find( { $and: [{ userId : userID }, { typeNote : "availability-noti" }, {answer: "waiting"} ] } );
+    
+    searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
+    searchBoxMessageInbox.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); //aqui ordenamos de menor a mayor por fecha
+    searchMessageInbox = searchBoxMessageInbox; 
+    //console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchMessageInbox);
+    
+    countMessagesInbox = searchMessageInbox.length;
+
+    console.log("vamos por aqui en la funcion searchMessages ...........")
+    //console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
+
+    const searchMessageOutbox = await modelMessage.find( { $and: [{userId : userID },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } ).sort({ createdAt: 1 }); // 1 para orden ascendente, -1 para descendente;
+    const searchMessageOutboxAlert = await modelMessage.find( { $and: [{userId : userID },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
+    countMessagesOutbox = searchMessageOutboxAlert.length;
+
+
+    //console.log('esta es la cantidad de mensajes que tiene este usario en Outbox--->', countMessagesOutbox)
+
+    totalMessages = (countMessagesInbox + countMessagesOutbox);
+    console.log("este es la totalidad de los mensajes en inbox y en outbox ----->", totalMessages)
+    //aqui tenemos la sumatoria de mensajes en Inbox y Outbox
+    console.log("Este es el fin delp proceso de la la funcion searchMessages");
+
+    req.session.countMessages = totalMessages
+    countMessages = totalMessages
+    return countMessages;
+
+    
+}
+
 module.exports = routes;
 

@@ -13,6 +13,7 @@ const modelAutomotive = require('../models/automotive.js');
 const modelRealstate = require('../models/realstate.js');
 const modelNautical = require('../models/nautical.js');
 const modelService = require('../models/services.js');
+const modelShoppingCart = require('../models/shoppingCart.js');
 const modelTransportAgent = require('../models/transportAgent.js');
 const modelBankUser = require('../models/bankUser.js');
 const user = require('../models/user.js');
@@ -2163,7 +2164,7 @@ routes.post('/negotiation-message/', async(req, res)=>{
 routes.get('/buysell-list/', async(req, res)=>{
   const user = req.session.user;
   let username, searchProfile; 
-  let searchOneBuy, searchTwoBuy, searchOneSell, searchTwoSell, countNegotiationsBuySell;
+  let searchOneBuy, searchTwoBuy, searchShoppingCart, searchOneSell, searchTwoSell, countNegotiationsBuySell;
   const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
   const searchBuy = [];
   const searchSell = [];
@@ -2182,6 +2183,14 @@ routes.get('/buysell-list/', async(req, res)=>{
       //console.log("eres el comprador", searchTwoBuy);
       searchBuy.push(...searchTwoBuy);
     }
+    //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
+    searchShoppingCart = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentSeller: "no_comment" } ]  });
+    if (searchShoppingCart){
+      searchBuy.push(...searchShoppingCart);
+    }  
+     
+      //sumCount = shoppingCartforPay.length; //aqui tomamos la cantidad de carritos pendientes
+      
   
     searchOneSell = await modelBuysell.find({ $and : [{usernameSell : username},{ closeOperationSeller : false }] });
     if (searchOneSell){

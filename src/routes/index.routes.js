@@ -136,17 +136,20 @@ routes.get('/', async(req, res)=>{
             if (searchOneBuy){
                 searchBuy.push(...searchOneBuy);
             }
-    
-            const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, { closeOperationSeller : false }] });
-            if (searchOneSell){
-                searchSell.push(...searchOneSell);
-            }
-    
             const searchTwoBuy = await modelNegotiation.find({ $and : [{ usernameBuy : username }, { closeOperationBuy : false }]} );
             if (searchTwoBuy){
                 searchBuy.push(...searchTwoBuy);
             }
-    
+            //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
+            const searchShoppingCart = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentSeller: "no_comment" } ]  });
+            if (searchShoppingCart){
+                searchBuy.push(...searchShoppingCart);
+            }    
+
+            const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, { closeOperationSeller : false }] });
+            if (searchOneSell){
+                searchSell.push(...searchOneSell);
+            }         
             const searchTwoSell = await modelNegotiation.find({ $and : [{ usernameSell : username }, { closeOperationSeller : false }]} );
             if (searchTwoSell){
                 searchSell.push(...searchTwoSell);
@@ -3562,8 +3565,9 @@ routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
         console.log("*********/myaccount/shopping-cart-admin******** -->");
         const user = req.session.user;
         console.log("este es el usuario propietario -->", user);
-        const countMessages = req.session.countMessages
-        console.log("esto es countMessages -->", countMessages);
+        let countMessages; //esta variable de actiualizara con la funcion searchMessages();
+        
+        //console.log("esto es countMessages -->", countMessages);
         //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
         //aqui obtengo la cantidad de negotiationsBuySell
         const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
@@ -3575,20 +3579,39 @@ routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
     
         if (user){
             //console.log("Esto es user._id ------>", user._id );
-            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            const userID = user._id;
+            searchProfile = await modelProfile.findOne({ indexed : userID });
             console.log("searchProfile -->", searchProfile);
 
+            searchMessages(userID, req) //---> nueva funcion;
+               .then( Messages => 
+                {
+                    countMessages = Messages;
+                 
+                        shoppingCarts()
+                            .then(()=>{
+                                console.log("esto es countMessages :", countMessages);            
+                                console.log('Esto es sumCount-->', sumCount);
+                                res.render('page/shopping-cart-admin', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartPending, sumCount });
+                            })
+
+                }  
+            ) 
+
             //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
-            const shoppingCart = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { consolidate: "false" }, {paid : "false"} ] });
-            const shoppingCartRegPay = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { consolidate: "true" }, { regPay : "true"}, {paid : "false"} ] });
-            
-            shoppingCartPending.push(...shoppingCart, ...shoppingCartRegPay);
+            async function shoppingCarts(){
+                //const shoppingCart = await modelShoppingCart.find({ $and : [{ sellerId: userID }, { consolidate: "false" }, {paid : "false"} ] });
+                //const shoppingCartRegPay = await modelShoppingCart.find({ $and : [{ sellerId: userID }, { consolidate: "true" }, { regPay : "true"}, {paid : "false"} ] });
+                const shoppingCartRegPay = await modelShoppingCart.find({ $and : [{ sellerId: userID }, { CommentBuy: "no_comment" } ] });
 
-            sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
+                shoppingCartPending.push(...shoppingCartRegPay);
 
-            console.log("shoppingCartPending.......................... ", shoppingCartPending);             
-            console.log('Esto es sumCount contamos todos los carritos por consolidar-->', sumCount);
-            res.render('page/shopping-cart-admin', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartPending, sumCount });
+                sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
+
+                //console.log("shoppingCartPending.......................... ", shoppingCartPending); 
+            }
+
+        
         }   
 
         
@@ -3598,6 +3621,71 @@ routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
     }
 
 })
+
+
+routes.get('/myaccount/tracking', async(req, res)=>{
+
+    try {
+        
+        console.log("*********/myaccount/tracking******** -->");
+        const user = req.session.user;
+        console.log("este es el usuario propietario -->", user);
+        let countMessages; //esta variable de actiualizara con la funcion searchMessages();
+        
+        //console.log("esto es countMessages -->", countMessages);
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+  
+        let searchProfile;
+        let sumCount = 0;
+        let shoppingCartPending = [];
+    
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            const userID = user._id;
+            searchProfile = await modelProfile.findOne({ indexed : userID });
+            console.log("searchProfile -->", searchProfile);
+
+            searchMessages(userID, req) //---> nueva funcion;
+               .then( Messages => 
+                {
+                    countMessages = Messages;
+                 
+                        shoppingCarts()
+                            .then(()=>{
+                                console.log("esto es countMessages :", countMessages);            
+                                console.log('Esto es sumCount-->', sumCount);
+                                res.render('page/tracking', { user, searchProfile, countMessages, countNegotiationsBuySell, shoppingCartPending, sumCount });
+                            })
+
+                }  
+            ) 
+
+            //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
+            async function shoppingCarts(){
+                const shoppingCart = await modelShoppingCart.find({ $and : [{ customerId: userID } ] });
+                                
+                shoppingCartPending.push(...shoppingCart);
+
+                sumCount = shoppingCartPending.length; //aqui tomamos la cantidad de carritos pendientes
+
+                //console.log("shoppingCartPending.......................... ", shoppingCartPending); 
+            }
+
+        
+        }   
+
+        
+
+    } catch (error) {
+        console.log("Ha habido un error en la carga de /myaccount/shopping-cart-admin", error);
+    }
+
+})
+
+
 
 routes.get('/myaccount/sellerType', async (req, res)=>{
     //Este ruta renderiza la pantalla para que los usuarios o tiendas puedan redefirnir el rango de las ventas,
@@ -4408,7 +4496,50 @@ routes.get('/myaccount/logout', (req, res) => {
     } else {
         res.redirect('/')
     }
-    });
+});
+
+async function searchMessages(userID, req){
+    console.log("estamos dentro de la funcion global de actualizar la cantidad de messages.......")
+    //primer paso ubicar todos los mensajes que tenga el usuario logeado y que el campo answer diga waiting.
+    const searchBoxMessageInbox = [];
+    let searchMessageInbox;
+    let countMessagesInbox;
+    let countMessagesOutbox;
+    let totalMessages;
+    let countMessages;
+
+    const searchMessageInbox0 = await modelMessages.find( { $and: [{ toCreatedArticleId : userID },{answer: "waiting"}, { typeNote: { $ne: "availability-noti" } } ] } );
+    const searchMessageInbox1 = await modelMessages.find( { $and: [{ userId : userID }, { typeNote : "availability-noti" }, {answer: "waiting"} ] } );
+    
+    searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
+    searchBoxMessageInbox.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); //aqui ordenamos de menor a mayor por fecha
+    searchMessageInbox = searchBoxMessageInbox; 
+    //console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchMessageInbox);
+    
+    countMessagesInbox = searchMessageInbox.length;
+
+    console.log("vamos por aqui en la funcion searchMessages ...........")
+    //console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
+
+    const searchMessageOutbox = await modelMessages.find( { $and: [{userId : userID },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } ).sort({ createdAt: 1 }); // 1 para orden ascendente, -1 para descendente;
+    const searchMessageOutboxAlert = await modelMessages.find( { $and: [{userId : userID },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
+    countMessagesOutbox = searchMessageOutboxAlert.length;
+
+
+    //console.log('esta es la cantidad de mensajes que tiene este usario en Outbox--->', countMessagesOutbox)
+
+    totalMessages = (countMessagesInbox + countMessagesOutbox);
+    console.log("este es la totalidad de los mensajes en inbox y en outbox ----->", totalMessages)
+    //aqui tenemos la sumatoria de mensajes en Inbox y Outbox
+    console.log("Este es el fin delp proceso de la la funcion searchMessages");
+
+    req.session.countMessages = totalMessages
+    countMessages = totalMessages
+    return countMessages;
+
+    
+}
+
 
 module.exports = routes
 

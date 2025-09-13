@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="card-body">
 
-                                            <div class="requests mb-2">
+                                            <div class="requests mb-3">
                                                 <span style="font-size: 16px;"> Solicitudes:  <span class="bg-secondary text-light rounded-3 px-2 ms-3"> <%= sumCount %> </span>   </span> 
                                             </div>
                                             
@@ -96,6 +96,12 @@
                                                         <% const consolidate = ele.consolidate %>
                                                         <% const regPay = ele.regPay %>
                                                         <% const dataRegPay = ele.dataRegPay %>
+                                                        <% const paid = ele.paid %>
+                                                        <% const sent = ele.sent %>
+                                                        <% const received = ele.received %>
+                                                        <% const commentBuy =  ele.CommentBuy %>
+                                                        <% const ratingBuy =  ele.ratingBuy %>
+                                                         
 
                                                         
                                                         <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
@@ -108,6 +114,11 @@
                                                             <input type="hidden" class="consolidate" value="<%= consolidate %>">
                                                             <input type="hidden" class="regPay" value="<%= regPay %>">
                                                             <input type="hidden" class="dataRegPay" value="<%= JSON.stringify(dataRegPay) %>"> 
+                                                            <input type="hidden" class="paid" value="<%= paid %>">
+                                                            <input type="hidden" class="sent" value="<%= JSON.stringify(sent) %>">
+                                                            <input type="hidden" class="received" value="<%= received %>">
+                                                            <input type="hidden" class="commentBuy" value="<%= commentBuy %>">
+                                                            <input type="hidden" class="ratingBuy" value="<%= ratingBuy %>">
                                                             
 
                                                             <div class="listLeft">
@@ -126,7 +137,7 @@
                                                 
                                          
                                             <% } else { %>
-                                                <span>no hay carritos pendientes</span>
+                                                 <span class="rounded-3 p-2" style="background-color: rgba(0, 0, 0, 0.1);">No hay carritos pendientes</span>
                                             <% }; %>    
 
                                         
@@ -147,48 +158,60 @@
                                             </div>    
                                             <div class="card-body">
 
-                                                <div class="bg-secondary rounded-3 px-2 text-light" style="font-size: 16px;">
-                                                    <span class="customerName" style="font-size: 16px;"> </span>
-                                                </div>
+                                                <% if (sumCount !==0){ %>
+                                                    <div class="contenteAlertSelect">
+                                                        <div class="alert" style="background-color: rgb(0, 0, 0, 0.1); font-size: 16px;">
+                                                            <p>¡ Seleccione un carrito de compra !</p>
+                                                        </div>
+                                                    </div>
+                                                <% } else { %>
+                                                    <div class="containerImageSinResultados d-flex justify-content-center p-5">
+                                                        <img src="/img/sinResultados.png" style="width: 200px;">
+                                                    </div>
+                                                <% }; %>
 
                                                 <div class="CUSTOMERName rounded-3 text-light mb-2" style="font-size: 18px;">
                                                     <!-- dato inyectado dinamicamente -->
                                                 </div>
                                                 
-                                                <table class="table themaTextLight">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Descrip.</th> <th>Cant.</th> <th style="white-space: nowrap;">P. Unit.</th> <th>Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="listShoppingCart">
-                                                        <!-- tabla dinamica -->
-                                                    </tbody>
-                                                    <tfoot style="font-size: 16px; background-color: rgb(0, 0, 0, 0.1);">
-                                                        <tr>
-                                                            <th colspan="3">Total a Pagar ..........</th>
-                                                            <th><span class="totalPayDinamic"> </span></th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                                
-                                                <div class="form-group my-2 d-flex flex-wrap" style="font-size: 16px;">
-                                                    <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Nombre: </b> <span class="clientNames"></span>  </span> 
-                                                    <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Documento: </b> <span class="clientDocument"></span> </span>
-                                                    <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Teléfono:</b> <span class="clientPhone"></span> </span>
-                                                </div>
+                                                <div class="tableAddress close">
+                                                    <table class="table themaTextLight">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Descrip.</th> <th>Cant.</th> <th style="white-space: nowrap;">P. Unit.</th> <th>Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="listShoppingCart">
+                                                            <!-- tabla dinamica -->
+                                                        </tbody>
+                                                        <tfoot style="font-size: 16px; background-color: rgb(0, 0, 0, 0.1);">
+                                                            <tr>
+                                                                <th colspan="3">Total a Pagar ..........</th>
+                                                                <th><span class="totalPayDinamic"> </span></th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                    
+                                                    <div class="form-group my-2 d-flex flex-wrap" style="font-size: 16px;">
+                                                        <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Nombre: </b> <span class="clientNames"></span>  </span> 
+                                                        <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Documento: </b> <span class="clientDocument"></span> </span>
+                                                        <span class="me-2 rounded-pill px-3 py-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); white-space: nowrap;"> <b>Teléfono:</b> <span class="clientPhone"></span> </span>
+                                                    </div>
 
-                                                <div class="form-group my-0 px-3 py-2 mb-3" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-radius: 10px;">
-                                                    <span style="white-space: 16px;"> <b>Dirección:</b> <span class="clientAddress"></span> </span>
-                                                </div>
+                                                    <div class="form-group my-0 px-3 py-2 mb-3" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-radius: 10px;">
+                                                        <span style="white-space: 16px;"> <b>Dirección:</b> <span class="clientAddress"></span> </span>
+                                                    </div>
+                                                </div>    
 
                                                 <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 9px; border-top-right-radius: 9px;">
                                                     <span style="white-space: 16px;"> <b>Delivery:</b> </span> <span class="delivery bg-secondary text-light rounded-pill ms-1 px-3 py-1" style="white-space: nowrap;"> </span> 
                                                 </div>                                                  
 
-                                                <div class="btn-group btnControl close" style="width: 100%;" role="group" aria-label="Basic outlined example">
-                                                    <button type="button" class="btn btn-dark btnDelete"> <i class="bi bi-x-square text-danger me-1"></i> Eliminar</button>
-                                                    <button type="button" class="btn btn-dark btnConsolidate"> <i class="bi bi-check2-square text-primary me-1"></i> Consolidar</button>
+                                                <div class="btnDeclineConsolide close pb-2" style="width: 100%; background-color: rgba(0, 0, 0, 0.1); width: auto; border-bottom-left-radius: 9px; border-bottom-right-radius: 9px; border-top-left-radius: 0px; border-top-right-radius: 0px;">
+                                                    <div class="d-flex justify-content-between p-3" style="font-size: 20px;">
+                                                        <button type="button" class="btn btn-danger rounded-pill py-2 px-4 btnDelete" style="width: 45%;">  <b> <i class="bi bi-x-circle me-1"></i> Eliminar </b>  </button>
+                                                        <button type="button" class="btn btn-primary rounded-pill py-2 px-4 btnConsolidate" style="width: 45%;"> <b> <i class="bi bi-check-circle me-1"></i> Consolidar </b> </button>
+                                                    </div>
                                                 </div>
 
                                                 <div class="dataRegisterPay close pb-2 mb-2" style="background-color: rgba(0, 0, 0, 0.1); width: 100%; font-size: 15px; border-bottom-right-radius: 9px; border-bottom-left-radius: 9px;">
@@ -200,7 +223,38 @@
                                                             <button class="btn btn-danger rounded-pill py-2 px-4 btnDecline" style="width: 45%;"> <b> <i class="bi bi-x-circle me-1"></i> Declinar </b>  </button>
                                                             <button class="btn btn-primary rounded-pill py-2 px-4 btnApprove" style="width: 45%;"> <b> <i class="bi bi-check-circle me-1"></i> Aprobar </b>  </button>
                                                         </div>
-                                                    </div>    
+                                                    </div>
+                                                    <div class="controlSent close">
+                                                        <div class="card-header">Declare cuando haya enviado a su cliente.</div>
+                                                        <div class="d-flex justify-content-between p-3 form-group" style="font-size: 20px;">
+                                                            <textarea class="form-control sentDetails" placeholder="Deje aqui un detalle del envio si lo requiere."></textarea>
+                                                            <button class="btn btn-primary rounded-2 py-2 px-4 sentBtn" style="width: 45%;"> <b> <i class="bi bi-check-circle me-1"></i> Enviado </b>  </button>
+                                                        </div>
+                                                    </div>   
+                                                    <div class="controlReceived form-group close">
+                                                        <div class="card-header">Califique y deje un comentario a su cliente.</div>
+                                                        <div class="p-3 form-group" style="font-size: 20px;">
+                                                            <div class="row m-0">
+                                                                <div class="col-xl-8 col-lg-8 col-md-7 col-sm-12 p-0">
+                                                                    <textarea class="form-control comment" maxlength="500" placeholder="Deje aqui un comentario a su Cliente."></textarea>
+                                                                </div>
+                                                                <div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 p-0" style="background-color: rgb(108, 117, 125, 0.8);">
+                                                                    <div class="contentToolStart d-flex py-2">
+                                                                        <div class="containRateStar d-flex justify-content-center" style="width: 100%;">
+                                                                            <i class="starE bi bi-star-fill mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                                            <i class="starE bi bi-star mx-2" data-star="2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                                            <i class="starE bi bi-star mx-2" data-star="3" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                                            <i class="starE bi bi-star mx-2" data-star="4" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                                            <i class="starE bi bi-star mx-2" data-star="5" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                                        </div> 
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>  
+                                                            <button class="btn btn-primary form-control my-3 commentRating">Enviar Calificación y Comentario</button>  
+                                                        </div>
+                                                    </div>                                                                                                           
+                                                    
                                                 </div>
 
 
@@ -286,6 +340,11 @@
     const consolidateData = document.querySelectorAll('.consolidate'); // "true" or "false"
     const regPayData = document.querySelectorAll('.regPay'); // "true" or "false"
     const dataRegPay = document.querySelectorAll('.dataRegPay');
+    const paid = document.querySelectorAll('.paid');
+    const sent = document.querySelectorAll('.sent'); //esto es un objeto
+    const received = document.querySelectorAll('.received');
+    const commentBuy = document.querySelectorAll('.commentBuy');
+    const ratingBuy = document.querySelectorAll('.ratingBuy'); 
 
     //para inyectar  
     const CUSTOMERName = document.querySelector('.CUSTOMERName');
@@ -299,14 +358,20 @@
     const clientPhoneSpan = document.querySelector('.clientPhone');
     const clientAddressSpan = document.querySelector('.clientAddress');
 
+    const tableAddress = document.querySelector('.tableAddress'); //esto es un contenedor que tiene la tabla y los campos del cliente que lo recibe y su direccion
     const dataRegisterPay = document.querySelector('.dataRegisterPay'); //contenedor que muestra el metodo de pago y detalle del pago
     const insertDataRegistePay = document.querySelector('.insertDataRegistePay'); //contenedor donde inyectamos los datos de pago
     const btnOptions = document.querySelector('.btnOptions'); //aqui en donde estan los dos botones de Declinar y Aprobar
-    const btnControl = document.querySelector('.btnControl'); //botones consolidar y eliminar.
+    const btnDeclineConsolide = document.querySelector('.btnDeclineConsolide'); //botones consolidar y eliminar.
+    const controlSent = document.querySelector('.controlSent'); //contenedor boton de enviado y textarea para colocar detalle del envio si lo requiere
+    const controlReceived = document.querySelector('.controlReceived'); //contenedor donde se califica y comenta al cliente
 
     const btnDecline = document.querySelector('.btnDecline');
     const btnApprove = document.querySelector('.btnApprove');
 
+    const sentDetails = document.querySelector('.sentDetails');
+    const sentBtn = document.querySelector('.sentBtn'); 
+ 
     let iDDinamic; //variable de id del articulo.
     let departDinamic; //variable de departamento del articulo.
     let titleDinamic; //variable del titulo del articulo.
@@ -315,14 +380,14 @@
     let totalDinamic; //variable del total del articulo. 
     let datos; //datos del boxShopping que peude ser el original o el actualizado si se llegara a cambiar alguna cantidad.
     let boxConsolidate; //variable que contendra un objeto que poseera toda la informacion real de lo que se puede despachar.
-    
+    let IDCart; //variable global 
 
     listCart.forEach((ele, i)=>{
 
         ele.addEventListener('click', ()=>{
             console.log("Valor del id del carrito :", ele);
             console.log(iDCart[i].value);
-            const IDCart = iDCart[i].value;
+            IDCart = iDCart[i].value;
             const clientName = customerNameData[i].value;
             const receiverTxt = purchaseReceiverData[i].value; 
             const receiver = JSON.parse(receiverTxt);
@@ -332,12 +397,22 @@
             const RegPayData = regPayData[i].value;
             const DataRegPay = dataRegPay[i].value;
             const dataRegister = JSON.parse(DataRegPay);
-          
+            const Paid = paid[i].value;
+            const sentV = sent[i].value;
+            const Sent = JSON.parse(sentV);
+            const Received = received[i].value;
+            const CommentBuy = commentBuy[i].value;
+            const RatingBuy = ratingBuy[i].value; 
 
             //console.log("receiver..........:", receiver);
             //console.log("deliveryOpt.......:", deliveryOpt);
             console.log("ConsolidateData.....:", ConsolidateData);
             console.log("RegPayData..........:", RegPayData); 
+            console.log("Paid..........:", Paid); 
+            console.log("CommentBuy.......:", CommentBuy);
+            console.log("RatingBuy.......:", RatingBuy);
+
+            tableAddress.classList.remove('close');
 
             let DeliveryOption;
 
@@ -385,7 +460,8 @@
         
             CUSTOMERName.innerHTML =   `<div class="bg-light rounded-pill text-secondary" style="height: auto; width: auto">        
                                             <img src="/img/iconCartBuyes.png" alt="" style="width: 30px; height: 30px;">
-                                            <span class="ms-2"> <b> ${clientName} </b> </span>  
+                                            <span class="ms-2"> <b> ${clientName} </b> </span> 
+                                            <span class="ms-2 text-secondary" style="font-size : 15px">  <b> <i class="bi bi-currency-dollar"></i>  ${Amount}  </b>  </span> 
                                         </div>`
              
             //{depart: 'items', id: '68a087e3f91f4e94c93be043', title: 'Sala de Tomate Pampero 397gr.', price: '2.35', countRequest: 1} 
@@ -449,11 +525,11 @@
 
             console.log("amountDinamic :", amountDinamic);
 
-            if (ConsolidateData === "false" && RegPayData ==="false"){
+            if (ConsolidateData === "false" && RegPayData ==="false" && Paid === "false") {
        
                 console.log("existe elementos amountDinamic y podemos mostrar los botones consolidar y eliminar");
                 dataRegisterPay.classList.add('close')
-                btnControl.classList.remove('close'); //es el set de botones Consolidar y Eliminar
+                btnDeclineConsolide.classList.remove('close'); //es el set de botones Consolidar y Eliminar
 
                 //con esto tengo el control de todos los item y con la variable i puedo tomar el control de cada item y saber el precio para tener el total
                 amountDinamic.forEach((ele, i)=>{ //aqui es cuando manipulo el input de las cantidades.
@@ -500,19 +576,43 @@
 
                 })
 
-            } else {
+                //.......ocultamos bloques de controles.
+                dataRegisterPay.classList.add('close'); //aseguramos que no se ve el bloque de registro de pagos.
+                btnOptions.classList.add('close'); //aseguramos que el set de botones de aceptar o declinar pagos este oculto.
+                controlSent.classList.add('close'); //aseguramos que no se ve el bloque de envio del carrito.
+                controlReceived.classList.add('close'); //aseguramos que no aparece el control de envio.
+
+            } else if (ConsolidateData === "true" && RegPayData ==="false" && Paid === "false") {    
+
+                console.log("este pago no ha sido registrado........")
+                dataRegisterPay.classList.remove('close');
+                insertDataRegistePay.innerHTML = "";
+
+                btnDeclineConsolide.classList.add('close');
+                btnOptions.classList.add('close');
+                insertDataRegistePay.innerHTML = ` 
+                                            <div class="alert">
+                                                <p class="mb-1"> <b> Estatus: </b> <span class="rounded-pill px-2 bg-light ms-1 text-dark"> <b>Esperando registro de Pago...</b> </span> </p>                              
+                                            </div>`
+
+                //.......ocultamos bloques de controles.                            
+                btnOptions.classList.add('close'); //aseguramos que el set de botones de aceptar o declinar pagos este oculto.
+                controlSent.classList.add('close'); //aseguramos que no se ve el bloque de envio del carrito. 
+                controlReceived.classList.add('close'); //aseguramos que no aparece el control de envio.                            
+
+            } else if (ConsolidateData === "true" && RegPayData ==="true" && Paid === "false") {
 
                 let lastStatus;
                 console.log("este pago ha sido registrado........")
                 dataRegisterPay.classList.remove('close')
-                btnControl.classList.add('close');
+                btnDeclineConsolide.classList.add('close');
 
                 console.log("dataRegister........", dataRegister);
 
                 if (dataRegister.length > 0){
                     const lastIndex = dataRegister.length -1;
                     lastStatus = dataRegister[lastIndex].response;
-                    console.log("lastStatus .......:", lastStatus);
+                    console.log("lastStatus .......:", lastStatus); // esto puede ser "ok", "error" o "";
 
                     insertDataRegistePay.innerHTML = "";
 
@@ -527,6 +627,8 @@
                             statusMessage = `<span class="rounded-pill px-2 bg-light ms-1 text-dark"> <b>Esperando Validación...</b> </span>`;
                         } else if (status === "error") {
                             statusMessage = `<span class="rounded-pill px-2 bg-danger ms-1 text-light"> <b>Error en Registro</b> </span>`; // Cambia esto según lo que quieras mostrar si hay un estatus
+                        } else if (status === "ok") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-primary ms-1 text-light"> <b>Pagado</b> </span>`;
                         }
 
                         
@@ -541,12 +643,91 @@
                 }   
                 
                 console.log("VER lastStatus .......:", lastStatus);
-                if (lastStatus == "error" ){
-                     btnOptions.classList.add('close');
-                } else {
-                     btnOptions.classList.remove('close');
-                }                
+                if (lastStatus == ""){
+                    btnOptions.classList.remove('close');
+                } else if (lastStatus == "error" ){
+                    btnOptions.classList.add('close');
+                } else if (lastStatus == "ok") {
+                    btnOptions.classList.add('close');
+                } 
+                     
+                //.......ocultamos bloques de controles.
+                //dataRegisterPay.classList.add('close'); //aseguramos que no se ve el bloque de registro de pagos.
+                //btnOptions.classList.add('close'); //aseguramos que el set de botones de aceptar o declinar pagos este oculto.
+                controlSent.classList.add('close'); //aseguramos que no se ve el bloque de envio del carrito.
+                controlReceived.classList.add('close'); //aseguramos que no aparece el control de envio.
 
+            } else if (ConsolidateData === "true" && RegPayData ==="true" && Paid === "true") {
+
+                console.log("El carrito ha sido pagado...........................");
+                //.......liberamos bloques de controles.
+                dataRegisterPay.classList.remove('close'); //aseguramos que no se ve el bloque de registro de pagos.
+                insertDataRegistePay.innerHTML = "";
+                controlSent.classList.remove('close'); //aseguramos que no se ve el bloque de envio del carrito.
+                controlReceived.classList.remove('close'); //aseguramos que no aparece el control de envio.
+
+                //muestra el registro de pago...............................
+                if (dataRegister.length > 0){
+                    const lastIndex = dataRegister.length -1;
+                    lastStatus = dataRegister[lastIndex].response;
+                    console.log("lastStatus .......:", lastStatus); // esto puede ser "ok", "error" o "";
+
+                    insertDataRegistePay.innerHTML = "";
+
+                    dataRegister.forEach((ele, i)=>{
+                        const method = ele.methodPay;
+                        const detail = ele.detailPay;
+                        const status = ele.response;
+
+                        let statusMessage = ""; // Inicializa una variable para el mensaje de estatus
+
+                        if (status === "") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-light ms-1 text-dark"> <b>Esperando Validación...</b> </span>`;
+                        } else if (status === "error") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-danger ms-1 text-light"> <b>Error en Registro</b> </span>`; // Cambia esto según lo que quieras mostrar si hay un estatus
+                        } else if (status === "ok") {
+                            statusMessage = `<span class="rounded-pill px-2 bg-primary ms-1 text-light"> <b>Pagado</b> </span>`;
+                        }
+
+                        
+                        insertDataRegistePay.innerHTML += ` 
+                                                <div class="alert">
+                                                    <p class="mb-1"> <b> Método de pago: </b> ${method} </p>
+                                                    <p class="mb-1"> <b> Detalle de pago: </b> ${detail} </p>
+                                                    <p class="mb-1"> <b> Estatus: </b> ${statusMessage} </p>                              
+                                                </div>`
+                    })
+
+                }
+
+                if (Sent.sentStatus === "false"){
+                    controlSent.classList.remove('close');
+                    sentDetails.value=""
+                    sentDetails.removeAttribute("disabled");
+                    sentBtn.classList.replace('btn-secondary', 'btn-primary');
+                    sentBtn.removeAttribute("disabled");
+                    controlReceived.classList.add('close');
+                } else if (Sent.sentStatus === "true" && Received === "false") {
+                    controlSent.classList.remove('close');
+                    sentDetails.value= Sent.sentDetails;
+                    sentDetails.setAttribute("disabled", "");
+                    sentBtn.classList.replace('btn-primary','btn-secondary')
+                    sentBtn.setAttribute("disabled", "");
+                    controlReceived.classList.add('close');
+                } else if (Sent.sentStatus === "true" && Received === "true") {
+                    controlSent.classList.remove('close');
+                    sentDetails.value= Sent.sentDetails;
+                    sentDetails.setAttribute("disabled", "");
+                    sentBtn.classList.replace('btn-primary','btn-secondary')
+                    sentBtn.setAttribute("disabled", "");
+                    //ahora mostramos el controlRateComment
+                    controlReceived.classList.remove('close');
+                }
+
+                //--------------ocultamos botones innecesarios 
+                btnOptions.classList.add('close'); //aseguramos que el set de botones de aceptar o declinar pagos este oculto.
+                btnDeclineConsolide.classList.add('close');
+                
             }
 
 
@@ -776,6 +957,158 @@
     })
 
 </script>
+
+<script>
+
+
+   sentBtn.addEventListener("click", ()=>{
+
+    sentBtn.setAttribute("disabled", "");
+    const sentDetailsValue = sentDetails.value;
+    console.log("Hemos notificado el envio de la compra al cliente");
+    console.log("...y va con este detalle :", sentDetailsValue);
+
+        const dato = {
+            box : boxConsolidate,
+            sentDetails : sentDetailsValue
+        }
+    
+        
+        console.log("dato :", dato);
+        
+        fetch('/done_shoppingCart/registerSent', {
+
+        method: "post",
+        body: JSON.stringify(dato),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response => response.json())
+        .then( jsonx => {
+            console.log("jsonx :",  jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+         
+            if (code === "ok"){
+                mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+
+                    setTimeout(() => {
+                        location.reload();    
+                    }, 3000);
+
+                }, 1000);
+            } else {
+                const message = "Ha habido un error, por favor ¡intente más tarde!."
+                mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    btnDecline.removeAttribute("disabled", "");
+                    btnApprove.removeAttribute("disabled", "");
+                },5000);
+            }    
+                            
+            
+        })
+        .catch( err => console.log(err))
+
+
+   })
+
+</script>
+
+<script>
+//script que da vida a las estrellas y activa al boton para comentar y calificar
+const commentRating = document.querySelector('.commentRating'); //boton para enviar el comentario y la calificación.
+const comment = document.querySelector('.comment'); //textarea de comentario
+const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella 
+let star;
+
+if (starE) {
+    starE.forEach((ele, i) => {
+        ele.addEventListener("click", () => {
+            star = ele.getAttribute("data-star"); // aquí es el número de la estrella
+            
+            // Desactivar o activar las estrellas
+            starE.forEach((starElement, index) => {
+                if (index < parseInt(star)) {
+                    starElement.classList.replace("bi-star", "bi-star-fill");
+                } else {
+                    starElement.classList.replace("bi-star-fill", "bi-star");
+                }
+            });
+
+        });
+    });
+}
+
+
+commentRating.addEventListener('click', ()=>{
+    const commentV = comment.value;
+    console.log("commentV ......:", commentV);
+    console.log("star ......:", star);
+
+    //cuando se envie esta informacion en el proceso se debe eliminar los mensajes "typeNote: "shoppingCart-Received"
+    // este tambien queda sin ser eliminado: typeNote: "shoppingCart-Paid"
+
+    commentRating.setAttribute("disabled", "");
+
+    const dato = {
+        IDCart,
+        comment : commentV,
+        rating : star
+
+    }
+
+    console.log("dato.............. :", dato); 
+        
+    fetch('/done_shoppingCart/registerCommentRatingToBuy', {
+
+        method: "post",
+        body: JSON.stringify(dato),
+        headers: {"content-type" : "application/json"}
+
+        })
+        .then(response => response.json())
+        .then( jsonx => {
+            console.log("jsonx :",  jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+        
+            if (code === "ok"){
+                mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+
+                    setTimeout(() => {
+                        location.reload();    
+                    }, 3000);
+
+                }, 1000);
+            } else {
+                const message = "Ha habido un error, por favor ¡intente más tarde!."
+                mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+
+                setTimeout(() => {
+                    btnDecline.removeAttribute("disabled", "");
+                    btnApprove.removeAttribute("disabled", "");
+                },5000);
+            }    
+                            
+            
+        })
+        .catch( err => console.log(err))
+
+
+
+})
+
+
+</script>
+
 
 <script>
 

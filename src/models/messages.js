@@ -13,7 +13,7 @@ const messageSchema = new Schema({
     toCreatedArticleId : { type : String}, //el id del creador del articulo dato extraido de cada coleccion de departamentos. "Quien recibe la pregunte"
     ownerStore  : { type : String}, // este es el username del creador del anuncio. "Quien recibe la pregunte"
     productId : { type : Schema.ObjectId }, //el id del producto en cuestion
-    cartId : { type : String }, //esto solo funiona para lo smensajes de notificacion de carritos de compra.
+    cartId : { type : String }, //esto solo funiona para los mensajes de notificacion de carritos de compra.
     depart : { type : String }, //departamento 
     answer : { type : String,  default: 'waiting' }, //esta respuesta la otorga el dueño del articulo 
     view : { type : Boolean, default: false } //con este campo puedo firmar cuando el usuario haya visto el mensaje enviado por el anunciante y desaparezca de su buson de salida (outbox)
