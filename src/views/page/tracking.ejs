@@ -156,13 +156,14 @@
 
                                     <div class="contentainer-fluid">
 
+
                                             <div class="card-header">
                                                <span style="font-size: 18px;"> Tracking </span>
                                             </div>    
                                             <div class="card-body">
 
                                                 <% if (sumCount !==0){ %>
-                                                    <div class="contenteAlertSelect">
+                                                    <div class="containerAlertSelect">
                                                         <div class="alert" style="background-color: rgb(0, 0, 0, 0.1); font-size: 16px;">
                                                             <p>¡ Seleccione un carrito de compra !</p>
                                                         </div>
@@ -305,7 +306,7 @@
     const listShoppingCart = document.querySelector('.listShoppingCart');
     const totalPayDinamic = document.querySelector('.totalPayDinamic');
 
-    const contenteAlertSelect = document.querySelector('.contenteAlertSelect');
+    const containerAlertSelect = document.querySelector('.containerAlertSelect');
     const contentClientData = document.querySelector('.contentClientData');
     const clientNamesSpan = document.querySelector('.clientNames');
     const clientDocumentSpan = document.querySelector('.clientDocument');
@@ -473,8 +474,9 @@
 
             }
 
-            contenteAlertSelect.classList.add('close');
+            containerAlertSelect.classList.add('close');
             contentClientData.classList.remove('close');
+            
             clientNamesSpan.innerText = clientNames;
             clientDocumentSpan.innerText = clientIndentification;
             clientPhoneSpan.innerText = clientPhone;

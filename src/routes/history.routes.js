@@ -5,6 +5,7 @@ const modelProfile = require('../models/profile.js');
 const modelBuysell = require('../models/buySell.js');
 const modelNegotiation = require('../models/negotiations.js');
 const modelRaffleHistory = require('../models/raffleHistory.js');
+const modelShoppingCart = require('../models/shoppingCart.js');
 
 routes.get('/history/', async(req, res)=>{
     const user = req.session.user;
@@ -12,9 +13,11 @@ routes.get('/history/', async(req, res)=>{
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
     let searchProfile;
-    let searchBuy, searchSell;
+    const searchBuy = [];
+    const searchSell = [];
     let searchContactBuy, searchContactSell;
     let raffleHistory
+
     
     console.log(":::: Cantidad de mensajes que tiene este usuario :::: ->", countMessages);    
     console.log(":::: Esto es la cantidad de negotiationsBuySell :::: ->", countNegotiationsBuySell);
@@ -22,20 +25,27 @@ routes.get('/history/', async(req, res)=>{
     if (user){// este codigo es para poder ver esta pagina sin estar logeado
         console.log("Esto es user._id ------>", user._id );
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
 
-        searchBuy =  await modelBuysell.find(  {$and : [{ usernameBuy : user.username },{ CommentSeller : { $ne : 'no_comment'}}]}   );
-        searchSell = await modelBuysell.find(  {$and : [{ usernameSell : user.username },{ CommentBuy : { $ne : 'no_comment'}}]}  ); 
-        
+        const commertBuy =  await modelBuysell.find(  {$and : [{ usernameBuy : user.username },{ CommentSeller : { $ne : 'no_comment'}}]}   );
+        const shoppCartBuy = await modelShoppingCart.find( { $and : [{ customerId: user._id }, { CommentBuy: { $ne : "no_comment" } } ]  });
+        searchBuy.push(... commertBuy, ...shoppCartBuy);
+
+        const commertSell = await modelBuysell.find(  {$and : [{ usernameSell : user.username },{ CommentBuy : { $ne : 'no_comment'}}]}  ); 
+        const shoppCartSell = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { CommentSeller: { $ne : "no_comment" } } ]  });
+        searchSell.push(... commertSell, ...shoppCartSell);
+
         searchContactBuy = await modelNegotiation.find( { $and : [{ usernameBuy : user.username }, { closeOperationBuy : true} ] } );
         searchContactSell = await modelNegotiation.find( { $and : [{ usernameSell : user.username }, { closeOperationSeller : true} ] } );
 
         raffleHistory = await modelRaffleHistory.find( { $and : [{anfitrion : user.username}, { celebration : true }]} );
+
+        
+       
     }
 
-
-    //console.log("searchBuy -->", searchBuy);
-    //console.log("searchSell -->", searchSell);
+    console.log("searchBuy -->", searchBuy);
+    console.log("searchSell -->", searchSell);
     console.log("raffleHistory -->", raffleHistory);            
    
     console.log('-------------')

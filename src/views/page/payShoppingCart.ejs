@@ -47,7 +47,7 @@
             <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
 
             <div class="container-fluid d-flex justify-content-start py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
-                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Pay ShoppingCart </b>  </span>
+                <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Shopping Cart Management </b>  </span>
             </div>    
             
             <div class="container-fluid p-0">
@@ -151,7 +151,8 @@
                                             <div class="card-body">
 
                                                 <% if (sumCount !==0){ %>
-                                                    <div class="contenteAlertSelect">
+                                                    
+                                                    <div class="containerAlertSelect">
                                                         <div class="alert" style="background-color: rgb(0, 0, 0, 0.1); font-size: 16px;">
                                                             <p>¡ Seleccione un carrito de compra !</p>
                                                         </div>
@@ -362,7 +363,7 @@
     const received = document.querySelectorAll('.received');
 
     //para inyectar
-    const contenteAlertSelect = document.querySelector('.contenteAlertSelect');
+    const containerAlertSelect = document.querySelector('.containerAlertSelect');
     const containerTableData = document.querySelector('.containerTableData');
 
     const customerName = document.querySelector('.customerName');
@@ -421,8 +422,8 @@
             console.log("Sent..........", Sent);
             console.log("Received..........", Received);
 
-            //hacemos aparecer el contenedor containerTableData
-            contenteAlertSelect.classList.add('close');
+            //hacemos aparecer o escoder contenedorres
+            containerAlertSelect.classList.add('close');
             containerTableData.classList.remove('close');
             //.................................................
 

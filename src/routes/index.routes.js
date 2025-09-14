@@ -141,9 +141,9 @@ routes.get('/', async(req, res)=>{
                 searchBuy.push(...searchTwoBuy);
             }
             //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
-            const searchShoppingCart = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentSeller: "no_comment" } ]  });
-            if (searchShoppingCart){
-                searchBuy.push(...searchShoppingCart);
+            const searchShoppingCartBuy = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentBuy: "no_comment" } ]  });
+            if (searchShoppingCartBuy){
+                searchBuy.push(...searchShoppingCartBuy);
             }    
 
             const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, { closeOperationSeller : false }] });
@@ -154,6 +154,11 @@ routes.get('/', async(req, res)=>{
             if (searchTwoSell){
                 searchSell.push(...searchTwoSell);
             }
+            //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario     
+            const searchShoppingCartSell = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { CommentSeller: "no_comment" } ]  });
+            if (searchShoppingCartSell){
+              searchSell.push(...searchShoppingCartSell);
+            }     
     
             countNegotiationsBuySell = (searchBuy.length + searchSell.length);
             req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.

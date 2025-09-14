@@ -139,7 +139,9 @@
                           </div>      
                           <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
                           <br> <hr>
-                        <% } else { %>
+
+                        <% } else if (ele.department == "realstate" || ele.department == "automotive" || ele.department == "airplanes" || ele.department == "service" ) { %>  
+                       
                           <div class="d-flex"> 
                               <div class="picture">
                                   <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
@@ -152,6 +154,22 @@
                           </div>        
                           <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
                           <br> <hr>
+
+                        <% } else if (ele.department == "shoppingCart") { %>
+
+                          <div class="d-flex">  
+                              <div class="picture">
+                                <img src="/img/iconCartBuyes.png" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                              </div>
+                              <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                  <span class="ms-2"><b>Buyer :</b> <%= ele.customerName %></span>
+                                  <span class="ms-2"><b>Monto :</b> <%= ele.amount %></span>
+                              </div>
+                          </div>         
+                          <span><i><a href="myaccount/shopping-cart-admin"> Carrrito de Compra.  </a></i></span> 
+                          <br><hr>
+
+                          
                         <% }; %>  
                       
                     <% }); %>

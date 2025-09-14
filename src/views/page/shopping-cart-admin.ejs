@@ -159,7 +159,7 @@
                                             <div class="card-body">
 
                                                 <% if (sumCount !==0){ %>
-                                                    <div class="contenteAlertSelect">
+                                                    <div class="containerAlertSelect">
                                                         <div class="alert" style="background-color: rgb(0, 0, 0, 0.1); font-size: 16px;">
                                                             <p>¡ Seleccione un carrito de compra !</p>
                                                         </div>
@@ -351,6 +351,7 @@
     const listShoppingCart = document.querySelector('.listShoppingCart');
     const totalPayDinamic = document.querySelector('.totalPayDinamic');
 
+    const containerAlertSelect = document.querySelector('.containerAlertSelect');
     const containerDelivery = document.querySelector('.containerDelivery');
     const deliverySpan = document.querySelector('.delivery');
     const clientNamesSpan = document.querySelector('.clientNames');
@@ -412,7 +413,9 @@
             console.log("CommentBuy.......:", CommentBuy);
             console.log("RatingBuy.......:", RatingBuy);
 
+            containerAlertSelect.classList.add('close');
             tableAddress.classList.remove('close');
+            
 
             let DeliveryOption;
 
@@ -524,6 +527,13 @@
 
 
             console.log("amountDinamic :", amountDinamic);
+            console.log("ConsolidateData :", ConsolidateData);    
+            console.log("RegPayData :", RegPayData);
+            console.log("Paid :", Paid);
+
+            //ConsolidateData : false
+            //RegPayData : true
+            //Paid : false
 
             if (ConsolidateData === "false" && RegPayData ==="false" && Paid === "false") {
        
@@ -603,7 +613,7 @@
             } else if (ConsolidateData === "true" && RegPayData ==="true" && Paid === "false") {
 
                 let lastStatus;
-                console.log("este pago ha sido registrado........")
+                console.log("Este pago ha sido registrado........")
                 dataRegisterPay.classList.remove('close')
                 btnDeclineConsolide.classList.add('close');
 
@@ -642,7 +652,7 @@
 
                 }   
                 
-                console.log("VER lastStatus .......:", lastStatus);
+                console.log("VER lastStatus .............:", lastStatus);
                 if (lastStatus == ""){
                     btnOptions.classList.remove('close');
                 } else if (lastStatus == "error" ){
@@ -1055,54 +1065,65 @@ commentRating.addEventListener('click', ()=>{
 
     commentRating.setAttribute("disabled", "");
 
-    const dato = {
-        IDCart,
-        comment : commentV,
-        rating : star
+    if (commentV.length === 0 || star === 0){
 
-    }
+        const message = "Debe dejar un comentario y una calificación";
+        mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
 
-    console.log("dato.............. :", dato); 
-        
-    fetch('/done_shoppingCart/registerCommentRatingToBuy', {
+        setTimeout(() => {
+            commentRating.removeAttribute("disabled");
+        }, 3000);
 
-        method: "post",
-        body: JSON.stringify(dato),
-        headers: {"content-type" : "application/json"}
+    } else {    
 
-        })
-        .then(response => response.json())
-        .then( jsonx => {
-            console.log("jsonx :",  jsonx)
-            const code = jsonx.code;
-            const message = jsonx.message;
-        
-            if (code === "ok"){
-                mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+        const dato = {
+            IDCart,
+            comment : commentV,
+            rating : star
 
-                setTimeout(() => {
-                    mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
+        }
+
+        console.log("dato.............. :", dato); 
+            
+        fetch('/done_shoppingCart/registerCommentRatingToBuy', {
+
+            method: "post",
+            body: JSON.stringify(dato),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response => response.json())
+            .then( jsonx => {
+                console.log("jsonx :",  jsonx)
+                const code = jsonx.code;
+                const message = jsonx.message;
+            
+                if (code === "ok"){
+                    mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
 
                     setTimeout(() => {
-                        location.reload();    
-                    }, 3000);
+                        mostrarToast( '¡Actualizando!', 'right', 'success', '', true ); // Agrega título aquí
 
-                }, 1000);
-            } else {
-                const message = "Ha habido un error, por favor ¡intente más tarde!."
-                mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                        setTimeout(() => {
+                            location.reload();    
+                        }, 3000);
 
-                setTimeout(() => {
-                    btnDecline.removeAttribute("disabled", "");
-                    btnApprove.removeAttribute("disabled", "");
-                },5000);
-            }    
-                            
-            
-        })
-        .catch( err => console.log(err))
+                    }, 1000);
+                } else {
+                    const message = "Ha habido un error, por favor ¡intente más tarde!."
+                    mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
 
+                    setTimeout(() => {
+                        btnDecline.removeAttribute("disabled", "");
+                        btnApprove.removeAttribute("disabled", "");
+                    },5000);
+                }    
+                                
+                
+            })
+            .catch( err => console.log(err))
 
+    }
 
 })
 
