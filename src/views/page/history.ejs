@@ -63,55 +63,177 @@
                   <% if (searchBuy.length !==0){ %>
 
                     <div class="containerFlx d-flex flex-column">
-                          <% searchBuy.forEach((ele)=>{ %>
+                        <% searchBuy.forEach((ele)=>{ %>
 
-                            <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
-                              <div class="containerData" style="width: 60%;">
+                            <% if (ele.department === 'shoppingCart') { %>
 
-                                <div class="d-flex">  
-                                    <div class="picture">
-                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
-                                    </div>
-                                    <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
-                                    <div class="details d-flex flex-column" style="font-size: 15px;"> 
-                                        <span class="ms-2"><b>Seller:</b> <%= ele.usernameSell %></span>
-                                        <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
-                                    </div>
-                                </div> 
-                                <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
-                                
-                              </div>
-                              <div class="containerRatingComment d-flex" style="width: 50%;">
-                                  <div class="containerRating d-flex align-items-center justify-content-center p-3">
-                                  
-                                    <% if (ele.ratingBuy === 'Positivo' ) { %>
-                                      <span class="text-info rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>+</b></span>
-                                    <% }; %>
-                                    <% if (ele.ratingBuy === 'Negativo' ) { %>
-                                      <span class="text-danger rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>-</b></span>
-                                    <% }; %>
-                                    <% if (ele.ratingBuy === 'Neutral' ) { %>
-                                      <span class="text-warning rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 14px; width: 26px; height: 33px;"> <b>N</b></span>
-                                    <% }; %>
+                                <div class="row m-0 mb-2" style="height: auto;">
 
+                                  <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerData">
+
+                                    <div class="d-flex">  
+                                        <div class="picture">
+                                          <img src="/img/iconCartBuyes.png" alt="" class="rounded-2" style="width: 65px; height: 65px; object-fit: cover;">
+                                        </div>
+                                        <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                                        <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                            <span class="ms-2"><b>Vendedor:</b> <%= ele.sellerName %></span>
+                                            <span class="ms-2"><b>Monto:</b> <%= ele.amount %></span>
+                                            <span class="ms-2"><b>Fecha:</b> <%= ele.date %></span>
+                                        </div>
+                                    </div> 
+                                    <span><i><a href="#"> Carrito ( <%= ele.cartId %> )  </a></i></span> 
+                                    
                                   </div>
-                                  <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: rgb(233, 236, 239, 0.1); border: 1px solid rgb(128, 128, 128, 0.5);">
-                                    <p style="text-align: justify; line-height: 18px; font-style: italic;">
+
+                                  <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerRatingComment d-flex flex-column">
+
+                                      <div class="containerComment p-1 rounded-1 d-flex justify-content-end" style="width: 100%; overflow-y: auto; ">
+                                        <p style="text-align: justify; line-height: 18px; font-style: italic;">
+                                          
+                                          <% if (ele.CommentBuy.length <= 1){ %>
+                                            <i>¡sin comentarios!</i> 
+                                          <% } else { %>
+                                            <%= ele.CommentBuy %>
+                                          <% }; %>
+                                          
+                                        </p>
+                                      </div>
+                                      <div class="containerRating d-flex justify-content-end ">
+                                        <% if (ele.ratingBuy === 5) {  %>
+
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                        
+                                          <% } else if (ele.ratingBuy === 4) { %>
+
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+
+                                        <% } else if (ele.ratingBuy === 3) { %>
+                                         
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                          
+                                        <% } else if (ele.ratingBuy === 2) { %>
+                 
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                        <% } else if (ele.ratingBuy === 1) { %>
+                                          
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                        <% }; %>  
+                                      </div>
                                       
-                                      <% if (ele.CommentBuy.length <= 1){ %>
-                                        <i>¡sin comentarios!</i> 
-                                      <% } else { %>
-                                        <%= ele.CommentBuy %>
-                                      <% }; %>
-                                      
-                                    </p>
                                   </div>
-                                  
-                              </div>
-                            </div>
-                            <hr class="my-1">
-                            
-                          <% }); %>
+
+                                </div>
+                                <hr class="my-1">
+
+                            <% } else { %> 
+
+                                <div class="row m-0 mb-2" style="height: auto;">
+
+                                  <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerData">
+
+                                    <div class="d-flex">  
+                                        <div class="picture">
+                                          <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 65px; height: 65px; object-fit: cover;">
+                                        </div>
+                                        <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                                        <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                            <span class="ms-2"><b>Vendedor:</b> <%= ele.usernameSell %></span>
+                                            <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                            <span class="ms-2"><b>Fecha:</b> <%= ele.date %></span>
+                                        </div>
+                                    </div> 
+                                    <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
+                                    
+                                  </div>
+
+                                  <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerRatingComment d-flex flex-column">
+
+                                      <div class="containerComment p-1 rounded-1 d-flex justify-content-end" style="width: 100%; overflow-y: auto; ">
+                                        <p style="text-align: justify; line-height: 18px; font-style: italic;">
+                                          
+                                          <% if (ele.CommentBuy.length <= 1){ %>
+                                            <i>¡sin comentarios!</i> 
+                                          <% } else { %>
+                                            <%= ele.CommentBuy %>
+                                          <% }; %>
+                                          
+                                        </p>
+                                      </div>
+                                      <div class="containerRating d-flex justify-content-end ">
+                                        <% if (ele.ratingBuy === 5) {  %>
+
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                        
+                                          <% } else if (ele.ratingBuy === 4) { %>
+
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+
+                                        <% } else if (ele.ratingBuy === 3) { %>
+                                         
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                          
+                                        <% } else if (ele.ratingBuy === 2) { %>
+                 
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                        <% } else if (ele.ratingBuy === 1) { %>
+                                          
+                                          <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                        <% }; %>  
+                                      </div>
+                                      
+                                  </div>
+
+                                </div>
+                                <hr class="my-1">                         
+
+                            <% }; %>  
+
+                        <% }); %>
                     </div>
                   
                   <% } else { %>
@@ -130,58 +252,178 @@
                 <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(219, 223, 228, 0.1);">
                   <% if (searchSell.length !==0){ %>
 
-                    <div class="containerFlx d-flex flex-column">
-                          <% searchSell.forEach((ele)=>{ %>
+                        <% searchSell.forEach((ele)=>{ %>
 
-                            <div class="containerFlexRow d-flex justify-content-between mb-2" style=" height: auto;">
-                              <div class="containerData" style="width: 60%;">
+                          <% if (ele.department === 'shoppingCart') { %>
+
+                                  <div class="row m-0 mb-2" style="height: auto;">
+
+                                    <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerData">
+
+                                      <div class="d-flex">  
+                                          <div class="picture">
+                                            <img src="/img/iconCartBuyes.png" alt="" class="rounded-2" style="width: 65px; height: 65px; object-fit: cover;">
+                                          </div>
+                                          <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                                          <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                              <span class="ms-2"><b>Comprador:</b> <%= ele.customerName %></span>
+                                              <span class="ms-2"><b>Monto:</b> <%= ele.amount %></span>
+                                              <span class="ms-2"><b>Fecha:</b> <%= ele.date %></span>
+                                          </div>
+                                      </div> 
+                                      <span><i><a href="#"> Carrito ( <%= ele.cartId %> )  </a></i></span> 
+                                      
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerRatingComment d-flex flex-column">
+
+                                        <div class="containerComment p-1 rounded-1 d-flex justify-content-end" style="width: 100%; overflow-y: auto; ">
+                                          <p style="text-align: justify; line-height: 18px; font-style: italic;">
                                            
-                               <div class="d-flex">  
-                                    <div class="picture">
-                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
-                                    </div>
-                                    <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
-                                    <div class="details d-flex flex-column" style="font-size: 15px;"> 
-                                        <span class="ms-2"><b>Buyer:</b> <%= ele.usernameBuy %></span>
-                                        <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
-                                    </div>
-                                </div> 
-                                <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span> 
-                                
-                              </div>
-                              <div class="containerRatingComment d-flex" style="width: 50%;">
-                                  <div class="containerRating d-flex align-items-center justify-content-center p-3">
-                                
-                                        <% if (ele.ratingBuy === 'Positivo' ) { %>
-                                            <span class="text-info rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>+</b></span>
-                                        <% }; %>
-                                        <% if (ele.ratingBuy === 'Negativo' ) { %>
-                                          <span class="text-danger rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 16px; width: 26px; height: 33px;"> <b>-</b></span>
-                                        <% }; %>
-                                        <% if (ele.ratingBuy === 'Neutral' ) { %>
-                                          <span class="text-warning rounded-2 bg-dark d-flex justify-content-center align-items-center" style="font-size: 14px; width: 26px; height: 33px;"> <b>N</b></span>
-                                        <% }; %>  
-                                      
-                                  </div>
-                                  <div class="containerComment p-1 rounded-1" style="width: 100%; overflow-y: auto; background-color: rgba(233, 236, 239, 0.1); border: 1px solid rgb(128, 128, 128, 0.5);">
-                                    <p style="text-align: justify; line-height: 18px; font-style: italic;">
-                                      
-                                      <% if (ele.CommentSeller.length <= 1){ %>
-                                        <i>¡sin comentarios!</i> 
-                                      <% } else { %>
-                                        <%= ele.CommentSeller %>
-                                      <% }; %>
+                                            <% if (ele.CommentSeller.length <= 1){ %>
+                                              <i>¡sin comentarios!</i> 
+                                            <% } else { %>
+                                              <%= ele.CommentSeller %>
+                                            <% }; %>
+                                            
+                                          </p>
+                                        </div>
+                                        <div class="containerRating d-flex justify-content-end ">
+                                          <% if (ele.ratingSeller === 5) {  %>
 
-                                    </p>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                          
+                                            <% } else if (ele.ratingSeller === 4) { %>
+
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+
+                                          <% } else if (ele.ratingSeller === 3) { %>
+                                          
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                            
+                                          <% } else if (ele.ratingSeller === 2) { %>
+                  
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                          <% } else if (ele.ratingSeller === 1) { %>
+                                            
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                          <% }; %>  
+                                        </div>
+                                        
+                                    </div>
+
                                   </div>
-                                  
-                              </div>
-                            </div>
-                            <hr class="my-1">
-                            
-                          <% }); %>
-                    </div>
-                
+                                  <hr class="my-1">
+
+                          <% } else { %>    
+
+                                  <div class="row m-0 mb-2" style="height: auto;">
+
+                                    <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerData">
+
+                                      <div class="d-flex">  
+                                          <div class="picture">
+                                            <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 65px; height: 65px; object-fit: cover;">
+                                          </div>
+                                          <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
+                                          <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                              <span class="ms-2"><b>Comprador:</b> <%= ele.usernameBuy %></span>
+                                              <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                              <span class="ms-2"><b>Fecha:</b> <%= ele.date %></span>
+                                          </div>
+                                      </div> 
+                                      <span><i><a href="/buysell-body/<%= ele._id %>"><%= ele.title %></a></i></span>
+                                      
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerRatingComment d-flex flex-column">
+
+                                        <div class="containerComment p-1 rounded-1 d-flex justify-content-end" style="width: 100%; overflow-y: auto; ">
+                                          <p style="text-align: justify; line-height: 18px; font-style: italic;">
+                                            
+                                            <% if (ele.CommentSeller.length <= 1){ %>
+                                              <i>¡sin comentarios!</i> 
+                                            <% } else { %>
+                                              <%= ele.CommentSeller %>
+                                            <% }; %>
+                                            
+                                          </p>
+                                        </div>
+                                        <div class="containerRating d-flex justify-content-end ">
+                                          <% if (ele.ratingSeller === 5) {  %>
+
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                          
+                                            <% } else if (ele.ratingSeller === 4) { %>
+
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+
+                                          <% } else if (ele.ratingSeller === 3) { %>
+                                          
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                            
+                                          <% } else if (ele.ratingSeller === 2) { %>
+                  
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                          <% } else if (ele.ratingSeller === 1) { %>
+                                            
+                                            <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                            <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                          <% }; %>  
+                                        </div>
+                                        
+                                    </div>
+
+                                  </div>
+                                  <hr class="my-1">
+
+                          <% }; %> 
+                    
+                        <% }); %>
+                          
                   <% } else { %>
                       <p class="mb-0">¡No hay nada por aqui!</p>
                   <% }; %> 
@@ -206,23 +448,98 @@
                           <% searchContactBuy.forEach((ele, i)=>{ %>
                                       
                             <% if (ele.visibleBuy == true ) { %>
-                            <div class="containerFlexRow d-flex justify-content-between mb-2" style=" height: auto;">
+
+                            <div class="row m-0 mb-2" style="height: auto;">
                               
-                              <div class="containerData" style="width: 60%;">
-                                <div class="d-flex">  
-                                    <div class="picture">
-                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
+                              <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerData">
+
+                                  <div class="d-flex">  
+                                      <div class="picture">
+                                        <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 65px; height: 65px; object-fit: cover;">
+                                      </div>
+                                      <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                          <span class="ms-2"><b>Vendedor:</b> <%= ele.usernameSell %></span>
+                                          <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                          <span class="ms-2"><b>Fecha:</b> <%= ele.date %></span>
+                                      </div>
+                                  </div> 
+                                  <div class="contentTitleHidden d-flex">
+                                  
+                                    <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
+
+                                    <div class="dropdown d-flex justify-content-start cursor-pointer ms-1">
+                                    
+                                      <i class="bi bi-three-dots mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>                            
+                                      <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="width: auto; background-color: rgba(255, 255, 255, 0.9)">
+                                        <li> <button class="dropdown-item btnVisible"> 
+                                              Esconder <input type="hidden" class="idContact" value="<%= ele._id %>">                                  
+                                            </button>
+                                        </li>
+                                      </ul>
+
                                     </div>
-                                    <div class="details d-flex flex-column" style="font-size: 15px;"> 
-                                        <span class="ms-2"><b>Seller:</b> <%= ele.usernameSell %></span>
-                                        <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
-                                    </div>
-                                </div> 
-                                <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
+
+                                  </div>  
+
                               </div>
-                              <div class="containerDelete me-4 d-flex align-items-center">
-                                <input class="idContact" type="hidden" value="<%= ele._id %>">
-                                <button class="btn btn-small btn-outline-danger btnVisible"> x </button>
+
+                              <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerRatingComment d-flex flex-column">
+
+                                  <div class="containerComment p-1 rounded-1 d-flex justify-content-end" style="width: 100%; overflow-y: auto; ">
+                                    <p style="text-align: justify; line-height: 18px; font-style: italic;">
+                                      
+                                      <% if (ele.CommentBuy.length <= 1){ %>
+                                        <i>¡sin comentarios!</i> 
+                                      <% } else { %>
+                                        <%= ele.CommentBuy %>
+                                      <% }; %>
+                                      
+                                    </p>
+                                  </div>
+                                  <div class="containerRating d-flex justify-content-end ">
+                                    <% if (ele.ratingBuy === 5) {  %>
+
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                    
+                                      <% } else if (ele.ratingBuy === 4) { %>
+
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+
+                                    <% } else if (ele.ratingBuy === 3) { %>
+                                      
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                      
+                                    <% } else if (ele.ratingBuy === 2) { %>
+              
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                    <% } else if (ele.ratingBuy === 1) { %>
+                                      
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                    <% }; %>  
+                                  </div>
+                                  
                               </div>
                             
                             </div>
@@ -254,28 +571,103 @@
                         <% searchContactSell.forEach((ele)=>{ %>
                                       
                           <% if (ele.visibleSell == true ) { %>
-                          <div class="containerFlexRow d-flex justify-content-between mb-2" style="height: auto;">
-                            
-                            <div class="containerData" style="width: 60%;">
-                              <div class="d-flex">  
-                                  <div class="picture">
-                                      <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 60px; height: 60px; object-fit: cover;">
-                                  </div>    
-                                  <!-- <span><b>Order :</b> <%#= ele._id %> </span> -->
-                                  <div class="details d-flex flex-column" style="font-size: 15px;">
-                                      <span class="ms-2"><b>Buyer:</b> <%= ele.usernameBuy %></span>
-                                      <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+
+                            <div class="row m-0 mb-2" style="height: auto;">
+                              
+                              <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerData">
+
+                                  <div class="d-flex">  
+                                      <div class="picture">
+                                        <img src="<%= ele.image[0].url %>" alt="" class="rounded-2" style="width: 65px; height: 65px; object-fit: cover;">
+                                      </div>
+                                      <div class="details d-flex flex-column" style="font-size: 15px;"> 
+                                          <span class="ms-2"><b>Comprador:</b> <%= ele.usernameBuy %></span>
+                                          <span class="ms-2"><b>Monto:</b> <%= ele.price %></span>
+                                          <span class="ms-2"><b>Fecha:</b> <%= ele.date %></span>
+                                      </div>
+                                  </div> 
+                                  <div class="contentTitleHidden d-flex">
+                                  
+                                    <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
+
+                                    <div class="dropdown d-flex justify-content-start cursor-pointer ms-1">
+                                    
+                                      <i class="bi bi-three-dots mx-2 p-1 rounded-pill d-flex justify-content-center setting" data-bs-toggle="dropdown"></i>                            
+                                      <ul class="dropdown-menu float-sm-start" aria-labelledby="dropdownMenu2" style="width: auto; background-color: rgba(255, 255, 255, 0.9)">
+                                        <li> <button class="dropdown-item btnVisible"> 
+                                              Esconder <input type="hidden" class="idContact" value="<%= ele._id %>">                                  
+                                            </button>
+                                        </li>
+                                      </ul>
+
+                                    </div>
+
+                                  </div>  
+
+                              </div>
+
+                              <div class="col-lg-6 col-md-11 col-sm-11 p-0 containerRatingComment d-flex flex-column">
+
+                                  <div class="containerComment p-1 rounded-1 d-flex justify-content-end" style="width: 100%; overflow-y: auto; ">
+                                    <p style="text-align: justify; line-height: 18px; font-style: italic;">
+                                      
+                                      <% if (ele.CommentSeller.length <= 1){ %>
+                                        <i>¡sin comentarios!</i> 
+                                      <% } else { %>
+                                        <%= ele.CommentSeller %>
+                                      <% }; %>
+                                      
+                                    </p>
                                   </div>
-                              </div>  
-                              <span><i><a href="/negotiation-body/<%= ele._id %>"><%= ele.title %></a></i></span>
-                            </div>
-                            <div class="containerDelete me-4 d-flex align-items-center">
-                              <input class="idContact" type="hidden" value="<%= ele._id %>">
-                              <button class="btn btn-small btn-outline-danger btnVisible"> x </button>
-                            </div>
+                                  <div class="containerRating d-flex justify-content-end ">
+                                      <% if (ele.ratingSeller === 5) {  %>
+
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                    
+                                      <% } else if (ele.ratingSeller === 4) { %>
+
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+
+                                    <% } else if (ele.ratingSeller === 3) { %>
+                                      
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                      
+                                    <% } else if (ele.ratingSeller === 2) { %>
+              
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                    <% } else if (ele.ratingSeller === 1) { %>
+                                      
+                                      <i class="starE bi bi-star-fill mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                      <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+
+                                    <% }; %>  
+                                  </div>
+                                  
+                              </div>
                             
-                          </div>
-                          <hr class="my-1">
+                            </div>
+                            <hr class="my-1">
+                            
                         
                           <% }; %> 
                           

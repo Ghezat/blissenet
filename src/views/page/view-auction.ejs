@@ -89,6 +89,23 @@
     .closed{
           display: none;
     }
+
+    .lightCartShopping {
+      animation: alarmaVisual 1.5s ease-in-out infinite;
+    }
+
+    @keyframes alarmaVisual {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 5px 2px rgba(255, 0, 0, 0.8);
+      }
+      50% {
+        transform: scale(1.3);
+        opacity: 0.6;
+        box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.4);
+      }
+    }
   
 </style>
 <body class="mainTheme">
@@ -549,7 +566,8 @@
                                       
                                       <% if (ele.active === true) { %>
                                         
-                                        <img src="/img/botonSubasta1.gif" class="opcion1" style="position: absolute; top: 5px; right: 5px; width: 40px;">  
+                                        <div class="lightCartShopping" style="position: absolute; top: 30px; left: 20px; background-color: #d30404; width: 12px; height: 12px; border-radius: 50%;"></div>
+<!--                                         <img src="/img/botonSubasta1.gif" class="opcion1" style="position: absolute; top: 20px; right: 5px; width: 40px;">   -->
                                                                            
                                       <% } %>
               

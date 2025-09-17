@@ -227,7 +227,7 @@
                                                     <div class="controlSent close">
                                                         <div class="card-header">Declare cuando haya enviado a su cliente.</div>
                                                         <div class="d-flex justify-content-between p-3 form-group" style="font-size: 20px;">
-                                                            <textarea class="form-control sentDetails" placeholder="Deje aqui un detalle del envio si lo requiere."></textarea>
+                                                            <textarea class="form-control sentDetails" placeholder="Deje aqui un detalle del envio si lo requiere." maxlength="200"></textarea>
                                                             <button class="btn btn-primary rounded-2 py-2 px-4 sentBtn" style="width: 45%;"> <b> <i class="bi bi-check-circle me-1"></i> Enviado </b>  </button>
                                                         </div>
                                                     </div>   
@@ -1034,7 +1034,7 @@
 const commentRating = document.querySelector('.commentRating'); //boton para enviar el comentario y la calificación.
 const comment = document.querySelector('.comment'); //textarea de comentario
 const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella 
-let star;
+let star = 1;
 
 if (starE) {
     starE.forEach((ele, i) => {

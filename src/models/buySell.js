@@ -24,8 +24,8 @@ const buySellSchema = new Schema({
     methodSelected : { type : String, default : "" }, //aqui el metodo que uso para el pago
     referPay : { type : String, default : ""}, //aqui se guarda la referencia de pago que hizo con comprador cuando ejecuto el pago al vendedor
     written : { type : Array }, //dentro habitara una coleccion de objetos con el campo user y written
-    ratingSeller :  { type : String, default : "" }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
-    ratingBuy :  { type : String, default : "" }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
+    ratingSeller :  { type : Number, default : 0 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1
+    ratingBuy :  { type : Number, default : 0 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1
     CommentSeller :  { type : String, default : "no_comment" },   
     CommentBuy :  { type : String, default : "no_comment" },
     cancel : { type : Boolean, default : false }, //este dato sera true cuando la venta sea cancelada y sera false cuando la venta esta en pie o efectiva.
@@ -37,7 +37,7 @@ const buySellSchema = new Schema({
     bank : { type : String, default : "no_bank" }, //aqui guarda el vendedor el banco donde hizo el pago de la comision.
     payCommission : { type : Boolean, default : false  }, //aqui guardamos si el usuario pago o no su comision de venta. 
     userDeclare : { type : Boolean, default : false }, //este dato es para registrar que el usuario a declarado su pago, cuando sea true es que el cliente ha declarado su pago.
-    dates : { type : String, default : "no_dates" },// aqui vamos a meter la fecha con el formato necesario. eje. 10-11-2023 esta fecha es el dia que el usuario se dispuso hacer su pago. es la fecha que paga a la plataforma.
+    date : { type : String },// aqui vamos a meter la fecha con el formato necesario. eje. 10-11-2023 esta fecha es el dia que el usuario se dispuso hacer su pago. es la fecha que paga a la plataforma.
     closeOperationSeller : { type : Boolean, default : false }, // con este campo manejamos el estado de la operacion de compra. por defecto nace false pero en el proceso puede pasar a ser true que significa que se ha cerrado la operacion. esto no debe confundirse con "cancel". esto es para cerrar la operacion cuando ya no se requiera tener mas comunicacion con la contraparte. se ha cerrado la sala de negociacion.
     closeOperationBuy : { type : Boolean, default : false }, // por defecto nacen con el valor false. cada sala es independiente y cada quien decide cuando cerrarlo
     fullScreen : { type : Boolean, default : false } //por defecto es false el chat estara contraido.

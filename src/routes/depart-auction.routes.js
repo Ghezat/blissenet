@@ -1246,7 +1246,7 @@ cron.schedule('*/1 * * * *', async () => {
         TNow = `${diaNow}${mesNow}${yearNow}T${horaNow}:${minuNow}`; //esto es un codigo creaado con fecha y hora
     } 
     
-      
+
     const result = await modelAuction.find().count();
     console.log("La cantidad de Subastas es", result );
     

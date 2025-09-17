@@ -141,7 +141,7 @@ routes.get('/', async(req, res)=>{
                 searchBuy.push(...searchTwoBuy);
             }
             //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
-            const searchShoppingCartBuy = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentBuy: "no_comment" } ]  });
+            const searchShoppingCartBuy = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentSeller: "no_comment" } ]  });
             if (searchShoppingCartBuy){
                 searchBuy.push(...searchShoppingCartBuy);
             }    
@@ -154,8 +154,8 @@ routes.get('/', async(req, res)=>{
             if (searchTwoSell){
                 searchSell.push(...searchTwoSell);
             }
-            //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario     
-            const searchShoppingCartSell = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { CommentSeller: "no_comment" } ]  });
+            //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario    
+            const searchShoppingCartSell = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { CommentBuy: "no_comment" } ]  });
             if (searchShoppingCartSell){
               searchSell.push(...searchShoppingCartSell);
             }     

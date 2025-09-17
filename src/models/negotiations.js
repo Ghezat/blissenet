@@ -17,8 +17,8 @@ const negotiationSchema = new Schema({
     optionTime : { type : Object }, //aqui guardamos el rango de horas en un array [ "14:00", "15:00", "16:00", "17:00" ];
     appointment : { type : String, default: "" }, //aqui dejamos este valor en blanco peor ya existe el campo al ser creado el objeto. aqui estara el valor de la cita en este formato. dd-mm-yyy hh:mm
     written : { type : Array }, //dentro habitara una coleccion de objetos con el campo user y written
-    ratingSeller :  { type : String, default : "" }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
-    ratingBuy :  { type : String, default : "" }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
+    ratingSeller :  { type : Number, default : 0 }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
+    ratingBuy :  { type : Number, default : 0 }, //existes 4 valores para el rating el inicial es vacio, este puede terminar siendo positivo, negativo o neutro
     CommentSeller :  { type : String, default : "no_comment" },   
     CommentBuy :  { type : String, default : "no_comment" },
     visibleBuy : { type : Boolean, default : true }, //control sobre la visibilidad de este documento solo podrá ser activado por el comprador -- cambia de estado al darle un click al boton rojo (x).
@@ -31,7 +31,8 @@ const negotiationSchema = new Schema({
     userDeclare : { type : Boolean, default : false }, //este dato es para delcarar que el usuario a declarado su pago cuando sea true es que el cliente ha declarado su pago
     closeOperationSeller : { type : Boolean, default : false }, // con este campo manejamos el estado de la operacion de compra. por defecto nace false pero en el proceso puede pasar a ser true que significa que se ha cerrado la operacion. esto no debe confundirse con "cancel". esto es para cerrar la operacion cuando ya no se requiera tener mas comunicacion con la contraparte. se ha cerrado la sala de negociacion.
     closeOperationBuy : { type : Boolean, default : false }, // por defecto nacen con el valor false. cada sala es independiente y cada quien decide cuando cerrarlo
-    fullScreen : { type : Boolean, default : false } //por defecto es false el chat estara contraido.
+    fullScreen : { type : Boolean, default : false }, //por defecto es false el chat estara contraido.
+    date : { type : String} //fecha in formato dd-mm-yyy hh:mm
 },{
     timestamps : true
 });

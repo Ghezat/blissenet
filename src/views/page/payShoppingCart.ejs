@@ -90,6 +90,7 @@
                                                         <% const boxShoppingCart = ele.boxShoppingCart %>
                                                         <% const purchaseReceiver = ele.purchaseReceiver %>
                                                         <% const deliveryOptions = ele.deliveryOptions %>
+                                                        <% const consolidate = ele.consolidate %>
                                                         <% const regPay = ele.regPay %>
                                                         <% const dataRegPay = ele.dataRegPay %>
                                                         <% const paid = ele.paid %>
@@ -105,6 +106,7 @@
                                                             <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
                                                             <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
                                                             <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
+                                                            <input type="hidden" class="consolidate" value="<%= consolidate %>">
                                                             <input type="hidden" class="regPay" value="<%= regPay %>">
                                                             <input type="hidden" class="dataRegPay" value="<%= JSON.stringify(dataRegPay) %>"> 
                                                             <input type="hidden" class="paid" value="<%= paid %>">
@@ -202,7 +204,7 @@
                                                 </div>
 
                                                
-                                                <div class="btnControl close" style="width: 100%;">
+                                                <div class="btnControl close" style="background-color: rgba(0, 0, 0, 0.1); width: 100%; font-size: 15px; border-bottom-right-radius: 9px; border-bottom-left-radius: 9px;">
                                                     <div class="d-flex justify-content-between p-3" style="font-size: 20px;">
                                                             <button type="button" class="btn btn-danger rounded-pill py-2 px-4 btnDelete" style="width: 45%;">  <b> <i class="bi bi-x-circle me-1"></i> Eliminar </b>  </button>
                                                             <button type="button" class="btn btn-primary rounded-pill py-2 px-4 btnPay" style="width: 45%;"> <b> <i class="bi bi-check-circle me-1"></i> Pagar </b> </button>
@@ -210,11 +212,19 @@
                                                 </div>
 
 
-                                                <div class="controlSent form-group close">
-                                                    <div class="alert alert-info border border-primary">
+                                                <div class="controlSent form-group close" style="background-color: rgba(0, 0, 0, 0.1); border-radius: 9px;">
+                                                    <div class="p-3" style="font-size: 16px;">
                                                         <p> <b>¡ Atención, solo de click cuando haya recibido su pedido ! </b> </p>
+                                                        
+                                                        <span> <b>Detalle del Envio:</b> </span>
+                                                        <textarea class="p-2 mb-2" id="TextSentDetails" rows="3" cols="50" style="width: 100%; resize: none;" disabled></textarea>
+                                                        <button class="my-2 rounded-pill btn btn-primary form-control receivedBtn">
+                                                             <span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>
+                                                             Recibido
+                                                        </button>
                                                     </div>
-                                                    <button class="rounded-pill btn btn-primary form-control receivedBtn">Recibido</button>
+                                                    
+                                                    
                                                 </div>
 
                                                 <div class="controlReceived form-group close">
@@ -232,7 +242,7 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 p-0" style="background-color: rgb(108, 117, 125, 0.8);">
                                                                 <div class="contentToolStart d-flex py-2">
                                                                     <div class="containRateStar d-flex justify-content-center pt-1" style="width: 100%;">
-                                                                        <i class="starE bi bi-star mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                                        <i class="starE bi bi-star-fill mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                                         <i class="starE bi bi-star mx-2" data-star="2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                                         <i class="starE bi bi-star mx-2" data-star="3" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                                         <i class="starE bi bi-star mx-2" data-star="4" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
@@ -242,7 +252,10 @@
                                                             </div> 
 
                                                         </div>  
-                                                        <button class="btn btn-primary form-control my-3 commentRating">Enviar Calificación y Comentario</button>  
+                                                        <button class="btn btn-primary form-control my-3 commentRating">
+                                                            <span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>
+                                                            Enviar Calificación y Comentario
+                                                        </button>  
                                                     </div>
                                                 </div>                                                
 
@@ -356,6 +369,7 @@
     const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData'); 
     const purchaseReceiverData = document.querySelectorAll('.purchaseReceiverData');
     const deliveryOption = document.querySelectorAll('.deliveryOptions');
+    const consolidateData = document.querySelectorAll('.consolidate'); // "true" or "false"    
     const regPay = document.querySelectorAll('.regPay');
     const dataRegPay = document.querySelectorAll('.dataRegPay');
     const paid =  document.querySelectorAll('.paid');
@@ -381,6 +395,7 @@
     const dataRegisterPay = document.querySelector('.dataRegisterPay'); //contenedor que muestra el metodo de pago y detalle del pago
     const btnControl = document.querySelector('.btnControl'); //botones consolidar y eliminar.
     const controlSent = document.querySelector('.controlSent'); //contenedor boton de enviado y textarea para colocar detalle del envio si lo requiere
+    const TextSentDetails = document.getElementById('TextSentDetails'); //este es el textArea donde va el detalle del envio
     const controlReceived = document.querySelector('.controlReceived'); //contenedor que permite comentar y calificar la venta
 
     const receivedBtn = document.querySelector('.receivedBtn'); 
@@ -407,6 +422,7 @@
             const receiver = JSON.parse(receiverTxt);
             const Amount = amount[i].value;
             const deliveryOpt = deliveryOption[i].value;
+            const ConsolidateData = consolidateData[i].value;
             const RegPay = regPay[i].value; 
             const DataRegPay = dataRegPay[i].value;
             const dataRegister = JSON.parse(DataRegPay);
@@ -418,6 +434,7 @@
             //console.log("receiver..........:", receiver);
             //console.log("deliveryOpt.......:", deliveryOpt);
             //console.log("dataRegister........:", dataRegister); // [{methodPay: 'Transferencia Bancaria', detailPay: '00001126268390099366388', response: ""}];
+            console.log("ConsolidateData.....:", ConsolidateData);
             console.log("Paid..........", Paid);
             console.log("Sent..........", Sent);
             console.log("Received..........", Received);
@@ -512,10 +529,16 @@
                 totalPayDinamic.innerHTML = `<span style="white-space: nowrap"> <i class="bi bi-currency-dollar"></i>${totalPayOriginal.toFixed(2)} </span>`;
             // ----------------------------------------------------
 
+            if (ConsolidateData === "false" && Paid === "false"){
 
-            if (Paid === "false"){
+                 btnControl.classList.add('close');
+                 dataRegisterPay.classList.remove('close');
+                 const message = `<span class="rounded-pill px-2 bg-light ms-1 text-dark"> <b>Esperando Consolidación...</b> </span>`
+                 dataRegisterPay.innerHTML = `<div class="p-3"> <p class="mb-1"> <b> Estatus: </b> ${message} </p> </div>`
+                 
+            } else if (ConsolidateData === "true" && Paid === "false"){
                 let lastStatus;
-                console.log("Pago no registrado ....................");
+                console.log("Pedido no consolidado y Pago no registrado ....................");
                
                 dataRegisterPay.classList.remove('close');
                 console.log("dataRegister...............:", dataRegister);
@@ -600,6 +623,7 @@
                 dataRegisterPay.classList.remove('close')
                 btnControl.classList.add('close');
                 controlSent.classList.remove('close');
+                TextSentDetails.innerText = Sent.sentDetails;
 
                 console.log("dataRegister...............:", dataRegister);
                 //console.log("methodPay :", methodPay);
@@ -999,7 +1023,7 @@ receivedBtn.addEventListener('click', ()=>{
 const commentRating = document.querySelector('.commentRating'); //boton para enviar el comentario y la calificación.
 const comment = document.querySelector('.comment'); //textarea de comentario
 const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella 
-let star = 0;
+let star = 1;
 
 if (starE) {
     starE.forEach((ele, i) => {

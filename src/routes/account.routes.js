@@ -107,6 +107,7 @@ routes.get('/account/:account', async (req,res)=>{
             console.log("Ha ocurrido un error en la function searchOffert()")
         })
         
+        
     if (user){
         //console.log("Esto es user._id ------>", user._id );
         const userId = user._id; //usaremos con el indexed en la coleccion profile.
@@ -525,6 +526,7 @@ routes.get('/account/:account', async (req,res)=>{
         };
     }                       
 
+    
     
 });
 

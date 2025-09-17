@@ -18,8 +18,8 @@ const shoppingCart = new Schema({
     deliveryOptions : { type : String }, //guardamos el modo de entrega que ha elejido el cliente. Estas opciones pueden ser : (D01, D02, D03)
     sent : { type : Object, default : { sentStatus : "false", sentDetails : ""} }, //enviado tiene dos valores "true" or "false".
     received : { type : String, default : "false" }, //recibido tiene dos valores "true" or "false".
-    ratingSeller :  { type : Number, default : 1 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1
-    ratingBuy :  { type : Number, default : 1 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1
+    ratingSeller :  { type : Number, default : 0 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1
+    ratingBuy :  { type : Number, default : 0 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1
     CommentSeller :  { type : String, default : "no_comment" },   
     CommentBuy :  { type : String, default : "no_comment" },
     

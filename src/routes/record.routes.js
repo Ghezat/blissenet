@@ -26,7 +26,7 @@ routes.get('/record', async (req,res)=>{
 });
 
 
-//aqui esta el record y el trust de los usuarios.
+//Esto esta en desarrollo, esta version vieja debe ser actualizado
 routes.get('/record-trust', async(req, res)=>{
     const user = req.session.user;
     const username = user.username;
@@ -134,6 +134,7 @@ routes.get('/record-trust', async(req, res)=>{
 });
 
 //Ruta para acceder al Record-Trust de cualquier Store o Usuario.
+
 routes.post('/record-trust', async(req, res)=>{
    
     //console.log(req.body);
@@ -227,5 +228,6 @@ routes.post('/record-trust', async(req, res)=>{
 
 
 });
+
 
 module.exports = routes;

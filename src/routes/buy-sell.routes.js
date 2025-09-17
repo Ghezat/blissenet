@@ -70,7 +70,7 @@ routes.post('/buysell/direct', async(req, res)=>{
         console.log('He llegado al apartado de buysell/direct ....................................');
         
         const { vendedor, comprador, depart, idProduct, countRequest, unitPrice, delivery } = req.body;
-        let chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation, codeDate, image, total, deliveryType;
+        let chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation, time, codeDate, image, total, deliveryType;
         let emailSell, emailBuy;
         let titleArticle; //esta variable se declara afuera para luego usar en la funcion de envio de Telegrama. 
         
@@ -121,6 +121,8 @@ routes.post('/buysell/direct', async(req, res)=>{
     
       
               const fecha =  new Date();
+
+              const hour = fecha.getHours(); const minut = fecha.getMinutes();
               const dia = fecha.getDate();
               const mes = fecha.getMonth() + 1;
               const anio = fecha.getFullYear();
@@ -128,6 +130,15 @@ routes.post('/buysell/direct', async(req, res)=>{
               console.log(fechaNegotiation);
 
               codeDate = `${dia}${mes}${anio}`; //este objeto guarda la fecha y es usado para el chat de bliss importantisimooo
+        
+              const ddFormatted = String(dia).padStart(2, '0');
+              const mmFormatted = String(mes).padStart(2, '0');
+              const hourFormatted = String(hour).padStart(2, '0');
+              const minuteFormatted = String(minut).padStart(2, '0');
+
+              time = `${ddFormatted}-${mmFormatted}-${anio} ${hourFormatted}:${minuteFormatted}`;
+
+              console.log("time ser ale valor de date en el documento:", time); //time : 16-8-2025 11:47              
 
               //tenemos que descubir la ubicacion del vendedor y del comprador.
               //Datos requeridos: country, state, city ----------------------------
@@ -428,7 +439,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                       const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                       const searchProfile = await modelProfile.find({ indexed : user._id });   
-                      const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType });
+                      const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, date: time });
                       console.log("BuySell .......................... :", BuySell);
                       const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                       //console.log('Aqui BuySell ---->', BuySell);
@@ -534,7 +545,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                             const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                             const searchProfile = await modelProfile.find({ indexed : user._id });   
-                            const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType });
+                            const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, date: time });
                             console.log("BuySell .......................... :", BuySell);
                             const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         
@@ -657,7 +668,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
-                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime, date: time });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         console.log('Function saveDB ()');
             
@@ -772,7 +783,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
-                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime, date: time });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         console.log('Function saveDB ()');
             
@@ -887,7 +898,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
-                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime, date: time });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         console.log('Function saveDB ()');
 
@@ -1005,7 +1016,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
-                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime, date: time });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         console.log('Function saveDB ()');
             
@@ -1120,7 +1131,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                         const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                         const searchProfile = await modelProfile.find({ indexed : user._id });  
-                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime });
+                        const Negotiation = new modelNegotiation({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, scheduleAppointment, optionTime, date: time });
                         const negotiation = await Negotiation.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         console.log('Function saveDB ()');
 
@@ -2184,7 +2195,7 @@ routes.get('/buysell-list/', async(req, res)=>{
       searchBuy.push(...searchTwoBuy);
     }
     //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
-    searchShoppingCartBuy = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentBuy: "no_comment" } ]  });
+    searchShoppingCartBuy = await modelShoppingCart.find({ $and : [{ customerId: user._id }, { CommentSeller: "no_comment" } ]  });
     if (searchShoppingCartBuy){
       searchBuy.push(...searchShoppingCartBuy);
     }  
@@ -2203,7 +2214,7 @@ routes.get('/buysell-list/', async(req, res)=>{
       searchSell.push(...searchTwoSell);
     }
     //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
-    searchShoppingCartSell = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { CommentSeller: "no_comment" } ]  });
+    searchShoppingCartSell = await modelShoppingCart.find({ $and : [{ sellerId: user._id }, { CommentBuy: "no_comment" } ]  });
     if (searchShoppingCartSell){
       searchSell.push(...searchShoppingCartSell);
     }  

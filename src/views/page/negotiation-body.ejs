@@ -298,29 +298,21 @@
 
                                                 <p class="mb-2">Finalice calificando y dejando un comentario a <b><%= negotiation.usernameBuy %></b>.</p>
 
-                                                <div class="form-group d-flex my-2">
-                    
-                                                    <input type="hidden" value="<%= negotiation._id %>" id="idOrderBuyerTrue">
-
-                                                    <div class="form-check mx-1">
-                                                        <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" value="Positivo" checked>
-                                                        <label class="form-check-label ms-1" for="RadioBuyerTrue1"> Positivo </label>
-                                                    </div>
-                                                    <div class="form-check mx-2">
-                                                        <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue2" value="Neutral">
-                                                        <label class="form-check-label ms-1" for="RadioBuyerTrue2"> Neutral </label>                                          
-                                                    </div>
-                                                    <div class="form-check mx-2">
-                                                        <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue3" value="Negativo">
-                                                        <label class="form-check-label ms-1" for="RadioBuyerTrue3"> Negativo </label>
-                                                    </div>
-
+                                                <input type="hidden" value="<%= negotiation._id %>" id="idOrderBuyerTrue">
+                                                <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="400" placeholder="Deje aquí su comentario al Comprador"></textarea>
+                                               
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <input type="hidden" id="starHidden">
+                                                    <i class="starE bi bi-star mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="starE bi bi-star mx-2" data-star="2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="starE bi bi-star mx-2" data-star="3" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="starE bi bi-star mx-2" data-star="4" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="starE bi bi-star mx-2" data-star="5" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
                                                 </div>
 
-                                                <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="50" placeholder="Deje aquí su comentario al Comprador"></textarea>
                                                 <div class="alert alert-info my-2">
                                                     <p>Deje un comentario conciso de su experiencia a su comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
-                                                </div>
+                                                </div>  
 
                                                 <button class="btn btn-primary form-control my-2" id="btnSellTrue">Enviar calificación y comentario</button>
 
@@ -332,16 +324,52 @@
                                             <% } else { %>
 
                                                 <h4 class="mb-2 text-secondary">!Ya ha calificado y dejado un comentario!</h4>
-                                                <div class="form-group d-flex my-2">
-                    
-                                                    <div class="form-check mx-1">
-                                                        <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" checked>
-                                                        <label class="form-check-label ms-1" for="RadioBuyerTrue1"> <%= negotiation.ratingBuy %></label>
-                                                    </div>
-                                                    
-                                                </div>
 
-                                                <textarea class="form-control my-1" rows="3" cols="10" maxlength="50" disabled> <%= negotiation.CommentBuy %>  </textarea>
+                                                <% const ratingBuy = negotiation.ratingBuy %>
+
+                                                <textarea class="form-control my-1" rows="3" cols="10"  disabled> <%= negotiation.CommentBuy %>  </textarea>
+                                                
+                                                <% if ( ratingBuy === 5 ) {  %>
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingBuy === 4 ) { %>
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingBuy === 3 ) { %>   
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingBuy === 2 ) { %>       
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingratingBuy === 1 ) { %>       
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div>
+                                                <% }; %> 
 
 
                                                 <% let closeOperationSeller = negotiation.closeOperationSeller %>
@@ -502,26 +530,18 @@
 
                                                     <p class="mb-2">Finalice calificando y dejando un comentario a <b><%= negotiation.usernameSell %></b>..</p>
 
-                                                    <div class="form-group d-flex my-2">
-                        
-                                                        <input type="hidden" value="<%= negotiation._id %>" id="idOrderBuyerTrue">
+                                                    <input type="hidden" value="<%= negotiation._id %>" id="idOrderBuyerTrue">
+                                                    <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="400" placeholder="Deje aquí su comentario al Vendedor"></textarea>
+                                                   
+                                                    <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                        <input type="hidden" id="starHidden">
+                                                        <i class="starE bi bi-star mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="3" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="4" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="5" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                    </div>  
 
-                                                        <div class="form-check mx-1">
-                                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" value="Positivo" checked>
-                                                            <label class="form-check-label ms-1" for="RadioBuyerTrue1"> Positivo </label>
-                                                        </div>
-                                                        <div class="form-check mx-2">
-                                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue2" value="Neutral">
-                                                            <label class="form-check-label ms-1" for="RadioBuyerTrue2"> Neutral </label>                                          
-                                                        </div>
-                                                        <div class="form-check mx-2">
-                                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue3" value="Negativo">
-                                                            <label class="form-check-label ms-1" for="RadioBuyerTrue3"> Negativo </label>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <textarea class="form-control my-1" id="commentBuyerTrue" rows="3" cols="10" maxlength="50" placeholder="Deje aquí su comentario al Vendedor"></textarea>
                                                     <div class="alert alert-info my-2">
                                                         <p>Deje un comentario conciso de su experiencia como comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
                                                     </div>
@@ -536,16 +556,53 @@
                                                 <% } else { %>
 
                                                     <h4 class="mb-2 text-secondary">!Ya ha calificado y dejado un comentario!</h4>
-                                                    <div class="form-group d-flex my-2">
-                        
-                                                        <div class="form-check mx-1">
-                                                            <input class="Radio-BuyerTrue" type="radio" name="rating" id="RadioBuyerTrue1" checked>
-                                                            <label class="form-check-label ms-1" for="RadioBuyerTrue1"> <%= negotiation.ratingSeller %></label>
-                                                        </div>
-                                                        
-                                                    </div>
 
-                                                    <textarea class="form-control my-1" rows="3" cols="10" maxlength="50" disabled> <%= negotiation.CommentSeller %>  </textarea>
+                                                    <% const ratingSeller = negotiation.ratingSeller %>
+
+                                                    <textarea class="form-control my-1" rows="3" cols="10" disabled> <%= negotiation.CommentSeller %>  </textarea>
+
+                                                <% if ( ratingSeller === 5 ) {  %>
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingSeller === 4 ) { %>
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingSeller === 3 ) { %>   
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingSeller === 2 ) { %>       
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div> 
+                                                <% } else if ( ratingSeller === 1 ) { %>       
+                                                <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                </div>
+                                                <% }; %> 
+
 
 
                                                 <% let closeOperationBuy = negotiation.closeOperationBuy %>
@@ -1780,6 +1837,35 @@
 </script>
 
 <script>
+    const starHidden = document.getElementById('starHidden'); //aqui guardo el valor de lacalificacion de la contraparte
+    const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella 
+    let star = 1;
+
+    if (starE) {
+        starE.forEach((ele, i) => {
+            ele.addEventListener("click", () => {
+                star = ele.getAttribute("data-star"); // aquí es el número de la estrella
+                
+                // Desactivar o activar las estrellas
+                starE.forEach((starElement, index) => {
+                    if (index < parseInt(star)) {
+                        starElement.classList.replace("bi-star", "bi-star-fill");
+                    } else {
+                        starElement.classList.replace("bi-star-fill", "bi-star");
+                    }
+                });
+
+                starHidden.value = star;
+                //console.log("el valor de starHidden .....:", starHidden.value);   
+
+            });
+        });
+    }
+
+
+</script>
+
+<script>
         //esto es la vista del comprador que ya ha cancelado la orden, deja la calificacion y comentario a su vendedor
             const btnBuyerCancel = document.getElementById('btnBuyerCancel');
             const idOrderBuyerCancel = document.getElementById('idOrderBuyerCancel');
@@ -1903,20 +1989,8 @@
     const btnBuyerTrue = document.getElementById('btnBuyerTrue');
     const btnBuyerTrueSpinner = document.getElementById('btnBuyerTrueSpinner');
     const idOrderBuyerTrue = document.getElementById('idOrderBuyerTrue');
-    const RadialesBuyerTrue = document.querySelectorAll('.Radio-BuyerTrue');
     const commentBuyerTrue = document.getElementById('commentBuyerTrue');
     
-    let radioValueBuyerTrue = "Positivo";                                      
-      
-
-     for (let i = 0; i < RadialesBuyerTrue.length; i++) {
-            const ele = RadialesBuyerTrue[i];
-
-        ele.addEventListener('click', ()=>{
-            radioValueBuyerTrue = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
-           // console.log("Valor del radial checked es --->", radioValue);
-        })  
-     }
         
     if (btnBuyerTrue){ 
 
@@ -1929,7 +2003,7 @@
 
             //aqui armo el objeto que requiero enviar via fetch
             const objectBuyerTrue = { idOrder : idOrderBuyerTrue.value,
-                                      rating : radioValueBuyerTrue, 
+                                      rating : starHidden.value,  
                                       comment : commentBuyerTrue.value   
                                     };                     
 
@@ -2004,20 +2078,8 @@
     const btnSellTrue = document.getElementById('btnSellTrue');
     const btnSellTrueSpinner = document.getElementById('btnSellTrueSpinner');
     //const idOrderBuyerTrue = document.getElementById('idOrderBuyerTrue');
-    //const RadialesBuyerTrue = document.querySelectorAll('.Radio-BuyerTrue');
     //const commentBuyerTrue = document.getElementById('commentBuyerTrue');
     
-    let radioValueSellTrue ="Positivo";                                      
-      
-
-     for (let i = 0; i < RadialesBuyerTrue.length; i++) {
-            const ele = RadialesBuyerTrue[i];
-
-        ele.addEventListener('click', ()=>{
-            radioValueSellTrue = ele.value; //aqui le doy el valor elegido del radio y lo guardo en la variable que arriba declare.
-           // console.log("Valor del radial checked es --->", radioValue);
-        })  
-     }
         
     if (btnSellTrue){ 
 
@@ -2029,7 +2091,7 @@
 
             //aqui armo el objeto que requiero enviar via fetch
             const objectBuyerTrue = { idOrder : idOrderBuyerTrue.value,
-                                      rating : radioValueBuyerTrue, 
+                                      rating : starHidden.value,  
                                       comment : commentBuyerTrue.value   
                                     };
 
