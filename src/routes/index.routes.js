@@ -166,7 +166,9 @@ routes.get('/', async(req, res)=>{
             //console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
         }
 
-            
+                
+
+
         //Esta funcion ejecuta una consulta en todos los anuncios que tengan ofertas y las atrapa para 
         async function searchOffert(){
             //ahora es momento de consultar en todas las colecciones de articulos en busca de ofertas.

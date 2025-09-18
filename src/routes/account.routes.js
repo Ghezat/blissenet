@@ -20,6 +20,8 @@ const modelRaffle = require('../models/raffle.js');
 const modelStoreRate = require('../models/storeRate.js');
 const modelCustomerSurvey = require('../models/customerSurvey.js');
 const messages = require('../models/messages.js');
+const modelBuySell = require('../models/buySell.js');
+const modelNegotiation = require('../models/negotiations.js');
 const modelShoppingCart = require('../models/shoppingCart.js');
 
 const axios = require('axios');
@@ -38,18 +40,32 @@ routes.get('/account/:account', async (req,res)=>{
     let newBox;
     let boxOffert = [];
     const user = req.session.user;
+    const userId = user._id;
     
     //console.log("este es el usuario visitante--->", user);
-    const countMessages = req.session.countMessages
+    //const countMessages = req.session.countMessages
     const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
     //console.log("ver receive -------------------------->", receive);
     let searchProfile;
     const segment = null;
+    
 
     //aqui obtengo la cantidad de negotiationsBuySell
-    const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+    //const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
     //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
-  
+    let countNegotiationsBuySell;
+    let countMessages;
+
+    const count = await negotiationsBuySell(userId); //llamamos la funcion y esperamos el valor para asignarlo en  countNegotiationsBuySell; 
+    countNegotiationsBuySell = count;
+    req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.
+    console.log("VER....countNegotiationsBuySell........:", countNegotiationsBuySell); 
+
+    const countMsg = await messengerCount(userId);
+    countMessages = countMsg;
+    req.session.countMessages = countMessages; // ---> Esto es lo que se propagara por toda la aplicacion
+    console.log("VER....countMessages........:", countMessages); 
+
     const Account = await modelUser.find({ username : account });
     const accountID = Account[0]._id;    
 
@@ -112,7 +128,7 @@ routes.get('/account/:account', async (req,res)=>{
         //console.log("Esto es user._id ------>", user._id );
         const userId = user._id; //usaremos con el indexed en la coleccion profile.
         searchProfile = await modelProfile.find({ indexed : userId });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
 
         
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ejecuta el bloque siguiente)
@@ -164,9 +180,9 @@ routes.get('/account/:account', async (req,res)=>{
                 const searchBanner = storeProfile.bannerPerfil;
                 const buyCar = storeProfile.buyCar; //esto es para detectar si la tienda tiene activado el carrito de compra. (importante porque el carrito solo muestra items y arte)
                 console.log("...........................ver......................")
-                console.log("Esto es Account: ", Account);
-                console.log("Este es el valor de buyCar ...", buyCar);
-                console.log("Este es el valor de typeof buyCar ...", typeof buyCar);
+                //console.log("Esto es Account: ", Account);
+                //console.log("Este es el valor de buyCar ...", buyCar);
+                //console.log("Este es el valor de typeof buyCar ...", typeof buyCar);
 
                         //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones. 
                         const resultAirplane = await modelAirplane.find( { $and : [{user_id : accountId}, {visibleStore : true }] }).sort({ title: 1 });
@@ -529,7 +545,65 @@ routes.get('/account/:account', async (req,res)=>{
     
     
 });
+    
+    async function messengerCount(userId){
 
+        let searchBoxMessageInbox = [];
+        let searchMessageInbox;
+        //primer paso ubicar todos los mensajes que tenga el usuario logeado y que el campo answer diga waiting.
+        const searchMessageInbox0 = await modelMessage.find( { $and: [{ toCreatedArticleId : userId },{answer: "waiting"}, { typeNote: { $ne: "availability-noti" } } ] } );
+        const searchMessageInbox1 = await modelMessage.find( { $and: [{ userId : userId }, { typeNote : "availability-noti" }, {answer: "waiting"} ] } );
+        
+        searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
+        searchBoxMessageInbox.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); //aqui ordenamos de menor a mayor por fecha
+        searchMessageInbox = searchBoxMessageInbox; 
+        const countMessagesInbox = searchMessageInbox.length;
+
+        const searchMessageOutbox = await modelMessage.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } ).sort({ createdAt: 1 }); // 1 para orden ascendente, -1 para descendente;
+        const searchMessageOutboxAlert = await modelMessage.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
+        const countMessagesOutbox = searchMessageOutboxAlert.length;
+
+        const totalMessages = (countMessagesInbox + countMessagesOutbox);
+        return totalMessages; // Retorna el conteo
+    }
+
+    async function negotiationsBuySell(userId){
+        // :::::: Aqui obtengo la cantidad de negotiationsBuySell ::::::::
+        const searchBuy = [];
+        const searchSell = [];
+    
+        const searchOneBuy = await modelBuySell.find({  $and : [{ indexedBuy : userId},{ closeOperationBuy : false }] });
+        if (searchOneBuy){
+            searchBuy.push(...searchOneBuy);
+        }
+        const searchTwoBuy = await modelNegotiation.find({ $and : [{ indexedBuy : userId }, { closeOperationBuy : false }]} );
+        if (searchTwoBuy){
+            searchBuy.push(...searchTwoBuy);
+        }
+        //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
+        const searchShoppingCartBuy = await modelShoppingCart.find({ $and : [{ customerId: userId }, { CommentSeller: "no_comment" } ]  });
+        if (searchShoppingCartBuy){
+            searchBuy.push(...searchShoppingCartBuy);
+        }    
+
+        const searchOneSell = await modelBuySell.find({ $and : [{ indexedSell : userId }, { closeOperationSeller : false }] });
+        if (searchOneSell){
+            searchSell.push(...searchOneSell);
+        }         
+        const searchTwoSell = await modelNegotiation.find({ $and : [{ indexedSell : userId }, { closeOperationSeller : false }]} );
+        if (searchTwoSell){
+            searchSell.push(...searchTwoSell);
+        }
+        //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario    
+        const searchShoppingCartSell = await modelShoppingCart.find({ $and : [{ sellerId: userId }, { CommentBuy: "no_comment" } ]  });
+        if (searchShoppingCartSell){
+            searchSell.push(...searchShoppingCartSell);
+        }     
+
+        const countNegotiationsBuySell = (searchBuy.length + searchSell.length);
+        return countNegotiationsBuySell; // Retorna el conteo
+
+    }
              
 ///account/${storeUsername}/${segment}
 routes.get('/account/:storeUsername/:segment', async (req, res)=>{
@@ -4543,7 +4617,7 @@ routes.post('/done_shoppingCart/registerReceived', async(req, res)=>{
 });
 
 routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
-//aqui se registra que el pedido que ya se ha recibido
+//aqui se registra el comentario y calificacion al vendedor
     try {
 
         console.log("......../done_shoppingCart/registerCommentRatingToSell..........");
@@ -4575,6 +4649,9 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
 
         console.log("Esto es searchShoppingCart :", searchShoppingCart);
         //IMPORTANTE evaluar que exista informacion de searchShoppingCart
+
+        //aqui buscamos el perfil del cliente que dejara el comentaio y calificacion de la tienda.
+        const searchProfile = await modelProfile.findById()
          
         if (searchShoppingCart) {
 
@@ -4584,19 +4661,34 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
             const sellerId = searchShoppingCart.sellerId;
             const sellerName = searchShoppingCart.sellerName;
 
+            //aqui buscamos el perfil del cliente que dejara el comentaio y calificacion de la tienda.
+            const searchProfile = await modelProfile.findOne( {indexed : customerId} );
+            console.log("VER searchProfile ..........:", searchProfile);
+            //avatarPerfil: [ { url: '', public_id: 'sin_data' } ]
+
+            const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
+            const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
+            const mailhash = searchProfile.mailhash;
+
             if (customerId == idUser){
 
                 //aseguramos que el es el clinte de este carrito.
                 updateShoppingcart()
                     .then(()=>{
-                    
-                        const message = "Gracias por el comentario y la calificación";
-                        const response = { "code" : "ok", "message" : message};
-                        res.json(response);
+                        storeRateComent()
+                            .then(()=>{
+                                const message = "Gracias por el comentario y la calificación";
+                                const response = { "code" : "ok", "message" : message};
+                                res.json(response);
+                            })
+                            .catch(error =>{
+                                 console.error('Error al ejecutar la funcion storeRateComent', error);
+                            })
+
                                         
                     })
                     .catch(error => {
-                        console.error('Error al ejecutar la funcion blissBotNoti', error);
+                        console.error('Error al ejecutar la funcion updateShoppingcart', error);
                     });
 
 
@@ -4609,7 +4701,6 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
             }
 
             
-
             async function updateShoppingcart() {
                 //debemos actualizar el ultimo elemento del array dataRegPay, el campo response. 
                 await modelMessage.deleteMany({ typeNote: 'shoppingCart-Received', cartId: cartId });
@@ -4621,10 +4712,19 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
            
             }            
 
-    
+            async function storeRateComent() {
+                //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
+                
+                const newRateComment =  new modelStoreRate
+                 ({ 
+                    store: sellerId, logeado: customerId, markStar: rating, comment: comment, storeName: sellerName,
+                    dataLogeado: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+                 });
 
-
+                const saveRateComment = await newRateComment.save();
+                console.log("Se ha creado la primera calificacion y comentario organico de blissenet.com", saveRateComment)
        
+            }    
 
         } else {
             console.log("No existe el carrito que se quiere actualizar como recibido");
@@ -4638,7 +4738,7 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
 });
 
 routes.post('/done_shoppingCart/registerCommentRatingToBuy', async(req, res)=>{
-//aqui se registra que el pedido que ya se ha recibido
+//aqui se registra el comentario y la calificacion al comprador.
     try {
 
         console.log("......../done_shoppingCart/registerCommentRatingToBuy..........");
@@ -4679,19 +4779,35 @@ routes.post('/done_shoppingCart/registerCommentRatingToBuy', async(req, res)=>{
             const sellerId = searchShoppingCart.sellerId;
             const sellerName = searchShoppingCart.sellerName;
 
+            //aqui buscamos el perfil de la tienda que dejara el comentaio y calificacion a su cliente.
+            const searchProfile = await modelProfile.findOne( {indexed : sellerId} );
+            console.log("VER searchProfile ..........:", searchProfile);
+            //avatarPerfil: [ { url: '', public_id: 'sin_data' } ]
+
+            const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
+            const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
+            const mailhash = searchProfile.mailhash;            
+
+
             if (sellerId == idUser){
 
                 //aseguramos que el es la tienda que vende este carrito.
                 updateShoppingcart()
                     .then(()=>{
-                    
-                        const message = "Gracias por el comentario y la calificación";
-                        const response = { "code" : "ok", "message" : message};
-                        res.json(response);
+                        storeRateComent()
+                            .then(()=>{
+                                const message = "Gracias por el comentario y la calificación";
+                                const response = { "code" : "ok", "message" : message};
+                                res.json(response);
+                            })
+                            .catch(error =>{
+                                 console.error('Error al ejecutar la funcion storeRateComent', error);
+                            })
+
                                         
                     })
                     .catch(error => {
-                        console.error('Error al ejecutar la funcion blissBotNoti', error);
+                        console.error('Error al ejecutar la funcion updateShoppingcart', error);
                     });
 
 
@@ -4704,7 +4820,6 @@ routes.post('/done_shoppingCart/registerCommentRatingToBuy', async(req, res)=>{
             }
 
             
-
             async function updateShoppingcart() {
                 //debemos actualizar el ultimo elemento del array dataRegPay, el campo response. 
                 await modelMessage.deleteMany({ typeNote: 'shoppingCart-Received', cartId: cartId });
@@ -4716,6 +4831,19 @@ routes.post('/done_shoppingCart/registerCommentRatingToBuy', async(req, res)=>{
            
             }            
     
+            async function storeRateComent() {
+                //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
+                
+                const newRateComment =  new modelStoreRate
+                 ({ 
+                    store: customerId, logeado: sellerId, markStar: rating, comment: comment, storeName: customerName,
+                    dataLogeado: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+                 });
+
+                const saveRateComment = await newRateComment.save();
+                console.log("Se ha creado la primera calificacion y comentario organico de blissenet.com", saveRateComment)
+       
+            }               
 
 
        
@@ -4994,52 +5122,6 @@ routes.post('/account/spread', async (req, res)=>{
 
 });
 
-// Aqui es donde dejamos la calificacion y el comentario a las Tiendas. 
-routes.post('/account/storeRate', async(req, res)=>{
-
-    console.log("Estamos llegando con estos datos al backend");
-    console.log("/account/storeRate");
-    const {store, logeado, markStar, comment} = req.body;
-    console.log(`store: ${store} logeado: ${logeado} markStar: ${markStar} comment: ${comment}`);
-    
-    if (store !== logeado){ //estos son id
-
-        //primero obtener el nombre de la tienda que se esta calificando;
-        const searchStoreName = await modelUser.findById(store);
-        const storeName = searchStoreName.username;
-        console.log("nombre de tienda ->", storeName);
-
-        //segundo debemos capturar los datos de user que esta calificando.(avatar, username):
-        const searchProfile = await modelProfile.find({indexed : logeado});
-        console.log("searchProfile de logeado ---->", searchProfile);
-        const { username , avatarPerfil, mailhash } = searchProfile[0];
-        console.log("Ver datos importantes -->", username, avatarPerfil, mailhash);
-        const dataLogeado = { username, avatarPerfil, mailhash };
-
-        //tercero buscamos todas las calificaciones de esta tienda para luego buscar si el logeado ha calificado
-        const searchStore = await modelStoreRate.find({store, logeado});
-        console.log("searchStore ->", searchStore);
-
-        if (searchStore.length !==0 ){
-            
-            console.log("esta persona a calificado esta tienda");
-            const updateRate = await modelStoreRate.updateOne({store, logeado}, {markStar, comment, dataLogeado});
-            console.log("ya hemos actualizado", updateRate);
-            res.json(updateRate);
-
-        } else {
-            console.log("esta persona No a calificado esta tienda");
-            const newRate = new modelStoreRate({ store, logeado, markStar, comment, storeName, dataLogeado });
-            const newRateSave = await newRate.save();
-            console.log("Ya ha calificado ", newRateSave);
-            res.json(newRateSave);
-        }
-
-
-    }
-
-});
-
 
 
 routes.post('/account/pountRate', async(req, res)=>{
@@ -5095,6 +5177,9 @@ routes.post('/account/pountRate/star-5', async(req, res)=>{
     //console.log("rateStore --->", rateStore)
     res.json(rateStore);
 });
+
+
+
 
 routes.post('/account/survey/search', async(req, res)=>{
     try {

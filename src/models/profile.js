@@ -35,7 +35,7 @@ const SchemaProfile = new Schema({
     phoneAlt : { type : String },
     profileMessage : { type : String }, //mensaje de la tienda
     bannerPerfil : { type : Object , default : {} }, //guarada el objeto donde esta la url del banner de la tienda. 
-    avatarPerfil : { type : Object , default : {} }, //guarda el objeto dodne esta la url del avatar de la tienda.
+    avatarPerfil : { type : Object , default : {} }, //guarda el objeto donde esta la url del avatar de la tienda.
     mailhash : { type : String }, //este dato tambien existe en la coleccion user. aqui se guarda por default el hash que produce el avatar por default.
     bGColorText : { type : String , default : '#1a1a1a' }, //podemos dar el color que tendra el texto;
     bGColorTopbar : { type : String , default : '#f8f9fa' }, //podemos dar el color que tendra la barra superior donde esta el avatar y el mensaje del sistio;
