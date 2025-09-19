@@ -3131,7 +3131,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         console.log("......../send_shoppingCart/consolidate..........");
         //console.log("req.boy", req.body);
         
-        const {boxShopping, StoreId, UserId, Amount, clientAddress, clientPhone, clientIndentification, clientName, deliveryOptionV } = req.body;
+        const {boxShopping, StoreId, UserId, Amount, clientAddress, clientPhone, clientIndentification, clientName, deliveryOptionV, orderDetail } = req.body;
         
         console.log("boxShopping :", boxShopping);
         console.log("StoreId :", StoreId);
@@ -3412,7 +3412,9 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                                             date : time,
                                             amount : Amount,
                                             purchaseReceiver : boxReceiver,
-                                            deliveryOptions : deliveryOptionV
+                                            deliveryOptions : deliveryOptionV,
+                                            boxReceiver : boxReceiver,
+                                            orderDetail : orderDetail
                                         });
                 const saveShoppingCart  = await newShoppingCart.save();
             }  

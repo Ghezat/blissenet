@@ -93,6 +93,7 @@
                                                         <% const boxShoppingCart = ele.boxShoppingCart %>
                                                         <% const purchaseReceiver = ele.purchaseReceiver %>
                                                         <% const deliveryOptions = ele.deliveryOptions %>
+                                                        <% const orderDetail = ele.orderDetail %>
                                                         <% const consolidate = ele.consolidate %>
                                                         <% const regPay = ele.regPay %>
                                                         <% const dataRegPay = ele.dataRegPay %>
@@ -111,6 +112,7 @@
                                                             <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
                                                             <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
                                                             <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
+                                                            <input type="hidden" class="orderDetail" value="<%= orderDetail %>">
                                                             <input type="hidden" class="consolidate" value="<%= consolidate %>">
                                                             <input type="hidden" class="regPay" value="<%= regPay %>">
                                                             <input type="hidden" class="dataRegPay" value="<%= JSON.stringify(dataRegPay) %>"> 
@@ -204,7 +206,13 @@
                                                 </div>    
 
                                                 <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 9px; border-top-right-radius: 9px;">
-                                                    <span style="white-space: 16px;"> <b>Delivery:</b> </span> <span class="delivery bg-secondary text-light rounded-pill ms-1 px-3 py-1" style="white-space: nowrap;"> </span> 
+                                                    <div class="d-flex flex-column">  
+                                                        <div class="my-1">  <span style="white-space: 16px;"> <b>Delivery:</b> </span> <span class="delivery bg-secondary text-light rounded-pill ms-1 px-3 py-1" style="white-space: nowrap;"> </span> </div>
+                                                        <div class="my-1">  
+                                                            <span> <b>Detalle:</b> </span> 
+                                                            <span class="detailOrder bg-secondary text-light rounded-pill ms-2 px-3 py-1" style="width: auto;"></span>
+                                                        </div>
+                                                    </div>    
                                                 </div>                                                  
 
                                                 <div class="btnDeclineConsolide close pb-2" style="width: 100%; background-color: rgba(0, 0, 0, 0.1); width: auto; border-bottom-left-radius: 9px; border-bottom-right-radius: 9px; border-top-left-radius: 0px; border-top-right-radius: 0px;">
@@ -337,6 +345,7 @@
     const boxShoppingCartData = document.querySelectorAll('.boxShoppingCartData'); 
     const purchaseReceiverData = document.querySelectorAll('.purchaseReceiverData');
     const deliveryOption = document.querySelectorAll('.deliveryOptions');
+    const orderDetailData = document.querySelectorAll('.orderDetail');
     const consolidateData = document.querySelectorAll('.consolidate'); // "true" or "false"
     const regPayData = document.querySelectorAll('.regPay'); // "true" or "false"
     const dataRegPay = document.querySelectorAll('.dataRegPay');
@@ -354,6 +363,7 @@
     const containerAlertSelect = document.querySelector('.containerAlertSelect');
     const containerDelivery = document.querySelector('.containerDelivery');
     const deliverySpan = document.querySelector('.delivery');
+    const orderDetSpan = document.querySelector('.detailOrder'); 
     const clientNamesSpan = document.querySelector('.clientNames');
     const clientDocumentSpan = document.querySelector('.clientDocument');
     const clientPhoneSpan = document.querySelector('.clientPhone');
@@ -394,6 +404,7 @@
             const receiver = JSON.parse(receiverTxt);
             const Amount = amount[i].value;
             const deliveryOpt = deliveryOption[i].value; 
+            const orderDet = orderDetailData[i].value; 
             const ConsolidateData = consolidateData[i].value;
             const RegPayData = regPayData[i].value;
             const DataRegPay = dataRegPay[i].value;
@@ -407,6 +418,7 @@
 
             //console.log("receiver..........:", receiver);
             //console.log("deliveryOpt.......:", deliveryOpt);
+            console.log("orderDet......:", orderDet);
             console.log("ConsolidateData.....:", ConsolidateData);
             console.log("RegPayData..........:", RegPayData); 
             console.log("Paid..........:", Paid); 
@@ -501,7 +513,8 @@
             })
 
             containerDelivery.classList.remove("close"); //hacemos aparecer el contenedor.
-            deliverySpan.innerText = DeliveryOption            
+            deliverySpan.innerText = DeliveryOption; 
+            orderDetSpan.innerText = orderDet;          
             clientNamesSpan.innerText = clientNames;
             clientDocumentSpan.innerText = clientIndentification;
             clientPhoneSpan.innerText = clientPhone;

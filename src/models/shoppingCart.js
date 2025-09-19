@@ -9,6 +9,7 @@ const shoppingCart = new Schema({
     sellerId : { type : String },  //id seller o id del seller " el vendedor"
     sellerName : { type : String }, //el username del vendedor (Store Username).
     boxShoppingCart : { type : Array}, //este array contendra los siguientes objetos : [ { depart, title, titleId, countrequest, price } ]; 
+    orderDetail : { type : String }, //aqui existira datos sobre la compra. por eje. Quiero que el pedido de los perros calientes no tenga vegetales. O quiero el modelo azul electrico en los zapataos nike.
     consolidate : { type : String, default : "false" }, //consolidado significa una validacion por parte de la tienda donde verifica el pedido que sera despachado. Es donde la Tienda podria manipular para arreglar el pedido y donde el cliente puede agregar mas articulos. No podra actualizar su compra si ya se ha consolidado. 
     amount : { type : Number }, //aqui el monto del valor del carrito, esto puede cambiar
     active : { type : String, default : "true" }, //true or false, si esta en true porque esta activo y se vera y si esta en false es porque ya no aparecera porque ya caduco su tiempo de visibilidad. y ya no puede volver a verse. esto es para tener un registro de todo lo que se ha hecho en este departamento.

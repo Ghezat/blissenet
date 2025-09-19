@@ -1688,11 +1688,11 @@
                           <% clientPhone = searchProfile[0].phone %>
                           <% clientAddress = searchProfile[0].address %>
                          
-
+<!-- 
                           <div class="alert alert-info">
-                            <b> ¡Requerimento! </b> Es obligatorio los datos de la persona quien recibe esta compra.
+                            <b> Obligatorio * </b> 
                           </div>  
-
+ -->
                           <div class="form-group my-2">
                             <input type="text" class="form-control" id="clientName" value="<%= clientName %>" placeholder="Nombre de quien recibirá la compra">
                           </div>
@@ -1725,6 +1725,11 @@
                               
                             </select>
                           </div>
+
+                          <div class="form-group my-2">
+                            <textarea class="form-control" id="orderDetail" rows="2" placeholder="Si desea agregar algún detalle, hágamelo saber."></textarea>
+                          </div>
+                          
 
                           <div class="dataMissing">
                           <!--  alert dinamico -->
@@ -2860,25 +2865,58 @@
 <script>
   const viewRateStore = document.getElementById('viewRateStore'); //esto es el boton para ver las calificaciones
   const containerWorkSpace = document.querySelector('.containerWorkSpace');
-  const containerViewRatesStore = document.querySelector('.containerViewRatesStore');
+  const containerViewRatesStore = document.querySelector('.containerViewRatesStore'); //contenedor que porta toda la vista de las calificaciones.
   const btnXCloseViewRate = document.getElementById('btnXCloseViewRate'); //icono x para cerrar
   const btnCloseViewRate = document.querySelector('.btnCloseViewRate'); //boton verde para cerrar
 
 
   viewRateStore.addEventListener('click', ()=>{
+
+    containerSegment.classList.add('close');
     containerWorkSpace.classList.add('close');
+    mainGallery.classList.add('close');
+    containerInfoBliss.classList.add('close');
+
     containerViewRatesStore.classList.remove('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });    
+
+    irATopBar() //nos llevan al lugar que se debe en el DOM
+
   })
 
   btnXCloseViewRate.addEventListener('click', ()=>{
+
+    containerSegment.classList.remove('close');
     containerWorkSpace.classList.remove('close');
+    mainGallery.classList.remove('close');
+
+    containerInfoBliss.classList.add('close');
     containerViewRatesStore.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    }); 
 
   })
 
   btnCloseViewRate.addEventListener('click', ()=>{
+
+    containerSegment.classList.remove('close');
     containerWorkSpace.classList.remove('close');
+    mainGallery.classList.remove('close');
+
+    containerInfoBliss.classList.add('close');
     containerViewRatesStore.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    }); 
 
   })
   
@@ -3983,6 +4021,7 @@ if (btnPolity) {
     containerFaqs.classList.add('close');
     containerSurvey.classList.add('close');
     containerLocation.classList.add('close');
+    containerViewRatesStore.classList.add('close');
 
     efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
     efectSoundExpan.play().catch(error => {
@@ -4022,6 +4061,7 @@ if (btnFaqs){
     containerFaqs.classList.remove('close');
     containerSurvey.classList.add('close');
     containerLocation.classList.add('close');
+    containerViewRatesStore.classList.add('close');
 
     efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
     efectSoundExpan.play().catch(error => {
@@ -4100,6 +4140,7 @@ if (btnSurvey){
                       containerFaqs.classList.add('close');
                       containerSurvey.classList.remove('close');
                       containerLocation.classList.add('close');
+                      containerViewRatesStore.classList.add('close');
 
                       containerSurveyCustomer.classList.remove('close');
                       containerSurveyDone.classList.add('close');
@@ -4118,6 +4159,7 @@ if (btnSurvey){
                       containerFaqs.classList.add('close');
                       containerSurvey.classList.remove('close');
                       containerLocation.classList.add('close');
+                      containerViewRatesStore.classList.add('close');
                       
                       containerSurveyCustomer.classList.add('close');
                       containerSurveyDone.classList.remove('close');
@@ -4136,6 +4178,7 @@ if (btnSurvey){
                       containerFaqs.classList.add('close');
                       containerSurvey.classList.remove('close');
                       containerLocation.classList.add('close');
+                      containerViewRatesStore.classList.add('close');
                       
                       containerSurveyCustomer.classList.add('close');
                       containerSurveyDone.classList.add('close');
@@ -4158,6 +4201,7 @@ if (btnSurvey){
                 containerFaqs.classList.add('close');
                 containerSurvey.classList.remove('close');
                 containerLocation.classList.add('close');
+                containerViewRatesStore.classList.add('close');
                 
                 containerSurveyCustomer.classList.add('close');
                 containerSurveyDone.classList.add('close');
@@ -4196,6 +4240,7 @@ if (btnLocation){
     containerPolity.classList.add('close');
     containerFaqs.classList.add('close');
     containerSurvey.classList.add('close');
+    containerViewRatesStore.classList.add('close');
     containerLocation.classList.remove('close');
 
     efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
@@ -4600,6 +4645,7 @@ const consolidate = document.getElementById('consolidate');
 const noConsolidate = document.getElementById('noConsolidate'); // boton cuando no el usuario no tenga perfil
 const dataMissing = document.querySelector('.dataMissing');
 
+const orderDetail = document.getElementById('orderDetail');
 const clientAddress = document.getElementById('clientAddress');
 const clientPhone = document.getElementById('clientPhone');
 const clientIndentification = document.getElementById('clientIndentification');
@@ -4628,7 +4674,7 @@ if (consolidate){
       //console.log("Id Cliente :", UserId);  
       const clientNameV = clientName.value; const clientIndentificationV = clientIndentification.value;
       const clientPhoneV = clientPhone.value; const clientAddressV = clientAddress.value;
-      const deliveryOptV = selectDeliveryOptions.value;
+      const deliveryOptV = selectDeliveryOptions.value; const orderDetailV = orderDetail.value;
       console.log("deliveryOptV ....................:", deliveryOptV)
 
       TotalPay = totalPay.toFixed(2);
@@ -4646,7 +4692,8 @@ if (consolidate){
                 clientPhone: clientPhoneV,
                 clientIndentification: clientIndentificationV,
                 clientName: clientNameV,
-                deliveryOptionV: deliveryOptV
+                deliveryOptionV: deliveryOptV,
+                orderDetail: orderDetailV
               }
 
               console.log("esto es datos", datos); 
