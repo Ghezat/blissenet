@@ -196,12 +196,13 @@
                                                                 <input type="hidden" name="iD" value="<%= storeUserId %>">
                                                                 <div class="form-group d-flex my-2">
                                                                     <% const paymentSystemEdit = bankData.paymentSystem %>
+                                                                   
                                                                     <select name="idMethod" id="selectToEdit" class="form-control">
                                                                         <option value="no_data">Selecciona una opción</option>
                                                                         <% paymentSystemEdit.forEach((ele)=>{ %>
 
                                                                             <option value="<%= ele.idMethod %>"> <%= ele.methodName %> </option>
-
+                                                                                                                                                        
                                                                         <% }) %>
                                                                     </select>
                                                                     
@@ -757,7 +758,7 @@
     selectToEdit.addEventListener('change', ()=>{
         const object = objetBankData.value; // Deserializa el string JSON
         const json = JSON.parse(object);
-        console.log("object --------->", object);
+        console.log("object a eliminar :-->", object);
         console.log("json ..........>", json);
         const selected = selectToEdit.value; //esto arroja el idMethod.
         console.log("selected ..........>", selected);

@@ -241,14 +241,13 @@
                                                         <option value="Insumos e Implementos de Panaderia/Reposteria">Insumos e Implementos de Reposteria y Panaderia</option>
                                                         <option value="Juguetes">Juguetes</option>
                                                         <option value="Lentes">Lentes</option>
-                                                        <option value="Medicamentos">Medicamentos</option>
                                                         <option value="Merceria">Merceria</option>
                                                         <option value="Vehiculo Movilidad Personal">Vehiculo Movilidad Personal (VMP)</option>
                                                         <option value="Papeleria">Papeleria</option>
-                                                        <option value="Productos Clinicos">Productos Clinicos</option>
                                                         <option value="Productos Quimicos Industriales y Aseo Urbano">Productos Quimicos Industriales y Aseo Urbano</option>
                                                         <option value="Relojes,Joyas y Bisutería">Relojes,Joyas y Bisutería</option>
                                                         <option value="Repuestos Mecanicos">Repuestos Mecanicos</option>
+                                                        <option value="Salud">Salud</option>
                                                         <option value="Telefonos y Smarphones">Telefonos y Smarphones</option>
                                                         <option value="Textil y Moda">Textil y Moda</option>
                                                         <option value="Juguetes Sexuales">Juguetes Sexuales</option>
@@ -405,14 +404,13 @@
                                                                 <option value="Insumos e Implementos de Panaderia/Reposteria">Insumos e Implementos de Reposteria y Panaderia</option>
                                                                 <option value="Juguetes">Juguetes</option>
                                                                 <option value="Lentes">Lentes</option>
-                                                                <option value="Medicamentos">Medicamentos</option>
                                                                 <option value="Merceria">Merceria</option>
                                                                 <option value="Vehiculo Movilidad Personal">Vehiculo Movilidad Personal (VMP)</option>
                                                                 <option value="Papeleria">Papeleria</option>
-                                                                <option value="Productos Clinicos">Productos Clinicos</option>
                                                                 <option value="Productos Quimicos Industriales y Aseo Urbano">Productos Quimicos Industriales y Aseo Urbano</option>
                                                                 <option value="Relojes,Joyas y Bisutería">Relojes,Joyas y Bisutería</option>
                                                                 <option value="Repuestos Mecanicos">Repuestos Mecanicos</option>
+                                                                <option value="Salud">Salud</option>
                                                                 <option value="Telefonos y Smarphones">Telefonos y Smarphones</option>
                                                                 <option value="Textil y Moda">Textil y Moda</option>
                                                                 <option value="Juguetes Sexuales">Juguetes Sexuales</option>
@@ -458,8 +456,8 @@
             
                                                         </div>
         
-                                                        <input type="submit" class="btn btn-success form-control my-3" value="Edit" id="btnEdit">
-                                                        <button class="btn btn-success form-control invisibleBtnEdit my-3" type="button" id="btnEditLoading" disabled>
+                                                        <input type="submit" class="btn btn-secondary form-control my-3" value="Edit" id="btnEdit">
+                                                        <button class="btn btn-secondary form-control invisibleBtnEdit my-3" type="button" id="btnEditLoading" disabled>
                                                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                             Updating...
                                                         </button>
@@ -831,10 +829,10 @@
             let Merceria = ["Select it", "Accesorios varios", "Agujas", "Botones", "Cremalleras y Cierres Magicos", "Dedales", "Hilos", "Telas", "Otros..."];
             let Vehiculo_Movilidad_Personal = ["Select it", "Scooter Electricos", "Monopatines Electricos", "Monociclos Electricos", "Accesorios p/Scooter", "Bicimotos", "Repuestos Varios", "Otros..."];
             let Papeleria = ["Select it", "Borradores", "Boligrafos, Lapices y Marcadores",  "Cuadernos y Libretas", "Colas y Pegas", "Grapas y Grapadoras", "Resmas de Papel y Hojas de Examenes", "Pinceles", "Otros..." ];
-            let Productos_clinicos = ["Select it", "Productos Clinicos Humanos", "Productos Clinicos Veterinarios", "Otros..."];
             let Productos_quimicos_industriales = ["Select it","Cloros", "Detergentes", "Insumos de Limpiezas", "Quimicos Varios", "Otros..."];
             let Relojes_joyas_bisutería = ["Select it", "Bisutería", "Joyería", "Pierdas Preciosas", "Piercings", "Plumas y Lapiceros de Lujos", "Relojes", "Repuestos para Relojes", "Otros..."];
             let Repuestos_mecanicos = ["Select it","Repuestos Autos", "Repuestos Aeronáuticos", "Repuestos Camiones", "Repuestos Maquinas Pesadas", "Repuestos Maquians de Coser","Repuestos Motos","Repuestos Náutivos", "Otros..."];
+            let Salud = ["Equipos Médicos", "Estética", "Insumos Médicos", "Medicamentos", "Miscelaneos", "Productos Clínicos", "Productos Naturales", "Suplementos Alimenticios",  ];
             let Telefonos_celulares = ["Select it", "Carcasas de Smarphone", "Cargadores", "Protectores de Smartphone", "Telefonos Smarphone", "Telefonos Alámbricos", "Otros"];
             let Textil_moda = ["Select it", "Calzados para Caballeros", "Calzados para Niños", "Calzados para Damas", "Calzados para Niñas", "Ropa de Caballeros", "Ropa para Niños", "Ropa para Damas", "Ropa para Niñas", "Ropa Interior Caballeros", "Ropa Interior niños", "Ropa Interior Damas", "Ropa Interior Niñas", "Correas de Damas y Niñas", "Correas de Caballeros y Niños", "Bolsos y Morrales", "Carteras Damas y Niñas", "Carteras Caballeros y Niños", "Gorras y Sombreros", "Ropa Deportiva", "Disfraces Adultos", "Disfraces Niños" ];
             let Juguetes_sexuales = ["Select it", "Condoladores/Dildos", "Vibradores", "Anillos/Fundas", "Disfraces Sexuales", "Muñecas Sexuales", "Lubricantes/Cremas", "Otros..."];
@@ -963,7 +961,7 @@
                         const element = Lentes[i];
                         nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
                     }      
-
+                
 
                 } else if ( selected == "Merceria") {
                     nivel2[0].innerHTML = "";
@@ -986,12 +984,6 @@
                         nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
                     }
                     
-                } else if ( selected == "Productos Clinicos") {
-                    nivel2[0].innerHTML = "";
-                    for (let i = 0; i < Productos_clinicos.length; i++) {
-                        const element = Productos_clinicos[i];
-                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
-                    } 
                     
                 } else if ( selected == "Productos Quimicos Industriales y Aseo Urbano") {
                     nivel2[0].innerHTML = "";
@@ -1013,6 +1005,13 @@
                         const element = Repuestos_mecanicos[i];
                         nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
                     }  
+
+                } else if ( selected == "Salud") {
+                    nivel2[0].innerHTML = "";
+                    for (let i = 0; i < Salud.length; i++) {
+                        const element = Salud[i];
+                        nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
+                    }                     
                     
                 } else if ( selected == "Telefonos y Smarphones") {
                     nivel2[0].innerHTML = "";
@@ -1163,7 +1162,7 @@
                     for (let i = 0; i < Lentes.length; i++) {
                         const element = Lentes[i];
                         nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
-                    }   
+                    }                       
                      
 
                 } else if ( selected == "Merceria") {
@@ -1187,12 +1186,6 @@
                         nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
                     }
                     
-                } else if ( selected == "Productos Clinicos") {
-                    nivel2[1].innerHTML = "";
-                    for (let i = 0; i < Productos_clinicos.length; i++) {
-                        const element = Productos_clinicos[i];
-                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
-                    } 
                     
                 } else if ( selected == "Productos Quimicos Industriales y Aseo Urbano") {
                     nivel2[1].innerHTML = "";
@@ -1215,6 +1208,13 @@
                         nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
                     }  
                     
+                } else if ( selected == "Salud") {
+                    nivel2[1].innerHTML = "";
+                    for (let i = 0; i < Salud.length; i++) {
+                        const element = Salud[i];
+                        nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
+                    }    
+
                 } else if ( selected == "Telefonos y Smarphones") {
                     nivel2[1].innerHTML = "";
                     for (let i = 0; i < Telefonos_celulares.length; i++) {

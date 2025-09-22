@@ -746,7 +746,7 @@ routes.post('/myaccount/bankData/editMethod', async(req, res)=>{
     const data4 = Data4.trim();
 
     const box = [data1, data2, data3, data4];
-    const objectData = { iDMethod, methodName };
+    const objectData = { idMethod: iDMethod, methodName };
 
     box.forEach((value, i) => {
         if (value !== "") {
@@ -757,7 +757,7 @@ routes.post('/myaccount/bankData/editMethod', async(req, res)=>{
 
     console.log("iD :", iD); //este es mi id del user que es el dato que va con el indexed de esta coleccion, asi los conecto
     console.log("iDMethod :", iDMethod); //tengo mi idMethod en una constante se cual es el id del elemento 
-    console.log("iDMethod typeof :",  typeof iDMethod); //tengo mi idMethod en una constante se cual es el id del elemento 
+    console.log("idMethod typeof :",  typeof idMethod); //tengo mi idMethod en una constante se cual es el id del elemento 
     console.log("objectData :", objectData); //ya tengo aqui mi objeto listo para ser incertado 
    
     try {

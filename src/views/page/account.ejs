@@ -3,22 +3,27 @@
 
 <head> 
     <!-- storeProfile[0].username -->
+
+    <%- include('../partials/head.ejs') %>
+
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
+    <title>Blissenet Account</title>
+        
     <meta property="og:title" content="<%= storeProfile.username %>">
     <meta property="og:type" content="website">
     <meta property="og:description" content="Visita mi tienda en Blissenet.com">
     <meta property="og:image" content="<%= searchBanner[0].url %>">
     <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile.username %>">
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= storeProfile.username %>">
     <meta name="twitter:description" content="Visita mi tienda en Blissenet.com">
     <meta name="twitter:image" content="<%= searchBanner[0].url %>">
     <meta name="twitter:url" content="https://blissenet.com/account/<%= storeProfile.username %>">
 
-        
-    <%- include('../partials/head.ejs') %>
-    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
-    <script src="/toastr/toastr.min.js"></script>
-    <title>Blissenet Account</title>
+
+
 </head>
 <style>
 
@@ -1626,7 +1631,6 @@
                                 </div>
 
 
-
                               <% } else { %>
 
                                 <div class="ContainerMessage d-flex justify-content-center p-2" style="background-color: rgba(219, 223, 228, 0); width: 100%; margin-top: 80px; margin-bottom: 80px;">
@@ -1658,8 +1662,8 @@
 
                       <table class="table">
                           <thead>
-                            <tr style="font-size: 16px">
-                              <th style="text-align: left; font-size: 17px;"> <i class="bi bi-x-square-fill"></i> </th>
+                            <tr style="font-size: 16px"> <!-- deleteALLElements este será un boton que permite eliminar todos los elementos del carrito y dejarlo en cero --->
+                              <th style="text-align: left; font-size: 17px;" class="cursor-pointer deleteALLElements"> <i class="bi bi-x-square-fill"></i> </th>
                               <th style="text-align: left;">Descrip.</th>
                               <th style="text-align: center;">Cant.</th>
                               <th style="text-align: right;">P.&nbsp;Unit.</th>
@@ -2211,7 +2215,7 @@
 
                     <div class="col-sm-6 col-md-6 col-lg-3 px-0 contentUserDetails d-flex justify-content-around align-items-center">
                       <div class="containerRate d-flex flex-column justify-content-end align-items-center mx-2 cursor-pointer" id="viewRateStore">
-                        <span> Ver Calificaciones </span>
+                        <span id="showRates"> <!-- Dinamic --> </span>
                         <span id="pountCalif"> <!-- Dinamic --> </span> 
                         <span id="pountCount"> <!-- Dinamico --> </span>
                       </div>
@@ -2730,9 +2734,10 @@
 
 <!-- script para extraer calificacion de una tienda -->
 <script>
+  const showRates = document.getElementById('showRates');
   const pountCalif = document.getElementById('pountCalif');
   const pountCount = document.getElementById('pountCount');
-
+  let ratesLength;
  //console.log("Esto es Store ----------->",Store);
 
   const rate = {
@@ -2751,15 +2756,17 @@
     .then(response =>response.json() )
     .then( jsonx =>  {
       
-        //console.log("recibiendo del backend ->", jsonx)
+        console.log("recibiendo del backend '/account/pountRate'->", jsonx);
         const boxRates = []; //aqui meto todas las calificaciones parseadas a numeros
         jsonx.forEach((ele)=>{
           const markStar = ele.markStar;
+          console.log("markStar ......:", markStar);
           const markstar = parseInt(markStar);
           boxRates.push(markstar)
         })
-        //console.log("boxRates", boxRates);
-        let ratesLength = boxRates.length;
+        console.log("boxRates", boxRates);
+        ratesLength = boxRates.length;
+        //console.log("ratesLength ......:", ratesLength); // indica la cantidad de elementos o puntuaciones realizadas a esta tienda.
         //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
         let sumRate = 0;
         boxRates.forEach((ele)=>{
@@ -2768,17 +2775,19 @@
           sumRate = sumRate + stars; 
         })
 
-        //console.log("sumRate", sumRate);
-        //console.log("ratesLength", ratesLength);
+        console.log("sumRate", sumRate);
+        console.log("ratesLength", ratesLength);
         const pount = (sumRate / ratesLength);
         const pountRate = pount.toFixed(1); 
-        //console.log("pountRate", pountRate)
+        console.log("pountRate ......:", pountRate)
 
         //ratesLength = 2458965; para probar
         if ( isNaN(pountRate)){
+          showRates.innerText = "Sin Calificaciones" ;
           pountCalif.innerHTML = `0 <i class="bi bi-star-fill"></i>`;
           pountCount.innerHTML = `(0)`
         } else {
+          showRates.innerText = "Ver Calificaciones" ;
           pountCalif.innerHTML = `${pountRate} <i class="bi bi-star-fill"></i>`;
           
           //pountCount.innerHTML = `(${ratesLength})`
@@ -2800,6 +2809,77 @@
       
       })
     .catch( err => console.log(err));
+
+</script>
+
+<script>
+  const viewRateStore = document.getElementById('viewRateStore'); //esto es el boton para ver las calificaciones
+  const containerWorkSpace = document.querySelector('.containerWorkSpace');
+  const containerViewRatesStore = document.querySelector('.containerViewRatesStore'); //contenedor que porta toda la vista de las calificaciones.
+  const btnXCloseViewRate = document.getElementById('btnXCloseViewRate'); //icono x para cerrar
+  const btnCloseViewRate = document.querySelector('.btnCloseViewRate'); //boton verde para cerrar
+
+
+  viewRateStore.addEventListener('click', ()=>{
+
+    //ratesLength = 0; para probar cuando ete en cero.
+    console.log("ratesLength ....:", ratesLength);
+    
+
+    if (ratesLength !== 0){
+
+      containerSegment.classList.add('close');
+      containerWorkSpace.classList.add('close');
+      mainGallery.classList.add('close');
+      containerInfoBliss.classList.add('close');
+      //popupCart.classList.add('close'); //cerramos la lista del carrito si lo tiene. REVISAR
+      
+      containerViewRatesStore.classList.remove('close');
+      
+      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+      efectSoundExpan.play().catch(error => {
+          console.error("Error al reproducir el sonido:", error);
+      });    
+
+      irATopBar() //nos llevan al lugar que se debe en el DOM
+
+    }     
+
+  })
+
+  btnXCloseViewRate.addEventListener('click', ()=>{
+
+    containerSegment.classList.remove('close');
+    containerWorkSpace.classList.remove('close');
+    mainGallery.classList.remove('close');
+
+    containerInfoBliss.classList.add('close');
+    containerViewRatesStore.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    }); 
+
+  })
+
+  btnCloseViewRate.addEventListener('click', ()=>{
+
+    containerSegment.classList.remove('close');
+    containerWorkSpace.classList.remove('close');
+    mainGallery.classList.remove('close');
+
+    containerInfoBliss.classList.add('close');
+    containerViewRatesStore.classList.add('close');
+
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    }); 
+
+  })
+  
+
 
 </script>
 
@@ -2862,67 +2942,6 @@
 
 </script>
 
-<script>
-  const viewRateStore = document.getElementById('viewRateStore'); //esto es el boton para ver las calificaciones
-  const containerWorkSpace = document.querySelector('.containerWorkSpace');
-  const containerViewRatesStore = document.querySelector('.containerViewRatesStore'); //contenedor que porta toda la vista de las calificaciones.
-  const btnXCloseViewRate = document.getElementById('btnXCloseViewRate'); //icono x para cerrar
-  const btnCloseViewRate = document.querySelector('.btnCloseViewRate'); //boton verde para cerrar
-
-
-  viewRateStore.addEventListener('click', ()=>{
-
-    containerSegment.classList.add('close');
-    containerWorkSpace.classList.add('close');
-    mainGallery.classList.add('close');
-    containerInfoBliss.classList.add('close');
-
-    containerViewRatesStore.classList.remove('close');
-
-    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-    efectSoundExpan.play().catch(error => {
-        console.error("Error al reproducir el sonido:", error);
-    });    
-
-    irATopBar() //nos llevan al lugar que se debe en el DOM
-
-  })
-
-  btnXCloseViewRate.addEventListener('click', ()=>{
-
-    containerSegment.classList.remove('close');
-    containerWorkSpace.classList.remove('close');
-    mainGallery.classList.remove('close');
-
-    containerInfoBliss.classList.add('close');
-    containerViewRatesStore.classList.add('close');
-
-    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-    efectSoundExpan.play().catch(error => {
-        console.error("Error al reproducir el sonido:", error);
-    }); 
-
-  })
-
-  btnCloseViewRate.addEventListener('click', ()=>{
-
-    containerSegment.classList.remove('close');
-    containerWorkSpace.classList.remove('close');
-    mainGallery.classList.remove('close');
-
-    containerInfoBliss.classList.add('close');
-    containerViewRatesStore.classList.add('close');
-
-    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
-    efectSoundExpan.play().catch(error => {
-        console.error("Error al reproducir el sonido:", error);
-    }); 
-
-  })
-  
-
-
-</script>
 
   <!-- script que crea la media de las calificaciones -->
   <script>
@@ -4021,6 +4040,7 @@ if (btnPolity) {
     containerFaqs.classList.add('close');
     containerSurvey.classList.add('close');
     containerLocation.classList.add('close');
+    popupCart.classList.add('close'); //cerramos la lista del carrito si lo tiene.
     containerViewRatesStore.classList.add('close');
 
     efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
@@ -4061,6 +4081,7 @@ if (btnFaqs){
     containerFaqs.classList.remove('close');
     containerSurvey.classList.add('close');
     containerLocation.classList.add('close');
+    popupCart.classList.add('close'); //cerramos la lista del carrito si lo tiene.
     containerViewRatesStore.classList.add('close');
 
     efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
@@ -4100,7 +4121,7 @@ if (btnSurvey){
       const indexed = store_indexed.value; //dueño de la tienda          
       
 
-      //verificamos que el vivitante realmente exista.
+      //verificamos que el visitante realmente exista.
       //cuando no exista este input no hay user
       if (surveyId){
         const surveyIdValue =  surveyId.value; //visitante 
@@ -4126,7 +4147,7 @@ if (btnSurvey){
                   console.log(jsonx)
                   const code = jsonx.code;
                   console.log("code -->", code);
-                  
+                  popupCart.classList.add('close'); //cerramos la lista del carrito si lo tiene.
                                       
                     if (code == 0){
                       //este usuario no ha realizado la encuesta
@@ -4241,6 +4262,7 @@ if (btnLocation){
     containerFaqs.classList.add('close');
     containerSurvey.classList.add('close');
     containerViewRatesStore.classList.add('close');
+    popupCart.classList.add('close'); //cerramos la lista del carrito si lo tiene.
     containerLocation.classList.remove('close');
 
     efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
@@ -4376,9 +4398,10 @@ function irATopBar() {
   const countTag = document.querySelectorAll('.countTag'); //es el span que muestra la cantidad de pedido por el cliente
   
   
-  const containerCartList = document.querySelector('.containerCartList'); //este es el icono de cartShopping dodne las personas podran con un click ver su lista de compra.
+  const containerCartList = document.querySelector('.containerCartList'); //este es el icono de cartShopping donde las personas podran con un click ver su lista de compra.
   const lightCartShopping = document.querySelector('.lightCartShopping'); //luz parpadeante identificadora de carrito activo
-  const cartItems = document.getElementById('cartItems'); // el la tabla donde vamos a inyectar los datos de la lista de compra                         
+  const deleteALLEle = document.querySelector('.deleteALLElements'); //boton que elimina todos los elementos del carrito y deja el listado en cero.
+  const cartItems = document.getElementById('cartItems'); // Es la tabla donde vamos a inyectar los datos de la lista de compra                         
   const totalPagar = document.getElementById('totalPagar'); //es el total a pagar del carrito de compras.
 
   const StoreId = document.getElementById('StoreId').value;
@@ -4396,6 +4419,44 @@ function irATopBar() {
     boxShopping.push(...cart);
   }
   console.log("boxShopping :", boxShopping );
+
+
+  deleteALLEle.addEventListener('click', ()=>{
+    console.log("boxShopping .............:", boxShopping );
+
+    if (boxShopping.length !==0){
+
+      efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+      efectSoundExpan.play().catch(error => {
+          console.error("Error al reproducir el sonido:", error);
+      });    
+
+      boxShopping = []; //limpiamos el array boxShopping
+      cartItems.innerHTML = "" //limpiamos todos los lementos de la tabla.
+      totalPagar.innerText = "0.00" //limpiamos el valor total.
+
+      console.log("boxShopping actualizado.............:", boxShopping );
+      //salvamos la informacion
+      localStorage.setItem(`cart_${UserId}+${StoreId}`, JSON.stringify(boxShopping));
+
+      const message = "Ha vaciado el carrito.";
+      mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+
+      //console.log("countTag ....:", countTag);
+      countTag.forEach((ele, i)=>{
+        ele.innerText = 0; //actualizamos en tiempo real colcoando todos los valores de las tarjetas en cero (0).
+      })
+      
+      lightCart()
+      
+    } else {
+
+      const message = "Sin articulos que eliminar.";
+      mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+
+    }
+
+  });
 
   //----- Esta funcion coloca un identificador al boton de cartShopping----
   lightCart();
