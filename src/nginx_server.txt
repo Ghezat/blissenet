@@ -93,5 +93,19 @@ que es duplicado y borrar el el archivo robots.txt y reemplazarlo por este
        access_log off;
     }
 
+    o puedes usar esta cinfiguracion 
+
+    location = /robots.txt {
+        root /home/blissenet/public_html;
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+Reinicia Nginx:
+
+    ```bash
+    sudo systemctl restart nginx
+
  esto seria todo luego sales dando a escape, luego  ":" y finalmente "wq"
  finalmente puedes pobar con el comando nginx -t    
