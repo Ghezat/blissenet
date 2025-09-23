@@ -1,7 +1,6 @@
    User-agent: *
    Disallow: /admin
 
-
    # Esto esta dentro de src
    # Esto es el significado de estos codigos
    # User-agent: Esta línea indica a qué motores de búsqueda se aplican las reglas que siguen. El asterisco (*) es un comodín que significa todos los motores de búsqueda.
