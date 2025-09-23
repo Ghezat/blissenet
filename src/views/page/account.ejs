@@ -2,19 +2,12 @@
 <html lang="en">
 
 <head> 
-    <!-- storeProfile[0].username -->
-
-    <%- include('../partials/head.ejs') %>
-
-    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
-    <script src="/toastr/toastr.min.js"></script>
-    <title>Blissenet Account</title>
         
-    <meta property="og:title" content="<%= storeProfile.username %>">
-    <meta property="og:type" content="website">
-    <meta property="og:description" content="Visita mi tienda en Blissenet.com">
-    <meta property="og:image" content="<%= searchBanner[0].url %>">
-    <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile.username %>">
+    <meta property="og:type" content="website" >
+    <meta property="og:title" content="<%= storeProfile.username %>" >
+    <meta property="og:description" content="Visita mi tienda en Blissenet.com" >
+    <meta property="og:image" content="<%= searchBanner[0].url %>" >
+    <meta property="og:url" content="https://blissenet.com/account/<%= storeProfile.username %>" >
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= storeProfile.username %>">
@@ -22,7 +15,10 @@
     <meta name="twitter:image" content="<%= searchBanner[0].url %>">
     <meta name="twitter:url" content="https://blissenet.com/account/<%= storeProfile.username %>">
 
-
+    <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
+    <title>Blissenet Account</title>
 
 </head>
 <style>
@@ -478,8 +474,8 @@
         <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
     <% }; %>
 
-    <%- include('../partials/navi-simple.ejs') %>
-   
+    <%- include('../partials/navi-simple.ejs') %>    
+
 
     <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
 
