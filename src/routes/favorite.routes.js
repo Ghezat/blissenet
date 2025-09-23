@@ -256,7 +256,10 @@ routes.post('/myfavorites', async (req, res)=>{
         console.log("esta es la busqueda del producto del usuario --->", searchFavorites);
         
         if (searchFavorites.length !== 0){
-            console.log('El producto ya esta guardado en favoritos')
+            console.log('El producto ya esta guardado en favoritos');
+
+            const msg = "Anuncio ya guardado en favoritos.";
+            res.json({ code: "ok", message: msg });
         } else {
             console.log('El producto no existe y se procederá a guardarse!')
             const newFavorite = new modelFavorites( { id_product : IdProduct, department: Depart, indexed : User._id } );
@@ -293,35 +296,35 @@ routes.post('/myfavorites', async (req, res)=>{
                 console.log("esta es la cantidad de favoritos que tiene actualmente --->", FavoriteSum);
                 const updatesfavorite = await modelAutomotive.findByIdAndUpdate(IdProduct, { favorite : FavoriteSum  } );
                 console.log("el campo favorito ya ha sido incrementado como favorito de unusuario");
-             }  else if (Depart == 'realstate'){
+             } else if (Depart == 'realstate'){
                 const result = await modelRealstate.findById(IdProduct);
                 const CountFavorite = result.favorite;
                 const FavoriteSum = CountFavorite + 1;
                 console.log("esta es la cantidad de favoritos que tiene actualmente --->", CountFavorite)
                 const updatesfavorite = await modelRealstate.findByIdAndUpdate(IdProduct, { favorite : FavoriteSum  } );
                 console.log("el campo favorito ya ha sido incrementado como favorito de unusuario");
-             }  else if (Depart == 'nautical'){
+             } else if (Depart == 'nautical'){
                 const result = await modelNautical.findById(IdProduct);
                 const CountFavorite = result.favorite;
                 const FavoriteSum = CountFavorite + 1;
                 console.log("esta es la cantidad de favoritos que tiene actualmente --->", CountFavorite)
                 const updatesfavorite = await modelNautical.findByIdAndUpdate(IdProduct, { favorite : FavoriteSum  } );
                 console.log("el campo favorito ya ha sido incrementado como favorito de unusuario");
-             }  else if (Depart == 'service'){
+             } else if (Depart == 'service'){
                 const result = await modelService.findById(IdProduct);
                 const CountFavorite = result.favorite;
                 const FavoriteSum = CountFavorite + 1;
                 console.log("esta es la cantidad de favoritos que tiene actualmente --->", CountFavorite)
                 const updatesfavorite = await modelService.findByIdAndUpdate(IdProduct, { favorite : FavoriteSum  } );
                 console.log("el campo favorito ya ha sido incrementado como favorito de unusuario"); 
-             }  else if (Depart == 'auctions'){
+             } else if (Depart == 'auctions'){
                 const result = await modelAuction.findById(IdProduct);
                 const CountFavorite = result.favorite;
                 const FavoriteSum = CountFavorite + 1;
                 console.log("esta es la cantidad de favoritos que tiene actualmente --->", CountFavorite)
                 const updatesfavorite = await modelAuction.findByIdAndUpdate(IdProduct, { favorite : FavoriteSum  } );
                 console.log("el campo favorito ya ha sido incrementado como favorito de unusuario"); 
-             }  else if (Depart == 'raffle'){
+             } else if (Depart == 'raffle'){
                 const result = await modelRaffle.findById(IdProduct);
                 const CountFavorite = result.favorite;
                 const FavoriteSum = CountFavorite + 1;
@@ -329,6 +332,9 @@ routes.post('/myfavorites', async (req, res)=>{
                 const updatesfavorite = await modelRaffle.findByIdAndUpdate(IdProduct, { favorite : FavoriteSum  } );
                 console.log("el campo favorito ya ha sido incrementado como favorito de unusuario"); 
              }
+
+            const msg = "Anuncio guardado en favoritos.";
+            res.json({ code: "ok", message: msg });
                           
         }
         

@@ -35,12 +35,14 @@ routes.get('/account/:account', async (req,res)=>{
     //console.log("Este es el parametroooo ---->",req.params);
     const account  = req.params.account;
     console.log("este es el account a visitar o tienda", account) //rogelio 
+    let countNegotiationsBuySell;
+    let countMessages;
     
     const boxPublisher = [];
     let newBox;
     let boxOffert = [];
     const user = req.session.user;
-    const userId = user._id;
+        
     
     //console.log("este es el usuario visitante--->", user);
     //const countMessages = req.session.countMessages
@@ -49,22 +51,6 @@ routes.get('/account/:account', async (req,res)=>{
     let searchProfile;
     const segment = null;
     
-
-    //aqui obtengo la cantidad de negotiationsBuySell
-    //const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
-    //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
-    let countNegotiationsBuySell;
-    let countMessages;
-
-    const count = await negotiationsBuySell(userId); //llamamos la funcion y esperamos el valor para asignarlo en  countNegotiationsBuySell; 
-    countNegotiationsBuySell = count;
-    req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.
-    console.log("VER....countNegotiationsBuySell........:", countNegotiationsBuySell); 
-
-    const countMsg = await messengerCount(userId);
-    countMessages = countMsg;
-    req.session.countMessages = countMessages; // ---> Esto es lo que se propagara por toda la aplicacion
-    console.log("VER....countMessages........:", countMessages); 
 
     const Account = await modelUser.find({ username : account });
     const accountID = Account[0]._id;    
@@ -115,8 +101,8 @@ routes.get('/account/:account', async (req,res)=>{
 
     searchOffert()
         .then(()=>{
-            console.log("Aqui lo recaudado de las ofertas");
-            console.log("boxOffert --->",boxOffert);
+            //console.log("Aqui lo recaudado de las ofertas");
+            //console.log("boxOffert --->",boxOffert);
             
         })
         .catch((err)=>{
@@ -127,6 +113,22 @@ routes.get('/account/:account', async (req,res)=>{
     if (user){
         //console.log("Esto es user._id ------>", user._id );
         const userId = user._id; //usaremos con el indexed en la coleccion profile.
+
+        //aqui obtengo la cantidad de negotiationsBuySell
+        //const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+
+        const count = await negotiationsBuySell(userId); //llamamos la funcion y esperamos el valor para asignarlo en  countNegotiationsBuySell; 
+        countNegotiationsBuySell = count;
+        req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.
+        console.log("VER....countNegotiationsBuySell........:", countNegotiationsBuySell); 
+
+        const countMsg = await messengerCount(userId);
+        countMessages = countMsg;
+        req.session.countMessages = countMessages; // ---> Esto es lo que se propagara por toda la aplicacion
+        console.log("VER....countMessages........:", countMessages); 
+
+
         searchProfile = await modelProfile.find({ indexed : userId });
         //console.log("Aqui el profile de la cuenta", searchProfile);
 

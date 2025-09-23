@@ -474,7 +474,12 @@
         <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
     <% }; %>
 
-    <%- include('../partials/navi-simple.ejs') %>    
+    <%- include('../partials/navi-simple.ejs') %>
+   
+<!--     <span class="text-light" >Prueba username : <%= storeProfile.username %> </span> <br>
+    <span class="text-light" >Prueba banner : <%= searchBanner[0].url %> </span> <br>
+    <span class="text-light" >Prueba url : https://blissenet.com/account/<%= storeProfile.username %> </span>  -->
+    
 
 
     <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
@@ -2424,67 +2429,6 @@
     
   </script>
 
-<script>
-  // popover del carrito de compra
-  // Selecciona el botón con la clase 'popoverCarBuy'
-  const popoverCarBuy = document.querySelector('.popoverCarBuy');
-
-  // Inicializa el popover de Bootstrap
-  const popoverInstanceCar = new bootstrap.Popover(popoverCarBuy);
-
-  // Función para mostrar/ocultar el popover
-  function togglePopoverCar() {
-      const isVisible = popoverInstanceCar._isShown;
-      if (isVisible) {
-        popoverInstanceCar.hide();
-      } else {
-        popoverInstanceCar.show();
-      }
-  }
-
-  // Añade evento al botón
-  popoverCarBuy.addEventListener('click', (event) => {
-      event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
-      togglePopoverCar();
-  });
-
-  // Cierra el popover si se hace clic en cualquier parte de la página
-  document.addEventListener('click', () => {
-      popoverInstanceCar.hide();
-  });
-
-</script>
-
-<script>
-  // popover no logeado para calificar la tienda 
-  // Selecciona el botón con la clase 'popoverNoRate'
-  const popoverNoRate = document.querySelector('.popoverNoRate');
-
-  // Inicializa el popover de Bootstrap
-  const popoverInstanceNoRate = new bootstrap.Popover(popoverNoRate);
-
-  // Función para mostrar/ocultar el popover
-  function togglePopoverNoRate() {
-      const isVisible = popoverInstanceNoRate._isShown;
-      if (isVisible) {
-        popoverInstanceNoRate.hide();
-      } else {
-        popoverInstanceNoRate.show();
-      }
-  }
-
-  // Añade evento al botón
-  popoverNoRate.addEventListener('click', (event) => {
-      event.stopPropagation(); // Evita que el clic en el botón cierre el popover inmediatamente
-      togglePopoverNoRate();
-  });
-
-  // Cierra el popover si se hace clic en cualquier parte de la página
-  document.addEventListener('click', () => {
-    popoverInstanceNoRate.hide();
-  });
-
-</script>
 
 
 <script>
@@ -2520,39 +2464,7 @@
 
 </script>
 
-<script>
-  // Estos son los popover de los corazones de los anuncios de la tienda.
-  // Selecciona todos los botones con la clase 'popover'
- 
-  const popoverButtons = document.querySelectorAll('.popover');
 
-  // Inicializa los popovers de Bootstrap
-  const popoverInstances = Array.from(popoverButtons).map(button => {
-      return new bootstrap.Popover(button);
-  });
-
-  // Añade evento a cada botón
-  popoverButtons.forEach(button => {
-      button.addEventListener('click', () => {
-          // Cierra todos los popovers abiertos
-          popoverInstances.forEach(popover => {
-              if (popover._element !== button) {
-                  popover.hide();
-              }
-          });
-          // Abre el popover del botón clicado
-          const currentPopover = bootstrap.Popover.getInstance(button);
-          if (currentPopover) {
-              currentPopover.toggle();
-          } else {
-              new bootstrap.Popover(button).show();
-          }
-      });
-  })
-
- 
-
-</script>
 
 <script>
   const formSegment = document.getElementById('formSegment');
@@ -2631,99 +2543,11 @@
 <script>
 
   const store = document.querySelector('.store');
-  const level = document.querySelector('.level');  
-  const imgLevel = document.querySelector('.imgLevel');  
-  const scoreLevel = document.querySelector('.scoreLevel');
-  const trustLevel = document.querySelector('.trustLevel');
   
   const Store = store.childNodes[1].value;
   //console.log("Esto es Store ----------->",Store);
   
-  
-  let dato = {
-    store : Store
-  }
-  
-  //console.log("Esto es dato ---->",dato)
-/*   
-  fetch("/record-trust", {
-                method: "post",
-                body: JSON.stringify(dato),
-                headers: { "content-type": "application/json" }
-          })
-          .then(response => response.json())
-          .then(json =>{ 
-            
-              //console.log("Esto es el Objeto", json)
-          
-             
-              const raffleData = json[0]; 
-              const sellerBuySell = json[1].count;
-              const sellerTrust = json[2];
-  
-              //console.log("esto es raffleData----->", raffleData);
-              //console.log("esto es sellerCount---->", sellerBuySell);
-              //console.log("esto es sellerTrust---->", sellerTrust);
 
-              let sellerPositivo = sellerTrust.positive + raffleData.countRafflePositivo;  
-              let sellerNegativo = sellerTrust.negative + raffleData.countRaffleNegativo;
-              
-              
-              const totalOperationSeller = sellerPositivo + sellerNegativo;
-  
-              if (sellerPositivo !== 0 && totalOperationSeller !== 0 ){
-                const tasaTrustSell = ((sellerPositivo * 100) / totalOperationSeller).toFixed(0);
-                trustLevel.innerText = tasaTrustSell + '%';
-              }
-
-
-              let countRafflePositivo = raffleData.countRafflePositivo;
-              let sellerCount = sellerBuySell + countRafflePositivo;
-  
-              if ( sellerCount <= 9 ){ // de 0 a 9
-                  //console.log("Estas en el nivel Carbon como comprador");
-                  level.innerText = 'Carbon'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralCarbonClean.png" class="m-0" style="width: 40px;">'
-                  scoreLevel.innerText = sellerCount;
-  
-              } else if ( sellerCount <= 19 && sellerCount >= 10 ){ //de 10 a 19 
-                  //console.log("Estas en el nivel Hierro como vendedor");
-                  level.innerText = 'Hierro'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralHierroClean.png" style="width: 40px;">'
-                  scoreLevel.innerText = sellerCount;
-                              
-              } else if ( sellerCount <= 49 && sellerCount >= 20 ){ // de 20 a 49 
-                  console.log("Estas en el nivel Bronce como vendedor");
-                  level.innerText = 'Bronce'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralBronceClean.png" style="width: 40px;">'
-                  scoreLevel.innerText = sellerCount;
-                              
-              } else if ( sellerCount <= 99 && sellerCount >= 50 ){ // de 50 a 99
-                  console.log("Estas en el nivel Plata como vendedor");
-                  level.innerText = 'Plata'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralPlataClean.png" style="width: 40px;">'
-                  scoreLevel.innerText = sellerCount;
-                              
-              } else if ( sellerCount <= 199 && sellerCount >= 100 ){ // de 100 a 199
-                  console.log("Estas en el nivel Oro como vendedor");
-                  level.innerText = 'Oro'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralOroClean.png" style="width: 40px;">'
-                  scoreLevel.innerText = sellerCount;
-           
-              } else if ( sellerCount >= 200 ){
-                  console.log("Estas en el nivel Diamante como vendedor");
-                  level.innerText = 'Diamante'
-                  imgLevel.innerHTML +=  '<img src="/img/MineralDiamanteClean.png" style="width: 40px;">'
-                  scoreLevel.innerText = sellerCount;
-             
-              }
-           
-
-             
-          })
-          .catch(err => console.log(err));
-
- */
 </script>
 
 
@@ -4688,13 +4512,9 @@ function irATopBar() {
     })  
 
 
-
  })
 
     
-       
-
-
  //boton de lista de compra que hace aparecer o desaparecer el popup de lista de compra     
 const popupCart = document.getElementById('popupCart'); //esta es la lista propiamente
 const closePopupCartList = document.querySelector('.closePopupCartList');
@@ -4854,7 +4674,6 @@ if (noConsolidate){
 }
 
   
-
 </script>
 
 <script>
@@ -4864,8 +4683,17 @@ if (noConsolidate){
       const element = linkHeart[i];
       element.addEventListener('click', () => {
 
+        efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+        efectSoundExpan.play().catch(error => {
+            console.error("Error al reproducir el sonido:", error);
+        });
+
         efecto()
-        setInterval(normalHeart, 2000)
+
+        setTimeout(() => {
+          normalHeart()
+        }, 8000);
+        
         //console.log(element.childNodes)
         //console.log(element.childNodes[0].value)
         //console.log(element.childNodes[1].value)
@@ -4887,7 +4715,16 @@ if (noConsolidate){
 
         })
           .then(response => response.json())
-          .then(jsonx => console.log(jsonx))
+          .then(jsonx => {
+            //console.log("Esto llega del backend cuando agregamos un anuncio a favorito", jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+            console.log("code :", code);
+            console.log("message :", message);
+
+            mostrarToast( message , 'right', 'info', '¡ Hecho !', false ); // Agrega título aquí
+
+          }) 
           .catch(err => console.log(err));
 
       })
@@ -5241,6 +5078,11 @@ if (purchaseTime){
         const depart = ele.childNodes[3].value;
         const id = ele.childNodes[5].value;
 
+        efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+        efectSoundExpan.play().catch(error => {
+            console.error("Error al reproducir el sonido:", error);
+        });
+
         const datos = {
             depart: depart,
             id: id
@@ -5261,7 +5103,6 @@ if (purchaseTime){
               const note = jsonx.note;
               console.log("note ->", note)
               // esto llefa del backend --> const response = con note 0 o note 1;
-
 
               if (note === 1){
                 boxDetailPurchaseTime[i].innerHTML = `<div class="d-flex flex-column align-items-center">  <span class="d-flex justify-content-center align-items-center bg-success text-light rounded-pill" style= "width: 30px; height: 30px"> <i class="bi bi-envelope"></i> </span>  ¡Será notificado al estar disponible!. </div>`
@@ -5564,16 +5405,6 @@ if (surveyDataInput){
     })
 
   }
-
-</script>
-
-<script>
-  const contentCardBuy = document.querySelector('.contentCardBuy');
-  
-  contentCardBuy.addEventListener('click', ()=>{
-    console.log('hola');
-
-  })
 
 </script>
 
