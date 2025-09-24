@@ -5,3 +5,41 @@
    # Esto es el significado de estos codigos
    # User-agent: Esta línea indica a qué motores de búsqueda se aplican las reglas que siguen. El asterisco (*) es un comodín que significa todos los motores de búsqueda.
    # Disallow: Esta línea indica qué partes del sitio no deben ser rastreadas por los motores de búsqueda. Al dejar esta línea vacía, estás permitiendo que todos los motores de búsqueda accedan y rastreen todo tu sitio. En otras palabras, no hay restricciones. 
+
+   # Como probar que este bien este archivo:
+   # en el url escribir : https://blissenet.com/robots.txt
+   # Si no puedes ver el archivo esta algo malo. que puede estar malo? abajo explico
+   # lo que se deña son los permisos del servidor del arhivo donde esta alojado /home/blissenet/public_html que debe estar con el permiso 755 si no tiene ese permiso es probable que no puedas tener acceso a el 
+   # como verlo? vas al explorador de archivos del servidor en "file manage" y buscas como estya definido el permiso del archivo public_html
+   # si dice 750 alli esta el problema debes ponerlo conb el permiso 755 se hacxe asi:
+   # sudo chmod 755 /home/blissenet/public_html
+   #   
+   #
+   #    1. **Cambiar permisos**:
+   #        - Cambia el permiso del directorio a `755`.
+   #             sudo chmod 755 /home/blissenet/public_html
+
+   #    2. **Reiniciar Nginx**:
+   #        - Después de hacer este cambio, reinicia Nginx:
+   #             sudo systemctl restart nginx
+   # 
+   #           ### Resumen de Permisos ###
+
+   #     - **Directorio `public_html`**: `755` (permite acceso público)
+   #     - **Archivo `robots.txt`**: `644` (acceso público de lectura)    
+
+   # ---------------------------------nginx------------------------------------------
+
+   #         location = /robots.txt {
+   #             alias /home/blissenet/public_html/robots.txt;
+   #             allow all;
+   #             log_not_found off;
+   #             access_log off;
+   #         }
+
+   # esta configuracion la veras aqui:
+   # Terminal:
+   # cd  /etc/nginx/conf.d/users 
+   # vim  blissenet.conf
+   # Debe verse como se muestra arriba el bloque location {...} 
+     

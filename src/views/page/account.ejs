@@ -510,8 +510,8 @@
         <% const deliveryOptions = storeProfile.deliveryOptions %>
 
         <input type="hidden" id="StorenameValue" value="<%= store_username %>">
-
         <input type="hidden" id="StoreId" value="<%= store_id %>">
+        <input type="hidden" id="shoppingCart" value="<%= shoppingCart %>">
         
         <div class="container-fluid p-0 m-0">
 
@@ -2354,6 +2354,9 @@
     const user = document.getElementById('iDLogeado'); 
     const userTienda = document.getElementById('iDStore'); 
 
+    const shoppingCart = document.getElementById('shoppingCart').value; 
+    //importante saber si tiene o no carrito activado
+
     btnFollow.addEventListener("click", ()=>{
       const BGColorTopbar = bGColorTopbar.value; const BGColorText = bGColorText.value;
       console.log(`BGColorTopbar ${BGColorTopbar} | BGColorText ${BGColorText}`) //colores cutomizados por el usuario de la tienda esto va solo en seguir
@@ -2703,6 +2706,16 @@
 
 </script>
 
+<script>
+  const contentAdmin = document.querySelector('.contentAdmin');
+  
+  contentAdmin.addEventListener('click', ()=>{
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
+  })
+</script>
 
 <!-- script para controlar todo el modulo de compartir -->
 <script>
@@ -3861,6 +3874,7 @@ if (btnPolity) {
     containerSurvey.classList.add('close');
     containerLocation.classList.add('close');
     popupCart.classList.add('close'); //cerramos la lista del carrito si lo tiene.
+    
     containerViewRatesStore.classList.add('close');
 
     efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
@@ -4211,13 +4225,15 @@ function irATopBar() {
 
 
 <script>
+console.log("shoppingCart.............:", shoppingCart);
+if (shoppingCart == "true"){
   //controlador de tagShippingCart
   const tagShippingCart = document.querySelectorAll('.tagShippingCart');
   const cartMenos = document.querySelectorAll('.CartMenos');
   const cartMas = document.querySelectorAll('.CartMas');
   const countTag = document.querySelectorAll('.countTag'); //es el span que muestra la cantidad de pedido por el cliente
   
-  
+ 
   const containerCartList = document.querySelector('.containerCartList'); //este es el icono de cartShopping donde las personas podran con un click ver su lista de compra.
   const lightCartShopping = document.querySelector('.lightCartShopping'); //luz parpadeante identificadora de carrito activo
   const deleteALLEle = document.querySelector('.deleteALLElements'); //boton que elimina todos los elementos del carrito y deja el listado en cero.
@@ -4283,47 +4299,63 @@ function irATopBar() {
 
   function lightCart(){
     if (boxShopping.length !==0){
-      lightCartShopping.classList.remove('close');
 
-      cartItems.innerHTML = "" //limpiamos e inyectamos 
-      totalPay = 0; //comenzamos en 0 sino se concatena dando sumas locas, ya que sumara incluso sino hay existencia.
+        lightCartShopping.classList.remove('close');
+
+        cartItems.innerHTML = "" //limpiamos e inyectamos 
+        totalPay = 0; //comenzamos en 0 sino se concatena dando sumas locas, ya que sumara incluso sino hay existencia.
+        
+        //inyectamos los datos en la tabla
+        boxShopping.forEach((ele)=>{
+
+          const total = parseFloat((ele.price * ele.countRequest).toFixed(2));
+
+          totalPay = totalPay + total; //aqui sumamos cada total
+
+          cartItems.innerHTML += `
+            <tr>
+              <th style="text-align: left;"> <span class="delItemCart">  <input type="hidden" value="${ ele.id }">  <i class="bi bi-x-square" style="font-size: 17px"></i> </span> </th>
+              <th style="text-align: left;"> ${ ele.title } </th>
+              <th style="text-align: center;">${ ele.countRequest }</th>
+              <th style="text-align: right;">${ ele.price }</th>
+              <th style="text-align: right;">${ total }</th>
+            </tr>
+          `
+        })
+
+
+        totalPagar.innerText = totalPay.toFixed(2);
+
+        const delItem = document.querySelectorAll('.delItemCart')  
       
-      //inyectamos los datos en la tabla
-      boxShopping.forEach((ele)=>{
+        delItem.forEach((ele)=>{
+          ele.addEventListener('click', ()=>{
+            const son = ele.children;
+            const id = son[0].value
+            console.log("Este es el id :", id);
+            const index = boxShopping.findIndex(ele => ele.id === id);
 
-        const total = parseFloat((ele.price * ele.countRequest).toFixed(2));
+            if (index !== -1) {
+              //tiene el indice, existe el articulo
+              
+                if (boxShopping.length > 1){ //cuando el array tiene mas de un elemento
+                  boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
+                  console.log("boxShopping ultimo dato:", boxShopping);
+                    tagShippingCart.forEach((ele, i)=>{
+                      //console.log("Este es ele", ele);
+                      const son = ele.children;
+                      const idEle = son[0].value;
+                      if (idEle === id){
+                        countTag[i].innerText = 0; //actualizamos en tiempo real
+                      }
+                    })
+                
+                    const message = "Eliminado del carrito.";
+                    mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+                    lightCart()
 
-        totalPay = totalPay + total; //aqui sumamos cada total
-
-        cartItems.innerHTML += `
-          <tr>
-            <th style="text-align: left;"> <span class="delItemCart">  <input type="hidden" value="${ ele.id }">  <i class="bi bi-x-square" style="font-size: 17px"></i> </span> </th>
-            <th style="text-align: left;"> ${ ele.title } </th>
-            <th style="text-align: center;">${ ele.countRequest }</th>
-            <th style="text-align: right;">${ ele.price }</th>
-            <th style="text-align: right;">${ total }</th>
-          </tr>
-        `
-      })
-
-
-      totalPagar.innerText = totalPay.toFixed(2);
-
-      const delItem = document.querySelectorAll('.delItemCart')  
-    
-      delItem.forEach((ele)=>{
-        ele.addEventListener('click', ()=>{
-          const son = ele.children;
-          const id = son[0].value
-          console.log("Este es el id :", id);
-          const index = boxShopping.findIndex(ele => ele.id === id);
-
-          if (index !== -1) {
-            //tiene el indice, existe el articulo
-            
-              if (boxShopping.length > 1){ //cuando el array tiene mas de un elemento
-                boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
-                console.log("boxShopping ultimo dato:", boxShopping);
+                } else { //cuando el array tiene solo un (1) elemento.
+                  boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
                   tagShippingCart.forEach((ele, i)=>{
                     //console.log("Este es ele", ele);
                     const son = ele.children;
@@ -4332,43 +4364,27 @@ function irATopBar() {
                       countTag[i].innerText = 0; //actualizamos en tiempo real
                     }
                   })
-               
+                  cartItems.innerHTML = ""; //limpiamos toda la lista
+                  totalPagar.innerText = "$0.00"; //iniciamos el monto en $0.00
+                  console.log("ver boxShopping ultimo dato:", boxShopping);
+                  //countTag[i].innerText = 0; //actualizamos en tiempo real
                   const message = "Eliminado del carrito.";
                   mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
                   lightCart()
+                }
+              
+              //salvamos la informacion
+              localStorage.setItem(`cart_${UserId}+${StoreId}`, JSON.stringify(boxShopping));
 
-              } else { //cuando el array tiene solo un (1) elemento.
-                boxShopping.splice(index, 1); // eliminar el elemento del array boxShopping
-                tagShippingCart.forEach((ele, i)=>{
-                  //console.log("Este es ele", ele);
-                  const son = ele.children;
-                  const idEle = son[0].value;
-                  if (idEle === id){
-                    countTag[i].innerText = 0; //actualizamos en tiempo real
-                  }
-                })
-                cartItems.innerHTML = ""; //limpiamos toda la lista
-                totalPagar.innerText = "$0.00"; //iniciamos el monto en $0.00
-                console.log("ver boxShopping ultimo dato:", boxShopping);
-                //countTag[i].innerText = 0; //actualizamos en tiempo real
-                const message = "Eliminado del carrito.";
-                mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
-                lightCart()
-              }
-            
-            //salvamos la informacion
-            localStorage.setItem(`cart_${UserId}+${StoreId}`, JSON.stringify(boxShopping));
-
-          } else {
-            console.log("Elemento no encontrado en boxShopping");
-          }
+            } else {
+              console.log("Elemento no encontrado en boxShopping");
+            }
 
 
-        })
-    })
+          })
+      })
 
-     
-
+      
     } else {
       lightCartShopping.classList.add('close');
     } //solo para cuando carga la pagina o se refresca.
@@ -4515,165 +4531,171 @@ function irATopBar() {
  })
 
     
- //boton de lista de compra que hace aparecer o desaparecer el popup de lista de compra     
-const popupCart = document.getElementById('popupCart'); //esta es la lista propiamente
-const closePopupCartList = document.querySelector('.closePopupCartList');
-const consolidate = document.getElementById('consolidate');
-const noConsolidate = document.getElementById('noConsolidate'); // boton cuando no el usuario no tenga perfil
-const dataMissing = document.querySelector('.dataMissing');
+  //boton de lista de compra que hace aparecer o desaparecer el popup de lista de compra     
+  const popupCart = document.getElementById('popupCart'); //esta es la lista propiamente
+  const closePopupCartList = document.querySelector('.closePopupCartList');
+  const consolidate = document.getElementById('consolidate');
+  const noConsolidate = document.getElementById('noConsolidate'); // boton cuando no el usuario no tenga perfil
+  const dataMissing = document.querySelector('.dataMissing');
 
-const orderDetail = document.getElementById('orderDetail');
-const clientAddress = document.getElementById('clientAddress');
-const clientPhone = document.getElementById('clientPhone');
-const clientIndentification = document.getElementById('clientIndentification');
-const clientName = document.getElementById('clientName');
-const selectDeliveryOptions = document.getElementById('selectDeliveryOptions');
+  const orderDetail = document.getElementById('orderDetail');
+  const clientAddress = document.getElementById('clientAddress');
+  const clientPhone = document.getElementById('clientPhone');
+  const clientIndentification = document.getElementById('clientIndentification');
+  const clientName = document.getElementById('clientName');
+  const selectDeliveryOptions = document.getElementById('selectDeliveryOptions');
 
-containerCartList.addEventListener('click', () => {
-  popupCart.classList.remove('close');
+  containerCartList.addEventListener('click', () => {
+    popupCart.classList.remove('close');
 
-});
+    efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+    efectSoundExpan.play().catch(error => {
+        console.error("Error al reproducir el sonido:", error);
+    });
 
 
-closePopupCartList.addEventListener('click', ()=>{
-    popupCart.classList.add('close'); // Cerrar el popup desde arriba icono x
-})
- 
-if (consolidate){
+  });
 
-  consolidate.addEventListener('click', ()=>{
 
-      consolidate.setAttribute("disabled", ""); //desactivamos el boton.
+  closePopupCartList.addEventListener('click', ()=>{
+      popupCart.classList.add('close'); // Cerrar el popup desde arriba icono x
+  })
+  
+  if (consolidate){
 
-      console.log("Esto es consolidate ..............")
-      console.log("boxShopping :", boxShopping);
-      //console.log("Id Tienda :", StoreId);
-      //console.log("Id Cliente :", UserId);  
-      const clientNameV = clientName.value; const clientIndentificationV = clientIndentification.value;
-      const clientPhoneV = clientPhone.value; const clientAddressV = clientAddress.value;
-      const deliveryOptV = selectDeliveryOptions.value; const orderDetailV = orderDetail.value;
-      console.log("deliveryOptV ....................:", deliveryOptV)
+    consolidate.addEventListener('click', ()=>{
 
-      TotalPay = totalPay.toFixed(2);
+        consolidate.setAttribute("disabled", ""); //desactivamos el boton.
 
-      if (boxShopping.length !==0){
+        console.log("Esto es consolidate ..............")
+        console.log("boxShopping :", boxShopping);
+        //console.log("Id Tienda :", StoreId);
+        //console.log("Id Cliente :", UserId);  
+        const clientNameV = clientName.value; const clientIndentificationV = clientIndentification.value;
+        const clientPhoneV = clientPhone.value; const clientAddressV = clientAddress.value;
+        const deliveryOptV = selectDeliveryOptions.value; const orderDetailV = orderDetail.value;
+        console.log("deliveryOptV ....................:", deliveryOptV)
 
-        if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="" && deliveryOptV !=="" ) {
-      
-              const datos = {
-                boxShopping: boxShopping,
-                StoreId: StoreId,
-                UserId: UserId,
-                Amount: TotalPay,
-                clientAddress: clientAddressV,
-                clientPhone: clientPhoneV,
-                clientIndentification: clientIndentificationV,
-                clientName: clientNameV,
-                deliveryOptionV: deliveryOptV,
-                orderDetail: orderDetailV
-              }
+        TotalPay = totalPay.toFixed(2);
 
-              console.log("esto es datos", datos); 
-      
-              fetch('/send_shoppingCart/consolidate', {
+        if (boxShopping.length !==0){
 
-                method: "post",
-                body: JSON.stringify(datos),
-                headers: { "content-type": "application/json" }
+          if (clientAddressV !=="" && clientPhoneV !=="" && clientIndentificationV !=="" && clientNameV !=="" && deliveryOptV !=="" ) {
+        
+                const datos = {
+                  boxShopping: boxShopping,
+                  StoreId: StoreId,
+                  UserId: UserId,
+                  Amount: TotalPay,
+                  clientAddress: clientAddressV,
+                  clientPhone: clientPhoneV,
+                  clientIndentification: clientIndentificationV,
+                  clientName: clientNameV,
+                  deliveryOptionV: deliveryOptV,
+                  orderDetail: orderDetailV
+                }
 
-              })
-              .then(response =>response.json() )
-              .then( jsonx => {
-                  console.log(jsonx) //const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                  
-                  const code = jsonx.code;
-                  const message = jsonx.message;
+                console.log("esto es datos", datos); 
+        
+                fetch('/send_shoppingCart/consolidate', {
 
-                  if (code == "ok"){
+                  method: "post",
+                  body: JSON.stringify(datos),
+                  headers: { "content-type": "application/json" }
 
-                      setTimeout(() => {
-                        consolidate.removeAttribute("disabled"); //activamos el boton.
-                      }, 5000);
-                      mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {
+                    console.log(jsonx) //const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                    
+                    const code = jsonx.code;
+                    const message = jsonx.message;
 
-                  } else if (code == "info"){
+                    if (code == "ok"){
 
-                      mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
-                      setTimeout(() => {
-                        consolidate.removeAttribute("disabled"); //activamos el boton.
-                      }, 5000);
-                      
-                  } else {
+                        setTimeout(() => {
+                          consolidate.removeAttribute("disabled"); //activamos el boton.
+                        }, 5000);
+                        mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
 
-                      setTimeout(() => {
-                        consolidate.removeAttribute("disabled"); //activamos el boton.
-                      }, 5000);
-                      mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+                    } else if (code == "info"){
 
-                  }
-              
-              })
-              .catch( err =>{ console.log(err)
+                        mostrarToast( message , 'right', 'info', '¡Atención!', true ); // Agrega título aquí
+                        setTimeout(() => {
+                          consolidate.removeAttribute("disabled"); //activamos el boton.
+                        }, 5000);
+                        
+                    } else {
 
-                  setTimeout(() => {
-                    consolidate.removeAttribute("disabled"); //activamos el boton.
-                  }, 5000);
-                  mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+                        setTimeout(() => {
+                          consolidate.removeAttribute("disabled"); //activamos el boton.
+                        }, 5000);
+                        mostrarToast( message , 'right', 'danger', '¡Error!', true ); // Agrega título aquí
 
-              });
+                    }
+                
+                })
+                .catch( err =>{ console.log(err)
+
+                    setTimeout(() => {
+                      consolidate.removeAttribute("disabled"); //activamos el boton.
+                    }, 5000);
+                    mostrarToast( message , 'right', 'danger', '', true ); // Agrega título aquí
+
+                });
+
+          } else {
+            //alert("faltan datos de receptor de esta compra.")
+            dataMissing.innerHTML = `                        
+                                    <div class="alert alert-danger">
+                                      <b>
+                                        <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor o Delivery. </span>
+                                      </b> 
+                                    </div>
+                                    `;
+
+            setTimeout(() => {
+              dataMissing.innerHTML = "" // limpiamos el alert
+              consolidate.removeAttribute("disabled"); //activamos el boton.
+            }, 5000);    
+                                    
+          } 
 
         } else {
-          //alert("faltan datos de receptor de esta compra.")
-          dataMissing.innerHTML = `                        
-                                  <div class="alert alert-danger">
-                                    <b>
-                                      <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Faltan datos del Receptor o Delivery. </span>
-                                    </b> 
-                                  </div>
-                                  `;
 
+          const message = "El carrito esta vacio."
+          mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
           setTimeout(() => {
-            dataMissing.innerHTML = "" // limpiamos el alert
             consolidate.removeAttribute("disabled"); //activamos el boton.
-          }, 5000);    
-                                  
-        } 
+          }, 5000);
 
-      } else {
+        }
 
-        const message = "El carrito esta vacio."
-        mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
-        setTimeout(() => {
-          consolidate.removeAttribute("disabled"); //activamos el boton.
-        }, 5000);
+    })
 
-      }
+  }
 
-  })
+  if (noConsolidate){
+    noConsolidate.addEventListener('click', ()=>{
 
-}
+      noConsolidate.setAttribute("disabled", "");
+      dataMissing.innerHTML = `                        
+                          <div class="alert alert-danger">
+                            <b>
+                              <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Debe crear su perfil. </span>
+                            </b> 
+                          </div>
+                          `;
 
-if (noConsolidate){
-  noConsolidate.addEventListener('click', ()=>{
+      setTimeout(() => {
+        noConsolidate.removeAttribute("disabled");
+        dataMissing.innerHTML = ""
+      }, 4000);                    
 
-    noConsolidate.setAttribute("disabled", "");
-    dataMissing.innerHTML = `                        
-                        <div class="alert alert-danger">
-                          <b>
-                            <span> <i class="bi bi-exclamation-triangle-fill me-2"></i> Debe crear su perfil. </span>
-                          </b> 
-                        </div>
-                        `;
+    })
+  }
 
-     setTimeout(() => {
-      noConsolidate.removeAttribute("disabled");
-      dataMissing.innerHTML = ""
-     }, 4000);                    
-
-  })
-}
-
-  
+}    
 </script>
 
 <script>

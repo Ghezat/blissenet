@@ -93,7 +93,7 @@ que es duplicado y borrar el el archivo robots.txt y reemplazarlo por este
        access_log off;
     }
 
-    o puedes usar esta cinfiguracion 
+    o puedes usar esta configuracion 
 
     location = /robots.txt {
         root /home/blissenet/public_html;
