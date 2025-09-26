@@ -23,7 +23,7 @@ const shoppingCart = new Schema({
     ratingBuy :  { type : Number, default : 0 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1
     CommentSeller :  { type : String, default : "no_comment" },   
     CommentBuy :  { type : String, default : "no_comment" },
-    
+    clearTracking : { type : Boolean, default : false }, //este campo es usado para cuando el tracking ha sido completado poder luego quitarlo a voluntad por medio de un boton donde pasa hacer true. y se vera luego ese registro en historial. 
     date : { type : String } //aqui guardamos la fecha en que el cliente envio para ser consolidado.
 },{
     timestamps : true

@@ -85,7 +85,7 @@
                                         <div class="card-body">
 
                                             <div class="requests mb-3">
-                                                <span style="font-size: 16px;"> Solicitudes:  <span class="bg-secondary text-light rounded-3 px-2 ms-3"> <%= sumCount %> </span>   </span> 
+                                                <span style="font-size: 16px;"> Compras en Proceso:  <span class="bg-secondary text-light rounded-3 px-2 ms-3"> <%= sumCount %> </span>   </span> 
                                             </div>
                                             
 
@@ -93,47 +93,53 @@
 
                                                 
                                                     <% shoppingCartPending.forEach((ele)=>{  %>
-                                                        <% const iDCart = ele._id %>
-                                                        <% const sellerName = ele.sellerName %>
-                                                        <% const customerName = ele.customerName %>
-                                                        <% const date = ele.date %>
-                                                        <% const amount = ele.amount %>
-                                                        <% const boxShoppingCart = ele.boxShoppingCart %>
-                                                        <% const purchaseReceiver = ele.purchaseReceiver %>
-                                                        <% const deliveryOptions = ele.deliveryOptions %>
-                                                        <% const consolidate = ele.consolidate %>
-                                                        <% const paid = ele.paid %>
-                                                        <% const sent = ele.sent %>
-                                                        <% const received = ele.received %>
-                                                        <% const commentRatingSell = ele.CommentSeller %>                                                       
 
-                                                        
-                                                        <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
-                                                            <input type="hidden" class="iDCart" value="<%= iDCart %>"> 
-                                                            <input type="hidden" class="sellerNameData" value="<%= sellerName %>">
-                                                            <input type="hidden" class="customerNameData" value="<%= customerName %>">
-                                                            <input type="hidden" class="amount" value="<%= amount %>">  
-                                                            <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
-                                                            <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
-                                                            <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
-                                                            <input type="hidden" class="consolidate" value="<%= consolidate %>">
-                                                            <input type="hidden" class="paid" value="<%= paid %>">
-                                                            <input type="hidden" class="sent" value="<%= JSON.stringify(sent) %>">
-                                                            <input type="hidden" class="received" value="<%= received %>">
-                                                            <input type="hidden" class="commentRatingSell" value="<%= commentRatingSell %>">
+                                                        <% if (ele.clearTracking === false){ %>
 
-                                                            <div class="listLeft">
-                                                                <img src="/img/iconCartBuyes.png" alt="" style="width: 35px; height: 35px;">
-                                                                <span class="me-1"><%= sellerName  %></span> <span class="px-2 rounded-3" style="white-space: nowrap"> <i class="bi bi-currency-dollar"></i>(<%= amount  %>)</span> 
-                                                            </div> 
+                                                            <% const iDCart = ele._id %>
+                                                            <% const sellerName = ele.sellerName %>
+                                                            <% const customerName = ele.customerName %>
+                                                            <% const date = ele.date %>
+                                                            <% const amount = ele.amount %>
+                                                            <% const boxShoppingCart = ele.boxShoppingCart %>
+                                                            <% const purchaseReceiver = ele.purchaseReceiver %>
+                                                            <% const deliveryOptions = ele.deliveryOptions %>
+                                                            <% const consolidate = ele.consolidate %>
+                                                            <% const paid = ele.paid %>
+                                                            <% const sent = ele.sent %>
+                                                            <% const received = ele.received %>
+                                                            <% const commentRatingSell = ele.CommentSeller %>                                                       
 
-                                                            <div class="listRight d-flex align-items-center">
-                                                                <span class="me-2 bg-light rounded-3 px-2 text-dark shadow-sm" style="font-size: 14px; white-space: nowrap">
-                                                                   <i><%= date %></i> 
-                                                                </span>
-                                                            </div>
                                                             
-                                                        </div>    
+                                                            <div class="listCart d-flex justify-content-between border rounded-2 mb-1 cursor-pointer" style="font-size: 16px;">
+                                                                <input type="hidden" class="iDCart" value="<%= iDCart %>"> 
+                                                                <input type="hidden" class="sellerNameData" value="<%= sellerName %>">
+                                                                <input type="hidden" class="customerNameData" value="<%= customerName %>">
+                                                                <input type="hidden" class="amount" value="<%= amount %>">  
+                                                                <input type="hidden" class="boxShoppingCartData" value="<%=  JSON.stringify(boxShoppingCart) %>">
+                                                                <input type="hidden" class="purchaseReceiverData" value="<%=  JSON.stringify(purchaseReceiver) %>"> 
+                                                                <input type="hidden" class="deliveryOptions" value="<%= deliveryOptions %>">
+                                                                <input type="hidden" class="consolidate" value="<%= consolidate %>">
+                                                                <input type="hidden" class="paid" value="<%= paid %>">
+                                                                <input type="hidden" class="sent" value="<%= JSON.stringify(sent) %>">
+                                                                <input type="hidden" class="received" value="<%= received %>">
+                                                                <input type="hidden" class="commentRatingSell" value="<%= commentRatingSell %>">
+
+                                                                <div class="listLeft">
+                                                                    <img src="/img/iconCartBuyes.png" alt="" style="width: 35px; height: 35px;">
+                                                                    <span class="me-1"><%= sellerName  %></span> <span class="px-2 rounded-3" style="white-space: nowrap"> <i class="bi bi-currency-dollar"></i>(<%= amount  %>)</span> 
+                                                                </div> 
+
+                                                                <div class="listRight d-flex align-items-center">
+                                                                    <span class="me-2 bg-light rounded-3 px-2 text-dark shadow-sm" style="font-size: 14px; white-space: nowrap">
+                                                                    <i><%= date %></i> 
+                                                                    </span>
+                                                                </div>
+                                                                
+                                                            </div>
+
+                                                        <% }; %>    
+
                                                     <% }); %>    
                                                   
                                          
@@ -207,10 +213,11 @@
                                                     <div class="form-group my-0 px-3 py-2 mb-3" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-radius: 10px;">
                                                         <span style="white-space: 16px;"> <b>Dirección:</b> <span class="clientAddress"></span> </span>
                                                     </div>
+ 
+                                                </div>
 
-                                                    <div class="containerDelivery form-group my-0 px-3 py-2 mb-3 close" style="font-size: 16px; background-color: rgba(0, 0, 0, 0.1); width: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 9px; border-top-right-radius: 9px;">
-                                                        <span style="white-space: 16px;"> <b>Delivery:</b> </span> <span class="delivery bg-secondary text-light rounded-pill ms-1 px-3 py-1" style="white-space: nowrap;"> </span> 
-                                                    </div> 
+                                                <div class="containerBtnClearTracking form-group mt-4">
+                                                   <!-- dinamic -->
                                                 </div>
                                             </div>
                         
@@ -319,7 +326,9 @@
     const sentInner = document.getElementById('sentInner');
     const receivedInner = document.getElementById('receivedInner');
     const rateCommentInner = document.getElementById('rateCommentInner');
-    
+    const containerBtnClearTracking = document.querySelector('.containerBtnClearTracking');
+    let ClearTracking; //esta variable es para almacenar el boton que limpia el carrito del tracking
+
     let IDCart;
 
     listCart.forEach((ele, i)=>{
@@ -481,6 +490,68 @@
             clientDocumentSpan.innerText = clientIndentification;
             clientPhoneSpan.innerText = clientPhone;
             clientAddressSpan.innerText = clientAddress;
+
+            if (CommentRatingSellData == "no_comment"){
+                containerBtnClearTracking.innerHTML = `<button class="form-control btn btn-secondary rounded-pill ClearTracking" disabled> <i class="bi bi-lock-fill me-1"></i> Limpiar del Tracking </button>`
+
+
+            } else {
+                containerBtnClearTracking.innerHTML = `<button class="form-control btn btn-secondary rounded-pill ClearTracking"> <i class="bi bi-unlock-fill me-1"></i>  Limpiar del Tracking </button>`
+                
+                ClearTracking = document.querySelector('.ClearTracking');
+
+                if (ClearTracking){
+                    console.log("ClearTracking :", ClearTracking)
+                    ClearTracking.addEventListener('click', ()=>{
+                        console.log("Enviamos la backend para procesar esta peticion");
+                        console.log("IDCart ......:", IDCart);
+
+                        const dato = {
+                            IDCart
+                        };
+
+                        fetch('/myaccount/tracking/clearTracking', {
+
+                        method: "post",
+                        body: JSON.stringify(dato),
+                        headers: {"content-type" : "application/json"}
+
+                        })
+                        .then(response =>response.json() )
+                        .then( jsonx => {
+                            console.log(jsonx)
+                            const code= jsonx.code;
+                            const message= jsonx.message;
+
+                            if (code === "ok"){
+
+                                mostrarToast( message , 'right', 'success', 'Hecho', true );
+                                setTimeout(() => {
+                                    location.reload()
+                                }, 4000);
+
+                            } else {
+
+                                mostrarToast( message , 'right', 'danger', 'Upps', true );
+
+                            }                       
+                        
+                        
+                        })
+                        .catch( err => console.log(err));
+  
+
+
+
+                    })
+                }
+
+
+            }
+
+
+            
+            
         })    
     
 

@@ -3595,7 +3595,7 @@ routes.get('/myaccount/tracking', async(req, res)=>{
 
             //aqui vamos a buscar todos los carritos de esta tienda y las contamos 
             async function shoppingCarts(){
-                const shoppingCart = await modelShoppingCart.find({ $and : [{ customerId: userID } ] });
+                const shoppingCart = await modelShoppingCart.find({ $and : [{ customerId: userID }, {clearTracking: false} ] });
                                 
                 shoppingCartPending.push(...shoppingCart);
 
@@ -3615,7 +3615,25 @@ routes.get('/myaccount/tracking', async(req, res)=>{
 
 })
 
+routes.post('/myaccount/tracking/clearTracking', async(req, res)=>{
 
+    try {
+        const {IDCart} = req.body;
+        console.log("........./myaccount/tracking/clearTracking............");
+        console.log("IDCart .......... :", IDCart);
+
+        const updateShoppingCart = await modelShoppingCart.findByIdAndUpdate(IDCart, { $set: {clearTracking : true} }, {new: true});
+        console.log("updateShoppingCart ....:", updateShoppingCart)
+
+        const msg = "Compra terminada, podrás verla en historial.";
+        res.json({ code: "ok", message: msg });
+
+    } catch (error) {
+        const msg = "Ha ocurrido un error, intente mas tarde.";
+        res.json({ code: "err", message: msg });
+    }
+
+})
 
 routes.get('/myaccount/sellerType', async (req, res)=>{
     //Este ruta renderiza la pantalla para que los usuarios o tiendas puedan redefirnir el rango de las ventas,
