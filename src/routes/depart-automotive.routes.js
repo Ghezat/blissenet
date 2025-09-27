@@ -149,6 +149,7 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
         const user = req.session.user
         console.log(user.username)
         const username = user.username; //aqui tengo el username;
+        const blissName = user.blissName; //aqui el nombre lejible
         const department = 'automotive'; 
        
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
@@ -252,7 +253,7 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Automotive =  new modelAutomotive({ title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
+                                                        const Automotive =  new modelAutomotive({ title, titleURL, category, sub_category, model, construcDate, kilometros, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
                                                         const AutomotiveSave = await Automotive.save()
                                                         //console.log(AutomotiveSave);
                                     

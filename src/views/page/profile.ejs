@@ -589,6 +589,7 @@
                                 
                                 
                                 <% const username = user.username %>
+                                <% const blissName = user.blissName %>
                                 <% const indexed = user._id %> <!-- esto es igual al id user -->
                                 <% let userTelegram = user.blissBot.userTelegram %> <!-- esto es igual al id user -->
                                 <% let chatId = user.blissBot.chatId %> <!-- esto es igual al id user -->
@@ -793,7 +794,7 @@
                                     </div>
                                 </div>
 
-                                <!-- seccion nombre de tienda -->
+                                <!-- seccion cambio de nombre de tienda -->
                                 <div class="card my-2">
                                         <div class="card-header d-flex justify-content-between">                                
                                             Cambiar Nombre de Cuenta  <div class="cursor-pointer info-icon" data-bs-toggle="modal" data-bs-target="#staticChangeUsername"> <i class="bi bi-info-circle mx-1"></i> </div>
@@ -802,13 +803,13 @@
                                         <!--  fetch post linea 940 -->
                                                 <div class="input-group my-1">
                                                     <span class="input-group-text" id="statusName"> <i class="bi bi-lock"></i> </span>
-                                                    <input type="text" class="form-control" id="username" value="<%= username %>" readonly>
+                                                    <input type="text" class="form-control" id="username" value="<%= blissName %>" readonly>
                                                     <input type="hidden"  id="indexed" value="<%= indexed %>">
                                                     <button class="btn btn-outline-secondary" type="button" id="unlockUsername"> Editar </button>
                                                 </div>
                                                 <div class="input-group my-1">
                                                     <span class="input-group-text"> <i class="bi bi-person"></i> </span>
-                                                    <input type="text" class="form-control" id="newName" placeholder="Nuevo nombre" maxlength="22" disabled>
+                                                    <input type="text" class="form-control" id="newName" placeholder="Nuevo nombre" maxlength="24" disabled>
                                                 </div>
                                                 <div class="input-group my-1">
                                                     <span class="input-group-text"> <i class="bi bi-key"></i> </span>

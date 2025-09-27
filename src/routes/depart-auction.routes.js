@@ -159,6 +159,7 @@ routes.post('/department/create/auctions', async(req,res)=>{
         const user = req.session.user
         console.log(user.username)
         const username = user.username; //aqui tengo el username
+        const blissName = user.blissName; //aqui el nombre lejible;
         const department = 'auctions';   
     
 
@@ -353,7 +354,7 @@ routes.post('/department/create/auctions', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Auctions =  new modelAuction({ title, titleURL, category, sub_category, state_use, tecnicalDescription, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
+                                                        const Auctions =  new modelAuction({ title, titleURL, category, sub_category, state_use, tecnicalDescription, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, images : boxImg, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
                                                         const AuctionsSave = await Auctions.save()
                                                         //console.log(AuctionsSave);
                                                 

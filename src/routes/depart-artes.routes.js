@@ -142,6 +142,7 @@ routes.post('/department/create/artes', async(req,res)=>{
         const user = req.session.user
         console.log(user.username)
         const username = user.username; //aqui tengo el username
+        const blissName = user.blissName; //aqui el nombre lejible;
         const department = 'arts';  
 
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
@@ -242,7 +243,7 @@ routes.post('/department/create/artes', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, count, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
+                                                        const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, count, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
                                                         const ArtesSave = await Artes.save()
                                                      
                                                     }  else {

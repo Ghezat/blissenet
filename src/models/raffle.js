@@ -32,7 +32,9 @@ const SchemaRaffle = new Schema({
     allTicketsTake : { type : Boolean, default : false }, //esto es lo que determina si un sorteo sea celebrado. Importante ya que de esto depende un cambio en el Front para que los ganadores puedan calificar en la Tabla de Tickets.
     user_id : { type: String }, //aqui guardamos el id del user del usuario que publica el anuncio(indexed).
     username : { type : String }, //este es el username del creador igual al de la coleccion user y profile.
+    blissName : { type : String }, //este es el nombre de la tienda lejible 
     notes : { type : Object, default: [] } //aqui es donde se guardan las notas creadas por el anfitrion de la publicación.
+    
 }, {
     timestamps : true
 });

@@ -31,7 +31,8 @@ const SchemaArtes = new Schema({
     favorite : { type : Number, default : 0 }, //para conocer cuantas personas han agregado este articulo y tener metricas de este dato.
     user_id : { type: String }, //aqui guardamos el id del user del usuario que publica el anuncio(indexed).
     username : { type : String }, //este es el username igual al de la coleccion user y profile.
-    sales : { type : Number } //cantidad de veces que se ha vendido este articulo, solo existe en items y artes.
+    sales : { type : Number }, //cantidad de veces que se ha vendido este articulo, solo existe en items y artes.
+    blissName : { type : String } //este es el nombre de la tienda lejible 
 }, {
     timestamps : true
 });

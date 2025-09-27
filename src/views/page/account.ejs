@@ -560,7 +560,7 @@
                           <% if (Account) { %> 
                               <% Account.forEach((ele)=>{ %>
                                     <h1 class="mx-1 store" style="font-size: 20px;">
-                                        <%= ele.username %> <input type="hidden" value="<%= ele.username %>">
+                                        <%= ele.blissName %> <input type="hidden" value="<%= ele.username %>">
                                     </h1>
                                     <!-- <span class="mx-1" style="font-size: 16px;">@<%= ele.username %> </span> -->
 
@@ -1094,11 +1094,11 @@
                                                               
                                                               </div>
                           
-                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                                              <div class="storeFavorite d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
                             
                                                                   <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
                                                                 
-                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                                  <!-- <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a> -->
 
                                                                 <% if (user) { %> <!-- control de corazones fascinometro -->
                                                                   <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
@@ -1150,11 +1150,11 @@
                                                                 </a>                                            
                                                             </div>
                     
-                                                            <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                                            <div class="storeFavorite d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
                           
                                                                 <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
                                                               
-                                                                <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                                <!-- <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a> -->
 
                                                               <% if (user) { %> <!-- control de corazones fascinometro -->
                                                                 <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
@@ -1206,11 +1206,11 @@
                                                             </a>                                            
                                                         </div>                
                                                                                                                     
-                                                        <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                                        <div class="storeFavorite d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
                       
                                                             <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
                                                           
-                                                            <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                            <!-- <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a> -->
 
                                                           <% if (user) { %> <!-- control de corazones fascinometro -->
                                                             <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
@@ -1414,11 +1414,9 @@
                                                               
                                                               </div>
                           
-                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
-                            
-                                                                  <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
-                                                                
-                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                              <div class="storeFavorite d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                                                                            
+                                                                 <!--  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a> -->
 
                                                                 <% if (user) { %> <!-- control de corazones fascinometro -->
                                                                   <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
@@ -1470,11 +1468,11 @@
                                                                   </a>                                            
                                                               </div>
                       
-                                                              <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                                              <div class="storeFavorite d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
                             
                                                                   <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
                                                                 
-                                                                  <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                                  <!-- <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a> -->
 
                                                                 <% if (user) { %> <!-- control de corazones fascinometro -->
                                                                   <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
@@ -1526,11 +1524,11 @@
                                                             </a>                                            
                                                         </div>                
                                                                                                                     
-                                                        <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+                                                        <div class="storeFavorite d-flex justify-content-end" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
                       
                                                             <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
                                                           
-                                                            <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a>
+                                                            <!-- <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.username %> </a> -->
 
                                                           <% if (user) { %> <!-- control de corazones fascinometro -->
                                                             <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
@@ -2202,7 +2200,7 @@
                           <% }; %>
                         </div>
                         <div class="containerDetail my-2">
-                          <p class="mb-0" style="color:<%= storeProfile.bGColorText %>"> <%= storeProfile.username%></p>
+                          <p class="mb-0" style="color:<%= storeProfile.bGColorText %>"> <%= storeProfile.blissName %></p>
                           <% const dateStore = new Date( storeProfile.createdAt) %>
                           <% const dia = dateStore.getDate() %>
                           <% const mes = dateStore.getMonth() +1 %>

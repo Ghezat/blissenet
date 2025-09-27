@@ -145,6 +145,7 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
         const user = req.session.user
         console.log(user.username)
         const username = user.username; //aqui tengo el username;
+        const blissName = user.blissName; //aqui el nombre lejible;
         const department = 'realstate'; 
        
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
@@ -248,7 +249,7 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
 
                                                             countImgAcept = 0 // detenemos la condicion
 
-                                                            const Realstate =  new modelRealstate({ title, titleURL, category, sub_category, construcDate, mtrs2, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
+                                                            const Realstate =  new modelRealstate({ title, titleURL, category, sub_category, construcDate, mtrs2, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
                                                             const RealstateSave = await Realstate.save();
                                                             //console.log(RealstateSave);
                                                                                 

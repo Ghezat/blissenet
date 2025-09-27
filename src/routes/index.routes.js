@@ -840,7 +840,10 @@ routes.post('/myaccount/signup', async(req,res)=>{
     const {username, email, password, confirmPassword, token, recaptchaResponse} = req.body
     //console.log(`username : ${username}, email : ${email}, password : ${password}, confirmPassword : ${confirmPassword}, token : ${token} recaptchaResponse : ${recaptchaResponse}`)
     const emailLower = email.toLowerCase();//transformo en minisculas el correo
-    const mailhash = hash.MD5(emailLower); let usernameParse; // esta variable guarda el nombre parseado sin espacios en blanco. 
+    const mailhash = hash.MD5(emailLower); 
+    
+    const blissName = username.trim(); //--> Este es el nombre que vamos a mostrar en las tiendas y tarjetas 
+    let usernameParse; // esta variable guarda el nombre parseado sin espacios en blanco. Para URL y codigos QR
 
     //consulta en la base de datos del campo email
     const search = await modelUser.findOne({email})    
@@ -879,8 +882,8 @@ routes.post('/myaccount/signup', async(req,res)=>{
             if (score >= 0.5){
                 console.log("Es un humano");    
    
-                if (usernameParse.length > 5 && usernameParse.length <= 20 ){
-                    // el username debe ser minimo 6 y maximo 20 
+                if (usernameParse.length > 5 && usernameParse.length <= 24 ){
+                    // el username debe ser minimo 6 y maximo 24 
                     if (password == confirmPassword) {
                         //console.log('password concuerda con la confirmacion')
 
@@ -936,7 +939,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
                                         }
 
                                         async function createUser(){
-                                            const newUser = new modelUser({username: usernameParse, email: emailLower , password : hashPassword, mailhash, token: newToken});
+                                            const newUser = new modelUser({username: usernameParse, blissName, email: emailLower , password : hashPassword, mailhash, token: newToken});
                                             const saveUser = await newUser.save();
                                             console.log(saveUser);
                                         }
@@ -995,7 +998,7 @@ routes.post('/myaccount/signup', async(req,res)=>{
                                                         sendToken()
                                                             .then(()=>{
                                                                 req.session.mailSent =  "Token enviado al correo para validación, 90 segundos para su confirmación.";
-                                                                req.session.datauser = {usernameParse, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
+                                                                req.session.datauser = {usernameParse, blissName, email}; // aqui guardamos los datos necesarios para trabajar en signup-emailverify
                                                                 res.redirect('/myaccount/signup-emailverify')
                                                             })
                                                             .catch((error)=>{
@@ -1065,7 +1068,7 @@ routes.get('/myaccount/signup-emailverify', async(req,res)=>{
 routes.post('/myaccount/signup-emailverify', async(req,res)=>{
  
     try {
-        const { username, email, token } = req.body;
+        const { username, blissName, email, token } = req.body;
         console.log(`${username}  ${email}  ${token}`);
         // buscamos el background de register
         const search = await modelUser.find({username});
@@ -1091,7 +1094,7 @@ routes.post('/myaccount/signup-emailverify', async(req,res)=>{
                     <h2 style="color: black"> Bienvenid@ a Blissenet.com. </h2>
                     <ul> 
                         <li> cuenta : ${email} </li>
-                        <li> usuario : ${username} </li> 
+                        <li> usuario : ${blissName} </li> 
                         <li> asunto : ${message} </li>
                     <ul>
                     <h3 style="color: black;"> Estimado usuario,</h3>
@@ -1901,6 +1904,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
     try{
         console.log("-------------- /myaccount/profile ------------------")
         const user = req.session.user;
+        const blissName = user.blissName;
         console.log(req.body);      
         const {names, identification, dateborn, gender, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
         console.log("company, companyRif, country, countryCode, state, quarter, cityBlock, postCode");
@@ -1932,7 +1936,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
 
         
             
-            const newProfile = new modelProfile({ username: user.username, names, identification, company, companyRif, dateborn, gender, geolocation, locations: { type: 'Point', coordinates: geoData }, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+            const newProfile = new modelProfile({ username: user.username, blissName, names, identification, company, companyRif, dateborn, gender, geolocation, locations: { type: 'Point', coordinates: geoData }, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
             console.log("newProfile ........................................>:", newProfile); 
             const saveProfile =  await newProfile.save()
             
@@ -3995,6 +3999,8 @@ routes.post('/myaccount/change-username', async(req, res)=>{
         const { indexed, username, newName, code, password } = req.body;
         //console.log("indexed", indexed); console.log("username", username); console.log("newName", newName); console.log("code", code); console.log("password", password);
 
+        const blissName = newName.trim(); //limpiamos los espacios delanteros y traseros.
+
         function escapeRegex(str) {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
@@ -4012,11 +4018,11 @@ routes.post('/myaccount/change-username', async(req, res)=>{
 
         //Conjunto de funciones que estaran activas para su ejecucion.
         async function editUser(){
-            const editUser = await modelUser.updateOne({ _id : indexed}, { $set : {username : newNameParse} });
+            const editUser = await modelUser.updateOne({ _id : indexed}, { $set : {username : newNameParse, blissName} });
         }
 
         async function editProfile(){
-            const editProfile =  await modelProfile.updateOne({indexed : indexed}, { $set : {username : newNameParse} });
+            const editProfile =  await modelProfile.updateOne({indexed : indexed}, { $set : {username : newNameParse, blissName} });
         }
         
         async function editMessages(){
@@ -4031,47 +4037,47 @@ routes.post('/myaccount/change-username', async(req, res)=>{
             const itemsExit = await modelItems.find({user_id: indexed});
                 await Promise.all( itemsExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelItems.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelItems.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));
             const artesExit = await modelArtes.find({user_id: indexed});
                 await Promise.all( artesExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelArtes.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelArtes.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));
             const airplaneExit = await modelAirplane.find({user_id: indexed});
                 await Promise.all( airplaneExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelAirplane.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelAirplane.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));
             const automotiveExit = await modelAutomotive.find({user_id: indexed});
                 await Promise.all( automotiveExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelAutomotive.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelAutomotive.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));   
             const realstateExit = await modelRealstate.find({user_id: indexed});
                 await Promise.all( realstateExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelRealstate.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelRealstate.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));  
             const nauticalExit = await modelNautical.find({user_id: indexed});
                 await Promise.all( nauticalExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelNautical.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelNautical.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));
             const serviceExit = await modelService.find({user_id: indexed});
                 await Promise.all( serviceExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelService.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelService.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));     
             const raffleExit = await modelRaffle.find({user_id: indexed});
                 await Promise.all( raffleExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelRaffle.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelRaffle.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 })); 
             const auctionExit = await modelAuction.find({user_id: indexed});
                 await Promise.all( auctionExit.map(async (ele) => {
                     // Aquí actualizas el campo username de cada documento
-                    await modelAuction.updateOne({ _id: ele._id }, { $set: { username: newNameParse } });
+                    await modelAuction.updateOne({ _id: ele._id }, { $set: { username: newNameParse, blissName } });
                 }));                                                                                           
         }
 

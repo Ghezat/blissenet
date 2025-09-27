@@ -2,7 +2,8 @@ const { Schema, model } = require('mongoose');
 const mongoosePagination = require('mongoose-paginate-v2');
 
 const SchemaProfile = new Schema({
-    username : { type : String }, //este username es el mismo que se puede ver en la coleccion user.
+    username : { type : String }, //este username es el mismo que se puede ver en la coleccion user. NO posee espacios es todo pegado para las url y codigos QR
+    blissName : { type : String}, //aqui el nombre que vamos a ver en las tiendas y en las tarjatas es legible ya que tiene espacios 
     names : { type : String },
     identification : { type : String }, //numero de cedula o de identificacion
     dateborn : { type : Date }, //fecha de nacimiento de la persona

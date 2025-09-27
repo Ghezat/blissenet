@@ -145,6 +145,7 @@ routes.post('/department/create/service', async(req,res, next)=>{
         const user = req.session.user
         console.log(user.username)
         const username = user.username; //aqui tengo el username; 
+        const blissName = user.blissName; //aqui el nombre lejible;
         const department = 'service';
 
 
@@ -249,7 +250,7 @@ routes.post('/department/create/service', async(req,res, next)=>{
 
                                                             countImgAcept = 0 // detenemos la condicion
 
-                                                            const Service =  new modelService({ title, titleURL, category, sub_category, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable }); 
+                                                            const Service =  new modelService({ title, titleURL, category, sub_category, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable }); 
                                                             const ServiceSave = await Service.save()
                                                             //console.log(ServiceSave);
                                                     

@@ -25,6 +25,7 @@
    # 
    #           ### Resumen de Permisos ###
 
+   #     - **Directorio `public_html`**: `750` (malo debe ser 755) ojoooooo
    #     - **Directorio `public_html`**: `755` (permite acceso público)
    #     - **Archivo `robots.txt`**: `644` (acceso público de lectura)    
 

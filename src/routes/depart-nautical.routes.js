@@ -147,7 +147,8 @@ routes.post('/department/create/nautical', async(req,res, next)=>{
         const boxImg = [];
         const user = req.session.user
         console.log(user.username)
-        const username = user.username; //aqui tengo el username; 
+        const username = user.username; //aqui tengo el username;
+        const blissName = user.blissName; //aqui el nombre lejible; 
         const department = 'nautical'; 
 
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
@@ -251,7 +252,7 @@ routes.post('/department/create/nautical', async(req,res, next)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Nautical =  new modelNautical({ title, titleURL, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
+                                                        const Nautical =  new modelNautical({ title, titleURL, category, sub_category, construcDate, length, tecnicalDescription, generalMessage, images : boxImg, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment, scheduleAppointment : agendaAvailable  }); 
                                                         const NauticalSave = await Nautical.save()
                                                         //console.log(NauticalSave);
                                         

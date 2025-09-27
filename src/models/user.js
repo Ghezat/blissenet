@@ -1,7 +1,8 @@
 const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema({
-    username : { type : String}, //este campo esta tambien en la coleccion profile.
+    username : { type : String}, //este campo esta tambien en la coleccion profile. NO posee espacios es todo pegado para las url y codigos QR
+    blissName : { type : String}, //aqui el nombre que vamos a ver en las tiendas y en las tarjatas es legible ya que tiene espacios 
     email : { type : String}, //campo almacena el correo del usuario
     password : { type : String}, //este campo almacenara un hashPassword.
     mailhash : { type : String }, //este campo almacena un hash producido con su email importante para logar su default avatar 

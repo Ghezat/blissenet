@@ -158,6 +158,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
     const user = req.session.user
     console.log(user.username)
     const username = user.username; //aqui tengo el username 
+    const blissName = user.blissName; //aqui el nombre lejible;
     const department = 'raffle';
     const stateRaffle = await modelRaffle.find({username});
     console.log("stateRaffle", stateRaffle);
@@ -306,7 +307,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
 
                                                                 countImgAcept = 0 // detenemos la condicion
 
-                                                                const Raffle =  new modelRaffle({ title, titleURL, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, country, countryCode, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
+                                                                const Raffle =  new modelRaffle({ title, titleURL, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, blissName, country, countryCode, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
                                                                 const RaffleSave = await Raffle.save();
                                                                 //console.log(RaffleSave);   
                                                         

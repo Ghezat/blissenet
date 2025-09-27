@@ -145,6 +145,7 @@ routes.post('/department/create/items', async(req,res)=>{
         const user = req.session.user
         console.log(user.username)
         const username = user.username; //aqui tengo el username
+        const blissName = user.blissName; //aqui el nombre lejible; 
         const department = 'items';     
         const searchProfile = await modelProfile.find({ indexed : user._id}) //aqui extraemos el documento del perfil de este usaurio
         console.log("Este es el perfil del usuario que desea subir una publicacion ---->", searchProfile)
@@ -243,7 +244,7 @@ routes.post('/department/create/items', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Items =  new modelItems({ title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, count, presentation, price, user_id : user._id, username, country, countryCode, state_province : state, segment }) 
+                                                        const Items =  new modelItems({ title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, count, presentation, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
                                                         const ItemsSave = await Items.save()
                                                         //console.log(ItemsSave);
                                                     }  else {
