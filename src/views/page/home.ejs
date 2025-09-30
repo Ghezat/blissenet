@@ -471,9 +471,7 @@
 
 
       <% if (success) { %>
-
         <%- include('../alert/success.ejs') %>
-      
       <% }; %>
 
       <% if (stopped) { %>
@@ -482,6 +480,10 @@
 
       <% if (dataLocked) { %>
         <%- include('../alert/dataLocked.ejs') %>
+      <% }; %>
+
+      <% if (methodLoging) { %>
+        <%- include('../alert/methodLoging.ejs') %>
       <% }; %>
 
       <% if (user) { %>
@@ -504,6 +506,7 @@
   
 
         <div class="row mx-0 sectionTheme">
+
             <div class="col-lg-12 px-0 py-2 shadow-sm" style="background: linear-gradient(90deg, rgba(255,222,93,1) 0%, rgba(240,197,30,1) 54%, rgb(255, 165, 40) 100%);";>
                 <audio src="/sound/Icon-efect.mp3" id="efectIcon"></audio>
                 <div class="barrHorizontIcon  p-0 m-0 d-flex justify-content-center flex-wrap" style="width: 100%;">
@@ -798,6 +801,31 @@
 
               </div>
             </div>
+
+            <% if (!user) { %>
+              <div class="containerFixedSinUser"  style="position: fixed; right: 10px; bottom: 100px; z-index : 100">
+                <div class="body fixedSinUser">
+                  
+                  <div class="d-flex flex-column align-items-center justify-content-center ">
+
+                    <div style="position: relative;">
+                      <span class="px-4 py-2 lightbulbAnimation shadow" style="background-color: #ffe372; font-size: 16px; color: #7a6202; border-top-left-radius: 12px; border-top-right-radius: 12px;"> No estas logeado </span>
+                      <div class="rounded-pill d-flex justify-content-center align-items-center" style="background-color: #ffe372; position: absolute; top: -40px; right:60px; width: 42px; height: 42px;">
+                        <i class="bi bi-lightbulb-fill lightbulbAnimation" style="font-size: 28px;"></i>
+                      </div>
+                       
+                    </div>
+                    
+                  </div>
+
+                  <div class="form-group my-1 py-2" style="width: 100%; font-size: 24px;">
+      
+                    <a href="/myaccount/signin-change" class="form-control rounded-pill btn btn-dark border-secondary shadow" style="font-size: 20px;"> Entrar </a>
+
+                  </div>
+                </div>
+              </div>
+            <% }; %>
 
             <!-- Modal trendingOffert --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingOffert" -->
             <div class="modal fade" id="staticTrendingOffert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">

@@ -335,6 +335,41 @@ a:hover {
 
 /* end footer */
 
+
+/* estilos del contenedor fixed no user  */
+.containerFixedSinUser {
+  display: flex;
+  justify-content:  flex-end;
+}
+
+.fixedSinUser{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 5px;
+ /*  background-color: rgba(255, 255, 255, 0.7); */
+ /*  border: 1px solid white; */
+  width: 200px;
+  height: auto;
+}
+
+  @keyframes lightbul {
+    0% {
+      color: #dbb003;
+    }
+    50% {
+      color: #161100;
+    }
+    100% {
+      color: #dbb003;
+    }
+  }
+
+  .lightbulbAnimation {
+    animation: lightbul 3s infinite; /* Cambia 3s por la duración que prefieras */
+  }
+
 /*  Media queries */
 @media screen and (min-width: 500px) and (max-width: 991px){
 /* :::::: navi-simple Tablet :::::: */

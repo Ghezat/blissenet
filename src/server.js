@@ -1,6 +1,10 @@
 const express = require('express');
 const SocketIO = require('socket.io'); //setting socket.io
 
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const modelUser = require('../src/models/user.js');
+
 const session = require('express-session');
 var methodOverride = require('method-override');
 const morgan = require('morgan');
@@ -36,7 +40,30 @@ app.use(session({
 }));
 
 //**maxAge**: Especifica la duración de la cookie en milisegundos. En tu caso, `24 * 60 * 60 * 1000` es el cálculo para un día (24 horas), donde multiplicas 24 horas por 60 minutos por 60 segundos y luego por 1000 para convertir a milisegundos.
- 
+
+// Serializar y deserializar usuario
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    done(null, user);
+});
+
+
+// Configuración de Passport con Google ................................................
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:1263/auth/google/callback"
+}, (accessToken, refreshToken, profile, done) => {
+
+    return done(null, profile);
+}));
+
+
+//.....................................................................................
+
 app.use(methodOverride('_method'));
 
 const storage =  multer.diskStorage({

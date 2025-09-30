@@ -1,5 +1,7 @@
 const { Router } = require('express');
 const hash = require('object-hash');
+const passport = require('passport');
+
 const nodemailer = require('nodemailer');
 const routes = Router();
 const multer = require('multer');
@@ -66,6 +68,8 @@ routes.get('/', async(req, res)=>{
     const success = req.session.success; //"¡Bienvenido! Has entrado a Blissenet.com. Tu red de mercado mundial.";
     const stopped = req.session.stopped; //"Su cuenta ha sido baneada por infringir nuestras normas.";
     const dataLocked = req.session.dataLocked // {username, date, ban}; envo estos tres datos para especificar el username cantidad de dias y la fecga de bloqueo
+    const methodLoging = req.session.methodLoging  //"Su cuenta usa el metodo de Usuario y Contraseña.";
+
     let countMessages, countMessagesInbox
     let searchBoxMessageInbox = [];
     let boxOffert = []; //este es el array que contendra todas las trending ofertas.  
@@ -74,6 +78,7 @@ routes.get('/', async(req, res)=>{
     delete req.session.success;
     delete req.session.stopped;
     delete req.session.dataLocked;
+    delete req.session.methodLoging;
     console.log("Esto es user ->", user);
 
 
@@ -268,11 +273,11 @@ routes.get('/', async(req, res)=>{
                             .then(()=>{
                                 console.log("Aqui lo recaudado de las ofertas");
                                 console.log("boxOffert ----------------con user---------------->",boxOffert);
-                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
+                                res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                             })
                             .catch((err)=>{
                                 console.log("Ha ocurrido un error en la function searchBestView()")
-                                res.render('page/home', {user, success, stopped, dataLocked, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
+                                res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                             })
                    
                         
@@ -398,11 +403,11 @@ routes.get('/', async(req, res)=>{
                     .then(()=>{
                         console.log("Aqui lo recaudado de las ofertas");
                         //console.log("boxOffert ---------------sin user------------------->",boxOffert);
-                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
+                        res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                     })
                     .catch((err)=>{
                         //console.log("Ha ocurrido un error en la function searchOffert()")
-                        res.render('page/home', {user, success, stopped, dataLocked, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
+                        res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                     })
                 
                 
@@ -637,6 +642,17 @@ routes.get('/percent', async (req,res)=>{
 
 });
 
+
+routes.get('/myaccount/signin-change', async (req, res)=>{
+ 
+    const user = req.session.user;
+    const signIn = await modelBackgroundSign.find( {active : true, typeBackground : "SignIn"} );
+    console.log("Esto es signIn", signIn);
+
+    res.render('page/signin-change', {user, signIn});
+
+});
+
 routes.get('/myaccount/signin', async (req,res)=>{
     const user = req.session.user;
 
@@ -723,30 +739,12 @@ routes.post('/myaccount/signin', async(req,res)=>{
         
                                 //console.log("password acertado, bienvenido")
                                 req.session.success = "¡Bienvenido! Has entrado a Blissenet.com. Tu red de mercado mundial.";
+                                
                                 const user = search
                                 req.session.user = user;
-                                const idSession = req.session.id;
-                                console.log("idSession..... :", idSession); 
-                                //idSession..... : nDdqjNvsjqatZl3k4gP3tRb_osItbenV
-                                //idSession..... : BW4C3P8qtW9N2tp_tSEOPAbBwqNGMN_C
-                                //cada session es diferente asi sea el mismo usuario asi que los id siempre seran difernetes. 
-                                //siempre debemos guardar este id
+                                res.redirect('/')
 
-                                async function saveIdSession(){
-                                    await modelUser.findByIdAndUpdate(id, { $set : { idSession }});
-                                }
-                                
-                                saveIdSession()
-                                    .then(()=>{
-                                        console.log("Se ha guardado satisfactoriamente el idSession");
-                                        res.redirect('/')
-                                    })
-                                    .catch(err =>{
-                                        console.log("Ha habido un error");
-                                        res.redirect('/')
-                                    })    
-                                
-        
+
                             } else {
         
                                 const stoppedUser = await modelStopped.find( {indexed : id, status : 'locked'} );
@@ -844,13 +842,12 @@ routes.post('/myaccount/signup', async(req,res)=>{
     
     const blissName = username.trim(); //--> Este es el nombre que vamos a mostrar en las tiendas y tarjetas 
     let usernameParse; // esta variable guarda el nombre parseado sin espacios en blanco. Para URL y codigos QR
-
-    //consulta en la base de datos del campo email
-    const search = await modelUser.findOne({email})    
-    //usernameParse = username.replace(/\s+/g, ''); modelo viejo se paso a la de abajo.
-    usernameParse = username.replace(/\s+/g, '').trim(); // Quitamos todos los espacios.
+  
+    usernameParse = username.replace(/\s+/g, '').trim(); //Quitamos todos los espacios.
     console.log("usernameParse", usernameParse);
-    
+
+    const search = await modelUser.findOne({email}) //consulta en la base de datos del campo email
+
     const result = await modelUser.findOne({ username: new RegExp( '^' + usernameParse + '$','i' ) });
 
     const datos = {
@@ -4437,7 +4434,255 @@ routes.get('/department/raffle', async (req, res)=>{
     }         
 });
 
+
+//Orígenes autorizados de JavaScript
+routes.get('/auth/google', (req, res, next) => {
+    console.log('Iniciando sesión con Google...');
+    next(); // Llama al siguiente middleware
+}, passport.authenticate('google', {
+    scope: ['profile', 'email']
+}));
+ 
+/* 
+routes.get('/auth/google/callback', async (req, res) => {
+    const { code } = req.query; // Obtienes el perfil del usuario autenticado
+
+    console.log(" code....    :", code); //respuesta  userGoogle....    : undefined
+
+    //const googleEmail = userGoogle.emails[0].value;
+    //const googleName = userGoogle.displayName;
+    //const googleId = userGoogle.id;
+
+    //const googleEmail = userGoogle.emails[0].value;
+
+    console.log("xxxxxxxxxxxxxxxxxx REVISAR xxxxxxxxxxxxxxx");
+
+    console.log(" /auth/google/callback ");
+
+    try {
+        const searchUser = await modelUser.findOne({ email: googleEmail });
+
+        if (searchUser) {
+            // Usuario existe
+
+            const googleIdExist = searchUser.googleId;
+
+            if (googleIdExist){
+                //existe el usuaro y tiene su googleId
+                //logeamos al usuario
+
+                req.login(searchUser, (err) => {
+                    if (err) {
+                        console.error('Login Error:', err);
+                        return res.status(500).send('Error al iniciar sesión.');
+                    }
+                    res.redirect('/');
+                });
+
+        
+
+            } else {
+                //existe el usuaro y NO tiene su googleId, se lo agregamos para que tenga todo sus datos completos
+                //logeamos al usuario
+
+                const updateUSer = await modelUser.findOneAndUpdate({email: googleEmail},{ googleId: googleId }, { new: true } );
+
+                req.login(searchUser, (err) => {
+                    if (err) {
+                        console.error('Login Error:', err);
+                        return res.status(500).send('Error al iniciar sesión.');
+                    }
+                    res.redirect('/');
+                });
+
+            }
+            
+
+        } else {
+            // Crear nuevo usuario partiendo de los datos de Google
+
+            const emailLower = googleEmail.toLowerCase();//transformo en minisculas el correo
+            const Mailhash = hash.MD5(emailLower); 
+
+            const usernameGoogle = googleName; // Nombre obtenido de Google
+            const maxLength = 24;
+
+            // Recorta el nombre si supera los 24 caracteres
+            const usernameReview = usernameGoogle.length > maxLength ? usernameGoogle.slice(0, maxLength) : usernameGoogle;
+
+            console.log(usernameReview);
+
+            // Se crea un nuevo usuario
+            const newUser = new modelUser({
+                googleId: googleId,
+                username: usernameReview,
+                blissName : usernameReview,
+                email: googleEmail,
+                emailVerify : true,  
+                mailhash : Mailhash        
+            });
     
+            const savedUser = await newUser.save();
+            console.log("savedUser", savedUser);
+           
+            req.login(savedUser, (err) => {
+                if (err) {
+                    console.error('Login Error:', err);
+                    return res.status(500).send('Error al iniciar sesión.');
+                }
+                res.redirect('/');
+            });            
+
+            //..............................................
+
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).send('Error en la autenticación.');
+    }
+
+
+});
+
+ */
+
+routes.get('/auth/google/callback', async (req, res) => {
+    const { code } = req.query;
+
+    try {
+        // Intercambiar el código por un token
+        //    const response = await axios.post('https://oauth2.googleapis.com/token', querystring.stringify({
+        //        code: code,
+        //        client_id: process.env.GOOGLE_CLIENT_ID,
+        //        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        //        redirect_uri: 'http://localhost:1263/auth/google/callback', //es lo que hemos registrado en google
+        //        grant_type: 'authorization_code'
+        //    })); sistema antiguo querystring esta deprecado
+
+        const params = new URLSearchParams();
+        params.append('code', code);
+        params.append('client_id', process.env.GOOGLE_CLIENT_ID);
+        params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET);
+        params.append('redirect_uri', 'https://blissnet.com/auth/google/callback'); //produccion
+        /* params.append('redirect_uri', 'http://localhost:1263/auth/google/callback'); desarrollo */
+        params.append('grant_type', 'authorization_code');
+
+        const response = await axios.post('https://oauth2.googleapis.com/token', params);
+
+   
+        const { access_token } = response.data;
+
+        // Ahora puedes usar este token para obtener la información del usuario
+        const userInfoResponse = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        const userGoogle = userInfoResponse.data; //esto es la informacion que me envia google despues de autorizar al user.
+        console.log("userGoogle ---->", userGoogle); // Aquí deberías ver la información del usuario, incluyendo email y nombre.
+/* 
+        userGoogle ----> {
+            sub: '114062835848042029579',
+            name: 'Km Cero',
+            given_name: 'Km',
+            family_name: 'Cero',
+            picture: 'https://lh3.googleusercontent.com/a/ACg8ocJ9h47szF6tZbNvsQhgr_jWY6rnDqL8EEvkmWocvCPr6tY_kOc3=s96-c',
+            email: 'scorpinosred@gmail.com',
+            email_verified: true
+        }
+ */
+        const googleId = userGoogle.sub;
+        const googleEmail = userGoogle.email;
+        const googleName = userGoogle.name;
+
+        try {
+            const searchUser = await modelUser.findOne({ email: googleEmail, emailVerify : true });
+
+            if (searchUser) {
+                // Usuario existe
+
+                const googleIdExist = searchUser.googleId;
+
+                if (googleIdExist){
+                    //existe el usuaro y tiene su googleId
+                    //logeamos al usuario con el metodo de login con google
+
+                    //const search = await modelUser.findOne({ email : email, emailVerify : true });
+                    const user = searchUser
+                    req.session.user = user;
+                    req.session.success = "¡Bienvenido! Has entrado a Blissenet.com. Tu red de mercado mundial.";
+                    res.redirect('/')
+            
+
+                } else {
+                    //existe el usuaro pero NO tiene googleId, en un usuario de contraseña
+                    //NO selogeamos al usuario y se le envia un mensaje
+
+                    req.session.methodLoging = "Su cuenta usa el metodo de Usuario y Contraseña.";
+                    res.redirect('/')
+
+                }
+                
+
+            } else {
+                // Crear nuevo usuario partiendo de los datos de Google
+
+                const emailLower = googleEmail.toLowerCase();//transformo en minisculas el correo
+                const Mailhash = hash.MD5(emailLower); 
+
+                const usernameGoogle = googleName; // Nombre obtenido de Google
+                const maxLength = 24;
+
+                // Recorta el nombre si supera los 24 caracteres
+                const usernameReview = usernameGoogle.length > maxLength ? usernameGoogle.slice(0, maxLength) : usernameGoogle;
+
+                // esta constante guarda el nombre parseado sin espacios en blanco. Para URL y codigos QR
+                const usernameParse = usernameReview.replace(/\s+/g, '').trim(); //Quitamos todos los espacios.
+                //console.log("usernameParse", usernameParse);
+
+                console.log(usernameReview);
+
+                // Se crea un nuevo usuario
+                const newUser = new modelUser({
+                    googleId: googleId,
+                    username: usernameParse,
+                    blissName : usernameReview,
+                    email: googleEmail,
+                    emailVerify : true,  
+                    mailhash : Mailhash,
+                    emailVerify : true        
+                });
+        
+                const savedUser = await newUser.save();
+                console.log("savedUser", savedUser);
+            
+                const user = savedUser;
+                req.session.user = user;
+                req.session.success = "¡Bienvenido! Has entrado a Blissenet.com. Tu red de mercado mundial.";
+                res.redirect('/')            
+
+                //..............................................
+
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            return res.status(500).send('Error en la autenticación.');
+        }
+
+
+    
+    } catch (error) {
+        console.error('Error al intercambiar el código por token:', error);
+        return res.status(500).send('Error en la autenticación.');
+    }
+
+    //aqui puedo agregar usuario para ir probando
+    //https://console.cloud.google.com/auth/audience?project=possible-aspect-450318-k2 
+});
+
 routes.get('/myaccount/logout', (req, res) => {
     if (req.session) {
         req.session.destroy(err => {

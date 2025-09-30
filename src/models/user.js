@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema({
+    googleId : { type : String,  unique : true }, //este campo se ha agregado para guardar el id del google esto es cuando el usuaio utiliza como metodo de acceder a la aplicacion su cuenta de google, de resto estara el campo vacio "".
     username : { type : String}, //este campo esta tambien en la coleccion profile. NO posee espacios es todo pegado para las url y codigos QR
     blissName : { type : String}, //aqui el nombre que vamos a ver en las tiendas y en las tarjatas es legible ya que tiene espacios 
     email : { type : String}, //campo almacena el correo del usuario
