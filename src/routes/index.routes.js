@@ -4564,7 +4564,7 @@ routes.get('/auth/google/callback', async (req, res) => {
         params.append('code', code);
         params.append('client_id', process.env.GOOGLE_CLIENT_ID);
         params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET);
-        params.append('redirect_uri', 'https://blissnet.com/auth/google/callback'); //produccion
+        params.append('redirect_uri', 'https://blissenet.com/auth/google/callback'); //produccion
         /* params.append('redirect_uri', 'http://localhost:1263/auth/google/callback'); desarrollo */
         params.append('grant_type', 'authorization_code');
 
