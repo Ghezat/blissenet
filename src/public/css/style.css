@@ -44,16 +44,50 @@ main{
   src: url("/fonts/Dream MMA.ttf");
 }
 
- 
-.iconEfect{
-  border: 1px solid white;
-  transition: 0.5s border ease;
+@font-face {
+  font-family: "modelo2";
+  src: url("/fonts/Bogista.ttf");
+}
+
+@font-face {
+  font-family: "italica";
+  src: url("/fonts/Roboto-Italic.ttf");
+}
+
+@font-face {
+  font-family: "Cream Cake";
+  src: url("/fonts/Cream Cake.otf");
+}
+
+.spanTextArticle{
+  font-family: "Cream Cake";
+  font-size: 24px;
+  color: beige;
+}
+
+.iconEfect .spanTextArticle{
+  font-family: "Cream Cake";
+  font-size: 26px;
+  color: beige;
+  transition: 1s all ease;
+}
+
+.iconEfect .iconDepart{
+  border: 1px ridge white;
+  transform: rotate(0deg);
+  transition: 1.5s all ease;
   user-select: none;
 }
 
-.iconEfect:hover{
-  border: 1px solid rgb(73, 73, 73);
+.iconEfect:hover .iconDepart{
+  border: 2px solid black;
+  transform: rotate(360deg);
 }
+
+.iconEfect:hover .spanTextArticle{
+  color: black;
+}
+
 
 .bordering{
     border: 2px dotted violet;
@@ -354,6 +388,7 @@ a:hover {
   height: auto;
 }
 
+
   @keyframes lightbul {
     0% {
       color: #dbb003;
@@ -368,6 +403,20 @@ a:hover {
 
   .lightbulbAnimation {
     animation: lightbul 3s infinite; /* Cambia 3s por la duración que prefieras */
+  }
+
+
+/*   #btnXSinUser:hover #bi-x-move {
+    transform: rotate(180deg);
+  } */
+
+  #btnXSinUser #bi-x-move{
+    transform: rotate(0deg);
+    transition: 1s ease;
+  }
+
+  #btnXSinUser:hover #bi-x-move{
+    transform: rotate(90deg);
   }
 
 /*  Media queries */

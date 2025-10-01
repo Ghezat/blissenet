@@ -167,7 +167,10 @@
 
   .closed {
     display: none;
+  }
 
+  .close {
+    display: none;
   }
 
   .containerIconSetting{
@@ -2034,7 +2037,6 @@
                   
               </div>
 
-
               <div class="mainGallery  p-0 ">
                   <% if (carouselOffert.show === true ) { %> <!-- true o false -->
                     <div class="contentGallery1 p-0" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">  
@@ -2321,6 +2323,45 @@
                 </footer>
 
               </div>
+
+              <% if (!user) { %>
+
+                <div class="containerFixedSinUser">
+                    <div class="d-flex flex-column"  style="position: fixed; right: 10px; bottom: 100px; z-index : 100">
+                        <div class="d-flex justify-content-end px-4">
+
+                            <span class="rounded-pill d-flex justify-content-center align-items-center cursor-pointer shadow-sm" id="btnXSinUser"  style="width: 40px; height: 40px; background-color: rgba(238, 238, 238, 0.9); color: black;">
+                                <i class="bi bi-x-lg" id="bi-x-move" style="font-size: 16px;"></i>
+                            </span> 
+                          
+                        </div>    
+                        <div class="body fixedSinUser mx-2 mt-5">
+                            
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+
+                            <div style="position: relative;">
+
+                                <div class="px-4 py-2 lightbulbAnimation shadow d-flex" style="background-color: #ffe372; font-size: 16px; color: #7a6202; border-top-left-radius: 12px; border-top-right-radius: 12px;"> 
+                                    <span> No estas logeado </span>   
+                                </div>
+                                <div class="rounded-pill d-flex justify-content-center align-items-center" style="background-color: #ffe372; position: absolute; top: -40px; right:60px; width: 42px; height: 42px;">
+                                <i class="bi bi-lightbulb-fill lightbulbAnimation" style="font-size: 28px;"></i>
+                                </div>
+                                
+                            </div>
+                            
+                            </div>
+
+                            <div class="form-group my-1 py-2" style="width: 100%; font-size: 24px;">
+
+                            <a href="/myaccount/signin-change" class="form-control rounded-pill btn btn-dark border-secondary shadow" style="font-size: 20px;"> Entrar </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+              <% }; %>
               
           </div>
       <% }; %>

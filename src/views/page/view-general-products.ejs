@@ -39,8 +39,12 @@
         background-color: rgb(128, 128, 128);
     }
 
-    .closed{
+/*     .closed{ antigua clase reeplazada por close
         display: none !important;
+    } */
+
+    .close{
+        display: none;
     }
 
     .photo img {
@@ -296,7 +300,12 @@
                             <h1 class="fw-bold" style="font-size: 28px;"><%= search.title %> </h1>
                             <p class="fw-bold mb-1">Categoria: <span class="fw-light ms-1"><%= search.category %></span> </p>
                             <p class="fw-bold mb-1">Autor: <span class="fw-light ms-1"><%= search.author %></span> </p>
-                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            
+                            <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                            </a>
+
                             <hr>
                             
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -318,6 +327,11 @@
                             <p class="fw-bold mb-1">Modelo : <span class="fw-light ms-1"><%= search.model %> </span> </p>
                             <p class="fw-bold mb-1">Año : <span class="fw-light ms-1"><%= search.construcDate %> </span> </p>
                             <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            
+                            <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                            </a>
+
                             <hr>
         
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -332,11 +346,16 @@
             <% }; %>
             <% if (depart == 'items')  { %>
                 <div class="card py-2 px-1" style="max-height: 80vh; overflow-y: auto;">
-                       <div class="card-body">
+                       <div class="card-body form-group">
                             <h1 class="fw-bold" style="font-size: 28px;"><%= search.title %> </h1>
                             <p class="fw-bold mb-1">Categoria : <span class="fw-light ms-1"><%= search.category %></span> </p>
                             <p class="fw-bold mb-1">Sub-Categoria : <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
-                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            
+                            <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                            </a>
+                
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -357,7 +376,12 @@
                             <p class="fw-bold mb-1">Marca : <span class="fw-light ms-1"> <%= search.produce %></span> </p>  
                             <p class="fw-bold mb-1">Modelo : <span class="fw-light ms-1"> <%= search.model %></span> </p> 
                             <p class="fw-bold mb-1">Año : <span class="fw-light ms-1"> <%= search.construcDate %></span> </p>
-                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p> 
+                            <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p> 
+                            
+                            <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                            </a>
+
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -377,7 +401,12 @@
                             <p class="fw-bold mb-1"> Tipo: <span class="fw-light ms-1"><%= search.category %> </span> </p>
                             <p class="fw-bold mb-1"> Oferta: <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
                             <p class="fw-bold mb-1"> Año: <span class="fw-light ms-1"> <%= search.construcDate %> |</span> Mtrs2:  <span class="fw-light ms-1"><%= search.mtrs2 %> </span> </p>
-                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p> 
+                            <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p> 
+                            
+                            <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                            </a>
+
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -397,7 +426,11 @@
                             <p class="fw-bold mb-1">Tipo : <span class="fw-light ms-1"><%= search.category %></span> </p>
                             <p class="fw-bold mb-1">Oferta : <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
                             <p class="fw-bold mb-1">Año : <span class="fw-light ms-1"> <%= search.construcDate %> |</span> Eslora :<span class="fw-light ms-1"><%= search.length %> </span> </p>
-                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            
+                            <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                            </a>
                             <hr>
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -416,7 +449,11 @@
                         <h1 class="fw-bold" style="font-size: 28px;"><%= search.title %> </h1> 
                         <p class="fw-bold mb-1">Categoria: <span class="fw-light ms-1"><%= search.category %></span> </p>
                         <p class="fw-bold mb-1">Sub-Categoria: <span class="fw-light ms-1"><%= search.sub_category %></span> </p>
-                        <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                        <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                        
+                        <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                        </a>
                         <hr>
                         
                         <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -454,9 +491,12 @@
                                 <p class="fw-bold my-1">Fecha Celebración : <span class="fw-light ms-1">Hasta agotarse todos los Tickets.</span> </p>
                             <% } %>
 
-                         <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>   
+                         <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>   
                          
-                         <hr>
+                        <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                            <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                        </a>
+                        <hr>
 
                          <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                          <div class="mb-1" id="showContent">
@@ -475,7 +515,11 @@
                             <h1 class="fw-bold" style="font-size: 28px;"><%= search.title %> </h1>
                             <p class="fw-bold mb-1">Categoria : <span class="fw-light"><%= search.category %></span> </p>
                             <p class="fw-bold mb-1">Sub-Categoria : <span class="fw-light"><%= search.sub_category %></span> </p>
-                            <p class="fw-bold mb-1">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            <p class="fw-bold mb-2">Anunciado en : <span class="fw-light ms-1"><%= search.country %> </span> </p>
+                            
+                            <a href="/account/<%= search.username %>" class="ps-0 py-2 px-2 mb-3" style="font-size: 16px; text-decoration: underline">
+                                <i class="bi bi-shop-window me-2"></i> <%= search.username %>
+                            </a>
                             <hr>
                             
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
@@ -489,11 +533,14 @@
                 </div>
             <% }; %>
 
-                <!-- tarjeta de precio y anunciante -->
+
+
+                <!-- tarjeta de precio -->
                 <div class="card my-2 p-2">
                     <div class="card-body">
 
-                        <span class="bg-warning px-1 py-1 rounded-2 pe-5" style="font-size: 18px; clip-path: polygon(0% 0%, 75% 0%, 82% 50%, 75% 100%, 0% 100%);">Precio: <i class="bi bi-currency-dollar"></i><%= search.price %></span> <hr>
+                        <!-- viejoo <span class="bg-warning px-1 py-1 rounded-2 pe-5" style="font-size: 18px; clip-path: polygon(0% 0%, 75% 0%, 82% 50%, 75% 100%, 0% 100%);">Precio: <i class="bi bi-currency-dollar"></i><%= search.price %></span>  -->
+                        <a class="ui yellow tag label" style="font-size: 16px;">  <span class="text-dark"> <i class="bi bi-currency-dollar"></i><%= search.price %></a>  </span>  <hr>
 
                     <% if (user) {  %>        
                         <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
@@ -505,12 +552,19 @@
                         <p class="me-1 mt-1 mb-3 favoriteStore" style="user-select: none;"> <i class="bi bi-bookmark-check me-1 starData cursor-pointer"></i> Seguir esta Tienda  <!-- usuario que esta logeado --><input type="hidden" value="<%= user._id %>">   <!-- id del usuario del anuncio --><input type="hidden" value="<%= search.user_id %>">  </p>
                       
                     <% } else { %>
-                        <div class="alert alert-light alert-dismissible fade show p-0" role="alert">
-                            <strong class="me-2"> <i class="bi bi-check-circle-fill me-2"></i> Para una mejor experiencia inicia sessión <a href="/myaccount/signin">aquí.</a> </strong>
-                           
+                        <div class="p-0 form-group">
+
+                            <span style="font-size: 18px;">
+                                <strong class="me-2">No estas Logeado</strong>
+                            </span>  
+
+                            <a class="btn btn-dark form-control my-3 py-2" style="font-size: 18px;" href="/myaccount/signin-change"> 
+                                <i class="bi bi-lightbulb-fill lightbulbAnimation me-1" ></i> Iniciar sección aquí
+                            </a> 
+                            <!-- <p> <span class="bg-dark ps-2 py-2 rounded-2 text-light" style=" padding-right: 50px;  clip-path: polygon(0% 0%, 75% 0%, 84% 50%, 75% 100%, 0% 100%);"><i class="bi bi-shop-window me-2"></i><%= search.username %></p> -->
                         </div>
                     <% }; %>    
-                        <p> <span class="bg-dark ps-2 py-2 rounded-2 text-light" style=" padding-right: 50px;  clip-path: polygon(0% 0%, 75% 0%, 84% 50%, 75% 100%, 0% 100%);"><i class="bi bi-shop-window me-2"></i><%= search.username %></p>
+                        
                     </div>
                 </div>
 
@@ -1523,12 +1577,13 @@
     </div>
 
     <% if (!user) { %>
-        <div class="containerFixedSinUser border border-danger">
+
+        <div class="containerFixedSinUser">
             <div class="d-flex flex-column"  style="position: fixed; right: 10px; bottom: 100px; z-index : 100">
                 <div class="d-flex justify-content-end px-4">
 
-                    <span class="rounded-pill d-flex justify-content-center align-items-center cursor-pointer shadow" id="btnXSinUser"  style="width: 40px; height: 40px; background-color: rgba(238, 238, 238, 0.9);">
-                         <i class="bi bi-x-lg" style="font-size: 16px;"></i>
+                    <span class="rounded-pill d-flex justify-content-center align-items-center cursor-pointer shadow-sm" id="btnXSinUser"  style="width: 40px; height: 40px; background-color: rgba(238, 238, 238, 0.9); color:black">
+                         <i class="bi bi-x-lg" id="bi-x-move" style="font-size: 16px;"></i>
                     </span> 
                    
                 </div>    
@@ -1667,17 +1722,6 @@
 
 </script>
 
-<script>
-    const containerFixedSinUser = document.querySelector('.containerFixedSinUser');
-    const btnXSinUser = document.querySelector('#btnXSinUser');
-
-    if (btnXSinUser){
-        btnXSinUser.addEventListener('click', ()=>{
-            containerFixedSinUser.classList.add("closed"); //quitamos el contenedor para que no le moleste, no quiere logearse
-        })
-    }
-
-</script>
 
 <script>
 
@@ -1779,8 +1823,8 @@
             console.log(ele.src)
             
             mini[i].addEventListener('mouseover', ()=>{
-                containerViewImg.classList.remove('closed');
-                containerViewVideo.classList.add('closed');
+                containerViewImg.classList.remove('close');
+                containerViewVideo.classList.add('close');
                 containerViewImg.innerHTML  = `<img src=${ele.src} class="imgView rounded-1 zoomImage" style="object-fit: cover; width: 100%;">  ` 
                                                    
                 $(document).ready(function() {
@@ -1816,8 +1860,8 @@
                     zoom.hide(); // Oculta el zoom al salir del mouse
             });
 
-            containerViewImg.classList.add('closed');   
-            containerViewVideo.classList.remove('closed');
+            containerViewImg.classList.add('close');   
+            containerViewVideo.classList.remove('close');
              
 
         });
@@ -2355,27 +2399,27 @@ const DataFetch = fetch('/extraer')
         
     if (emojiSelectorIcon){
         emojiSelectorIcon.addEventListener('click', ()=>{
-            emojiSelector.classList.toggle('closed');
+            emojiSelector.classList.toggle('close');
         });
     }; 
 
 
     if (emotiClosed){
         emotiClosed.addEventListener('click', ()=>{
-            emojiSelector.classList.toggle('closed');
+            emojiSelector.classList.toggle('close');
         });
     };
 
 
     if (colorsSelectorIcon){
         colorsSelectorIcon.addEventListener('click', ()=>{
-            colorsSelector.classList.toggle('closed');
+            colorsSelector.classList.toggle('close');
         });
     };
 
     if  (colorSelected){
         colorSelected.addEventListener('click', ()=>{
-            colorsSelector.classList.toggle('closed'); 
+            colorsSelector.classList.toggle('close'); 
         })
     }
 
@@ -2390,25 +2434,25 @@ const DataFetch = fetch('/extraer')
           
             if (colorSelectedValue == "dark"){
                 colorSelected.style.backgroundColor = "#e2e3e5";
-                colorsSelector.classList.toggle('closed'); 
+                colorsSelector.classList.toggle('close'); 
             } else if (colorSelectedValue == "primary"){
                 colorSelected.style.backgroundColor = "#cfe2ff";
-                colorsSelector.classList.toggle('closed'); 
+                colorsSelector.classList.toggle('close'); 
             } else if (colorSelectedValue == "success"){
                 colorSelected.style.backgroundColor = "#d1e7dd";
-                colorsSelector.classList.toggle('closed');
+                colorsSelector.classList.toggle('close');
             } else if (colorSelectedValue == "info"){
                 colorSelected.style.backgroundColor = "#cff4fc";
-                colorsSelector.classList.toggle('closed');
+                colorsSelector.classList.toggle('close');
             } else if (colorSelectedValue == "warning"){
                 colorSelected.style.backgroundColor = "#fff3cd";
-                colorsSelector.classList.toggle('closed');
+                colorsSelector.classList.toggle('close');
             } else if (colorSelectedValue == "danger"){
                 colorSelected.style.backgroundColor = "#f8d7da";
-                colorsSelector.classList.toggle('closed');
+                colorsSelector.classList.toggle('close');
             } else {
                 colorSelected.style.backgroundColor = "white";
-                colorsSelector.classList.toggle('closed');
+                colorsSelector.classList.toggle('close');
             }
             
         })
@@ -2417,7 +2461,7 @@ const DataFetch = fetch('/extraer')
 
     if (colorClosed){
         colorClosed.addEventListener('click', ()=>{
-            colorsSelector.classList.toggle('closed');
+            colorsSelector.classList.toggle('close');
         });
     };
 
