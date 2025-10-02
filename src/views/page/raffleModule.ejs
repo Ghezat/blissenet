@@ -64,16 +64,41 @@
     height: auto !important;
   }
 
+  .containerTicketExplanation{
+    margin: 0px 2px;
+
+  }
+
+  .containerMainImg{
+    display: none;
+  }
+
+  .containerLegends{
+    margin-top: 10px;
+  }
+
 }  
 
 @media screen and (min-width: 320px) and (max-width: 450px){
 
-.selectorContent{
-  height: auto !important;
-}
-.infoContent{
-  height: auto !important;
-}
+  .selectorContent{
+    height: auto !important;
+  }
+  .infoContent{
+    height: auto !important;
+  }
+
+  .containerTicketExplanation{
+    margin: 0px 2px;
+  }
+
+  .containerMainImg{
+    display: none;
+  }
+
+  .containerLegends{
+    margin-top: 10px;
+  }
 
 }  
 
@@ -122,7 +147,35 @@
         <div class="row mx-0 d-flex justify-content-center themaTextLight">
             
             <div class="col-12 col-sm-12 col-md-11 col-lg-11  px-0 " style="border: 2px solid #d5a3fc;">
-                
+
+                <div class="row containerTicketExplanation d-flex justify-content-between my-2 px-1">
+
+                  <div class="col-lg-4 col-md-12 col-sm-12">
+                    <div class="containerDetails d-flex flex-column px-2 py-2"  style="border-radius: 10px; background-color: rgba(32, 32, 32, .9); height: 150px;">
+                      <h2 class="mb-3" style="color: goldenrod; border-bottom: 2px solid goldenrod; padding-bottom: 4px;"><%= search.title %></h2>
+                      <h5 class="text-light">Serial : <%= search._id %></h5>
+                      <h5 class="text-light">Inicio : <%= search.dateStart %></h5>
+                      <h5 class="text-light">Celebración : <%= search.raffleClosingPolicy %></h5>
+                    </div>
+                  </div>  
+
+                  <div class="col-lg-4 col-md-12 col-sm-12 containerMainImg">
+                    <div class="containerImage" style="height: 150px;">
+                      <img src="<%= search.images[0].url %>" alt="" style="border-radius: 10px; height: 100%;" >
+                    </div>
+                  </div>  
+
+                  <div class="col-lg-4 col-md-12 col-sm-12 ">
+                    <div class="border containerLegends d-flex flex-column justify-content-between align-items-start border border-light"  style="height: 150px;">
+                      <div class="card-header" style="width: 100%;">  <span class="font-size: 16px"> Leyenda de Ticket </span>  </div>
+                      <div class="containerTicked d-flex align-items-center ms-1"> <div class="cube rounded-2" style="width: 33px; height: 33px;">0</div> <span class="mx-3"> Ticked Libre </span>  </div>
+                      <div class="containerTicked d-flex align-items-center ms-1"> <div class="cubeTakeNOVerified rounded-2" style="width: 33px; height: 33px;">0</div> <span class="mx-3"> Ticked Tomado No Consolidado </span>  </div>  
+                      <div class="containerTicked d-flex align-items-center ms-1"> <div class="cubeTakeVerified rounded-2" style="width: 33px; height: 33px;">0</div> <span class="mx-3"> Ticked Tomado y Consolidado </span>  </div> 
+                    </div>
+                  </div>  
+
+                </div>    
+
                 <div class="contentCubes d-flex justify-content-center flex-wrap">
                   
 
@@ -668,43 +721,44 @@ fetch('/raffleModule/data/', {
   const referTicket = document.getElementById('referTicket');
   const btnRegister = document.getElementById('btnRegister');
   
+  if (selectTicket){ 
+    selectTicket.addEventListener('change', ()=>{
+      
+      console.log("boxTickets :", boxTickets);
+      const ticketValue = selectTicket.value;
+      console.log("ticketValue :",ticketValue);
 
-  selectTicket.addEventListener('change', ()=>{
-    
-    console.log("boxTickets :", boxTickets);
-    const ticketValue = selectTicket.value;
-    console.log("ticketValue :",ticketValue);
+      if (ticketValue !== "Select"){
 
-    if (ticketValue !== "Select"){
-
-        for (let i = 0; i < boxTickets.length; i++) {
-          const ele = boxTickets[i];
-          if (ele.No == ticketValue){
-              if (ele.Ref.length >= 2){
-                  console.log("La Ref ya tiene informacion:", ele.Ref);
-                  referTicket.setAttribute("disabled", "");
-                  referTicket.value = "";
-                  btnRegister.setAttribute("disabled", "");
-                  referTicket.value = ele.Ref
-              } else {
-                  console.log("La Ref es vacia o diferente:", ele.Ref);
-                  referTicket.removeAttribute("disabled");
-                  btnRegister.removeAttribute("disabled");
-              }
+          for (let i = 0; i < boxTickets.length; i++) {
+            const ele = boxTickets[i];
+            if (ele.No == ticketValue){
+                if (ele.Ref.length >= 2){
+                    console.log("La Ref ya tiene informacion:", ele.Ref);
+                    referTicket.setAttribute("disabled", "");
+                    referTicket.value = "";
+                    btnRegister.setAttribute("disabled", "");
+                    referTicket.value = ele.Ref
+                } else {
+                    console.log("La Ref es vacia o diferente:", ele.Ref);
+                    referTicket.removeAttribute("disabled");
+                    btnRegister.removeAttribute("disabled");
+                }
+            }
           }
-        }
 
 
-       
-    } else {
+        
+      } else {
 
-          referTicket.setAttribute("disabled", "");
-          referTicket.value = "";
-          btnRegister.setAttribute("disabled", "");
+            referTicket.setAttribute("disabled", "");
+            referTicket.value = "";
+            btnRegister.setAttribute("disabled", "");
 
-    }
+      }
 
-  })
+    })
+  }  
 
 </script>
 <!-- 

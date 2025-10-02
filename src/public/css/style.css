@@ -68,7 +68,7 @@ main{
 .iconEfect .spanTextArticle{
   font-family: "Cream Cake";
   font-size: 26px;
-  color: beige;
+  color: white;
   transition: 1s all ease;
 }
 
@@ -80,7 +80,7 @@ main{
 }
 
 .iconEfect:hover .iconDepart{
-  border: 2px solid black;
+  /* border: 2px solid black; */
   transform: rotate(360deg);
 }
 
