@@ -58,46 +58,60 @@ routes.get('/history/', async(req, res)=>{
            
 routes.get('/comments/:username', async(req, res)=>{
     
-    let Date;
-    let searchProfile;
-    const countMessages = req.session.countMessages; //obtengo la cantidad de mensajes que pueda tener.
-    //aqui obtengo la cantidad de negotiationsBuySell
-    const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
-    //console.log(":::: Esto es la cantidad de negotiationsBuySell desde comments ::::", countNegotiationsBuySell);
-
-    const user = req.session.user; //obtengo el user
-
-    if (user){// este codigo es para poder ver esta pagina sin estar logeado
-        console.log("Esto es user._id ------>", user._id );
-        searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-    }
-   
-    //console.log("Esto es el parametro ----->", req.params)
-    const username = req.params.username;
-    console.log("Esto es username (Store:) ---->", username);
+   try {
     
-    const storeSearch = await modelProfile.find( { username } );
-    console.log("Esto es el profile de esta store investigada storeSearch--->", storeSearch);
-    
-    const dateCreated = storeSearch.forEach((ele)=>{
-    Date = ele.createdAt;
-    });
-    
-    //Armando la fecha de creacion de esta tienda
-    const dia = Date.getDate();
-    const mes = Date.getMonth() + 1;
-    const year = Date.getFullYear();
-    
-    const fullDate = `${dia}-${mes}-${year}`;
-    console.log("Esto es fullDate ------>",fullDate);
+        let Date;
+        let searchProfile;
+        const countMessages = req.session.countMessages; //obtengo la cantidad de mensajes que pueda tener.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
 
-    const searchSell = await modelBuysell.find(  {$and : [{ usernameSell : username },{ CommentBuy : { $ne : 'no_comment'}}]}  ); 
-    console.log("::::::: Esto es el resultado de la busqueda searchSell ---->", searchSell );
+        console.log(":::: Esto es la cantidad de countMessages ::::", countMessages);
+        console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
 
-    raffleHistory = await modelRaffleHistory.find( { $and : [{anfitrion : username}, { celebration : true }]} );
+        const user = req.session.user; //obtengo el user
 
-    res.render('page/comments', {user, searchProfile, countMessages, countNegotiationsBuySell, storeSearch, searchSell, raffleHistory, fullDate});  
+        if (user){// este codigo es para poder ver esta pagina sin estar logeado
+            console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.find({ indexed : user._id });
+            //console.log("Aqui el profile de la cuenta", searchProfile);
+        }
+    
+        //console.log("Esto es el parametro ----->", req.params)
+        const username = req.params.username;
+        console.log("Esto es username (Store:) ---->", username);
+        
+        const storeSearch = await modelProfile.find( { username } );
+        //console.log("Esto es el profile de esta Tienda --->", storeSearch);
+        Date = storeSearch[0].createdAt;
+        indexed = storeSearch[0].indexed;
+
+        //Armando la fecha de creacion de esta tienda
+        const dia = Date.getDate();
+        const mes = Date.getMonth() + 1;
+        const year = Date.getFullYear();
+        
+        const fullDate = `${dia}-${mes}-${year}`;
+        console.log("Esto es fullDate ------>",fullDate);
+
+        let searchSell = [];
+        //const searchSell = await modelBuysell.find(  {$and : [{ usernameSell : username },{ CommentBuy : { $ne : 'no_comment'}}]}  ); 
+    
+        const commentbuySell = await modelBuysell.find(  {$and : [{ indexedSell : indexed },{ CommentBuy : { $ne : 'no_comment'}}]}  ); 
+        const shoppCartSell = await modelShoppingCart.find({ $and : [{ sellerId: indexed }, { CommentSeller: { $ne : "no_comment" } } ]  });
+        searchSell.push(... commentbuySell, ...shoppCartSell);
+ 
+        raffleHistory = await modelRaffleHistory.find( { $and : [{anfitrion : username}, { celebration : true }]} );
+
+        console.log("Esto es searchSell ---->", searchSell );
+        console.log("Esto es raffleHistory :", raffleHistory);
+
+        res.render('page/comments', { user, searchProfile, countMessages, countNegotiationsBuySell, storeSearch, searchSell,raffleHistory, fullDate });  
+    
+    } catch (error) {
+        console.log("ha habido un error", error );
+        res.status(500).send("Error en el servidor");
+   }
 
 });
 

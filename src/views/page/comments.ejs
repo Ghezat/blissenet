@@ -251,6 +251,7 @@
 <!--  Nota: la infomacion usada viene de la routas History
  routes.get('/comments/:username', async(req, res)=>{ -->
 
+<!--  Trabajar con este modulo ..................... -->
     <script>
         
         const porcentTrust = document.getElementById('porcentTrust');
@@ -262,7 +263,7 @@
                     store : Username.value
                 }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-            fetch('/record-trust', {
+            fetch('/record-trustS', {
                  method : "POST",
                  body : JSON.stringify(dato),
                  headers : { "content-type" : "application/json"}
@@ -324,8 +325,6 @@
 
                  })
                 .catch(err => console.error(err));
-
-        
 
     </script>
 

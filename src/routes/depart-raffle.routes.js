@@ -193,7 +193,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
             //console.log(titleURL); // "hoverboard-blue-tooth-250w"            
 
             
-            if ( numTickets >= 50 && numTickets <=1000 ){
+            if ( numTickets >= 50 && numTickets <=2000 ){
 
                 let dateStart;
                 const date = new Date();
@@ -216,7 +216,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
     
                 
                 for (let i = 1; i < parseNumTickets + 1; i++) {
-                    let ticket = { "No" : i, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Verified" : false };
+                    let ticket = { "No" : i, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Verified" : false, "Winner" : false };
                     BOXTickets.push(ticket);
                 }
     
@@ -400,7 +400,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                 
             } else {
 
-                req.session.numTicketFall = 'El sorteo debe tener un rango entre 50 y 1000 Tickets.';
+                req.session.numTicketFall = 'El sorteo debe tener un rango entre 50 y 2000 Tickets.';
                 res.redirect('/department/create/raffle');
                 
             }
@@ -1084,7 +1084,7 @@ cron.schedule('*/1 * * * *', async() => {
     const dtNow = new Date();
     let dateNow;
     let dateNowData; //este es la fecha que requiere el message
-    let ticketRandom = [];
+    let ticketRandom = []; //en este arreglo guardamos todos los TicketWin
     let updatePrizesObject; // esta variable se actualiza cuando la funcion messagesForWin() es ejecutada
     // es un objeto que posee el numero ganador y el username a quien pertenece el ticket. este objeto ya actualizado lo usaremos en una funcion 
     // llamada createAndSendEmails()
@@ -1155,7 +1155,7 @@ cron.schedule('*/1 * * * *', async() => {
                         
                     }
 
-                    if (tiketTakeCount !==0 ){
+                    if (tiketTakeCount !==0 ){//han tomado numeros del sorteo.
 
                                                 
                         //asigno true al campo allTicketsTrue
@@ -1188,7 +1188,31 @@ cron.schedule('*/1 * * * *', async() => {
                             
                             }
                         }
-                        
+
+
+                        async function UpdateBoxTickets() {
+                            const ticketSet = new Set(ticketRandom); // Usamos un Set para búsquedas rápidas
+
+                            // Creamos un array para almacenar las actualizaciones
+                            const updates = [];
+                                              
+                            //dentro del array boxTickets [ { "No" : 1, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Verified" : false, "Winner" : false }, {...}, {...} ];
+
+                            // Recorremos boxTickets una sola vez
+                            for (const ticket of boxTickets) {
+                                if (ticketSet.has(ticket.No)) { // Verificamos si el ticket está en ticketRandom
+                                    updates.push({ id: ticket.No, winner: true }); // Preparamos la actualización
+                                }
+                            }
+
+                            // Realizamos las actualizaciones en una sola operación
+                            for (const update of updates) {
+                                await modelRaffle.findByIdAndUpdate(Id, { 
+                                    $set: { [`boxTickets.${update.id - 1}.Winner`]: update.winner } 
+                                });
+                            }
+                        }
+
                         async function fContestan(){
 
                             for (let u = 0; u < ticketRandom.length; u++) {
@@ -1487,39 +1511,47 @@ cron.schedule('*/1 * * * *', async() => {
                                 //todos los elementos de PrizesObject en el campo winTicket deben tener su numero ganador y no null.
                                 fContestan() //:::invocacion segundo funcion 
                                     .then(()=>{
-                                        messagesForWin() //invocacion de envio de mensajes a todos los participantes Ganadores.
+                                        UpdateBoxTickets()
                                             .then(()=>{
-                                                emailsWinTicket()
+
+                                                messagesForWin() //invocacion de envio de mensajes a todos los participantes Ganadores.
                                                     .then(()=>{
-                                                        emailAnfitrion()
+                                                        emailsWinTicket()
                                                             .then(()=>{
-                                                                invoiceDone() //aqui invoco el ultimo proceso, la creacion de la factura del Sorteo.
+                                                                emailAnfitrion()
                                                                     .then(()=>{
-                                                                        raffleHistory()
+                                                                        invoiceDone() //aqui invoco el ultimo proceso, la creacion de la factura del Sorteo.
                                                                             .then(()=>{
-                                                                                console.log("Cadena de funciones ejecutada satisfactoriamente en raffle by date");
+                                                                                raffleHistory()
+                                                                                    .then(()=>{
+                                                                                        console.log("Cadena de funciones ejecutada satisfactoriamente en raffle by date");
+                                                                                    })
+                                                                                    .catch((error)=> {
+                                                                                        console.log("Ha ocurrido un error en raffleHistory()", error);
+                                                                                    })
                                                                             })
                                                                             .catch((error)=> {
-                                                                                console.log("Ha ocurrido un error en raffleHistory()", error);
+                                                                                console.log("Ha ocurrido un error en invoiceDone()", error);
                                                                             })
                                                                     })
-                                                                    .catch((error)=> {
-                                                                        console.log("Ha ocurrido un error en invoiceDone()", error);
+                                                                    .catch((error)=>{
+                                                                        console.log("Ha ocurrido un error en emailAnfitrion()", error);
                                                                     })
+
                                                             })
                                                             .catch((error)=>{
-                                                                console.log("Ha ocurrido un error en emailAnfitrion()", error);
+                                                                console.log("Ha ocurrido un error en emailsWinTicket()", error);
                                                             })
 
                                                     })
-                                                    .catch((error)=>{
-                                                        console.log("Ha ocurrido un error en emailsWinTicket()", error);
+                                                    .catch((error)=> {
+                                                        console.log("Ha ocurrido un error en messagesForWin()", error);
                                                     })
 
                                             })
                                             .catch((error)=> {
-                                                console.log("Ha ocurrido un error en messagesForWin()", error);
-                                            })
+                                                console.log("Ha ocurrido un error en UpdateBoxTickets()", error);
+                                            })        
                                     })
                                     .catch((error)=> {
                                         console.log("Ha ocurrido un error en fContestan()", error);
@@ -1538,7 +1570,7 @@ cron.schedule('*/1 * * * *', async() => {
                         let countSuccess = 0; 
                         let countMedia = 0;  
 
-                        //funcion para enviar un correo al anfitrion de que su sorteo fue eliminado 
+                        //funcion para enviar un correo al anfitrion de que su sorteo fue pausado
                         async function emailAnfitrion(){
                             console.log("emailAnfitrion() -> ejecutandose"); 
 
@@ -1609,7 +1641,7 @@ cron.schedule('*/1 * * * *', async() => {
 
                         }    
 
-                        //al no ser tomado ningun ticket este de cierte forma queda intacto y en pausa. para que el anfitrion administre este sorteo.                         
+                        //al no ser tomado ningun ticket el sorteo es eliminado. Pero no deberia sino pausarlo.                         
                         async function deleteRaffle(){
 
                             const RaffleByDate = await modelRaffle.findById(Id);
@@ -1676,18 +1708,21 @@ cron.schedule('*/1 * * * *', async() => {
        
                         }
                 
-                            
+                        //al no ser tomado ningun numero el sorteo es pausado
+                        async function pauseRaffle(){
+                            const RaffleByDate = await modelRaffle.findByIdAndUpdate(Id, {paused: true, allTicketsTake: false });
+                        }     
 
                         emailAnfitrion()
                             .then(()=>{
                                 sendMessage()
                                     .then(()=>{
-                                        deleteRaffle()
+                                        pauseRaffle()
                                             .then(()=>{
-                                                console.log("Sorteo eliminado por no tener participación");
+                                                console.log("Sorteo pausado por no tener participación");
                                             })
                                             .catch((error)=>{
-                                                console.log("Ha habido un error deleteRaffle()", error);
+                                                console.log("Ha habido un error pauseRaffle()", error);
                                             })
                                     })
                                     .catch((error)=>{

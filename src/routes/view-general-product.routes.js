@@ -1087,17 +1087,7 @@ routes.post('/auction/cronoAsta', async(req, res)=>{
 //Sección de manejo de Raffles --------------------------------------------
 routes.get('/raffleModule/:id', async(req, res)=>{
 
-    const idRaffle = req.params.id;
-    const ticketTakeError =  req.session.ticketTakeError;
-    const ticketTakeFine = req.session.ticketTakeFine;
-    const ticketTakeAnfitrion = req.session.ticketTakeAnfitrion;
-    const ticketTakeErrorNoProfile = req.session.ticketTakeErrorNoProfile;
-    delete req.session.ticketTakeError;
-    delete req.session.ticketTakeFine;
-    delete req.session.ticketTakeAnfitrion;
-    delete req.session.ticketTakeErrorNoProfile;
-
-    
+    const idRaffle = req.params.id;    
     const search = await modelRaffle.findById(idRaffle);
 
     //console.log('search', search);
@@ -1115,13 +1105,13 @@ routes.get('/raffleModule/:id', async(req, res)=>{
         
         if (search){
             ticketsTake = search.boxTickets; //aqui tengo el array con los tickets con toda la inf. necesaria
-            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake, ticketTakeFine, ticketTakeError, ticketTakeErrorNoProfile, ticketTakeAnfitrion })    
+            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake })    
         } else {
             res.redirect('/')
         }
 
     } else {
-            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake, ticketTakeFine, ticketTakeError, ticketTakeErrorNoProfile, ticketTakeAnfitrion })       
+            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake })       
     }
 
     
@@ -1213,417 +1203,414 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
 
             console.log("El usuario ha participado", count, "veces");
 
-            if ( anfitrion !== username ){ 
+            if (cantVerifiedTicket === numTickets){
+                //comparo si hemos llegado a la ultima verificacion ultimo ticket. 
+                //y ejecuto todo el proceso requerido
 
-                    if (cantVerifiedTicket === numTickets){
-                        //comparo si hemos llegado a la ultima verificacion ultimo ticket. 
-                        //y ejecuto todo el proceso requerido
+                if (count === 0){
 
-                        if (count === 0){
-
-                            let ticketRandom = [];
-                            console.log('Se han verificado todos los Tickets')
-                            console.log('cantVerifiedTicket :', cantVerifiedTicket);
-                            console.log('numTickets :', numTickets);
-                            console.log(`${cantVerifiedTicket}/${numTickets}`);
-                            //verifico el ultimo ticket
-                            const updateRef = await modelRaffle.findByIdAndUpdate(Id, { $set: {
-                                            
-                        
-                                [`boxTickets.${n}.Contestan`] : username,
-                                [`boxTickets.${n}.No_Serial`] : serial,
-                                [`boxTickets.${n}.Date`] : dateNow,
-                                [`boxTickets.${n}.Take`] : true,
-                                [`boxTickets.${n}.Verified`] : true
-                            
-                        
-                            }});
-
-                            //aqui vamos a guardar la informacion en el modelTickets ---------
-                            const newTicket = new modelTickets ({ id_raffle: Id, dateStart, category, numTickets, raffleClosingPolicy: policy, title,  price, serial, No : Ticket , username, anfitrion });
-                            const newTicketSave = await newTicket.save();
-
-                            //asigno true al campo allTicketsTake
-                            const updateRaffle = await modelRaffle.findByIdAndUpdate(Id, { $set: { allTicketsTake : true }} );
-                            //genero los numeros ganadores sin repetirse (winTicket)               
-                            //cantPrizes (esta variable esta la cantidad de numeros que se deben generar)
-                            while (ticketRandom.length < cantPrizes){
-                                let randomNumber = Math.trunc(Math.random() * numTickets);
-                                if ( randomNumber !== 0 ){
+                    let ticketRandom = [];
+                    console.log('Se han verificado todos los Tickets')
+                    console.log('cantVerifiedTicket :', cantVerifiedTicket);
+                    console.log('numTickets :', numTickets);
+                    console.log(`${cantVerifiedTicket}/${numTickets}`);
+                    //verifico el ultimo ticket
+                    const updateRef = await modelRaffle.findByIdAndUpdate(Id, { $set: {
                                     
-                                    if (!ticketRandom.includes(randomNumber)){
-                                        ticketRandom.push(randomNumber);
-                                    }
+                
+                        [`boxTickets.${n}.Contestan`] : username,
+                        [`boxTickets.${n}.No_Serial`] : serial,
+                        [`boxTickets.${n}.Date`] : dateNow,
+                        [`boxTickets.${n}.Take`] : true,
+                        [`boxTickets.${n}.Verified`] : true
+                    
+                
+                    }});
 
-                                }
+                    //aqui vamos a guardar la informacion en el modelTickets ---------
+                    const newTicket = new modelTickets ({ id_raffle: Id, dateStart, category, numTickets, raffleClosingPolicy: policy, title,  price, serial, No : Ticket , username, anfitrion });
+                    const newTicketSave = await newTicket.save();
+
+                    const message = `Felicidades, ha tomado el Ticket, Noº. ${Ticket}.`;
+                    res.json({ code: "ok", ticket: Ticket, message });
+
+                    //asigno true al campo allTicketsTake
+                    const updateRaffle = await modelRaffle.findByIdAndUpdate(Id, { $set: { allTicketsTake : true }} );
+                    //genero los numeros ganadores sin repetirse (winTicket)               
+                    //cantPrizes (esta variable esta la cantidad de numeros que se deben generar)
+
+                    while (ticketRandom.length < cantPrizes){
+                        let randomNumber = Math.trunc(Math.random() * numTickets);
+                        if ( randomNumber !== 0 ){
+                            
+                            if (!ticketRandom.includes(randomNumber)){
+                                ticketRandom.push(randomNumber);
                             }
 
-                            console.log(":::::::::::::::::::::::Aqui los numeros random:::::::::::::::::::::::");
-                            console.log('ticketRandom', ticketRandom);
-                        
-                            //PrizesObject arreglo que posee los objetos que deben ser actualizados con los numeros en el campo winTicket 
-                            let updatePrizesObject; // esta variable se actualiza cuando la funcion messagesForWin() es ejecutada
+                        }
+                    }
 
-                            async function TicketWin(){
-                        
-                                for (let i = 0; i < ticketRandom.length; i++) {
-                                    let ticketWin = ticketRandom[i];
+                    console.log(":::::::::::::::::::::::Aqui los numeros random:::::::::::::::::::::::");
+                    console.log('ticketRandom', ticketRandom);
+                
+                    //PrizesObject arreglo que posee los objetos que deben ser actualizados con los numeros en el campo winTicket 
+                    let updatePrizesObject; // esta variable se actualiza cuando la funcion messagesForWin() es ejecutada
 
+                    async function TicketWin(){
+                
+                        for (let i = 0; i < ticketRandom.length; i++) {
+                            let ticketWin = ticketRandom[i];
+
+                            const updateWinTicket = await modelRaffle.findByIdAndUpdate(Id, { $set: {
+                                [`PrizesObject.${i}.winTicket`] : ticketWin
+                            }});
+                            
+                        }
+                        
+                        
+                    };
+
+                    async function contestan(){
+                        console.log(":::Invocacion de la Funcion Contestan()");
+                        console.log("Ejecutando la funcion Contestan")
+    
+                        for (let u = 0; u < ticketRandom.length; u++) {
+                            const ticketWin = ticketRandom[u];// aqui estaran los numeros ganadores ejemplo 4, 7, 9
+                            for (let x = 0; x < boxTickets.length; x++) {
+                                const ele = boxTickets[x].No; //1,2,3,4,5,6,7,8,9,...... hasta el ultimo
+                                const Contestan = boxTickets[x].Contestan; //aqui iran pasando todos los participantes
+                                if (ele == ticketWin){
                                     const updateWinTicket = await modelRaffle.findByIdAndUpdate(Id, { $set: {
-                                        [`PrizesObject.${i}.winTicket`] : ticketWin
+                                            
+                                        [`PrizesObject.${u}.winUser`] : Contestan
+                                
                                     }});
-                                    
                                 }
                                 
-                                
+                            }
+                            
+                        }
+
+                    };
+                        
+                    async function messagesForWin(){
+                        const newRaffle = await modelRaffle.findById(productId);
+                        updatePrizesObject = newRaffle.PrizesObject
+                        console.log("Esto es updatePrizesObject -----------> mirar esto", updatePrizesObject);
+                        for (let n = 0; n < updatePrizesObject.length; n++) {
+                            const winUser = updatePrizesObject[n].winUser; //user ganador
+                            console.log("winUser --->", winUser);
+                            try{
+                                const resultUser = await modelUser.find({ username : winUser}); //hago una busqueda para ubicar el Id del user
+                                const winId = resultUser[0]._id; //Id del user ganador.
+                                console.log("VER ESTO");
+                                console.log("------------------------------------");
+                                console.log("winUser --->", winUser);
+                                console.log("resultUser esto es la busqueda debemos recibir un objeto de la coleccion user--->", resultUser);
+                                console.log("Esto es winId", winId);
+                                                                                                                                                                                                                                                                                                
+                                const newMessage = new modelMessages({times : dateNow, titleArticle : title, urlImageArticle, userId : anfitrion_id, username : anfitrion , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId, toCreatedArticleId : winId, ownerStore : winUser  });
+                                console.log("newMessage :", newMessage);
+                                const saveMessage = await newMessage.save();
+                            } catch(error){
+                                console.error('Ha ocurrido un error', error);
+                            }    
+                            
+                        }
+                    };
+
+                    async function emailsWinTicket(){
+                        //updatePrizesObject y title estan afuera y tengo acceso a estos datos.
+                        console.log("emailsWinTicket() -> ejecutandose"); 
+                        console.log("updatePrizesObject ->", updatePrizesObject);
+                        for (let i = 0; i < updatePrizesObject.length; i++) {
+                            const winUser = updatePrizesObject[i].winUser; //user ganador
+                            console.log("winUser --->", winUser )
+
+                            const resultUser = await modelUser.find({ username : winUser}); //hago una busqueda para ubicar el Id del user
+                            const winEmail = resultUser[0].email; //Id del user ganador.
+
+                            // con el email y el titulo arriba disponible, se procede a crear el correo y a enviarlo.
+                            const message = "Celebración de Sorteo."
+                            const contentHtml = `
+                            <h2 style="color: black"> Felicidades has sido ganador en un Sorteo. </h2>
+                            <ul style="color: black"> 
+                                <li> cuenta : ${winEmail} </li> 
+                                <li> asunto : ${message} </li>
+                            <ul>
+                            <h2 style="color: black"> Ganaste Sorteo de ${title}. </h2>
+                            <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al sorteo. Reclame su premio y califique. </p>
+                            `
+
+                            const emailMessage = {
+                                from: "Blissenet<sistemve@blissenet.com>", //remitente
+                                to: winEmail,
+                                subject: "🎊 Celebración de Sorteo - Blissenet", //objeto
+                                text: message,
+                                html: contentHtml
                             };
 
-                            async function contestan(){
-                                console.log(":::Invocacion de la Funcion Contestan()");
-                                console.log("Ejecutando la funcion Contestan")
-            
-                                for (let u = 0; u < ticketRandom.length; u++) {
-                                    const ticketWin = ticketRandom[u];// aqui estaran los numeros ganadores ejemplo 4, 7, 9
-                                    for (let x = 0; x < boxTickets.length; x++) {
-                                        const ele = boxTickets[x].No; //1,2,3,4,5,6,7,8,9,...... hasta el ultimo
-                                        const Contestan = boxTickets[x].Contestan; //aqui iran pasando todos los participantes
-                                        if (ele == ticketWin){
-                                            const updateWinTicket = await modelRaffle.findByIdAndUpdate(Id, { $set: {
-                                                    
-                                                [`PrizesObject.${u}.winUser`] : Contestan
-                                        
-                                            }});
-                                        }
-                                        
-                                    }
+                            //añadir las credenciales
+                            const transport = nodemailer.createTransport({
+                                host: "mail.blissenet.com",
+                                port: 465,
+                                auth: {
+                                    user: "sistemve@blissenet.com",
+                                    pass: process.env.pass_sistemve
+                                }
+                            });
+
+                            transport.sendMail(emailMessage, (error, info) => {
+                                if (error) {
+                                    console.log("Error enviando email")
+                                    console.log(error.message)
+                                } else {
+                                    console.log("Email enviado")
                                     
                                 }
+                            })                          
 
-                            };
-                                
-                            async function messagesForWin(){
-                                const newRaffle = await modelRaffle.findById(productId);
-                                updatePrizesObject = newRaffle.PrizesObject
-                                console.log("Esto es updatePrizesObject -----------> mirar esto", updatePrizesObject);
-                                for (let n = 0; n < updatePrizesObject.length; n++) {
-                                    const winUser = updatePrizesObject[n].winUser; //user ganador
-                                    console.log("winUser --->", winUser);
-                                    try{
-                                        const resultUser = await modelUser.find({ username : winUser}); //hago una busqueda para ubicar el Id del user
-                                        const winId = resultUser[0]._id; //Id del user ganador.
-                                        console.log("VER ESTO");
-                                        console.log("------------------------------------");
-                                        console.log("winUser --->", winUser);
-                                        console.log("resultUser esto es la busqueda debemos recibir un objeto de la coleccion user--->", resultUser);
-                                        console.log("Esto es winId", winId);
-                                                                                                                                                                                                                                                                                                        
-                                        const newMessage = new modelMessages({times : dateNow, titleArticle : title, urlImageArticle, userId : anfitrion_id, username : anfitrion , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId, toCreatedArticleId : winId, ownerStore : winUser  });
-                                        console.log("newMessage :", newMessage);
-                                        const saveMessage = await newMessage.save();
-                                    } catch(error){
-                                        console.error('Ha ocurrido un error', error);
-                                    }    
+                        }
+
+                    };
+
+                    async function emailAnfitrion(){
+                        console.log("emailAnfitrion() -> ejecutandose"); 
+
+                        const resultUser = await modelUser.find({ username : anfitrion }); //hago una busqueda para ubicar el Id del user
+                        const anfitrionMail = resultUser[0].email; //Id del user ganador.
+
+                        //console.log(`anfitrionMail : ${anfitrionMail} | title: ${title}`); 
+
+                        const message = "Celebración de Sorteo."
+                        const contentHtml = `
+                        <h2 style="color: black"> Felicidades su Sorteo se ha celebrado. </h2>
+                        <ul style="color: black"> 
+                            <li> cuenta : ${anfitrionMail} </li> 
+                            <li> asunto : ${message} </li>
+                        <ul>
+                        <h2 style="color: black"> Celebración de Sorteo  ${title}. </h2>
+                        <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y atienda con esmero a los dichosos ganadores, para que estos le califiquen positivo. </p>
+                        `
+
+                        const emailMessage = {
+                            from: "Blissenet<sistemve@blissenet.com>", //remitente
+                            to: anfitrionMail,
+                            subject: "🎊 Celebración de Sorteo - Blissenet", //objeto
+                            text: message,
+                            html: contentHtml
+                        };
+
+                        //añadir las credenciales
+                        const transport = nodemailer.createTransport({
+                            host: "mail.blissenet.com",
+                            port: 465,
+                            auth: {
+                                user: "sistemve@blissenet.com",
+                                pass: process.env.pass_sistemve
+                            }
+                        });
+
+                        transport.sendMail(emailMessage, (error, info) => {
+                            if (error) {
+                                console.log("Error enviando email")
+                                console.log(error.message)
+                            } else {
+                                console.log("Email enviado al anfitrion")
+                            }
+                        }) 
+                    };
+
+                    async function invoiceDone(){
+                        //aqui creamos la factura del sorteo.
+                        // category > Gratis or Pago
+                        let commission = 6;
+                        let tecnicalDescription = 'Esto es un Sorteo de Tickets Gratis';
+                        const Invoice = new modelInvoice({ usernameSell : anfitrion, indexed : anfitrion_id, department : depart, title, title_id : productId,  tecnicalDescription, price, commission });
+                        const InvoiceSave = await Invoice.save();
+                        
+                    };
+
+                    async function raffleHistory(){
+                        //aqui guardamos la data del raffle history
+                        const raffle = await modelRaffle.findById(productId);
+                        const PrizesObject =  raffle.PrizesObject;
+                        const image = raffle.images[0].url;
+                        //console.log("image ---->", image);
+
+                        let response;
+                        async function downloadImgToUpload(){
+                            response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
+                            //console.log("response ---->", response); //un espaguitero grande
+                        }
+                        
+                        downloadImgToUpload()
+                            .then(()=>{
+                                    const epoch = new Date().getTime();
+                                    const folder = 'firstImgRaffleHistory';
+                                    const pathField = image; const extPart = pathField.split(".");
+                                    const ext = extPart[4]; console.log("ext------->", ext) //esto es para conseguir la extencion .png o jpg
+                                    //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
+                
+                                    const key = `${folder}/${epoch}.${ext}`;
+                                    console.log("key -->", key);
+                                    let dImage;
                                     
-                                }
-                            };
-
-                            async function emailsWinTicket(){
-                                //updatePrizesObject y title estan afuera y tengo acceso a estos datos.
-                                console.log("emailsWinTicket() -> ejecutandose"); 
-                                console.log("updatePrizesObject ->", updatePrizesObject);
-                                for (let i = 0; i < updatePrizesObject.length; i++) {
-                                    const winUser = updatePrizesObject[i].winUser; //user ganador
-                                    console.log("winUser --->", winUser )
-        
-                                    const resultUser = await modelUser.find({ username : winUser}); //hago una busqueda para ubicar el Id del user
-                                    const winEmail = resultUser[0].email; //Id del user ganador.
-        
-                                    // con el email y el titulo arriba disponible, se procede a crear el correo y a enviarlo.
-                                    const message = "Celebración de Sorteo."
-                                    const contentHtml = `
-                                    <h2 style="color: black"> Felicidades has sido ganador en un Sorteo. </h2>
-                                    <ul style="color: black"> 
-                                        <li> cuenta : ${winEmail} </li> 
-                                        <li> asunto : ${message} </li>
-                                    <ul>
-                                    <h2 style="color: black"> Ganaste Sorteo de ${title}. </h2>
-                                    <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y vaya al sorteo. Reclame su premio y califique. </p>
-                                    `
-        
-                                    const emailMessage = {
-                                        from: "Blissenet<sistemve@blissenet.com>", //remitente
-                                        to: winEmail,
-                                        subject: "🎊 Celebración de Sorteo - Blissenet", //objeto
-                                        text: message,
-                                        html: contentHtml
+                                    const params = { 
+                                        Bucket : bucketName,
+                                        Key : key,
+                                        Body : response.data,
+                                        ACL : 'public-read' 
                                     };
-        
-                                    //añadir las credenciales
-                                    const transport = nodemailer.createTransport({
-                                        host: "mail.blissenet.com",
-                                        port: 465,
-                                        auth: {
-                                            user: "sistemve@blissenet.com",
-                                            pass: process.env.pass_sistemve
-                                        }
-                                    });
-        
-                                    transport.sendMail(emailMessage, (error, info) => {
-                                        if (error) {
-                                            console.log("Error enviando email")
-                                            console.log(error.message)
+                                            
+                                    s3.putObject(params, function(err, data){
+                                    
+                                        if (err){
+                                            console.log('Error al subir un archivo', err);
                                         } else {
-                                            console.log("Email enviado")
-                                            
-                                        }
-                                    })                          
-        
-                                }
-        
-                            };
-        
-                            async function emailAnfitrion(){
-                                console.log("emailAnfitrion() -> ejecutandose"); 
-        
-                                const resultUser = await modelUser.find({ username : anfitrion }); //hago una busqueda para ubicar el Id del user
-                                const anfitrionMail = resultUser[0].email; //Id del user ganador.
-        
-                                //console.log(`anfitrionMail : ${anfitrionMail} | title: ${title}`); 
-        
-                                const message = "Celebración de Sorteo."
-                                const contentHtml = `
-                                <h2 style="color: black"> Felicidades su Sorteo se ha celebrado. </h2>
-                                <ul style="color: black"> 
-                                    <li> cuenta : ${anfitrionMail} </li> 
-                                    <li> asunto : ${message} </li>
-                                <ul>
-                                <h2 style="color: black"> Celebración de Sorteo  ${title}. </h2>
-                                <p> <b> Estimado usuario, </b> Entre a su cuenta en Blissenet.com y atienda con esmero a los dichosos ganadores, para que estos le califiquen positivo. </p>
-                                `
-        
-                                const emailMessage = {
-                                    from: "Blissenet<sistemve@blissenet.com>", //remitente
-                                    to: anfitrionMail,
-                                    subject: "🎊 Celebración de Sorteo - Blissenet", //objeto
-                                    text: message,
-                                    html: contentHtml
-                                };
-        
-                                //añadir las credenciales
-                                const transport = nodemailer.createTransport({
-                                    host: "mail.blissenet.com",
-                                    port: 465,
-                                    auth: {
-                                        user: "sistemve@blissenet.com",
-                                        pass: process.env.pass_sistemve
-                                    }
-                                });
-        
-                                transport.sendMail(emailMessage, (error, info) => {
-                                    if (error) {
-                                        console.log("Error enviando email")
-                                        console.log(error.message)
-                                    } else {
-                                        console.log("Email enviado al anfitrion")
-                                    }
-                                }) 
-                            };
-
-                            async function invoiceDone(){
-                                //aqui creamos la factura del sorteo.
-                                // category > Gratis or Pago
-                                let commission = 6;
-                                let tecnicalDescription = 'Esto es un Sorteo de Tickets Gratis';
-                                const Invoice = new modelInvoice({ usernameSell : anfitrion, indexed : anfitrion_id, department : depart, title, title_id : productId,  tecnicalDescription, price, commission });
-                                const InvoiceSave = await Invoice.save();
-                                
-                            };
-
-                            async function raffleHistory(){
-                                //aqui guardamos la data del raffle history
-                                const raffle = await modelRaffle.findById(productId);
-                                const PrizesObject =  raffle.PrizesObject;
-                                const image = raffle.images[0].url;
-                                //console.log("image ---->", image);
-
-                                let response;
-                                async function downloadImgToUpload(){
-                                    response = await axios.get(image, { responseType: 'arraybuffer', maxContentLength: Infinity });
-                                    //console.log("response ---->", response); //un espaguitero grande
-                                }
-                                
-                                downloadImgToUpload()
-                                    .then(()=>{
-                                            const epoch = new Date().getTime();
-                                            const folder = 'firstImgRaffleHistory';
-                                            const pathField = image; const extPart = pathField.split(".");
-                                            const ext = extPart[4]; console.log("ext------->", ext) //esto es para conseguir la extencion .png o jpg
-                                            //console.log("imagen descargada", response.data); -->response.data  , es la imagen desscargada en formato binario y almacenada en un array buffer, esto es como si alguien hubiera subido una foto al servidor solo que no la guardamos solo se usa para enviar al buckets Spaces;
-                        
-                                            const key = `${folder}/${epoch}.${ext}`;
-                                            console.log("key -->", key);
-                                            let dImage;
-                                            
-                                            const params = { 
-                                                Bucket : bucketName,
-                                                Key : key,
-                                                Body : response.data,
-                                                ACL : 'public-read' 
-                                            };
+                                            console.log('La imagen fue subida, Exitooooooooooooooo', data);
                                                     
-                                            s3.putObject(params, function(err, data){
-                                            
-                                                if (err){
-                                                    console.log('Error al subir un archivo', err);
-                                                } else {
-                                                    console.log('La imagen fue subida, Exitooooooooooooooo', data);
-                                                            
-                                                    let url = `https://${bucketName}.${endpoint}/${key}`;    
-                                                    let public_id = key;
-                                                    dImage = {public_id, url};
+                                            let url = `https://${bucketName}.${endpoint}/${key}`;    
+                                            let public_id = key;
+                                            dImage = {public_id, url};
 
-                                                    async function saveDB(){ 
-                                                        const history = new modelRaffleHistory({ category, anfitrion : UserName, anfitrion_id, title_id : Id , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
-                                                        //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
-                                                        const historySave = await history.save(); //data salvada.
-                                                    }
+                                            async function saveDB(){ 
+                                                const history = new modelRaffleHistory({ category, anfitrion : UserName, anfitrion_id, title_id : Id , title, price, numTickets: cantTicket, PrizesObject, dateStart, image: dImage });
+                                                //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
+                                                const historySave = await history.save(); //data salvada.
+                                            }
 
-                                                    saveDB() //invocar funcion 
-                                                        .then(()=>{
-                                                            console.log('se guardo el historial del sorteo OK')
-                                                        })
-                                                        .catch((err)=>{
-                                                            console.log("XXXXXXXXXXXXXXXXXXXXXXX ERROR XXXXXXXXXXXXXXXXXXXXXXXX");
-                                                            console.log('XXXX  ha habido un error al guardar el historial XXXX', err);
-                                                        })
-                                                }
-                                            
-                                            });
-                                            
-
-                                            
-                                    })
-                                    .catch((err)=>{
-                                        console.log("ha habido un error en la descarga de la imagen raffle", err);
-                                    })  
-
-    /* 
-                            {     
-                                const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
-                                //console.log("Aqui resultUpload ----->", resultUpload);
-                                const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
-                                const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
-                                //
-                    
-                                const history = new modelRaffleHistory({ category, anfitrion, anfitrion_id, title_id : productId, title, price, numTickets, PrizesObject, dateStart, image: dImage });
-                                //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
-                                const historySave = await history.save(); //data salvada.
-                                }
-
-    */
-
-                            };
-                        
-                            TicketWin() //:::invocacion de la primera Funcion TicketWin
-                                .then(()=>{
-                                    //todos los elementos de PrizesObject en el campo winTicket deben tener su numero ganador y no null.
-                                    contestan() //:::invocacion segundo funcion 
-                                        .then(()=>{
-                                            messagesForWin() //invocacion de envio de mensajes a todos los participantes Ganadores.
+                                            saveDB() //invocar funcion 
                                                 .then(()=>{
-                                                    emailsWinTicket()
+                                                    console.log('se guardo el historial del sorteo OK')
+                                                })
+                                                .catch((err)=>{
+                                                    console.log("XXXXXXXXXXXXXXXXXXXXXXX ERROR XXXXXXXXXXXXXXXXXXXXXXXX");
+                                                    console.log('XXXX  ha habido un error al guardar el historial XXXX', err);
+                                                })
+                                        }
+                                    
+                                    });
+                                    
+
+                                    
+                            })
+                            .catch((err)=>{
+                                console.log("ha habido un error en la descarga de la imagen raffle", err);
+                            })  
+
+/* 
+                    {     
+                        const resultUpload = await cloudinary.uploader.upload( image, {folder: 'firstImgRaffleHistory'});
+                        //console.log("Aqui resultUpload ----->", resultUpload);
+                        const {public_id, url} = resultUpload; //aqui obtengo los datos de la nueva foto guardada por siempre;
+                        const dImage = {public_id, url}; //aqui el objeto con los datos de la foto para ser agregado directamente dentro del array.
+                        //
+            
+                        const history = new modelRaffleHistory({ category, anfitrion, anfitrion_id, title_id : productId, title, price, numTickets, PrizesObject, dateStart, image: dImage });
+                        //(anfitrion, anfitrion_id, category, title_id, title, image, price, numTickets, PrizesObject, dateStart)
+                        const historySave = await history.save(); //data salvada.
+                        }
+
+*/
+
+                    };
+                
+                    TicketWin() //:::invocacion de la primera Funcion TicketWin
+                        .then(()=>{
+                            //todos los elementos de PrizesObject en el campo winTicket deben tener su numero ganador y no null.
+                            contestan() //:::invocacion segundo funcion 
+                                .then(()=>{
+                                    messagesForWin() //invocacion de envio de mensajes a todos los participantes Ganadores.
+                                        .then(()=>{
+                                            emailsWinTicket()
+                                                .then(()=>{
+                                                    emailAnfitrion()
                                                         .then(()=>{
-                                                            emailAnfitrion()
+                                                            invoiceDone() //aqui invoco el ultimo proceso, la creacion de la factura del Sorteo.
                                                                 .then(()=>{
-                                                                    invoiceDone() //aqui invoco el ultimo proceso, la creacion de la factura del Sorteo.
+                                                                    raffleHistory()
                                                                         .then(()=>{
-                                                                            raffleHistory()
-                                                                                .then(()=>{
-                                                                                    console.log("Procesos de Celebracion de Sorteo ejecutado OK.");
-                                                                                })
-                                                                                .catch((error)=>{
-                                                                                    console.log("Ha habido un error raffleHistory()", error)
-                                                                                })
+                                                                            console.log("Procesos de Celebracion de Sorteo ejecutado OK.");
                                                                         })
                                                                         .catch((error)=>{
-                                                                            console.log("Ha habido un error invoiceDone()", error)
+                                                                            console.log("Ha habido un error raffleHistory()", error)
                                                                         })
                                                                 })
                                                                 .catch((error)=>{
-                                                                    console.log("Ha habido un error emailAnfitrion()", error)
+                                                                    console.log("Ha habido un error invoiceDone()", error)
                                                                 })
-
                                                         })
                                                         .catch((error)=>{
-                                                            console.log("Ha habido un error emailsWinTicket()", error)
+                                                            console.log("Ha habido un error emailAnfitrion()", error)
                                                         })
 
                                                 })
                                                 .catch((error)=>{
-                                                    console.log("Ha habido un error messagesForWin()", error)
+                                                    console.log("Ha habido un error emailsWinTicket()", error)
                                                 })
+
                                         })
                                         .catch((error)=>{
-                                            console.log("Ha habido un error contestan()", error)
+                                            console.log("Ha habido un error messagesForWin()", error)
                                         })
-                                    
                                 })
-                                .catch((error)=> {
-                                    console.log("Ha ocurrido un error TicketWin()", error);
+                                .catch((error)=>{
+                                    console.log("Ha habido un error contestan()", error)
                                 })
-
-
-                            console.log(":::\\\ Fin del raffle y ejecutado con exito ///:::")
-                            console.log(":::\\\\\\\\\\ Fin ////////:::")
-
-
-                        } else {
-
-                            req.session.ticketTakeError = 'Ya ha tomado un Tickets';
-                            resp = "ya este usuario ha tomado un Tickets";
                             
-                        }    
+                        })
+                        .catch((error)=> {
+                            console.log("Ha ocurrido un error TicketWin()", error);
+                        })
+
+
+                    console.log(":::\\\ Fin del raffle y ejecutado con exito ///:::")
+                    console.log(":::\\\\\\\\\\ Fin ////////:::")
+
+
+                } else {
+
+                    const message = "Ya ha tomado un Ticket.";
+                    res.json({ code: "ok", ticket: 0, message }); 
+                    
+                }    
 
 
 
-                    } else {
-                        
-                        if (count === 0){
-
-                            resp = await modelRaffle.findByIdAndUpdate(Id, { $set: {
-                                [`boxTickets.${n}.Contestan`] : username,
-                                [`boxTickets.${n}.No_Serial`] : serial,
-                                [`boxTickets.${n}.Date`] : dateNow,
-                                [`boxTickets.${n}.Take`] : true,
-                                [`boxTickets.${n}.Verified`] : true
-                            }});
-
-                            //aqui vamos a guardar la informacion en el modelTickets ---------
-                            const newTicket = new modelTickets ({ id_raffle: Id, dateStart, category, numTickets, raffleClosingPolicy: policy, title,  price, serial, No : Ticket , username , anfitrion });
-                            const newTicketSave = await newTicket.save();
-
-                            req.session.ticketTakeFine = `Felicidades, ha tomado el ticket, ${Ticket}`; 
-                            
-                            console.log("Aun faltan Numeros por tomar")
-                            console.log("cantVerifiedTicket", cantVerifiedTicket);
-                            console.log("numTickets", numTickets);
-
-                        } else {
-
-                            req.session.ticketTakeError = 'Ya ha tomado un Tickets';
-                            resp = "ya este usuario ha tomado un Tickets";
-
-                        } 
-                        
-
-                    }    
-            
             } else {
+                
+                if (count === 0){
 
-                req.session.ticketTakeAnfitrion = 'El Anfitrión no puede participar';
+                    resp = await modelRaffle.findByIdAndUpdate(Id, { $set: {
+                        [`boxTickets.${n}.Contestan`] : username,
+                        [`boxTickets.${n}.No_Serial`] : serial,
+                        [`boxTickets.${n}.Date`] : dateNow,
+                        [`boxTickets.${n}.Take`] : true,
+                        [`boxTickets.${n}.Verified`] : true
+                    }});
 
-            }
+                    //aqui vamos a guardar la informacion en el modelTickets ---------
+                    const newTicket = new modelTickets ({ id_raffle: Id, dateStart, category, numTickets, raffleClosingPolicy: policy, title,  price, serial, No : Ticket , username , anfitrion });
+                    const newTicketSave = await newTicket.save();
+                                        
+                    console.log("Aun faltan Numeros por tomar")
+                    console.log("cantVerifiedTicket", cantVerifiedTicket);
+                    console.log("numTickets", numTickets);
 
+                    const message = `Felicidades, ha tomado el Ticket, Noº. ${Ticket}.`;
+                    res.json({ code: "ok", ticket: Ticket, message }); 
+
+                } else {
+
+                    const message = "Ya ha tomado un Ticket.";
+                    res.json({ code: "ok", ticket: 0, message }); 
+
+                } 
+                
+
+            }    
+            
             //este es el patron del nacimiento de un ticket
             //posee 7 propiedades con sus valores por default 
             //estos objetos iran modificandose en el tiempo si es tomado por un usuario
@@ -1635,18 +1622,12 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
             //"Take" : false
             //"Ref" : "",
             //"Verified" : false
-
-            //console.log(update);
-            res.json({resp});
+    
 
         } else {
 
-            req.session.ticketTakeErrorNoProfile = 'Requiere Perfil para participar';
-            resp = "Debe tener Perfil para poder participar";
-            console.log("********************* L e e r ****************************");
-            console.log("Este usuario no tiene Perfil, NO puede tomar ninung Tickets")
-            res.json({resp});
-
+            const message = `Debe tener Perfil para poder participar.`;
+            res.json({ code: "noPerfil", ticket: 0, message });
         }
      
     } catch(error){
@@ -1717,34 +1698,27 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
             }
         
             console.log("El usuario ha participado", count, "veces");
-        
-            if ( anfitrion !== username ){ 
-        
-                if (count === 0){
-        
-                    resp = await modelRaffle.findByIdAndUpdate(Id, { $set: {
-                        [`boxTickets.${n}.Contestan`] : username,
-                        [`boxTickets.${n}.No_Serial`] : serial,
-                        [`boxTickets.${n}.Date`] : dateNow,
-                        [`boxTickets.${n}.Take`] : true,
             
-                    }});
+            if (count === 0){
+    
+                resp = await modelRaffle.findByIdAndUpdate(Id, { $set: {
+                    [`boxTickets.${n}.Contestan`] : username,
+                    [`boxTickets.${n}.No_Serial`] : serial,
+                    [`boxTickets.${n}.Date`] : dateNow,
+                    [`boxTickets.${n}.Take`] : true,
         
-                    req.session.ticketTakeFine = `Felicidades, ha tomado el ticket, ${Ticket}`;   
-        
-                } else {
-        
-                    req.session.ticketTakeError = 'Ya ha tomado un Tickets';
-                    resp = "ya este usuario ha tomado un Tickets";
-        
-                } 
-            
+                }});
+    
+                const message = `Felicidades, ha tomado el Ticket, Noº. ${Ticket}.`;
+                res.json({ code: "ok", ticket: Ticket, message });   
+    
             } else {
-        
-                req.session.ticketTakeAnfitrion = 'El Anfitrión no puede participar';
-        
-            }
-        
+    
+                const message = "Ya ha tomado un Ticket.";
+                res.json({ code: "ok", ticket: 0, message });   
+    
+            } 
+            
             //"No" : 7,
             //"Contestan" : "",
             //"No_Serial" : 1708869455364,
@@ -1754,15 +1728,12 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
             //"Verified" : false
         
             //console.log(update);
-            res.json({resp});
+            
 
         } else {
 
-            req.session.ticketTakeErrorNoProfile = 'Requiere Perfil para participar';
-            resp = "Debe tener Perfil para poder participar";
-            console.log("********************* L e e r ****************************");
-            console.log("Este usuario no tiene Perfil, NO puede tomar ningun Tickets")
-            res.json({resp});
+            const message = `Debe tener Perfil para poder participar.`;
+            res.json({ code: "noPerfil", ticket: 0, message });   
 
         }
 
@@ -1780,6 +1751,8 @@ routes.post('/raffleModule/registerTicket/pay', async(req, res)=>{
     console.log(":::::: Registrando un Tickets ::::::");
     console.log("user :", username);
 
+    // --> el Id es el serial del sorteo
+    
     const { Id, NoTicket, Ref } = req.body;
     console.log("Id :", Id);
     console.log("NoTicket :", NoTicket);
@@ -1800,10 +1773,9 @@ routes.post('/raffleModule/registerTicket/pay', async(req, res)=>{
 
         }});
     }    
-
-    req.session.ticketRegister = `Felicidades, Ha registrado su Ticket, ${Ticket}`;   
-
-    res.redirect(`/raffleModule/${Id}`);
+ 
+    const message = `Felicidades, Ha registrado el pago de su Ticket, Noº. ${Ticket}`;
+    res.json({ code: "ok", message });
     
 });
 
@@ -1819,6 +1791,9 @@ routes.get("/raffleModule/verifiedTicket/payYes/:id/:contestan/:NoTicket", async
     let n = (NoParse - 1);
     let cantVerifiedTicket = 1; //este es el contador de ticket Verficados. Se usara para comparar con * cantTicket *
     const user = req.session.user;
+    console.log(":::::: verificando el objeto user ::::::");
+    console.log("user ...:", user);
+
     const username = user.username;
     console.log(":::::: verificando un Tickets ::::::");
     console.log("user :", username);
