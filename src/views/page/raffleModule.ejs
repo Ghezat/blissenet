@@ -201,12 +201,12 @@
                             <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= search.price %> </span> 
                           </a>
                         </div>
-                        <div class="contentMiniaturas d-flex flex-column justify-content-start ms-1" style="height: 100%;">
+                        <div class="contentMiniaturas d-flex flex-column justify-content-between ms-1" style="height: 100%;">
                                                           
                             <% search.images.forEach((ele, i)=>{ %>
                               
                                 <% if (i < 3 ) { %>
-                                  <img src="<%= ele.url %>" alt="" class="shadow-sm"  style="width: 63px; height: 63px; object-fit: cover; border-radius: 2px;"> 
+                                  <img src="<%= ele.url %>" alt="" class="shadow-sm"  style="width: 68px; height: 60px; object-fit: cover; border-radius: 2px;"> 
                                 <% } %>  
                             
                             <% }) %>
