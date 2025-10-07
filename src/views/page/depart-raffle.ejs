@@ -280,7 +280,7 @@
                                                     
                                                     <div class="input-group my-2">
                                                         <span class="input-group-text">Cant. Tickets</span>
-                                                        <input type="number" name="numTickets" class="form-control" id="numTicketsCreate" placeholder="min. 50 max. 1000" minlength="50" maxlength="1000"  required>
+                                                        <input type="number" name="numTickets" class="form-control" id="numTicketsCreate" placeholder="min. 50 max. 2000" min ="50" max ="2000"  required>
                                                         <span class="input-group-text"><i class="bi bi-ticket-perforated"></i></span>
                                                     </div>
                                                     <div class="input-group my-2">
@@ -941,12 +941,19 @@
         const numTicketsCreate = document.getElementById('numTicketsCreate');
         const fundRaisingCreate = document.getElementById('fundRaisingCreate');
 
-        numTicketsCreate.addEventListener('blur', ()=>{
+        priceCreate.addEventListener('input', ()=>{
             let Price = parseInt(priceCreate.value);
             let NumTickets = parseInt(numTicketsCreate.value);
             let totalFun = (Price * NumTickets);
             fundRaisingCreate.value = totalFun;
-        })
+        });
+
+        numTicketsCreate.addEventListener('input', ()=>{
+            let Price = parseInt(priceCreate.value);
+            let NumTickets = parseInt(numTicketsCreate.value);
+            let totalFun = (Price * NumTickets);
+            fundRaisingCreate.value = totalFun;
+        });
 
         //selector de fecha o venta de tickets
 

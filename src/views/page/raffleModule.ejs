@@ -88,6 +88,11 @@
     margin: 1px;
 }
 
+  .containerDataSelect{
+    height: 190px;
+    overflow-y: auto;
+  }
+
 
 @media screen and (min-width: 451px) and (max-width: 767px){
 
@@ -99,16 +104,18 @@
   }
 
   .containerTicketExplanation{
-    margin: 0px 2px;
-
-  }
-
-/*   .containerMainImg{
-    display: none;
-  }
- */
-  .containerLegends{
     margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+ .containerMainImage{
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+ 
+  .containerLegends{
+    margin-top: 5px;
+    margin-bottom: 10px;
   }
 
 }  
@@ -126,12 +133,20 @@
     margin: 0px 2px;
   }
 
-/*   .containerMainImg{
-    display: none;
-  } */
+  .containerMainImage{
+    margin-top: 0px;
+  } 
+
+  .containerDetails{
+    margin-top: 10px;
+  }
 
   .containerLegends{
     margin-top: 10px;
+  }
+
+  .containerDataSelect{
+    height: auto;
   }
 
 }  
@@ -150,6 +165,11 @@
           <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
           <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
 
+          <% if (searchMethodBankJson) { %>
+            <input type="hidden" id="searchMethodBank" value="<%= searchMethodBankJson %>"> <!--  searchMethodBank es un objeto -->
+            
+          <% }; %>
+
 
           <input type="hidden" value="<%= user._id %>" id="userId">
           <div class="container-fluid successBannerFront my-2 d-flex justify-content-center" id="alertCelebrado">
@@ -162,6 +182,7 @@
               <p class="my-0"> <span style="color: white;" ><b>Serial Raffle : </b></span><span class="rounded-pill ms-1 px-2 py-1 bg-dark text-light"><b><%= search._id %></b></span> </p>
               <input type="hidden" value="<%= search._id %>" id="idRaffle">
               <input type="hidden" value="<%= search.user_id %>" id="anfitrion"> 
+              <input type="hidden" value="<%= search.price %>" id="price"> 
 
             <% }; %>
           </div>
@@ -170,14 +191,17 @@
               
               <div class="col-12 col-sm-12 col-md-11 col-lg-11  px-0 " style="border: 2px solid #d5a3fc;">
   
-                  <div class="row containerTicketExplanation d-flex justify-content-between my-0 px-1 mx-0 py-3" style="background-color: #494949">
+                  <div class="row containerTicketExplanation d-flex justify-content-between my-0 px-1 mx-0 py-2" style="background-color: #494949">
 
-                    <div class="col-lg-4 col-md-12 col-sm-12 containerMainImg p-0 m-0" style="height: 200px;">
-                      <div class="containerMainImage d-flex justify-content-center" style="height: 100%">
-                        <div class="containerBigImage">
+                    <div class="col-lg-4 col-md-12 col-sm-12" style="height: 200px;">
+                      <div class="containerMainImage d-flex justify-content-center p-2" style="border-radius: 5px; background-color: rgba(32, 32, 32, .8); width: 100%; height: 100%">
+                        <div class="containerBigImage" style="position: relative;">
                           <img src="<%= search.images[0].url %>" alt="" style="border-radius: 2px; height: 100%; max-width: 100%; object-fit: cover;" >
+                          <a class="ui yellow circular label px-1 text-decoration-none" style="position: absolute; top: 20px; right: 20px;"> 
+                            <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= search.price %> </span> 
+                          </a>
                         </div>
-                        <div class="contentMiniaturas d-flex flex-column justify-content-between ms-1" style="height: 100%;">
+                        <div class="contentMiniaturas d-flex flex-column justify-content-start ms-1" style="height: 100%;">
                                                           
                             <% search.images.forEach((ele, i)=>{ %>
                               
@@ -193,7 +217,7 @@
                     </div>  
 
                     <div class="col-lg-5 col-md-12 col-sm-12">
-                      <div class="containerDetails d-flex flex-column px-2 py-2"  style="border-radius: 6px; background-color: rgba(32, 32, 32, .9); height: 200px; overflow-y: auto;">
+                      <div class="containerDetails d-flex flex-column p-2"  style="border-radius: 5px; background-color: rgba(32, 32, 32, .8); height: 200px; overflow-y: auto;">
                         <h2 class="mb-3" style="font-size:22px; color: gold; border-bottom: 2px solid gold; padding-bottom: 4px;"><%= search.title %></h2>
                         <h5 class="text-light" style="font-size: 16px;">Serial : <%= search._id %></h5>
                         <h5 class="text-light" style="font-size: 16px;">Inicio : <%= search.dateStart %></h5>
@@ -216,8 +240,8 @@
                     </div>                      
 
                     <div class="col-lg-3 col-md-12 col-sm-12 ">
-                      <div class="containerLegends d-flex flex-column justify-content-between align-items-start rounded-1"  style="height: 200px;background-color: rgba(32, 32, 32, .5); width: 100%; border: 1px solid rgba(32, 32, 32, .9)">
-                        <div class="card-header" style="background-color: rgba(32, 32, 32, .3); width: 100%;">  <span style="color: gold ;font-size: 19px"> Leyenda de Ticket </span>  </div>
+                      <div class="containerLegends d-flex flex-column justify-content-between align-items-start"  style="border-radius: 5px; height: 200px;background-color: rgba(32, 32, 32, .5); width: 100%; border: 1px solid rgba(32, 32, 32, .9)">
+                        <div class="card-header" style="background-color: rgba(32, 32, 32, .8); width: 100%;">  <span style="color: gold ;font-size: 19px"> Leyenda de Ticket </span>  </div>
                         <div class="containerTicked d-flex align-items-center ms-1"> <div class="cube0 rounded-1" style="width: 34px; height: 34px;">0</div> <span class="text-light mx-3"> Ticked Libre </span>  </div>
                         <div class="containerTicked d-flex align-items-center ms-1"> <div class="cubeTakeNOVerified0 rounded-1" style="width: 34px; height: 34px;">0</div> <span class="text-light mx-3"> Ticket No Consolidado </span>  </div>  
                         <div class="containerTicked d-flex align-items-center ms-1"> <div class="cubeTakeVerified0 rounded-1" style="width: 34px; height: 34px;">0</div> <span class="text-light mx-3"> Ticket Consolidado </span>  </div> 
@@ -371,15 +395,53 @@
                   <% } else { %>
                     
                         <% if (search.category === "Pago") { %>
-                          <div class="col-12 m-0 p-0 d-flex flex-wrap justify-content-center" style="height: auto;">
+                          
+                       
                             <div class="row m-0 d-flex flex-wrap justify-content-center"> 
+
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-0 infoContent" style="border: 2px solid #202020; height: 100%;">
+                      
+                                  <div class="py-2" style="background-color: #202020; height: auto">
+                                    <span class="d-flex justify-content-start ms-2" style="color: gold;"> <b>Datos Bancarios</b> </span>
+                                  </div>
+                                  <div class="containerDataSelect p-2 m-0">
+                      
+                                    <div class="row m-0">
+                                      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 p-0" style="height: 100%;">
+                                       
+                                        <div class="containerMethods mt-3">
+
+                                          <!-- dinamico  -->
+
+                                        </div>
+ 
+
+                                      </div>
+                                      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 p-0  p-0" style="height: 100%;">
+
+                                        <div class="containerDatas py-2 px-3 mt-3">
+
+                                         <!--  dinamico -->
+
+                                        </div>
+
+
+                                      </div>
+                                    </div>
+
+                                    
+                                  </div>
+                      
+                                </div>
+
                                 <div class="col-12 col-sm-12 col-md-5 col-lg-5 px-0 selectorContent" style="border: 2px solid #202020; height: 100%;">
 
                                   <div class="content-fluid py-2" style="background-color: #202020; height: auto;"> <span class="d-flex justify-content-start ms-2" style="color: gold;"> <b>Datos de Pago</b> </span> </div>
-                                  <div class="contentPayData p-3" style="height: auto;">
+                                  <div class="contentPayData p-3" style="height: 190px;">
                                     
                                    
-                                    <div class="input-group my-1">
+                                    <div class="input-group my-3" style="width: 100%;">
+
                                         <input id="serial" name="Id" type="hidden" value="<%= search._id %>">
                                         <span class="input-group-text"> <i class="bi bi-ticket-perforated"></i></span>
                                         <select name="NoTicket" id="selectTicket" class="form-control">
@@ -394,9 +456,40 @@
                                           <% }; %>
                                     
                                         </select>
+
                                         <span class="input-group-text"><i class="bi bi-bank"></i></span>
-                                        <input name="Ref" type="text" id="referTicket" class="form-control" maxlength="20" disabled>   
-                                        <span class="input-group-text"><i class="bi bi-plus-circle"></i></span>
+                                        <select id="selectMethod" class="form-control" style="width: 30%;">
+                                          <option value="Select">Selecciona el Método</option>
+                                          
+                                          <% const MethodBankJson = JSON.parse(searchMethodBankJson) %>
+                                          <% if (MethodBankJson.length !== 0 ) { %>
+
+                                            <% const paymentSystem = MethodBankJson[0].paymentSystem %>
+                                            <% paymentSystem.forEach((ele, i)=>{ %>
+                                              <% const methodName = ele.methodName %> 
+
+                                              <option value="<%= methodName %>"><%= methodName %> </option> 
+
+                                            <% }) %> 
+
+                                          <% }; %> 
+                                          
+
+                                        </select>              
+                                        
+                                    </div>
+                                    <div class="input-group my-3">
+                                        <% let price; %>
+                                        <% if (search) { %>
+                                          <% price = search.price %>
+                                        <% }; %>
+
+                                        <input id="serial" name="Id" type="hidden" value="<%= search._id %>">
+
+                                        <span class="input-group-text"><i class="bi bi-bank"></i></span>
+                                        <input name="Ref" type="text" id="referTicket" class="form-control" maxlength="22" disabled>   
+                                        <span class="input-group-text" style="background-color: goldenrod;"> <i class="bi bi-cash"></i> </span>
+                                        <input name="Method" type="number" value="<%= price %>"  id="amount" class="form-control" disabled style="background-color: goldenrod; font-weight: 700; font-size: 17px; width: 5px !important; text-align: right;"> 
                                         
                                     </div>
                                     <div class="form-group mt-4 mb-1">
@@ -407,7 +500,12 @@
                                   </div>    
                                   
                                 </div>
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 px-0 d-flex flex-column infoContent" style="border: 2px solid #202020; height: 100%;">
+
+                            </div>
+                        
+                          
+                            <div class="row m-0 d-flex flex-wrap justify-content-center"> 
+                                <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0 d-flex flex-column infoContent" style="border: 2px solid #202020; height: 100%;">
                       
                                   <div class="content-fluid py-2" style="background-color: #202020; height: auto">
                                     <span class="d-flex justify-content-start ms-2" style="color: gold;"> <b>Información</b> </span>
@@ -415,14 +513,25 @@
                                   <div class="content-fluid p-2 m-0 d-flex justify-content-center align-items-center" style="height: 80%; overflow-y: auto;">
                       
                                     <div class=" mt-0 py-2" style="height: auto !important;">
-                                      <p class="m-0"> Elige el Ticket en la tabla de Distribución de Tickets, realiza el pago al anfitrión del Sorteo y regístralo en <b>'Datos de pago'</b> seleccionando el Ticket elegido y dando clic al botón <b>'Registrar Pago'</b>. La información será verificada por el administrador del sorteo. Si el pago es efectivo, simplemente coloque la palabra 'efectivo'. En caso de depósito bancario, proporcione el número de confirmación o referencia completo. De esta forma, el anfitrión podrá verificar. De esta forma tu Ticket será consolidado. </p>
+                                      <p> 1. Elige el Ticket en la tabla de Distribución de Tickets.
+                                                      2. Realiza el pago al anfitrión del Sorteo.
+                                                      3. Registra tu pago en 'Datos de pago':
+                                                         Selecciona el Ticket elegido. Indica el Método de pago junto con su Referencia Bancaria. Haz clic en el botón 'Registrar Pago'.
+                                     </p>
+
+                                     <p class="m-0">
+                                        
+                                      Si el pago es en efectivo, simplemente escribe la palabra "efectivo". En caso de depósito bancario, proporciona el número de confirmación o referencia completo. De esta forma, el anfitrión podrá verificar tu pago y tu Ticket será consolidado.
+                                     </p>
+
                                     </div>
                                     
                                   </div>
                       
                                 </div>
                             </div>
-                          </div>  
+                                                  
+
                         <% } else { %>
                           <div class="col-12 col-sm-12 col-md-11 col-lg-11 px-0" style="border: 2px solid #202020; height: 100%;">
                 
@@ -444,7 +553,7 @@
 
           </div> 
 
-        
+          
 
           <!-- Modal de registro de pago exitoso -->
           <div class="modal fade" id="staticRegisterPayTicket" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticRegisterPayTicket" aria-hidden="true">
@@ -978,8 +1087,11 @@ fetch('/raffleModule/data/', {
   
   // aqui hacemos el juego del selector de ticket y cambio de color del boton y activacion del inpur ref.
   const referTicket = document.getElementById('referTicket');
-  const btnRegister = document.getElementById('btnRegister');
   const serial = document.getElementById('serial');
+  const selectMethod = document.getElementById('selectMethod');
+
+  const btnRegister = document.getElementById('btnRegister');
+
   let ticketValue;
 
   if (selectTicket){ 
@@ -1024,9 +1136,25 @@ fetch('/raffleModule/data/', {
 
     })
   }  
+
+  if (selectMethod){
+    selectMethod.addEventListener('change', ()=>{
+
+      const ReferTicketValue = referTicket.value;
+
+      if (selectMethod.value  !== "Select" ) {
+        if (ReferTicketValue.length >= 2){
+            btnRegister.removeAttribute("disabled");
+        }
+      }
+
+    })
+  }
+
   
   let ReferTicketValue;
   function writeRefrence(){
+
 
     referTicket.addEventListener('input', (e)=>{
       //console.log("estoy teclenado el input");
@@ -1034,13 +1162,19 @@ fetch('/raffleModule/data/', {
       ReferTicketValue = e.target.value;
 
       if (ReferTicketValue.length >= 2){
-        btnRegister.removeAttribute("disabled");
+
+        if (selectMethod.value !== "Select" ) {
+          btnRegister.removeAttribute("disabled");
+        }
+        
       } else {
         btnRegister.setAttribute("disabled", "");
       }
 
 
     })
+
+    Select
 
   }
 
@@ -1050,13 +1184,17 @@ fetch('/raffleModule/data/', {
     btnRegister.addEventListener('click', ()=>{
       // ---> aqui enviamo el post  /raffleModule/registerTicket/pay
       const serialValue = serial.value;
+      const selectMethodValue = selectMethod.value;
+
       console.log("serialValue  :", serialValue);
       console.log("ticketValue  :", ticketValue);
+      console.log("selectMethodValue  :", selectMethodValue);
       console.log("ReferTicketValue  :", ReferTicketValue);
 
       const data = {
         Id : serialValue,
         NoTicket: ticketValue,
+        MethodBank: selectMethodValue,
         Ref: ReferTicketValue
       } 
 
@@ -1100,5 +1238,113 @@ fetch('/raffleModule/data/', {
 
   }  
 
+
+</script>
+
+<script>
+          
+   const containerMethods = document.querySelector('.containerMethods');
+
+
+
+   try {
+        const searchMethodBank = document.getElementById('searchMethodBank').value;
+        console.log("searchMethodBank ...:", searchMethodBank.value);
+        const methodBankValue = JSON.parse(searchMethodBank);   
+
+        const containerDatas = document.querySelector('.containerDatas'); // contenedor donde inyecto los datos del metodo bancario.
+        let boxDataX = []; //aqui metere los datos del metodo de pago elegido
+
+
+        // Ahora puedes hacer lo que necesites con paymentSystems
+        console.log("................... :");
+        console.log("methodBankValue  :" , methodBankValue);// [{"_id":"68e403dfe3b157c9f859fd01","indexed":"68dfd0efe82457d8d3129f0d","username":"IvanSimonivic","paymentSystem":[{"methodName":"Pago Movil Venezuela","idMethod":1759773663064,"data1":"0102","data2":"04149927998","data3":"13986459"},{"methodName":"zelle","idMethod":1759773896424,"data1":"jon uribe centelles","data2":"jonuribecentelles247@gmail.com"}],"createdAt":"2025-10-06T18:01:03.088Z","updatedAt":"2025-10-06T18:04:56.426Z","__v":0}]
+
+        if (methodBankValue.length !== 0 ){
+
+            console.log("paymentSystem :", methodBankValue[0].paymentSystem );
+            const paymentSystem = methodBankValue[0].paymentSystem;
+
+            console.log("paymentSystem ....... :", paymentSystem);
+            paymentSystem.forEach((ele, i)=>{
+
+              containerMethods.innerHTML += `
+                                            <div class="d-flex my-2 mx-2 p-2" id="selectMethod" style="background-color: rgb(32, 32, 32, .8); border-radius: 3px; font-size: 16px">
+                                                  <input type="radio" name="method" id="method${i}"  class="selectedMethod" >
+                                                  <label for="method${i}" class="ms-2 text-light">  ${ele.methodName}  </label>
+                                            </div> 
+                                            `     
+
+            })
+
+            const selectedMethod = document.querySelectorAll(".selectedMethod");
+
+            selectedMethod.forEach((ele, i)=>{
+              ele.addEventListener("click", ()=>{
+                console.log("He seleccionado el metodo :", i);
+                const methodName = paymentSystem[i].methodName;
+                const data1 = paymentSystem[i].data1; const data2 = paymentSystem[i].data2; const data3 = paymentSystem[i].data3; const data4 = paymentSystem[i].data4;
+                console.log("El metodo elegido es :", methodName);
+          
+                boxDataX = []; //limpiamos el array
+                boxDataX.push(data1, data2, data3, data4); 
+
+                            
+                console.log("Esto es boxDataX" , boxDataX);
+                
+
+                containerDatas.innerHTML = ""
+
+                containerDatas.innerHTML += `
+                                              <div class="data mb-2"> 
+                                                <span style="font-size: 16px;"> <b> ${methodName} </b> </span>  
+                                              </div>
+                                            `  
+                
+                boxDataX.forEach((ele)=>{
+
+                    if (ele !== undefined ){
+
+                              containerDatas.innerHTML += `
+                                              <div class="data"> 
+                                                <span class="ms-2 dataX" style="font-size: 16px;"> <span>${ele}</span> <i class="ms-3 bi bi-copy cursor-pointer"></i>  </span>  
+                                              </div>
+                                            `  
+                    }
+
+                })
+
+                const dataX = document.querySelectorAll('.dataX');
+                
+                dataX.forEach((ele) => {
+                  ele.addEventListener('click', async () => {
+                    const sonData = ele.children[0].innerText;
+                    console.log("sonData :", sonData);
+
+                    try {
+                      await navigator.clipboard.writeText(sonData);
+                      console.log("Texto copiado al portapapeles");
+
+                      const message = "¡Copiado en portapapeles!"                    
+                      mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí 
+
+                    } catch (err) {
+                      console.error("Error al copiar al portapapeles: ", err);
+                    }
+                  });
+                });
+
+              })
+            })
+
+        } else {
+
+            containerMethods.innerHTML = `<div class="alert alert-dark mt-3"> <b> <i class="bi bi-exclamation-triangle-fill me-2"></i> Sin método de pago. </b> </div> `
+        }   
+            
+      
+   } catch (error) {
+       console.error("Error al parsear JSON:", error);
+   }
 
 </script>

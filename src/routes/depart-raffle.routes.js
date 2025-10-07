@@ -216,7 +216,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
     
                 
                 for (let i = 1; i < parseNumTickets + 1; i++) {
-                    let ticket = { "No" : i, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Verified" : false, "Winner" : false };
+                    let ticket = { "No" : i, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Method" : "", "Verified" : false, "Winner" : false };
                     BOXTickets.push(ticket);
                 }
     

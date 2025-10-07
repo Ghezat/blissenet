@@ -16,6 +16,7 @@ const modelRaffle = require('../models/raffle.js');
 const modelRaffleHistory = require('../models/raffleHistory.js');
 const modelTickets = require('../models/tickets.js');
 const modelInvoice = require('../models/invoice.js');
+const modelBankUser = require('../models/bankUser.js');
 
 const modelMessages = require('../models/messages.js');
 
@@ -1089,6 +1090,7 @@ routes.get('/raffleModule/:id', async(req, res)=>{
 
     const idRaffle = req.params.id;    
     const search = await modelRaffle.findById(idRaffle);
+    const iDAnfitrion = search.user_id; //aqui el id del anfitrion del sorteo
 
     //console.log('search', search);
 
@@ -1102,16 +1104,23 @@ routes.get('/raffleModule/:id', async(req, res)=>{
         //console.log("Esto es user._id ------>", user._id );
         searchProfile = await modelProfile.find({ indexed : user._id });
         //console.log("Aqui el profile de la cuenta del visitante -->", searchProfile);
+
+        const methodBank = await modelBankUser.find({ indexed : iDAnfitrion });
+        const searchMethodBankJson = JSON.stringify(methodBank);
         
+        console.log("methodBank ...:", methodBank);
+        console.log("searchMethodBankJson ....:", searchMethodBankJson);
+        
+
         if (search){
             ticketsTake = search.boxTickets; //aqui tengo el array con los tickets con toda la inf. necesaria
-            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake })    
+            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake, methodBank, searchMethodBankJson })    
         } else {
             res.redirect('/')
         }
 
     } else {
-            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake })       
+            res.render('page/raffleModule', {user, countMessages, countNegotiationsBuySell, searchProfile, search, ticketsTake, methodBank, searchMethodBankJson })       
     }
 
     
@@ -1753,7 +1762,7 @@ routes.post('/raffleModule/registerTicket/pay', async(req, res)=>{
 
     // --> el Id es el serial del sorteo
     
-    const { Id, NoTicket, Ref } = req.body;
+    const { Id, NoTicket, MethodBank, Ref } = req.body;
     console.log("Id :", Id);
     console.log("NoTicket :", NoTicket);
     const Ticket = parseInt(NoTicket);
@@ -1769,7 +1778,8 @@ routes.post('/raffleModule/registerTicket/pay', async(req, res)=>{
     if (RefTrim.length >= 2 ){
         const updateRef = await modelRaffle.findByIdAndUpdate(Id, { $set: {
         
-            [`boxTickets.${n}.Ref`] : RefTrim
+            [`boxTickets.${n}.Ref`] : RefTrim,
+            [`boxTickets.${n}.Method`] : MethodBank
 
         }});
     }    
