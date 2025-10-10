@@ -340,43 +340,69 @@
                           </div>
                         <% } else { %>
                           <div class="row m-0">
-                            <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
-                              <div class="p-2" style="height: auto;">
+                           
+                            <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-7 col-xxl-7 d-flex align-items-center" style="max-height: auto;">
+                              
+                              <div class="row p-4">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 col-xxl-5 p-0" style="background-color: #202020;">
+                                    <img src="/img/cupWinnerBlack.gif" alt="" class="rounded-1" style="width: 100%;">
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7 col-xxl-7 p-0" style="background-color: #202020;">
+
+                                  <div class="d-flex align-items-center p-3">
+                                    <p class="mt-2" style="font-size: 17px;"> <b style="color: goldenrod;">Usted ha sido ganador con el Ticket <%= ticketWin %></b>. Ahora pongase encontacto con el Anfitrión, Luego de recibir su Premio, Puede calificar este Sorteo, dejando un comentario y una calificación.</p>
+                                  </div>
+                                    
+                                </div>
+                              </div>
+       
+                            </div>                            
+                            <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 col-xxl-5 p-0" style="max-height: auto;">
+
+                              <div class="p-3" style="height: auto;">
 
                                 <form action="/raffleModule/rate" method="post">
-                                  
+                                    <!-- esto es lo que envia: username, IdRaffle, winTicket, winPrize, rateStar, comment -->
+
                                     <input name="username" id="username" type="hidden" value="<%= user.username %>"> 
                                     <input name="IdRaffle" type="hidden" value="<%= search._id %>">
-                                    <p><b>La Suerte le ha sonreido <%= user.username %></b>.</p>
+                                    <p style="font-size: 18px;"><b>La Suerte le ha sonreido <%= user.username %></b>.</p>
 
                                     <div class="input-group my-1">
                                         <span class="input-group-text" id="basic-addon1"> <i class="bi bi-ticket-perforated"></i> </span>
                                         
                                         <select name="winTicket" id="winTicketSelect" class="form-control">
                                           <option value="select">Elegir</option>
-                                          
                                         </select>
+
                                         <input type="text" name="winPrize" id="winPrize" class="form-control" readonly>
                                     </div>
-                                    <div class="input-group my-1">
-                                      <span class="input-group-text" id="basic-addon1"> <i class="bi bi-pencil"></i> </span>
-                                      <select name="rateSelect" id="rateSelect" class="form-control">
-                                        <option value="select">Elegir</option>
-                                        <option value="positivo">Positivo</option>
-                                        <option value="negativo">Negativo</option>
-                                      </select>
-                                      <button id="btnRate" class="btn btn-secondary form-control" disabled> Calificar </button>
+
+                                    <div class="form-group my-2">
+                                      <textarea class="form-control" name="comment" id="comment" maxlength="400" placeholder="Deje aquí su comentario sobre la experiencia de este Sorteo." rows="2" ></textarea>
+                                    </div>
+
+                                    <div class="form-group my-2">
+                                                                            
+                                      <div class="containRateStar d-flex justify-content-center py-2" style="background-color: rgba(56, 56, 56, 1); width: 100%;">
+                                          <input type="hidden" id="starStatus" name="rateStar">
+                                          <i class="starE bi bi-star-fill mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2" data-star="2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2" data-star="3" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2" data-star="4" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                          <i class="starE bi bi-star mx-2" data-star="5" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                      </div> 
+
+                                      
+                                      <button id="btnRate" class="btn btn-secondary form-control my-4" disabled> Calificar </button>
                                     </div>
 
                                 </form>
 
                               </div>
+
                             </div>
-                            <div class="col-12 col-sm-12 col-md-7 col-lg-7 d-flex align-items-center">
-                              <div class="p-2" style="height: auto;">
-                                <p class="m-0">Usted ha sido ganador con el Ticket <b><%= ticketWin %></b>. Ahora pongase encontacto con el Anfitrión, Luego de recibir su Premio, Puede calificar este Sorteo, eligiendo las opciones y dando clic en <b>Calificar</b>.</p>
-                              </div>
-                            </div>
+
                           </div>
                         <% }; %>
                       
@@ -444,7 +470,7 @@
 
                                         <input id="serial" name="Id" type="hidden" value="<%= search._id %>">
                                         <span class="input-group-text"> <i class="bi bi-ticket-perforated"></i></span>
-                                        <select name="NoTicket" id="selectTicket" class="form-control">
+                                        <select id="selectTicket" class="form-control">
                                           <option value="Select">Selecciona el Ticket</option>
                                           
                                           <% if (ticketsTake) { %>
@@ -484,12 +510,12 @@
                                           <% price = search.price %>
                                         <% }; %>
 
-                                        <input id="serial" name="Id" type="hidden" value="<%= search._id %>">
+                                        <input id="serial" type="hidden" value="<%= search._id %>">
 
                                         <span class="input-group-text"><i class="bi bi-bank"></i></span>
-                                        <input name="Ref" type="text" id="referTicket" class="form-control" maxlength="22" disabled>   
+                                        <input type="text" id="referTicket" class="form-control" maxlength="22" disabled>   
                                         <span class="input-group-text" style="background-color: goldenrod;"> <i class="bi bi-cash"></i> </span>
-                                        <input name="Method" type="number" value="<%= price %>"  id="amount" class="form-control" disabled style="background-color: goldenrod; font-weight: 700; font-size: 17px; width: 5px !important; text-align: right;"> 
+                                        <input type="number" value="<%= price %>"  id="amount" class="form-control" disabled style="background-color: goldenrod; font-weight: 700; font-size: 17px; width: 5px !important; text-align: right;"> 
                                         
                                     </div>
                                     <div class="form-group mt-4 mb-1">
@@ -574,7 +600,7 @@
             </div>
           </div>
 
-          <!-- Modal de registro de pago exitoso -->
+          <!-- Modal de Celebracion del sorteo -->
           <div class="modal fade" id="staticRaffleEnd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticRaffleEnd" aria-hidden="true">
             <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
                 <div class="modal-content">
@@ -768,12 +794,14 @@ fetch('/raffleModule/data/', {
                               selectTicket.innerHTML += `<option value="${Ticket}">${Ticket}</option>`
                             }
                             
+                          } else if ( code === "info" ){
+                            //En breve este sorteo será celebrado.
+                            mostrarToast( message , 'right', 'info', '¡ Atención !', false ); // Agrega título aquí
 
                           } else if ( code === "noPerfil" ){
 
                             mostrarToast( message , 'right', 'danger', '¡ Upps !', false ); // Agrega título aquí
-                            //Ahora metemos este ticket en el select "selectTicket" para que pueda enviar el numero de confirmacion del pago
-
+                            
                           } else {
 
                             mostrarToast( message , 'right', 'danger', '¡ Upps !', false ); // Agrega título aquí
@@ -842,7 +870,7 @@ fetch('/raffleModule/data/', {
                 }); 
 
 
-                if (allTicketsTake === false ){
+                if (allTicketsTake === false ){ //el sorteo aun no se ha celebrado
 
                   if ( iDUser === IdAnfitrion ){ //el usuario es el mismo anfitrion
 
@@ -896,8 +924,11 @@ fetch('/raffleModule/data/', {
                             if (Ticket !== 0){
                               selectTicket.innerHTML += `<option value="${Ticket}">${Ticket}</option>`
                             }
-                            
 
+                          } else if ( code === "info" ){ //por si acaso allTicketsTake === false pero relamente ya ha pasao el tiempo y no se ha cerrado por alguna averia esta condicion no permite tomar mas numeros
+                            //En breve este sorteo será celebrado.
+                            mostrarToast( message , 'right', 'info', '¡ Atención !', false ); // Agrega título aquí                          
+                            
                           } else if ( code === "noPerfil" ){
 
                             mostrarToast( message , 'right', 'danger', '¡ Upps !', false ); // Agrega título aquí
@@ -1097,32 +1128,42 @@ fetch('/raffleModule/data/', {
   if (selectTicket){ 
     selectTicket.addEventListener('change', ()=>{
       
-      //console.log("boxTickets ..... :", boxTickets);
+      console.log("boxTickets ..... :", boxTickets);
       ticketValue = selectTicket.value;
       //console.log("ticketValue :",ticketValue);
 
       if (ticketValue !== "Select"){
 
-          for (let i = 0; i < boxTickets.length; i++) {
-            const ele = boxTickets[i];
+          /* for (let i = 0; i < boxTickets.length; i++) { */
+          boxTickets.forEach((element, i)=>{  
+            const ele = element;
+            //console.log("Esto es ele :", ele);
             if (ele.No == ticketValue){
-                if (ele.Ref.length >= 2){
-                    console.log("La Ref ya tiene informacion:", ele.Ref);
+                if (ele.Ref.length >= 2 && ele.Method !== "") {
+                    console.log(`La Ref : ${ele.Ref}   |  El Method : ${ele.Method}`);
                     referTicket.setAttribute("disabled", "");
                     referTicket.value = "";
-                    btnRegister.setAttribute("disabled", "");
                     referTicket.value = ele.Ref
+
+                    selectMethod.setAttribute("disabled", "");
+                    selectMethod.value = "";
+                    selectMethod.value = ele.Method;
+
+                    btnRegister.setAttribute("disabled", "");
                 } else {
                     console.log("La Ref es vacia o diferente:", ele.Ref);
                     //entonces como no hay nada debemos poder escribir para poder enviar esa referencia
                     referTicket.removeAttribute("disabled");
                     referTicket.value = "";
 
+                    selectMethod.removeAttribute("disabled");
+                    //selectMethod.value = "Selecciona el Méthodo";
+
                     writeRefrence();
                     
                 }
             }
-          }
+          })
 
 
         
@@ -1174,8 +1215,6 @@ fetch('/raffleModule/data/', {
 
     })
 
-    Select
-
   }
 
 
@@ -1183,6 +1222,8 @@ fetch('/raffleModule/data/', {
 
     btnRegister.addEventListener('click', ()=>{
       // ---> aqui enviamo el post  /raffleModule/registerTicket/pay
+      btnRegister.setAttribute("disabled", ""); //desactivamos el boton de Registrar Pago.
+
       const serialValue = serial.value;
       const selectMethodValue = selectMethod.value;
 
@@ -1197,6 +1238,8 @@ fetch('/raffleModule/data/', {
         MethodBank: selectMethodValue,
         Ref: ReferTicketValue
       } 
+
+      console.log("....Ver esto: ", data);
 
       fetch('/raffleModule/registerTicket/pay', {
 
@@ -1222,7 +1265,7 @@ fetch('/raffleModule/data/', {
                 location.reload()
               }, 4000);
 
-              
+            
             } else {
 
               alert("Ha habido un error");
@@ -1270,8 +1313,8 @@ fetch('/raffleModule/data/', {
 
               containerMethods.innerHTML += `
                                             <div class="d-flex my-2 mx-2 p-2" id="selectMethod" style="background-color: rgb(32, 32, 32, .8); border-radius: 3px; font-size: 16px">
-                                                  <input type="radio" name="method" id="method${i}"  class="selectedMethod" >
-                                                  <label for="method${i}" class="ms-2 text-light">  ${ele.methodName}  </label>
+                                                  <input type="radio" name="method" id="method${i}"  class="selectedMethod cursor-pointer">
+                                                  <label for="method${i}" class="ms-2 text-light cursor-pointer">  ${ele.methodName}  </label>
                                             </div> 
                                             `     
 
@@ -1346,5 +1389,111 @@ fetch('/raffleModule/data/', {
    } catch (error) {
        console.error("Error al parsear JSON:", error);
    }
+
+</script>
+
+
+<script>
+//script que da vida a las estrellas y activa al boton para comentar y calificar
+const btnRate = document.getElementById('btnRate'); //boton para enviar el comentario y la calificación.
+const winTicketSelect = document.getElementById('winTicketSelect'); //selector de ticket valor default "select"
+const comment = document.getElementById('comment'); //textarea de comentario
+const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella 
+const starStatus = document.getElementById('starStatus'); //Este es el input que guarda los datos de la calificacion usando las estrellas
+let starStatusValue; //variable global
+let star = 1;
+
+if (starE) {
+    starE.forEach((ele, i) => {
+        ele.addEventListener("click", () => {
+            star = ele.getAttribute("data-star"); // aquí es el número de la estrella
+            starStatus.value = star;
+
+            // Desactivar o activar las estrellas
+            starE.forEach((starElement, index) => {
+                if (index < parseInt(star)) {
+                    starElement.classList.replace("bi-star", "bi-star-fill");
+                } else {
+                    starElement.classList.replace("bi-star-fill", "bi-star");
+                }
+            });
+
+            starStatusValue = starStatus.value;
+            console.log("starStatusValue :", starStatusValue);
+
+        });
+    });
+}
+
+
+
+starE.forEach((ele)=>{
+  ele.addEventListener('click', ()=>{
+
+    const ticketSelected = winTicketSelect.value;
+    const commentValue = comment.value;
+
+    if (ticketSelected !== "select"){
+        if (commentValue.length > 10){
+           actionRate()
+        }
+       
+    } 
+
+  })
+})
+  
+ 
+
+   
+    
+  
+
+
+winTicketSelect.addEventListener('change', ()=>{
+
+  const commentValue = comment.value;
+  const ticketSelected = winTicketSelect.value;
+
+  if (ticketSelected !== "select"){
+    
+    if ( commentValue.length > 10 ){
+      if (starStatusValue >= 1){
+          actionRate()
+      } 
+
+    }
+     
+  }
+  
+})
+
+comment.addEventListener('input', (e)=>{
+  const ticketSelected = winTicketSelect.value;
+  const cantiTexto = e.target.value;
+
+  if (cantiTexto.length > 10){
+    
+    if (ticketSelected !== 'select'){
+      
+      if (starStatusValue >= 1){
+          actionRate()
+      }
+
+    }
+    
+  } else {
+    btnRate.setAttribute("disabled", "");
+  }
+ 
+})
+
+function actionRate(){
+  btnRate.removeAttribute("disabled");
+}
+
+
+
+
 
 </script>

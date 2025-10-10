@@ -33,8 +33,9 @@ const SchemaRaffle = new Schema({
     user_id : { type: String }, //aqui guardamos el id del user del usuario que publica el anuncio(indexed).
     username : { type : String }, //este es el username del creador igual al de la coleccion user y profile.
     blissName : { type : String }, //este es el nombre del anfitrion 
+    chatId : { type : String }, // aqui guardamos el chatId de Telegram del Anfitrion para enviar directamente cada vez que alguien tome un nunmero.
     notes : { type : Object, default: [] } //aqui es donde se guardan las notas creadas por el anfitrion de la publicación.
-    
+
 }, {
     timestamps : true
 });

@@ -16,6 +16,11 @@
     display: none;
   }
 
+  .starStyle{
+    color: rgb(211, 152, 3);
+    font-size: 1.2rem;
+  }
+
 </style>
 <body class="mainTheme">
 
@@ -174,7 +179,7 @@
                     <table class="table themaTextLight">
                         <thead>
                           <tr>
-                            <td>No.</td><td>Serial</td><td>User</td><td>Date</td><td>Ref</td><td>Action</td><td>Action</td>
+                            <td>No.</td><td>Serial</td><td>User</td><td>Date</td><td>Method</td><td>Ref</td><td>Action</td><td>Action</td>
                           </tr>
                         </thead>
                         <tbody>                    
@@ -183,7 +188,7 @@
                                 
                               <% if (ele.Take === true && ele.Verified === false ) { %>
                                       <tr>
-                                        <td><i class="bi bi-ticket-perforated mx-2"></i><%= ele.No %></td><td><%= ele.No_Serial %></td><td><%= ele.Contestan %></td><td><%= ele.Date %></td><td><%= ele.Ref %></td>   
+                                        <td><i class="bi bi-ticket-perforated mx-2"></i><%= ele.No %></td><td><%= ele.No_Serial %></td><td><%= ele.Contestan %></td><td><%= ele.Date %></td><td><%= ele.Method %></td><td><%= ele.Ref %></td>   
                                         <td><a href="/raffleModule/verifiedTicket/payYes/<%= search._id %>/<%= ele.Contestan %>/<%= ele.No %>" class="btn btn-primary btn-sm" style="width: 35px;"> Si</a></td>
                                         <td><a href="/raffleModule/verifiedTicket/payNo/<%= search._id %>/<%= ele.Contestan %>/<%= ele.No %>" class="btn btn-danger btn-sm" style="width: 35px;"> No</a></td>
                                       </tr>
@@ -200,7 +205,7 @@
                     <table class="table themaTextLight">
                       <thead>
                          <tr>
-                           <td>No.</td><td>Serial</td><td>User</td><td>Date</td><td>Ref</td><td>Verified</td>
+                           <td>No.</td><td>Serial</td><td>User</td><td>Date</td><td>Method</td><td>Ref</td><td>Verified</td>
                          </tr>
                       </thead>
                       <tbody>                    
@@ -210,7 +215,7 @@
                             <% if (ele.Take === true && ele.Verified === true ) { %>
                                     <tr>
 
-                                      <td><i class="bi bi-ticket-perforated mx-2"></i><%= ele.No %></td><td><%= ele.No_Serial %></td><td><%= ele.Contestan %></td><td><%= ele.Date %></td><td><%= ele.Ref %></td> <td><i class="bi bi-clipboard-check"></i></td>   
+                                      <td><i class="bi bi-ticket-perforated mx-2"></i><%= ele.No %></td><td><%= ele.No_Serial %></td><td><%= ele.Contestan %></td><td><%= ele.Date %></td><td><%= ele.Method %></td><td><%= ele.Ref %></td> <td><i class="bi bi-clipboard-check"></i></td>   
                 
                                     </tr>
                             <% }; %>
@@ -263,7 +268,7 @@
                               <table class="table mt-1">
                                 <thead>
                                   <tr>
-                                    <th>Lugar</th><th>Ticket</th> <th>User</th> <th>Premio</th><th>Calificacion</th>
+                                    <th>Lugar</th><th>Ticket</th> <th>User</th> <th>Premio</th><th>Calificación</th>
                                   </tr>
                                 </thead>
                                 <tbody class="data-tbody">
@@ -512,27 +517,56 @@ fetch('/raffleModule/data/', {
         const winTicket = PrizesObject[i].winTicket;
         const winUser = PrizesObject[i].winUser;
         const rate = PrizesObject[i].rate;
+        console.log("rate ..... :", rate);
 
-        if (rate === 'positivo'){
+        if (rate === '5'){
           datatbody.innerHTML += `
                                   <tr>
-                                    <th>${i + 1}º</th><td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket} </td><td> ${winUser} </td><td> ${prize} </td><td> <i class="bi bi-plus-square"></i> </td>
-                                  </tr
+                                    <th>${i + 1}º</th> <td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket} </td><td> ${winUser} </td><td> ${prize} </td>
+                                    <td> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i>  </td>
+                                  </tr>
                               `
-        } else if (rate === 'negativo') {
+        } else if (rate === '4') {
 
           datatbody.innerHTML += `
                                   <tr>
-                                    <th>${i + 1}º</th><td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td><td> <i class="bi bi-dash-square"></i> </td>
-                                  </tr
+                                    <th>${i + 1}º</th> <td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td>
+                                    <td> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star"></i>  </td>
+                                  </tr>
+                              `
+        } else if (rate === '3') {
+
+          datatbody.innerHTML += `
+                                  <tr>
+                                    <th>${i + 1}º</th> <td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td>
+                                    <td> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i>  </td>
+                                  </tr>
+                              `
+        } else if (rate === '2') {
+
+          datatbody.innerHTML += `
+                                  <tr>
+                                    <th>${i + 1}º</th> <td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td>
+                                    <td> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i>  </td>
+                                  </tr>
+                              `
+        } else if (rate === '1') {
+
+          datatbody.innerHTML += `
+                                  <tr>
+                                    <th>${i + 1}º</th> <td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td>
+                                    <td> <i class="starStyle bi bi-star-fill"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i>  </td>
+                                  </tr>
                               `
         } else {
 
           datatbody.innerHTML += `
                                   <tr>
-                                    <th>${i + 1}º</th><td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td><td> ${winUser} </td><td>${prize} </td><td> Sin Datos </td>
-                                  </tr
+                                    <th>${i + 1}º</th><td><i class="bi bi-ticket-perforated me-1"></i> ${winTicket}</td> <td> ${winUser} </td><td>${prize} </td>
+                                    <td> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i> <i class="starStyle bi bi-star"></i>  </td>
+                                  </tr>
                               `
+
         }
 
 

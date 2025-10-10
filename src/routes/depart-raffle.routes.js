@@ -159,6 +159,8 @@ routes.post('/department/create/raffle', async(req,res)=>{
     console.log(user.username)
     const username = user.username; //aqui tengo el username 
     const blissName = user.blissName; //aqui el nombre lejible;
+    const chatId = user.blissBot.chatId; //aqui el chatId;
+
     const department = 'raffle';
     const stateRaffle = await modelRaffle.find({username});
     console.log("stateRaffle", stateRaffle);
@@ -227,7 +229,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
                 for (let i = 0; i < Prizes.length ; i++) {
                 let ele = Prizes[i];
                     if (ele !== undefined){
-                        let obje = { Prize : ele, winTicket : null, winUser : null, rate : null };
+                        let obje = { Prize : ele, winTicket : null, winUser : null, rate : null, comment : null };
                         boxPrizesObject.push(obje); 
                     }
                 }
@@ -307,7 +309,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
 
                                                                 countImgAcept = 0 // detenemos la condicion
 
-                                                                const Raffle =  new modelRaffle({ title, titleURL, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, blissName, country, countryCode, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
+                                                                const Raffle =  new modelRaffle({ title, titleURL, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, blissName, chatId, country, countryCode, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
                                                                 const RaffleSave = await Raffle.save();
                                                                 //console.log(RaffleSave);   
                                                         
