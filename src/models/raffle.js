@@ -14,7 +14,7 @@ const SchemaRaffle = new Schema({
     numTickets : { type: Number }, //cantidad de tikets
     boxTickets : { type: Array },//arreglo de tickets con los datos necesarios.. Datos de este array { "No" : i, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Verified" : false, "Winner" : false }
     fundRaising : { type: Number}, //fundraising "recaudación de fondos" esto es (numTikets * price).
-    raffleClosingPolicy : { type: String }, //en que forma se cierra el sorteo (By-Date or All-Tikets) por fecha o por venta de todos los tikets.
+    raffleClosingPolicy : { type: String }, //en que forma se cierra el sorteo (By-Date or All-Tickets) por fecha o por venta de todos los tikets.
     CloseDate : { type: Date },//si se configura como By-Date este campo se activa de resto esta en blanco
     numberOfPrizes : { type : Number }, //numero de premios
     PrizesObject : { type : Object, default: [] }, //Array donde se guardaran los lugares y premios [ {Prize : "Monopatin", winTicket : null}, {Prize : "Hoverboard", winTicket : 56} ] || El Valor de winTicket inicia siendo null y luego se inserta al confirmarse que todos los ticket han sido tomados o verificados.  

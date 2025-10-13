@@ -1183,7 +1183,8 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
             const search = await modelRaffle.findById(Id);
             const productId = search._id; //el id del articulo (Sorteo).
             const depart = search.department; //aqui el departamento.
-            const title = search.title; //aqui tengo el title
+            const title = search.title; //aqui tengo el title.
+            const titleURL = search.titleURL //aqui el titleURL.
             const urlImageArticle = search.images[0].url 
             const category = search.category; //aqui la categoria
             const numTickets = search.numTickets; //cantidad de tickets que posee el sorteo
@@ -1334,7 +1335,7 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
                                     console.log("resultUser esto es la busqueda debemos recibir un objeto de la coleccion user--->", resultUser);
                                     console.log("Esto es winId", winId);
                                                                                                                                                                                                                                                                                                     
-                                    const newMessage = new modelMessages({times : dateNow, titleArticle : title, urlImageArticle, userId : anfitrion_id, username : anfitrion , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId, toCreatedArticleId : winId, ownerStore : winUser  });
+                                    const newMessage = new modelMessages({times : dateNow, titleArticle : title, titleURL, urlImageArticle, userId : anfitrion_id, username : anfitrion , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId, toCreatedArticleId : winId, ownerStore : winUser  });
                                     console.log("newMessage :", newMessage);
                                     const saveMessage = await newMessage.save();
                                 } catch(error){
@@ -1584,7 +1585,7 @@ routes.post('/raffleModule/takeTikets/free', async(req, res)=>{
                                                                                             console.log("Procesos de Celebracion de Sorteo ejecutado OK.");
                                                                                         })
                                                                                         .catch(err =>{
-
+                                                                                            console.log("Ha habido un error en la funcion blissNoti()")
                                                                                         })
                                                                                 } else {
                                                                                     console.log("Procesos de Celebracion de Sorteo ejecutado OK.");
@@ -1783,19 +1784,101 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
             const search = await modelRaffle.findById(Id);
             const title = search.title; //aqui el titulo del sorteo.
             const anfitrion = search.username; //aqui tenemos el username del anfitrion
+            const policy = search.raffleClosingPolicy; //en que forma se cierra el sorteo (By-Date or All-Tickets) por fecha o por venta de todos los tikets.
             const boxTickets = search.boxTickets;  //buscar Contestan con un for
             const CloseDate = search.CloseDate; //es un objeto Date;
             const chatId = search.chatId; // aqui obtengo el chatId del anfitrion pude ser un "string" o ""
 
-            console.log(`nowDate:  ${nowDate} > CloseDate: ${CloseDate}`)    
-            if (nowDate > CloseDate) {
-                console.log("Ha pasado la fecha de cierre y no se ha celebrado. Enviar un mensaje de calma a los usuarios.");
+            if (policy === "byDate"){
 
-                const message = `En breve este sorteo será celebrado.`;
-                res.json({ code: "info", message });
+                console.log(`nowDate:  ${nowDate} > CloseDate: ${CloseDate}`)    
+                if (nowDate > CloseDate) {
+                    console.log("Ha pasado la fecha de cierre y no se ha celebrado. Enviar un mensaje de calma a los usuarios.");
 
+                    const message = `En breve este sorteo será celebrado.`;
+                    //res.json({ code: "info", message });
+
+                } else {
+
+                    console.log("El sorteo es ByDate y esta en tiempo para ser tomado un ticket");
+                    let count = 0;
+                    for (let i = 0; i < boxTickets.length; i++) {
+                        const contestan = boxTickets[i].Contestan;
+                        const verified = boxTickets[i].Verified;
+                        
+                        if (contestan == username){
+                            console.log("::::: YA el usuario esta participando :::::")
+                            if (verified === false){
+                                count = count + 1;
+                            }
+                            
+                        } 
+                    }
+                    
+                    console.log("El usuario ha participado", count, "veces");
+                        
+                    if (count === 0){ //no ha participado
+                
+                            async function take(){
+
+                                resp = await modelRaffle.findByIdAndUpdate(Id, { $set: {
+                                    [`boxTickets.${n}.Contestan`] : username,
+                                    [`boxTickets.${n}.No_Serial`] : serial,
+                                    [`boxTickets.${n}.Date`] : dateNow,
+                                    [`boxTickets.${n}.Take`] : true,
+                        
+                                }});
+
+                            }
+
+                            async function blissNoti(){
+
+                                //Si el anfitrion tiene chatId entonces le enviamos el Telegrama.
+                            
+                                    //enviamos un telegrama al Anfitrion para que revise rapidamente esta solicitud de toma de ticket
+                                    const Message = `Solicitud de revisión de Ticket del Sorteo : ${title}`;
+                                    axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                                        chat_id: chatId,
+                                        text: Message,
+                                    })
+                                    .then(response => {
+                                        console.log('Mensaje enviado con éxito:', response.data);
+                                    })
+                                    .catch(error => {
+            
+                                        console.error('Error al enviar el mensaje por Telegram:', error.response.data);
+                                        
+                                    });
+
+                            }   
+
+                            take()
+                                .then(()=>{
+                                    const message = `Felicidades, ha tomado el Ticket, Noº. ${Ticket}.`;
+                                    res.json({ code: "ok", ticket: Ticket, message }); 
+
+                                    if (chatId !== ""){
+                                        blissNoti()
+                                    }
+
+                                })
+                                .catch(err => {
+                                    console.log("Ha ocurrido un error", err);
+                                })
+
+
+                    } else {
+            
+                        const message = "Ya ha tomado un Ticket.";
+                        res.json({ code: "ok", ticket: 0, message });   
+            
+                    }
+                        
+                } 
+                
             } else {
-
+                //All-Tickets
+                console.log(`policy es : ${policy}`);
 
                 let count = 0;
                 for (let i = 0; i < boxTickets.length; i++) {
@@ -1869,8 +1952,8 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
                     res.json({ code: "ok", ticket: 0, message });   
         
                 }
-                    
-            }        
+                        
+            }   
             
             //"No" : 7,
             //"Contestan" : "",

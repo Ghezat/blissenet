@@ -234,15 +234,15 @@
                           <h5 class="text-light" style="font-size: 16px;">Celebración: Hasta agotarse los Tickets</h5>
                         <% } %>
                         
-                        <h5 class="text-light" style="font-size: 16px;">Cant. Premios : <%= search.numberOfPrizes %> </h5>
-                        <h5 class="text-light" style="font-size: 16px;">Anfitrión : <%= search.blissName %> </h5>
-                      </div>
+                        <h5 class="text-light" style="font-size: 16px;">Cant. Premios : <%= search.numberOfPrizes %>  <span class="mx-2"> | </span>  Tickets : <span class="px-2"> <%= search.numTickets %> </span>  </h5>
+                        <h5 class="text-light" style="font-size: 16px;"> Anfitrión : <a href="/account/<%= search.username %>"><%= search.blissName %></a> </h5>
+                      </div>                    
                     </div>                      
 
                     <div class="col-lg-3 col-md-12 col-sm-12 ">
                       <div class="containerLegends d-flex flex-column justify-content-between align-items-start"  style="border-radius: 5px; height: 200px;background-color: rgba(32, 32, 32, .5); width: 100%; border: 1px solid rgba(32, 32, 32, .9)">
                         <div class="card-header" style="background-color: rgba(32, 32, 32, .8); width: 100%;">  <span style="color: gold ;font-size: 19px"> Leyenda de Ticket </span>  </div>
-                        <div class="containerTicked d-flex align-items-center ms-1"> <div class="cube0 rounded-1" style="width: 34px; height: 34px;">0</div> <span class="text-light mx-3"> Ticked Libre </span>  </div>
+                        <div class="containerTicked d-flex align-items-center ms-1"> <div class="cube0 rounded-1" style="width: 34px; height: 34px;">0</div> <span class="text-light mx-3"> Ticket Libre </span>  </div>
                         <div class="containerTicked d-flex align-items-center ms-1"> <div class="cubeTakeNOVerified0 rounded-1" style="width: 34px; height: 34px;">0</div> <span class="text-light mx-3"> Ticket No Consolidado </span>  </div>  
                         <div class="containerTicked d-flex align-items-center ms-1"> <div class="cubeTakeVerified0 rounded-1" style="width: 34px; height: 34px;">0</div> <span class="text-light mx-3"> Ticket Consolidado </span>  </div> 
                         <div class="containerTicked d-flex align-items-center ms-1"> <div class="cubeWinner0 rounded-1" style="width: 34px; height: 34px;">0</div><span class="text-light mx-3"> Ticket Ganador </span> </div> 
@@ -837,12 +837,14 @@ fetch('/raffleModule/data/', {
 
           for (let i = 0; i < boxTickets.length; i++) {
               const ele =  boxTickets[i]
-              //console.log('Esto es ele', ele)
-              if (ele.Take === true){
+              console.log('Esto es ele', ele)
+              if (ele.Take === true && ele.Winner === false ){
                 contentCubes.innerHTML += `<div class="cubeTake">${ele.No} <input type="hidden" value="${ele.No}"></div>`
-              } else {
+              } else if (ele.Take === false && ele.Winner === false )  {
                 contentCubes.innerHTML += `<div class="cube">${ele.No} <input type="hidden" value="${ele.No}"></div>`
-              }
+              } else if ( ele.Winner === true ) {
+                contentCubes.innerHTML += `<div class="cubeWinner">${ele.No}<input type="hidden" value="${ele.No}"></div>`;
+            }
               
           }
 

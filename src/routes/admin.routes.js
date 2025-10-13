@@ -68,7 +68,8 @@ const s3 = new S3({
     }
 });
 
-
+//este Token es la KEY del bot de Telegram
+const Token =  process.env.Token_Bot;
 
 routes.get('/admin', (req,res)=>{
     const userAdmin = req.session.userAdmin;
@@ -4409,6 +4410,7 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
             const Id = searchRaffle._id;
             const depart = searchRaffle.department; //aqui el depaartamento. 
             const title = searchRaffle.title; //aqui tengo el title
+            const titleURL = searchRaffle.titleURL; //aqui el titleURL
             const urlImageArticle = searchRaffle.images[0].url;
             const category = searchRaffle.category; //Pago
             const policy = searchRaffle.raffleClosingPolicy; //politica de celebracion
@@ -4420,6 +4422,7 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
             const CloseDate = searchRaffle.CloseDate;
             const cantPrizes = searchRaffle.numberOfPrizes;
             const cantTicket = searchRaffle.numTickets;
+            const chatId = searchRaffle.chatId;
             
             const dtNow = new Date(); 
             const diaNow = dtNow.getDate(); const mesNow = dtNow.getMonth() +1; const yearNow = dtNow.getFullYear();
@@ -4469,6 +4472,29 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
                 }
             };
 
+            async function UpdateBoxTickets() {
+                const ticketSet = new Set(ticketRandom); // Usamos un Set para búsquedas rápidas
+
+                // Creamos un array para almacenar las actualizaciones
+                const updates = [];
+                                    
+                //dentro del array boxTickets [ { "No" : 1, "Contestan" : "", "No_Serial" : "", "Date" : "", "Take" : false, "Ref" : "", "Verified" : false, "Winner" : false }, {...}, {...} ];
+
+                // Recorremos boxTickets una sola vez
+                for (const ticket of boxTickets) {
+                    if (ticketSet.has(ticket.No)) { // Verificamos si el ticket está en ticketRandom
+                        updates.push({ id: ticket.No, winner: true }); // Preparamos la actualización
+                    }
+                }
+
+                // Realizamos las actualizaciones en una sola operación
+                for (const update of updates) {
+                    await modelRaffle.findByIdAndUpdate(Id, { 
+                        $set: { [`boxTickets.${update.id - 1}.Winner`]: update.winner } 
+                    });
+                }
+            }
+
             async function fContestan(){
 
                 for (let u = 0; u < ticketRandom.length; u++) {
@@ -4476,7 +4502,7 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
                         for (let x = 0; x < boxTickets.length; x++) {
                             const ele = boxTickets[x].No; //1,2,3,4,5,6,7,8,9,...... hasta el ultimo
                             const Contestan = boxTickets[x].Contestan; //aqui iran pasando todos los username que participaron
-                            const Verified = boxTickets[x].Verified; //si esta false es porque no ha sido verificado coono ticket pagado en el caso de sorteos "pagos"
+                            const Verified = boxTickets[x].Verified; //si esta false es porque no ha sido verificado como ticket pagado en el caso de sorteos "pagos"
                         
 
                             if (category == "Gratis"){
@@ -4553,7 +4579,7 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
                         console.log("resultUser esto es la busqueda debemos recibir un objeto de la coleccion user--->", resultUser);
                         console.log("Esto es winId", winId);
                                                                                                                                                                                                                                                                                         
-                        const newMessage = new modelMessage({times : dateNowData, titleArticle : title, urlImageArticle, userId : anfitrion_id, username : UserName , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId : Id, toCreatedArticleId : winId, ownerStore : winUser  });
+                        const newMessage = new modelMessage({times : dateNowData, titleArticle : title, titleURL, urlImageArticle, userId : anfitrion_id, username : UserName , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId : Id, toCreatedArticleId : winId, ownerStore : winUser  });
                         console.log("newMessage :", newMessage);
                         const saveMessage = await newMessage.save();
                     } catch(error){
@@ -4669,6 +4695,8 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
             async function invoiceDone(){
                 //aqui creamos la factura del sorteo.
                 // category > Gratis or Pago
+
+                
                 if (category === "Pago"){
                     let commission = 8;
                     let tecnicalDescription = 'Esto es un Sorteo de Tickets Pago';
@@ -4762,65 +4790,117 @@ routes.post('/admin/process/finishMechanic', async (req, res)=>{
                 const historySave = await history.save(); //data salvada.*/ 
             };
 
+            async function blissNoti(){
+
+                //Si el anfitrion tiene chatId entonces le enviamos el Telegrama.
+            
+                //enviamos un telegrama al Anfitrion para que revise rapidamente esta solicitud de toma de ticket
+                const Message = `El Sorteo ${title} ha sido celebrado satifactoriamente.`;
+                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                    chat_id: chatId,
+                    text: Message,
+                })
+                .then(response => {
+                    console.log('Mensaje enviado con éxito:', response.data);
+                })
+                .catch(error => {
+
+                    console.error('Error al enviar el mensaje por Telegram:', error.response.data);
+                    
+                });
+
+            } 
+
 
             allTicketsTrue()
                 .then(()=> {
                     TicketWin()
                         .then(()=>{
-                            fContestan()
+                            UpdateBoxTickets()
                                 .then(()=>{
-                                    messagesForWin()
+
+                                    fContestan()
                                         .then(()=>{
-                                            emailsWinTicket()
+                                            messagesForWin()
                                                 .then(()=>{
-                                                    emailAnfitrion()
+                                                    emailsWinTicket()
                                                         .then(()=>{
-                                                            invoiceDone()
+                                                            emailAnfitrion()
                                                                 .then(()=>{
-                                                                    raffleHistory()
+                                                                    invoiceDone()
                                                                         .then(()=>{
-                                                                            console.log("Proceso de Celebracion OK");
-                                                                            req.session.finishMechanicSuccessRaffle = `El Sorteo ${title} se ha celebrado exitosamente`;
-                                                                            res.redirect('/admin/finishMechanic');
+                                                                            raffleHistory()
+                                                                                .then(()=>{
+
+                                                                                    if (chatId !== ""){
+                                                                                        //si tiene chatId entonces se envia un Telegrama al Anfitrion de este sirteo.
+                                                                                        blissNoti()
+                                                                                            .then(()=>{
+                                                                                                console.log("Proceso de Celebracion OK");
+                                                                                                req.session.finishMechanicSuccessRaffle = `El Sorteo ${title} se ha celebrado exitosamente`;
+                                                                                                res.redirect('/admin/finishMechanic');
+                                                                                            })
+                                                                                            .catch(error =>{
+                                                                                                console.log("Ha habido un error blissNoti()", error);
+                                                                                                req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
+                                                                                                res.redirect('/admin/finishMechanic');
+                                                                                            })
+
+                                                                                    } else {
+                                                                                        console.log("Proceso de Celebracion OK");
+                                                                                        req.session.finishMechanicSuccessRaffle = `El Sorteo ${title} se ha celebrado exitosamente`;
+                                                                                        res.redirect('/admin/finishMechanic');
+                                                                                    }
+                                                                                   
+                                                                                })
+                                                                                .catch((error)=>{
+                                                                                    console.log("Ha habido un error raffleHistory()", error);
+                                                                                    req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
+                                                                                    res.redirect('/admin/finishMechanic');
+                                                                                })
+
                                                                         })
                                                                         .catch((error)=>{
-                                                                            console.log("Ha habido un error raffleHistory()", error);
+                                                                            console.log("Ha habido un error invoiceDone()", error);
                                                                             req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
                                                                             res.redirect('/admin/finishMechanic');
                                                                         })
-
                                                                 })
                                                                 .catch((error)=>{
-                                                                    console.log("Ha habido un error invoiceDone()", error);
+                                                                    console.log("Ha habido un error emailAnfitrion()", error);
                                                                     req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
-                                                                    res.redirect('/admin/finishMechanic');
+                                                                    res.redirect('/admin/finishMechanic'); 
                                                                 })
+
                                                         })
                                                         .catch((error)=>{
-                                                            console.log("Ha habido un error emailAnfitrion()", error);
+                                                            console.log("Ha habido un error emailsWinTicket()", error);
                                                             req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
-                                                            res.redirect('/admin/finishMechanic'); 
+                                                            res.redirect('/admin/finishMechanic');
                                                         })
 
                                                 })
                                                 .catch((error)=>{
-                                                    console.log("Ha habido un error emailsWinTicket()", error);
+                                                    console.log("Ha habido un error messagesForWin()", error);
                                                     req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
                                                     res.redirect('/admin/finishMechanic');
-                                                })
-
+                                                })                        
                                         })
                                         .catch((error)=>{
-                                            console.log("Ha habido un error messagesForWin()", error);
+                                            console.log("Ha habido un error fContestan()", error);
                                             req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
                                             res.redirect('/admin/finishMechanic');
-                                        })                        
+                                        })
+
                                 })
                                 .catch((error)=>{
-                                    console.log("Ha habido un error fContestan()", error);
+                                    console.log("Ha habido un error UpdateBoxTickets()", error);
                                     req.session.finishMechanicErrorRaffle = `Ha habido un Error en la Celebracion de Sorteo ${title}`;
                                     res.redirect('/admin/finishMechanic');
                                 })
+        
+
+
                         })
                         .catch((error)=>{
                             console.log("Ha habido un error TicketWin()", error);

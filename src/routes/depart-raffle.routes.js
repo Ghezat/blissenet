@@ -28,6 +28,8 @@ const s3 = new S3({
     }
 });
 
+//este Token es la KEY del bot de Telegram
+const Token =  process.env.Token_Bot;
            
 routes.get('/department/create/raffle', async(req,res)=>{
     let countImpagos = 0;
@@ -1113,6 +1115,7 @@ cron.schedule('*/1 * * * *', async() => {
                 const Id = searchRaffleByDate[i]._id;
                 const depart = searchRaffleByDate[i].department; //aqui el departamento. 
                 const title = searchRaffleByDate[i].title; //aqui tengo el title
+                const titleURL = searchRaffleByDate[i].titleURL; //titleURL
                 const urlImageArticle = searchRaffleByDate[i].images[0].url;
                 const category = searchRaffleByDate[i].category; //Pago o Gratis
                 const policy = searchRaffleByDate[i].raffleClosingPolicy; //politica de celebracion
@@ -1124,6 +1127,8 @@ cron.schedule('*/1 * * * *', async() => {
                 const CloseDate = searchRaffleByDate[i].CloseDate;
                 const cantPrizes = searchRaffleByDate[i].numberOfPrizes;
                 const cantTicket = searchRaffleByDate[i].numTickets; 
+                const chatId = searchRaffleByDate[i].chatId; //aqui obtengo el chatId del anfitrion pude ser un "string" o ""
+                
 
                 const CD = new Date(CloseDate);
                 let diaCD = CD.getDate();
@@ -1190,7 +1195,6 @@ cron.schedule('*/1 * * * *', async() => {
                             
                             }
                         }
-
 
                         async function UpdateBoxTickets() {
                             const ticketSet = new Set(ticketRandom); // Usamos un Set para búsquedas rápidas
@@ -1299,7 +1303,7 @@ cron.schedule('*/1 * * * *', async() => {
                                     console.log("resultUser esto es la busqueda debemos recibir un objeto de la coleccion user--->", resultUser);
                                     console.log("Esto es winId", winId);
                                                                                                                                                                                                                                                                                                     
-                                    const newMessage = new modelMessages({times : dateNowData, titleArticle : title, urlImageArticle, userId : anfitrion_id, username : UserName , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId : Id, toCreatedArticleId : winId, ownerStore : winUser  });
+                                    const newMessage = new modelMessages({times : dateNowData, titleArticle : title, titleURL, urlImageArticle, userId : anfitrion_id, username : UserName , question : "Felicidades ha sido ganador de un Sorteo. ¡Vaya al sorteo reclame su premio y califique!", depart, productId : Id, toCreatedArticleId : winId, ownerStore : winUser  });
                                     console.log("newMessage :", newMessage);
                                     const saveMessage = await newMessage.save();
                                 } catch(error){
@@ -1415,15 +1419,16 @@ cron.schedule('*/1 * * * *', async() => {
                         async function invoiceDone(){
                             //aqui creamos la factura del sorteo.
                             // category > Gratis or Pago
+
                             if (category === "Pago"){
                                 let commission = 8;
                                 let tecnicalDescription = 'Esto es un Sorteo de Tickets Pago';
-                                const Invoice = new modelInvoice({ usernameSell : UserName, indexed : anfitrion_id, department : depart, title, title_id : Id,  tecnicalDescription, price, commission });
+                                const Invoice = new modelInvoice({ usernameSell : UserName, indexed : anfitrion_id, department : depart, title, title_id : Id, tecnicalDescription, price, commission });
                                 const InvoiceSave = await Invoice.save();
                             } else {
                                 let commission = 6;
                                 let tecnicalDescription = 'Esto es un Sorteo de Tickets Gratis';
-                                const Invoice = new modelInvoice({ usernameSell : UserName, indexed : anfitrion_id, department : depart, title, title_id : Id,  tecnicalDescription, price, commission });
+                                const Invoice = new modelInvoice({ usernameSell : UserName, indexed : anfitrion_id, department : depart, title, title_id : Id, tecnicalDescription, price, commission });
                                 const InvoiceSave = await Invoice.save();
                             }
                         }
@@ -1508,6 +1513,27 @@ cron.schedule('*/1 * * * *', async() => {
                             const historySave = await history.save(); //data salvada.  */
                         }
                     
+                        async function blissNoti(){
+
+                            //Si el anfitrion tiene chatId entonces le enviamos el Telegrama.
+                        
+                            //enviamos un telegrama al Anfitrion para que revise rapidamente esta solicitud de toma de ticket
+                            const Message = `El Sorteo ${title} ha sido celebrado satifactoriamente.`;
+                            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                                chat_id: chatId,
+                                text: Message,
+                            })
+                            .then(response => {
+                                console.log('Mensaje enviado con éxito:', response.data);
+                            })
+                            .catch(error => {
+    
+                                console.error('Error al enviar el mensaje por Telegram:', error.response.data);
+                                
+                            });
+
+                        } 
+
                         TicketWin() //:::invocacion de la primera Funcion TicketWin
                             .then(()=>{
                                 //todos los elementos de PrizesObject en el campo winTicket deben tener su numero ganador y no null.
@@ -1526,7 +1552,19 @@ cron.schedule('*/1 * * * *', async() => {
                                                                             .then(()=>{
                                                                                 raffleHistory()
                                                                                     .then(()=>{
-                                                                                        console.log("Cadena de funciones ejecutada satisfactoriamente en raffle by date");
+
+                                                                                        if (chatId !==""){
+                                                                                            blissNoti()
+                                                                                                .then(()=>{
+                                                                                                    console.log("Cadena de funciones ejecutada satisfactoriamente en raffle by date");
+                                                                                                })
+                                                                                                .catch(err =>{
+                                                                                                    console.log("Ha habido un error en la funcion blissNoti()")
+                                                                                                })
+                                                                                        } else {
+                                                                                            console.log("Cadena de funciones ejecutada satisfactoriamente en raffle by date");
+                                                                                        }        
+                                                                                        
                                                                                     })
                                                                                     .catch((error)=> {
                                                                                         console.log("Ha ocurrido un error en raffleHistory()", error);
