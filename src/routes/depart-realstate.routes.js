@@ -196,7 +196,8 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
                                 countImgAcept ++;
                                 console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
 
-                                const folder = department; const ident = new Date().getTime();
+                                const folder = department;
+                                const ident = new Date().getTime();
                                 const pathField = element.path; const extPart = pathField.split(".");
                                 const ext = extPart[1];
                                 
@@ -229,9 +230,10 @@ routes.post('/department/create/realstate', async(req,res, next)=>{
                                             let url = `https://${bucketName}.${endpoint}/${key}`;
                                             let bytes = element.size;
                                             let public_id = key;
+                                            let idImage = ident;
                                             
                                             console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                                            boxImg.push( {url, public_id, bytes, format} );
+                                            boxImg.push( {url, public_id, bytes, format, idImage} );
 
                                             countSuccess ++;
                                             console.log("countSuccess :", countSuccess );
@@ -517,7 +519,8 @@ routes.post('/department/create/realstate/add/first/realstate', async(req, res)=
 
                 //console.log("una imagen aqui aceptada----->", element)
 
-                const folder = department; const ident = new Date().getTime();
+                const folder = department;
+                const ident = new Date().getTime();
                 const pathField = element.path; const extPart = pathField.split(".");
                 const ext = extPart[1];
                             
@@ -547,9 +550,10 @@ routes.post('/department/create/realstate/add/first/realstate', async(req, res)=
                         let url = `https://${bucketName}.${endpoint}/${key}`;
                         let bytes = element.size;
                         let public_id = key;
+                        let idImage = ident;
                         
                         //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                        boxImg.push( {url, public_id, bytes, format} );            
+                        boxImg.push( {url, public_id, bytes, format, idImage} );            
 
                         async function saveDB(){
                             //console.log("este es el path que tiene que ser eliminado:", element.path)
@@ -615,7 +619,8 @@ routes.post('/department/create/realstate/add/last/realstate', async(req, res)=>
 
                 //console.log("una imagen aqui aceptada----->", element)
                 
-                const folder = department; const ident = new Date().getTime();
+                const folder = department;
+                const ident = new Date().getTime();
                 const pathField = element.path; const extPart = pathField.split(".");
                 const ext = extPart[1];
                 
@@ -645,9 +650,10 @@ routes.post('/department/create/realstate/add/last/realstate', async(req, res)=>
                         let url = `https://${bucketName}.${endpoint}/${key}`;
                         let bytes = element.size;
                         let public_id = key;
+                        let idImage = ident;
                         
                         //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                        boxImg.push( {url, public_id, bytes, format} );            
+                        boxImg.push( {url, public_id, bytes, format, idImage} );            
 
                         async function saveDB(){
                             //console.log("este es el path que tiene que ser eliminado:", element.path)
@@ -897,41 +903,41 @@ routes.post('/department/create/realstate/edit', async(req, res)=>{
     res.redirect('/department/create/realstate');
 });
 
-routes.post('/department/create/realstate/edit-images', async(req, res)=>{
-    const order = req.body.Order
-    console.log(order)
-    res.redirect('/department/create/realstate');
-});
 
 
-routes.get('/department/create/realstate/editImages', async (req, res) => {
-    try {
-        const items = await modelRealstate.find({});
+routes.post('/department/create/realstate/edit-images', async (req, res) => {
 
-        const updatedResults = await Promise.all(items.map(async item => {
-            const imagesWithExtras = item.images.map((image, index) => {
-                if (!image.idImage && !image.position) {
-                    const idImage = image.public_id.split('/').pop().split('.')[0];
-                    return {
-                        ...image,
-                        idImage,
-                        position: index
-                    };
-                }
-                return image;
-            });
+    const { Order, Id } = req.body;
+    console.log("Estamos en servicio y queremos reorganizar la posición de las imágenes");
+    console.log(Order);
 
-            // Actualiza el item en la base de datos
-            await modelRealstate.updateOne({ _id: item._id }, { $set: { images: imagesWithExtras } });
-            return { images: imagesWithExtras };
-        }));
+    const searchADS = await modelRealstate.findById(Id, { images: 1 });
+    console.log("searchADS :", searchADS);
 
-        console.log("Updated images with idImage and position:", updatedResults);
-        res.json(updatedResults);
-    } catch (error) {
-        console.error("Error fetching images:", error);
-        res.status(500).send("Error fetching images");
+    if (searchADS) {
+        // Crear un mapa para acceder rápidamente a las imágenes por su id
+        const imageMap = {};
+        searchADS.images.forEach((image) => {
+            imageMap[image.idImage] = image;
+        });
+
+        // Reorganizar las imágenes según el orden proporcionado
+        const updatedImages = Order.map(id => imageMap[id]).filter(Boolean); // Filtrar las imágenes que no se encontraron
+        console.log("updatedImages :", updatedImages);
+
+        // Actualizar el documento en la base de datos
+        await modelRealstate.updateOne(
+            { _id: Id },
+            { $set: { images: updatedImages } }
+        );
+
+        console.log("Imágenes actualizadas:", updatedImages);
+
+        const message = "Actualizacion de posición de imagenes exitosa."
+        res.json({ code : "ok", message});        
     }
-})
+
+
+});
 
 module.exports = routes

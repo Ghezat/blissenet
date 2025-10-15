@@ -525,11 +525,6 @@
                                   </div>
                                 </div>
                             </div>
-        
-                            <!-- eliminar despues de actualizar la collections -->
-                            <div class="form-group my-1">
-                                <button class="btn btn-primary form-control updateCollection"> update colections  </button>
-                            </div>
 
                         </div>
         
@@ -582,7 +577,7 @@
                                     <% if (TitleSelect) { %>
         
                                         <input type="hidden" value="<%= TitleSelect._id %>" id="titleID">
-                                        
+
                                         <% if (Images.length !==0) { %>
                                            <% if (Video) { %>
                                             <div class="contentCtrlImgs" style="width: auto; overflow-x: auto;">
@@ -1122,88 +1117,61 @@
 
         </script>
         
-           <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
-           <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-           
-        <script>
-           const dateSortable = Sortable.create(addObjectImgEdit ,{
-                animation : 200,
-                easing: "cubic-bezier(0.5, 0, 0.75, 0)",
-                handle:".preview",
-                ghostClass: "active",
-                store : {
-                    set : function(Sortable){
-                       const order = Sortable.toArray();
-                       console.log(order);
-                       
-                        fetch('/department/create/aeronaves/edit-images', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                Order: order
-                            })
-                        });
-                    }
-                }
-               
-                });
-            
-              
-        </script>
-        <script>//con este script logro proteger y dar el spinnier en el boton de carga.
-            const btnCreate = document.getElementById('btnCreate');
-            const btnCreateLoading = document.getElementById('btnCreateLoading');
 
-            const formCreate = document.getElementById('formCreate')
-            formCreate.addEventListener('submit', (e)=>{
-                if (e){
-                    //console.log("existe un evento en desarrollo")
-                    btnCreate.classList.add('invisibleBtn')
-                    btnCreateLoading.classList.remove('invisibleBtn')
-                } else {
-                    //console.log("no hay ningun evento")
-                    btnCreate.classList.remove('invisibleBtn')   
-                }
-                
-            })
-        </script>
-        <script> //aqui creo el spinner en el edit
-              const btnEdit = document.getElementById('btnEdit');
-              const btnEditLoading = document.getElementById('btnEditLoading');
+<script>//con este script logro proteger y dar el spinnier en el boton de carga.
+    const btnCreate = document.getElementById('btnCreate');
+    const btnCreateLoading = document.getElementById('btnCreateLoading');
 
-              const formEdit = document.getElementById('formEdit')
-              formEdit.addEventListener('submit', (e)=>{
-                if (e){
-                    //console.log("existe un evento en desarrollo")
-                    btnEdit.classList.add('invisibleBtnEdit')
-                    btnEditLoading.classList.remove('invisibleBtnEdit')
-                } else {
-                    //console.log("no hay ningun evento")
-                    btnEdit.classList.remove('invisibleBtnEdit')   
-                }
-                
-            })
-        </script>
-        <script> //aqui creo el spinner en el delete
-            const btnDelete = document.getElementById('btnDelete');
-            const btnDeleteLoading = document.getElementById('btnDeleteLoading');
-
-            const formDelete = document.getElementById('formDelete')
-            formDelete.addEventListener('submit', (e)=>{
-            if (e){
-                //console.log("existe un evento en desarrollo")
-                btnDelete.classList.add('invisibleBtnDelete')
-                btnDeleteLoading.classList.remove('invisibleBtnDelete')
-            } else {
-                //console.log("no hay ningun evento")
-                btnDelete.classList.remove('invisibleBtnDelete')   
-            }
-            
-        })
+    const formCreate = document.getElementById('formCreate')
+    formCreate.addEventListener('submit', (e)=>{
+        if (e){
+            //console.log("existe un evento en desarrollo")
+            btnCreate.classList.add('invisibleBtn')
+            btnCreateLoading.classList.remove('invisibleBtn')
+        } else {
+            //console.log("no hay ningun evento")
+            btnCreate.classList.remove('invisibleBtn')   
+        }
         
-        </script>
+    })
+</script>
+
+<script> //aqui creo el spinner en el edit
+        const btnEdit = document.getElementById('btnEdit');
+        const btnEditLoading = document.getElementById('btnEditLoading');
+
+        const formEdit = document.getElementById('formEdit')
+        formEdit.addEventListener('submit', (e)=>{
+        if (e){
+            //console.log("existe un evento en desarrollo")
+            btnEdit.classList.add('invisibleBtnEdit')
+            btnEditLoading.classList.remove('invisibleBtnEdit')
+        } else {
+            //console.log("no hay ningun evento")
+            btnEdit.classList.remove('invisibleBtnEdit')   
+        }
+        
+    })
+</script>
+
+<script> //aqui creo el spinner en el delete
+    const btnDelete = document.getElementById('btnDelete');
+    const btnDeleteLoading = document.getElementById('btnDeleteLoading');
+
+    const formDelete = document.getElementById('formDelete')
+    formDelete.addEventListener('submit', (e)=>{
+    if (e){
+        //console.log("existe un evento en desarrollo")
+        btnDelete.classList.add('invisibleBtnDelete')
+        btnDeleteLoading.classList.remove('invisibleBtnDelete')
+    } else {
+        //console.log("no hay ningun evento")
+        btnDelete.classList.remove('invisibleBtnDelete')   
+    }
+    
+})
+
+</script>
 
 <script>
     const bodyToolADS = document.querySelector('.bodyToolADS');
@@ -1426,64 +1394,42 @@
 
 <script>
 
-                const imagesSortable =  document.getElementById('imagesSortable');
-            const titleID = document.getElementById('titleID');
-            
-            const imgSortable = Sortable.create(imagesSortable ,{
-                animation : 200,
-                easing: "cubic-bezier(0.5, 0, 0.75, 0)",
-                handle:".move",
-                ghostClass: "active",
-                onStart: function(evt) {
-                console.log('Sortable initialized, start dragging');
-                },
-                onEnd: function(evt) {
-                    console.log('Dragging ended');
-                },
-                store : {
-                       
-                    set : function(Sortable){
-                        const order = Sortable.toArray();
-                        console.log("order:", order); // order: (2) ['img1', 'img0'] listo ya tengo elementos unicos
+    const imagesSortable =  document.getElementById('imagesSortable');
+    const titleID = document.getElementById('titleID');
+    
+    const imgSortable = Sortable.create(imagesSortable ,{
+        animation : 200,
+        easing: "cubic-bezier(0.5, 0, 0.75, 0)",
+        handle:".move",
+        ghostClass: "active",
+        onStart: function(evt) {
+        console.log('Sortable initialized, start dragging');
+        },
+        onEnd: function(evt) {
+            console.log('Dragging ended');
+        },
+        store : {
+                
+            set : function(Sortable){
+                const order = Sortable.toArray();
+                console.log("order:", order); // order: (2) ['img1', 'img0'] listo ya tengo elementos unicos
 
-                        fetch('/department/create/aeronaves/edit-images', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                Order: order, Id: titleID.value 
-                            })
-                        });
-                    }
-                }
-            });    
-               
-
-</script>
-
-<script>
-
-        const updateCollection = document.querySelector('.updateCollection');
-
-        updateCollection.addEventListener('click', ()=>{
-            
-        fetch("/department/create/airplane/editImages", {
-                    method: "GET",
-                    headers: { "Content-Type" : "applications/json"}
-                })
-                .then(response =>response.json() )
-                .then( jsonx =>{ 
-                    
-                    console.log(jsonx)
-                    alert("¡Se ha realizado la actualizacion exitosamente!");
-
-                })
-                .catch( err => console.log(err));
-                        
-        });
+                fetch('/department/create/airplane/edit-images', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Order: order, Id: titleID.value 
+                    })
+                });
+            }
+        }
+    });    
+        
 
 </script>
+
 
         <script type="text/javascript"></script>
            <%- include('../partials/scripts.ejs') %>

@@ -574,11 +574,7 @@
                             </div>
                             
                         </div>
-    
-                        <!-- eliminar despues de actualizar la collections -->
-                        <div class="form-group my-1">
-                            <button class="btn btn-primary form-control updateCollection"> update colections  </button>
-                        </div>                        
+                      
                     </div>
     
                     <div class="col-lg-8 col-md-12 col-sm-12 py-1" style="background-color: #e9ecef;">
@@ -628,7 +624,7 @@
                                 <% if (TitleSelect) { %>
     
                                     <input type="hidden" value="<%= TitleSelect._id %>" id="titleID">
-                                    
+
                                     <% if (Images.length !==0) { %>
                                       <% if (Video) { %>
                                     
@@ -1291,72 +1287,47 @@
    })
 
         </script>
-           <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
-           <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+ 
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-           <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-           
-           <script>
-           const dateSortable = Sortable.create(addObjectImgEdit ,{
-                animation : 200,
-                easing: "cubic-bezier(0.5, 0, 0.75, 0)",
-                handle:".preview",
-                ghostClass: "active",
-                store : {
-                    set : function(Sortable){
-                       const order = Sortable.toArray();
-                       console.log(order);
-                       
-                        fetch('/department/create/aeronaves/edit-images', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                Order: order
-                            })
-                        });
-                    }
-                }
-               
-                });
-            
-              
-</script>
 <script>//con este script logro proteger y dar el spinnier en el boton de carga.
-            const btnCreate = document.getElementById('btnCreate');
-            const btnCreateLoading = document.getElementById('btnCreateLoading');
 
-            const formCreate = document.getElementById('formCreate')
-            formCreate.addEventListener('submit', (e)=>{
-                if (e){
-                    //console.log("existe un evento en desarrollo")
-                    btnCreate.classList.add('invisibleBtn')
-                    btnCreateLoading.classList.remove('invisibleBtn')
-                } else {
-                    //console.log("no hay ningun evento")
-                    btnCreate.classList.remove('invisibleBtn')   
-                }
-                
-            })
+    const btnCreate = document.getElementById('btnCreate');
+    const btnCreateLoading = document.getElementById('btnCreateLoading');
+
+    const formCreate = document.getElementById('formCreate')
+    formCreate.addEventListener('submit', (e)=>{
+        if (e){
+            //console.log("existe un evento en desarrollo")
+            btnCreate.classList.add('invisibleBtn')
+            btnCreateLoading.classList.remove('invisibleBtn')
+        } else {
+            //console.log("no hay ningun evento")
+            btnCreate.classList.remove('invisibleBtn')   
+        }
+        
+    })
 </script>
+
 <script> //aqui creo el spinner en el edit
-              const btnEdit = document.getElementById('btnEdit');
-              const btnEditLoading = document.getElementById('btnEditLoading');
 
-              const formEdit = document.getElementById('formEdit')
-              formEdit.addEventListener('submit', (e)=>{
-                if (e){
-                    //console.log("existe un evento en desarrollo")
-                    btnEdit.classList.add('invisibleBtnEdit')
-                    btnEditLoading.classList.remove('invisibleBtnEdit')
-                } else {
-                    //console.log("no hay ningun evento")
-                    btnEdit.classList.remove('invisibleBtnEdit')   
-                }
-                
-            })
+    const btnEdit = document.getElementById('btnEdit');
+    const btnEditLoading = document.getElementById('btnEditLoading');
+
+    const formEdit = document.getElementById('formEdit')
+    formEdit.addEventListener('submit', (e)=>{
+    if (e){
+        //console.log("existe un evento en desarrollo")
+        btnEdit.classList.add('invisibleBtnEdit')
+        btnEditLoading.classList.remove('invisibleBtnEdit')
+    } else {
+        //console.log("no hay ningun evento")
+        btnEdit.classList.remove('invisibleBtnEdit')   
+    }
+    
+})
 </script>
+
 <script> //aqui creo el spinner en el active
     const btnActive = document.getElementById('btnActive');
     const btnActiveLoading = document.getElementById('btnActiveLoading');
@@ -1687,29 +1658,6 @@
         }
     });    
         
-
-</script>
-
-<script>
-
-        const updateCollection = document.querySelector('.updateCollection');
-
-        updateCollection.addEventListener('click', ()=>{
-            
-        fetch("/department/create/auction/editImages", {
-                    method: "GET",
-                    headers: { "Content-Type" : "applications/json"}
-                })
-                .then(response =>response.json() )
-                .then( jsonx =>{ 
-                    
-                    console.log(jsonx)
-                    alert("¡Se ha realizado la actualizacion exitosamente!");
-
-                })
-                .catch( err => console.log(err));
-                        
-        });
 
 </script>
 

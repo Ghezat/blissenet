@@ -524,10 +524,6 @@
                             </div>
                         </div>
     
-                        <!-- eliminar despues de actualizar la collections -->
-                        <div class="form-group my-1">
-                            <button class="btn btn-primary form-control updateCollection"> update colections  </button>
-                        </div>
                     </div>
     
                     <div class="col-lg-8 col-md-12 col-sm-12 py-1" style="background-color: #e9ecef;">
@@ -581,7 +577,7 @@
                                 <% if (TitleSelect) { %>
     
                                     <input type="hidden" value="<%= TitleSelect._id %>" id="titleID">
-                                    
+
                                     <% if (Images.length !==0) { %>
                                        <% if (Video) { %>
                                         <div class="contentCtrlImgs" style="width: auto; overflow-x: auto;">
@@ -1478,36 +1474,7 @@
 
         </script>
 
-           <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
-           <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-           
-        <script>
-           const dateSortable = Sortable.create(addObjectImgEdit ,{
-                animation : 200,
-                easing: "cubic-bezier(0.5, 0, 0.75, 0)",
-                handle:".preview",
-                ghostClass: "active",
-                store : {
-                    set : function(Sortable){
-                       const order = Sortable.toArray();
-                       console.log(order);
-                       
-                        fetch('/department/create/aeronaves/edit-images', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                Order: order
-                            })
-                        });
-                    }
-                }
-               
-                });
-            
-              
-        </script>
+
         <script>//con este script logro proteger y dar el spinnier en el boton de carga.
             const btnCreate = document.getElementById('btnCreate');
             const btnCreateLoading = document.getElementById('btnCreateLoading');
@@ -1803,7 +1770,7 @@
                 const order = Sortable.toArray();
                 console.log("order:", order); // order: (2) ['img1', 'img0'] listo ya tengo elementos unicos
 
-                fetch('/department/create/automotive/edit-images', {
+                fetch('/department/create/items/edit-images', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1819,29 +1786,6 @@
 
 </script>
 
-
-<script>
-
-        const updateCollection = document.querySelector('.updateCollection');
-
-        updateCollection.addEventListener('click', ()=>{
-            
-        fetch("/department/create/items/editImages", {
-                    method: "GET",
-                    headers: { "Content-Type" : "applications/json"}
-                })
-                .then(response =>response.json() )
-                .then( jsonx =>{ 
-                    
-                    console.log(jsonx)
-                    alert("¡Se ha realizado la actualizacion exitosamente!");
-
-                })
-                .catch( err => console.log(err));
-                        
-        });
-
-</script>
 
         <script type="text/javascript"></script>
            <%- include('../partials/scripts.ejs') %>

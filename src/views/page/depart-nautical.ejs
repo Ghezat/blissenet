@@ -511,11 +511,6 @@
                               </div>
                             </div>
                         </div>
-    
-                        <!-- eliminar despues de actualizar la collections -->
-                        <div class="form-group my-1">
-                            <button class="btn btn-primary form-control updateCollection"> update colections  </button>
-                        </div>
 
                     </div>
     
@@ -566,7 +561,7 @@
                                 <% if (TitleSelect) { %>
     
                                     <input type="hidden" value="<%= TitleSelect._id %>" id="titleID">
-                                    
+
                                     <% if (Images.length !==0) { %>
                                        <% if (Video) { %>
                                         <div class="contentCtrlImgs" style="width: auto; overflow-x: auto;">
@@ -1360,7 +1355,7 @@
                 const order = Sortable.toArray();
                 console.log("order:", order); // order: (2) ['img1', 'img0'] listo ya tengo elementos unicos
 
-                fetch('/department/create/nautico/edit-images', {
+                fetch('/department/create/nautical/edit-images', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1376,28 +1371,6 @@
 
 </script>
 
-<script>
-
-        const updateCollection = document.querySelector('.updateCollection');
-
-        updateCollection.addEventListener('click', ()=>{
-            
-        fetch("/department/create/nautico/editImages", {
-                    method: "GET",
-                    headers: { "Content-Type" : "applications/json"}
-                })
-                .then(response =>response.json() )
-                .then( jsonx =>{ 
-                    
-                    console.log(jsonx)
-                    alert("¡Se ha realizado la actualizacion exitosamente!");
-
-                })
-                .catch( err => console.log(err));
-                        
-        });
-
-</script>
 
         <script type="text/javascript"></script>
            <%- include('../partials/scripts.ejs') %>

@@ -200,7 +200,8 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
                             countImgAcept ++;
                             console.log("countImgAcept ------------------------------------------------------> ", countImgAcept);
 
-                            const folder = department; const ident = new Date().getTime();
+                            const folder = department;
+                            const ident = new Date().getTime();
                             const pathField = element.path; const extPart = pathField.split(".");
                             const ext = extPart[1];
                             
@@ -233,9 +234,10 @@ routes.post('/department/create/automotive', async(req,res, next)=>{
                                         let url = `https://${bucketName}.${endpoint}/${key}`;
                                         let bytes = element.size;
                                         let public_id = key;
+                                        let idImage = ident;
                                         
                                         console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                                        boxImg.push( {url, public_id, bytes, format} );
+                                        boxImg.push( {url, public_id, bytes, format, idImage} );
 
                                         countSuccess ++;
                                         console.log("countSuccess :", countSuccess );
@@ -528,7 +530,8 @@ routes.post('/department/create/automotive/add/first/automotive', async(req, res
                 
                 //console.log("una imagen aqui aceptada----->", element)
 
-                const folder = department; const ident = new Date().getTime();
+                const folder = department;
+                const ident = new Date().getTime();
                 const pathField = element.path; const extPart = pathField.split(".");
                 const ext = extPart[1];
                             
@@ -558,9 +561,10 @@ routes.post('/department/create/automotive/add/first/automotive', async(req, res
                         let url = `https://${bucketName}.${endpoint}/${key}`;
                         let bytes = element.size;
                         let public_id = key;
+                        let idImage = ident;
                         
                         //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                        boxImg.push( {url, public_id, bytes, format} );            
+                        boxImg.push( {url, public_id, bytes, format, idImage} );            
 
                         async function saveDB(){
                             //console.log("este es el path que tiene que ser eliminado:", element.path)
@@ -906,94 +910,40 @@ routes.post('/department/create/automotive/edit', async(req, res)=>{
     res.redirect('/department/create/automotive');
 });
 
-routes.post('/department/create/automotive/edit-images', async(req, res)=>{
-    const order = req.body.Order; //order : [ '1758997381612', '1758997381571', '1760404713610', '1760404708027' ]
-    const Id = req.body.Id;
 
-    console.log("........... /department/create/automotive/edit-images ..........");
-    console.log("ver el nuevo arreglo del orden de los elementos :")
-    console.log("order :", order); //order : [ '1758997381612', '1758997381571', '1760404713610', '1760404708027' ]
-    console.log("Id :", Id);
+routes.post('/department/create/automotive/edit-images', async (req, res) => {
 
-    const updateImg = await modelAutomotive.findById(Id, { images : 1 });
-    //res.redirect('/department/create/automotive');
-    const images = updateImg;
-    console.log("images :", images); 
+    const { Order, Id } = req.body;
+    console.log("Estamos en servicio y queremos reorganizar la posición de las imágenes");
+    console.log(Order);
 
-   /*  images: [
-    {
-      url: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/automotive/1758997381612.jpg',
-      public_id: 'automotive/1758997381612.jpg',
-      bytes: 31875,
-      format: 'jpg',
-      position: 0,
-      idImage: '1758997381612'
-    },
-    {
-      url: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/automotive/1758997381571.jpg',
-      public_id: 'automotive/1758997381571.jpg',
-      bytes: 39682,
-      format: 'jpg',
-      position: 1,
-      idImage: '1758997381571'
-    },
-    {
-      url: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/automotive/1760404708027.jpg',
-      public_id: 'automotive/1760404708027.jpg',
-      bytes: 88313,
-      format: 'jpg',
-      position: 2,
-      idImage: '1760404708027'
-    },
-    {
-      url: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/automotive/1760404713610.jpg',
-      public_id: 'automotive/1760404713610.jpg',
-      bytes: 86302,
-      format: 'jpg',
-      position: 3,
-      idImage: '1760404713610'
+    const searchADS = await modelAutomotive.findById(Id, { images: 1 });
+    console.log("searchADS :", searchADS);
+
+    if (searchADS) {
+        // Crear un mapa para acceder rápidamente a las imágenes por su id
+        const imageMap = {};
+        searchADS.images.forEach((image) => {
+            imageMap[image.idImage] = image;
+        });
+
+        // Reorganizar las imágenes según el orden proporcionado
+        const updatedImages = Order.map(id => imageMap[id]).filter(Boolean); // Filtrar las imágenes que no se encontraron
+        console.log("updatedImages :", updatedImages);
+
+        // Actualizar el documento en la base de datos
+        await modelAutomotive.updateOne(
+            { _id: Id },
+            { $set: { images: updatedImages } }
+        );
+
+        console.log("Imágenes actualizadas:", updatedImages);
+
+        const message = "Actualizacion de posición de imagenes exitosa."
+        res.json({ code : "ok", message});        
     }
-  ]
- */
 
-    //ahora quiero actualizar el array images del documento que he filtrado quiero editar el campo position en el orden index del forEach
-    order.forEach((ele, i) => {
-        const idImage = ele; //aparece el primer idImage en el orden que esta en el array;
-        //actualizar el documento con el campo postion con el valor index 
+}); 
 
-    });
-});
-
-
-
-routes.get('/department/create/automotive/editImages', async (req, res) => {
-    try {
-        const items = await modelAutomotive.find({});
-
-        const updatedResults = await Promise.all(items.map(async item => {
-            const imagesWithExtras = item.images.map((image, index) => {
-                if (!image.idImage && !image.position) {
-                    const idImage = image.public_id.split('/').pop().split('.')[0];
-                    return {
-                        ...image,
-                        idImage,
-                        position: index
-                    };
-                }
-                return image;
-            });
-
-            // Actualiza el item en la base de datos
-            await modelAutomotive.updateOne({ _id: item._id }, { $set: { images: imagesWithExtras } });
-            return { images: imagesWithExtras };
-        }));
-
-        console.log("Updated images with idImage and position:", updatedResults);
-        res.json(updatedResults);
-    } catch (error) {
-        console.error("Error fetching images:", error);
-        res.status(500).send("Error fetching images");
-    }
-})
 
 module.exports = routes
