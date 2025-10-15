@@ -10,9 +10,7 @@
 
 <style>
 
-    .borderView{
-        border: 1px ridge darkgray;
-    }
+
     .bg-secondaryLight{
         background-color: rgb(255, 245, 226);
         background-color: rgb(243, 238, 238);
@@ -583,6 +581,8 @@
         
                                     <% if (TitleSelect) { %>
         
+                                        <input type="hidden" value="<%= TitleSelect._id %>" id="titleID">
+                                        
                                         <% if (Images.length !==0) { %>
                                            <% if (Video) { %>
                                             <div class="contentCtrlImgs" style="width: auto; overflow-x: auto;">
@@ -622,7 +622,7 @@
     
                                                 </div>
     
-                                                <div class="contentImages d-flex p-3 flex-wrap borderView" style="width: 100%">
+                                                <div class="contentImages d-flex p-3 flex-wrap" style="width: 100%">
     
                                                     <% Video.forEach( (elem, i)=>{ %>
     

@@ -9,9 +9,7 @@
 </head>
 
 <style>
-    .borderView {
-        border: 1px ridge darkgray;
-    }
+
 
     .bg-secondaryLight {
         background-color: rgb(255, 245, 226);
@@ -571,6 +569,8 @@
     
                                 <% if (TitleSelect) { %>
     
+                                    <input type="hidden" value="<%= TitleSelect._id %>" id="titleID">
+                                    
                                     <% if (Images.length !==0) { %>
                                        <% if (Video) { %>
                                     
@@ -611,7 +611,7 @@
 
                                             </div>
 
-                                            <div class="contentImages d-flex p-3 flex-wrap borderView" style="width: 100%">
+                                            <div class="contentImages d-flex p-3 flex-wrap" style="width: 100%">
 
                                                 <% Video.forEach( (elem, i)=>{ %>
                                                     <!-- renderiza los video y permite eliminar -->
