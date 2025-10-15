@@ -97,7 +97,7 @@
     .redMask:hover{
         background-color: rgba(255, 0, 0, 0.3);
         outline: 1px solid red;
-        cursor: pointer;
+        cursor: move;
     }
 
     .contentController{
@@ -514,6 +514,11 @@
                             </div>
                         </div>
     
+                        <!-- eliminar despues de actualizar la collections -->
+                        <div class="form-group my-1">
+                            <button class="btn btn-primary form-control updateCollection"> update colections  </button>
+                        </div>
+
                     </div>
     
                     <div class="col-lg-8 col-md-12 col-sm-12 py-1" style="background-color: #e9ecef;">
@@ -619,20 +624,22 @@
         
                                                         <% }); %>
         
-                                                        <% Images.forEach( (elem, i)=>{ %>
-                
-                                                            <div class="m-2">
-                                                                    <div class="cardImg redMask rounded-2">
-                                                                        <div class="contentImg pesoFormatImg" style="position: relative; width: 120px; height: 120px;">
-                                                                            <img src="<%= elem.url %>" class="rounded-2" style="width: 120px; max-height: 120px;">
-                                                                            <a href="/department/create/nautical/del/<%= Images[i].public_id %>" class="text-dark rounded-pill d-flex justify-content-center align-items-center delImgX" style="width: 30px; height: 30px; position: absolute; top: 5px; left: 5px; background-color: rgba(255, 255, 255, 0.5)"><i class="bi bi-trash3-fill"></i></a>
-                                                                            <input type="hidden" class="bytes" value="<%= elem.bytes %>">
-                                                                            <input type="hidden" class="format" value="<%= elem.format %>">
+                                                        <div class="imageSortable d-flex flex-wrap borderView border border-danger" id="imagesSortable">
+                                                            <% Images.forEach( (elem, i)=>{ %>
+                    
+                                                                <div class="m-2 move" data-id="<%= elem.idImage %>">
+                                                                        <div class="cardImg redMask rounded-2">
+                                                                            <div class="contentImg pesoFormatImg" style="position: relative; width: 120px; height: 120px;">
+                                                                                <img src="<%= elem.url %>" class="rounded-2" style="width: 120px; max-height: 120px;">
+                                                                                <a href="/department/create/nautical/del/<%= Images[i].public_id %>" class="text-dark rounded-pill d-flex justify-content-center align-items-center delImgX" style="width: 30px; height: 30px; position: absolute; top: 5px; left: 5px; background-color: rgba(255, 255, 255, 0.5)"><i class="bi bi-trash3-fill"></i></a>
+                                                                                <input type="hidden" class="bytes" value="<%= elem.bytes %>">
+                                                                                <input type="hidden" class="format" value="<%= elem.format %>">
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                            </div>    
-                                                        
-                                                        <% }); %>
+                                                                </div>    
+                                                            
+                                                            <% }); %>
+                                                        </div>    
         
                                                     </div>
                                                         
@@ -1272,61 +1279,123 @@
     
     let depart, titleId, title;
 
-    btnSpread.addEventListener('click', ()=>{
+    if (btnSpread){
+        btnSpread.addEventListener('click', ()=>{
 
-        btnSpread.classList.add('close');
-        btnSpreadSpin.classList.remove('close');
+            btnSpread.classList.add('close');
+            btnSpreadSpin.classList.remove('close');
 
-        depart = department_Difundir.value;
-        titleId = titleID_Difundir.value;
-        title = title_Difundir.value;
+            depart = department_Difundir.value;
+            titleId = titleID_Difundir.value;
+            title = title_Difundir.value;
 
 
-        const datos = {
-            depart : depart,
-            titleId : titleId,
-            title : title
+            const datos = {
+                depart : depart,
+                titleId : titleId,
+                title : title
 
-        };
+            };
 
-        fetch('/account/spread', {
+            fetch('/account/spread', {
 
-        method: "post",
-        body: JSON.stringify(datos),
-        headers: {"content-type" : "application/json"}
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
 
-        })
-        .then(response =>response.json() )
-        .then( jsonx =>{
+            })
+            .then(response =>response.json() )
+            .then( jsonx =>{
+                
+                console.log("mirar este msg :", jsonx)
+                //response : "Se ha enviado el mensage a todos nuestros seguidores.", type : "success"
+                const type = jsonx.type;
+                const response = jsonx.response;
+                const followMe = jsonx.followMe;
+
+                if (type === "success"){
+
+                    contentSpread.classList.add('close');
+                    contentSpreadUpdate.classList.remove('close');
+                    contentSpreadMessage.innerHTML = `  <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
+                                                            <span class="text-secondary">Este anuncio ha sido entregado a : <strong class="ms-1"> ${followMe} seguidores <i class="bi bi-send-check"></i> </strong> </span>
+                                                        </div>`;
+
+                } else {
+
+                    contentSpread.classList.remove('close');
+                    contentSpreadUpdate.classList.add('close');
+                    contentSpreadMessage.innerHTML = `  <div class="alert alert-danger mx-0 mb-3" style="width: 100%;">
+                                                            <span class="text-secondary"><strong class="ms-1"> ${response} <i class="bi bi-exclamation-triangle"></i> </strong> </span>
+                                                        </div>`;
+                }
             
-            console.log("mirar este msg :", jsonx)
-            //response : "Se ha enviado el mensage a todos nuestros seguidores.", type : "success"
-            const type = jsonx.type;
-            const response = jsonx.response;
-            const followMe = jsonx.followMe;
+            })
+            .catch( err => console.log(err));
 
-            if (type === "success"){
+        });
+    }    
 
-                contentSpread.classList.add('close');
-                contentSpreadUpdate.classList.remove('close');
-                contentSpreadMessage.innerHTML = `  <div class="alert alert-light mx-0 mb-3" style="width: 100%;">
-                                                        <span class="text-secondary">Este anuncio ha sido entregado a : <strong class="ms-1"> ${followMe} seguidores <i class="bi bi-send-check"></i> </strong> </span>
-                                                    </div>`;
+</script>
 
-            } else {
+<script> 
 
-                contentSpread.classList.remove('close');
-                contentSpreadUpdate.classList.add('close');
-                contentSpreadMessage.innerHTML = `  <div class="alert alert-danger mx-0 mb-3" style="width: 100%;">
-                                                        <span class="text-secondary"><strong class="ms-1"> ${response} <i class="bi bi-exclamation-triangle"></i> </strong> </span>
-                                                    </div>`;
+    const imagesSortable =  document.getElementById('imagesSortable');
+    const titleID = document.getElementById('titleID');
+    
+    const imgSortable = Sortable.create(imagesSortable ,{
+        animation : 200,
+        easing: "cubic-bezier(0.5, 0, 0.75, 0)",
+        handle:".move",
+        ghostClass: "active",
+        onStart: function(evt) {
+        console.log('Sortable initialized, start dragging');
+        },
+        onEnd: function(evt) {
+            console.log('Dragging ended');
+        },
+        store : {
+                
+            set : function(Sortable){
+                const order = Sortable.toArray();
+                console.log("order:", order); // order: (2) ['img1', 'img0'] listo ya tengo elementos unicos
+
+                fetch('/department/create/nautico/edit-images', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Order: order, Id: titleID.value 
+                    })
+                });
             }
+        }
+    });    
         
-        })
-        .catch( err => console.log(err));
 
-        })
+</script>
 
+<script>
+
+        const updateCollection = document.querySelector('.updateCollection');
+
+        updateCollection.addEventListener('click', ()=>{
+            
+        fetch("/department/create/nautico/editImages", {
+                    method: "GET",
+                    headers: { "Content-Type" : "applications/json"}
+                })
+                .then(response =>response.json() )
+                .then( jsonx =>{ 
+                    
+                    console.log(jsonx)
+                    alert("¡Se ha realizado la actualizacion exitosamente!");
+
+                })
+                .catch( err => console.log(err));
+                        
+        });
 
 </script>
 

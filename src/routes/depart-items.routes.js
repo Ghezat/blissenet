@@ -907,5 +907,35 @@ routes.post('/department/create/items/edit-images', async(req, res)=>{
 });
 
 
+routes.get('/department/create/items/editImages', async (req, res) => {
+    try {
+        const result = await modelItems.find({}, { images: 1, _id: 0 });
+        console.log("result :", result);
+
+        const updatedResults = result.map(item => {
+            const imagesWithExtras = item.images.map((image, index) => {
+                // Verificar si ya existen los campos idImage y position
+                if (!image.idImage && !image.position) {
+                    // Extraer el idImage del public_id
+                    const idImage = image.public_id.split('/').pop().split('.')[0];
+                    return {
+                        ...image,
+                        idImage,
+                        position: index
+                    };
+                }
+                return image; // Retorna la imagen sin cambios si ya existen los campos
+            });
+            return { images: imagesWithExtras };
+        });
+
+        console.log("Updated images with idImage and position:", updatedResults);
+        res.json(updatedResults);
+    } catch (error) {
+        console.error("Error fetching images:", error);
+        res.status(500).send("Error fetching images");
+    }
+});
+
 module.exports = routes;
 
