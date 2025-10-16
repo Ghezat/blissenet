@@ -44,7 +44,7 @@
     } */
 
     .close{
-        display: none;
+        display: none !important;
     }
 
     .photo img {
@@ -625,12 +625,13 @@
                                 
                                 </div>
 
-                            <%};%>
+                            <% }; %>
 
+                            <% const titleImg = search.title %> <!-- este titulo es para la imagen alt = titleImg -->
                             <% search.images.forEach((ele)=> { %>
-                                                        
+                            
                             <div class="containMiniImg me-1">
-                                <img src="<%= ele.url%>" class="imgMini border rounded-1" style="object-fit: cover; background-position: center; background-size: auto; width: 60px; height: 60px; cursor: pointer;" >
+                                <img src="<%= ele.url %>" alt="<%= titleImg %>" class="imgMini border rounded-1" style="object-fit: cover; background-position: center; background-size: auto; width: 60px; height: 60px; cursor: pointer;" >
                             </div>         
                             
                             <% }); %>
@@ -639,12 +640,12 @@
                        
                         
                         <div class="containerViewImg border">
-                            <img src="<%= search.images[0].url %>" id="mainImage" class="imgView rounded-1 zoomImage" style="object-fit: cover; width: 100%;">                               
+                            <img src="<%= search.images[0].url %>" id="mainImage" class="imgView rounded-1 zoomImage" style="object-fit: cover; width: 100%;" alt="<%= search.title %>">                               
                         </div>                         
 
 
                         <% if (search.video.length !==0) { %>
-                        <div class="containerViewVideo closed border d-flex justify-content-center rounded-1" style="width: 100%; max-height: 85vh">
+                        <div class="containerViewVideo close border d-flex justify-content-center rounded-1" style="width: 100%; max-height: 85vh">
                             <video src="<%= search.video[0].url %>" controls class="videoView rounded-1" style="object-fit: cover; width: 100%"></video>
                         </div>  
                       
@@ -1813,6 +1814,7 @@
 
 <script>
 
+    const title = document.getElementById('newBTNtitle');
     let mini = document.querySelectorAll('.imgMini');
     let view = document.querySelector('.imgView');
     let videoMini = document.querySelector('.videoMini');
@@ -1821,14 +1823,15 @@
     let containerViewVideo = document.querySelector('.containerViewVideo');
 
     if (videoMini && containerViewVideo){
+        console.log("mini ..........:", mini);
         //existe un video entre los recursos de media
         mini.forEach( (ele, i)=>{
-            console.log(ele.src)
             
-            mini[i].addEventListener('mouseover', ()=>{
+            mini[i].addEventListener('mousemove', ()=>{
+                const titleImg = title.value;
                 containerViewImg.classList.remove('close');
                 containerViewVideo.classList.add('close');
-                containerViewImg.innerHTML  = `<img src=${ele.src} class="imgView rounded-1 zoomImage" style="object-fit: cover; width: 100%;">  ` 
+                containerViewImg.innerHTML  = `<img src=${ele.src} class="imgView rounded-1 zoomImage" style="object-fit: cover; width: 100%;" alt="${titleImg}">` 
                                                    
                 $(document).ready(function() {
                     $('.imgView').elevateZoom({
