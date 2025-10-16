@@ -807,22 +807,29 @@
                                                     <input type="hidden"  id="indexed" value="<%= indexed %>">
                                                     <button class="btn btn-outline-secondary" type="button" id="unlockUsername"> Editar </button>
                                                 </div>
-                                                <div class="input-group my-1">
-                                                    <span class="input-group-text"> <i class="bi bi-person"></i> </span>
-                                                    <input type="text" class="form-control" id="newName" placeholder="Nuevo nombre" maxlength="24" disabled>
+                                                <div class="nuevoNombreYKeyToken close">
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text"> <i class="bi bi-person"></i> </span>
+                                                        <input type="text" class="form-control" id="newName" placeholder="Nuevo nombre" maxlength="24">
+                                                    </div>
+                                                    
+                                                    <div class="input-group my-1">
+                                                        <span class="input-group-text"> <i class="bi bi-key"></i> </span>
+                                                        <input type="text" class="form-control" id="passwordKey" placeholder="Key Token" maxlength="6">
+                                                    </div>
                                                 </div>
-                                                <div class="input-group my-1">
-                                                    <span class="input-group-text"> <i class="bi bi-key"></i> </span>
-                                                    <input type="text" class="form-control" id="passwordKey" placeholder="Contraseña" maxlength="20" disabled>
-                                                </div>
-
                                                 <div class="alert my-2 border p-0" id="alertEditName">
                                                     <!-- alertas dinamicos -->
                                                 </div>
-                                                        
+                                                
                                                 <div class="form-group my-3">
-                                                    <input type="button" value="Actualizar" class="btn btn-dark form-control" id="btnChangeUsername" disabled>
+                                                    <input type="button" value="Enviar Token" class="btn btn-dark form-control" id="btnSentToken" disabled>
                                                 </div> 
+
+                                                <div class="form-group my-3">
+                                                    <input type="button" value="Actualizar" class="btn btn-dark form-control close" id="btnChangeUsername" disabled>
+                                                </div> 
+
                                             <!-- fetch post  -->
                                         </div>
                                 </div>
@@ -2112,12 +2119,14 @@
     <!-- Script para cambiar username -->
 
     <script>
+        const btnSentToken = document.getElementById('btnSentToken');
         const btnChangeUsername = document.getElementById('btnChangeUsername');
+        const nuevoNombreYKeyToken = document.querySelector('.nuevoNombreYKeyToken'); //este contenedor toiene el inpuit dodne se colocara el nuevo nombre y el input del key token
         const unlockUsername = document.getElementById('unlockUsername');//boton editar
         const indexed = document.getElementById('indexed');
         const username = document.getElementById('username');
         const statusName = document.getElementById('statusName');
-        const newName = document.getElementById('newName');
+        const newName = document.getElementById('newName'); 
         const passwordKey = document.getElementById('passwordKey');
         const alertEditName = document.getElementById('alertEditName');
 
@@ -2144,93 +2153,145 @@
                     if (edit === true){
                         console.log("estamos aqui en ", edit);
                         statusName.innerHTML = `<i class="bi bi-unlock"></i>`;
-                        newName.removeAttribute('disabled');
-                        newName.focus();
-                        passwordKey.removeAttribute('disabled');
-                        btnChangeUsername.removeAttribute('disabled');
+                        //newName.removeAttribute('disabled');
+                        //newName.focus();
+                        //passwordKey.removeAttribute('disabled');
+                        btnSentToken.removeAttribute('disabled'); 
+                        //btnChangeUsername.removeAttribute('disabled');
+                        const message = "Envie el Token de Seguridad."
                         alertEditName.innerHTML = `<div class="alert-success p-2">
-                                                        <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
+                                                        <i class="bi bi-check-circle-fill mx-1"></i> ${message} 
                                                    </div>`
 
                         //Ahora que tenemos las colecciones que se deben cambiar enviamos un fecth post al backend
-                        //con el nombre que queremos. 
-                        btnChangeUsername.addEventListener('click', ()=>{
+                        //con el nombre que queremos.
+                        
 
-                            btnChangeUsername.setAttribute("disabled", "");
+                        btnSentToken.addEventListener('click', ()=>{
+                            
 
-                            alertEditName.innerHTML = "";
-                            const NewName = newName.value;
+                            fetch('/myaccount/change-username/token', {
+                                    method: "GET",
+                                    headers: { "Content-Type" : "applications/json"}
+                                })
+                                .then(response =>response.json() )
+                                .then( jsonx =>{
+                                    
+                                    console.log(jsonx)
+                                    const response = jsonx.code;
+                                    const message = jsonx.message;
 
-                            if (NewName.length > 5){
+                                    if (response === "ok"){
 
-                                const data = {
-                                    indexed : indexed.value,
-                                    username : username.value,
-                                    newName : NewName,
-                                    password : passwordKey.value, 
-                                    code : code
-                                }
-                                
-
-                                console.log("Esto es la informacion que enviaremos al backend", data);
-                                //enviamos el fetch con los datos
-                                fetch('/myaccount/change-username', {
-
-                                    method: "post",
-                                    body: JSON.stringify(data),
-                                    headers: {"content-type" : "application/json"}
-
-                                    })
-                                    .then(response =>response.json() )
-                                    .then( jsonx => {
+                                        //escondemos el boton sentToken
+                                        btnSentToken.classList.add('close');
+                                        //hacemos aparecer el nuevo boton de change name
+                                        btnChangeUsername.classList.remove('close');
+                                        //hacemos aparecer el contenedor de nombre y key token
+                                        nuevoNombreYKeyToken.classList.remove('close');
                                         
-                                        console.log(jsonx)
-                                        const edit = jsonx.edit; const msg = jsonx.msg;
+                                        alertEditName.innerHTML = "" //limpiamos el contenedor de mensajeria
+                                        alertEditName.innerHTML = ` <div class="alert-success p-2">
+                                                                        <i class="bi bi-check-circle-fill mx-1"></i> ${message} 
+                                                                    </div>` 
 
-                                        if (edit === true){
-                                            unlockUsername.setAttribute('disabled', "");
-                                            newName.setAttribute('disabled', "");
-                                            passwordKey.setAttribute('disabled', "");
-                                            alertEditName.innerHTML = ` <div class="alert-success p-2">
-                                                                            <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
-                                                                        </div>
-                                                                        <div class="alert-success p-2">
-                                                                            <i class="bi bi-door-closed-fill mx-1"></i> Cerrando session en 3 segundos... 
-                                                                        </div>
-                                                                        `
-                                            //ahora vamos a cerrar session......................................................
-                                            setTimeout(() => {
-                                                // Crear el elemento <a>
-                                                const logoutLink = document.createElement('a');
-                                                // Establecer el atributo href
-                                                logoutLink.href = '/myaccount/logout';
-                                                // Simular un clic en el enlace (sin agregarlo al DOM)
-                                            logoutLink.click();                                            
-                                            }, 3000);
+                                                                    
+
+                                        btnChangeUsername.addEventListener('click', ()=>{
+
+                                            btnChangeUsername.setAttribute("disabled", "");
+
+                                            alertEditName.innerHTML = "";
+                                            const NewName = newName.value;
+
+                                            if (NewName.length > 5){
+
+                                                const data = {
+                                                    indexed : indexed.value,
+                                                    username : username.value,
+                                                    newName : NewName,
+                                                    keyToken : passwordKey.value, 
+                                                    code : code
+                                                }
+                                                
+
+                                                console.log("Esto es la informacion que enviaremos al backend", data);
+                                                //enviamos el fetch con los datos
+                                                
+                                                
+                                                fetch('/myaccount/change-username', {
+
+                                                    method: "post",
+                                                    body: JSON.stringify(data),
+                                                    headers: {"content-type" : "application/json"}
+
+                                                    })
+                                                    .then(response =>response.json() )
+                                                    .then( jsonx => {
                                                         
+                                                        console.log(jsonx)
+                                                        const edit = jsonx.edit; const msg = jsonx.msg;
+
+                                                        if (edit === true){
+                                                            unlockUsername.setAttribute('disabled', "");
+                                                            newName.setAttribute('disabled', "");
+                                                            passwordKey.setAttribute('disabled', "");
+                                                            alertEditName.innerHTML = ` <div class="alert-success p-2">
+                                                                                            <i class="bi bi-check-circle-fill mx-1"></i> ${msg} 
+                                                                                        </div>
+                                                                                        <div class="alert-success p-2">
+                                                                                            <i class="bi bi-door-closed-fill mx-1"></i> Cerrando session en 3 segundos... 
+                                                                                        </div>
+                                                                                        `
+                                                            //ahora vamos a cerrar session......................................................
+                                                            setTimeout(() => {
+                                                                // Crear el elemento <a>
+                                                                const logoutLink = document.createElement('a');
+                                                                // Establecer el atributo href
+                                                                logoutLink.href = '/myaccount/logout';
+                                                                // Simular un clic en el enlace (sin agregarlo al DOM)
+                                                            logoutLink.click();                                            
+                                                            }, 3000);
+                                                                        
 
 
-                                        } else {
-                                            btnChangeUsername.removeAttribute('disabled');
-                                            unlockUsername.setAttribute('disabled', "");
-                                            alertEditName.innerHTML = ` <div class="alert-danger p-2">
-                                                                            <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
-                                                                        </div>`
-                                        }
+                                                        } else {
+                                                            btnChangeUsername.removeAttribute('disabled');
+                                                            unlockUsername.setAttribute('disabled', "");
+                                                            alertEditName.innerHTML = ` <div class="alert-danger p-2">
+                                                                                            <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
+                                                                                        </div>`
+                                                        }
 
 
-                                    })
-                                    .catch( err => console.log(err));
+                                                    })
+                                                    .catch( err => console.log(err));
+                
+                                            } else {
+                                                const msg = "Su username debe tener entre 6 a 22 carácteres."
+                                                alertEditName.innerHTML = ` <div class="alert-danger p-2">
+                                                                                <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
+                                                                            </div>`
+                                                btnChangeUsername.removeAttribute("disabled");
+                                            }            
+
+                                        })
+
+                                    } else {
+
+                                        alertEditName.innerHTML = "" //limpiamos el contenedor de mensajeria
+                                        alertEditName.innerHTML = `<div class="alert-danger p-2">
+                                                                        <i class="bi bi-x-circle-fill mx-1"></i> ${message} 
+                                                                </div>` 
+                                    }
+                                
+                                })
+                                .catch( err => console.log(err));
  
-                            } else {
-                                const msg = "Su username debe tener entre 6 a 22 carácteres."
-                                alertEditName.innerHTML = ` <div class="alert-danger p-2">
-                                                                <i class="bi bi-x-circle-fill mx-1"></i> ${msg} 
-                                                            </div>`
-                                btnChangeUsername.removeAttribute("disabled");
-                            }            
 
-                        })
+                        });
+
+
                             
                                 
 
@@ -2247,6 +2308,35 @@
 
         })
 
+       
+        newName.addEventListener('input', (e)=>{
+            const newNameV = e.target.value;
+            console.log("newNameV :", newNameV);
+            if(newNameV.length > 5){
+                reviewInputs()
+            } else {
+                reviewInputs()
+            }
+        })
+
+        passwordKey.addEventListener('input', (e)=>{
+            const passwordKeyV = e.target.value;
+            console.log("passwordKeyV :", passwordKeyV);
+            if(passwordKeyV.length > 5){
+                reviewInputs()
+            } else {
+                reviewInputs()
+            }
+        })
+
+        
+        function reviewInputs(){
+            if (newName.value.length > 5 && passwordKey.value.length > 5){
+                btnChangeUsername.removeAttribute("disabled");
+            } else {
+                btnChangeUsername.setAttribute("disabled", "");
+            }
+        }
 
     </script>    
 

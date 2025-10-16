@@ -1657,6 +1657,7 @@ routes.post('/myaccount/new-password', async(req, res)=>{
         
         }
 
+        //enviar telegram
         async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
             console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
             const Message = `Notificación de Blissenet.com: Safety\n\nCodigo de seguridad: ${newToken}`;
@@ -3988,13 +3989,190 @@ routes.post('/myaccount/change-review', async(req, res)=>{
 });
 
 //Ruta para cambiar el nombre de la tienda 
+routes.get('/myaccount/change-username/token', async(req, res)=>{
+
+    
+    let newToken, newTN;
+    user = req.session.user;
+    const email = user.email;
+
+    const result = await modelUser.findById(user._id)
+    const chatId = result.blissBot.chatId; //este es el chatId del user.
+       
+    
+        //creacion de Token
+        async function createToken(){
+            
+            createNewToken()
+            function createNewToken(){
+                let ran = Math.random();
+                let random = Math.ceil(ran * 1000000);
+                newTN = random.toString(); //este estrin de numeros puede ser de 5 caracteres entonces lo forzo a que sean 6;
+            }    
+
+            while(newTN.length < 6){
+                createNewToken()
+            } 
+
+            newToken = `${newTN}`;
+            console.log("newToken", newToken);
+
+            //req.session.token = newToken; //este es el valor que se guarda en memoria se encuentra disponible al refrescar la pagina profile.
+
+        }
+
+        //actualizacion de la Data Base
+        async function updateDB(){
+            const update = await modelUser.findByIdAndUpdate( user._id, { $set: { token : newToken } } );
+        }
+
+        //crear el correo y enviarlo
+        async function sendToken(){
+            //enviamos al correo el nuevo token a usar
+            const message = "Cambio de nombre de tienda."
+            const contentHtml = `
+            <h2 style="color: black"> Restableciendo un nuevo nombre. </h2>
+            <ul> 
+                <li> cuenta : ${email} </li> 
+                <li> asunto : ${message} </li>
+            <ul>
+            <h2> ${newToken} </h2>
+            <p> <b> Estimado usuario, </b> Si usted no ha solicitado cambio de nombre. <b> Esta siendo victima de hackeo </b>. </p>
+            <h4><b> Pongase en contacto con la adminsitración de Blissenet.com  adminve@blissenet.com </b>.  </4>
+            `
+
+            //enviar correo
+            //(SMTP)-> Simple Mail Transfer Protocol --> es el protocolo con que los servidores se comunican a traves de correos.
+            const emailMessage = {
+                from: "Blissenet<sistemve@blissenet.com>", //remitente
+                to: email,
+                subject: "🏪 Inico de cambio de nombre de Tienda - Blissenet", //objeto
+                text: message,
+                html: contentHtml
+            };
+
+            //añadir las credenciales
+            const transport = nodemailer.createTransport({
+                host: "mail.blissenet.com",
+                port: 465,
+                auth: {
+                    user: "sistemve@blissenet.com",
+                    pass: process.env.pass_sistemve
+                }
+            });
+
+            transport.sendMail(emailMessage, (error, info) => {
+                if (error) {
+                    console.log("Error enviando email")
+                    console.log(error.message)
+                } else {
+                    console.log("Email enviado")
+                    
+                }
+            }) 
+        
+        }
+
+        //enviar telegram
+        async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+            console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+
+            const Message = `Notificación de Blissenet.com: 🏪 Store Name Change\n\nCodigo de seguridad: *${newToken}*`;
+            console.log("chatId --->", chatId);          
+
+            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                chat_id: chatId,
+                text: Message
+            })
+            .then(response => {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.log('Mensaje enviado con éxito:', response.data);
+            })
+            .catch(error => {
+                console.log('--------------------------- BlissBot----------------------------');
+                console.error('Error al enviar el mensaje:', error);
+            });
+    
+        }
+
+
+        if (chatId){
+            console.log("Existe chatId, asi que vamos a ejecutar todas las funciones..................... ");
+
+            createToken()
+                .then(()=>{
+                    updateDB()
+                        .then(()=>{
+                            sendToken()
+                                .then(()=>{
+                                    blissBotNoti()
+                                        .then(()=>{
+                                                console.log("proceso de cambio de nombre, OK");
+                                                res.json({ code: "ok", message : "Token enviado satisfactoriamente."});
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error blissBotNoti()", error);
+                                            res.json({ code: "err", message : "Ha ocurrido un error, intente mas tarde."});
+                                        })        
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error sendToken()", error);
+                                    res.json({ code: "err", message : "Ha ocurrido un error, intente mas tarde."});
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error updateDB()", error);
+                            res.json({ code: "err", message : "Ha ocurrido un error, intente mas tarde."});
+                        })
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error createToken()", error);
+                    res.json({ code: "err", message : "Ha ocurrido un error, intente mas tarde."});
+                })
+
+        } else {
+
+            createToken()
+                .then(()=>{
+                    updateDB()
+                        .then(()=>{
+                            sendToken()
+                                .then(()=>{
+                                    console.log("proceso de cambio de nombre, OK");
+                                    res.json({ code: "ok", message : "Token enviado satisfactoriamente."});
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error sendToken()", error);
+                                    res.json({ code: "err", message : "Ha ocurrido un error, intente mas tarde."});
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error updateDB()", error);
+                            res.json({ code: "err", message : "Ha ocurrido un error, intente mas tarde."});
+                        })
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error createToken()", error);
+                    res.json({ code: "err", message : "Ha ocurrido un error, intente mas tarde."});
+                })
+
+        }
+
+
+
+});
+
+//Ruta para cambiar el nombre de la tienda 
 routes.post('/myaccount/change-username', async(req, res)=>{
 
     try{
-        console.log("-----change username------");
+        console.log("-----Change Username------");
         //console.log(req.body);
-        const { indexed, username, newName, code, password } = req.body;
-        //console.log("indexed", indexed); console.log("username", username); console.log("newName", newName); console.log("code", code); console.log("password", password);
+        const { indexed, username, newName, code, keyToken } = req.body;
+        console.log("indexed", indexed);
+        console.log("username", username);
+        console.log("newName", newName);
+        console.log("code", code); console.log("keyToken", keyToken);
 
         const blissName = newName.trim(); //limpiamos los espacios delanteros y traseros.
 
@@ -4080,184 +4258,185 @@ routes.post('/myaccount/change-username', async(req, res)=>{
 
 
         const searchUser = await modelUser.findOne({_id : indexed});
-        console.log("searchUser ->", searchUser);
+        //console.log("searchUser ->", searchUser);
         const hashPassword = searchUser.password;
+        const tokenSecret = searchUser.token;
 
-        async function hashing(){
-            const compares = await bcrypt.compare(password, hashPassword);
-            console.log("resul de la comparacion--->",compares)
+        console.log("-------------------Review--------------------");
+        console.log("keyToken == tokenSecret");
+        console.log(`${keyToken} == ${tokenSecret}`);
 
-            if (compares === true) {
-        
-                //vamos a comprobar que el nuevo nombre no este siendo usado.
-                if (!searchNewName){
+        if (keyToken == tokenSecret){
+    
+            //vamos a comprobar que el nuevo nombre no este siendo usado.
+            if (!searchNewName){
 
-                    if ( code === 'user_profile_messages_storeRate' ){
-                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
+                if ( code === 'user_profile_messages_storeRate' ){
+                    console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
-                        editUser()
-                            .then(()=>{
-                                editProfile()
-                                    .then(()=>{
-                                        editMessages()
-                                            .then(()=>{
-                                                editStoreRate()
-                                                    .then(()=>{
-                                                        editAllADS()
-                                                            .then(()=>{
-                                                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                                            })
-                                                            .catch((error)=>{
-                                                                console.log("Ha habido un error en editAllADS", error);
-                                                            })
-                                                        
-                                                    })
-                                                    .catch((error)=>{
-                                                        console.log("Ha habido un error en editStoreRate", error);
-                                                    })
-                                            })
-                                            .catch((error)=>{
-                                                console.log("Ha habido un error en editMessages", error);
-                                            })
-                                    })
-                                    .catch((error)=>{
-                                        console.log("Ha habido un error en editProfile", error);
-                                    })
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error en editUser", error);
-                            })
+                    editUser()
+                        .then(()=>{
+                            editProfile()
+                                .then(()=>{
+                                    editMessages()
+                                        .then(()=>{
+                                            editStoreRate()
+                                                .then(()=>{
+                                                    editAllADS()
+                                                        .then(()=>{
+                                                            res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                        })
+                                                        .catch((error)=>{
+                                                            console.log("Ha habido un error en editAllADS", error);
+                                                        })
+                                                    
+                                                })
+                                                .catch((error)=>{
+                                                    console.log("Ha habido un error en editStoreRate", error);
+                                                })
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error en editMessages", error);
+                                        })
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error en editProfile", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en editUser", error);
+                        })
 
 
-                    } else if ( code === 'user_profile_messages') {
-                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
+                } else if ( code === 'user_profile_messages') {
+                    console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
-                        editUser()
-                            .then(()=>{
-                                editProfile()
-                                    .then(()=>{
-                                        editMessages()
-                                            .then(()=>{
-                                                editAllADS()
-                                                    .then(()=>{
-                                                         res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                                    })
-                                                    .catch((error)=>{
-                                                        console.log("Ha habido un error en editAllADS()", error);
-                                                    })
-                                               
-                                            })
-                                            .catch((error)=>{
-                                                console.log("Ha habido un error en editMessages", error);
-                                            })
-                                    })
-                                    .catch((error)=>{
-                                        console.log("Ha habido un error en editProfile", error);
-                                    })
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error en editUser", error);
-                            })
-
-                    } else if ( code === 'user_profile_storeRate' ) {
-                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
-
-                        editUser()
-                            .then(()=>{
-                                editProfile()
-                                    .then(()=>{
-                                        editStoreRate()
-                                            .then(()=>{
-                                                editAllADS()
-                                                    .then(()=>{
+                    editUser()
+                        .then(()=>{
+                            editProfile()
+                                .then(()=>{
+                                    editMessages()
+                                        .then(()=>{
+                                            editAllADS()
+                                                .then(()=>{
                                                         res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                                    })
-                                                    .catch((error)=>{
-                                                        console.log("Ha habido un error en editAllADS", error);
-                                                    })
-                                                
-                                            })
-                                            .catch((error)=>{
-                                                console.log("Ha habido un error en editStoreRate", error);
-                                            })
-                                    })
-                                    .catch((error)=>{
-                                        console.log("Ha habido un error en editProfile", error);
-                                    })
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error en editUser", error);
-                            })        
+                                                })
+                                                .catch((error)=>{
+                                                    console.log("Ha habido un error en editAllADS()", error);
+                                                })
+                                            
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error en editMessages", error);
+                                        })
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error en editProfile", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en editUser", error);
+                        })
 
-                    } else if ( code === 'user_profile' ) {
-                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
+                } else if ( code === 'user_profile_storeRate' ) {
+                    console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
-                        editUser()
-                            .then(()=>{
-                                editProfile()
-                                    .then(()=>{
-                                        editAllADS()
-                                            .then(()=>{
-                                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                            })
-                                            .catch((error)=>{
-                                                console.log("Ha habido un error en editAllADS", error);
-                                            })
-                                                
-                                    })
-                                    .catch((error)=>{
-                                        console.log("Ha habido un error en editProfile", error);
-                                    })
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error en editUser", error);
-                            })        
+                    editUser()
+                        .then(()=>{
+                            editProfile()
+                                .then(()=>{
+                                    editStoreRate()
+                                        .then(()=>{
+                                            editAllADS()
+                                                .then(()=>{
+                                                    res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                                })
+                                                .catch((error)=>{
+                                                    console.log("Ha habido un error en editAllADS", error);
+                                                })
+                                            
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error en editStoreRate", error);
+                                        })
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error en editProfile", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en editUser", error);
+                        })        
 
-                    } else if ( code === 'user_messages' ) {
-                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
+                } else if ( code === 'user_profile' ) {
+                    console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
-                        editUser()
-                            .then(()=>{
-                                editMessages()
-                                    .then(()=>{
-                                        res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                                    })
-                                    .catch((error)=>{
-                                        console.log("Ha habido un error en editMessages", error);
-                                    })
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error en editUser", error);
-                            }) 
+                    editUser()
+                        .then(()=>{
+                            editProfile()
+                                .then(()=>{
+                                    editAllADS()
+                                        .then(()=>{
+                                            res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                        })
+                                        .catch((error)=>{
+                                            console.log("Ha habido un error en editAllADS", error);
+                                        })
+                                            
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error en editProfile", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en editUser", error);
+                        })        
 
-                    } else if ( code === 'user' ){
-                        console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
+                } else if ( code === 'user_messages' ) {
+                    console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
-                        editUser()
-                            .then(()=>{
-                                res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
-                            })
-                            .catch((error)=>{
-                                console.log("Ha habido un error en editUser", error);
-                            })         
+                    editUser()
+                        .then(()=>{
+                            editMessages()
+                                .then(()=>{
+                                    res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                                })
+                                .catch((error)=>{
+                                    console.log("Ha habido un error en editMessages", error);
+                                })
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en editUser", error);
+                        }) 
 
-                    }
+                } else if ( code === 'user' ){
+                    console.log(`vamos a cambiar el username ${username} por ${newNameParse} en estas colecciones ${code}`);
 
-                } else {
-                    console.log('Nuevo username ya esta en uso');
-                    const status = { edit : false, msg : "Username ocupado", code : "denegado", note : "Nuevo Username ya en uso" };
-                    res.json(status);
-                }    
+                    editUser()
+                        .then(()=>{
+                            res.json({ 'edit': true, 'msg': 'Username Cambiado', 'response' : "Ok", 'editCode' : code });
+                        })
+                        .catch((error)=>{
+                            console.log("Ha habido un error en editUser", error);
+                        })         
+
+                }
 
             } else {
-                console.log('Password Erroneo, no puede cambiar el username');
-                const status = { edit : false, msg : "Contraseña Errada", code : "denegado", note : "Contraseña errada." };
+                console.log('Nuevo username ya esta en uso');
+                const status = { edit : false, msg : "Username ocupado", code : "denegado", note : "Nuevo Username ya en uso" };
                 res.json(status);
             }    
 
-        }
+        } else {
+            console.log('Token Erroneo, no puede cambiar el username');
+            const status = { edit : false, msg : "Contraseña Errada", code : "denegado", note : "Contraseña errada." };
+            res.json(status);
+        }    
+
         
-        hashing()
+        
+       
 
     } catch (error) {
         req.session.catchError = 'Ha ocurrido un error, intente en unos minutos.';
