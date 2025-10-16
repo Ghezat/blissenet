@@ -88,7 +88,10 @@ main{
   color: black;
 }
 
-
+.borderView{
+    border: 1px solid rgb(197, 197, 197);
+}
+    
 .bordering{
     border: 2px dotted violet;
 }

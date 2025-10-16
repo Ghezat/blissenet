@@ -87,12 +87,18 @@
         cursor: pointer;
     }
 
-    .redMask{
+    .redMask, .imageRedMask{
         background-color: rgba(255, 0, 0, 0);
         transition: all 1s ease;
     }
 
     .redMask:hover{
+        background-color: rgba(255, 0, 0, 0.3);
+        outline: 1px solid red;
+        cursor: pointer;
+    }
+
+    .imageRedMask:hover{
         background-color: rgba(255, 0, 0, 0.3);
         outline: 1px solid red;
         cursor: move;
@@ -178,23 +184,9 @@
                 <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Articulos </b>  </span>
             </div>
             
-            <!-- este container es el spinner que verás cuando un usuario carga un archivo de video o img de la barra de herramientas de los anuncios. -->
-            <div class="container-fluid bodySpinner close" style="height: 100%;  background: radial-gradient(circle, rgba(222,209,242,1) 9%, rgba(175,197,238,1) 53%, rgba(160,218,240,1) 91%);">
-                <div class="container d-flex justify-content-center p-5">   
-                    <div class="container mt-5 d-flex flex-column justify-content-start align-items-center" style="height: 50%;">
-
-                        <h4 class="mt-5" style="text-align: center; margin-bottom: 20px;">Subiendo un Archivo, No salga de esta pagina.</h4>
-                        <h4>¡Espere por favor.!</h4>
-                        <div class="spinner-border mt-3" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-
-                    </div>
-                </div>    
-            </div>
 
             <div class="container-fluid bodyToolADS p-0">
-                <div class="row rowWidth">
+                <div class="row rowWidth" style="position: relative;">
     
                     <div class="col-lg-4 col-md-12 col-sm-12 py-1" style="background-color: #e9ecef;">
                              
@@ -635,11 +627,11 @@
     
                                                     <% }); %>
     
-                                                    <div class="imageSortable d-flex flex-wrap borderView" id="imagesSortable">
+                                                    <div class="imageSortable d-flex flex-wrap" id="imagesSortable">
                                                         <% Images.forEach( (elem, i)=>{ %>
                 
                                                             <div class="m-2 move" data-id="<%= elem.idImage %>">
-                                                                    <div class="cardImg redMask rounded-2">
+                                                                    <div class="cardImg imageRedMask rounded-2">
                                                                         <div class="contentImg pesoFormatImg" style="position: relative; width: 120px; height: 120px;">
                                                                             <img src="<%= elem.url %>" class="rounded-2" style="width: 120px; max-height: 120px;">
                                                                             <a href="/department/create/items/del/<%= Images[i].public_id %>" class="text-dark rounded-pill d-flex justify-content-center align-items-center delImgX" style="width: 30px; height: 30px; position: absolute; top: 5px; left: 5px; background-color: rgba(255, 255, 255, 0.5)"><i class="bi bi-trash3-fill"></i></a>
@@ -678,8 +670,11 @@
                                             </div>
 
                                             <div class="container-fluid p-0 my-2">
-                                                <div class="form-group d-flex">
-                                                    <span class="m-0 bg-warning rounded-1 text-dark fw-bold py-2 ps-2 pe-4" style="clip-path: polygon(88% 0, 100% 50%, 88% 100%, 0 100%, 0 1%);"><label class="me-2"> Precio : </label>$ <%= TitleSelect.price %></span>
+                                                <div class="form-group d-flex align-items-center">
+                                                    <div class="alert alert-warning m-0" style="width: 100%; position: relative;">
+                                                        <img src="/img/fondoDegradadoMoney.png" alt="" style="position: absolute; right: 0; top: 0; height: 100%; width: 100%; object-fit: cover;">
+                                                        <span class="me-2"> Precio : </span>  <a class="ui yellow tag label text-decoration-none" style="font-size: 16px;">  <span> <i class="bi bi-currency-dollar"></i><%= TitleSelect.price %></a>  </span> 
+                                                    </div>                                                        
                                                 </div>
                                             </div>
 
@@ -788,6 +783,20 @@
                         </div>
                     </div>
     
+                    <!-- este container es el spinner que veraz cuando un usuario carga un archivo de video o img de la barra de herramientas de los anuncios. -->
+                    <div class="container-fluid bodySpinner close" style="position: absolute; top: o; height: 100%; backdrop-filter: blur(5px); background-color: rgba(255, 255, 255, 0.4);">
+                        <div class="container d-flex justify-content-center p-5">   
+                            <div class="container mt-5 py-3 d-flex flex-column justify-content-start align-items-center text-secondary border shadow" style="border-radius: 12px; height: 50%; width: auto; background-color: rgba(255, 255, 255, 0.9);">
+
+                                <h4 class="mt-5" style="text-align: center; margin-bottom: 20px;"> <b> Subiendo un Archivo, No salga de esta pagina.</b> </h4>
+                                <h4> <b>¡Espere por favor!</b></h4>
+                                <div class="d-flex mt-3">
+                                    <img src="/img/uploadAnimad.gif" style="width: 120px; border-radius: 8px;">
+                                </div>
+
+                            </div>
+                        </div>    
+                    </div>
     
                 </div>
             </div>
@@ -1550,7 +1559,6 @@
         submitAddPhotoFirst.click();
         
         //esconder el bodyToolsADS y aparece el bodySpinner
-        bodyToolADS.classList.add('close');
         bodySpinner.classList.remove('close'); 
 
     });
@@ -1568,7 +1576,6 @@
         submitAddPhotoLast.click();
 
         //esconder el bodyToolsADS y aparece el bodySpinner
-        bodyToolADS.classList.add('close');
         bodySpinner.classList.remove('close'); 
         
     });
@@ -1631,7 +1638,6 @@
         submitAddVideo.click();
         
         //esconder el bodyToolsADS y aparece el bodySpinner
-        bodyToolADS.classList.add('close');
         bodySpinner.classList.remove('close'); 
     });
 
