@@ -15,6 +15,16 @@
 </head>
 <style>
 
+    .copyData{
+        color: black;
+        transition: .5s ease color;
+    }
+
+     .copyData:hover{
+        color: #0150c7;
+        font-weight: bold;
+    }   
+
     .visibilityHidden{
         visibility: hidden;
     }
@@ -507,24 +517,39 @@
                                                 </div>
                                             </div>    
 
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
-                                                <label class="form-check-label" for="flexRadioDefault1">
-                                                    Retirar Personalmente en la tienda
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
-                                                <label class="form-check-label" for="flexRadioDefault2">
-                                                    Retirar Personalmente en algun lugar acordado
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
-                                                <label class="form-check-label" for="flexRadioDefault3">
-                                                    Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
-                                                </label>
-                                            </div>
+                                        <!--    buySell.deliveryOptions  aqui esta toda la informacion de envio -->
+                                        <!--    deliveryOptions: { pickupInStore: 'true', pickupAtAgreedPlace: 'true, shippingToCustomer: 'false, shippingAgentsAffiliated: [] } -->
+                                            <% const deliveryOptions = buySell.deliveryOptions; %>
+
+                                            <% const pickupInStore = deliveryOptions.pickupInStore;  %>
+                                            <% const pickupAtAgreedPlace = deliveryOptions.pickupAtAgreedPlace;  %>
+                                            <% const shippingToCustomer = deliveryOptions.shippingToCustomer;  %>
+
+                                            <%  if (pickupInStore === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
+                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                        Retirar Personalmente en la tienda
+                                                    </label>
+                                                </div>
+                                            <% }; %>    
+                                            <%  if (pickupAtAgreedPlace === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault2">
+                                                        Retirar Personalmente en algun lugar acordado
+                                                    </label>
+                                                </div>                                                    
+                                            <% }; %> 
+                                            <%  if (shippingToCustomer === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault3">
+                                                        Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
+                                                    </label>
+                                                </div>
+                                            <% }; %>   
+
                                         </div> 
                                         
                                         <div class="form-group my-3">
@@ -560,7 +585,7 @@
                                                 
                                                 <div class="form-group my-2">
                                                     <input class="form-check-input me-2" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
-                                                    <label class="form-check-label" for= option<%= i + 1 %>>
+                                                    <label class="form-check-label" for= option<%= i + 1 %> >
                                                         <%= ele.methodName %> 
                                                     </label>
 
@@ -700,30 +725,44 @@
                                         <div class="form-group my-2 mx-2">
 
                                             <div class="contentLabel mb-2">
-                                                <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elige como deseas retirar </label>
+                                                <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elige como deseas retirar</label>
                                                 <div class="ui left pointing violet basic label">
                                                     <%= buySell.deliveryType %>
                                                 </div>
                                             </div>    
 
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
-                                                <label class="form-check-label" for="flexRadioDefault1">
-                                                    Retirar Personalmente en la tienda
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
-                                                <label class="form-check-label" for="flexRadioDefault2">
-                                                    Retirar Personalmente en algun lugar acordado
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
-                                                <label class="form-check-label" for="flexRadioDefault3">
-                                                    Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
-                                                </label>
-                                            </div>
+                                            <% const deliveryOptions = buySell.deliveryOptions; %>
+
+                                            <% const pickupInStore = deliveryOptions.pickupInStore;  %>
+                                            <% const pickupAtAgreedPlace = deliveryOptions.pickupAtAgreedPlace;  %>
+                                            <% const shippingToCustomer = deliveryOptions.shippingToCustomer;  %>
+
+                                            <%  if (pickupInStore === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
+                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                        Retirar Personalmente en la tienda
+                                                    </label>
+                                                </div>
+                                            <% }; %>    
+                                            <%  if (pickupAtAgreedPlace === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault2">
+                                                        Retirar Personalmente en algun lugar acordado
+                                                    </label>
+                                                </div>                                                    
+                                            <% }; %> 
+                                            <%  if (shippingToCustomer === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault3">
+                                                        Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
+                                                    </label>
+                                                </div>
+                                            <% }; %>                                                 
+
+
                                         </div> 
                                         
                                         <div class="form-group my-3">
@@ -912,24 +951,39 @@
                                                 </div>
                                             </div>    
 
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
-                                                <label class="form-check-label" for="flexRadioDefault1">
-                                                    Retirar Personalmente en la tienda
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
-                                                <label class="form-check-label" for="flexRadioDefault2">
-                                                    Retirar Personalmente en algun lugar acordado
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
-                                                <label class="form-check-label" for="flexRadioDefault3">
-                                                    Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
-                                                </label>
-                                            </div>
+                                        <!--    buySell.deliveryOptions  aqui esta toda la informacion de envio -->
+                                        <!--    deliveryOptions: { pickupInStore: 'true', pickupAtAgreedPlace: 'true, shippingToCustomer: 'false, shippingAgentsAffiliated: [] } -->
+                                            <% const deliveryOptions = buySell.deliveryOptions; %>
+
+                                            <% const pickupInStore = deliveryOptions.pickupInStore;  %>
+                                            <% const pickupAtAgreedPlace = deliveryOptions.pickupAtAgreedPlace;  %>
+                                            <% const shippingToCustomer = deliveryOptions.shippingToCustomer;  %>
+
+                                            <%  if (pickupInStore === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
+                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                        Retirar Personalmente en la tienda
+                                                    </label>
+                                                </div>
+                                            <% }; %>    
+                                            <%  if (pickupAtAgreedPlace === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault2">
+                                                        Retirar Personalmente en algun lugar acordado
+                                                    </label>
+                                                </div>                                                    
+                                            <% }; %> 
+                                            <%  if (shippingToCustomer === "true"){ %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault3">
+                                                        Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
+                                                    </label>
+                                                </div>
+                                            <% }; %>  
+
                                         </div> 
                                         
                                         <div class="form-group my-3">
@@ -962,38 +1016,37 @@
                                             <% paymentSystem.forEach((ele, i)=>{ %>
 
                                                 
-                                                <div class="form-group my-2">
-                                                    <input class="form-check-input me-2" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
-                                                    <label class="form-check-label" for= option<%= i + 1 %>>
-                                                        <%= ele.methodName %> 
+                                                <div class="form-group my-2 p-2 rounded-1 border border-secondary" style="background-color: rgba(0, 0, 0, .1);">
+                                                    <input class="form-check-input me-2 cursor-pointer" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
+                                                    <label class="form-check-label cursor-pointer" for= option<%= i + 1 %>>
+                                                      <b> <%= ele.methodName %> </b>   
                                                     </label>
-
                                                 </div>
                                                     
                                                 <div class="contentCollapse<%= i + 1 %> ms-3 close">
 
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data1 ? ele.data1 : '' %> 
                                                         <% if (ele.data1) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data1 %>"> </i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data2 ? ele.data2 : '' %> 
                                                         <% if (ele.data2) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data2 %>"></i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data3 ? ele.data3 : '' %> 
                                                         <% if (ele.data3) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data3 %>"></i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data4 ? ele.data4 : '' %> 
                                                         <% if (ele.data4) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data4 %>"></i>
                                                         <% } %>
                                                     </p>
                                                 </div>
@@ -2123,6 +2176,29 @@
 
     // explicacion: '[class^="contentCollapse"]' Este es un selector CSS que busca todos los elementos cuyo atributo `class` comienza (`^=`) con el texto "contentCollapse". El símbolo `^=` es un operador que significa "comienza con". 
     // Así que, en resumen, esta línea está obteniendo todos los elementos del DOM que tienen una clase que empieza con "contentCollapse", y los almacena en la variable `contents`. Luego, puedes iterar sobre esa lista para aplicarles cambios, como cerrar todos los contenidos.
+    
+    const copyData = document.querySelectorAll('.copyData');
+    copyData.forEach((ele, i)=>{
+        ele.addEventListener("click", ()=>{
+            console.log("hemos dado click", ele)
+            const data = ele.getAttribute("data-info");
+            const Data = data.trim();
+            console.log("Data :", Data);
+            
+
+            navigator.clipboard.writeText(Data)
+            .then(() => {
+                const message = "Copiado al portapapeles";
+                mostrarToast( message, 'right', 'sucess', '¡Hecho!', true );
+            })
+            .catch(err => {
+                const message = "Error al copiar";
+                mostrarToast( message, 'right', 'sucess', '¡upps!', true );
+            });
+
+        })
+    })
+    
     </script>
 
     <script>

@@ -58,7 +58,7 @@ routes.post('/buysell-one/direct/auction', async(req, res)=>{
 
 //Esta direccion forma la informacion necesaria para crear la sala donde vendedor y comprador se reunen 
 //esta informacion se guardara en buySell si es arts, items, auction
-//para el resto se guaradara en negotiation (airplane, automotive, realstate, service) 
+//para el resto se guardara en negotiation (airplane, automotive, realstate, service) 
 routes.post('/buysell/direct', async(req, res)=>{
   //modo compra directa, compras que no son son de carrito, todas son gratis
   try {
@@ -70,7 +70,7 @@ routes.post('/buysell/direct', async(req, res)=>{
         console.log('He llegado al apartado de buysell/direct ....................................');
         
         const { vendedor, comprador, depart, idProduct, countRequest, unitPrice, delivery } = req.body;
-        let chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation, time, codeDate, image, total, deliveryType;
+        let chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation, time, codeDate, image, total, deliveryType, deliveryOptions;
         let emailSell, emailBuy;
         let titleArticle; //esta variable se declara afuera para luego usar en la funcion de envio de Telegrama. 
         
@@ -102,7 +102,6 @@ routes.post('/buysell/direct', async(req, res)=>{
               //creamos el dato total 
               total = (unitPrice * countRequest).toFixed(2); 
 
-
               console.log("vendedor, comprador, depart, idProduct, countRequest, unitPrice");
               console.log(vendedor, comprador, depart, idProduct, countRequest, unitPrice);
 
@@ -119,7 +118,6 @@ routes.post('/buysell/direct', async(req, res)=>{
               const searchBuy = await modelUser.findById( userBuy );
               usernameBuy = searchBuy.username; //el username del comprador.
     
-      
               const fecha =  new Date();
 
               const hour = fecha.getHours(); const minut = fecha.getMinutes();
@@ -142,31 +140,24 @@ routes.post('/buysell/direct', async(req, res)=>{
 
               //tenemos que descubir la ubicacion del vendedor y del comprador.
               //Datos requeridos: country, state, city ----------------------------
-              const sellLocation = await modelProfile.findOne({indexed : userSell}); 
-              const sell_city = sellLocation.city;
-              const sell_state = sellLocation.state;
-              const sell_country = sellLocation.country;
+              const dataProfileSell = await modelProfile.findOne({indexed : indexedSell}); 
+              const sell_city = dataProfileSell.city;
+              const sell_state = dataProfileSell.state;
+              const sell_country = dataProfileSell.country;
+              deliveryOptions = dataProfileSell.deliveryOptions;
 
-              const buyLocation = await modelProfile.findOne({indexed : userBuy});
-              const buy_city = buyLocation.city;
-              const buy_state = buyLocation.state;
-              const buy_country = buyLocation.country; 
-
+              const dataProfileBuy = await modelProfile.findOne({indexed : indexedBuy});
+              const buy_city = dataProfileBuy.city;
+              const buy_state = dataProfileBuy.state;
+              const buy_country = dataProfileBuy.country; 
 
               if ( sell_state == buy_state && sell_country == buy_country ){
-
                 deliveryType = "Envio Local" 
-              
               } else if ( sell_state != buy_state && sell_country == buy_country ) {
-
                 deliveryType = "Envio Interurbano" 
-
               } else if ( sell_country != buy_country ) {
-              
                 deliveryType = "Envio Internacional" 
-
               }
-
 
             //Objetivo de esta funcion es buscar los correos de ambas partes
             async function searchData(){
@@ -439,7 +430,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                       const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                       const searchProfile = await modelProfile.find({ indexed : user._id });   
-                      const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, date: time });
+                      const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, deliveryOptions, date: time });
                       console.log("BuySell .......................... :", BuySell);
                       const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                       //console.log('Aqui BuySell ---->', BuySell);
@@ -545,7 +536,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                             const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                             const searchProfile = await modelProfile.find({ indexed : user._id });   
-                            const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, date: time });
+                            const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, deliveryOptions, date: time });
                             console.log("BuySell .......................... :", BuySell);
                             const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         

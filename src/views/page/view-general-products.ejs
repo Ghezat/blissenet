@@ -1648,7 +1648,7 @@
  const newBTNBuy = document.getElementById('newBTNBuy'); //boton inicial 
  const newBTNBuySpinning = document.getElementById('newBTNBuySpinning'); //boton de processing 
 
- let validPurchase = true;
+/*  let validPurchase = true; no hace nada*/
 
  if (countRequest){
 
@@ -1664,23 +1664,36 @@
 
         console.log(`${countRequestValue} < ${availableValue}`)
 
-        if (countRequestValue <= availableValue){
-            console.log("Se puede procesar");
-            countRequest.style.cssText = "color: black;font-size: 20px"
-            totalMount = (unitPrice.value * countRequest.value).toFixed(2)  //limitar dos decimales
-            totalPay.innerText = `$${totalMount}`
-            validPurchase = true;
+        if (countRequestValue !== "" && !isNaN(countRequestValue)) {
+        // El valor es un número válido
+      
+            if (countRequestValue <= availableValue){
+                console.log("Se puede procesar");
+                countRequest.style.cssText = "color: black;font-size: 20px"
+                totalMount = (unitPrice.value * countRequest.value).toFixed(2)  //limitar dos decimales
+                totalPay.innerText = `$${totalMount}`
+               /*  validPurchase = true; */
+                newBTNBuy.removeAttribute("disabled");
+            } else {
+                console.log("Has pasado el limite colocarlo en rojo")
+                countRequest.style.cssText = "color: red;font-size: 20px"
+                totalPay.innerText = ""
+               /*  validPurchase = false; */
+                newBTNBuy.setAttribute("disabled", "");
+            }
+
         } else {
-            console.log("Has pasado el limite colocarlo en rojo")
-            countRequest.style.cssText = "color: red;font-size: 20px"
-            totalPay.innerText = ""
-            validPurchase = false;
-        }
+
+            console.log("no hay datos en este campo debemos tener al menos un numero y no debe estar vacio");
+            /* validPurchase = false; */
+            newBTNBuy.setAttribute("disabled", "");
+        }    
 
     
     });
 
  }    
+
  if (newBTNBuy){
 
     newBTNBuy.addEventListener('click', (e)=>{
@@ -1696,7 +1709,7 @@
                 if ( availableValue  >= countRequestValue ){
 
                     e.preventDefault(); // Esto previene el envío del formulario
-                    // Aquí puedes poner la lógica que quieras antes de enviar el formulario
+                    
                     console.log('Botón clicado, pero el formulario no se envió aún.');
                     newBTNBuy.classList.add('close');
                     newBTNBuySpinning.classList.remove('close');

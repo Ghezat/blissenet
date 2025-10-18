@@ -11,6 +11,7 @@ const buySellSchema = new Schema({
     fechaNegotiation : { type : String },
     deliveryType : { type : String }, //aqui guardamos el tipo de entrega que puede ser una de estas tres (Envio Local, Envio Interurbano, Envio Internacional );
     deliveryDetails : { type : String, default : "" }, //aqui guardamos el detalle de como se debe enviare el paquete. ejemplo. "Retirar Personalmente en la tienda", o "Reciba su pedido en la puerta de su casa. (Solicitar Delivery)" Nace como string vacio pero luego tendra un valor. lo importante es que ya exista para luego solo actualizar su valor.
+    deliveryOptions : { type : Object }, // este objeto lo posee el perfil de vendedor. verlo en profile 
     count : { type : Number }, //cantidad de existencia que hay del articulo.
     tecnicalDescription : { type : String },
     image : { type : Array }, //aqui solo existira dos atributos con sus valores public_id y url. 
