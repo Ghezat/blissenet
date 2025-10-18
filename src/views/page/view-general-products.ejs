@@ -875,11 +875,11 @@
                                                     </button>   
                                                 </p>
                                                 <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
-                                                <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy" disabled><div> ¡Compra ahora! </div></button>
-                                               <!--  <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNBuySpinning" style="color: #FEDE05;" disabled>
+                                                <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary" disabled><div> ¡Compra ahora! </div></button>
+<!--                                                 <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNBuySpinning" style="color: #FEDE05;" disabled>
                                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                      Processing ... 
-                                                </button> -->
+                                                </button>  -->
                                             </section>
 
                                     <% }; %>
@@ -958,6 +958,7 @@
                                         <% }; %>
                                     
                                     <% } else { %>
+                                       <!--  este usuario esta viendo su propio anuncio --> 
                                             <section class="containerBuy_btn">
                                                 
                                                     <div class="contentPubliRating">
@@ -977,7 +978,7 @@
                                                         </button>   
                                                     </p>
                                                     
-                                                    <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNContact" disabled><div> ¡Contactar ahora! </div></button>                                                
+                                                    <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary" disabled><div> ¡Contactar ahora! </div></button>                                                
 
                                             </section>
   
@@ -1664,7 +1665,7 @@
 
         console.log(`${countRequestValue} < ${availableValue}`)
 
-        if (countRequestValue !== "" && !isNaN(countRequestValue)) {
+        if (countRequestValue !== "" && countRequestValue !== 0 && !isNaN(countRequestValue)) {
         // El valor es un número válido
       
             if (countRequestValue <= availableValue){
