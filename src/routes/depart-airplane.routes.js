@@ -909,7 +909,7 @@ routes.post('/department/create/aeronaves/edit', async(req, res)=>{
 routes.post('/department/create/airplane/edit-images', async (req, res) => {
 
     const { Order, Id } = req.body;
-    console.log("Estamos en servicio y queremos reorganizar la posición de las imágenes");
+    console.log("Estamos en airplane y queremos reorganizar la posición de las imágenes");
     console.log(Order);
 
     const searchADS = await modelAirplane.findById(Id, { images: 1 });

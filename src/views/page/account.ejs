@@ -2069,20 +2069,20 @@
                     <% const medias = sectionMedia.data %>
 
                     <% if (countMedia >= 1) { %>
-                        <div class="container-fluid p-4" style="position: relative; z-index: 100; background-color:<%= bGColorGallery %>; height: auto">
+                        <div class="container-fluid p-4" style="position: relative; height: auto; z-index: 100; background-color:<%= bGColorGallery %>;">
                             <div class="row m-0 d-flex justify-content-between"> <!-- carousel-images es la clase de slick-carousel -->
                                 <% medias.forEach((ele)=>{ %>
                                     
                                     <% if (ele.type === 'image'){ %>
                                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
                                           
-                                            <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 280px; object-fit: cover;">
+                                            <img class="rounded-2" src="<%= ele.url %>"  style="width: 100%; height: 320px; object-fit: cover;">
                                           
                                         </div>
                                     <% } else { %>
                                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 p-1">
                                             
-                                            <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 280px; object-fit: cover;"></video>
+                                            <video class="rounded-2" src="<%= ele.url %>" controls autoplay muted style="width: 100%; height: 320px; object-fit: cover;"></video>
                                           
                                         </div>
                                     <% }; %>
@@ -2129,7 +2129,7 @@
                           
                               <% carousel.forEach((ele)=>{ %>
                               
-                                  <img src="<%= ele.url %>" alt="" style="height: 300px; object-fit: cover;" >                                                   
+                                  <img src="<%= ele.url %>" alt="" style="height: 380px; object-fit: cover;" >                                                   
                               
                               <% }) %>
 

@@ -2766,9 +2766,10 @@ routes.post('/zonabliss/upload/media', async (req, res)=> {
                             let bytes = element.size;
                             let public_id = key;
                             let type = 'image';
+                            let idImage = ident;
                             
                             //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id}, type : ${type} `);
-                            boxImg.push( {url, public_id, bytes, format, type} );            
+                            boxImg.push( {url, public_id, bytes, format, type, idImage} );            
 
                             async function saveDB(){
                                 //console.log("este es el path que tiene que ser eliminado:", element.path)
@@ -2842,9 +2843,10 @@ routes.post('/zonabliss/upload/media', async (req, res)=> {
                             let bytes = element.size;
                             let public_id = key;
                             let type = 'video';
+                            let idImage = ident;
                             
                             console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id}, type : ${type} `);    
-                            boxVideo.push( {url, public_id, bytes, format, type} );
+                            boxVideo.push( {url, public_id, bytes, format, type, idImage} );
                             //console.log("Esto es boxVideo -------->", boxVideo);
             
                                 
@@ -2930,7 +2932,8 @@ routes.post('/zonabliss/upload/imgCarousel', async (req, res)=> {
 
                 //console.log("una imagen aqui aceptada----->", element)
 
-                const folder = 'gallery'; const ident = new Date().getTime();
+                const folder = 'gallery';
+                const ident = new Date().getTime();
                 const pathField = element.path; const extPart = pathField.split(".");
                 const ext = extPart[1];
                             
@@ -2964,10 +2967,11 @@ routes.post('/zonabliss/upload/imgCarousel', async (req, res)=> {
                         let url = `https://${bucketName}.${endpoint}/${key}`;
                         let bytes = element.size;
                         let public_id = key;
+                        let idImage = ident;
                         
                         //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                        boxImg.push( {url, public_id, bytes, format} );            
-
+                        boxImg.push( {url, public_id, bytes, format, idImage} );            
+                                                                     
                         async function saveDB(){
                             //console.log("este es el path que tiene que ser eliminado:", element.path)
                             await fs.unlink(element.path) 
@@ -3080,9 +3084,10 @@ routes.post('/zonabliss/upload/bannerCarousel', async (req, res)=> {
                         let url = `https://${bucketName}.${endpoint}/${key}`;
                         let bytes = element.size;
                         let public_id = key;
+                        let idImage = ident;
                         
                         //console.log(`format : ${format}, url : ${url}, bytes ${bytes}, Public_Id : ${public_id} `);
-                        boxImg.push( {url, public_id, bytes, format} );            
+                        boxImg.push( {url, public_id, bytes, format, idImage} );            
 
                         async function saveDB(){
                             //console.log("este es el path que tiene que ser eliminado:", element.path)
@@ -3330,6 +3335,138 @@ routes.get('/zonabliss/delete_source/gallery/:public_id', async (req, res)=> {
 
 });
 
+routes.post('/zonabliss/reorganize/carouselImages/edit-images', async (req, res) => {
+
+    const { Order, Id } = req.body;
+    console.log("Estamos en zonabliss y queremos reorganizar la posición de las imágenes");
+    console.log(Order); // [ '1760898846255', '1760898861029', '1760898879933', '1760898908687', '1760898894142' ]
+    console.log(Id); // 689f989e2b989d4c1df8a043
+    const id = Id.trim(); 
+
+    try {
+        const searchProfile = await modelProfile.findById(id);
+        console.log("carouselImages.data :", searchProfile.gallery.carouselImages.data);
+  
+    if (searchProfile) {
+        // Crear un mapa para acceder rápidamente a las imágenes por su id
+        const imageMap = {};
+        searchProfile.gallery.carouselImages.data.forEach((image) => {
+            imageMap[image.idImage] = image;
+        });
+
+        // Reorganizar las imágenes según el orden proporcionado
+        const updatedImages = Order.map(id => imageMap[id]).filter(Boolean); // Filtrar las imágenes que no se encontraron
+        console.log("updatedImages :", updatedImages);
+
+        // Actualizar el documento en la base de datos
+        await modelProfile.updateOne(
+            { _id: Id },
+            { $set: { 'gallery.carouselImages.data' : updatedImages } }
+        );
+
+        console.log("Imágenes actualizadas:", updatedImages);
+
+        const message = "Actualizacion de posición de imagenes exitosa."
+        res.json({ code : "ok", message});        
+    } 
+
+    } catch (error) {
+        console.log("este es el error", error);
+    }
+    
+    //console.log("searchProfile :", searchProfile);
+
+});
+
+routes.post('/zonabliss/reorganize/sectionMedia/edit-medias', async (req, res) => {
+
+    const { Order, Id } = req.body;
+    console.log("Estamos en zonabliss y queremos reorganizar la posición de las imágenes");
+    console.log(Order); // [ '1760898846255', '1760898861029', '1760898879933', '1760898908687', '1760898894142' ]
+    console.log(Id); // 689f989e2b989d4c1df8a043
+    const id = Id.trim(); 
+
+    try {
+        const searchProfile = await modelProfile.findById(id);
+        console.log("carouselImages.data :", searchProfile.gallery.carouselImages.data);
+  
+    if (searchProfile) {
+        // Crear un mapa para acceder rápidamente a las imágenes por su id
+        const imageMap = {};
+        searchProfile.gallery.sectionMedia.data.forEach((image) => {
+            imageMap[image.idImage] = image;
+        });
+
+        // Reorganizar las imágenes según el orden proporcionado
+        const updatedImages = Order.map(id => imageMap[id]).filter(Boolean); // Filtrar las imágenes que no se encontraron
+        console.log("updatedImages :", updatedImages);
+
+        // Actualizar el documento en la base de datos
+        await modelProfile.updateOne(
+            { _id: Id },
+            { $set: { 'gallery.sectionMedia.data' : updatedImages } }
+        );
+
+        console.log("Imágenes actualizadas:", updatedImages);
+
+        const message = "Actualizacion de posición de imagenes exitosa."
+        res.json({ code : "ok", message});        
+    } 
+
+    } catch (error) {
+        console.log("este es el error", error);
+    }
+    
+    //console.log("searchProfile :", searchProfile);
+
+});
+
+
+routes.post('/zonabliss/reorganize/carouselBanner/edit-banner', async (req, res) => {
+
+    const { Order, Id } = req.body;
+    console.log("Estamos en zonabliss y queremos reorganizar la posición de las imágenes");
+    console.log(Order); // [ '1760898846255', '1760898861029', '1760898879933', '1760898908687', '1760898894142' ]
+    console.log(Id); // 689f989e2b989d4c1df8a043
+    const id = Id.trim(); 
+
+    try {
+        const searchProfile = await modelProfile.findById(id);
+        console.log("carouselBanner.data :", searchProfile.gallery.carouselBanner.data);
+  
+    if (searchProfile) {
+        // Crear un mapa para acceder rápidamente a las imágenes por su id
+        const imageMap = {};
+        searchProfile.gallery.carouselBanner.data.forEach((image) => {
+            imageMap[image.idImage] = image;
+        });
+
+        // Reorganizar las imágenes según el orden proporcionado
+        const updatedImages = Order.map(id => imageMap[id]).filter(Boolean); // Filtrar las imágenes que no se encontraron
+        console.log("updatedImages :", updatedImages);
+
+        // Actualizar el documento en la base de datos
+        await modelProfile.updateOne(
+            { _id: Id },
+            { $set: { 'gallery.carouselBanner.data' : updatedImages } }
+        );
+
+        console.log("Imágenes actualizadas:", updatedImages);
+
+        const message = "Actualizacion de posición de imagenes exitosa."
+        res.json({ code : "ok", message});        
+    } 
+
+    } catch (error) {
+        console.log("este es el error", error);
+    }
+    
+    //console.log("searchProfile :", searchProfile);
+
+});
+//----------------------------------------------------------------------
+
+
 
 routes.get('/myaccount/search', async(req, res)=>{
 
@@ -3463,7 +3600,7 @@ routes.get('/myaccount/shopping-cart', async(req, res)=>{
         console.log("Ha habido un error en la carga de tools-store", error);
     }
 
-})
+});
 
 routes.post('/myaccount/shopping-cart', async(req, res)=>{
 
@@ -4922,6 +5059,4 @@ async function searchMessages(userID, req){
 module.exports = routes
 
 
-                   
-                
-                      
+            

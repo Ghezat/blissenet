@@ -59,6 +59,52 @@ main{
   src: url("/fonts/Cream Cake.otf");
 }
 
+/* -------------------------------- */
+.loader {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.loader:before , .loader:after{
+  content: '';
+  border-radius: 50%;
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3) inset;
+}
+.loader:after {
+  box-shadow: 0 2px 0 #FF3D00 inset;
+  box-shadow: 0 2px 0 #9200ff inset;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  0% {  transform: rotate(0)}
+  100% { transform: rotate(360deg)}
+}
+/* ----------- fin de spinner home ...............................*/
+
+/* HTML: <div class="loaderText"></div> */
+.loaderText {
+  width: fit-content;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 24px;
+  color: #ffffff00;
+  background: linear-gradient(90deg, #9200ff calc(50% + 0.5ch),#dfdfdf 0) right/calc(200% + 1ch) 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  animation: l7 2s infinite steps(11);
+}
+.loaderText:before {
+  content:"Cargando ..."
+}
+@keyframes l7 {to{background-position: left}}
+
+/* ---------------------find loaderText -------------------------------- */
+
+
 .spanTextArticle{
   font-family: "Cream Cake";
   font-size: 24px;
@@ -592,4 +638,6 @@ a:hover {
     
 }
 
-
+/* pagina de ejemplos de css geniales para botones y componente */
+/* https://css-loaders.com/ */
+/* https://prismic.io/blog/css-button-animations */

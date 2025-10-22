@@ -29,6 +29,22 @@
 </head>
 <style>
 
+  .marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+  }
+
+  .marquee span {
+      display: inline-block;
+      animation: marquee 10s linear infinite;
+  }
+
+  @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+  }
+
   .imageContainer {
       position: relative; /* Necesario para posicionar el span */
       display: inline-block; /* Asegura que el contenedor ajuste al tamaño de la imagen */
@@ -465,486 +481,504 @@
 <body class="mainTheme">
 
 
-  <main>
 
-    <%- include('../partials/navi-simple.ejs') %>
+    <main style="position: relative;">
 
-    <%- include('../partials/modalGeolocation.ejs') %>
-
-
-      <% if (success) { %>
-        <%- include('../alert/success.ejs') %>
-      <% }; %>
-
-      <% if (stopped) { %>
-        <%- include('../alert/stopped.ejs') %>
-      <% }; %>
-
-      <% if (dataLocked) { %>
-        <%- include('../alert/dataLocked.ejs') %>
-      <% }; %>
-
-      <% if (methodLoging) { %>
-        <%- include('../alert/methodLoging.ejs') %>
-      <% }; %>
-
-      <% if (user) { %>
-        <% const seeMarket = user.seeMarket %>
-        <% const idUser = user._id %>
-        <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
-        <input type="hidden" value="<%= idUser %>" id= "idUser">
-          <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
-      <% }; %>
-      
-        <div class="carril m-0"  id="afterNavHead">
-    
-          <marquee class="themaTextLight"> 
-            <span id="dateRateUpdate">
-              <!-- dinamico -->
-            </span> 
-          </marquee>
-   
-        </div>
-  
-
-        <div class="row mx-0 sectionTheme">
-
-            <div class="col-lg-12 px-0 py-2 shadow-sm" style="background: rgb(250, 169, 57)";>
-                <audio src="/sound/Icon-efect.mp3" id="efectIcon"></audio>
-                <div class="barrHorizontIcon  p-0 m-0 d-flex justify-content-center flex-wrap" style="width: 100%;">
-                  <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto; width: 90%;">
-                    
-                    <a href="/view-store" class="text-decoration-none mx-4 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/tiendaHome.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Tiendas </span>
-                    </a> 
-                    <a href="/view-raffles" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;"> 
-                      <img src="/img/ico-raffleW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Sorteos </span>
-                    </a> 
-                    <a href="/view-artes" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-arteGalleryW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Artes </span>
-                    </a> 
-                    <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-aeronauticaW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Aeronáutico </span>
-                    </a> 
-                    <a href="/view-items" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-articuloW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Artículos </span>
-                    </a> 
-                    <a href="/view-automotive" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-automotrizW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Automotríz </span>
-                    </a> 
-                    <a href="/view-realstate" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-bienesRaicesW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Realstate </span>
-                    </a> 
-                    <a href="/view-nautical" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-nauticoW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Náuticos </span>
-                    </a> 
-                    <a href="/view-services" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-servicioW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Servicios </span>
-                    </a> 
-                    <a href="/view-auction" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
-                      <img src="/img/ico-subastaW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
-                      <span class="my-1 spanTextArticle"> Subastas </span>
-                    </a> 
-                  </ul>
-                </div>
-                
-
-            </div>
-           
-            
-            <div class="container-fluid p-0">
-              <div class="row rowWidth m-0">
-
-                <div class="contentBanner p-0" style="position: relative;">
-                  <div class="banners p-0" >
-                      <% if (currentBanner.length !== 0) { %>
-                        <div class="carousel-banners" style="width: 100vw;">
-
-                            <% currentBanner.forEach((ele, i)=>{ %>
-
-                                <div class="bannerHome"> 
-                                  <img src="<%= ele.url %>"  alt="..." class="imageBanner">
-                                </div>
-                                                                            
-                            <% }); %>
-
-                        </div>                           
-                      <% }; %> 
-                  </div> 
-
-                  
-                  <div class="contentAlert" style="z-index: 200; position: absolute; top: 0; right: -1000px;">
-                    <!-- dinamico para alerta cuando no tenga perfil aqui le invita a que lo haga-->
-                  </div>  
-                  
-                </div>
-
-                <div class="row containerAboutBlissenet px-2 py-3 m-0">
-
-                  <div class="col-xl-6 col-lg-6 px-4 d-flex justify-content-center flex-column">
-                     
-                    <div class="containerInfo p-2">
-                                           
-                      <h1 style="text-align: start;" class="mt-3">  
-                        <img src="/img/iconManifest-192x192.png" alt="" style="width: 40px;"> 
-                        <b> <span style="font-size: 30px;" class="themaTextLight">Blissenet</span><span style="font-size: 32px;" class="text-warning">.com</span> 
-                        </b>
-                        <span style="font-size: 26px" class="themaTextLight"> la red comercial que conecta clientes y comerciantes en todo el mundo. </span>
-                      </h1>
-                      <div class="d-flex justify-content-start">
-                        <span class="bg-secondary text-light px-2 py-1 rounded-3"> <i> <small>Explora otros mercados en Perfil </small> </i>  </span>
-                      </div>
-                    
-                    </div>
-                   
-                  </div>
-                  <div class="col-xl-6 col-lg-6 p-4 d-flex justify-content-center align-items-center">
-
-                    <img src="/img/globeX-unscreen.gif" alt="" style="width: 400px;" class="mt-4">
-                   
-                  </div>
-
-                </div>
-
-                <div class="contentOffert p-0" style="position: relative; z-index: 100; height: auto">  
-
-                  <% if (boxOffert) { %>
-
-                    <% if (boxOffert.length >= 5) { %>
-                                    
-
-                      <div class="carousel-bestView p-4">    
-                          <% boxOffert.forEach((ele)=>{ %>
-                              <% const images = ele.images %>
-                              <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
-
-                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>">
-                                      <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 360px; object-fit: cover;  border-top-left-radius: 6px; border-top-right-radius: 6px;">
-                                      <div class="contentMiniaturas d-flex justify-content-start" style="background-color: rgba(255, 193, 7, 0.8); position: absolute; bottom: 0px; width: 310px; height: auto;">
-                                                                       
-                                          <% images.forEach((ele, i)=>{ %>
-                                            
-                                              <% if (i < 4 ) { %>
-                                               <img src="<%= ele.url %>" alt="" class="m-1 rounded-3 shadow-sm"  style="width: 70px; height: 70px; object-fit: cover;"> 
-                                              <% } %>  
-                                          
-                                          <% }) %>
-                                             
-                                      </div>
-                                    </a>
-                  
-                                    
-                                    <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
-                       
-                              </div>
-                              
-                          <% }) %>
-                      </div>
-                      <div class="titleCarrousel d-flex justify-content-end">
-                
-                        <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingOffert">
-                          <span class="fst-italic me-3" style="font-size: 17px"> Trending Offert  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
-                        </div>
-
-                      </div>
-
-                    <% } %>
-                    
-                  <% } %>
-
-                </div>
-
-                <div class="contentNewsDay my-5">
-                  <div class="carousel-newDay py-2 m-0" style="width: 100%;">
-                      <% if (currentNewsDay) { %>
-
-                          <% currentNewsDay.forEach((ele, i)=>{  %> 
-                                      
-                                <div class="contentNewDay d-flex py-3 px-4" style="width: 100vw;">
+      <!-- este container es el spinner que veraz cuando un usuario carga un archivo de video o img de la barra de herramientas de los anuncios. -->
+      <div class="loading">
+        <div class="container-fluid d-flex align-items-center" style="position: absolute; top: o; height: 100%; background-color: rgba(2, 2, 2, 1);">
+            <div class="container d-flex flex-column justify-content-center align-items-center">   
                                   
-                                      <div class="contentImage">
-                                          <img src="<%= ele.url %>" class="imgNews rounded-3 " alt="..." style="object-fit: cover; width: 100%;" >
-                                      </div>
-                          
-                        
-                                      <div class="contentDetails">
-                                          <p style="font-weight: bold; font-size: 24px;"><%= ele.newDayTitle %></p>
-                                          <p style="font-size: 20px;"><%= ele.newDayDetails %></p>
-                                          
-                                            <div class="contenAuthorDate d-flex justify-content-end my-0" >
-                                              <div class="content">
-                                                  <a class="ui grey label text-decoration-none">
-                                                      <span class="me-1 fst-italic"><%= ele.adminName %></span>
-                                                      <span>(<%= ele.simplifiedDate %>)</span>
-                                                  </a>
-                                              </div>
-                                            </div>
-
-                                      </div>
+                  <!--  <span class="loader m-5"></span> -->
+                  <span class="d-flex align-items-center"> 
+                    <img src="/img/iconManifest-192x192.png" alt="logo" class="me-2" style="width: 40px;"> 
+                    <b> <span style="font-size: 30px;" class="themaTextLight">Blissenet</span><span style="font-size: 32px;" class="text-warning">.com</span> 
+                    </b>
+                  </span>  
+                  <div class="loaderText mt-3"></div>
                                     
+            </div>    
+        </div>
+      </div>  
 
-                                </div>       
+      <div class="homePage invisible">
+
+        <%- include('../partials/navi-simple.ejs') %>
+
+        <%- include('../partials/modalGeolocation.ejs') %>
+
+
+        <% if (success) { %>
+          <%- include('../alert/success.ejs') %>
+        <% }; %>
+
+        <% if (stopped) { %>
+          <%- include('../alert/stopped.ejs') %>
+        <% }; %>
+
+        <% if (dataLocked) { %>
+          <%- include('../alert/dataLocked.ejs') %>
+        <% }; %>
+
+        <% if (methodLoging) { %>
+          <%- include('../alert/methodLoging.ejs') %>
+        <% }; %>
+
+        <% if (user) { %>
+          <% const seeMarket = user.seeMarket %>
+          <% const idUser = user._id %>
+          <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+          <input type="hidden" value="<%= idUser %>" id= "idUser">
+            <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+        <% }; %>
+        
+          <div class="carril m-0"  id="afterNavHead">
+      
+            <marquee class="themaTextLight" behavior="scroll" direction="left">
+                <span id="dateRateUpdate"></span>
+            </marquee>
+
+          </div>
+    
+
+          <div class="row mx-0 sectionTheme">
+
+              <div class="col-lg-12 px-0 py-2 shadow-sm" style="background: rgb(250, 169, 57)";>
+                  <audio src="/sound/Icon-efect.mp3" id="efectIcon"></audio>
+                  <div class="barrHorizontIcon  p-0 m-0 d-flex justify-content-center flex-wrap" style="width: 100%;">
+                    <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto; width: 90%;">
                       
-                          <% }); %>  
-
-                        <% }; %>
-                  </div>  
-                  <div class="titleNewDay d-flex justify-content-end">
+                      <a href="/view-store" class="text-decoration-none mx-4 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/tiendaHome.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Tiendas </span>
+                      </a> 
+                      <a href="/view-raffles" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;"> 
+                        <img src="/img/ico-raffleW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Sorteos </span>
+                      </a> 
+                      <a href="/view-artes" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-arteGalleryW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Artes </span>
+                      </a> 
+                      <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-aeronauticaW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Aeronáutico </span>
+                      </a> 
+                      <a href="/view-items" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-articuloW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Artículos </span>
+                      </a> 
+                      <a href="/view-automotive" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-automotrizW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Automotríz </span>
+                      </a> 
+                      <a href="/view-realstate" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-bienesRaicesW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Realstate </span>
+                      </a> 
+                      <a href="/view-nautical" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-nauticoW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Náuticos </span>
+                      </a> 
+                      <a href="/view-services" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-servicioW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Servicios </span>
+                      </a> 
+                      <a href="/view-auction" class="text-decoration-none mx-4 p-0 iconEfect d-flex justify-content-center align-items-center flex-column" style="width: 80px;">
+                        <img src="/img/ico-subastaW.png" alt="" class="iconDepart shadow" style="width: 46px; height: 46px; border-radius: 50%;">
+                        <span class="my-1 spanTextArticle"> Subastas </span>
+                      </a> 
+                    </ul>
+                  </div>
                   
-                      <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticNewsDay">
-                        <span class="fst-italic me-3" style="font-size: 17px"> News Day  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
-                      </div>
-
-                  </div> 
-                </div>   
-
-                <div class="contentBestView p-0" style="height: auto">
-                  <% if (boxBestView) { %>
-
-                    <% if (boxBestView.length >= 5) { %>
-                                    
-                      <div class="carousel-bestView p-4">    
-                          <% boxBestView.forEach((ele)=>{ %>
-                              <% const images = ele.images %>
-                              <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
-
-                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>">
-                                      <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 360px; object-fit: cover; border-top-left-radius: 6px; border-top-right-radius: 6px;">
-                                      <div class="contentMiniaturas d-flex justify-content-start" style="position: absolute; bottom: 0px; background-color: rgba(255, 255, 255, 0.8); width: 310px; height: auto;">
-                                                                       
-                                          <% images.forEach((ele, i)=>{ %>
-                                      
-                                              <% if (i < 4 ) { %>
-                                               <img src="<%= ele.url %>" alt="" class="m-1 rounded-3 shadow-sm"  style="width: 70px; height: 70px; object-fit: cover;"> 
-                                              <% } %>  
-                                      
-                                          <% }) %>
-                                             
-                                      </div>
-                                    </a>
-                  
-                                    <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
-                       
-                              </div>
-                              
-                          <% }) %>
-                      </div>
-                      <div class="titleCarrousel d-flex justify-content-end">
-                
-                        <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingBestView">
-                          <span class="fst-italic me-3" style="font-size: 17px"> Trending <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
-                        </div>
-
-                      </div>
-
-                    <% } %>
-
-                  <% } %>   
-                </div>
-
-                <div class="row contentMosacicoPorcentMarket m-0 py-5 d-flex justify-content-around">
-                    
-                    <div class="boxTopStore col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12" style="position: relative">                 
-                      <div class="textTitle my-3">
-                        <span class="text-secondary mt-1" style="font-size: 26px;">Top 50 Tiendas + Vistas</span>
-                      </div>
-                      <div class="Top50Stores d-flex flex-wrap">
-  
-                      </div>
-                    </div>      
-                    
-                    <div class="boxPercentMarket col-xxl-5 col-xl-5 col-lg-5 col-md-12 col-sm-12">
-                     
-                      <div class="textTitle my-3">
-                        <span class="text-secondary mt-1" style="font-size: 26px;">Indice de Mercado Dominante</span>
-                      </div>
-                      <div>
-                        <canvas id="myChart"></canvas>
-                      </div>
-
-                    </div>
-
-                </div>
-
-                <div class="row px-2 py-5 m-0 containerLastStore text-light" style="height: auto;">
-                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 m-0 py-4">
-                    <% if (profileLast) { %>
-
-                      <div class="left-section contentProfileLast d-flex flex-wrap">
-                          <% profileLast.forEach((ele, i)=>{ %>
-                          
-                            <a href="/account/<%= ele.username %>" class="text-decoration-none">
-                              <div class="contentStoreLast d-flex shadow">
-                                <div class="contentImg" style="background-color: white;">
-                                  <% if (ele.avatarPerfil[0].url.length === 0 ) { %>
-                                      <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;">   
-                                  <% } else { %>
-                                      <img src="<%= ele.avatarPerfil[0].url %>" alt="" style="width: 50px; height: 50px; object-fit: cover;">
-                                  <% }; %>
-                                </div>  
-
-                                <div class="usernameCountry px-2 d-flex align-items-center" style="background-color: #2c2c2c; color:white;">
-                                  <p class="mb-1" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><%= ele.username %></p>
-                                  <p class="mb-1 ms-2" style="font-size: 11px;"> (<span><%= ele.countryCode %></span>) </p>
-                                </div>
-                              </div>  
-                            </a>
-
-                          <% }); %>  
-                      </div>
-
-                    <% }; %>
-                  </div>
-                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 m-0 py-4">
-
-                    <div class="right-section">
-                      <p style="font-size: 22px;"> <b>¡Descubre las últimas tiendas creadas en nuestra comunidad!</b> </p>
-                      <p id="texto" style="font-size: 20px;"> "¡Vamos a construir algo increíble juntos! Explora las nuevas tiendas, deja comentarios y ayuda a crear un mercado digital de alto tráfico y dinámico. ¡Cada comentario y seguimiento cuenta!"</p>
-                    </div>  
-                      
-                  </div>
-                </div>
-
-                <div class="gallery-masonry p-2" id="newADS" style="background-color: rgba(255, 255, 255, 0.9);">
-                  <div class="textTitle my-3">
-                      <span class="text-secondary" style="font-size: 26px;">últimas Publicaciones</span>
-                  </div>
-                  <div class="gallery">
-
-                  </div>
-                </div>
-
-                <div class="gallery-masonry p-2 shadow-sm" id="moreViewADS" style="background-color: rgba(255, 255, 255, 0.9);">
-                  <div class="textTitle my-3">
-                      <span class="text-secondary" style="font-size: 26px;">Publicaciones más vistas</span>
-                  </div>
-                  <div class="galleryMoreView">
-
-                  </div>
-                </div>
 
               </div>
-            </div>
+            
+              
+              <div class="container-fluid p-0">
+                <div class="row rowWidth m-0">
 
-            <% if (!user) { %>
+                  <div class="contentBanner p-0" style="position: relative;">
+                    <div class="banners p-0" >
+                        <% if (currentBanner.length !== 0) { %>
+                          <div class="carousel-banners" style="width: 100vw;">
 
-            <div class="containerFixedSinUser">
-                <div class="d-flex flex-column"  style="position: fixed; right: 10px; bottom: 100px; z-index : 100">
-                    <div class="d-flex justify-content-end px-4">
+                              <% currentBanner.forEach((ele, i)=>{ %>
 
-                        <span class="rounded-pill d-flex justify-content-center align-items-center cursor-pointer shadow-sm" id="btnXSinUser"  style="width: 40px; height: 40px; background-color: rgba(238, 238, 238, 0.9); color: black;">
-                            <i class="bi bi-x-lg" id="bi-x-move" style="font-size: 16px;"></i>
-                        </span> 
+                                  <div class="bannerHome"> 
+                                    <img src="<%= ele.url %>"  alt="..." class="imageBanner">
+                                  </div>
+                                                                              
+                              <% }); %>
+
+                          </div>                           
+                        <% }; %> 
+                    </div> 
+
+                    
+                    <div class="contentAlert" style="z-index: 200; position: absolute; top: 0; right: -1000px;">
+                      <!-- dinamico para alerta cuando no tenga perfil aqui le invita a que lo haga-->
+                    </div>  
+                    
+                  </div>
+
+                  <div class="row containerAboutBlissenet px-2 py-3 m-0">
+
+                    <div class="col-xl-6 col-lg-6 px-4 d-flex justify-content-center flex-column">
                       
-                    </div>    
-                    <div class="body fixedSinUser mx-2 mt-5">
+                      <div class="containerInfo p-2">
+                                            
+                        <h1 style="text-align: start;" class="mt-3">  
+                          <img src="/img/iconManifest-192x192.png" alt="" style="width: 40px;"> 
+                          <b> <span style="font-size: 30px;" class="themaTextLight">Blissenet</span><span style="font-size: 32px;" class="text-warning">.com</span> 
+                          </b>
+                          <span style="font-size: 26px" class="themaTextLight"> la red comercial que conecta clientes y comerciantes en todo el mundo. </span>
+                        </h1>
+                        <div class="d-flex justify-content-start">
+                          <span class="bg-secondary text-light px-2 py-1 rounded-3"> <i> <small>Explora otros mercados en Perfil </small> </i>  </span>
+                        </div>
+                      
+                      </div>
+                    
+                    </div>
+                    <div class="col-xl-6 col-lg-6 p-4 d-flex justify-content-center align-items-center">
+
+                      <img src="/img/globeX-unscreen.gif" alt="" style="width: 400px;" class="mt-4">
+                    
+                    </div>
+
+                  </div>
+
+                  <div class="contentOffert p-0" style="position: relative; z-index: 100; height: auto">  
+
+                    <% if (boxOffert) { %>
+
+                      <% if (boxOffert.length >= 5) { %>
+                                      
+
+                        <div class="carousel-bestView p-4">    
+                            <% boxOffert.forEach((ele)=>{ %>
+                                <% const images = ele.images %>
+                                <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
+
+                                      <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>">
+                                        <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 360px; object-fit: cover;  border-top-left-radius: 6px; border-top-right-radius: 6px;">
+                                        <div class="contentMiniaturas d-flex justify-content-start" style="background-color: rgba(255, 193, 7, 0.8); position: absolute; bottom: 0px; width: 310px; height: auto;">
+                                                                        
+                                            <% images.forEach((ele, i)=>{ %>
+                                              
+                                                <% if (i < 4 ) { %>
+                                                <img src="<%= ele.url %>" alt="" class="m-1 rounded-3 shadow-sm"  style="width: 70px; height: 70px; object-fit: cover;"> 
+                                                <% } %>  
+                                            
+                                            <% }) %>
+                                              
+                                        </div>
+                                      </a>
+                    
+                                      
+                                      <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
                         
-                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                                
+                            <% }) %>
+                        </div>
+                        <div class="titleCarrousel d-flex justify-content-end">
+                  
+                          <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingOffert">
+                            <span class="fst-italic me-3" style="font-size: 17px"> Trending Offert  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                          </div>
 
-                        <div style="position: relative;">
+                        </div>
 
-                            <div class="px-4 py-2 lightbulbAnimation shadow d-flex" style="background-color: #ffe372; font-size: 16px; color: #7a6202; border-top-left-radius: 12px; border-top-right-radius: 12px;"> 
-                                <span> No estas logeado </span>   
-                            </div>
-                            <div class="rounded-pill d-flex justify-content-center align-items-center" style="background-color: #ffe372; position: absolute; top: -40px; right:60px; width: 42px; height: 42px;">
-                            <i class="bi bi-lightbulb-fill lightbulbAnimation" style="font-size: 28px;"></i>
-                            </div>
+                      <% } %>
+                      
+                    <% } %>
+
+                  </div>
+
+                  <div class="contentNewsDay my-5">
+                    <div class="carousel-newDay py-2 m-0" style="width: 100%;">
+                        <% if (currentNewsDay) { %>
+
+                            <% currentNewsDay.forEach((ele, i)=>{  %> 
+                                        
+                                  <div class="contentNewDay d-flex py-3 px-4" style="width: 100vw;">
+                                    
+                                        <div class="contentImage">
+                                            <img src="<%= ele.url %>" class="imgNews rounded-3 " alt="..." style="object-fit: cover; width: 100%;" >
+                                        </div>
+                            
+                          
+                                        <div class="contentDetails">
+                                            <p style="font-weight: bold; font-size: 24px;"><%= ele.newDayTitle %></p>
+                                            <p style="font-size: 20px;"><%= ele.newDayDetails %></p>
+                                            
+                                              <div class="contenAuthorDate d-flex justify-content-end my-0" >
+                                                <div class="content">
+                                                    <a class="ui grey label text-decoration-none">
+                                                        <span class="me-1 fst-italic"><%= ele.adminName %></span>
+                                                        <span>(<%= ele.simplifiedDate %>)</span>
+                                                    </a>
+                                                </div>
+                                              </div>
+
+                                        </div>
+                                      
+
+                                  </div>       
+                        
+                            <% }); %>  
+
+                          <% }; %>
+                    </div>  
+                    <div class="titleNewDay d-flex justify-content-end">
+                    
+                        <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticNewsDay">
+                          <span class="fst-italic me-3" style="font-size: 17px"> News Day  <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                        </div>
+
+                    </div> 
+                  </div>   
+
+                  <div class="contentBestView p-0" style="height: auto">
+                    <% if (boxBestView) { %>
+
+                      <% if (boxBestView.length >= 5) { %>
+                                      
+                        <div class="carousel-bestView p-4">    
+                            <% boxBestView.forEach((ele)=>{ %>
+                                <% const images = ele.images %>
+                                <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
+
+                                      <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>">
+                                        <img src="<%= images[0].url %>" alt="" style="width: 310px; height: 360px; object-fit: cover; border-top-left-radius: 6px; border-top-right-radius: 6px;">
+                                        <div class="contentMiniaturas d-flex justify-content-start" style="position: absolute; bottom: 0px; background-color: rgba(255, 255, 255, 0.8); width: 310px; height: auto;">
+                                                                        
+                                            <% images.forEach((ele, i)=>{ %>
+                                        
+                                                <% if (i < 4 ) { %>
+                                                <img src="<%= ele.url %>" alt="" class="m-1 rounded-3 shadow-sm"  style="width: 70px; height: 70px; object-fit: cover;"> 
+                                                <% } %>  
+                                        
+                                            <% }) %>
+                                              
+                                        </div>
+                                      </a>
+                    
+                                      <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
+                        
+                                </div>
+                                
+                            <% }) %>
+                        </div>
+                        <div class="titleCarrousel d-flex justify-content-end">
+                  
+                          <div class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticTrendingBestView">
+                            <span class="fst-italic me-3" style="font-size: 17px"> Trending <span class="me-3"><i class="bi bi-info-circle mx-1"></i> </span></span> 
+                          </div>
+
+                        </div>
+
+                      <% } %>
+
+                    <% } %>   
+                  </div>
+
+                  <div class="row contentMosacicoPorcentMarket m-0 py-5 d-flex justify-content-around">
+                      
+                      <div class="boxTopStore col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12" style="position: relative">                 
+                        <div class="textTitle my-3">
+                          <span class="text-secondary mt-1" style="font-size: 26px;">Top 50 Tiendas + Vistas</span>
+                        </div>
+                        <div class="Top50Stores d-flex flex-wrap">
+    
+                        </div>
+                      </div>      
+                      
+                      <div class="boxPercentMarket col-xxl-5 col-xl-5 col-lg-5 col-md-12 col-sm-12">
+                      
+                        <div class="textTitle my-3">
+                          <span class="text-secondary mt-1" style="font-size: 26px;">Indice de Mercado Dominante</span>
+                        </div>
+                        <div>
+                          <canvas id="myChart"></canvas>
+                        </div>
+
+                      </div>
+
+                  </div>
+
+                  <div class="row px-2 py-5 m-0 containerLastStore text-light" style="height: auto;">
+                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 m-0 py-4">
+                      <% if (profileLast) { %>
+
+                        <div class="left-section contentProfileLast d-flex flex-wrap">
+                            <% profileLast.forEach((ele, i)=>{ %>
+                            
+                              <a href="/account/<%= ele.username %>" class="text-decoration-none">
+                                <div class="contentStoreLast d-flex shadow">
+                                  <div class="contentImg" style="background-color: white;">
+                                    <% if (ele.avatarPerfil[0].url.length === 0 ) { %>
+                                        <img src="https://www.gravatar.com/avatar/<%= ele.mailhash %>?d=identicon" style="width: 50px; height: 50px; object-fit: cover;">   
+                                    <% } else { %>
+                                        <img src="<%= ele.avatarPerfil[0].url %>" alt="" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <% }; %>
+                                  </div>  
+
+                                  <div class="usernameCountry px-2 d-flex align-items-center" style="background-color: #2c2c2c; color:white;">
+                                    <p class="mb-1" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><%= ele.username %></p>
+                                    <p class="mb-1 ms-2" style="font-size: 11px;"> (<span><%= ele.countryCode %></span>) </p>
+                                  </div>
+                                </div>  
+                              </a>
+
+                            <% }); %>  
+                        </div>
+
+                      <% }; %>
+                    </div>
+                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 m-0 py-4">
+
+                      <div class="right-section">
+                        <p style="font-size: 22px;"> <b>¡Descubre las últimas tiendas creadas en nuestra comunidad!</b> </p>
+                        <p id="texto" style="font-size: 20px;"> "¡Vamos a construir algo increíble juntos! Explora las nuevas tiendas, deja comentarios y ayuda a crear un mercado digital de alto tráfico y dinámico. ¡Cada comentario y seguimiento cuenta!"</p>
+                      </div>  
+                        
+                    </div>
+                  </div>
+
+                  <div class="gallery-masonry p-2" id="newADS" style="background-color: rgba(255, 255, 255, 0.9);">
+                    <div class="textTitle my-3">
+                        <span class="text-secondary" style="font-size: 26px;">últimas Publicaciones</span>
+                    </div>
+                    <div class="gallery">
+
+                    </div>
+                  </div>
+
+                  <div class="gallery-masonry p-2 shadow-sm" id="moreViewADS" style="background-color: rgba(255, 255, 255, 0.9);">
+                    <div class="textTitle my-3">
+                        <span class="text-secondary" style="font-size: 26px;">Publicaciones más vistas</span>
+                    </div>
+                    <div class="galleryMoreView">
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <% if (!user) { %>
+
+              <div class="containerFixedSinUser">
+                  <div class="d-flex flex-column"  style="position: fixed; right: 10px; bottom: 100px; z-index : 100">
+                      <div class="d-flex justify-content-end px-4">
+
+                          <span class="rounded-pill d-flex justify-content-center align-items-center cursor-pointer shadow-sm" id="btnXSinUser"  style="width: 40px; height: 40px; background-color: rgba(238, 238, 238, 0.9); color: black;">
+                              <i class="bi bi-x-lg" id="bi-x-move" style="font-size: 16px;"></i>
+                          </span> 
+                        
+                      </div>    
+                      <div class="body fixedSinUser mx-2 mt-5">
+                          
+                          <div class="d-flex flex-column align-items-center justify-content-center">
+
+                          <div style="position: relative;">
+
+                              <div class="px-4 py-2 lightbulbAnimation shadow d-flex" style="background-color: #ffe372; font-size: 16px; color: #7a6202; border-top-left-radius: 12px; border-top-right-radius: 12px;"> 
+                                  <span> No estas logeado </span>   
+                              </div>
+                              <div class="rounded-pill d-flex justify-content-center align-items-center" style="background-color: #ffe372; position: absolute; top: -40px; right:60px; width: 42px; height: 42px;">
+                              <i class="bi bi-lightbulb-fill lightbulbAnimation" style="font-size: 28px;"></i>
+                              </div>
+                              
+                          </div>
+                          
+                          </div>
+
+                          <div class="form-group my-1 py-2" style="width: 100%; font-size: 24px;">
+
+                          <a href="/myaccount/signin-change" class="form-control rounded-pill btn btn-dark border-secondary shadow" style="font-size: 20px;"> Entrar </a>
+
+                          </div>
+                      </div>
+                  </div>
+              </div> 
+
+              <% }; %>
+
+              <!-- Modal trendingOffert --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingOffert" -->
+              <div class="modal fade" id="staticTrendingOffert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
+                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                    <div class="modal-content text-dark">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBlissBotConnect"> Trending Offert </h5>
+                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                        </div>
+                        <div class="modal-body">
+
+                            <p> Las ofertas en tendencias son todos los anuncios que han sido etiquetadas como ofertas y que hayan recibido muchas vistas. Puedes lograr tener un anuncio aquí con un poco de esfuerzo y creatividad. </p>
                             
                         </div>
-                        
-                        </div>
-
-                        <div class="form-group my-1 py-2" style="width: 100%; font-size: 24px;">
-
-                        <a href="/myaccount/signin-change" class="form-control rounded-pill btn btn-dark border-secondary shadow" style="font-size: 20px;"> Entrar </a>
-
+                        <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
-            </div> 
-
-            <% }; %>
-
-            <!-- Modal trendingOffert --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingOffert" -->
-            <div class="modal fade" id="staticTrendingOffert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
-              <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                  <div class="modal-content text-dark">
-
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="staticBlissBotConnect"> Trending Offert </h5>
-                          <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
-                      </div>
-                      <div class="modal-body">
-
-                          <p> Las ofertas en tendencias son todos los anuncios que han sido etiquetadas como ofertas y que hayan recibido muchas vistas. Puedes lograr tener un anuncio aquí con un poco de esfuerzo y creatividad. </p>
-                          
-                      </div>
-                      <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
-                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
-                      </div>
-                  </div>
               </div>
-            </div>
 
-            <!-- Modal NewsDay --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticNewsDay" -->
-            <div class="modal fade" id="staticNewsDay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticNewsDay" aria-hidden="true">
-              <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                  <div class="modal-content text-dark">
+              <!-- Modal NewsDay --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticNewsDay" -->
+              <div class="modal fade" id="staticNewsDay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticNewsDay" aria-hidden="true">
+                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                    <div class="modal-content text-dark">
 
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="staticBlissBotConnect"> News Day </h5>
-                          <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
-                      </div>
-                      <div class="modal-body">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBlissBotConnect"> News Day </h5>
+                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                        </div>
+                        <div class="modal-body">
 
-                          <p> Este es un espacio publicitario informativo, si quieres colocar un NewsDay escribenos en admin@blissenet.com y dejate descubrir por centenares de personas y empresas. </p>
-                          
-                      </div>
-                      <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
-                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
-                      </div>
-                  </div>
+                            <p> Este es un espacio publicitario informativo, si quieres colocar un NewsDay escribenos en adminve@blissenet.com y dejate descubrir por centenares de personas y empresas. </p>
+                            
+                        </div>
+                        <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
               </div>
-            </div>
-            
-            <!-- Modal TrendingBestView --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingBestView" -->
-            <div class="modal fade" id="staticTrendingBestView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
-              <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
-                  <div class="modal-content text-dark">
+              
+              <!-- Modal TrendingBestView --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticTrendingBestView" -->
+              <div class="modal fade" id="staticTrendingBestView" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
+                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                    <div class="modal-content text-dark">
 
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="staticBlissBotConnect"> Trending </h5>
-                          <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
-                      </div>
-                      <div class="modal-body">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBlissBotConnect"> Trending </h5>
+                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                        </div>
+                        <div class="modal-body">
 
-                          <p> Los anuncios en tendencias son todas las publicaciones que hayan recibido muchas visistas y que no esten etiquetadas como oferta. Puedes lograr tener un anuncio aquí con un poco de esfuerzo y creatividad. </p>
-                          
-                      </div>
-                      <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
-                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
-                      </div>
-                  </div>
+                            <p> Los anuncios en tendencias son todas las publicaciones que hayan recibido muchas visistas y que no esten etiquetadas como oferta. Puedes lograr tener un anuncio aquí con un poco de esfuerzo y creatividad. </p>
+                            
+                        </div>
+                        <div class="modal-footer" style="background-image: url('/img/trendingOffert.jpg'); background-size: cover; background-position: center;">
+                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
               </div>
-            </div>
 
-        </div>
-        
-      
-        <%- include('../partials/footer.ejs') %>
-
+          </div>
           
+        
+          <%- include('../partials/footer.ejs') %>
 
-  </main>
+      </div>      
+
+    </main>
   
   <!-- CDN js Slick-carousel --> <!-- Es importante manejar los script del carrousel en el mismo archivo que se van a usar -->
   <!-- para no interferir en otros script cdn de jquey --> 
@@ -958,6 +992,24 @@
   <%- include('../partials/scriptsOnlyNavi-simple.ejs') %>
  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Selecciona el contenedor del loading y el homePage
+    const loading = document.querySelector('.loading');
+    const homePage = document.querySelector('.homePage');
+
+    setTimeout(() => {
+      // Quita la clase "close" del loading
+      loading.classList.add('invisible');
+
+      // Agrega la clase "close" al homePage
+      homePage.classList.remove('invisible');
+    }, 1000);
+
+});
+</script>
 
  <script>
 
@@ -1029,38 +1081,46 @@
 
   
   //al cargar toda la pagina actualizamos date 
-  window.addEventListener('load', ()=>{
-    fetch("/requireDate", {
-                  method: "GET",
-                  headers: { "Content-Type" : "applications/json"}
-        })
-        .then(response =>response.json() )
-        .then( jsonx => { 
-          //console.log("Esto es /requireDate --------------------------->", jsonx) 
-          const date = jsonx.date;
-          const year = new Date(date).getFullYear();
-          //console.log("year -->", year);
-          currentYear.innerText = year
-          //const rateSort = jsonx.rateSort;
-          //const currentPrice = rateSort.currentPrice;
+  window.addEventListener('DOMContentLoaded', ()=>{
 
-          //console.log("date -->", date);
-          // Crear un objeto Date con la hora del servidor
-          const serverDate = new Date(date);
-          console.log("serverDate -->", serverDate);
 
-          // Convertir a la zona horaria local del usuario
-          const localTime = serverDate.toLocaleString(); // Sin especificar idioma, tomará la configuración regional del usuario
-          console.log("localTime -->", localTime);
+    setTimeout(() => {
+      
+    
+      fetch("/requireDate", {
+                    method: "GET",
+                    headers: { "Content-Type" : "applications/json"}
+          })
+          .then(response =>response.json() )
+          .then( jsonx => { 
+            //console.log("Esto es /requireDate --------------------------->", jsonx) 
+            const date = jsonx.date;
+            const year = new Date(date).getFullYear();
+            //console.log("year -->", year);
+            currentYear.innerText = year
+            //const rateSort = jsonx.rateSort;
+            //const currentPrice = rateSort.currentPrice;
 
-          dateRateUpdate.innerHTML = `<span class= "fst-italic"> <span class="me-1">Server Time:</span> ${localTime} </span>`
-        })
-        .catch( err => console.log(err));
+            //console.log("date -->", date);
+            // Crear un objeto Date con la hora del servidor
+            const serverDate = new Date(date);
+            console.log("serverDate -->", serverDate);
+
+            // Convertir a la zona horaria local del usuario
+            const localTime = serverDate.toLocaleString(); // Sin especificar idioma, tomará la configuración regional del usuario
+            console.log("localTime -->", localTime);
+
+            dateRateUpdate.innerHTML = `<span class= "fst-italic"> <span class="me-1">Server Time:</span> ${localTime} </span>`
+          })
+          .catch( err => console.log(err));
+
+    }, 1000);
+
   })
 
 
-//cada minuto actualizamos la fecha y hora para mantener la plataforma actualizada con la hora del servidor
-//y el precio del dolar    
+  //cada minuto actualizamos la fecha y hora para mantener la plataforma actualizada con la hora del servidor
+  //y el precio del dolar    
     setInterval(() => {
 
       fetch("/requireDate", {
@@ -1471,6 +1531,9 @@
 
 
 </script>
+
+
+
 
 </body>
 
