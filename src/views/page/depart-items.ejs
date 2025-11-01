@@ -219,7 +219,7 @@
                                                         <option value="Alimentos y Bebidas">Alimentos y Bebidas</option>
                                                         <option value="Animales y Mascotas">Animales y Mascotas</option>
                                                         <option value="Ciclismo">Ciclismo</option>
-                                                        <option value="Computacion,Consolas y Drones">Computacion,Consolas y Drones</option>
+                                                        <option value="Computacion">Computacion</option>
                                                         <option value="Confiteria y Piñateria">Confiteria y Piñateria</option>
                                                         <option value="Construcción">Construcción</option>
                                                         <option value="Cosmeticos y Aseo Personal">Cosmeticos y Aseo Personal</option>
@@ -825,18 +825,18 @@
             let Alimentos_bebidas = ["Select it", "Congelados", "Almacén", "Bebidas", "Charcuteria", "Comidas Preparadas", "Postres y Dulces", "Otros..."];
             let Animales_mascotas = ["Select it", "Perros", "Gatos", "Hurones", "Hammters", "Conejos", "Reptiles", "Peces","Artículos para mascotas", "Accesorios para su cuidado", "Otros..." ];
             let Ciclismo = ["Select it","Accesorios", "Carreras", "Montañeras", "Paseo", "Repuestos varios", "Otros..."];
-            let Computacion_consolas_drones = ["Select it","Computadores Personales", "Monitores", "Teclados", "Mouses", "Impresoras", "Scaners", "Plotters", "Modems", "Suiches", "Drones", "Camaras", "Calculadoras", "Microfonos", "Otros..."];
+            let Computacion = ["Select it","Computadores Personales", "Disco Duro", "Fuente de Poder", "Memorias", "Microfonos", "Monitores", "Mouses", "Modems", "Pendrive", "Procesadores", "Tarjeta Grafica", "Tarjeta Madre", "Teclados", "Impresoras", "Scaners", "Plotters", "Suiches", "Camaras", "Calculadoras", "Reguladores", "UPS", "Otros..."];
             let Confiteria_piñateria = ["Duces Varios", "Plasticos para piñatas", "Piñatas", "Otros..."];
             let Construcción = ["Herramientas Electricas", "Herramientas Manuales", "Insumos de Albañileria", "Insumos de Carpinteria", "Materiales de Cosntrucción", "Implementos de Seguridad Industrial", "Instrumentos e Insumos de Jardín", "Otros..."];
             let Cosmeticos_aseo_personal = ["Pinturas de uñas", "Tintes para cabello", "Aguas oxigenadas", "Cremas", "Jabones", "Shampoos", "Algodones e Isopos", "Toallitas", "Perfumes y Splashes", "Otros..."];
             let Deporte_fitness = ["Select it", "Balones", "Pelotas", "Mallas", "Pesas", "Mancuernas", "Guantes y Calleras", "Cuerdas y Elasticas", "Equipos de Multifuerza", "Fajas Reductoras", "Cañas de Pescar, Nailons, Pesas, Anzuelos y Carretes", "Proteinas masa Muscular", "Otros..." ];
-            let Electricidad = ["Select it","Cables", "brakers", "Iluminación", "Transformadores", "Otros..."];
+            let Electricidad = ["Select it","Cables", "Brakers", "Iluminación", "Transformadores", "Otros..."];
             let Electrodomesticos = ["Select it","Aires Acondicionados", "Licuadoras", "Hornos", "Amasadoras","Sobadoras", "Microondas", "Televisores", "Ventiladores", "Secadoras", "Lavadoras", "Cocinas de Gas  y Electricas", "cocinas de Tope de Gas/Electricas", "Batidoras", "Maquinas de Coser"];
-            let Electronicos = ["Select it","Resistencias", "Condensadores", "Transformadores", "Accesorios e Insumos", "Otros..."];
+            let Electronicos = ["Select it", "Cables", "Consolas de Juegos", "Consolas de Sonido", "Drones", "Radio Control Equipos", "Tarjetas", "Testers", "Resistencias", "Condensadores", "Transformadores", "Accesorios e Insumos", "Otros..."];
             let Hogar_muebles = ["Select it", "Articulos de Cocinas","Muebles de Cocina", "Muebles de Oficina", "Muebles de Baño", "Escritorios", "Camas","Sillas","Juegos de Sala", "Juegos de Comedor", "Juegos de Cuartos", "Baúles y Cofres", "Vajillas Y Copas", "Otros..." ];
             let Instrumentos_musicales = ["Select it","Guitarras", "Bajos", "Cuatros","Bandolinas","Baterias Acusticas", "Baterias Electricas", "Flautas", "Violínes", "Tambores", "Trombones", "Pianos", "Teclados", "Insumos de Instrumentos", "Otros..."];
             let Insumos_implementos_reposteria = ["Select it","Sacos de Harina", "Harina por Kilos", "Levaduras", "Polvo de Hornear", "Colorantes y sabores Artificiales", "Mantecas", "Otros..."];
-            let Juguetes = ["Select it", "Juguetes Infantiles", "Juguetes Adolescentes", "Juegos de Mesa", "Otros..."];
+            let Juguetes = ["Select it", "Juguetes Infantiles", "Juguetes Adolescentes", "Juegos de Mesa", "Radio Control", "Otros..."];
             let Lentes = ["Select it", "Correctivos","Deportivos","Industriales", "Lentes para Motos", "Otros..." ];
             let Merceria = ["Select it", "Accesorios varios", "Agujas", "Botones", "Cremalleras y Cierres Magicos", "Dedales", "Hilos", "Telas", "Otros..."];
             let Vehiculo_Movilidad_Personal = ["Select it", "Scooter Electricos", "Monopatines Electricos", "Monociclos Electricos", "Accesorios p/Scooter", "Bicimotos", "Repuestos Varios", "Otros..."];
@@ -883,10 +883,10 @@
                         nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
                     }
 
-                } else if ( selected == "Computacion,Consolas y Drones") {
+                } else if ( selected == "Computacion") {
                     nivel2[0].innerHTML = "";
-                    for (let i = 0; i < Computacion_consolas_drones.length; i++) {
-                        const element = Computacion_consolas_drones[i];
+                    for (let i = 0; i < Computacion.length; i++) {
+                        const element = Computacion[i];
                         nivel2[0].innerHTML += `<option value="${element}">${element}</option>`
                     }
 
@@ -1085,10 +1085,10 @@
                         nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
                     }
 
-                } else if ( selected == "Computacion,Consolas y Drones") {
+                } else if ( selected == "Computacion") {
                     nivel2[1].innerHTML = "";
-                    for (let i = 0; i < Computacion_consolas_drones.length; i++) {
-                        const element = Computacion_consolas_drones[i];
+                    for (let i = 0; i < Computacion.length; i++) {
+                        const element = Computacion[i];
                         nivel2[1].innerHTML += `<option value="${element}">${element}</option>`
                     }
 

@@ -1875,120 +1875,121 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
 
 //esta ruta es accedida por tres peticiones, desde el stores, desde una tienda sobre el banner y en el view-general-product.
 routes.post('/account/myfavorite-stores', async (req,res)=>{
-try {
-      
-    //console.log("Esto es lo que esta llegando de un favoritoStore al backend ---->", req.body)
-    const { user, userOfStore } = req.body;
-    console.log(` user:  ${user}    userOfStore:  ${userOfStore} `);
-    //user:  66ac0281a3afb22ac770d5f2    userOfStore:  66fd4cede0160a6c5f8d5954
-    let searchProfile;
     
-    let date = new Date();
-    let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
-    let hora = date.getHours(); let minu = date.getMinutes();
-
-    //### Consideraciones adicionales:
-    //Si deseas que los minutos siempre se muestren con dos dígitos (por ejemplo, `03` en lugar de `3`), puedes agregar un formato adicional. Por ejemplo:
-    //String(minu)`**: Esta parte convierte el valor de la variable `minu` a un tipo de dato `String`. Esto es importante porque queremos asegurarnos de que el valor que estamos manejando sea una cadena de texto.
-    //padStart(2, '0')`**: Esta es una función que se aplica a la cadena que obtenemos del paso anterior. La función `padStart` se utiliza para rellenar la cadena con un carácter específico hasta alcanzar una longitud deseada. 
-    //El primer argumento (`2`) indica que queremos que la longitud total de la cadena sea de al menos 2 caracteres.
-    //El segundo argumento (`'0'`) especifica que queremos rellenar con ceros (`'0'`) si la longitud original de la cadena es menor que 2.
-
-    let mesFormatted = String(mes).padStart(2, '0');
-    let minuFormatted = String(minu).padStart(2, '0');
-    const timeNow = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
-    
-    console.log("Esto es timeNow>>>", timeNow);
-
-    searchProfile = await modelProfile.findOne({ indexed : user });
-    console.log("Esto es searchProfile : ", searchProfile)
-
-     
-    if (searchProfile){
-
-        //const elqueSigue = await modelProfile.findOne({ indexed : user });
-        // ya tenemos este objeto "searchProfile" asi que no hace falta volverlo a buscar 
-        const alqueSigue = await modelProfile.findOne({ indexed : userOfStore }, {username : 1, indexed : 1} );
-        console.log("-------------------------------------")
-        console.log("elqueSigue >>", searchProfile);
-        console.log("alqueSigue >>", alqueSigue);
-        console.log("-------------------------------------")
-        const usernameElqueSigue = searchProfile.username; 
-        const avatar = searchProfile.avatarPerfil[0].url; const avatarDefault = searchProfile.mailhash;
-        const usernameAlqueSigue = alqueSigue.username; //const idAlqueSiguen = alqueSigue._id; borrar
-        //userOfStore = al indexed 
-        console.log("Esto es avatar>>", avatar);
-        console.log("Esto es avatarDefault>>", avatarDefault);
+    try {
         
-        const favoriteStores = searchProfile.favoritestores;
-        //console.log("Aqui veo el user --->",searchProfile)
-        //console.log("Aqui veo las tiendas favoritas del user --->", favoriteStores); //esto es un array que contiene todas las cuentas a las que yo estoy siguiendo
+        //console.log("Esto es lo que esta llegando de un favoritoStore al backend ---->", req.body)
+        const { user, userOfStore } = req.body;
+        console.log(` user:  ${user}    userOfStore:  ${userOfStore} `);
+        //user:  66ac0281a3afb22ac770d5f2    userOfStore:  66fd4cede0160a6c5f8d5954
+        let searchProfile;
         
-        async function Follow(){
-            console.log("No existe esta tienda en el array favoriteStore de este usuario")
-            console.log("----------------------------see-------------------------")
-            const resultUpdate = await modelProfile.updateOne({ indexed : user }, {$push:{ favoritestores : userOfStore }});
-            //ahora vamos a agregar al user al array folowMe
-            const followMe = await modelProfile.updateOne({ indexed : userOfStore }, { $push: { followMe : user } } );
+        let date = new Date();
+        let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+        let hora = date.getHours(); let minu = date.getMinutes();
+
+        //### Consideraciones adicionales:
+        //Si deseas que los minutos siempre se muestren con dos dígitos (por ejemplo, `03` en lugar de `3`), puedes agregar un formato adicional. Por ejemplo:
+        //String(minu)`**: Esta parte convierte el valor de la variable `minu` a un tipo de dato `String`. Esto es importante porque queremos asegurarnos de que el valor que estamos manejando sea una cadena de texto.
+        //padStart(2, '0')`**: Esta es una función que se aplica a la cadena que obtenemos del paso anterior. La función `padStart` se utiliza para rellenar la cadena con un carácter específico hasta alcanzar una longitud deseada. 
+        //El primer argumento (`2`) indica que queremos que la longitud total de la cadena sea de al menos 2 caracteres.
+        //El segundo argumento (`'0'`) especifica que queremos rellenar con ceros (`'0'`) si la longitud original de la cadena es menor que 2.
+
+        let mesFormatted = String(mes).padStart(2, '0');
+        let minuFormatted = String(minu).padStart(2, '0');
+        const timeNow = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
+        
+        console.log("Esto es timeNow>>>", timeNow);
+
+        searchProfile = await modelProfile.findOne({ indexed : user });
+        console.log("Esto es searchProfile : ", searchProfile)
+
+        
+        if (searchProfile){
+
+            //const elqueSigue = await modelProfile.findOne({ indexed : user });
+            // ya tenemos este objeto "searchProfile" asi que no hace falta volverlo a buscar 
+            const alqueSigue = await modelProfile.findOne({ indexed : userOfStore }, {username : 1, indexed : 1} );
+            console.log("-------------------------------------")
+            console.log("elqueSigue >>", searchProfile);
+            console.log("alqueSigue >>", alqueSigue);
+            console.log("-------------------------------------")
+            const usernameElqueSigue = searchProfile.username; 
+            const avatar = searchProfile.avatarPerfil[0].url; const avatarDefault = searchProfile.mailhash;
+            const usernameAlqueSigue = alqueSigue.username; //const idAlqueSiguen = alqueSigue._id; borrar
+            //userOfStore = al indexed 
+            console.log("Esto es avatar>>", avatar);
+            console.log("Esto es avatarDefault>>", avatarDefault);
+            
+            const favoriteStores = searchProfile.favoritestores;
+            //console.log("Aqui veo el user --->",searchProfile)
+            //console.log("Aqui veo las tiendas favoritas del user --->", favoriteStores); //esto es un array que contiene todas las cuentas a las que yo estoy siguiendo
+            
+            async function Follow(){
+                console.log("No existe esta tienda en el array favoriteStore de este usuario")
+                console.log("----------------------------see-------------------------")
+                const resultUpdate = await modelProfile.updateOne({ indexed : user }, {$push:{ favoritestores : userOfStore }});
+                //ahora vamos a agregar al user al array folowMe
+                const followMe = await modelProfile.updateOne({ indexed : userOfStore }, { $push: { followMe : user } } );
+
+            }
+            //ahora que amvas partes tienen la informacion de siguiendo y seguido procedemos a crear la notificacion
+            //de siguiendome para que el usuario sepa cuando lo siguen y quien lo sigue.
+            async function Notification(){
+                //enviar mensaje al usuario que lo estan siguiendo.
+                const newNotification = new modelMessage( { typeNote: 'followMe',
+                                                            times: timeNow,
+                                                            objeAvatar : {avatar, avatarDefault},
+                                                            username: usernameElqueSigue,
+                                                            question: `¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también.`,
+                                                            toCreatedArticleId : userOfStore,
+                                                            ownerStore  : usernameAlqueSigue,
+                                                            answer: 'waiting',
+                                                            view: false } );
+                console.log("newNotification ------>", newNotification);
+                const saveMessage = await newNotification.save();
+                console.log("se ha creado la notificacion del seguidor");
+            }
+
+
+            
+            //const search = await modelProfile.findOne({ favoritestores : userOfStore }); maloooo
+            const search = await modelProfile.findOne({
+                indexed: user,
+                'favoritestores': userOfStore 
+            });
+            console.log ("userOfStore ---->", userOfStore);
+            console.log ("search ---->", search);
+            if (search !== null) {
+
+                    console.log("Resultado encontrado:");
+                    res.json({ "type" : "Following", "message" : "Sigo esta Tienda"});
+
+            } else {
+                    console.log("No se encontró ningún documento con ese valor en favoriteStores.");
+                    Follow()
+                        .then(()=>{
+                            Notification()
+                                .then(()=>{
+                                    res.json({ "type" : "Save", "message" : "Tienda guardada y siguiendo"});
+                                })
+                                .catch((error)=>{
+                                    res.json({ "type" : "Error", "message" : "Ha habido un error em Notificaction(), intente luego"});        
+                                })
+                            
+                        })
+                        .catch((error)=>{
+                            res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
+                        })
+                    
+            }
+            
 
         }
-        //ahora que amvas partes tienen la informacion de siguiendo y seguido procedemos a crear la notificacion
-        //de siguiendome para que el usuario sepa cuando lo siguen y quien lo sigue.
-        async function Notification(){
-            //enviar mensaje al usuario que lo estan siguiendo.
-            const newNotification = new modelMessage( { typeNote: 'followMe',
-                                                        times: timeNow,
-                                                        objeAvatar : {avatar, avatarDefault},
-                                                        username: usernameElqueSigue,
-                                                        question: `¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también.`,
-                                                        toCreatedArticleId : userOfStore,
-                                                        ownerStore  : usernameAlqueSigue,
-                                                        answer: 'waiting',
-                                                        view: false } );
-            console.log("newNotification ------>", newNotification);
-            const saveMessage = await newNotification.save();
-            console.log("se ha creado la notificacion del seguidor");
-        }
 
-
-        
-        //const search = await modelProfile.findOne({ favoritestores : userOfStore }); maloooo
-        const search = await modelProfile.findOne({
-            indexed: user,
-            'favoritestores': userOfStore 
-          });
-        console.log ("userOfStore ---->", userOfStore);
-        console.log ("search ---->", search);
-        if (search !== null) {
-
-                console.log("Resultado encontrado:");
-                res.json({ "type" : "Following", "message" : "Sigo esta Tienda"});
-
-        } else {
-                console.log("No se encontró ningún documento con ese valor en favoriteStores.");
-                Follow()
-                    .then(()=>{
-                        Notification()
-                            .then(()=>{
-                                res.json({ "type" : "Save", "message" : "Tienda guardada y siguiendo"});
-                            })
-                            .catch((error)=>{
-                                res.json({ "type" : "Error", "message" : "Ha habido un error em Notificaction(), intente luego"});        
-                            })
-                        
-                    })
-                    .catch((error)=>{
-                        res.json({ "type" : "Error", "message" : "Ha habido un error en Follow(), intente luego"});
-                    })
-                
-        }
-        
-
-    }
-
-} catch (error) {
-   console.log("Ha habido un error, intente luego", error); 
-}  
+    } catch (error) {
+    console.log("Ha habido un error, intente luego", error); 
+    }  
 
     
 // hay tres valores en Type = "Save", "Following", "Error"
@@ -4914,8 +4915,12 @@ routes.post('/account/spread', async (req, res)=>{
     let avatar; let avatarDefault;
     let imageFirst; //aqui guardamos la imagen que vamos a pasar por el BlissBot y les llegue a telegram. 
 
-    //console.log("*******variables*******");
-    //console.log("userId", userId); console.log("username", username); console.log("depart", depart); console.log("title", title); console.log("titleId", titleId);
+    console.log("*******variables*******");
+    console.log("userId", userId);
+    console.log("username", username);
+    console.log("depart", depart);
+    console.log("title", title); 
+    console.log("titleId", titleId);
 
     const date = new Date();
     let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
@@ -4937,7 +4942,7 @@ routes.post('/account/spread', async (req, res)=>{
     }
     
     const titleURL = transformarTitle(title);
-    //console.log(titleURL); // "hoverboard-blue-tooth-250w"
+    console.log(titleURL); // "hoverboard-blue-tooth-250w"
     
     // avatarPerfil, mailhash
     //Aqui buscamos el avatar de la tienda que esta difundiendo el anuncio.
