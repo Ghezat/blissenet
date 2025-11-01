@@ -1875,7 +1875,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
 
 //esta ruta es accedida por tres peticiones, desde el stores, desde una tienda sobre el banner y en el view-general-product.
 routes.post('/account/myfavorite-stores', async (req,res)=>{
-    
+
     try {
         
         //console.log("Esto es lo que esta llegando de un favoritoStore al backend ---->", req.body)
@@ -4960,25 +4960,33 @@ routes.post('/account/spread', async (req, res)=>{
     //Aqui escaneamos en toda la DB cuales usuarios siguen a esta tienda
     const searchToFollowMe = await modelProfile.find({ indexed : userId } );
     const FollowMe = searchToFollowMe[0].followMe; //esto es un array de id de users 
-    //console.log("FollowMe ----------->", FollowMe);
+    console.log("FollowMe ----------->", FollowMe);
     const count = FollowMe.length;
     //console.log("esto es FollowMe", FollowMe); //esto es un array donde estan todas las cuentas que me siguen.
     //console.log("seguiendo esta cuenta", count);
 
 
     async function sendingSpread(){
-        for (let i = 0; i < FollowMe.length; i++) {
-            const indexed = FollowMe[i] //un id de usuario que deseo enviar el mensaje;
-            
-            const searchReceive = await modelProfile.find({indexed});
-            //console.log("usernameReceive", searchReceive[0].username);
-            const usernameReceive = searchReceive[0].username;
 
-            //enviamo el mensaje a este usuario
-            const newMessage = new modelMessage( { typeNote: "spread", times: dateSend, username, question : Note, toCreatedArticleId: indexed,  ownerStore: usernameReceive, depart, titleArticle: title, titleURL, productId : titleId, objeAvatar : objAvatar } );
-            //console.log("newMessage :", newMessage);
-            const saveMessage = await newMessage.save();
-        }
+        try {
+            
+            for (let i = 0; i < FollowMe.length; i++) {
+                const indexed = FollowMe[i] //un id de usuario que deseo enviar el mensaje;
+                
+                const searchReceive = await modelProfile.find({indexed});
+                console.log("usernameReceive", searchReceive[0].username);
+                const usernameReceive = searchReceive[0].username;
+
+                //enviamo el mensaje a este usuario
+                const newMessage = new modelMessage( { typeNote: "spread", times: dateSend, username, question : Note, toCreatedArticleId: indexed,  ownerStore: usernameReceive, depart, titleArticle: title, titleURL, productId : titleId, objeAvatar : objAvatar } );
+                console.log("newMessage :", newMessage);
+                const saveMessage = await newMessage.save();
+            }
+
+        } catch (error) {
+            console.log("Este es el error en sendingSpread() :", error);
+        }    
+
     }
 
    
