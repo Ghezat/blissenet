@@ -4567,7 +4567,7 @@ routes.post('/myaccount/change-username', async(req, res)=>{
 
         } else {
             console.log('Token Erroneo, no puede cambiar el username');
-            const status = { edit : false, msg : "Contraseña Errada", code : "denegado", note : "Contraseña errada." };
+            const status = { edit : false, msg : "Token Errado", code : "denegado", note : "Token Errado." };
             res.json(status);
         }    
 

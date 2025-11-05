@@ -886,7 +886,7 @@
 
                           <div style="position: relative;">
 
-                              <div class="px-4 py-2 lightbulbAnimation shadow d-flex" style="background-color: #ffe372; font-size: 16px; color: #7a6202; border-top-left-radius: 12px; border-top-right-radius: 12px;"> 
+                              <div class="px-4 py-2 shadow d-flex" style="background-color: #ffe372; font-size: 16px; color: #7a6202; border-top-left-radius: 12px; border-top-right-radius: 12px;"> 
                                   <span> No estas logeado </span>   
                               </div>
                               <div class="rounded-pill d-flex justify-content-center align-items-center" style="background-color: #ffe372; position: absolute; top: -40px; right:60px; width: 42px; height: 42px;">
@@ -995,18 +995,17 @@
 
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Selecciona el contenedor del loading y el homePage
-    const loading = document.querySelector('.loading');
-    const homePage = document.querySelector('.homePage');
+// Selecciona el contenedor del loading y el homePage
+const loading = document.querySelector('.loading');
+const homePage = document.querySelector('.homePage');
 
-    setTimeout(() => {
+/* Este script se ejecuta cuando haya cargado absolutamente todo incluyendo el js y los estilos css */
+window.addEventListener("load", function() {
       // Quita la clase "close" del loading
       loading.classList.add('invisible');
 
       // Agrega la clase "close" al homePage
       homePage.classList.remove('invisible');
-    }, 2000);
 
 });
 </script>
