@@ -658,6 +658,10 @@
 
                         <div class="carousel-bestView p-4">    
                             <% boxOffert.forEach((ele)=>{ %>
+
+                                <% let priceFormat = ele.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
+                                <!-- console.log(priceFormat); // Salida: "34.600,45" -->
+
                                 <% const images = ele.images %>
                                 <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
 
@@ -677,7 +681,7 @@
                                       </a>
                     
                                       
-                                      <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
+                                      <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= priceFormat %></b>  </span>
                         
                                 </div>
                                 
@@ -748,6 +752,10 @@
                                       
                         <div class="carousel-bestView p-4">    
                             <% boxBestView.forEach((ele)=>{ %>
+
+                                <% let priceFormat = ele.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
+                                <!-- console.log(priceFormat); // Salida: "34.600,45" -->
+
                                 <% const images = ele.images %>
                                 <div class="contentCard px-3 d-flex flex-column text-dark;" style="position: relative;">
 
@@ -766,7 +774,7 @@
                                         </div>
                                       </a>
                     
-                                      <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= ele.price %></b>  </span>
+                                      <span class="bg-warning px-3 py-0 text-dark" style="border-radius: 50%; position: absolute; top: 30px; right: 30px; font-size: 17px;">  <b>$<%= priceFormat %></b>  </span>
                         
                                 </div>
                                 
