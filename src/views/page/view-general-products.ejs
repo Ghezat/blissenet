@@ -292,6 +292,10 @@
 
         <% if  (search) { %>
             <% const titleURL = search.titleURL %> 
+            
+            <% let priceFormat = search.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
+            <!-- console.log(priceFormat); // Salida: "34.600,45" -->
+
             <div class="col-lg-3 p-2" style="background-color: rgb(233, 236, 239); ">
             <% if (depart == 'arts')  { %>
                 <div class="card py-2 px-1" style="max-height: 80vh; overflow-y: auto;">
@@ -539,7 +543,7 @@
                     <div class="card-body">
 
                         <!-- viejoo <span class="bg-warning px-1 py-1 rounded-2 pe-5" style="font-size: 18px; clip-path: polygon(0% 0%, 75% 0%, 82% 50%, 75% 100%, 0% 100%);">Precio: <i class="bi bi-currency-dollar"></i><%= search.price %></span>  -->
-                        <a class="ui yellow tag label" style="font-size: 16px;">  <span class="text-dark"> <i class="bi bi-currency-dollar"></i><%= search.price %></a>  </span>  <hr>
+                        <a class="ui yellow tag label" style="font-size: 16px;">  <span class="text-dark"> <i class="bi bi-currency-dollar"></i><%= priceFormat %></a>  </span>  <hr>
 
                     <% if (user) {  %>        
                         <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
@@ -766,12 +770,12 @@
                                                    
                                                     <input type="hidden" class="available" value="<%= search.count %>">
                                                     
-                                                    <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                    <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= priceFormat %> </span>
                                                         <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
                                                             <i class="bi bi-info-circle text-primary ms-2"></i>
                                                         </button>   
                                                     </p>
-                                                    <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                    <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= priceFormat %><!-- valor dinamico  --> </span> </p>
                                                     <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy"><div>¡Compra ahora! </div></button>
                                                     <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNBuySpinning" style="color: #FEDE05;" disabled>
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -818,12 +822,12 @@
                                                 </div>    
                                                 <input type="hidden" class="available" value="<%= search.count %>">
                                                 <input type="hidden" class="unitPrice" value="<%= search.price %>">
-                                                <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= priceFormat %></span>
                                                     <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
                                                         <i class="bi bi-info-circle text-primary ms-2"></i>
                                                     </button>   
                                                 </p>
-                                                <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= priceFormat %><!-- valor dinamico  --> </span> </p>
                                                 <!-- <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy"><div>¡Compra ahora! </div></button> -->
                                                 <button class="buttonPause rounded-2 btn" disabled>
                                                      PAUSADO/AGOTADO
@@ -869,12 +873,12 @@
 
                                                 <input type="hidden" class="available" value="<%= search.count %>">
                                                 <input type="hidden" class="unitPrice" value="<%= search.price %>">
-                                                <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= priceFormat %></span>
                                                     <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
                                                         <i class="bi bi-info-circle text-primary ms-2"></i>
                                                     </button>   
                                                 </p>
-                                                <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= priceFormat %><!-- valor dinamico  --> </span> </p>
                                                 <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary" disabled><div> ¡Compra ahora! </div></button>
 <!--                                                 <button class="buttonProcessingBuy rounded-2 btn btn-primary close"  id="newBTNBuySpinning" style="color: #FEDE05;" disabled>
                                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -932,7 +936,7 @@
                                                     <input type="hidden" name="unitPrice" class="unitPrice" value="<%= search.price %>"> <!-- aqui el precio --> 
                                                    
                                                     
-                                                    <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                    <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= priceFormat %> </span>
                                                         <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
                                                             <i class="bi bi-info-circle text-primary ms-2"></i>
                                                         </button>   
@@ -972,7 +976,7 @@
                                                 
                                                     <!-- este contenedor muestra el boton disabled porque el anuncio es del usuario -->
                                                                                                      
-                                                    <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                    <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= priceFormat %> </span>
                                                         <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
                                                             <i class="bi bi-info-circle text-primary ms-2"></i>
                                                         </button>   
@@ -1016,7 +1020,7 @@
                                                                 <span id="leftTime"></span>
                                                             </div>
                                                             <div class="form-grup px-1 my-1">
-                                                                <p class="m-0">Inicia en: $<span><%= search.price %></span></p>
+                                                                <p class="m-0">Inicia en: $<span><%= priceFormat %></span></p>
                                                             </div>
                                                               
                                                             <div class="form-group d-flex justify-content-between">
@@ -1064,7 +1068,7 @@
                                                                     <span id="leftTime"></span>
                                                                 </div>
                                                                 <div class="form-grup px-1 my-1">
-                                                                    <p class="m-0">Inicia en: $<span><%= search.price %></span></p>
+                                                                    <p class="m-0">Inicia en: $<span><%= priceFormat %></span></p>
                                                                 </div>
                                                                   
                                                                 <div class="form-group d-flex justify-content-between">
@@ -1145,12 +1149,12 @@
                                                     <input type="hidden" class="unitPrice" value="<%= search.price %>">
                                                     <input type="hidden" class="available" value="<%= search.count %>">
                                                     
-                                                    <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                                    <p class="m-0 d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= priceFormat %> </span>
                                                         <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
                                                             <i class="bi bi-info-circle text-primary ms-2"></i>
                                                         </button>   
                                                     </p>
-                                                    <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= search.price %><!-- valor dinamico  --> </span> </p>
+                                                    <p style="font-size: 18px; font-weight: bolder;">Total<span class="ms-3 totalPay">$<%= priceFormat %><!-- valor dinamico  --> </span> </p>
                                                     <button data-hover="¡clic me!" class="buttonSlice rounded-2 btn btn-primary"  id="newBTNBuy" disabled ><div>¡Compra ahora! </div></button>
                                                                                                
 
@@ -1183,7 +1187,7 @@
                                         
                                             <!-- este contenedor muestra el boton disabled porque el anuncio es del usuario -->
                                                                                                 
-                                            <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= search.price %></span>
+                                            <p class="d-flex align-items-start" style="font-size: 24px; font-weight: bolder;">Precio <span class="ms-3"> $<%= priceFormat %></span>
                                                 <button class="popoverCarBuy" type="button" style="background-color: transparent; border: none; font-size: 16px;" data-bs-toggle="popover"  data-bs-placement="top" data-bs-content="Los precios en blissenet.com están en moneda local o en dólares. Si están en dólares, acuerda con el vendedor el pago en tu moneda local.">                                                               
                                                     <i class="bi bi-info-circle text-primary ms-2"></i>
                                                 </button>   
@@ -1222,7 +1226,7 @@
                                                             <span id="leftTime"></span>
                                                         </div>
                                                         <div class="form-grup px-1 my-1">
-                                                            <p class="m-0">Inicia en: $<span><%= search.price %></span></p>
+                                                            <p class="m-0">Inicia en: $<span><%= priceFormat %></span></p>
                                                         </div>
                                                           
                                                         <div class="form-group d-flex justify-content-between">
@@ -1671,8 +1675,12 @@
             if (countRequestValue <= availableValue){
                 console.log("Se puede procesar");
                 countRequest.style.cssText = "color: black;font-size: 20px"
-                totalMount = (unitPrice.value * countRequest.value).toFixed(2)  //limitar dos decimales
-                totalPay.innerText = `$${totalMount}`
+                totalMount = (unitPrice.value * countRequest.value) 
+
+                let totalFormat = totalMount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                console.log(totalFormat); // Salida: "34.600,45" -->
+
+                totalPay.innerText = `$${totalFormat}`
                /*  validPurchase = true; */
                 newBTNBuy.removeAttribute("disabled");
             } else {

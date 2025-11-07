@@ -529,6 +529,9 @@
 
               <% cardArticleAutomotive.docs.forEach( (ele, i)=>{ %>
 
+                <% let priceFormat = ele.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
+                <!-- console.log(priceFormat); // Salida: "34.600,45" -->
+
                 <div class="card m-3 shadow cardPublished">
 
                         <div class="card-body d-flex flex-column p-0">
@@ -598,7 +601,7 @@
 
                                     <div class="containerPrice d-flex justify-content-between px-2">
                                   
-                                      <a class="ui yellow circular label px-1 text-decoration-none"> <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %></a> </span> 
+                                      <a class="ui yellow circular label px-1 text-decoration-none"> <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %></a> </span> 
 
                                       <div class="containerDosIconos d-flex">
                                         <div class="containerOnlyOneAvailable">
@@ -648,7 +651,7 @@
 
                                       <div class="containerPrice d-flex justify-content-between px-2">
 
-                                        <a class="ui yellow circular label px-1 text-decoration-none"> <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %></a> </span>
+                                        <a class="ui yellow circular label px-1 text-decoration-none"> <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %></a> </span>
                                         
                                         <div class="containerDosIconos d-flex">
                                           <div class="containerOnlyOneAvailable">

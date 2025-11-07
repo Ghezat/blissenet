@@ -956,6 +956,9 @@
 
                                     <% newBox.forEach( (ele, i)=>{ %>
 
+                                        <% let priceFormat = ele.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
+                                        <!-- console.log(priceFormat); // Salida: "34.600,45" -->
+
                                         <% if (shoppingCart === false ) { %> 
                                         
                                           <div class="card m-3 p-0 shadow cardPublished">
@@ -1114,7 +1117,7 @@
                                                                 <div class="containerPrice d-flex justify-content-between px-2">
 
                                                                   <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %> </span> 
                                                                   </a>
 
                                                                   <div class="containerTresIconos d-flex">
@@ -1170,7 +1173,7 @@
                                                               <div class="containerPrice d-flex justify-content-between px-2">
 
                                                                 <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                                  <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                  <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %> </span> 
                                                                 </a>
 
                                                                 <div class="containerTresIconos d-flex">
@@ -1226,7 +1229,7 @@
                                                           <div class="containerPrice d-flex justify-content-between px-2">
                                                             
                                                             <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                              <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                              <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %> </span> 
                                                             </a>
 
                                                             <div class="containerTickets">
@@ -1432,7 +1435,7 @@
                                                                 <div class="containerPrice d-flex justify-content-between px-2">
 
                                                                   <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %> </span> 
                                                                   </a>
 
                                                                   <div class="containerTresIconos d-flex">
@@ -1488,7 +1491,7 @@
                                                                 <div class="containerPrice d-flex justify-content-between px-2">
 
                                                                   <a class="ui yellow circular label px-1 text-decoration-none"> 
-                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= ele.price %> </span> 
+                                                                    <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %> </span> 
                                                                   </a>
 
                                                                   <div class="containerTresIconos d-flex">
