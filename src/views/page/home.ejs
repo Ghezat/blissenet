@@ -29,20 +29,8 @@
 </head>
 <style>
 
-  .marquee {
-      overflow: hidden;
-      white-space: nowrap;
-      box-sizing: border-box;
-  }
-
-  .marquee span {
-      display: inline-block;
-      animation: marquee 10s linear infinite;
-  }
-
-  @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+  .hideOverflow{
+    overflow: hidden;
   }
 
   .imageContainer {
@@ -482,11 +470,11 @@
 
 
 
-    <main style="position: relative;">
+    <main class="hideOverflow" style="position: relative;">
 
       <!-- este container es el spinner que veraz cuando un usuario carga un archivo de video o img de la barra de herramientas de los anuncios. -->
       <div class="loading">
-        <div class="container-fluid d-flex align-items-center" style="position: absolute; top: o; height: 100%; background-color: rgba(2, 2, 2, 1);">
+        <div class="container-fluid d-flex align-items-center" style="position: absolute; top: 0; height: 100%; background-color: rgba(2, 2, 2, 1);">
             <div class="container d-flex flex-column justify-content-center align-items-center">   
                                   
                   <!--  <span class="loader m-5"></span> -->
@@ -1003,19 +991,21 @@
 
 
 <script>
-// Selecciona el contenedor del loading y el homePage
-const loading = document.querySelector('.loading');
-const homePage = document.querySelector('.homePage');
+  // Selecciona el contenedor del loading y el homePage
+  const mainElem = document.querySelector('main');
+  const loading = document.querySelector('.loading');
+  const homePage = document.querySelector('.homePage');
 
-/* Este script se ejecuta cuando haya cargado absolutamente todo incluyendo el js y los estilos css */
-window.addEventListener("load", function() {
-      // Quita la clase "close" del loading
-      loading.classList.add('invisible');
+  /* Este script se ejecuta cuando haya cargado absolutamente todo incluyendo el js y los estilos css */
+  window.addEventListener("load", function() {
+        // Quita la clase "close" del loading
+        loading.classList.add('invisible');
 
-      // Agrega la clase "close" al homePage
-      homePage.classList.remove('invisible');
+        // Agrega la clase "close" al homePage
+        homePage.classList.remove('invisible');
+        mainElem.classList.remove('hideOverflow')
 
-});
+  });
 </script>
 
  <script>

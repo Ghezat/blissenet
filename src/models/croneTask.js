@@ -8,7 +8,8 @@ const croneSchema = new Schema({
     croneDeleteAdmin : { type : String }, //aqui fecha de actualizacion de la eliinacion de admin sin validar
     croneDeleteADS : { type : String }, //aqui fecha de actualizacion de eliminacion de anuncios (contacto) que tienen mas de un año
     croneDeleteUpload : { type : String }, //aqui fecha de actualizacion de eliminacion de archivos que se alojan en la carpeta upload. Importante que se eliminen automaticamente todos los dias y nunca de forma manual. ya que esto puede ocacionar un accidente, eliminar una carpeta del sistema. aeroplanos, automotriz, nautico, realstate, service.  todas las fechas seran dd-mm-yyyy
-    croneUnlockedUsers : { type : String } //aqui la fecha de actualizacion y desbloqueo de usuarios baneados.
+    croneUnlockedUsers : { type : String }, //aqui la fecha de actualizacion y desbloqueo de usuarios baneados.
+    croneDeleteBuySell : { type : String } //aqui la fecha de actualizacion de eliminacion de todos los buySell que se han cancelado.
 },{    
     timestamps : true
 });

@@ -137,7 +137,7 @@ routes.get('/', async(req, res)=>{
             const searchBuy = [];
             const searchSell = [];
         
-            const searchOneBuy = await modelBuySell.find({  $and : [{usernameBuy : username},{ closeOperationBuy : false }] });
+            const searchOneBuy = await modelBuySell.find({  $and : [{usernameBuy : username},{ closeOperationBuy : false },{ cancel : false } ] });
             if (searchOneBuy){
                 searchBuy.push(...searchOneBuy);
             }
@@ -151,7 +151,7 @@ routes.get('/', async(req, res)=>{
                 searchBuy.push(...searchShoppingCartBuy);
             }    
 
-            const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, { closeOperationSeller : false }] });
+            const searchOneSell = await modelBuySell.find({ $and : [{usernameSell : username}, { closeOperationSeller : false }, { cancel : false } ] });
             if (searchOneSell){
                 searchSell.push(...searchOneSell);
             }         

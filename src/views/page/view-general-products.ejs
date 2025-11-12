@@ -274,6 +274,7 @@
     <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> 
      
 
+    <% const countFormat = Math.floor(search.count) %>
     <!-- esta variable desgloza la fecha de creacion del anuncio -->
     <% const creationADS = search.createdAt %>
  
@@ -294,7 +295,7 @@
             <% const titleURL = search.titleURL %> 
             
             <% let priceFormat = search.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
-            <!-- console.log(priceFormat); // Salida: "34.600,45" -->
+            <!-- // Salida: "34.600,45" -->
 
             <div class="col-lg-3 p-2" style="background-color: rgb(233, 236, 239); ">
             <% if (depart == 'arts')  { %>
@@ -750,7 +751,7 @@
                                                 
                                                 <form action="/buysell/direct" method="post" id="form_buysell">
 
-                                                    <p class="m-0">Disponible : <%= search.count %> </p>
+                                                    <p class="m-0">Disponible : <%= countFormat %> </p>
 
                                                     <div class="input-group my-2">
                                                         <!-- la cantidad que quiere comprar el cliente  -->
@@ -813,7 +814,7 @@
                                                     </div> 
                                                 </div>
 
-                                                <p class="m-0">Disponible : <%= search.count %> </p>
+                                                <p class="m-0">Disponible : <%= countFormat %> </p>
 
                                                 <div class="input-group my-2">
                                                     <!-- la cantidad que quiere comprar el cliente  -->
@@ -863,7 +864,7 @@
                                                     </div> 
                                                 </div>
 
-                                                <p class="m-0">Disponible : <%= search.count %> </p>
+                                                <p class="m-0">Disponible : <%= countFormat %> </p>
 
                                                 <div class="input-group my-2">
                                                     <!-- la cantidad que quiere comprar el cliente  -->
@@ -1135,7 +1136,7 @@
                                                 
                                                 <form action="/buysell/direct" method="post" id="form_buysell">
 
-                                                    <p class="m-0">Disponible : <%= search.count %> </p>
+                                                    <p class="m-0">Disponible : <%= countFormat %> </p>
 
                                                     <div class="input-group my-2">
                                                         <!-- la cantidad que quiere comprar el cliente  -->
@@ -1744,8 +1745,6 @@
  }   
 
 
-
-
 </script>
 
 
@@ -1919,69 +1918,66 @@
  
 </script>
 
-
-
 <script>
 
-const DataFetch = fetch('/extraer')
-    .then(response => response.json())
-    .then((jsondata) =>
-{
-       
-    //console.log("jsondata ..........: ",jsondata)
-    
-    let btnSenMessage = document.getElementById('btnSenMessage'); //este es el boton para enviar el mensaje
-    let questions = document.getElementById('questions'); //esto es el input donde el usuario escribe su mensaje
-    let showMessage = document.querySelector('.showMessage'); //tomo esta card para mostrar en tiempo real el mensaje enviado.
-
-    if (btnSenMessage){
-
-        btnSenMessage.addEventListener('click', ()=>{
-        // con esta linea condiciono a que debe haber algun texto para poder enviar una pregunta.
-        if (questions.value.length !== 0 ){
-
-            console.log("<<<<Esto es jsondata>>>>---->",jsondata);
-            const _data = {
-                dataI : jsondata,
-                questionsI : questions.value
-            }
-            
-
-            fetch("/message", {
-                method: "POST",
-                body : JSON.stringify(_data),
-                headers: { "Content-Type" : "application/json"}
-            })
-            .then(response => response.json())
-            .then(json =>{ console.log(":::::: Esto es json  ---->", json)
-                    const CreatedAt = json.createdAt;
-                   
-                  
-                })
-            .catch( err => console.log(err));
-
-                //mostrar el mensaje dentro de la caja showMessage linea 385.
-
-                        
-                showMessage.innerHTML += `<div class="rounded-3 ms-2 my-1 pt-2 pb-1 ps-2 pe-5" style="background-color: rgb(207, 207, 207, 0.2); margin-left: 5px;">
-                                                <span class="bg-secondary rounded-2 px-1 text-light">${jsondata.user.username}</span>
-                                                <span class="ms-1 me-4">${questions.value}</span>
-                                          </div>`
-
-
-                //limpia el textarea
-                questions.value = '';
-                questions.focus();
-
-        }
-    
-    });
-    
-    }
-       
+    const DataFetch = fetch('/extraer')
+        .then(response => response.json())
+        .then((jsondata) =>
+    {
         
+        //console.log("jsondata ..........: ",jsondata)
+        
+        let btnSenMessage = document.getElementById('btnSenMessage'); //este es el boton para enviar el mensaje
+        let questions = document.getElementById('questions'); //esto es el input donde el usuario escribe su mensaje
+        let showMessage = document.querySelector('.showMessage'); //tomo esta card para mostrar en tiempo real el mensaje enviado.
+
+        if (btnSenMessage){
+
+            btnSenMessage.addEventListener('click', ()=>{
+            // con esta linea condiciono a que debe haber algun texto para poder enviar una pregunta.
+            if (questions.value.length !== 0 ){
+
+                console.log("<<<<Esto es jsondata>>>>---->",jsondata);
+                const _data = {
+                    dataI : jsondata,
+                    questionsI : questions.value
+                }
+                
+
+                fetch("/message", {
+                    method: "POST",
+                    body : JSON.stringify(_data),
+                    headers: { "Content-Type" : "application/json"}
+                })
+                .then(response => response.json())
+                .then(json =>{ console.log(":::::: Esto es json  ---->", json)
+                        const CreatedAt = json.createdAt;
                     
-});
+                    
+                    })
+                .catch( err => console.log(err));
+
+                    //mostrar el mensaje dentro de la caja showMessage linea 385.
+
+                            
+                    showMessage.innerHTML += `<div class="rounded-3 ms-2 my-1 pt-2 pb-1 ps-2 pe-5" style="background-color: rgb(207, 207, 207, 0.2); margin-left: 5px;">
+                                                    <span class="bg-secondary rounded-2 px-1 text-light">${jsondata.user.username}</span>
+                                                    <span class="ms-1 me-4">${questions.value}</span>
+                                            </div>`
+
+
+                    //limpia el textarea
+                    questions.value = '';
+                    questions.focus();
+
+            }
+        
+            });
+        
+        }
+        
+                            
+    });
 
 </script>
 
@@ -2092,7 +2088,7 @@ const DataFetch = fetch('/extraer')
 
 <script>
     //aqui estaba antiguamente el sistema que enviaba y recibia toda la informacion 
-    //del lebvel de la tienda si era carbo o hierro o diamante 
+    //del level de la tienda si era carbo o hierro o diamante 
     //se hacia a traves del fetch con la direccion : fetch("/record-trust"
     //este antiguo sistema era muy laboriado de mantener asi que se decidio por ser reemplazado por uno nuevo.
 </script>

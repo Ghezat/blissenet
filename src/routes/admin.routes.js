@@ -8045,6 +8045,97 @@ routes.get('/admin/cronoTask/croneUnlockedUsers', async(req, res)=>{
 
 });
 
+routes.get('/admin/cronoTask/croneDeleteBuySellCanceled', async(req, res)=>{
+
+    let currentDay;
+    let croneDeleteBuySell;
+    const time = new Date();
+    const hora = time.getHours(); const minu = time.getMinutes();
+    const Dia = time.getDate();
+    const Mes = time.getMonth() +1;
+    const Anio = time.getFullYear();
+
+    currentDay = `${Dia}-${Mes}-${Anio}`;
+    croneDeleteBuySell = `${Dia}-${Mes}-${Anio} ${hora}:${minu}`;
+
+    const buySellCanceled = await modelBuySell.find({ cancel : true });
+    console.log("buySellCanceled -->", buySellCanceled); // es un array
+
+    if (buySellCanceled.length !==0){
+
+        buySellCanceled.forEach((ele)=>{
+            const ID = ele._id;
+
+            async function deleteBuySell(){
+                const delBuySell = await modelBuySell.findByIdAndDelete(ID);
+            }
+            
+            deleteBuySell()
+                .then(()=>{
+                    console.log("Se ha eliminado todos los documentos buySell que se hayan cancelado");
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error en la eliminacion buySell que se hayan cancelado", error);
+                })
+
+        });
+
+        //luego que borra todos los buySell cancelados actualiza el crono
+        
+        async function updateCrono(){
+
+            const searchCrono = await modelCrono.find( {cronoDate : currentDay} );
+            
+            if ( searchCrono.length !==0 ){
+                const updatecrono = await modelCrono.findOneAndUpdate({cronoDate : currentDay}, {  $set: {croneDeleteBuySell} });
+            } else {
+                const updatecrono = new modelCrono({ cronoDate: currentDay, croneDeleteBuySell });
+                const cronoSave = await updatecrono.save();
+            }
+
+        }
+
+        updateCrono()
+            .then(()=>{
+                console.log("Se ha eliminado todos los buySell cancelados");
+                res.json({type : "Ok", msg: "Crono-DeleteBuySellCanceled Ejecutado"});
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error en deleteBuySellCanceled()", error)
+                res.json({type : "Error", msg: "Error al Ejecutar Crono-DeleteBuySellCanceled"});
+            })
+
+    } else {
+
+        async function updateCrono(){
+
+            const searchCrono = await modelCrono.find( {cronoDate : currentDay} );
+            console.log("searchCrono ->", searchCrono);
+
+            if ( searchCrono.length !==0 ){
+
+                const updatecrono = await modelCrono.findOneAndUpdate({cronoDate : currentDay}, {  $set: {croneDeleteBuySell} });
+
+            } else {
+                const updatecrono = new modelCrono({ cronoDate: currentDay, croneDeleteBuySell });
+                const cronoSave = await updatecrono.save();
+            }
+
+        }
+
+        updateCrono()
+            .then(()=>{
+                console.log("Se ha eliminado todos los buySell cancelados");
+                res.json({type : "Ok", msg: "Crono-DeleteBuySellCanceled Ejecutado"});
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error en deleteBuySellCanceled()", error)
+                res.json({type : "Error", msg: "Error al Ejecutar Crono-DeleteBuySellCanceled"});
+            })
+    }
+
+});
+
 //************ Crone Task **************/
 // croneDeleteADS, croneDeleteAdmin, croneDeleteUsers, croneUpdateRate  ---->DATABASE
 
@@ -8753,6 +8844,102 @@ cron.schedule('50 3 * * * ', async()=>{
         })
 
 });
+
+//croneDeleteBuySellCanceled
+cron.schedule('0 4 * * * ', async()=>{
+
+    console.log("---------------------- CRONO DeleteBuySell-Canceled -----------------------")
+    console.log("Tarea ejecutada a las 4:00")
+
+    let currentDay;
+    let croneDeleteBuySell;
+    const time = new Date();
+    const hora = time.getHours(); const minu = time.getMinutes();
+    const Dia = time.getDate();
+    const Mes = time.getMonth() +1;
+    const Anio = time.getFullYear();
+
+    currentDay = `${Dia}-${Mes}-${Anio}`;
+    croneDeleteBuySell = `${Dia}-${Mes}-${Anio} ${hora}:${minu}`;
+
+    const buySellCanceled = await modelBuySell.find({ cancel : true });
+    console.log("buySellCanceled -->", buySellCanceled); // es un array
+
+    if (buySellCanceled.length !==0){
+
+        buySellCanceled.forEach((ele)=>{
+            const ID = ele._id;
+
+            async function deleteBuySell(){
+                const delBuySell = await modelBuySell.findByIdAndDelete(ID);
+            }
+            
+            deleteBuySell()
+                .then(()=>{
+                    console.log("Se ha eliminado todos los documentos buySell que se hayan cancelado");
+                })
+                .catch((error)=>{
+                    console.log("Ha habido un error en la eliminacion buySell que se hayan cancelado", error);
+                })
+
+        });
+
+        //luego que borra todos los buySell cancelados actualiza el crono
+        
+        async function updateCrono(){
+
+            const searchCrono = await modelCrono.find( {cronoDate : currentDay} );
+            
+            if ( searchCrono.length !==0 ){
+                const updatecrono = await modelCrono.findOneAndUpdate({cronoDate : currentDay}, {  $set: {croneDeleteBuySell} });
+
+            } else {
+                const updatecrono = new modelCrono({ cronoDate: currentDay, croneDeleteBuySell });
+                const cronoSave = await updatecrono.save();
+                
+            }
+
+        }
+
+        updateCrono()
+            .then(()=>{
+                console.log("Se ha actualizado la eliminación de usuarios no verificados")
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error en updateCrono()", error)
+            })
+
+    } else {
+
+        async function updateCrono(){
+
+            const searchCrono = await modelCrono.find( {cronoDate : currentDay} );
+            console.log("searchCrono ->", searchCrono);
+
+            if ( searchCrono.length !==0 ){
+
+                const updatecrono = await modelCrono.findOneAndUpdate({cronoDate : currentDay}, {  $set: {croneDeleteBuySell} });
+
+            } else {
+                const updatecrono = new modelCrono({ cronoDate: currentDay, croneDeleteBuySell });
+                const cronoSave = await updatecrono.save();
+            }
+
+        }
+
+        updateCrono()
+            .then(()=>{
+                console.log("Se ha actualizado la eliminación de buySell cancelados")
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error en croneDeleteBuySell()", error)
+            })
+    }
+
+
+
+});
+
 
 //**************************************/
 

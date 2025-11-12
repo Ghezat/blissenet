@@ -528,7 +528,8 @@ routes.post('/department/create/raffle/delete', async(req, res)=>{
                     const deletingDoc = await modelRaffle.findByIdAndDelete(valor);
 
                     req.session.deletePublication = "Publicación eliminada"
-                    res.redirect('/department/create/nautical')
+                    res.redirect('/department/create/raffle')
+
                 }   
 
             } else {

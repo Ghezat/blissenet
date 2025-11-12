@@ -61,6 +61,10 @@ main{
 
 /* -------------------------------- */
 
+.no-salto {
+    white-space: nowrap; /* Evita el salto de línea */
+}
+
 .glow-on-disabled {
     width: 220px;
     height: 50px;

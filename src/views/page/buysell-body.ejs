@@ -15,6 +15,16 @@
 </head>
 <style>
 
+
+    .hoverCancel{
+        color: red;
+        transition: .5s color ease;
+    }
+
+    .hoverCancel:hover{
+        color: black;
+    }
+
     .copyData{
         color: black;
         transition: .5s ease color;
@@ -498,7 +508,26 @@
                                 </div>  
 
                                 <div class="form-group my-3">
-                                    <button class="form-control btn btn-primary" id="btn_confirmacion">Confirme</button>
+                                    <% if (buySell.cancel == false){ %>
+                                        <button class="form-control btn btn-primary" id="btn_confirmacion">Confirmar Compra</button>
+                                    <% } else { %>
+                                        <button class="form-control btn btn-primary" disabled>Confirmar Compra</button>
+                                    <% }; %>    
+
+                                </div>
+
+                                <div class="alert alert-light mt-2">
+                                    
+                                    <div class="contain" style="font-size: 17px;">
+
+                                    <% if (buySell.cancel == false){ %>
+                                        <span>Si deseas cancelar esta compra. </span> <span id="btn_cancelarCompra" class="cursor-pointer hoverCancel no-salto"> <b>¡Puede hacerlo Ahora! </b>  </span> 
+                                    <% } else { %>
+                                        <span> <b>Esta compra ha sido cancelada y en un peridodo de 24 horas será eliminada. </b></span> 
+                                    <% }; %>  
+                                         
+                                    </div> 
+                                    
                                 </div>
                         
                             </div>
@@ -1507,6 +1536,30 @@
                     </div>   
                 </div>
 
+                <!-- Modal de orden cancelada --> 
+                <div class="modal fade" id="staticCancelBuySell" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticCancelBuySell" aria-hidden="true">
+                    <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                        <div class="modal-content text-dark">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title">Se ha Cancelado esta compra.</h5>
+                                <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                            </div>
+                            <div class="modal-body">
+                                <p><span class="fw-bold text-primary">Has cancelado esta operación de compra. </span>
+                                    ¡Esta orden ya no podrá ser vista y no hay calificaciones de ninguna de las partes!
+                                </p>
+                                
+                            </div>
+                            <div class="modal-footer" style="background-image: url('/img/BannerCancelBuySell.jpg'); background-size: cover; background-position: center;">
+                                <!-- <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button> -->
+                                <a class="btn btn-dark" href="/buysell-list">Cerrar</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div> 
+
             </div>    
 
         </div>
@@ -1831,6 +1884,7 @@
         //-------------------------------------------------------------
 
         const btn_confirmacion = document.getElementById('btn_confirmacion');
+        const btn_cancelarCompra = document.getElementById('btn_cancelarCompra');
         
         if (btn_confirmacion){   
             btn_confirmacion.addEventListener('click', ()=>{
@@ -1882,7 +1936,57 @@
                     .catch(err => console.log(err));
 
             })
-        }     
+        }
+        
+        var modalCancelBuySel = document.getElementById('staticCancelBuySell');
+        var modalCancel = new bootstrap.Modal(modalCancelBuySel); // Crea una instancia del modal
+        //modalCancel.show(); // Muestra el modal
+
+        if (btn_cancelarCompra){   
+            btn_cancelarCompra.addEventListener('click', ()=>{
+                
+                const iDBuysell = idBuysell.value;
+                console.log("iDBuysell :", iDBuysell);
+
+                //vamos a crear el forData para enviar al backend
+
+                const formData = new FormData();
+                    formData.append('iD', iDBuysell);
+                  
+                    fetch('/buysell-body/cancelarBuySell', {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(jsonx => {
+                        console.log("response del backend --->", jsonx);
+
+                        const code = jsonx.code;
+                        const message = jsonx.message;
+                              
+                        console.log("code : ", code);
+                        console.log("message : ", message);
+                        
+                        if (code == "ok"){
+
+                            console.log("Hemos cancelado esta compra.");
+
+                            //mostrarToast( message , 'right', 'success', '¡Hecho!', true ); 
+                            btn_confirmacion.setAttribute("disabled", "");
+                            modalCancel.show();
+
+                        } else {
+
+                            mostrarToast( message , 'right', 'danger', '¡Upss!', true ); 
+                        
+                        }
+
+                    })
+                    .catch(err => console.log(err));
+
+            })
+        }
+        
 
     }
 

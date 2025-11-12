@@ -574,7 +574,7 @@ routes.get('/account/:account', async (req,res)=>{
         const searchBuy = [];
         const searchSell = [];
     
-        const searchOneBuy = await modelBuySell.find({  $and : [{ indexedBuy : userId},{ closeOperationBuy : false }] });
+        const searchOneBuy = await modelBuySell.find({  $and : [{ indexedBuy : userId},{ closeOperationBuy : false }, { cancel : false } ] });
         if (searchOneBuy){
             searchBuy.push(...searchOneBuy);
         }
@@ -588,7 +588,7 @@ routes.get('/account/:account', async (req,res)=>{
             searchBuy.push(...searchShoppingCartBuy);
         }    
 
-        const searchOneSell = await modelBuySell.find({ $and : [{ indexedSell : userId }, { closeOperationSeller : false }] });
+        const searchOneSell = await modelBuySell.find({ $and : [{ indexedSell : userId }, { closeOperationSeller : false },{ cancel : false } ] });
         if (searchOneSell){
             searchSell.push(...searchOneSell);
         }         

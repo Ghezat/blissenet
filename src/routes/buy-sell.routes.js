@@ -1441,6 +1441,39 @@ routes.post('/negotiation-body/visible', async(req, res)=>{
    
 });
 
+//Ruta para cancelar una compra, esto lo hace el comprador. 
+routes.post('/buysell-body/cancelarBuySell', async(req, res)=>{
+
+    try {
+
+      const {iD} = req.body
+
+      //en buySell esta el dato title_id que es el id de artculo 
+      // y el departamento en el dato department
+      const searchBuySell = await modelBuysell.findById(iD);
+      const depart = searchBuySell.department;
+      const idProduct  = searchBuySell.title_id;
+      
+      console.log("++++ Se ha Cancelado esta orden ++++");
+      console.log("depart ----------", depart);
+      console.log("idProduct-----------", idProduct);
+      
+      const buySellCancel = await modelBuysell.findByIdAndUpdate(iD, {$set: { cancel: true }}, {new : true});
+      console.log("buySellCancel :", buySellCancel);
+
+      //funciona bien, ahora tenemos que enviar un mensaje al inbox de que ha sido cancelada una compra.
+
+      res.json({ message: "La Compra se ha Cancelado", code: "ok" });
+
+        
+    } catch (error) {
+
+      res.json({ message: "Ha habido un error, intente en unos minutos.", code: "err" });
+      
+    }
+
+});
+
 routes.post('/buysell-body/confirm', async(req, res)=>{
 
   try {
@@ -2175,7 +2208,7 @@ routes.get('/buysell-list/', async(req, res)=>{
     username = user.username;
     searchProfile = await modelProfile.find({ indexed : user._id });
 
-    searchOneBuy = await modelBuysell.find({  $and : [{usernameBuy : username},{ closeOperationBuy : false }] });
+    searchOneBuy = await modelBuysell.find({  $and : [{usernameBuy : username},{ closeOperationBuy : false },{ cancel : false } ] });
     if (searchOneBuy){
       //console.log("eres el comprador", searchOneBuy);
       searchBuy.push(...searchOneBuy);
@@ -2194,7 +2227,7 @@ routes.get('/buysell-list/', async(req, res)=>{
       //sumCount = shoppingCartforPay.length; //aqui tomamos la cantidad de carritos pendientes
       
   
-    searchOneSell = await modelBuysell.find({ $and : [{usernameSell : username},{ closeOperationSeller : false }] });
+    searchOneSell = await modelBuysell.find({ $and : [{usernameSell : username},{ closeOperationSeller : false },{ cancel: false } ] });
     if (searchOneSell){
       //console.log("eres el vendedor", searchOneSell);
       searchSell.push(...searchOneSell);
