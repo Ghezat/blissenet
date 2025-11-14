@@ -388,6 +388,8 @@
                                             <textarea class="form-control my-1" rows="3" cols="10" maxlength="50" disabled> <%= buySell.CommentBuy %>  </textarea>
 
                                             <% if ( ratingBuy === 5 ) {  %>
+                                             
+                                                
                                             <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
                                                 <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                 <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
@@ -611,43 +613,41 @@
                                             <% const paymentSystem = bankData.paymentSystem %>
                                             <% paymentSystem.forEach((ele, i)=>{ %>
 
-                                                
-                                                <div class="form-group my-2">
-                                                    <input class="form-check-input me-2" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
-                                                    <label class="form-check-label" for= option<%= i + 1 %> >
-                                                        <%= ele.methodName %> 
+                                                <div class="form-group my-2 p-2 rounded-1 border border-secondary" style="background-color: rgba(0, 0, 0, .1);">
+                                                    <input class="form-check-input me-2 cursor-pointer" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
+                                                    <label class="form-check-label cursor-pointer" for= option<%= i + 1 %>>
+                                                      <b> <%= ele.methodName %> </b>   
                                                     </label>
-
                                                 </div>
                                                     
+
                                                 <div class="contentCollapse<%= i + 1 %> ms-3 close">
 
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data1 ? ele.data1 : '' %> 
                                                         <% if (ele.data1) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data1 %>"> </i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data2 ? ele.data2 : '' %> 
                                                         <% if (ele.data2) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data2 %>"></i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data3 ? ele.data3 : '' %> 
                                                         <% if (ele.data3) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data3 %>"></i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data4 ? ele.data4 : '' %> 
                                                         <% if (ele.data4) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data4 %>"></i>
                                                         <% } %>
                                                     </p>
-                                                    
-                                                </div>
+                                                </div>                                                
 
                                             <% }) %>
                                     
@@ -823,44 +823,42 @@
                                         <%  if (bankData) { %>
                                             <% const paymentSystem = bankData.paymentSystem %>
                                             <% paymentSystem.forEach((ele, i)=>{ %>
-
                                                 
-                                                <div class="form-group my-2">
-                                                    <input class="form-check-input me-2" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
-                                                    <label class="form-check-label" for= option<%= i + 1 %>>
-                                                        <%= ele.methodName %> 
+                                                <div class="form-group my-2 p-2 rounded-1 border border-secondary" style="background-color: rgba(0, 0, 0, .1);">
+                                                    <input class="form-check-input me-2 cursor-pointer" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
+                                                    <label class="form-check-label cursor-pointer" for= option<%= i + 1 %>>
+                                                      <b> <%= ele.methodName %> </b>   
                                                     </label>
-
                                                 </div>
-                                                    
+
                                                 <div class="contentCollapse<%= i + 1 %> ms-3 close">
 
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data1 ? ele.data1 : '' %> 
                                                         <% if (ele.data1) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data1 %>"> </i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data2 ? ele.data2 : '' %> 
                                                         <% if (ele.data2) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data2 %>"></i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data3 ? ele.data3 : '' %> 
                                                         <% if (ele.data3) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data3 %>"></i>
                                                         <% } %>
                                                     </p>
-                                                    <p class="mb-1 ms-4">
+                                                    <p class="mb-1 ms-4 cursor-pointer">
                                                         <%= ele.data4 ? ele.data4 : '' %> 
                                                         <% if (ele.data4) { %>
-                                                            <i class="bi bi-copy ms-3"></i>
+                                                            <i class="bi bi-copy ms-3 copyData" data-info="<%= ele.data4 %>"></i>
                                                         <% } %>
                                                     </p>
+                                                </div>                                                
 
-                                                </div>
 
                                             <% }) %>
                                     
@@ -1044,7 +1042,6 @@
                                             <% const paymentSystem = bankData.paymentSystem %>
                                             <% paymentSystem.forEach((ele, i)=>{ %>
 
-                                                
                                                 <div class="form-group my-2 p-2 rounded-1 border border-secondary" style="background-color: rgba(0, 0, 0, .1);">
                                                     <input class="form-check-input me-2 cursor-pointer" type="radio" name="methodNameSelected" value="<%= ele.methodName %>" id=option<%= i + 1 %> onchange="toggleCollapse(<%= i + 1 %>)">
                                                     <label class="form-check-label cursor-pointer" for= option<%= i + 1 %>>
@@ -1150,7 +1147,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
                                         <table class="table table-striped">
-                                            <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
+                                            <tr style="font-size: 17px;"> <td>Comprador</td> <td> <%= buySell.usernameBuy %> </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Titulo </td> <td> <%= buySell.title %> </td> </tr>
@@ -1229,7 +1226,7 @@
                                                         <div class="form-group my-2">
                                                             <input class="form-check-input me-2" type="radio" checked disabled>
                                                             <label class="form-check-label">
-                                                                <%= ele.methodName %> 
+                                                                <%= ele.methodName %>
                                                             </label>
                                                         </div>
                                                             
@@ -1350,43 +1347,43 @@
 
                                                 <% if ( ratingSeller === 5 ) {  %>
                                                 <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
                                                 </div> 
                                                 <% } else if ( ratingSeller === 4 ) { %>
                                                 <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2"  style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
                                                 </div> 
                                                 <% } else if ( ratingSeller === 3 ) { %>   
                                                 <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
                                                 </div> 
                                                 <% } else if ( ratingSeller === 2 ) { %>       
                                                 <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
                                                 </div> 
                                                 <% } else if ( ratingSeller === 1 ) { %>       
                                                 <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
-                                                    <i class="starE bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
-                                                    <i class="starE bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                    <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                    <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
                                                 </div>
                                                 <% }; %> 
 
@@ -3278,6 +3275,4 @@
 
 </body>
 </html>
-
-
 

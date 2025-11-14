@@ -90,6 +90,25 @@
 
     <input type="hidden" value="<%= negotiation._id %>" id="idNegotiation">
     <input type="hidden" value="<%= fullScreen %>" id="fullScreen">
+
+    <!-- datos importantes de esta pagina -->
+    <input type="hidden" class="idUser" value="<%= user._id %>">
+
+    <input type="hidden" class="idNegotiation" value="<%= negotiation._id %>">
+
+    <input type="hidden" class="indexedSell" value="<%= negotiation.indexedSell %>">
+    <input type="hidden" class="indexedBuy" value="<%= negotiation.indexedBuy %>">
+
+    <input type="hidden" class="usernameBuy" value="<%= negotiation.usernameBuy %>">
+
+    <input type="hidden" class="Price" value="<%= negotiation.price %>">
+    <input type="hidden" class="countRequestData" value="<%= negotiation.countRequest %>">
+    <input type="hidden" class="countMaxData" value="<%= negotiation.count %>">
+    <input type="hidden" class="deliveryType" value="<%= negotiation.deliveryType %>">
+
+    <input type="hidden" class="daysInp" value="<%= negotiation.scheduleAppointment.days %>">
+    <input type="hidden" class="rangeTimeInp" value="<%= negotiation.scheduleAppointment.rangeTime %>">
+    <!--  scheduleAppointment: { days: [ '0', '1', '2', '3', '4' ], rangeTime: [ '10:00', '18:00' ] } -->
    
     <% if (fullScreen === false) { %>
 
@@ -111,24 +130,6 @@
 
                     <% if (negotiation) { %>
                     
-                        <!-- datos importantes de esta pagina -->
-                        <input type="hidden" class="idUser" value="<%= user._id %>">
-
-                        <input type="hidden" class="idNegotiation" value="<%= negotiation._id %>">
-
-                        <input type="hidden" class="indexedSell" value="<%= negotiation.indexedSell %>">
-                        <input type="hidden" class="indexedBuy" value="<%= negotiation.indexedBuy %>">
-
-                        <input type="hidden" class="usernameBuy" value="<%= negotiation.usernameBuy %>">
-
-                        <input type="hidden" class="Price" value="<%= negotiation.price %>">
-                        <input type="hidden" class="countRequestData" value="<%= negotiation.countRequest %>">
-                        <input type="hidden" class="countMaxData" value="<%= negotiation.count %>">
-                        <input type="hidden" class="deliveryType" value="<%= negotiation.deliveryType %>">
-
-                        <input type="hidden" class="daysInp" value="<%= negotiation.scheduleAppointment.days %>">
-                        <input type="hidden" class="rangeTimeInp" value="<%= negotiation.scheduleAppointment.rangeTime %>">
-                        <!--  scheduleAppointment: { days: [ '0', '1', '2', '3', '4' ], rangeTime: [ '10:00', '18:00' ] } -->
                     
                             <% if ( negotiation.usernameSell == user.username ) { %>
                                 
@@ -361,7 +362,7 @@
                                                     <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                     <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
                                                 </div> 
-                                                <% } else if ( ratingratingBuy === 1 ) { %>       
+                                                <% } else if ( ratingBuy === 1 ) { %>       
                                                 <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
                                                     <i class="bi bi-star-fill mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                     <i class="bi bi-star mx-2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
@@ -740,7 +741,7 @@
                                             <button class="btn btn-secondary rounded-pill me-2" style="font-size: 17px;"> <i class="bi bi-send-fill"></i> </button>
                                         <% } else { %>
                                             <button class="btn rounded-pill me-2 close" id="btnSenMessage" style="font-size: 16px; width: 40px; height: 40px; color: white; background-color: rgba(146,0,255,1);"> <i class="bi bi-send-fill"></i> </button>
-                                             <button class="btn rounded-pill me-2" id="btnFullscreen" style="font-size: 16px; width: 40px; height: 40px; color: white; background-color: rgba(146,0,255,1);"> <i class="bi bi-fullscreen"></i> </button>
+                                            <button class="btn rounded-pill me-2" id="btnFullscreen" style="font-size: 16px; width: 40px; height: 40px; color: white; background-color: rgba(146,0,255,1);"> <i class="bi bi-fullscreen"></i> </button>
                                         <% }; %>     
                                     </div>
 
@@ -843,7 +844,7 @@
 
             <div class="containerWritten px-1 py-3" style="position: absolute; bottom: 0; left: o; width: 100%;  overflow-x: auto; background-color: rgba(233, 236, 239, 0.8); ">                
 
-                    <span class="ms-4 my-3 px-1 text-dark" style="font-size: 17px;">Hacer una pregunta a tu contraparte. </span>
+                    <span class="ms-4 my-3 px-1 text-dark" style="font-size: 17px;">Hacer una pregunta a tu contraparte.</span>
                     <div class="containerTextButton d-flex justify-content-between mb-3 mt-1 px-4" style="width: 100%;">
 
                         <div class="form-group" style="width: 85%;">
@@ -874,10 +875,6 @@
         </div>
 
     <% }; %>    
-
-  
-    
-
    
 
 
@@ -889,6 +886,9 @@
   <script src="/socket.io/socket.io.js" charset="utf-8"></script>
 
     <script>
+        const inpFullScreen = document.getElementById('fullScreen');
+        const fullScreen = inpFullScreen.value;
+
         //controles de pestaña y contenedores
         const information = document.getElementById('information');
         const rateBuy = document.getElementById('rateBuy'); 
@@ -972,10 +972,11 @@
 
     <script>
 
-        if (fullScreen === "false"){
-            //aqui haremos una conuslta para buscar en todos los documentos de negociacion el campo appointment con el indexedSell definido actual
+        
+            //aqui haremos una consulta para buscar en todos los documentos de negociacion el campo appointment con el indexedSell definido actual
             //para que el comprador y el vendedor puedan saber si esta o no disponible
-            const iDNegoti = document.querySelector('.idNegotiation').value;
+            console.log("esto se puede ver en consola ?");
+            const iDNegoti = document.querySelector('#idNegotiation').value;
             const usernameBuy = document.querySelector('.usernameBuy').value;
             const indexedSell = document.querySelector('.indexedSell').value;
             const tbodyAgenda = document.querySelector('.tbodyAgenda');
@@ -985,14 +986,14 @@
                 
                 formData.append('indexedSell', indexedSell);
 
-            fetch('/negotiation-appointmentSearchAll/', {
+            fetch('/negotiation-appointmentSearchAll', {
                 method: "POST",
                 body: formData
             })
                 .then(response =>response.json() ) 
                 .then( jsonx => 
                     {
-                        console.log("jsonx searchNegotiations:", jsonx) 
+                        console.log("jsonx searchNegotiations:..................", jsonx) 
                         const code = jsonx.code;
                         searchNegotiations = jsonx.searchNegotiations;
 
@@ -1005,7 +1006,7 @@
 
                         searchNegotiations.sort((a, b) => parseAppointment(a.appointment) - parseAppointment(b.appointment));
 
-                        console.log(searchNegotiations);
+                        console.log("searchNegotiations ....:", searchNegotiations);
                         
                         if (code == "ok"){
 
@@ -1034,15 +1035,15 @@
                     })
                 .catch( err => console.log(err));
 
-        }
+    
 
     </script>
 
     <script>
-
+        console.log("fullScreen :::::::", fullScreen);
         if (fullScreen === "false"){
 
-            const idNegotiation = document.querySelector('.idNegotiation');
+            const idNegotiation = document.querySelector('#idNegotiation');
             const daysAvaible = document.querySelector('.daysInp').value;
             const rangeTimeAvailable = document.querySelector('.rangeTimeInp').value;//14:00,18:00  quiero que se transforme en [1400, 1800] un array con estos numeros quitar ":" para crear un nunemro y que sea de tipo number
 
@@ -1111,13 +1112,13 @@
 
             if (btnAppointment){
                 btnAppointment.addEventListener('click', ()=>{
-                    
+                    console.log("Hemos dsado a agendar");
                     const time = timeInput.value;
                     const date = dateInput.value;
                     let existAppointment = false;
 
                     if (time !== "no_time" && date !=="") {
-                        console.log("hay que revisar si este appointment existe ya:", searchNegotiations);
+                        console.log("hay que revisar si este appointment existe ya:");
 
                         const searchNegotiationsFormat = searchNegotiations.map(negotiation => {
                             const parts = negotiation.appointment.split('-');
@@ -1442,20 +1443,22 @@
         written.value =""; //estado incial 
         written.focus(); //estado inicial 
 
+        console.log("fullScreen ...........:", fullScreen);
         // quiero que el textarea vaya expandiendose a medida existan mas lienas pero el maximo debe ser de 5 lineas.
         written.addEventListener('input', () => {
-            const fullScreenValue = fullScreen.value;
+            
             const writtenValue = written.value;
             //console.log("esto es written :", writtenValue.length);
             if (writtenValue.length !== 0){
-                
+                console.log("Estas escribiendo ...");
+
                 btnSenMessage.classList.remove('close'); // Aparece el boton de enviar;
 
-                if (fullScreenValue == "true"){
+                if (fullScreen == "true"){
                     btnFullscreenExit.classList.add('close'); // Escondemos el boton de fullScreenExit;
                    
                 } else {
-                     btnFullscreen.classList.add('close'); // Escondemos el boton de fullScreen;
+                    btnFullscreen.classList.add('close'); // Escondemos el boton de fullScreen;
                 }
 
             } else {
@@ -1463,13 +1466,13 @@
 
                 btnSenMessage.classList.add('close'); // Aparece el boton de enviar;
                
-                if (fullScreenValue == "true"){
-                    console.log("fullScreenValue ", fullScreenValue);
-                    console.log("fullScreenValue typeof", typeof fullScreenValue);
+                if (fullScreen == "true"){
+                    console.log("fullScreen ", fullScreen);
+                    console.log("fullScreen typeof", typeof fullScreen);
                     btnFullscreenExit.classList.remove('close'); // Escondemos el boton de fullScreenExit;
                 } else {
-                    console.log("fullScreenValue ", fullScreenValue);
-                    console.log("fullScreenValue typeof", typeof fullScreenValue);
+                    console.log("fullScreen ", fullScreen);
+                    console.log("fullScreen typeof", typeof fullScreen);
                     btnFullscreen.classList.remove('close'); // Escondemos el boton de fullScreen;
                 }
                       

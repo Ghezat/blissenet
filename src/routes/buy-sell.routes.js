@@ -13,9 +13,11 @@ const modelAutomotive = require('../models/automotive.js');
 const modelRealstate = require('../models/realstate.js');
 const modelNautical = require('../models/nautical.js');
 const modelService = require('../models/services.js');
+
 const modelShoppingCart = require('../models/shoppingCart.js');
 const modelTransportAgent = require('../models/transportAgent.js');
 const modelBankUser = require('../models/bankUser.js');
+const modelStoreRate = require('../models/storeRate.js');
 const user = require('../models/user.js');
 
 //este Token es la KEY del bot de Telegram
@@ -1348,7 +1350,7 @@ routes.post('/negotiation-body/fullScreen/', async(req, res)=>{
 });
 
 
-routes.post('/negotiation-appointmentSearchAll/', async(req, res)=>{
+routes.post('/negotiation-appointmentSearchAll', async(req, res)=>{
 
   try {
 
@@ -1901,9 +1903,9 @@ routes.post('/buysell-body/confirm', async(req, res)=>{
 
 });
 
-//aqui es donde el comprador califica el intercambio.
+//aqui es donde el comprador califica al vendedor. "En Compra directa"
 routes.post('/buysell-body/buyerTrue', async(req, res)=>{
-
+//aqui se registra el comentario y calificacion al vendedor
   try {
       console.log(" ................... /buysell-body/buyerTrue ..................... ");
       const body = req.body
@@ -1914,14 +1916,53 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       console.log("Esta es la calificacion del vendedor ---->", rating);
       console.log("Este es el comentario del vendedor sobre su comprador ---->", comment);
       
+      const searchBuySell = await modelBuysell.findById(idOrder);
+
+      const sellerId = searchBuySell.indexedSell;
+      const sellerName = searchBuySell.usernameSell;
+      const customerId = searchBuySell.indexedBuy; 
+      const customerName = searchBuySell.usernameBuy;  
+      
+      const searchProfile = await modelProfile.findOne( {indexed : customerId} );
+      console.log("VER searchProfile ..........:", searchProfile);
+      //avatarPerfil: [ { url: '', public_id: 'sin_data' } ]
+
+      const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
+      const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
+      const mailhash = searchProfile.mailhash;
+
+
       async function buyerRating(){
         await modelBuysell.findByIdAndUpdate(idOrder, { ratingSeller : rating, CommentSeller : comment }, {new:true});            
       }
+
+      async function storeRateComent() {
+          //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
+          
+          const newRateComment =  new modelStoreRate
+            ({ 
+              store: sellerId, logeado: customerId, markStar: rating, comment: comment, storeName: sellerName,
+              dataLogeado: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+            });
+
+          const saveRateComment = await newRateComment.save();
+          console.log("Se ha creado la primera calificacion y comentario organico de blissenet.com", saveRateComment)
+  
+      }
+
       
       buyerRating()
         .then(()=>{
-          const response = { code: "ok", message: "Calificación y comentario recibido." };
-          res.json(response);
+          storeRateComent()
+            .then(()=>{
+                const response = { code: "ok", message: "Calificación y comentario recibido." };
+                res.json(response);
+            })
+            .catch((err)=>{
+                const response = { code: "error", message: "Ha habido un problema, con storeRateComent intente nuevamente en unos segundos." };
+                res.json(response);
+            })
+
         })
         .catch((err)=>{
           const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
@@ -1937,7 +1978,7 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
 
 });
 
-//aqui es donde el comprador califica el intercambio.
+//aqui es donde el comprador califica al vendedor
 routes.post('/negotiation-rating/buyerTrue', async(req, res)=>{
 
   try {
@@ -1949,21 +1990,60 @@ routes.post('/negotiation-rating/buyerTrue', async(req, res)=>{
       console.log("Este es el idOrder ---->", idOrder);
       console.log("Esta es la calificacion del vendedor ---->", rating);
       console.log("Este es el comentario del vendedor sobre su comprador ---->", comment);
+
+      const searchNegotiation = await modelNegotiation.findById(idOrder);
+
+      const sellerId = searchNegotiation.indexedSell;
+      const sellerName = searchNegotiation.usernameSell;
+      const customerId = searchNegotiation.indexedBuy; 
+      const customerName = searchNegotiation.usernameBuy;  
+      
+      const searchProfile = await modelProfile.findOne( {indexed : customerId} );
+      console.log("VER searchProfile ..........:", searchProfile);
+      //avatarPerfil: [ { url: '', public_id: 'sin_data' } ]
+
+      const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
+      const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
+      const mailhash = searchProfile.mailhash;
       
       async function buyerRating(){
         await modelNegotiation.findByIdAndUpdate(idOrder, { ratingSeller : rating, CommentSeller : comment }, {new:true});            
       }
       
+      async function storeRateComent() {
+          //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
+          
+          const newRateComment =  new modelStoreRate
+            ({ 
+              store: sellerId, logeado: customerId, markStar: rating, comment: comment, storeName: sellerName,
+              dataLogeado: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+            });
+
+          const saveRateComment = await newRateComment.save();
+          console.log("Se ha creado la primera calificacion y comentario organico de blissenet.com", saveRateComment)
+  
+      }
+
+      
       buyerRating()
         .then(()=>{
-          const response = { code: "ok", message: "Calificación y comentario recibido." };
-          res.json(response);
+          storeRateComent()
+            .then(()=>{
+                const response = { code: "ok", message: "Calificación y comentario recibido." };
+                res.json(response);
+            })
+            .catch((err)=>{
+                const response = { code: "error", message: "Ha habido un problema, con storeRateComent intente nuevamente en unos segundos." };
+                res.json(response);
+            })
+
         })
         .catch((err)=>{
           const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
           res.json(response);
         })     
       
+
 
   } catch (error) {
 
@@ -1973,7 +2053,7 @@ routes.post('/negotiation-rating/buyerTrue', async(req, res)=>{
 
 });
 
-//aqui es donde el vendedor califica el intercambio para items, artes y subasta
+//aqui es donde el vendedor califica al comprador para items, artes y subasta "En Compra directa"
 routes.post('/buysell-body/sellTrue', async(req, res)=>{
 
   try {
@@ -1985,21 +2065,58 @@ routes.post('/buysell-body/sellTrue', async(req, res)=>{
       console.log("Este es el idOrder ---->", idOrder);
       console.log("Esta es la calificacion del comprador ---->", rating);
       console.log("Este es el comentario del comprador sobre su vendedor ---->", comment);
+
+      const searchBuySell = await modelBuysell.findById(idOrder);
+
+      const sellerId = searchBuySell.indexedSell;
+      const sellerName = searchBuySell.usernameSell;
+      const customerId = searchBuySell.indexedBuy; 
+      const customerName = searchBuySell.usernameBuy;  
+      
+      const searchProfile = await modelProfile.findOne( {indexed : sellerId} );
+      console.log("VER searchProfile ..........:", searchProfile);
+      //avatarPerfil: [ { url: '', public_id: 'sin_data' } ]
+
+      const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
+      const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
+      const mailhash = searchProfile.mailhash;      
      
       async function buyerRating(){
         await modelBuysell.findByIdAndUpdate(idOrder, { ratingBuy : rating, CommentBuy : comment }, {new:true});            
       }
-      
+
+      async function storeRateComent() {
+          //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
+          
+          const newRateComment =  new modelStoreRate
+            ({ 
+              store: customerId, logeado: sellerId, markStar: rating, comment: comment, storeName: customerName,
+              dataLogeado: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+            });
+
+          const saveRateComment = await newRateComment.save();
+          console.log("Se ha creado la primera calificacion y comentario organico de blissenet.com", saveRateComment)
+  
+      }  
+ 
+
       buyerRating()
         .then(()=>{
-          const response = { code: "ok", message: "Calificación y comentario recibido." };
-          res.json(response);
+          storeRateComent()
+            .then(()=>{
+                const response = { code: "ok", message: "Calificación y comentario recibido." };
+                res.json(response);
+            })
+            .catch((err)=>{
+                const response = { code: "error", message: "Ha habido un problema, con storeRateComent intente nuevamente en unos segundos." };
+                res.json(response);
+            })
+
         })
         .catch((err)=>{
           const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
           res.json(response);
-        })     
-
+        })           
 
   } catch (error) {
 
@@ -2009,7 +2126,7 @@ routes.post('/buysell-body/sellTrue', async(req, res)=>{
 
 });
 
-//aqui es donde el vendedor califica al interesado de algun servicio, auto, avion, propiedad o un nautico
+//aqui es donde el vendedor califica al comprador o interesado de algun servicio, auto, avion, propiedad o un nautico
 routes.post('/negotiation-rating/sellTrue', async(req, res)=>{
 
   try {
@@ -2021,20 +2138,58 @@ routes.post('/negotiation-rating/sellTrue', async(req, res)=>{
       console.log("Este es el idOrder ---->", idOrder);
       console.log("Esta es la calificacion del comprador ---->", rating);
       console.log("Este es el comentario del comprador sobre su vendedor ---->", comment);
+
+      const searchNegotiation = await modelNegotiation.findById(idOrder);
+
+      const sellerId = searchNegotiation.indexedSell;
+      const sellerName = searchNegotiation.usernameSell;
+      const customerId = searchNegotiation.indexedBuy; 
+      const customerName = searchNegotiation.usernameBuy;  
+      
+      const searchProfile = await modelProfile.findOne( {indexed : sellerId} );
+      console.log("VER searchProfile ..........:", searchProfile);
+      //avatarPerfil: [ { url: '', public_id: 'sin_data' } ]
+
+      const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
+      const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
+      const mailhash = searchProfile.mailhash;      
      
       async function buyerRating(){
         await modelNegotiation.findByIdAndUpdate(idOrder, { ratingBuy : rating, CommentBuy : comment }, {new:true});            
       }
       
+      async function storeRateComent() {
+          //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
+          
+          const newRateComment =  new modelStoreRate
+            ({ 
+              store: customerId, logeado: sellerId, markStar: rating, comment: comment, storeName: customerName,
+              dataLogeado: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+            });
+
+          const saveRateComment = await newRateComment.save();
+          console.log("Se ha creado la primera calificacion y comentario organico de blissenet.com", saveRateComment)
+  
+      }  
+ 
+
       buyerRating()
         .then(()=>{
-          const response = { code: "ok", message: "Calificación y comentario recibido." };
-          res.json(response);
+          storeRateComent()
+            .then(()=>{
+                const response = { code: "ok", message: "Calificación y comentario recibido." };
+                res.json(response);
+            })
+            .catch((err)=>{
+                const response = { code: "error", message: "Ha habido un problema, con storeRateComent intente nuevamente en unos segundos." };
+                res.json(response);
+            })
+
         })
         .catch((err)=>{
           const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
           res.json(response);
-        })     
+        })           
 
 
   } catch (error) {

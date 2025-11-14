@@ -42,4 +42,3 @@ module.exports = model('negotiationModel', negotiationSchema, 'negotiations');
 //este esquema es muy parecido al de buySell.js a excepcion de algunos campos que aqui no son necesarios.
 //como el rating, comentarios, cancel y pay.
 //en este esquema solo se guarda la informacion basico de ambos contactos para que ellos puedan escribirse y cerrar la sala cuando uno de ambos asi lo decida.
-
