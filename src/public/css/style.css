@@ -65,6 +65,19 @@ main{
     white-space: nowrap; /* Evita el salto de línea */
 }
 
+.cursor-pointer{
+  cursor: pointer;
+}
+
+.no-select{
+  user-select: none;
+}
+
+.close{
+  display: none;
+}
+
+
 .glow-on-disabled {
     width: 220px;
     height: 50px;
@@ -367,18 +380,6 @@ main{
   }
 }
 
-.cursor-pointer{
-  cursor: pointer;
-}
-
-.no-select{
-  user-select: none;
-}
-
-.close{
-  display: none;
-  
-}
 
 .mainMail{
   cursor: pointer;

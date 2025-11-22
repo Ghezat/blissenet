@@ -12,7 +12,9 @@ const messageSchema = new Schema({
     question : { type : String}, //la pregunta.
     toCreatedArticleId : { type : String}, //el id del creador del articulo dato extraido de cada coleccion de departamentos. "Quien recibe la pregunte"
     ownerStore  : { type : String}, // este es el username del creador del anuncio. "Quien recibe la pregunte"
-    productId : { type : Schema.ObjectId }, //el id del producto en cuestion
+    productId : { type : Schema.ObjectId }, //el id del producto en cuestion para artAndArticle-rate"
+    department : { type : String }, //solo para artAndArticle-rate"
+    markStar: { type : Number }, //esto solo funciona para los mensajes de tipo calificacion "artAndArticle-rate"
     cartId : { type : String }, //esto solo funiona para los mensajes de notificacion de carritos de compra.
     depart : { type : String }, //departamento 
     answer : { type : String,  default: 'waiting' }, //esta respuesta la otorga el dueño del articulo 
@@ -158,6 +160,22 @@ module.exports = model('messageModel', messageSchema, 'messages');
   view: false,
   _id: new ObjectId("68b1f663b5a6eebfc0fcad4d")
 }
+
+{
+  typeNote: 'artAndArticle-Rate',
+  times: '29-08-2025 14:50',
+  productId: '40ab9dc1b8c25e5528f4eeth'
+  objeAvatar: { avatar: '' },
+  username: 'el commentator',
+  question: '¡Hola, es tiempo de calificar producto "el titulo del articulo o arte" !',
+  toCreatedArticleId: '66ab9dc1b8c25e5528f4ea9d',
+  ownerStore: 'develop-test1',
+  answer: 'waiting',
+  markStar: 5,
+  view: false,
+  _id: new ObjectId("68b1f663b5a6eebfc0fcad4d")
+}
+
 */
 
 //tipos de notas

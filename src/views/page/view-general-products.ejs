@@ -252,6 +252,7 @@
     <% }; %> 
 
     <input type="hidden" value="<%= depart %>" id="departAllBody">
+    
     <% if (user) { %>
         <% const seeMarket = user.seeMarket %>
         <!-- <% const idUser = user._id %> -->
@@ -292,6 +293,9 @@
         <!-- :::::::::: -->
 
         <% if  (search) { %>
+
+            <!-- rateData : { type : Object, default : { markStar : 0, comment : 0} } -->
+            <input type="hidden" value="<%= search.rateData.markStar %>" id="markStar">
             <% const titleURL = search.titleURL %> 
             
             <% let priceFormat = search.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
@@ -733,18 +737,23 @@
                                                         Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
-                                                        Rating: 4.4
-                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
-                                                         <div class="contentStart" style="color: gold">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-half"></i>
 
-                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
-                                                         </div>    
+                                                        <% const markStar = search.rateData.markStar %>
+                                                        <% const comments = search.rateData.comments %>
                                                         
+                                                        <% if (markStar !== 0 ) { %>
+                                                            
+
+                                                            Rating: <%= markStar %>
+                                                                
+                                                                <div class="boxstarViewMain" style="color: gold">
+                                                                   <!--  dinamico -->
+                                                                </div>    
+                                                        <% } else { %>
+
+                                                            Rating: ¡Sin calificación!
+
+                                                        <% }; %>    
                                                         
                                                     </div> 
                                                 </div>
@@ -798,18 +807,22 @@
                                                         Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
-                                                        Rating: 4.4
-                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
-                                                         <div class="contentStart" style="color: gold">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-half"></i>
 
-                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
-                                                         </div>    
-                                                        
+                                                        <% const markStar = search.rateData.markStar %>
+                                                        <% const comments = search.rateData.comments %>
+
+                                                        <% if (markStar !==0) { %>
+
+                                                            Rating: <%= markStar %>
+                                                                
+                                                                <div class="boxstarViewMain" style="color: gold">
+                                                                   <!--  dinamico -->
+                                                                </div>    
+                                                        <% } else { %>
+
+                                                            Rating: ¡Sin calificación!
+
+                                                        <% }; %> 
                                                         
                                                     </div> 
                                                 </div>
@@ -848,18 +861,22 @@
                                                         Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
-                                                        Rating: 4.4
-                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
-                                                         <div class="contentStart" style="color: gold">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-half"></i>
 
-                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
-                                                         </div>    
-                                                        
+                                                        <% const markStar = search.rateData.markStar %>
+                                                        <% const comments = search.rateData.comments %>
+
+                                                        <% if (markStar !==0) { %>
+
+                                                            Rating: <%= markStar %>
+                                                                
+                                                                <div class="boxstarViewMain" style="color: gold">
+                                                                   <!--  dinamico -->
+                                                                </div>      
+                                                        <% } else { %>
+
+                                                            Rating: ¡Sin calificación!
+
+                                                        <% }; %>   
                                                         
                                                     </div> 
                                                 </div>
@@ -1118,17 +1135,25 @@
                                                         Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
-                                                        Rating: 4.4
-                                                        <!-- <div class="ui star rating" data-rating="4.4" data-max-rating="5" data-readonly="true"></div>  -->
-                                                         <div class="contentStart" style="color: gold">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-half"></i>
 
-                                                            <a href=""> <span class="mx-2 text-dark">|</span> 2 Calificación</a>
-                                                         </div>    
+                                                        <% if (search.rateData.markStar !==0) { %>
+
+                                                            Rating: <%= search.rateData.markStar %>
+                                                                
+                                                                <div class="contentStart" style="color: gold">
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                    <i class="bi bi-star-half"></i>
+
+                                                                    <a href=""> <span class="mx-2 text-dark">|</span> <%= search.rateData.comment %> Calificación</a>
+                                                                </div>    
+                                                        <% } else { %>
+
+                                                            Rating: ¡Sin calificación!
+
+                                                        <% }; %> 
                                                         
                                                         
                                                     </div> 
@@ -1538,7 +1563,7 @@
 
                                    <% if (search) { %> 
                                         <% if (user.username !== search.username) { %>
-                                        <h6 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h6>
+                                        <h3 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h3>
                                         <div class="form-group">
                                             <!-- <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;">     -->
                                             <textarea class="form-control" name="questions" id="questions" rows="2" placeholder="Escribe aqui su pregunta"></textarea>
@@ -1547,7 +1572,7 @@
                                             <input type="button" class="form-control btn btn-primary" id="btnSenMessage" value="Enviar Pregunta" style="width: 100%;">
                                         </div>
                                         <% } else { %>
-                                        <h6 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h6>
+                                        <h3 class="text-decoration-underline mb-2">Hacer una pregunta al anunciante.</h3>
                                         <div class="form-group">
                                             <!--  <input type="text" class="form-control" name="questions" id="questions"  placeholder="Escribe aqui su pregunta" style="width: 100%;" disabled>     -->
                                              <textarea class="form-control" name="questions" id="questions" rows="2" placeholder="Escribe aqui su pregunta" disabled></textarea>
@@ -1585,6 +1610,102 @@
             </div>
         </div>
     </div>
+
+
+    <% if (depart == 'items' || depart == 'arts') { %>
+
+        <% if (RateThisArticle.length > 0 ) { %>
+
+            <input type="hidden" class="objetRateThisArticle" value="<%= JSON.stringify(RateThisArticle) %>">
+        
+            <!-- contenedor para mostrar calificacion y comentarios de este articulo -->
+            <div class="containerViewRatesStore px-3 rounded-1" style="background-color: rgb(233, 236, 239, 0.1);">
+                <div class="containert themaTextLight">
+
+                    <div class="modal-header" style="background-color: rgba(247, 247, 247, 0.2);">
+                        <h3 class="modal-title">Ver Calificaciones y Opiniones</h3>
+                    </div>
+                    
+                    <div class="row mx-0 mt-1 bodyAnalisi d-flex justify-content-between">
+
+                        <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6 p-0 containerPoint d-flex flex-column justify-content-center align-items-center px-2">
+                            
+                            <p class="pountrateView p-0 mb-1" style="font-size: 40px; font-weight: bold;"> <!-- 4.8 --> </p>
+                            <div class="boxstarView"> <!-- ***** --> </div>
+                            <p class="countrateView" style="font-size: 16px; font-weight: bold;" > <!-- 56 --> </p>
+
+                        </div>
+
+                        <div class="col-xl-9 col-lg-9 col-md-6 col-sm-6 p-0 containerRatePercentBar px-3">
+                                                                    
+                                <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                    <span class="p-0 ms-2" style="width: 10%;"> <b class="m-0"> 5 <i class="bi bi-star-fill p-0 m-0"></i> </b>  </span>
+                                    <div class="progress py-1 mt-1" id="barStar5" style="width: 90%;">
+                                        <!-- dinamico -->
+                                    </div>
+
+                                </div>
+
+                                <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                    <span class="p-0 ms-2" style="width: 10%;"> <b class="m-0"> 4 <i class="bi bi-star-fill p-0 m-0"></i> </b>  </span>
+                                    <div class="progress py-1 mt-1" id="barStar4" style="width: 90%;">
+                                        <!-- dinamico -->
+                                    </div>
+
+                                </div>
+
+                                <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                    <span class="p-0 ms-2" style="width: 10%;"> <b class="m-0"> 3 <i class="bi bi-star-fill p-0 m-0"></i> </b>  </span>
+                                    <div class="progress py-1 mt-1" id="barStar3" style="width: 90%;">
+                                        <!-- dinamico -->
+                                    </div>
+
+                                </div>
+
+                                <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                    <span class="p-0 ms-2" style="width: 10%;"> <b class="m-0"> 2 <i class="bi bi-star-fill p-0 m-0"></i> </b>  </span>
+                                    <div class="progress py-1 mt-1" id="barStar2" style="width: 90%;">
+                                        <!-- dinamico -->
+                                    </div>
+
+                                </div>
+
+                                <div class="contentBar d-flex my-1" style="height: 25px;">
+
+                                    <span class="p-0 ms-2" style="width: 10%;"> <b class="m-0"> 1 <i class="bi bi-star-fill p-0 m-0"></i> </b>  </span>
+                                    <div class="progress py-1 mt-1" id="barStar1" style="width: 90%;">
+                                        <!-- dinamico -->
+                                    </div>
+
+                                </div>
+                            
+                        </div>
+                    
+                    </div>
+                    <div class="row m-0 my-3">
+                    <div class="col-12 d-flex py-2" style="overflow-x: auto;">
+                        <button class="btn btn-primary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRateAll" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">Todos <i class="bi bi-star ms-1"></i> </span> </button>
+                        <button class="btn btn-primary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate5" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">5 <i class="bi bi-star ms-1"></i> </span> </button>
+                        <button class="btn btn-primary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate4" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">4 <i class="bi bi-star ms-1"></i> </span> </button>
+                        <button class="btn btn-primary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate3" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">3 <i class="bi bi-star ms-1"></i> </span> </button>
+                        <button class="btn btn-primary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate2" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">2 <i class="bi bi-star ms-1"></i> </span> </button>
+                        <button class="btn btn-primary rounded-pill px-2 py-1 mx-2 d-flex justify-content-center align-items-center btnRate1" style="width: 90px; height: 40px;"> <span class="d-flex mx-1">1 <i class="bi bi-star ms-1"></i> </span> </button>
+                    </div>
+                    </div>
+
+                    <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
+                    <!-- dinamico -->
+                    </div>
+                    
+                </div>
+            </div>
+        <% }; %>  
+
+    <% }; %>
 
     <% if (!user) { %>
 
@@ -2777,6 +2898,7 @@
         });
         
 </script>
+
 <script>
     //escucha para actualizar las pujas de las subastas desde el Socket
     const tableBids = document.querySelector('.tableBids');
@@ -3460,7 +3582,7 @@
     
     }
     
-    </script>
+</script>
 
 <script>//con este script logro proteger y dar el spinnier en el boton de carga.
 
@@ -3546,7 +3668,488 @@
 
 </script>
 
+<script>
+    //Script que procesa toda la informacion sobre las calificacione y comentarios de este articulo.
+    const pountrateView = document.querySelector('.pountrateView'); //contenedor donde inyectamos markStar
+    const boxstarViewMain = document.querySelector('.boxstarViewMain');
+    const boxstarView = document.querySelector('.boxstarView');
+    const countrateView = document.querySelector('.countrateView');
+    const bodyRates = document.querySelector('#bodyRates');
+
+    const barStar5 = document.getElementById('barStar5');
+    const barStar4 = document.getElementById('barStar4');
+    const barStar3 = document.getElementById('barStar3');
+    const barStar2 = document.getElementById('barStar2');
+    const barStar1 = document.getElementById('barStar1');
+
+    const objetRateThisArticle = document.querySelector('.objetRateThisArticle'); //aqui el objeto en cuestion 
+
+    const markStar = document.getElementById('markStar').value;
+    console.log("markStar ...:", markStar);
+    pountrateView.innerText = markStar;
+
+          if (markStar == 0 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                            `                      
+                 
+          } else if (markStar > 0 && markStar < 1 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `  
+
+          } else if (markStar == 1 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `                                            
+                            
+          } else if (markStar > 1 && markStar < 2){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                    `                      
+                     
+          } else if (markStar == 2){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                     <i class="bi bi-star mx-1"></i>
+                                    `                                  
+
+          } else if (markStar > 2 && markStar < 3){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      `                                  
+          } else if (markStar == 3 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                     `                                   
+
+          } else if (markStar > 3 && markStar < 4){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-half"></i>
+                                      <i class="bi bi-star"></i>
+                                     `                                  
+
+          } else if (markStar == 4 ){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                     `                                    
+
+          } else if (markStar > 4 && markStar < 5){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                     `                                  
+
+          } else if (markStar == 5){
+            boxstarView.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                     `                                  
+          } 
+
+
+
+          const objetRate = objetRateThisArticle.value; //ya tiene el stringify del objeto JSON
+          const boxRates = JSON.parse(objetRate); //que esta malo aqui luzia?
+          console.log("boxRates :", boxRates); //esto es un array
+
+          console.log("boxRates :", boxRates);
+          const ratesLength = boxRates.length;
+          
+
+          countrateView.innerText = ratesLength; // cantidad de calificaciones  
+
+          /*  Este condicional logra las estrellas de la calificacion que esta arriba de Disponible ------------- */ 
+         if (markStar == 0 ){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a> 
+                                        `                      
+                 
+          } else if (markStar > 0 && markStar < 1 ){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                    `  
+
+          } else if (markStar == 1 ){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                    `                                            
+                            
+          } else if (markStar > 1 && markStar < 2){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                    `                      
+                     
+          } else if (markStar == 2){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                    `                                  
+
+          } else if (markStar > 2 && markStar < 3){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      `                                  
+          } else if (markStar == 3 ){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                     `                                   
+
+          } else if (markStar > 3 && markStar < 4){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-fill"></i>
+                                      <i class="bi bi-star-half"></i>
+                                      <i class="bi bi-star"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                     `                                  
+
+          } else if (markStar == 4 ){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                     `                                    
+
+          } else if (markStar > 4 && markStar < 5){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-half mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                     `                                  
+
+          } else if (markStar == 5){
+            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                     `                                  
+          } 
+
+          // -------------------------------------------------------------------------------------
+
+
+          //ahora hacemos el calculo para saber cual es la media de las calificaciones aportadas por los usuarios 
+          let sumStar1 = 0, sumStar2 = 0, sumStar3 = 0, sumStar4 = 0, sumStar5 = 0;
+          let sumRate = 0;
+          let boxPercent = [];
+
+          boxRates.forEach((ele)=>{
+            const stars = ele.markStar;
+            //console.log("stars >", stars)
+            sumRate = sumRate + stars; 
+
+            if (stars == 1){
+              sumStar1 ++;
+            } else if (stars ==2){
+              sumStar2 ++;
+            } else if (stars ==3){
+              sumStar3 ++;
+            } else if (stars ==4){
+              sumStar4 ++;
+            } else if (stars ==5){
+              sumStar5 ++;
+            } 
+          })
+
+          //console.log("Con estos datos armo las barras de progrso de las estrellas.")
+          //console.log( `sumStar1 :${sumStar1} sumStar2 :${sumStar2} sumStar3 :${sumStar3} sumStar4 :${sumStar4} sumStar5 :${sumStar5}` );
+          //console.log("ratesLength: ", ratesLength);
+          //console.log("------------------------------------------------------")
+          const boxCountStart = [sumStar1, sumStar2, sumStar3, sumStar4, sumStar5];
+          boxCountStart.forEach((ele)=>{
+            let resultPercent = ((ele * 100) / ratesLength).toFixed(1);
+            boxPercent.push(resultPercent);
+          })
+          console.log("boxPercent --->", boxPercent);
+          //   1* ,   2* ,    3* ,    4* ,    5*
+          //['0.0', '40.0', '20.0', '20.0', '20.0']
+
+        for (let i = 0; i < boxPercent.length; i++) {
+            const ele = boxPercent[i];
+            //console.log("verrrrrrr aqui", i);
+            //console.log(`barStar${i + 1} valor : ${ele} `);
+            const x = i + 1;
+            if (x == 1){
+            barStar1.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 2) {
+            barStar2.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 3) {
+            barStar3.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 4) {
+            barStar4.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            } else if (x == 5) {
+            barStar5.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` 
+            }
+                    
+            /* `barStar${i}`.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` */
+        }
+
+        // Esta es la parte donde se crean las calificaciones y comentarios
+
+            boxRates.forEach((ele)=>{
+            
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;
+
+              const markstar = ele.markStar;
+              const comment = ele.comment;
+              const commentatorData = ele.commentatorData
+              const avatarPerfil = commentatorData.avatarPerfil;
+              const mailhash = commentatorData.mailhash;
+              const username = commentatorData.username
+              
+
+              console.log("avatarPerfil ....:", avatarPerfil);
+              //{url: '', public_id: 'sin_data'}
+
+                  if (avatarPerfil[0].public_id === 'sin_data'){
+                      
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: gold;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: gold;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: gold;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: gold;">
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: gold;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p> 
+                                        </div>               
+                                        `
+                      }   
+
+                  } else {
+ 
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: gold;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: gold;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: gold;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: gold;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: gold;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                  
+                      }
+
+                  }
+                  
+           })       
+ 
+
+
+</script>
+
 <% if ( user !== undefined ) { %>
+
     <script>
 
         const favoriteProduct = document.querySelector('.favoriteProduct');
@@ -3595,50 +4198,52 @@
 
     </script>
 
-<script>
+    <script>
 
-    const favoriteStore = document.querySelector('.favoriteStore');
-    const starData = document.querySelector('.starData');
- 
-    favoriteStore.addEventListener('click', ()=>{
-        console.log("favoriteStore.chilnodes---> ", favoriteStore.childNodes )
+        const favoriteStore = document.querySelector('.favoriteStore');
+        const starData = document.querySelector('.starData');
+    
+        favoriteStore.addEventListener('click', ()=>{
+            console.log("favoriteStore.chilnodes---> ", favoriteStore.childNodes )
 
-        const user = favoriteStore.childNodes[4].value; //usuario que esta logeado
-        const userTienda = favoriteStore.childNodes[7].value; //usuario dueño de la tienda
-      
-        const datos = {
-            user : user,
-            userOfStore : userTienda
-        };
+            const user = favoriteStore.childNodes[4].value; //usuario que esta logeado
+            const userTienda = favoriteStore.childNodes[7].value; //usuario dueño de la tienda
+        
+            const datos = {
+                user : user,
+                userOfStore : userTienda
+            };
 
-        console.log("datos favoriteStore--->", datos);
-         
-        efecto()
-        setInterval( normalBookmark, 2000)
+            console.log("datos favoriteStore--->", datos);
+            
+            efecto()
+            setInterval( normalBookmark, 2000)
 
-        fetch('/account/myfavorite-stores', {
+            fetch('/account/myfavorite-stores', {
 
-          method: "post",
-          body: JSON.stringify(datos),
-          headers: {"content-type" : "application/json"}
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
 
-          })
-          .then(response =>response.json() )
-          .then( jsonx => jsonx)
-          .catch( err => console.log(err));
+            })
+            .then(response =>response.json() )
+            .then( jsonx => jsonx)
+            .catch( err => console.log(err));
 
 
-        function efecto(){            
-            starData.classList.remove('bi-bookmark-check');
-            starData.classList.add('bi-bookmark-check-fill')
-        }
+            function efecto(){            
+                starData.classList.remove('bi-bookmark-check');
+                starData.classList.add('bi-bookmark-check-fill')
+            }
 
-        function normalBookmark(){ 
-            starData.classList.remove('bi-bookmark-check-fill');
-            starData.classList.add('bi-bookmark-check')
-        }
+            function normalBookmark(){ 
+                starData.classList.remove('bi-bookmark-check-fill');
+                starData.classList.add('bi-bookmark-check')
+            }
 
-    })         
+        })         
 
-</script>
-    <% } %>
+    </script>
+
+
+<% } %>

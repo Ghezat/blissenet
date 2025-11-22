@@ -18,6 +18,7 @@ const modelShoppingCart = require('../models/shoppingCart.js');
 const modelTransportAgent = require('../models/transportAgent.js');
 const modelBankUser = require('../models/bankUser.js');
 const modelStoreRate = require('../models/storeRate.js');
+const modelMessages = require('../models/messages.js');
 const user = require('../models/user.js');
 
 //este Token es la KEY del bot de Telegram
@@ -1904,6 +1905,7 @@ routes.post('/buysell-body/confirm', async(req, res)=>{
 });
 
 //aqui es donde el comprador califica al vendedor. "En Compra directa"
+//y no solo califica sino que se ahora recibe un mensaje en inbox para calificar el articulo en si.
 routes.post('/buysell-body/buyerTrue', async(req, res)=>{
 //aqui se registra el comentario y calificacion al vendedor
   try {
@@ -1912,16 +1914,28 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       console.log ("esto es lo que esta llegando al backend", body);
       const { idOrder, rating, comment } = req.body;
 
+      let date = new Date();
+      let dia = date.getDate(); let mes = date.getMonth() + 1; let anio = date.getFullYear();
+      let hora = date.getHours(); let minu = date.getMinutes();
+
+      let mesFormatted = String(mes).padStart(2, '0');
+      let minuFormatted = String(minu).padStart(2, '0');
+      const timeNow = `${dia}-${mesFormatted}-${anio} ${hora}:${minuFormatted}`;
+
       console.log("Este es el idOrder ---->", idOrder);
       console.log("Esta es la calificacion del vendedor ---->", rating);
       console.log("Este es el comentario del vendedor sobre su comprador ---->", comment);
       
       const searchBuySell = await modelBuysell.findById(idOrder);
 
+      const productTitle = searchBuySell.title;
+      const department = searchBuySell.department;
+      const productId = searchBuySell.title_id;
       const sellerId = searchBuySell.indexedSell;
       const sellerName = searchBuySell.usernameSell;
       const customerId = searchBuySell.indexedBuy; 
-      const customerName = searchBuySell.usernameBuy;  
+      const customerName = searchBuySell.usernameBuy; 
+      const image = searchBuySell.image[0].url; 
       
       const searchProfile = await modelProfile.findOne( {indexed : customerId} );
       console.log("VER searchProfile ..........:", searchProfile);
@@ -1930,6 +1944,26 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
       const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
       const mailhash = searchProfile.mailhash;
+
+      async function NotificationRate(){
+
+          //enviar mensaje de calificacion de este articulo, comprado
+          const newNotificationRate = new modelMessages( { typeNote: 'artAndArticle-Rate',
+                                                      times: timeNow,
+                                                      department: department,
+                                                      productId: productId,
+                                                      objeAvatar : {avatar : image},
+                                                      username: customerName,
+                                                      question: `¡Hola, es tiempo de calificar ${productTitle}!`,
+                                                      markStar: 0,
+                                                      toCreatedArticleId : customerId, //el id de la cuenta donde debe llegar la notificacion
+                                                      answer: 'waiting', //aqui responde y sobre escribe el waiting.
+                                                      view: false } );
+          console.log("newNotificationRate ------>", newNotificationRate);
+
+          const saveMessage = await newNotificationRate.save();
+          console.log("se ha creado la notificacion de calificacion y ciomentario del articulo comprado.");
+      }
 
 
       async function buyerRating(){
@@ -1955,16 +1989,29 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
         .then(()=>{
           storeRateComent()
             .then(()=>{
-                const response = { code: "ok", message: "Calificación y comentario recibido." };
-                res.json(response);
+                //vamos a enviar la notificacion para que califiqye y comente el articulo en cuestion.
+                NotificationRate()
+                  .then(()=>{
+                      const response = { code: "ok", message: "Calificación y comentario recibido." };
+                      res.json(response);
+                  })
+                  .catch((err)=>{
+                      console.log("hay un error en NotificationRate()")
+                      const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
+                      res.json(response);
+                  })
+
             })
             .catch((err)=>{
-                const response = { code: "error", message: "Ha habido un problema, con storeRateComent intente nuevamente en unos segundos." };
-                res.json(response);
+              console.log("hay un error en storeRateComent()")
+              const response = { code: "error", message: "Ha habido un error, intenta nuevamente enviar tu calificación" };
             })
+
+
 
         })
         .catch((err)=>{
+          console.log("hay un error en buyerRating()")
           const response = { code: "error", message: "Ha habido un problema, intente nuevamente en unos segundos." };
           res.json(response);
         })     

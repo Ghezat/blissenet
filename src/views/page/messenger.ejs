@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que estar despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
     <title>Blissenet Notificaciones</title>
 </head>
 <style>
@@ -40,6 +42,12 @@
     .textLight{
         /* trabaja en conjunto con themaTextLight */
         color: white;
+    }
+
+    .toast-success {
+        /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+        background-color: #6f42c1; /* Azul tirando a morado */
+        color: white; /* Color del texto */
     }
 
 </style>
@@ -81,7 +89,7 @@
                                     </div>
 
                                     <% if (searchMessageInbox.length !== 0 ) { %>
-                                        <% searchMessageInbox.forEach((ele)=>{ %>
+                                        <% searchMessageInbox.forEach((ele, i)=>{ %>
     
                                             <% if (ele.typeNote === "notes") { %>
                                                 <div class="bodyTheme">
@@ -456,7 +464,58 @@
                                                     <hr class="m-1">     
                                                 </div>
 
+                                             <% } else if (ele.typeNote === "artAndArticle-Rate") { %>
+                                                <div class="bodyTheme">
+                                                    
+                                                    <div class="contentDateTime d-flex justify-content-center"> <small><span class="rounded-pill px-1 shadow-sm" style="background-color: rgba(95, 103, 110, 0.4);"><%= ele.times %></span> </small> </div>  
+                                                    <div class="containerImgTitle d-flex">
+        
+                                                        <div><img src="<%= ele.objeAvatar.avatar %>" style="width: 50px; height: 50px; object-fit: cover;" class="me-4 rounded-1"></div>
+                                                        <div> <p style="font-size: 18px;"> La comunidad agradece las calificaciones.</p> </div>
+                
+                                                    </div>
+                                                    
+                                                    <div class="question mt-2">
+                                                        <p class="rounded-2 ps-1" style="font-size: 16px;"><%= ele.question %> <span>  </span></p> 
+                                                    </div>
+
+                                                    <div class="containRateStar d-flex justify-content-center border border-dark py-3 my-2 rounded-2" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
+                                                        <input type="hidden" id="idMesagge" value="<%= ele._id%>"> <!-- esto es importante porque luego de enviar la califacion con este id podemos actualizar este mensaje para que ya no aparezca dandole un valor true en el campo view -->
+                                                        <input type="hidden" id="department"  value= "<%= ele.department %>"> 
+                                                        <input type="hidden" id="productId"  value= "<%= ele.productId %>"> 
+                                                        <input type="hidden" name="starValue" id="starHidden">
+                                                        <i class="starE bi bi-star mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="3" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="4" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                        <i class="starE bi bi-star mx-2" data-star="5" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i> 
+                                                    </div>  
+
+                                                    <div class="containerInputSubmit form-group d-flex justify-content-between mb-2">
+                                                        <input type="text" class="form-control" style="width: 79%;" id="commentId" required> 
+                                                        <input type="submit" class="form-control btn btn-primary" style="width: 20%;" id="btnSend">
+                                                    </div>
+                                                    
+                                                    <hr class="m-1">     
+                                                </div>    
+
                                              <% }; %>  
+
+<!--                                             newNotificationRate  {
+                                                typeNote: 'artAndArticle-Rate',
+                                                times: '17-11-2025 12:57',
+                                                objeAvatar: {
+                                                    avatar: 'https://bucket-blissve.nyc3.digitaloceanspaces.com/firstImgBuySell/1763389938471.png'
+                                                },
+                                                username: 'DayOfTheTentacle',
+                                                question: '¡Hola, es tiempo de calificar Linterna Cat - baterias recargables!',
+                                                toCreatedArticleId: '68add4dca09409e3310898e0',
+                                                productId: new ObjectId("678eaa9dd30c9cb0f7745033"),
+                                                markStar: 0,
+                                                answer: 'waiting',
+                                                view: false,
+                                                _id: new ObjectId("691b540764d487d9ccc30d5b")
+                                            } -->
 
                                         <% }); %>
                                       
@@ -560,6 +619,8 @@
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
 
   <script>
+    
+
     let btnInbox = document.getElementById('btnInbox');
     let btnOutbox = document.getElementById('btnOutbox');
     let contentInbox = document.querySelector('.contentInbox');
@@ -582,6 +643,118 @@
     });
 
   </script>
+
+  <script>
+    const starHidden = document.getElementById('starHidden'); //aqui guardo el valor de lacalificacion de la contraparte
+    const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella 
+    let star = 1;
+
+    if (starE) {
+        starE.forEach((ele, i) => {
+            ele.addEventListener("click", () => {
+                star = ele.getAttribute("data-star"); // aquí es el número de la estrella
+                
+                // Desactivar o activar las estrellas
+                starE.forEach((starElement, index) => {
+                    if (index < parseInt(star)) {
+                        starElement.classList.replace("bi-star", "bi-star-fill");
+                    } else {
+                        starElement.classList.replace("bi-star-fill", "bi-star");
+                    }
+                });
+
+                starHidden.value = star;
+                //console.log("el valor de starHidden .....:", starHidden.value);   
+
+            });
+        });
+    }
+
+
+</script>
+
+<script>
+    
+    //const starHidden = document.getElementById('starHidden'); ya esta declarada arriba
+    const commentId = document.getElementById('commentId');
+    const btnSend = document.getElementById('btnSend');
+    const idMesagge = document.getElementById('idMesagge');
+    const department = document.getElementById('department');
+    const productId = document.getElementById('productId');
+    const starValue = starHidden;
+    const answer = commentId;
+    
+
+    if (btnSend){
+        btnSend.addEventListener('click', () => {
+
+            // Proceso de validación
+            if (validarFormulario()) {
+            
+                const Department = department.value; const ProductId = productId.value; const StarValue = starValue.value; const Answer = answer.value;
+                const IdMesagge = idMesagge.value;
+                console.log(` Department :${Department} | ProductId :${ProductId} | StarValue :${StarValue} | Answer :${Answer} | IdMesagge : ${IdMesagge} `)
+                
+                // lo que debe recibir en la ruta:  department, productId, starValue, answer
+                const datos = {
+                    department : Department,
+                    productId : ProductId,
+                    starValue : StarValue,
+                    answer : Answer,
+                    idMesagge : IdMesagge
+                };
+
+                fetch('/rateProduct', {
+
+                method: "post",
+                body: JSON.stringify(datos),
+                headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => {
+                    console.log(jsonx)
+                    const code = jsonx.code;
+                    const message = jsonx.message;
+
+                    if (code === "ok"){
+                        mostrarToast( message , 'right', 'success', 'Hecho', true ); 
+                        mostrarToast( "3 Ssegundos para actualizar la pagina." , 'right', 'info', '', true ); // Agrega título aquí
+                        setTimeout(() => {
+
+                        location.reload();
+
+                        }, 3000);
+
+                    } else {
+                        mostrarToast( message , 'right', 'danger', 'Upps', true ); // Agrega título aquí
+                    }
+
+                })
+                .catch( err => {
+                    console.log(err);
+                    mostrarToast( message , 'right', 'danger', 'Upps', true ); // Agrega título aquí
+                });
+                
+                
+            } else {
+                //alert("Por favor, completa todos los campos requeridos."); // Mensaje de error
+                console.log("comment", commentId.value.trim());
+                console.log("starHidden", starHidden.value);
+                const message = "Por favor, completa todos los campos requeridos.";
+                mostrarToast( message , 'right', 'info', '', true ); // Agrega título aquí
+            }
+            
+        });
+    }    
+
+    function validarFormulario() {
+        // Aquí puedes agregar tus condiciones de validación
+        return (commentId.value.trim() !== "") && (starHidden.value !== ""); // Esto envio un false o un true ?
+    }
+
+</script>
+
 </body>
 </html>
 

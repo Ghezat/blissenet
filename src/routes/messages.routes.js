@@ -6,6 +6,7 @@ const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
 const modelMessages = require('../models/messages.js');
+const modelArtAndArticle = require('../models/artAndArticle.js');
 
 const modelArtes = require('../models/artes.js');
 const modelAirplane = require('../models/airplane.js');
@@ -22,6 +23,129 @@ const modelRaffle = require('../models/raffle.js');
 const Token =  process.env.Token_Bot;
 
 const axios = require('axios');
+
+routes.post('/rateProduct', async(req, res)=>{
+    console.log('···· /rateProduct ····');
+    console.log(req.body);
+
+    const { department, productId, starValue, answer, idMesagge } = req.body
+    const StarValue = parseInt(starValue); //siempre es un numero entero el que se envia para calificar.
+    //ahora vamos a crear la calificacion de este articulo. 
+    //que luego se mostrara en el view-general-product
+    //tambien se usara para dejar la media de calificacion en el producto en si. que es las estrellas que mosytrara en la tarjeta.
+
+    const user = req.session.user;
+    const userId = user._id;
+
+    const perfilData = await modelProfile.findOne({ indexed : userId });
+    const blissName = perfilData.blissName;
+    const mailhash = perfilData.mailhash;
+    const avatarPerfil = perfilData.avatarPerfil;
+    const commentatorId = perfilData.indexed;
+
+    console.log("user :", user);
+    console.log("blissName :", blissName);
+    console.log("mailhash :", mailhash); console.log("avatarPerfil :", avatarPerfil); console.log("commentatorId :", commentatorId);
+
+    //blissName : Falcon Roger; mailhash : fd25e003e3b6b4b4f60c0659099321bd
+    //avatarPerfil : [ { url: '', public_id: 'sin_data' } ]; commentatorId : 66ba334e0e5f1becbefdb4d5
+
+    const searhRateArtAndArticle = await modelArtAndArticle.find({ department, productId });
+    
+    async function createRateArtAndArticle(){
+
+        const Data = {username : blissName, avatarPerfil, mailhash}; 
+        //commentatorData : { type : Object }, //aqui va a estar un objeto asi {username, avatarPerfil, mailhash}
+
+        const newArtAndArticle = new modelArtAndArticle ( {department, productId, markStar: StarValue, comment : answer, commentatorData : Data, commentatorId} );
+        //console.log("newArtAndArticle :", newArtAndArticle);
+        const saveArtAndArticle = newArtAndArticle.save();
+    }
+
+    async function editProduct(){
+
+        if (department === "items"){
+            const search = await modelItems.findOne({ _id : productId});
+            const markStarCurrent = search.rateData.markStar;
+            const commentsCurrent = search.rateData.comments; 
+            console.log("search :", search); 
+
+            console.log(`StarValue  : ${StarValue}`);
+            console.log(`markStarCurrent  : ${markStarCurrent}`);
+            console.log(`commentsCurrent  : ${commentsCurrent}`);
+            console.log(`typeof---> StarValue  : ${typeof StarValue} | markStarCurrent  : ${typeof markStarCurrent} | commentsCurrent  : ${typeof commentsCurrent} `);
+            //typeof  : number | starValue  : string
+            let newMarkStar, comments;
+
+
+            if (markStarCurrent !==0){
+                newMarkStar = parseFloat(((markStarCurrent + StarValue) / 2).toFixed(1));
+                comments = commentsCurrent + 1;
+                console.log("newMarkStar .....:", newMarkStar);
+                console.log("comments .....:", comments);
+            } else {
+                newMarkStar = StarValue;
+                comments = commentsCurrent + 1 ;
+                console.log("newMarkStar .....:", newMarkStar);
+                console.log("comments .....:", comments);
+            }
+
+            const update = await modelItems.updateOne({ _id : productId}, {$set : { 'rateData.markStar' : newMarkStar, 'rateData.comments' : comments } } );
+            const updateMessage = await modelMessages.findByIdAndUpdate( idMesagge, {$set : {view: true, markStar: newMarkStar, answer: answer}} );
+
+        } else {
+            const search = await modelArtes.findOne({ _id : productId});
+            const markStarCurrent = search.rateData.markStar;
+            const commentsCurrent = search.rateData.comments; 
+            console.log("search :", search); 
+
+            console.log(`markStarCurrent  : ${markStarCurrent} | StarValue  : ${StarValue}`);
+            console.log(`commentsCurrent  : ${commentsCurrent}`);
+            console.log(`typeof--->  markStarCurrent  : ${typeof markStarCurrent} | StarValue  : ${typeof StarValue}`);
+            //typeof  : number | starValue  : string
+            let newMarkStar, comments;
+
+            if (markStarCurrent !==0){
+                newMarkStar = parseFloat(((markStarCurrent + StarValue) / 2).toFixed(1));
+                comments = commentsCurrent + 1;
+                console.log("newMarkStar .....:", newMarkStar);
+            } else {
+                newMarkStar = StarValue;
+                comments = commentsCurrent + 1;
+                console.log("newMarkStar .....:", newMarkStar);
+            }
+
+            const update = await modelArtes.updateOne({ _id : productId}, {$set : { 'rateData.markStar' : newMarkStar, 'rateData.comments' : comments } } );
+            const updateMessage = await modelMessages.findByIdAndUpdate( idMesagge, {$set : {view: true, markStar: newMarkStar, answer: answer}} );
+        }
+
+    }
+
+     
+
+    createRateArtAndArticle()
+        .then(()=>{
+
+            editProduct()
+                .then(()=>{
+                    console.log("todo ha resultado de maravilla");
+                    const message = "Calificación y Comentario enviado.";
+                    res.json({ code: "ok", message});
+                })
+                .catch((err)=>{
+                    console.log("ha habido un error en editProduct()", err);
+                    const message = "Ha habido un error, intente mas tarde.";
+                    res.json({ code: "err", message});
+                })
+        })
+        .catch((err)=>{
+            console.log("ha habido un error en createArtAndArticle()", err);
+            const message = "Ha habido un error, intente mas tarde.";
+            res.json({ code: "err", message});
+        })
+
+
+});
 
 routes.get('/myaccount/messenger', async (req,res)=>{
     let userId;
@@ -272,6 +396,8 @@ routes.post('/express-notes-deleting', async(req, res)=>{
 
         res.json(searchNotes);
 });
+
+
 
 //-------------------------------------------------------------------------------------------------
 module.exports = routes;

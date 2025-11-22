@@ -26,6 +26,7 @@ const SchemaArtes = new Schema({
     countryCode : { type: String }, //aqui el codigo del pais, si es venezuela seria (ve) y es lo que mostrara cuando el sservidor detecte que estamos en venezuela.
     state_province : { type: String },
     view : { type : Number, default : 0 }, //aqui tenemos la cantidad de vistas que tiene este producto.
+    rateData : { type : Object, default : { markStar : 0, comments : 0} }, //Datos de calificacion y comentarios
     spread : { type : Object, default : { spreading : false, time : null } }, //este campo es para identificar si se ha hecho la accion de "Difundir entre sus seguidores". 
     stock : { type: Boolean, default: true },
     favorite : { type : Number, default : 0 }, //para conocer cuantas personas han agregado este articulo y tener metricas de este dato.

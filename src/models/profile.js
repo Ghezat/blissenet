@@ -30,7 +30,6 @@ const SchemaProfile = new Schema({
     postCode : { type : String },
     city : { type : String },
     suburb : { type : String },
-
     address : { type : String }, //direccion del usuario (dato importante para sus futuras facturas). Ultimo atributo creado. 
     phone : { type : String },
     phoneAlt : { type : String },

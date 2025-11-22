@@ -18,7 +18,9 @@ const modelTickets = require('../models/tickets.js');
 const modelInvoice = require('../models/invoice.js');
 const modelBankUser = require('../models/bankUser.js');
 
+
 const modelMessages = require('../models/messages.js');
+const modelArtAndArticle = require('../models/artAndArticle.js');
 
 const nodemailer = require('nodemailer');
       
@@ -119,7 +121,11 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
             
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport });
+            //aqui vamos a recuperar todas las calificaciones y comentarios de este articulo 
+            const RateThisArticle = await modelArtAndArticle.find({department : depart, productId})
+            console.log("RateThisArticle :", RateThisArticle); 
+  
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, RateThisArticle });
         
         } else {
         
@@ -199,7 +205,11 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
     
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});  
+            //aqui vamos a recuperar todas las calificaciones y comentarios de este articulo 
+            const RateThisArticle = await modelArtAndArticle.find({department : depart, productId})
+            console.log("RateThisArticle :", RateThisArticle);
+
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, RateThisArticle});  
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
