@@ -105,7 +105,7 @@ routes.get('/myaccount/manage', async (req,res)=>{
 
             // paginate
             let long = boxPublisher.length; //conocer la longitud del array
-            const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+            const limit = 25; //establecer la cantidad  de elementos que se mostrarán
             let pagina = 1; //declaracion de la pagina por default en 1
             let X;
             let totalPagina = Math.ceil(long / limit);    

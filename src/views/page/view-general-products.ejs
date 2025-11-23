@@ -294,8 +294,12 @@
 
         <% if  (search) { %>
 
-            <!-- rateData : { type : Object, default : { markStar : 0, comment : 0} } -->
-            <input type="hidden" value="<%= search.rateData.markStar %>" id="markStar">
+            
+            <% if (search.rateData) { %>
+                <!-- rateData : { markStar : 0, comments : 0} -->
+                <input type="hidden" value="<%= search.rateData.markStar %>" id="markStar">
+            <% }; %>    
+            
             <% const titleURL = search.titleURL %> 
             
             <% let priceFormat = search.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
@@ -742,16 +746,14 @@
                                                         <% const comments = search.rateData.comments %>
                                                         
                                                         <% if (markStar !== 0 ) { %>
-                                                            
-
-                                                            Rating: <%= markStar %>
                                                                 
                                                                 <div class="boxstarViewMain" style="color: gold">
                                                                    <!--  dinamico -->
                                                                 </div>    
+
                                                         <% } else { %>
 
-                                                            Rating: ¡Sin calificación!
+                                                            Calificación: ¡Sin calificación!
 
                                                         <% }; %>    
                                                         
@@ -812,15 +814,14 @@
                                                         <% const comments = search.rateData.comments %>
 
                                                         <% if (markStar !==0) { %>
-
-                                                            Rating: <%= markStar %>
                                                                 
                                                                 <div class="boxstarViewMain" style="color: gold">
                                                                    <!--  dinamico -->
                                                                 </div>    
+
                                                         <% } else { %>
 
-                                                            Rating: ¡Sin calificación!
+                                                            Calificación: ¡Sin calificación!
 
                                                         <% }; %> 
                                                         
@@ -866,15 +867,13 @@
                                                         <% const comments = search.rateData.comments %>
 
                                                         <% if (markStar !==0) { %>
-
-                                                            Rating: <%= markStar %>
                                                                 
                                                                 <div class="boxstarViewMain" style="color: gold">
                                                                    <!--  dinamico -->
                                                                 </div>      
                                                         <% } else { %>
 
-                                                            Rating: ¡Sin calificación!
+                                                            Calificación: ¡Sin calificación!
 
                                                         <% }; %>   
                                                         
@@ -1619,7 +1618,7 @@
             <input type="hidden" class="objetRateThisArticle" value="<%= JSON.stringify(RateThisArticle) %>">
         
             <!-- contenedor para mostrar calificacion y comentarios de este articulo -->
-            <div class="containerViewRatesStore px-3 rounded-1" style="background-color: rgb(233, 236, 239, 0.1);">
+            <div class="containerViewRates px-3 rounded-1" id="viewRates" style="background-color: rgb(233, 236, 239, 0.1);">
                 <div class="containert themaTextLight">
 
                     <div class="modal-header" style="background-color: rgba(247, 247, 247, 0.2);">
@@ -1697,6 +1696,7 @@
                     </div>
                     </div>
 
+                    <!-- Aqui vamos a trabajar el lunes para programar los botones de las vistas rate -->
                     <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
                     <!-- dinamico -->
                     </div>
@@ -3795,8 +3795,8 @@
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a> 
-                                        `                      
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a> 
+                                    `                      
                  
           } else if (markStar > 0 && markStar < 1 ){
             boxstarViewMain.innerHTML = ` <i class="bi bi-star-half mx-1"></i>
@@ -3804,7 +3804,7 @@
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                     `  
 
           } else if (markStar == 1 ){
@@ -3813,7 +3813,7 @@
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) /a>
                                     `                                            
                             
           } else if (markStar > 1 && markStar < 2){
@@ -3822,7 +3822,7 @@
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                     `                      
                      
           } else if (markStar == 2){
@@ -3831,7 +3831,7 @@
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                     `                                  
 
           } else if (markStar > 2 && markStar < 3){
@@ -3840,7 +3840,7 @@
                                       <i class="bi bi-star-half mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                       `                                  
           } else if (markStar == 3 ){
             boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
@@ -3848,7 +3848,7 @@
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                      `                                   
 
           } else if (markStar > 3 && markStar < 4){
@@ -3857,7 +3857,7 @@
                                       <i class="bi bi-star-fill"></i>
                                       <i class="bi bi-star-half"></i>
                                       <i class="bi bi-star"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                      `                                  
 
           } else if (markStar == 4 ){
@@ -3866,7 +3866,7 @@
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                      `                                    
 
           } else if (markStar > 4 && markStar < 5){
@@ -3875,7 +3875,7 @@
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-half mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                      `                                  
 
           } else if (markStar == 5){
@@ -3884,7 +3884,7 @@
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
-                                      <a href=""> <span class="mx-2 text-dark">|</span> ${ratesLength} Calificación</a>
+                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                      `                                  
           } 
 

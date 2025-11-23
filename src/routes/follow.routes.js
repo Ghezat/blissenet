@@ -55,9 +55,9 @@ routes.get('/follow', async (req,res)=>{
         //console.log('esto es boxStore Ordenado ----->', boxStores); 
     
 
-        // paginate
+        // Paginate .............................................................
         let long = boxStores.length; //conocer la longitud del array
-        const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+        const limit = 50; //establecer la cantidad  de elementos que se mostrarán
         let pagina = 1; //declaracion de la pagina por default en 1
         let X;
         let totalPagina = Math.ceil(long / limit);    

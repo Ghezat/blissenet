@@ -242,7 +242,7 @@ routes.get('/account/:account', async (req,res)=>{
 
                 // paginate
                 let long = boxPublisher.length; //conocer la longitud del array
-                const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                const limit = 20; //establecer la cantidad  de elementos que se mostrarán
                 let pagina = 1; //declaracion de la pagina por default en 1
                 let X, V; //variables importantes para guardar datos necesarios
                 let totalPagina = Math.ceil(long / limit);    
@@ -437,7 +437,7 @@ routes.get('/account/:account', async (req,res)=>{
                 //console.log("Este es el boxPublisher ------>", boxPublisher);
                 // paginate
                 let long = boxPublisher.length; //conocer la longitud del array
-                const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                const limit = 20; //establecer la cantidad  de elementos que se mostrarán
                 let pagina = 1; //declaracion de la pagina por default en 1
                 let X;
                 let totalPagina = Math.ceil(long / limit);    
@@ -785,7 +785,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
                         // paginate
                         let long = boxPublisher.length; //conocer la longitud del array
-                        const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                        const limit = 20; //establecer la cantidad  de elementos que se mostrarán
                         let pagina = 1; //declaracion de la pagina por default en 1
                         let X, V; //variables importantes para guardar datos necesarios
                         let totalPagina = Math.ceil(long / limit);    
@@ -950,7 +950,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
                         // paginate
                         let long = boxPublisher.length; //conocer la longitud del array
-                        const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                        const limit = 20; //establecer la cantidad  de elementos que se mostrarán
                         let pagina = 1; //declaracion de la pagina por default en 1
                         let X, V; //variables importantes para guardar datos necesarios
                         let totalPagina = Math.ceil(long / limit);    
@@ -1159,7 +1159,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
                     // paginate
                     let long = boxPublisher.length; //conocer la longitud del array
-                    const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                    const limit = 20; //establecer la cantidad  de elementos que se mostrarán
                     let pagina = 1; //declaracion de la pagina por default en 1
                     let X, V; //variables importantes para guardar datos necesarios
                     let totalPagina = Math.ceil(long / limit);    
@@ -1324,7 +1324,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
                         // paginate
                         let long = boxPublisher.length; //conocer la longitud del array
-                        const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+                        const limit = 20; //establecer la cantidad  de elementos que se mostrarán
                         let pagina = 1; //declaracion de la pagina por default en 1
                         let X, V; //variables importantes para guardar datos necesarios
                         let totalPagina = Math.ceil(long / limit);    
@@ -1623,7 +1623,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
             console.log("Este es el boxPublisher ------>", boxPublisher);
             // paginate
             let long = boxPublisher.length; //conocer la longitud del array
-            const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+            const limit = 20; //establecer la cantidad  de elementos que se mostrarán
             let pagina = 1; //declaracion de la pagina por default en 1
             let X;
             let totalPagina = Math.ceil(long / limit);    
@@ -1766,7 +1766,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
             console.log("Este es el boxPublisher ------>", boxPublisher);
             // paginate
             let long = boxPublisher.length; //conocer la longitud del array
-            const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+            const limit = 20; //establecer la cantidad  de elementos que se mostrarán
             let pagina = 1; //declaracion de la pagina por default en 1
             let X;
             let totalPagina = Math.ceil(long / limit);    
