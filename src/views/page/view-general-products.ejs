@@ -4170,6 +4170,8 @@
 
            btnRateAll.addEventListener('click', ()=>{
                 //alert("Hola estoy dandole a btnRateAll");
+                bodyRates.innerHTML = "" //limpiamos todo;
+                
                 boxRates.forEach((ele)=>{
             
               const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
