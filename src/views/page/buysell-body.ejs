@@ -2602,15 +2602,15 @@
 
             const ele = Notes[i];
 
-                efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
-                efectSoundNewNote.play().catch(error => {
-                    console.error("Error al reproducir el sonido:", error);
-                })
             //console.log("ele.idDocument :",  ele.idDocument);
             //console.log("orderBuy :",  orderBuy);
 
             if (ele.idDocument == orderBuy){ //esto verifica que sea el mensaje para este chat
 
+                efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
+                efectSoundNewNote.play().catch(error => {
+                    console.error("Error al reproducir el sonido:", error);
+                })
 
                 if ( username.value == ele.user ){
   
@@ -2645,14 +2645,14 @@
                                                 </div>
                     ` 
                 }  
-                
+
+
+                writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
+                written.focus();
             
             }    
 
         }
-
-        writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
-        written.focus();
 
         function formatText(text) {
             return text.replace(/\n/g, '<br>');

@@ -710,7 +710,7 @@
                                         <span> <i class="bi bi-exclamation-triangle-fill me-1"></i> Solo de a comprar si esta seguro de adquirir este producto.</span>
                                     </div>
                                     <hr>
-                                    <!-- <p>Modo compra directa sin seguro</p> -->
+                                
 
                                 <% }; %>
                                 <% if (depart == 'raffle') { %>
@@ -738,7 +738,7 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
+                                                        Publicado : <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
 
@@ -747,6 +747,7 @@
                                                         
                                                         <% if (markStar !== 0 ) { %>
                                                                 
+                                                                Valoración : <%= markStar %> 
                                                                 <div class="boxstarViewMain" style="color: gold">
                                                                    <!--  dinamico -->
                                                                 </div>    
@@ -806,7 +807,7 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
+                                                        Publicado : <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
 
@@ -814,7 +815,8 @@
                                                         <% const comments = search.rateData.comments %>
 
                                                         <% if (markStar !==0) { %>
-                                                                
+
+                                                                Valoración : <%= markStar %>
                                                                 <div class="boxstarViewMain" style="color: gold">
                                                                    <!--  dinamico -->
                                                                 </div>    
@@ -859,7 +861,7 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
+                                                        Publicado : <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
 
@@ -867,7 +869,8 @@
                                                         <% const comments = search.rateData.comments %>
 
                                                         <% if (markStar !==0) { %>
-                                                                
+
+                                                                Valoración : <%= markStar %>
                                                                 <div class="boxstarViewMain" style="color: gold">
                                                                    <!--  dinamico -->
                                                                 </div>      
@@ -1131,31 +1134,26 @@
                                                 <div class="contentPubliRating">
                                                     <div class="title fw-bold mb-2" style="font-size: 20px;"><%= search.title %></div>
                                                     <div class="meta">
-                                                        Publicado  <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
+                                                        Publicado : <%= TDay %>-<%= TMonth %>-<%= TYear %> | Vendidos <%= search.sales %>
                                                     </div>
                                                     <div class="extra text-dark">
 
-                                                        <% if (search.rateData.markStar !==0) { %>
+                                                        <% const markStar = search.rateData.markStar %>
+                                                        <% const comments = search.rateData.comments %>
 
-                                                            Rating: <%= search.rateData.markStar %>
-                                                                
-                                                                <div class="contentStart" style="color: gold">
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-fill"></i>
-                                                                    <i class="bi bi-star-half"></i>
+                                                        <% if (markStar !==0) { %>
 
-                                                                    <a href=""> <span class="mx-2 text-dark">|</span> <%= search.rateData.comment %> Calificación</a>
-                                                                </div>    
+                                                                Valoración : <%= markStar %> 
+                                                                <div class="boxstarViewMain" style="color: gold">
+                                                                   <!--  dinamico -->
+                                                                </div>      
                                                         <% } else { %>
 
-                                                            Rating: ¡Sin calificación!
+                                                            Calificación: ¡Sin calificación!
 
-                                                        <% }; %> 
+                                                        <% }; %>   
                                                         
-                                                        
-                                                    </div> 
+                                                    </div>  
                                                 </div>
                                                 
                                                 <form action="/buysell/direct" method="post" id="form_buysell">
@@ -1697,11 +1695,11 @@
                     </div>
 
                     <!-- Aqui vamos a trabajar el lunes para programar los botones de las vistas rate -->
-                    <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">
+                    <div class="bodyRates p-3" id="bodyRates" style="min-height: max-content; max-height: 80vh; overflow-y: auto;">  
                     <!-- dinamico -->
                     </div>
                     
-                </div>
+                </div> 
             </div>
         <% }; %>  
 
@@ -3674,13 +3672,22 @@
     const boxstarViewMain = document.querySelector('.boxstarViewMain');
     const boxstarView = document.querySelector('.boxstarView');
     const countrateView = document.querySelector('.countrateView');
-    const bodyRates = document.querySelector('#bodyRates');
+    const bodyRates = document.querySelector('#bodyRates'); //contenedor dodne se muestras las calificaciones del articulo. debajo de los botones
 
+    // barras de calificaciones
     const barStar5 = document.getElementById('barStar5');
     const barStar4 = document.getElementById('barStar4');
     const barStar3 = document.getElementById('barStar3');
     const barStar2 = document.getElementById('barStar2');
     const barStar1 = document.getElementById('barStar1');
+
+    //botones de filtrado por calificaciones.
+    const btnRateAll = document.querySelector('.btnRateAll'); 
+    const btnRate5 = document.querySelector('.btnRate5');
+    const btnRate4 = document.querySelector('.btnRate4');
+    const btnRate3 = document.querySelector('.btnRate3');
+    const btnRate2 = document.querySelector('.btnRate2');
+    const btnRate1 = document.querySelector('.btnRate1');
 
     const objetRateThisArticle = document.querySelector('.objetRateThisArticle'); //aqui el objeto en cuestion 
 
@@ -3694,7 +3701,7 @@
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
-                                            `                      
+                                    `                      
                  
           } else if (markStar > 0 && markStar < 1 ){
             boxstarView.innerHTML = ` <i class="bi bi-star-half mx-1"></i>
@@ -3790,7 +3797,8 @@
 
           /*  Este condicional logra las estrellas de la calificacion que esta arriba de Disponible ------------- */ 
          if (markStar == 0 ){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star mx-1"></i>
+            boxstarViewMain.innerHTML = ` <a href="#viewRates"> 
+                                      <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
@@ -3799,7 +3807,8 @@
                                     `                      
                  
           } else if (markStar > 0 && markStar < 1 ){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-half mx-1"></i>
+            boxstarViewMain.innerHTML = ` <a href="#viewRates"> 
+                                      <i class="bi bi-star-half mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
@@ -3808,7 +3817,8 @@
                                     `  
 
           } else if (markStar == 1 ){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = `<a href="#viewRates">
+                                      <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
@@ -3817,7 +3827,8 @@
                                     `                                            
                             
           } else if (markStar > 1 && markStar < 2){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = ` <a href="#viewRates"> 
+                                      <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-half mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
@@ -3826,7 +3837,8 @@
                                     `                      
                      
           } else if (markStar == 2){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = ` <a href="#viewRates">
+                                      <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
@@ -3835,7 +3847,8 @@
                                     `                                  
 
           } else if (markStar > 2 && markStar < 3){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = `<a href="#viewRates"> 
+                                      <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-half mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
@@ -3843,7 +3856,8 @@
                                       <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                       `                                  
           } else if (markStar == 3 ){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = `<a href="#viewRates"> 
+                                      <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star mx-1"></i>
@@ -3852,7 +3866,8 @@
                                      `                                   
 
           } else if (markStar > 3 && markStar < 4){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill"></i>
+            boxstarViewMain.innerHTML = `<a href="#viewRates">
+                                      <i class="bi bi-star-fill"></i>
                                       <i class="bi bi-star-fill"></i>
                                       <i class="bi bi-star-fill"></i>
                                       <i class="bi bi-star-half"></i>
@@ -3861,7 +3876,8 @@
                                      `                                  
 
           } else if (markStar == 4 ){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = `<a href="#viewRates"> 
+                                      <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
@@ -3870,21 +3886,23 @@
                                      `                                    
 
           } else if (markStar > 4 && markStar < 5){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = `<a href="#viewRates"> 
+                                      <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-half mx-1"></i>
-                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
+                                      <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                      `                                  
 
           } else if (markStar == 5){
-            boxstarViewMain.innerHTML = ` <i class="bi bi-star-fill mx-1"></i>
+            boxstarViewMain.innerHTML = `<a href="#viewRates">  
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
                                       <i class="bi bi-star-fill mx-1"></i>
-                                      <a href="#viewRates"> <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
+                                      <i class="bi bi-star-fill mx-1"></i>
+                                      <span class="mx-2 text-dark">|</span> (${ratesLength}) </a>
                                      `                                  
           } 
 
@@ -3947,8 +3965,9 @@
             /* `barStar${i}`.innerHTML = `<div class="progress-bar rounded-2" role="progressbar" style="width: ${ele}%" aria-valuenow="${ele}" aria-valuemin="0" aria-valuemax="100">  </div>` */
         }
 
-        // Esta es la parte donde se crean las calificaciones y comentarios
+        // Esta es la parte donde se crean las calificaciones y comentarios por default.
 
+            console.log("boxRates ....:", boxRates);
             boxRates.forEach((ele)=>{
             
               const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
@@ -3972,7 +3991,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: gold;">
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
                                                                  <i class="bi bi-star"></i>
@@ -3989,7 +4008,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: gold;">
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4005,7 +4024,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: gold;"> 
+                                          <p class="mb-1">  <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4021,7 +4040,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: gold;">
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
                                                                      <i class="bi bi-star-fill"></i>
                                                                      <i class="bi bi-star-fill"></i>
                                                                      <i class="bi bi-star-fill"></i>
@@ -4037,7 +4056,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1"> <span style="color: gold;"> 
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4057,7 +4076,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: gold;">
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4074,7 +4093,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1"> <span style="color: gold;">
+                                          <p class="mb-1"> <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4091,7 +4110,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1"> <span style="color: gold;">
+                                          <p class="mb-1"> <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4108,7 +4127,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1"> <span style="color: gold;"> 
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4125,7 +4144,7 @@
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
                                           <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1"> <span style="color: gold;"> 
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4143,6 +4162,543 @@
                   }
                   
            })       
+
+
+        //Aqui se controlan la accion de los botones de filtrado por calificacion del articulo.
+           boxRates //este es el array donde esta todo. 
+           bodyRates // contenedor que se debe limpiar.
+
+           btnRateAll.addEventListener('click', ()=>{
+                //alert("Hola estoy dandole a btnRateAll");
+                boxRates.forEach((ele)=>{
+            
+              const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+              let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+              const fecha = `${dia}-${mes}-${anio}`;
+
+              const markstar = ele.markStar;
+              const comment = ele.comment;
+              const commentatorData = ele.commentatorData
+              const avatarPerfil = commentatorData.avatarPerfil;
+              const mailhash = commentatorData.mailhash;
+              const username = commentatorData.username
+              
+
+              console.log("avatarPerfil ....:", avatarPerfil);
+              //{url: '', public_id: 'sin_data'}
+
+                  if (avatarPerfil[0].public_id === 'sin_data'){
+                      
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>            
+                                        `
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p> 
+                                        </div>               
+                                        `
+                      }   
+
+                  } else {
+ 
+                      if (markstar == 1){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 2){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        ` 
+                      } else if (markstar == 3){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 4){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                   
+                      } else if (markstar == 5){
+                        bodyRates.innerHTML += `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                        </div>           
+                                        `                  
+                      }
+
+                  }
+                  
+            })       
+
+           });
+
+           btnRate5.addEventListener('click', ()=>{
+                //alert("Hola estoy dandole a btnRate5");
+                bodyRates.innerHTML = "" //limpiamos todo;
+
+                //console.log("boxRates ....:", boxRates);
+                boxRates.forEach((ele)=>{ 
+            
+                    const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+                    let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+                    const fecha = `${dia}-${mes}-${anio}`;
+
+                    const markstar = ele.markStar;
+                    const comment = ele.comment;
+                    const commentatorData = ele.commentatorData
+                    const avatarPerfil = commentatorData.avatarPerfil;
+                    const mailhash = commentatorData.mailhash;
+                    const username = commentatorData.username
+                
+                    console.log("avatarPerfil ....:", avatarPerfil);
+                    //{url: '', public_id: 'sin_data'}
+
+                    if (markstar == 5){
+
+                        if (avatarPerfil[0].public_id === 'sin_data'){
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span> 
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>            
+                                                        `
+                        }  else {
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i> 
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span>
+
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>           
+                                                `    
+                        
+                        }
+
+                    }    
+
+                })   
+           
+           });
+
+           btnRate4.addEventListener('click', ()=>{
+                //alert("Hola estoy dandole a btnRate4");
+                bodyRates.innerHTML = "" //limpiamos todo;
+
+                //console.log("boxRates ....:", boxRates);
+                boxRates.forEach((ele)=>{ 
+            
+                    const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+                    let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+                    const fecha = `${dia}-${mes}-${anio}`;
+
+                    const markstar = ele.markStar;
+                    const comment = ele.comment;
+                    const commentatorData = ele.commentatorData
+                    const avatarPerfil = commentatorData.avatarPerfil;
+                    const mailhash = commentatorData.mailhash;
+                    const username = commentatorData.username
+                
+                    console.log("avatarPerfil ....:", avatarPerfil);
+                    //{url: '', public_id: 'sin_data'}
+
+                    if (markstar == 4){
+
+                        if (avatarPerfil[0].public_id === 'sin_data'){
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span> 
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>            
+                                                        `
+                        }  else {
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star"></i> 
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span>
+
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>           
+                                                `    
+                        
+                        }
+
+                    }    
+
+                })   
+           
+            })       
+
+           btnRate3.addEventListener('click', ()=>{
+                //alert("Hola estoy dandole a btnRate4");
+                bodyRates.innerHTML = "" //limpiamos todo;
+
+                //console.log("boxRates ....:", boxRates);
+                boxRates.forEach((ele)=>{ 
+            
+                    const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+                    let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+                    const fecha = `${dia}-${mes}-${anio}`;
+
+                    const markstar = ele.markStar;
+                    const comment = ele.comment;
+                    const commentatorData = ele.commentatorData
+                    const avatarPerfil = commentatorData.avatarPerfil;
+                    const mailhash = commentatorData.mailhash;
+                    const username = commentatorData.username
+                
+                    console.log("avatarPerfil ....:", avatarPerfil);
+                    //{url: '', public_id: 'sin_data'}
+
+                    if (markstar == 3){
+
+                        if (avatarPerfil[0].public_id === 'sin_data'){
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span> 
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>            
+                                                        `
+                        }  else {
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star"></i>
+                                                                                <i class="bi bi-star"></i> 
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span>
+
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>           
+                                                `    
+                        
+                        }
+
+                    }    
+
+                })  
+           })       
+
+           btnRate2.addEventListener('click', ()=>{
+                //alert("Hola estoy dandole a btnRate2");
+                bodyRates.innerHTML = "" //limpiamos todo;
+
+                //console.log("boxRates ....:", boxRates);
+                boxRates.forEach((ele)=>{ 
+            
+                    const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+                    let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+                    const fecha = `${dia}-${mes}-${anio}`;
+
+                    const markstar = ele.markStar;
+                    const comment = ele.comment;
+                    const commentatorData = ele.commentatorData
+                    const avatarPerfil = commentatorData.avatarPerfil;
+                    const mailhash = commentatorData.mailhash;
+                    const username = commentatorData.username
+                
+                    console.log("avatarPerfil ....:", avatarPerfil);
+                    //{url: '', public_id: 'sin_data'}
+
+                    if (markstar == 2){
+
+                        if (avatarPerfil[0].public_id === 'sin_data'){
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span> 
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>            
+                                                        `
+                        }  else {
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star"></i>
+                                                                                <i class="bi bi-star"></i>
+                                                                                <i class="bi bi-star"></i> 
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span>
+
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>           
+                                                `    
+                        
+                        }
+
+                    }    
+
+                }) 
+           });
+
+           btnRate1.addEventListener('click', ()=>{
+                //alert("Hola estoy dandole a btnRate1");
+                bodyRates.innerHTML = "" //limpiamos todo;
+
+                //console.log("boxRates ....:", boxRates);
+                boxRates.forEach((ele)=>{ 
+            
+                    const updatedAt = ele.updatedAt; const date = new Date(updatedAt); 
+                    let dia = date.getDate(); let mes = date.getMonth() +1; let anio = date.getFullYear();
+                    const fecha = `${dia}-${mes}-${anio}`;
+
+                    const markstar = ele.markStar;
+                    const comment = ele.comment;
+                    const commentatorData = ele.commentatorData
+                    const avatarPerfil = commentatorData.avatarPerfil;
+                    const mailhash = commentatorData.mailhash;
+                    const username = commentatorData.username
+                
+                    console.log("avatarPerfil ....:", avatarPerfil);
+                    //{url: '', public_id: 'sin_data'}
+
+                    if (markstar == 1){
+
+                        if (avatarPerfil[0].public_id === 'sin_data'){
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                                    <i class="bi bi-star-fill"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                                    <i class="bi bi-star"></i>
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span> 
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>            
+                                                        `
+                        }  else {
+
+                                bodyRates.innerHTML += `
+                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                                <i class="bi bi-star-fill"></i>
+                                                                                <i class="bi bi-star"></i>
+                                                                                <i class="bi bi-star"></i>
+                                                                                <i class="bi bi-star"></i>
+                                                                                <i class="bi bi-star"></i> 
+                                                                            </span>
+                                                                            <span class="ms-2"> ${fecha} </span>
+
+                                                        </p>
+                                                        <p class="mb-1"> <span> ${comment} </span> </p>
+                                                        </div>           
+                                                `    
+                        
+                        }
+
+                    }    
+
+                }) 
+           });
+
  
 
 
