@@ -1591,7 +1591,7 @@ routes.post('/buysell-body/deliveryPolicy', async(req, res)=>{
     const {iD, indexedBuy, indexedSell, deliveryType, deliveryDetails} = req.body
 
     //deliveryDetails: 'undefined'
-    console.log("deliveryType --->", deliveryType);
+    console.log("deliveryType --->", deliveryType);//deliveryType ---> Envio Internacional = cambiar a comercio Internacional
     console.log("deliveryDetails --->", deliveryDetails);
 
     //en buySell esta el dato title_id que es el id de articulo 
@@ -1601,6 +1601,7 @@ routes.post('/buysell-body/deliveryPolicy', async(req, res)=>{
     if (deliveryType === "Envio Local"){
       //debemos gestionar todo lo concerniente a una entrega local. 
       //condionamos la solicitud del comprador
+
       if (deliveryDetails === "D01"){
          // D01 Retirar Personalmente en la tienda.
          // se guarda en la base de datos buySell. sin ninguna otra operacion adicional   
@@ -1659,9 +1660,118 @@ routes.post('/buysell-body/deliveryPolicy', async(req, res)=>{
 
     } else if (deliveryType === "Envio Interurbano"){
 
+        if (deliveryDetails === "D01"){
+          // D01 Retirar Personalmente en la tienda.
+          // se guarda en la base de datos buySell. sin ninguna otra operacion adicional   
+          await modelBuysell.findByIdAndUpdate(iD, { deliveryDetails, step : 2 }, {new: true});
+
+          const response = { code : "ok", message : "opción tomada exitosamente." };
+          res.json(response)
+
+        } else if (deliveryDetails === "D02"){
+          // D02 Retirar Personalmente en algun lugar acordado.
+          // se guarda en la base de datos buySell. sin ninguna otra operacion adicional  
+          await modelBuysell.findByIdAndUpdate(iD, { deliveryDetails, step : 2 }, {new: true});
+
+          const response = { code : "ok", message : "opción tomada exitosamente." };
+          res.json(response)
+
+        } else if (deliveryDetails === "D03"){
+          // D03 Reciba su pedido en la puerta de su casa. (Solicitar Delivery).
+          // Se debe activar la funcion de ubicacion para detectar a todos los deliveries que estan al rededor del vendedor y luego se guarda en la base de datos buySell.   
+          
+          const searchSell = await modelProfile.findOne({indexed : indexedSell});
+          const geolocation = searchSell.geolocation;// esto es un objeto {lon y lat}
+          console.log("geolocation : ", geolocation); //{ lon: -62.736074', lat: '8.2871893' }
+
+          // Convertir las coordenadas a un formato adecuado para la consulta
+          const longitude = parseFloat(geolocation.lon);
+          const latitude = parseFloat(geolocation.lat);
+          console.log("longitude :", longitude); //longitude : -62.736074
+          console.log("latitude :", latitude); //latitude : 8.2871893
+
+          const distanciaEnMetros = 6000
+          const searchDelivery = await modelProfile.find({
+            locations: {
+              $near: {
+                $geometry: {
+                  type: "Point",
+                  coordinates: [longitude, latitude]
+                },
+                $maxDistance: distanciaEnMetros
+              }
+            }
+          });
+      
+          console.log("searchDelivery cerca de 6 kilometros a la redonda........:", searchDelivery);// arroja un array vacio
+
+          await modelBuysell.findByIdAndUpdate(iD, { deliveryDetails, step : 2 }, {new: true});
+        
+          //ahora enviamos el arreglo searchDelivery al socket.
+          //socket.emit('result:delivery', { 'obje' : searchDelivery });
+
+          const response = { code : "ok", message : "opción tomada exitosamente.", data : searchDelivery };
+          res.json(response)
+
+        }
+
 
     } else if (deliveryType === "Envio Internacional"){
 
+        if (deliveryDetails === "D01"){
+          // D01 Retirar Personalmente en la tienda.
+          // se guarda en la base de datos buySell. sin ninguna otra operacion adicional   
+          await modelBuysell.findByIdAndUpdate(iD, { deliveryDetails, step : 2 }, {new: true});
+
+          const response = { code : "ok", message : "opción tomada exitosamente." };
+          res.json(response)
+
+        } else if (deliveryDetails === "D02"){
+          // D02 Retirar Personalmente en algun lugar acordado.
+          // se guarda en la base de datos buySell. sin ninguna otra operacion adicional  
+          await modelBuysell.findByIdAndUpdate(iD, { deliveryDetails, step : 2 }, {new: true});
+
+          const response = { code : "ok", message : "opción tomada exitosamente." };
+          res.json(response)
+
+        } else if (deliveryDetails === "D03"){
+          // D03 Reciba su pedido en la puerta de su casa. (Solicitar Delivery).
+          // Se debe activar la funcion de ubicacion para detectar a todos los deliveries que estan al rededor del vendedor y luego se guarda en la base de datos buySell.   
+          
+          const searchSell = await modelProfile.findOne({indexed : indexedSell});
+          const geolocation = searchSell.geolocation;// esto es un objeto {lon y lat}
+          console.log("geolocation : ", geolocation); //{ lon: -62.736074', lat: '8.2871893' }
+
+          // Convertir las coordenadas a un formato adecuado para la consulta
+          const longitude = parseFloat(geolocation.lon);
+          const latitude = parseFloat(geolocation.lat);
+          console.log("longitude :", longitude); //longitude : -62.736074
+          console.log("latitude :", latitude); //latitude : 8.2871893
+
+          const distanciaEnMetros = 6000
+          const searchDelivery = await modelProfile.find({
+            locations: {
+              $near: {
+                $geometry: {
+                  type: "Point",
+                  coordinates: [longitude, latitude]
+                },
+                $maxDistance: distanciaEnMetros
+              }
+            }
+          });
+      
+          console.log("searchDelivery cerca de 6 kilometros a la redonda........:", searchDelivery);// arroja un array vacio
+
+          await modelBuysell.findByIdAndUpdate(iD, { deliveryDetails, step : 2 }, {new: true});
+        
+          //ahora enviamos el arreglo searchDelivery al socket.
+          //socket.emit('result:delivery', { 'obje' : searchDelivery });
+
+          const response = { code : "ok", message : "opción tomada exitosamente.", data : searchDelivery };
+          res.json(response)
+
+        }
 
     }
 

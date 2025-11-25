@@ -20,7 +20,11 @@ io.on('connection', (socket)=>{
         console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxx  Sockect  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         console.log("::::: Aqui llega el mensaje de buysell, para ser enviada a todos los sockets ::::");
         console.log("---->creacion:MsgBuysell");
-        io.emit('refresh:MsgBuysell', data);
+        io.emit('refresh:MsgBuysell', data); 
+        //socket.on('refresh:MsgBuysell', (data)=>{...})  De esta manera llega al front html nuevamente.
+        //diferencia entre socket.emit y io.emit
+        //socket.emit ==> solo llega al cliente que esta conectado a este socket.
+        //io.emit ==> llega a todos los clientes que esten conectados al servidor. Es una forma de hacer una difusion
     });
    
     //socket.emit('result:delivery', { 'obje' : data });
