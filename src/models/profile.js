@@ -22,8 +22,9 @@ const SchemaProfile = new Schema({
                required: true
            }
     }, //este campo esta creado para optimizar las busquedas de aproximacion geografico
-    country : { type : String },  //pais
+    country : { type : String }, 
     countryCode : { type : String },  //codigo del pais
+    flag : { type : String }, //bandera del pais del usuario 
     state : { type : String },  //estado o provincia
     quarter : { type : String },
     cityBlock : { type : String },
@@ -57,10 +58,9 @@ const SchemaProfile = new Schema({
     paused : { type: Boolean, default: false }, //por default nace false. este campo se utilizará para impedir que un usuario moroso con sus impagos pueda crear, editar y eliminar publicaciones. será la unica forma existente para presionar a los usuarios morosos. 
     view : { type : Number, default: 0  }, //este campo permite tener la cantidad de veces que entran en la tienda. 
     hashtags : { type : Object , default : [] }, //este campo crea por defecto un objeto vacio, en el se agregara un array con las diferentes palabras claves de la tienda. 
-    sellPolicy : { type : Object, default : { "Envio Local" : true, "Envio Interurbano" : false, "Envio Internacional" : false }}, 
+    /* tradePolicy : { type : Object, default : { "ComercioLocal" : true, "ComercioInterurbano" : false, "ComercioInternacional" : false }},  */
     buyCar : { type : Boolean , default : false}, //por defecto todos tienen este valor false a menos que desee activarlo y para ello debe tener al menos 11 articulos. SOlo funciona para articulos y artes
     transportAgent : { type : Object, default : { deliveryTransport : false, active: false } }, //este objeto guarda el estado del perfil esto indica que es un agente de transporte para hacer deliveries para "envios locales"
-    sellerType : { type : Object, default: { local: "true", estadal: "false", nacional: "false", internacional: "false" } }, //aqui guardamos los valores de estas tres variables  (Interurbano, Nacional, Internacional ), Esto es para otorgar al vendedor la capacidad de decidir si quiere vender en su misma ciudad, en ciudades de otros estados o provincias e incluso poder hacer comercio en otros paises. Este sera un valor que se usara como criterio para el vendedor no para el comprador.
     deliveryOptions : { type : Object, default : { pickupInStore: "true", pickupAtAgreedPlace: "false", shippingToCustomer: "false", shippingAgentsAffiliated: [] } }, //shippingAgentsAffiliated --> este array guarda los indexed de los perfiles que se han afiliado a esta tienda para ser las entregas.  Estas opciones pueden ser : (pickupInStore (D01), shippingToCustomer (D02), shippingToCustomer (D03) )
     indexed :  { type : String }  //este es el id del user     
 },{

@@ -3,7 +3,7 @@ const routes = Router()
 
 const venezuela = require('venezuela');
 
-//ruta que maneja toda la informacion del pais en dodne va a operar esta pagina.
+//ruta que maneja toda la informacion del pais en donde va a operar esta pagina.
 routes.get('/country', async (req,res)=>{
 
 const ve = venezuela.pais

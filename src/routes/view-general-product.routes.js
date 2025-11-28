@@ -20,7 +20,7 @@ const modelBankUser = require('../models/bankUser.js');
 
 
 const modelMessages = require('../models/messages.js');
-const modelArtAndArticle = require('../models/artAndArticle.js');
+const modelArtAndArticle = require('../models/rateArtAndArticle.js');
 
 const nodemailer = require('nodemailer');
       

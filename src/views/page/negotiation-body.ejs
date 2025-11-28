@@ -536,6 +536,7 @@
                                                    
                                                     <div class="containRateStar d-flex justify-content-center border border-dark py-3" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
                                                         <input type="hidden" id="starHidden">
+                                                        <i class="starE bi bi-star mx-2" data-star="1" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
                                                         <i class="starE bi bi-star mx-2" data-star="2" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
                                                         <i class="starE bi bi-star mx-2" data-star="3" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
                                                         <i class="starE bi bi-star mx-2" data-star="4" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
@@ -1694,13 +1695,14 @@
 
             if (ele.idDocument == orderBuy){ //esto verifica que sea el mensaje para este chat
 
-                efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
-                efectSoundNewNote.play().catch(error => {
-                    console.error("Error al reproducir el sonido:", error);
-                })
 
                 if ( username.value == ele.user ){
   
+                    efectSoundNewNote.currentTime = 0; //Reiniciamos el sonido
+                    efectSoundNewNote.play().catch(error => {
+                        console.error("Error al reproducir el sonido:", error);
+                    })
+
                     showMessageNew.innerHTML += `
                                                 <div class="card-body d-flex justify-content-end my-0 ms-3 pb-1 pt-1" style="position: relative;">
                                                     <div class="contentFlexible py-3 ps-4 pe-3 shadow-sm" style="display: inline; border-bottom-left-radius: 24px; border-top-left-radius: 24px; border-bottom-right-radius: 0px; border-top-right-radius: 13px; background: rgba(146,0,255,1);">
@@ -1713,7 +1715,10 @@
                                                         </p>
                                                     </div>
                                                 </div>
-                    `
+                                                `
+
+                    writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
+                    written.focus();
 
                 } else {
 
@@ -1730,7 +1735,10 @@
                                                         </p>
                                                     </div>
                                                 </div>
-                    ` 
+                                                ` 
+                
+                    writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
+                    written.focus();                            
                 }  
                 
             
@@ -1738,8 +1746,7 @@
 
         }
 
-        writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
-        written.focus();
+        
 
         function formatText(text) {
             return text.replace(/\n/g, '<br>');

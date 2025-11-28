@@ -6,7 +6,7 @@ const routes = Router()
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
 const modelMessages = require('../models/messages.js');
-const modelArtAndArticle = require('../models/artAndArticle.js');
+const modelArtAndArticle = require('../models/rateArtAndArticle.js');
 
 const modelArtes = require('../models/artes.js');
 const modelAirplane = require('../models/airplane.js');
@@ -42,6 +42,8 @@ routes.post('/rateProduct', async(req, res)=>{
     const mailhash = perfilData.mailhash;
     const avatarPerfil = perfilData.avatarPerfil;
     const commentatorId = perfilData.indexed;
+    const country = perfilData.country;
+    const flag = perfilData.flag;
 
     console.log("user :", user);
     console.log("blissName :", blissName);
@@ -53,9 +55,9 @@ routes.post('/rateProduct', async(req, res)=>{
     const searhRateArtAndArticle = await modelArtAndArticle.find({ department, productId });
     
     async function createRateArtAndArticle(){
-
-        const Data = {username : blissName, avatarPerfil, mailhash}; 
-        //commentatorData : { type : Object }, //aqui va a estar un objeto asi {username, avatarPerfil, mailhash}
+        //{username, avatarPerfil, mailhash, country, flag}
+        const Data = {username : blissName, avatarPerfil, mailhash, country, flag}; 
+        //commentatorData : { type : Object }, //aqui va a estar un objeto asi {username, avatarPerfil, mailhash country, flag}
 
         const newArtAndArticle = new modelArtAndArticle ( {department, productId, markStar: StarValue, comment : answer, commentatorData : Data, commentatorId} );
         //console.log("newArtAndArticle :", newArtAndArticle);

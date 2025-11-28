@@ -10,7 +10,7 @@ const upload = multer({ dest: 'uploads/' });
 //este Token es la KEY del bot de Telegram
 const Token =  process.env.Token_Bot;
 
-const countries = require('../countries.js');
+const countries = require('../countries.js'); //todas las banderas y codigos de paises del mundo.
 
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
@@ -476,6 +476,7 @@ routes.get('/alertNotProfile', async (req, res)=>{
 
 });
 
+//este es la ruta donde los usuarios puede ir a ver otros mercados
 routes.post('/locationMarket', async (req, res)=>{
     try {
         console.log('Estoy llegando a locationMarket');
@@ -1912,6 +1913,15 @@ routes.post('/myaccount/profile', async (req, res)=>{
         const geoData = [parseFloat(geolocation.lon), parseFloat(geolocation.lat)]; //objeto para guardar en location.coordinates; importante para calculos geograficos
         console.log("geoData : ", geoData); // geoData :  [ -62.736074, 8.2871893 ]
         
+        let flag; //variable para guardar la bandera de ese pais,
+
+        countries.forEach((ele)=>{
+            const code = ele.code;
+            if (countryCode == code){
+                flag = ele.flags;
+            }
+        })
+
         const searchBanner = await modelBannerDefault.find();
         console.log("geolocation: ", geolocation);
 
@@ -1932,9 +1942,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
             }
 
 
-        
-            
-            const newProfile = new modelProfile({ username: user.username, blissName, names, identification, company, companyRif, dateborn, gender, geolocation, locations: { type: 'Point', coordinates: geoData }, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+            const newProfile = new modelProfile({ username: user.username, blissName, names, identification, company, companyRif, dateborn, gender, geolocation, locations: { type: 'Point', coordinates: geoData }, country, countryCode, flag, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
             console.log("newProfile ........................................>:", newProfile); 
             const saveProfile =  await newProfile.save()
             
@@ -1975,7 +1983,15 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         console.log("geoData : ", geoData); // geoData :  [ -62.736074, 8.2871893 ]
         const result = await modelProfile.findById(ID);
 
-        
+        let flag; //variable para guardar la bandera de ese pais,
+
+        countries.forEach((ele)=>{
+            const code = ele.code;
+            if (countryCode == code){
+                flag = ele.flags;
+            }
+        })
+
         if (!profileMessage || profileMessage.trim() === ""){
             //si no coloca nada en mensaje de tienda este debe guardar ¡Sin descripción...!
             messageProfile = "¡Sin descripción...!"
@@ -1985,7 +2001,7 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         }
 
         if (result) { 
-            const updates = await modelProfile.findByIdAndUpdate(ID, { $set: { names, identification, company, companyRif, geolocation, "locations.coordinates": geoData, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok}}, {new:true});
+            const updates = await modelProfile.findByIdAndUpdate(ID, { $set: { names, identification, company, companyRif, geolocation, "locations.coordinates": geoData, country, countryCode, flag, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok}}, {new:true});
             console.log("updates .........................:", updates);
             req.session.updateSuccess = "Su perfil ha sido actualizado satisfactoriamente";
         } 
@@ -3828,64 +3844,31 @@ routes.get('/myaccount/sellerType', async (req, res)=>{
     }
 });
 
-routes.post('/myaccount/sellerType', async (req, res)=>{
-      try {
-  
-        let updateProfile;
-        const user = req.session.user;
-        console.log('Has enviado un dato activar o desactivar un tipo de venta Local, Nacional o Internacional.')
-        console.log("req.body :", req.body);
-        const { sellerType, value, idUser } = req.body;
-        console.log("Este es el iduser :", idUser);
-   
-        if ( sellerType === "local" ){
+routes.post('/myaccount/addFlags', async (req, res)=>{
+   try {
+        console.log("estamos en /myaccount/addFlags");
+        
+        const allProfile = await modelProfile.find({});
 
-            if (value === "true"){
-                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : value } }, {new : true} );
-                console.log("Esto es updateProfile :", updateProfile);
-            } else {
-                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : value, 'sellerType.estadal' : "false", 'sellerType.nacional' : "false" } }, {new : true} );
-                console.log("Esto es updateProfile :", updateProfile);
+        // Usamos Promise.all para esperar a que todas las actualizaciones se completen
+        await Promise.all(allProfile.map(async (ele) => {
+            const id = ele._id;
+            const code = ele.countryCode;
+            console.log("code :", code);
+
+            const country = countries.find((element) => code === element.code);
+            if (country) {
+                console.log("Aquí actualizamos el flag");
+                await modelProfile.findByIdAndUpdate(id, { $set: { flag: country.flags } });
             }
+        }));
 
-        } else if (sellerType === "estadal") {
-
-            if (value === "true" ){
-                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : "true", 'sellerType.estadal' : value } }, {new : true} );
-                console.log("Esto es updateProfile :", updateProfile);
-            } else {
-                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.estadal' : "false", 'sellerType.nacional' : "false" } }, {new : true} );
-                console.log("Esto es updateProfile :", updateProfile);
-            }
-
-
-        } else if (sellerType === "nacional") {
-
-            if (value === "true"){
-                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.local' : "true", 'sellerType.estadal' : "true", 'sellerType.nacional' : value } }, {new : true} );
-                console.log("Esto es updateProfile :", updateProfile);
-            } else {
-                updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.nacional' : "false" } }, {new : true} );
-                console.log("Esto es updateProfile :", updateProfile);
-            }
-            
-        } else {
-
-            updateProfile = await modelProfile.findOneAndUpdate( {indexed : idUser }, { $set: { 'sellerType.internacional' : value } }, {new : true} );
-            console.log("Esto es updateProfile :", updateProfile);
-            
-        }
-          
-                  
-        const response = { code : "Ok", result : updateProfile};
-        res.json(response);
-  
-      } catch (error) {
-
-          const response = { code : "Error", result : updateProfile};
-          res.json(response);
-  
-      }
+        // Respuesta exitosa
+        res.json({ code: "Success", result: "Flags updated successfully." });
+    } catch (error) {
+        console.error("Error updating flags:", error);
+        res.status(500).json({ code: "Error", message: "An error occurred while updating flags." });
+    }
 });
 
 

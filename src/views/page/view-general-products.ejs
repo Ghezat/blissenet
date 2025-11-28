@@ -1125,7 +1125,7 @@
                                     <div class="alert alert-light" style="background-color: #E9ECEF;">
                                         <span> <i class="bi bi-exclamation-triangle-fill me-1"></i> Solo de a comprar si esta seguro de adquirir este producto.</span>
                                     </div>
-                                    <hr>
+                                    <hr> 
 
                                     <!-- si existe un usuario desconocido y el depart es un itens o arte tendrá la opcion de ver el precio y calcular pero no puede comprar -->
                                    
@@ -3979,7 +3979,9 @@
               const commentatorData = ele.commentatorData
               const avatarPerfil = commentatorData.avatarPerfil;
               const mailhash = commentatorData.mailhash;
-              const username = commentatorData.username
+              const username = commentatorData.username;
+              const country = commentatorData.country;
+              const flag = commentatorData.flag;
               
 
               console.log("avatarPerfil ....:", avatarPerfil);
@@ -3990,8 +3992,14 @@
                       if (markstar == 1){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                          <div class="mb-1 d-flex">  
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4001,14 +4009,20 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 2){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>                                        
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4017,14 +4031,20 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span>
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 3){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;"> 
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>                                          
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4033,14 +4053,20 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span> 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 4){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
                                                                      <i class="bi bi-star-fill"></i>
                                                                      <i class="bi bi-star-fill"></i>
                                                                      <i class="bi bi-star-fill"></i>
@@ -4049,14 +4075,21 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span> 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 5){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                          <div class="mb-1 d-flex"> 
+                                            <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                            <div class="ms-2">
+                                                <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                            </div>    
+                                          </div>
+                                          
+                                          <p class="mb-1 mt-2"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4065,7 +4098,7 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span> 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p> 
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p>  
                                         </div>               
                                         `
                       }   
@@ -4075,7 +4108,14 @@
                       if (markstar == 1){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                                                                   
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4086,13 +4126,20 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         ` 
                       } else if (markstar == 2){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4103,13 +4150,19 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         ` 
                       } else if (markstar == 3){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4120,13 +4173,19 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         `                   
                       } else if (markstar == 4){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4137,13 +4196,19 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         `                   
                       } else if (markstar == 5){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4154,7 +4219,7 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         `                  
                       }
@@ -4183,7 +4248,9 @@
               const commentatorData = ele.commentatorData
               const avatarPerfil = commentatorData.avatarPerfil;
               const mailhash = commentatorData.mailhash;
-              const username = commentatorData.username
+              const username = commentatorData.username;
+              const country = commentatorData.country;
+              const flag = commentatorData.flag;
               
 
               console.log("avatarPerfil ....:", avatarPerfil);
@@ -4194,8 +4261,14 @@
                       if (markstar == 1){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                          <div class="mb-1 d-flex">  
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4205,14 +4278,20 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 2){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>                                        
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4221,14 +4300,20 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span>
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 3){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;"> 
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>                                          
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4237,14 +4322,20 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span> 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 4){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
                                                                      <i class="bi bi-star-fill"></i>
                                                                      <i class="bi bi-star-fill"></i>
                                                                      <i class="bi bi-star-fill"></i>
@@ -4253,14 +4344,21 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span> 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>            
                                         `
                       } else if (markstar == 5){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                          <div class="mb-1 d-flex"> 
+                                            <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                            <div class="ms-2">
+                                                <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                            </div>    
+                                          </div>
+                                          
+                                          <p class="mb-1 mt-2"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4269,17 +4367,24 @@
                                                             </span>
                                                             <span class="ms-2"> ${fecha} </span> 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p> 
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p>  
                                         </div>               
                                         `
-                      }   
+                      }  
 
                   } else {
  
                       if (markstar == 1){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                                                                   
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1">  <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star"></i>
@@ -4290,13 +4395,20 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         ` 
                       } else if (markstar == 2){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4307,13 +4419,19 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         ` 
                       } else if (markstar == 3){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;">
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4324,13 +4442,19 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         `                   
                       } else if (markstar == 4){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4341,13 +4465,19 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         `                   
                       } else if (markstar == 5){
                         bodyRates.innerHTML += `
                                         <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                          <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
                                           <p class="mb-1"> <span style="color: #0d6efd;"> 
                                                                  <i class="bi bi-star-fill"></i>
                                                                  <i class="bi bi-star-fill"></i>
@@ -4358,7 +4488,7 @@
                                                             <span class="ms-2"> ${fecha} </span>
 
                                           </p>
-                                          <p class="mb-1"> <span> ${comment} </span> </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
                                         </div>           
                                         `                  
                       }
@@ -4385,7 +4515,9 @@
                     const commentatorData = ele.commentatorData
                     const avatarPerfil = commentatorData.avatarPerfil;
                     const mailhash = commentatorData.mailhash;
-                    const username = commentatorData.username
+                    const username = commentatorData.username;
+                    const country = commentatorData.country;
+                    const flag = commentatorData.flag;
                 
                     console.log("avatarPerfil ....:", avatarPerfil);
                     //{url: '', public_id: 'sin_data'}
@@ -4395,38 +4527,51 @@
                         if (avatarPerfil[0].public_id === 'sin_data'){
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1">  <span style="color: #0d6efd;">
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span> 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>            
-                                                        `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex"> 
+                                            <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                            <div class="ms-2">
+                                                <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                            </div>    
+                                          </div>
+                                          
+                                          <p class="mb-1 mt-2"> <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p>  
+                                        </div>               
+                                        `
                         }  else {
 
-                                bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i> 
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span>
+                                bodyRates.innerHTML +=  `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>           
-                                                `    
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>           
+                                        `    
                         
                         }
 
@@ -4452,7 +4597,9 @@
                     const commentatorData = ele.commentatorData
                     const avatarPerfil = commentatorData.avatarPerfil;
                     const mailhash = commentatorData.mailhash;
-                    const username = commentatorData.username
+                    const username = commentatorData.username;
+                    const country = commentatorData.country;
+                    const flag = commentatorData.flag;
                 
                     console.log("avatarPerfil ....:", avatarPerfil);
                     //{url: '', public_id: 'sin_data'}
@@ -4462,38 +4609,50 @@
                         if (avatarPerfil[0].public_id === 'sin_data'){
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1">  <span style="color: #0d6efd;">
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span> 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>            
-                                                        `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star-fill"></i>
+                                                                     <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>            
+                                        `
                         }  else {
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star"></i> 
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span>
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1"> <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>           
-                                                `    
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>           
+                                        `   
                         
                         }
 
@@ -4519,7 +4678,9 @@
                     const commentatorData = ele.commentatorData
                     const avatarPerfil = commentatorData.avatarPerfil;
                     const mailhash = commentatorData.mailhash;
-                    const username = commentatorData.username
+                    const username = commentatorData.username;
+                    const country = commentatorData.country;
+                    const flag = commentatorData.flag;
                 
                     console.log("avatarPerfil ....:", avatarPerfil);
                     //{url: '', public_id: 'sin_data'}
@@ -4529,38 +4690,50 @@
                         if (avatarPerfil[0].public_id === 'sin_data'){
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1">  <span style="color: #0d6efd;">
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span> 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>            
-                                                        `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>                                          
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;"> 
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span> 
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>            
+                                        `
                         }  else {
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star"></i>
-                                                                                <i class="bi bi-star"></i> 
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span>
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1"> <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>           
-                                                `    
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>           
+                                        `    
                         
                         }
 
@@ -4585,7 +4758,9 @@
                     const commentatorData = ele.commentatorData
                     const avatarPerfil = commentatorData.avatarPerfil;
                     const mailhash = commentatorData.mailhash;
-                    const username = commentatorData.username
+                    const username = commentatorData.username;
+                    const country = commentatorData.country;
+                    const flag = commentatorData.flag;
                 
                     console.log("avatarPerfil ....:", avatarPerfil);
                     //{url: '', public_id: 'sin_data'}
@@ -4594,39 +4769,52 @@
 
                         if (avatarPerfil[0].public_id === 'sin_data'){
 
-                                bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1">  <span style="color: #0d6efd;">
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span> 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>            
-                                                        `
+                                bodyRates.innerHTML +=  `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex"> 
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>                                        
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>            
+                                        `
                         }  else {
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star"></i>
-                                                                                <i class="bi bi-star"></i>
-                                                                                <i class="bi bi-star"></i> 
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span>
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1"> <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>           
-                                                `    
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>           
+                                        `   
                         
                         }
 
@@ -4651,7 +4839,9 @@
                     const commentatorData = ele.commentatorData
                     const avatarPerfil = commentatorData.avatarPerfil;
                     const mailhash = commentatorData.mailhash;
-                    const username = commentatorData.username
+                    const username = commentatorData.username;
+                    const country = commentatorData.country;
+                    const flag = commentatorData.flag;
                 
                     console.log("avatarPerfil ....:", avatarPerfil);
                     //{url: '', public_id: 'sin_data'}
@@ -4661,38 +4851,52 @@
                         if (avatarPerfil[0].public_id === 'sin_data'){
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1">  <span style="color: #0d6efd;">
-                                                                                    <i class="bi bi-star-fill"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                                    <i class="bi bi-star"></i>
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span> 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>            
-                                                        `
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                          <div class="mb-1 d-flex">  
+                                                <img src="https://www.gravatar.com/avatar/${mailhash}?d=identicon" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1 mt-2">  <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
+
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>            
+                                        `
                         }  else {
 
                                 bodyRates.innerHTML += `
-                                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
-                                                        <p class="mb-1"> <img src="${avatarPerfil[0].url}" style="width: 40px;"> <span> ${username} </span> </p>
-                                                        <p class="mb-1"> <span style="color: #0d6efd;"> 
-                                                                                <i class="bi bi-star-fill"></i>
-                                                                                <i class="bi bi-star"></i>
-                                                                                <i class="bi bi-star"></i>
-                                                                                <i class="bi bi-star"></i>
-                                                                                <i class="bi bi-star"></i> 
-                                                                            </span>
-                                                                            <span class="ms-2"> ${fecha} </span>
+                                        <div class="boxRatesView my-2" style="border-bottom: 2px dotted rgb(211, 211, 211);">
+                                                                                   
+                                          <div class="mb-1 d-flex">  
+                                                <img src="${avatarPerfil[0].url}" style="width: 40px;height:40px"> 
+                                                <div class="ms-2">
+                                                    <p class="mb-1" style="font-size: 17px;"> ${username} </p>
+                                                    <p class="mb-0" style="font-size: 13px;"> <img src="${flag}" alt="" style="height: 12px;">  ${country}  </p>
+                                                </div>    
+                                          </div>
+                                          <p class="mb-1">  <span style="color: #0d6efd;">
+                                                                 <i class="bi bi-star-fill"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i>
+                                                                 <i class="bi bi-star"></i> 
+                                                            </span>
+                                                            <span class="ms-2"> ${fecha} </span>
 
-                                                        </p>
-                                                        <p class="mb-1"> <span> ${comment} </span> </p>
-                                                        </div>           
-                                                `    
+                                          </p>
+                                          <p class="mb-1" style="font-size: 16px;"> ${comment} </p> 
+                                        </div>           
+                                        `  
                         
                         }
 

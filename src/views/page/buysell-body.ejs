@@ -82,6 +82,22 @@
        color: white; /* Color del texto */
     } 
 
+    .efectLocation {
+        animation: moverVertical 2s ease-in-out infinite;
+    }
+
+    @keyframes moverVertical {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(6px); /* Cambia 10px por la distancia que desees */
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
 </style>
 <body class="mainTheme">
 
@@ -138,7 +154,7 @@
                             <input type="hidden" class="Price" value="<%= buySell.price %>">
                             <input type="hidden" class="countRequestData" value="<%= buySell.countRequest %>">
                             <input type="hidden" class="countMaxData" value="<%= buySell.count %>">
-                            <input type="hidden" class="deliveryType" value="<%= buySell.deliveryType %>">
+                            <input type="hidden" class="tradeType" value="<%= buySell.tradeType %>">
                         
                         <% if ( buySell.usernameSell == user.username ) { %>
                             
@@ -153,8 +169,8 @@
 
                             </ul>
 
-                            <div class="contentInformation" style="width: 100%; background-color: #dbdfe4;">
-                                <div class="row rounded-1 p-3 m-0 contentData">
+                            <div class="contentInformation" style="width: 100%;">
+                                <div class="row rounded-1 p-3 mx-0 contentData" style="background-color: #dbdfe4;" >
 
                                     <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
@@ -168,6 +184,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
                                         <table class="table table-striped">
+                                            <tr style="font-size: 17px;"> <td>Comercio </td> <td> <div class="ui left pointing violet basic label"> <%= buySell.tradeType %> </div> <img src="<%= buySell.locationBuy.flag %>" alt="" style="height: 27px;" title="<%= buySell.locationBuy.country %>" > </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
@@ -179,24 +196,33 @@
                                         
                                             <tr style="font-size: 18px;"> <th>Total a Pagar </th> <th> <span class="totalPay"> <%= buySell.total %> </span>  </th> </tr>
                                         </table>
-
                                         
-                                    </div>  
-                            
+                                    </div> 
+                                                                
                                 </div>
+
+                                <div class="alert alert-light my-2 shadow-sm my-2 d-flex" style="font-size: 16px;">
+                                    <div class="imgLocation">
+                                        <img src= "/img/locationPNG.png" alt="" class="efectLocation" style="width: 50px;">
+                                    </div>
+                                    <div class="details ms-2">
+                                        
+                                        <p class="mb-1 text-secondary"> <b>  <%= buySell.usernameBuy %> esta en :  </b> <%= buySell.locationBuy.country %> (<%= buySell.locationBuy.countryCode %>) <img src="<%= buySell.locationBuy.flag %>" alt="" style="height: 16px;"> | <%= buySell.locationBuy.state %> </p>
+                                        <p class="mb-1 text-secondary"> <b>  Dirección :</b> <%= buySell.locationBuy.city %> | <%= buySell.locationBuy.address %> </p>
+                                        
+                                    </div>    
+                                </div>
+
 
                                 <div class="row rounded-1 p-3 m-0 contentDeliveries border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
                                     <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
                                 
-                                        <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
+                                        <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">  
 
                                             <div class="form-group my-2 mx-2">
 
                                                 <div class="contentLabel mb-2">
-                                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Envio elegido por comprador </label>
-                                                    <div class="ui left pointing violet basic label">
-                                                        <%= buySell.deliveryType %>
-                                                    </div>
+                                                    <label class="text-secondary my-1 me-2" style="font-size: 16px;">Envio elegido por el comprador </label>
                                                 </div>    
 
                                                 
@@ -244,7 +270,7 @@
                                         <div class="form-group my-2 mx-2">
 
                                             <div class="contentLabel mb-2">
-                                                <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Metodo de pago elegido </label>
+                                                <label class="text-secondary my-1 me-2" style="font-size: 16px;">Metodo de pago elegido </label>
                                             </div>    
 
                                             <!-- aqui debemos iterar para mostar los metodos de pago disponibles por el vendedor -->
@@ -484,6 +510,7 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
                                     <table class="table table-striped">
+                                        <tr style="font-size: 17px;"> <td>Comercio</td> <td> <div class="ui left pointing violet basic label"> <%= buySell.tradeType %> </div> <img src="<%= buySell.locationSell.flag %>" alt="" style="height: 27px;" title="<%= buySell.locationSell.country %>"> </td> </tr> 
                                         <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
@@ -509,13 +536,23 @@
                                     
                                 </div>  
 
-                                <div class="form-group my-3">
-                                    <% if (buySell.cancel == false){ %>
-                                        <button class="form-control btn btn-primary" id="btn_confirmacion">Confirmar Compra</button>
-                                    <% } else { %>
-                                        <button class="form-control btn btn-primary" disabled>Confirmar Compra</button>
-                                    <% }; %>    
+                                <div class="alert alert-light my-2 shadow-sm my-2 d-flex" style="font-size: 16px;">
+                                    <div class="imgLocation">
+                                        <img src= "/img/locationPNG.png" alt="" class="efectLocation" style="width: 50px;">
+                                    </div>
+                                    <div class="details ms-2">
+                                        <p class="mb-1 text-secondary"> <b>  <%= buySell.usernameSell %> esta en : </b> <%= buySell.locationSell.country %> (<%= buySell.locationSell.countryCode %>) <img src="<%= buySell.locationSell.flag %>" alt="" style="height: 16px;"> | <%= buySell.locationSell.state %> </p>
+                                        <p class="mb-1 text-secondary"> <b>  Dirección :</b> ver en el paso 2 (Envio) </p>
+                                    </div>    
+                                </div>
 
+
+                                <div class="form-group my-3 p-0">
+                                    <% if (buySell.cancel == false){ %>
+                                        <button class="form-control btn btn-primary py-2" id="btn_confirmacion">Confirmar Compra</button>
+                                    <% } else { %>
+                                        <button class="form-control btn btn-primary py-2" disabled>Confirmar Compra</button>
+                                    <% }; %>    
                                 </div>
 
                                 <div class="alert alert-light mt-2">
@@ -539,12 +576,24 @@
                             
                                     <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
 
+                                        <div class="alert alert-light my-2 shadow-sm my-2 d-flex" style="font-size: 16px;">
+                                            <div class="imgLocation">
+                                                <img src= "/img/locationPNG.png" alt="" class="efectLocation" style="width: 50px;">
+                                            </div>
+                                            <div class="details ms-2">
+                                                <p class="mb-1 text-secondary"> <b>  <%= buySell.usernameSell %> esta en : </b> <%= buySell.locationSell.country %> (<%= buySell.locationSell.countryCode %>) <img src="<%= buySell.locationSell.flag %>" alt="" style="height: 16px;"> | <%= buySell.locationSell.state %> </p>
+                                                <p class="mb-1 text-secondary"> <b>  Dirección :</b> <%= buySell.locationSell.city %> | <%= buySell.locationSell.address %> </p>
+                                            </div>    
+                                        </div>
+
                                         <div class="form-group my-2 mx-2">
 
                                             <div class="contentLabel mb-2">
-                                                <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elige como deseas retirar </label>
+                                
+                                                <label class="text-secondary my-2 me-2" style="font-size: 17px;"> <b> Elige como deseas retirar o recibir </b> </label>
+
                                                 <div class="ui left pointing violet basic label">
-                                                    <%= buySell.deliveryType %>
+                                                    <%= buySell.tradeType %>
                                                 </div>
                                             </div>    
 
@@ -720,6 +769,7 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
                                     <table class="table table-striped">
+                                        <tr style="font-size: 17px;"> <td>Comercio </td> <td> <div class="ui left pointing violet basic label"> <%= buySell.tradeType %> </div> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
@@ -751,14 +801,22 @@
                             
                                     <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
 
-                                        <div class="form-group my-2 mx-2">
 
-                                            <div class="contentLabel mb-2">
-                                                <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elige como deseas retirar</label>
-                                                <div class="ui left pointing violet basic label">
-                                                    <%= buySell.deliveryType %>
-                                                </div>
-                                            </div>    
+                                        <div class="alert alert-light my-2 shadow-sm my-2 d-flex" style="font-size: 16px;">
+                                            <div class="imgLocation">
+                                                <img src= "/img/locationPNG.png" alt="" class="efectLocation" style="width: 50px;">
+                                            </div>
+                                            <div class="details ms-2">
+                                                <p class="mb-1 text-secondary"> <b>  <%= buySell.usernameSell %> esta en : </b> <%= buySell.locationSell.country %> (<%= buySell.locationSell.countryCode %>) <img src="<%= buySell.locationSell.flag %>" alt="" style="height: 16px;"> | <%= buySell.locationSell.state %> </p>
+                                                <p class="mb-1 text-secondary"> <b>  Dirección :</b> <%= buySell.locationSell.city %> | <%= buySell.locationSell.address %> </p>
+                                            </div>  
+                                        </div>
+
+
+                                        <div class="form-group my-2 mx-2">
+            
+                                            <label class="text-secondary my-2 me-2" style="font-size: 17px;"> <b> Elige como deseas retirar o recibir </b> </label>
+                                               
 
                                             <% const deliveryOptions = buySell.deliveryOptions; %>
 
@@ -931,6 +989,7 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
                                     <table class="table table-striped">
+                                        <tr style="font-size: 17px;"> <td>Comercio </td> <td> <div class="ui left pointing violet basic label"> <%= buySell.tradeType %> </div> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Comprador </td> <td> <%= buySell.usernameBuy %> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
                                         <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
@@ -969,14 +1028,24 @@
                             
                                     <div class="contenteDeliveries" style="height: auto; overflow-y: auto;">
 
+                                        <div class="dataInfo my-2 mx-0 py-2 border-bottom border-light" style="font-size: 15px;">
+
+                                            <p class="text-secondary mb-1"> Tienda : <a class="ms-1" href="/account/<%= buySell.usernameSell %>"> <%= buySell.usernameSell %>  </a> </p>
+                                            <div class="contentLabel mb-1">
+                                                <label for="" class="text-secondary my-1 me-2">Comercio : </label>
+                                                <div class="ui left pointing violet basic label">
+                                                    <%= buySell.tradeType %>
+                                                </div>
+                                                <img src="<%= buySell.locationSell.flag %>" alt="" style="height: 27px;" >
+                                            </div>  
+                                           
+                                            <p class="text-secondary mb-1"> Ubicación : <%= buySell.locationSell.country %> (<%= buySell.locationSell.countryCode %>) | <%= buySell.locationSell.state %> | <%= buySell.locationSell.city %> | <%= buySell.locationSell.address %>  </p>
+                                            
+                                        </div>
+
                                         <div class="form-group my-2 mx-2">
 
-                                            <div class="contentLabel mb-2">
-                                                <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Elige como deseas retirar </label>
-                                                <div class="ui left pointing violet basic label">
-                                                    <%= buySell.deliveryType %>
-                                                </div>
-                                            </div>    
+                                            <label class="text-secondary my-2 me-2" style="font-size: 17px;"> <b> Elige como deseas retirar o recibir </b> </label>
 
                                         <!--    buySell.deliveryOptions  aqui esta toda la informacion de envio -->
                                         <!--    deliveryOptions: { pickupInStore: 'true', pickupAtAgreedPlace: 'true, shippingToCustomer: 'false, shippingAgentsAffiliated: [] } -->
@@ -1147,6 +1216,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
                                         <table class="table table-striped">
+                                            <tr style="font-size: 17px;"> <td>Comercio </td> <td> <div class="ui left pointing violet basic label"> <%= buySell.tradeType %> </div>  <img src="<%= buySell.locationSell.flag %>" alt="" style="height: 27px;" > </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Comprador</td> <td> <%= buySell.usernameBuy %> </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Vendedor </td> <td> <%= buySell.usernameSell %> </td> </tr>
                                             <tr style="font-size: 17px;"> <td>Departamento </td> <td> <%= buySell.department %>  </td> </tr>
@@ -1164,6 +1234,17 @@
                             
                                 </div>
 
+
+                                <div class="alert alert-light my-2 shadow-sm my-2 d-flex" style="font-size: 16px;">
+                                    <div class="imgLocation">
+                                        <img src= "/img/locationPNG.png" alt="" class="efectLocation" style="width: 50px;">
+                                    </div>
+                                    <div class="details ms-2">
+                                        <p class="mb-1 text-secondary"> <b>  <%= buySell.usernameSell %> esta en : </b> <%= buySell.locationSell.country %> (<%= buySell.locationSell.countryCode %>) <img src="<%= buySell.locationSell.flag %>" alt="" style="height: 16px;"> | <%= buySell.locationSell.state %>  </p>
+                                        <p class="mb-1 text-secondary"> <b>  Dirección :</b> <%= buySell.locationSell.city %> | <%= buySell.locationSell.address %> </p>
+                                    </div>    
+                                </div>
+
                                 <div class="row rounded-1 p-3 m-0 contentDeliveries border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
                                     <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
                                 
@@ -1172,10 +1253,7 @@
                                             <div class="form-group my-2 mx-2">
 
                                                 <div class="contentLabel mb-2">
-                                                    <label for="" class="text-secondary my-1 me-2" style="font-size: 16px;">Typo de envio </label>
-                                                    <div class="ui left pointing violet basic label">
-                                                        <%= buySell.deliveryType %>
-                                                    </div>
+                                                    <label class="text-secondary my-1 me-2" style="font-size: 16px;">Tipo de envio </label>
                                                 </div>    
 
                                                 <% const deliveryDetails = buySell.deliveryDetails %>
@@ -1992,7 +2070,7 @@
   <script>
     //nuevo
     //este script registra el tipo de delivery que el cliente selecciona
-    const DeliveryType = document.querySelector('.deliveryType');
+    const TradeType = document.querySelector('.tradeType');
     const IndexedBuy = document.querySelector('.indexedBuy');
     const IndexedSell = document.querySelector('.indexedSell');
     
@@ -2004,7 +2082,7 @@
             const iDBuysell = idBuysell.value;
             const indexedBuy = IndexedBuy.value;
             const indexedSell = IndexedSell.value;
-            const deliveryType = DeliveryType.value;
+            const tradeType = TradeType.value;
 
             const radioDetails = document.querySelectorAll('input[name="deliveryDetails"]');
             let selectedValue;
@@ -2021,7 +2099,7 @@
             console.log("indexedBuy : ", indexedBuy);
             console.log("indexedSell : ", indexedSell);
             console.log("deliveryDetails : ", selectedValue);
-            console.log("deliveryType : ", deliveryType);
+            console.log("tradeType : ", tradeType);
 
             //vampos a crear el forData para enviar al backend
 
@@ -2031,10 +2109,11 @@
                 formData.append('indexedBuy', indexedBuy);
                 formData.append('indexedSell', indexedSell);
                 formData.append('deliveryDetails', selectedValue);
-                formData.append('deliveryType', deliveryType);
-                
+                formData.append('tradeType', tradeType);
+
+                //{iD, indexedBuy, indexedSell, deliveryDetails, tradeType }
                     
-                fetch('/buysell-body/deliveryPolicy', {
+                fetch('/buysell-body/deliveryType', {
                         method: "POST",
                         body: formData
                     })
@@ -2629,6 +2708,7 @@
                     `
 
                      writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
+                     written.focus();
                 } else {
 
 
@@ -2647,9 +2727,10 @@
                     ` 
                                                 
                      writtenLast(); //esta funcion muestra el ultimo mensaje en el contenedor.
+                     written.focus();
                 }  
 
-                written.focus();
+                
             
             }    
 

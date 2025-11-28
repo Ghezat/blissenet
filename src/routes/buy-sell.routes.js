@@ -1,4 +1,6 @@
 const { Router } = require('express');
+const countries = require("../countries.js");
+
 const routes = Router()
 const nodemailer = require('nodemailer');
 const modelUser = require('../models/user.js');
@@ -73,8 +75,8 @@ routes.post('/buysell/direct', async(req, res)=>{
         console.log('He llegado al apartado de buysell/direct ....................................');
         
         const { vendedor, comprador, depart, idProduct, countRequest, unitPrice, delivery } = req.body;
-        let chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation, time, codeDate, image, total, deliveryType, deliveryOptions;
-        let emailSell, emailBuy;
+        let chatId, usernameBuy, usernameSell, indexedSell, indexedBuy, fechaNegotiation, time, codeDate, image, total, tradeType, deliveryOptions;
+        let locationBuyData, locationSellData, emailSell, emailBuy;
         let titleArticle; //esta variable se declara afuera para luego usar en la funcion de envio de Telegrama. 
         
         console.log("idProduct :", idProduct) // primer dato.
@@ -143,24 +145,49 @@ routes.post('/buysell/direct', async(req, res)=>{
 
               //tenemos que descubir la ubicacion del vendedor y del comprador.
               //Datos requeridos: country, state, city ----------------------------
-              const dataProfileSell = await modelProfile.findOne({indexed : indexedSell}); 
+              const dataProfileSell = await modelProfile.findOne({indexed : indexedSell});
+              const sell_address = dataProfileSell.address; 
               const sell_city = dataProfileSell.city;
               const sell_state = dataProfileSell.state;
               const sell_country = dataProfileSell.country;
+              const sell_countryCode = dataProfileSell.countryCode;
               deliveryOptions = dataProfileSell.deliveryOptions;
 
               const dataProfileBuy = await modelProfile.findOne({indexed : indexedBuy});
+              const buy_address = dataProfileBuy.address;
               const buy_city = dataProfileBuy.city;
               const buy_state = dataProfileBuy.state;
-              const buy_country = dataProfileBuy.country; 
+              const buy_country = dataProfileBuy.country;
+              const buy_countryCode = dataProfileBuy.countryCode; 
 
               if ( sell_state == buy_state && sell_country == buy_country ){
-                deliveryType = "Envio Local" 
+                tradeType = "Local" 
               } else if ( sell_state != buy_state && sell_country == buy_country ) {
-                deliveryType = "Envio Interurbano" 
+                tradeType = "Nacional" 
               } else if ( sell_country != buy_country ) {
-                deliveryType = "Envio Internacional" 
+                tradeType = "Internacional" 
               }
+              //tradeType 
+
+              console.log("sell_countryCode :", sell_countryCode);
+              console.log("buy_countryCode :", buy_countryCode);
+
+              console.log("............................Obervacion..................................")
+              console.log("countries :", countries);
+
+              let flagSell, flagBuy;
+              
+              countries.forEach((ele) => {
+                if (ele.code === sell_countryCode) {
+                  flagSell = ele.flags;
+                }
+                if (ele.code === buy_countryCode) {
+                  flagBuy = ele.flags;
+                }
+              });
+              
+              locationBuyData = { countryCode: buy_countryCode, country: buy_country, state: buy_state, city: buy_city, address: buy_address, flag: flagBuy  };
+              locationSellData = { countryCode: sell_countryCode, country: sell_country, state: sell_state, city: sell_city, address: sell_address, flag: flagSell };
 
             //Objetivo de esta funcion es buscar los correos de ambas partes
             async function searchData(){
@@ -433,7 +460,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                       const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                       const searchProfile = await modelProfile.find({ indexed : user._id });   
-                      const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, deliveryOptions, date: time });
+                      const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, locationBuy : locationBuyData, locationSell : locationSellData, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, tradeType, deliveryOptions, date: time });
                       console.log("BuySell .......................... :", BuySell);
                       const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                       //console.log('Aqui BuySell ---->', BuySell);
@@ -539,7 +566,7 @@ routes.post('/buysell/direct', async(req, res)=>{
                             const fullScreen = false; //este objeto define como se vera el viewport si con el chat full Screen o no.
 
                             const searchProfile = await modelProfile.find({ indexed : user._id });   
-                            const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, deliveryType, deliveryOptions, date: time });
+                            const BuySell = new modelBuysell({ usernameBuy, usernameSell, indexedSell, indexedBuy, locationBuy : locationBuyData, locationSell : locationSellData, department : depart, title, title_id : idProduct, fechaNegotiation, tecnicalDescription, image : dImage, price, countRequest, count, total, tradeType, deliveryOptions, date: time });
                             console.log("BuySell .......................... :", BuySell);
                             const buySell = await BuySell.save(); //aqui guardo en la base de datos este documento en la coleccion modelBuysell
                         
@@ -1581,24 +1608,26 @@ routes.post('/buysell-body/confirm', async(req, res)=>{
 
 });
 
-routes.post('/buysell-body/deliveryPolicy', async(req, res)=>{
+
+routes.post('/buysell-body/deliveryType', async(req, res)=>{
 
   try {
     
     const body = req.body;
-    console.log("/buysell-body/deliveryPolicy");
+    console.log("/buysell-body/deliveryType");
     console.log("Esto es body", body);               
-    const {iD, indexedBuy, indexedSell, deliveryType, deliveryDetails} = req.body
+    const {iD, indexedBuy, indexedSell, deliveryDetails, tradeType} = req.body;
+          
 
     //deliveryDetails: 'undefined'
-    console.log("deliveryType --->", deliveryType);//deliveryType ---> Envio Internacional = cambiar a comercio Internacional
+    console.log("tradeType --->", tradeType);//deliveryType ---> Local, Nacional, Internacional 
     console.log("deliveryDetails --->", deliveryDetails);
 
     //en buySell esta el dato title_id que es el id de articulo 
     // y el departamento en el dato department
     const searchBuySell = await modelBuysell.findById(iD);
 
-    if (deliveryType === "Envio Local"){
+    if (tradeType === "Local"){
       //debemos gestionar todo lo concerniente a una entrega local. 
       //condionamos la solicitud del comprador
 
@@ -1658,7 +1687,7 @@ routes.post('/buysell-body/deliveryPolicy', async(req, res)=>{
       }
 
 
-    } else if (deliveryType === "Envio Interurbano"){
+    } else if (tradeType === "Nacional"){
 
         if (deliveryDetails === "D01"){
           // D01 Retirar Personalmente en la tienda.
@@ -1716,7 +1745,7 @@ routes.post('/buysell-body/deliveryPolicy', async(req, res)=>{
         }
 
 
-    } else if (deliveryType === "Envio Internacional"){
+    } else if (tradeType === "Internacional"){
 
         if (deliveryDetails === "D01"){
           // D01 Retirar Personalmente en la tienda.

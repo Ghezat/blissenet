@@ -5,11 +5,13 @@ const buySellSchema = new Schema({
     usernameSell : { type : String }, //este campo esta tambien en la coleccion profile.
     indexedSell : { type : String }, //aqui se guardara el id del user (usernameSell); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
     indexedBuy : { type : String }, //aqui se guardara el id del user (usernameBuy); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
-    department : { type : String },
+    locationBuy : { type : Object }, // aqui estaran estos datos importantes para saber de donde es nuestro cliente o proveedor  country, countryCode, state, city, address, flag
+    locationSell : { type : Object }, // aqui estaran estos datos importantes para saber de donde es nuestro cliente o proveedor  country, countryCode, state, city, address, flag
+    department : { type : String }, 
     title : { type : String },
     title_id : { type : String }, //este es el id del articulo o del arte o del auto o de lo que sea que se este vendiendo o alquilando
     fechaNegotiation : { type : String },
-    deliveryType : { type : String }, //aqui guardamos el tipo de entrega que puede ser una de estas tres (Envio Local, Envio Interurbano, Envio Internacional );
+    tradeType : { type : String }, //aqui guardamos el tipo de entrega que puede ser una de estas tres (Local, Nacional, Internacional );
     deliveryDetails : { type : String, default : "" }, //aqui guardamos el detalle de como se debe enviare el paquete. ejemplo. "Retirar Personalmente en la tienda", o "Reciba su pedido en la puerta de su casa. (Solicitar Delivery)" Nace como string vacio pero luego tendra un valor. lo importante es que ya exista para luego solo actualizar su valor.
     deliveryOptions : { type : Object }, // este objeto lo posee el perfil de vendedor. verlo en profile 
     count : { type : Number }, //cantidad de existencia que hay del articulo.
