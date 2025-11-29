@@ -261,13 +261,16 @@
           <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
     
         <input type="hidden" value="<%= user._id %>" id="newBTNvisitante"> <!-- aqui el id del visitante -->
-        <input type="hidden" value="<%= search.username %>" id="newBTNanunciante"> <!-- aqui el user anunciante -->
-        <input type="hidden" value="<%= search.user_id %>" id="newBTNid_anunciante"> <!-- aqui el id del anunciante -->
-        <input type="hidden" value="<%= search.department %>" id="newBTNdepart"> <!-- aqui el department -->
-        <input type="hidden" value="<%= search.title %>" id="newBTNtitle"> <!-- aqui el title -->
-        <input type="hidden" value="<%= search._id %>" id="newBTNid_title"> <!-- aqui el id del articulo -->
 
-    <% }; %>
+    <% }; %>    
+
+    <input type="hidden" value="<%= search.username %>" id="newBTNanunciante"> <!-- aqui el user anunciante -->
+    <input type="hidden" value="<%= search.user_id %>" id="newBTNid_anunciante"> <!-- aqui el id del anunciante -->
+    <input type="hidden" value="<%= search.department %>" id="newBTNdepart"> <!-- aqui el department -->
+    <input type="hidden" value="<%= search.title %>" id="newBTNtitle"> <!-- aqui el title -->
+    <input type="hidden" value="<%= search._id %>" id="newBTNid_title"> <!-- aqui el id del articulo -->
+
+    
     
     <!-- audios disponibles para diferentes acciones -->        
     <!-- <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> -->
@@ -1968,7 +1971,7 @@
         mini.forEach( (ele, i)=>{
             
             mini[i].addEventListener('mousemove', ()=>{
-                const titleImg = title.value;
+                const titleImg = title.value; //no puede ser leido cuando no hay un usuario logeado
                 containerViewImg.classList.remove('close');
                 containerViewVideo.classList.add('close');
                 containerViewImg.innerHTML  = `<img src=${ele.src} class="imgView rounded-1 zoomImage" style="object-fit: cover; width: 100%;" alt="${titleImg}">` 

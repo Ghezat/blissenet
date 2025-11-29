@@ -527,13 +527,13 @@
                     <% if (user) { %>
                         <% if (searchBanner) { %>
 
-                          <img src="<%= searchBanner[0].url %>" style="width: 100%; max-height: 100vh; object-fit: cover;">
+                          <img src="<%= searchBanner[0].url %>" style="width: 100%; max-height: auto; aspect-ratio: 16/3; object-fit: cover;">
                         
                         <% } %>
                     <% } else { %> 
                         <% if (searchBanner) { %>
 
-                          <img src="<%= searchBanner[0].url %>" style="width: 100%; max-height: 100vh; object-fit: cover;">
+                          <img src="<%= searchBanner[0].url %>" style="width: 100%; height: auto; aspect-ratio: 16/3; object-fit: cover;">
               
                         <% }; %>
 
@@ -545,16 +545,16 @@
               <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 px-0">
 
                 <!-- bloque Topbar -->
-                <div class="TopbarMain p-1 d-flex justify-content-between px-4" id="topBar"
+                <div class="TopbarMain d-flex justify-content-between py-3 px-4" id="topBar"
                   style="position: relative; background-color: <%= bGColorTopbar %> ; color: <%= bGColorText %>; position: relative; z-index: 200;">
                   
                     <div class="containerAvatarUser d-flex" style="width: 30%;">
                         <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
 
                           <% if (storeProfile.avatarPerfil[0].url.length === 0 ) { %>
-                              <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" style="width: 70px; height: 70px; object-fit: cover;"></td>    
+                              <td> <img src="https://www.gravatar.com/avatar/<%= storeProfile.mailhash %>?d=identicon" class="rounded-pill" style="width: 100px; height: 100px; object-fit: cover;"></td>    
                             <% } else { %>
-                              <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 70px; height: 70px; object-fit: cover;"></td> 
+                              <td><img src="<%= storeProfile.avatarPerfil[0].url %>" alt="" class="rounded-pill" style="width: 100px; height: 100px; object-fit: cover;"></td> 
                           <% }; %>
 
                <!-- este es el fin del foreach de colores -->
