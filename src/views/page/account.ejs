@@ -2269,12 +2269,14 @@
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <small><%= storeProfile.state %></small></p>
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> 
                             
+                            
+                            <% const City = storeProfile.city.trim()  %>
                             <small>
-                              <%= typeof storeProfile.city %>
-                              <% if (storeProfile.city) { %>
-                                  <%= storeProfile.city %>
-                              <% } %> 
+                                <% if (City && City !== 'undefined') { %>
+                                    <%= City %>
+                                <% } %>
                             </small>
+                            
 
                           </p>
                         </div>
