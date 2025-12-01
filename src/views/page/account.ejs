@@ -2270,7 +2270,7 @@
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> 
                             
                             <small> 
-                              <% if (storeProfile.city) { %>
+                              <% if (storeProfile.city === "undefined" ) { %>
                                   <%= storeProfile.city %>
                               <% } %> 
                             </small>
