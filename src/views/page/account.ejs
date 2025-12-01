@@ -2269,10 +2269,10 @@
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <small><%= storeProfile.state %></small></p>
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> 
                             
-                            <small>
-                              <% if  (storeProfile.city !== undefined ) { %>
-                                <%= storeProfile.city %>
-                              <% }; %>  
+                            <small> 
+                              <% if (storeProfile.city) { %>
+                                  <%= storeProfile.city %>
+                              <% } %> 
                             </small>
 
                           </p>
