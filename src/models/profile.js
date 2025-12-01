@@ -46,7 +46,7 @@ const SchemaProfile = new Schema({
     facebook : { type : String }, 
     instagram : { type : String },
     youtube : { type : String },
-    tiktok : { type : String },
+    tiktok : { type : String }, 
     favoritestores : { type : Array }, //"Siguiendo" un array de todas las tiendas que sigo o mis tiendas favoritas.
     followMe : { type : Array }, // "Me siguen" un array de todas las cuentas que me estan siguiendo.
     segment : {  type : Array, default : [ "All" ] }, //por defecto el profile nace con el objeto segment ya definido. Esto es el campo requerido para segmentar

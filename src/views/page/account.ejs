@@ -512,6 +512,10 @@
         <% const shoppingCart = storeProfile.buyCar %>
         <% const deliveryOptions = storeProfile.deliveryOptions %>
 
+        <% const siguiendo = storeProfile.favoritestores.length %>
+        <% const siguiendome = storeProfile.followMe.length %>
+        
+
         <input type="hidden" id="StorenameValue" value="<%= store_username %>">
         <input type="hidden" id="StoreId" value="<%= store_id %>">
         <input type="hidden" id="shoppingCart" value="<%= shoppingCart %>">
@@ -548,7 +552,7 @@
                 <div class="TopbarMain d-flex justify-content-between py-3 px-4" id="topBar"
                   style="position: relative; background-color: <%= bGColorTopbar %> ; color: <%= bGColorText %>; position: relative; z-index: 200;">
                   
-                    <div class="containerAvatarUser d-flex" style="width: 30%;">
+                    <div class="containerAvatarUser d-flex" style="width: 40%;">
                         <div class="containerAvatar me-2 d-flex align-items-center" style="margin-left: 20px;">
 
                           <% if (storeProfile.avatarPerfil[0].url.length === 0 ) { %>
@@ -562,82 +566,107 @@
                         <div class="containerDetails d-flex flex-column">
                           <% if (Account) { %> 
                               <% Account.forEach((ele)=>{ %>
-                                    <h1 class="mx-1 store" style="font-size: 20px;">
+                                    <h1 class="mx-1 store" style="font-size: 19px;">
                                         <%= ele.blissName %> <input type="hidden" value="<%= ele.username %>">
                                     </h1>
                                     <!-- <span class="mx-1" style="font-size: 16px;">@<%= ele.username %> </span> -->
 
-                                    <div class="d-flex justify-content-start">
+                                    <div class="containerDentro ms-2">
+                                        <div class="d-flex justify-content-end">
 
-                                      <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit"> <i class="bi bi-share me-1"></i>  Compartir </button> 
-                                      
-                                      <div class="containerShare d-flex invisible border border-secondary py-3 px-2 rounded-3" style="height: 80px;">
-                                            <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
-                                            <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
-                                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
-                                            <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
-                                              <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i> </button>
-                                              <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
-                                            </div>
-                                            <button class="btn btn-dark mx-2" id="btnQR" style="width: 42px; height: 42px ; border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
-                                      </div>
-                                      <input type="hidden" id="linkToShare" value="https://blissenet.com/account/<%= ele.username %>">
-                                      
-                                    </div>
+                                          <button class="mx-1 shareToggle" style="user-select: none; background: none; border: none; padding: 0; margin: 0; color: inherit; font-size: 16px;"> <i class="bi bi-share me-1"></i>  Compartir </button> 
+                                          
+                                          <div class="containerShare d-flex invisible border border-secondary py-3 px-2 rounded-3" style="height: 80px;">
+                                                <a href="https://api.whatsapp.com/send?text=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpWhatsapp.png" alt="" style="width: 42px; height: 42px;">   </a> 
+                                                <a href="https://t.me/share/url?url=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpTelegram.png" alt="" style="width: 42px; height: 42px"> </a> 
+                                                <a href="https://www.facebook.com/sharer/sharer.php?u=https://blissenet.com/account/<%= ele.username %>" target="_blank" class="mx-2"> <img src="/img/helpFacebook.png" alt="" style="width: 42px; height: 42px">  </a>
+                                                <div class="containerBTN p-0 mx-2" style="position: relative; width: 43px !important">   
+                                                  <button class="btn btn-sm btn-primary" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoard"> <i class="bi bi-clipboard px-1" style="font-size: large;"></i> </button>
+                                                  <button class="btn btn-sm btn-dark invisible" style="border-radius: 8px; position: absolute; right: - 200px; width: 42px; height: 42px" id="btnClicBoardCheck"> <i class="bi bi-clipboard-check px-1" style="font-size: large;"></i>  </button>
+                                                </div>
+                                                <button class="btn btn-dark mx-2" id="btnQR" style="width: 42px; height: 42px ; border-radius: 8px;"  data-bs-toggle="modal" data-bs-target="#staticQR"> <i class="bi bi-qr-code px-0" style="font-size: large;"></i> </button>
+                                          </div>
+                                          <input type="hidden" id="linkToShare" value="https://blissenet.com/account/<%= ele.username %>">
+                                          
+                                        </div>
 
-                                  <% if (boxPublisher) { %>
-
-                                      <span class="mx-1" style="font-size: 16px; user-select: none"><i class="bi bi-bag-plus me-1"></i> Anuncios: <%= boxPublisher.length %> </span>
-                                  
-                                  <% }; %>
+                                    </div>  
                                   
                               <% }) %>
                           <% }; %>
                         </div>
                     </div>
 
+                    <div class="containerFolowDetails">
 
-                    <% if (user) { %>
-                      <input type="hidden" id="iDLogeado" value="<%= user._id %>">
-                      <% if (storeProfile) { %>
-                        <input type="hidden" id="iDStore" value="<%= storeProfile.indexed %>">
-                        
-                        <!-- estos datos ocultos se usan para jugar con los estilos el boton buttonFollow abajo presente -->
-                        <input type="hidden" id="bGColorText" value="<%= storeProfile.bGColorText %>">
-                        <input type="hidden" id="bGColorTopbar" value="<%= storeProfile.bGColorTopbar %>">
+                      <div class="details py-2 px-3 d-flex justify-content-between rounded-2" style="background-color: rgba(160, 160, 160, 0.1);">
 
-
-                        
-                        <% if (statusFollow !== null) { %>
-                            <div class="content-btn mt-3 cursor-pointer me-5" id="btnFollow" style = "width: max-content; height: max-content; position: relative;">
-                              
-                                <button class="btn rounded-pill shadow-sm px-4 buttonFollow" style="background-color: #131313; color: #ffffff; border: 1px solid #ffffff"> <span id= "spanBtnFollow"> Siguiendo </span>  </button>
-                                <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
-                            </div>
-                        <% } else { %>
-                            <div class="content-btn mt-3 cursor-pointer me-5" id="btnFollow" style = "width: max-content; height: max-content; position: relative;">
-                                
-                                <button class="btn rounded-pill shadow-sm px-4 buttonFollow"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar %>;"> <span id= "spanBtnFollow"> Seguir </span>  </button>
-                                <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
-                            </div>
-                        <% }; %>
-                      
-
-                      <% } %>  
-                    <% } else { %>
-
-            
-                      
-                          <div class="content-btn-follow mt-3 me-5" style= "width: fit-content; position: relative;" data-bs-toggle="modal" data-bs-target="#staticnoLogin">    
-                              <a class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;"> Seguir </a>
+                        <div class="ContainerAnuncios d-flex flex-column justify-content-start me-3">
+                          <div class="count fw-bold text-primary" style="font-size: 21px;">
+                            <% if (boxPublisher) { %>
+                                <span> <%= boxPublisher.length %> </span>
+                            <% }; %>
                           </div>
+                          <div class="anuncios">
+                            <span style="font-size: 16px;"> anuncios </span>
+                          </div>
+                        </div>
+                        <div class="ContainerAnuncios d-flex flex-column justify-content-start me-3">
+                          <div class="count fw-bold" style="font-size: 21px;"> <span> <%= siguiendo %> </span></div>
+                          <div class="anuncios">
+                            <span style="font-size: 16px;"> siguiendo </span>
+                          </div>  
+                        </div>
+                        <div class="ContainerAnuncios d-flex flex-column justify-content-start me-3">
+                          <div class="count fw-bold" style="font-size: 21px;"><%= siguiendome %></div>
+                          <div class="anuncios">
+                            <span style="font-size: 16px;"> seguidores </span>
+                          </div>
+                        </div>     
                       
-              
+                      </div>
+                      <div class="follow d-flex justify-content-end">
+                          <% if (user) { %>
+                            <input type="hidden" id="iDLogeado" value="<%= user._id %>">
+                            <% if (storeProfile) { %>
+                              <input type="hidden" id="iDStore" value="<%= storeProfile.indexed %>">
+                              
+                              <!-- estos datos ocultos se usan para jugar con los estilos el boton buttonFollow abajo presente -->
+                              <input type="hidden" id="bGColorText" value="<%= storeProfile.bGColorText %>">
+                              <input type="hidden" id="bGColorTopbar" value="<%= storeProfile.bGColorTopbar %>">
 
 
-                    <% }; %>  
+                              
+                              <% if (statusFollow !== null) { %>
+                                  <div class="content-btn mt-3 cursor-pointer me-4" id="btnFollow" style = "width: max-content; height: max-content; position: relative;">
+                                      <button class="btn rounded-pill shadow-sm px-4 buttonFollow" style="background-color: #131313; color: #ffffff; border: 1px solid #ffffff"> <span id= "spanBtnFollow"> Siguiendo </span>  </button>
+                                      <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
+                                  </div>
+                              <% } else { %>
+                                  <div class="content-btn mt-3 cursor-pointer me-4" id="btnFollow" style = "width: max-content; height: max-content; position: relative;">
+                                      <button class="btn rounded-pill shadow-sm px-4 buttonFollow"  style="border: 1px solid <%= storeProfile.bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar %>;"> <span id= "spanBtnFollow"> Seguir </span>  </button>
+                                      <div class = "contentConfetyFollow" style="position: absolute; top: -20px; left: -35px; width: 180px; height: 90px;">  </div>  
+                                  </div>
+                              <% }; %>
+                            
+
+                            <% } %>  
+                          <% } else { %>
+
+                  
+                            
+                                <div class="content-btn-follow mt-3 me-4" style= "width: fit-content; position: relative;" data-bs-toggle="modal" data-bs-target="#staticnoLogin">    
+                                    <a class="btn rounded-pill shadow-sm px-4"  style="border: 1px solid <%= bGColorText %>; color: <%= bGColorText %>; background-color:<%= bGColorTopbar%>;"> Seguir </a>
+                                </div>
+                            
                     
-        
+
+
+                          <% }; %>  
+                      </div>
+
+                    </div>
+
                 </div> <!-- aqui cierra el bloque Topbar--> 
         
                 <div class="containerSegment"> 
@@ -648,19 +677,19 @@
 
                         <div class="form-floating shadow-sm" style="position: relative; z-index: 200;">
                             <select class="form-select" id="floatingSelect" name="segment" aria-label="label select example"
-                            style="border: none; outline: none; border-radius: 0; background-color: <%= bGColorTopbar%> ; color: <%= bGColorText %>; ">
-                            
+                              style="border: none; outline: none; border-radius: 0; font-size: 17px; background-color: <%= bGColorTopbar%> ; color: <%= bGColorText %>; ">
                               
-                            <% if (segment) { %> <!-- esto es un objeto que viebe del backend -->
-                              <option value= "<%= segment %>" selected> <%= segment %>  </option>
-                            <% }; %>  
+                                
+                              <% if (segment) { %> <!-- esto es un objeto que viene del backend -->
+                                <option value= "<%= segment %>" selected> <%= segment %>  </option>
+                              <% }; %>  
 
-                            <% storeProfile.segment.forEach((Segment)=>{ %>
-                              <option value= "<%= Segment %>"> <%= Segment %>  </option>
-                            <% }) %>
+                              <% storeProfile.segment.forEach((Segment)=>{ %>
+                                <option value= "<%= Segment %>"> <%= Segment %>  </option>
+                              <% }) %>
 
                             </select>
-                            <label for="floatingSelect" style="color: <%= bGColorText %>; "><i>Selecciona un Segmento</i> </label>
+                            <label for="floatingSelect" style=" font-size: 18px; color: <%= bGColorText %>;  "><i>Selecciona un Segmento</i> </label>
                         </div>
                     </form>
 
@@ -2238,7 +2267,15 @@
                         <div class="containerYears my-2 rounded-3 d-flex flex-column align-items-center">
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <img src="<%= storeProfile.flag %>" alt="" style="height: 12px;" >  <small><%= storeProfile.country %></small></p>
                           <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <small><%= storeProfile.state %></small></p>
-                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> <small><%= storeProfile.quarter %></small></p>
+                          <p class="m-0" style="color:<%= storeProfile.bGColorText %>"> 
+                            
+                            <small>
+                              <% if  (storeProfile.city !== undefined ) { %>
+                                <%= storeProfile.city %>
+                              <% }; %>  
+                            </small>
+
+                          </p>
                         </div>
                     </div>   
                   </div>
@@ -4194,7 +4231,6 @@ function createMap() {
             .bindPopup(storename)
             .openPopup();
  
-        
 
         const options = {
             position: 'topleft',
@@ -4203,7 +4239,8 @@ function createMap() {
             activeColor: '#9200FF',
             completedColor: '#c174fc',
             // Traducción de los textos
-        };
+          };
+          
         const measureControl = new L.Control.Measure(options);
         map.addControl(measureControl); // Asegúrate de añadir el control al mapa
 
