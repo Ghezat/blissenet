@@ -470,7 +470,7 @@
           </ul>
         </div>
         
-        <div class="viewCollection" style="height: auto; background: #fff5cb;">
+        <div class="viewCollection" style="height: auto; background: #ffffff;">
        
               <div class="containAlert" style="position: sticky; z-index: 100; top: 0px;" > <!-- bloque dinamico --> </div>
             
@@ -497,11 +497,14 @@
                                                     <img src="<%= ele.avatarPerfil[0].url %>" alt="" class="rotar" style="width: 55px; height: 55px; object-fit: cover; border-radius: 50%;">
                                                 <% }; %>    
                                           </div>
+
+                                          <% const City = ele.city.trim()  %>
+                                                                               
                                                   
                                           <div class="contentWorkSpace py-0 px-2 d-flex justify-content-start align-items-center" style="width: 100%; height: 49%; background-color: <%= ele.bGColorTopbar %>;">
                                             <a href="/account/<%= ele.username %>" class="text-decoration-none text-dark d-flex flex-column align-items-start justify-content-center">        
                                                   <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-person-workspace me-1"></i><%= ele.username %></p>
-                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt-fill me-1"></i><%= ele.country %> - <%= ele.state %> - <%= ele.quarter %> </p>
+                                                  <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt-fill me-1"></i><%= ele.country %> - <%= ele.state %> - <% if (City && City !== 'undefined') { %> <%= City %> <% } %> </p>
                                                   <!-- <p class="mx-0 my-0" style="color:<%= ele.bGColorText %>;"><i class="bi bi-geo-alt me-1"></i><%= ele.state %></p> -->
                                             </a>  
                                           </div>

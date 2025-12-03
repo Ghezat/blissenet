@@ -233,7 +233,7 @@
         right: 3px;
     }
 
-    }
+}
 
 
 </style>
@@ -325,6 +325,10 @@
                             
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                             <div class="mb-1" id="showContent">
+                                <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                    <!-- dinamico -->
+                                </div>
+                                <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                             </div>
                                                          
                             <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -351,6 +355,10 @@
         
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                             <div class="mb-1" id="showContent">
+                                <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                    <!-- dinamico -->
+                                </div>
+                                <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                             </div>
                                                          
                             <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -375,6 +383,10 @@
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                             <div class="mb-1" id="showContent">
+                                <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                    <!-- dinamico -->
+                                </div>
+                                <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                             </div>
                                                          
                             <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -401,6 +413,10 @@
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                             <div class="mb-1" id="showContent">
+                                <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                    <!-- dinamico -->
+                                </div>
+                                <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                             </div>
                                                          
                             <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -426,6 +442,10 @@
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                             <div class="mb-1" id="showContent">
+                                <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                    <!-- dinamico -->
+                                </div>
+                                <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                             </div>
                                                          
                             <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -450,6 +470,10 @@
 
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                             <div class="mb-1" id="showContent">
+                                <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                    <!-- dinamico -->
+                                </div>
+                                <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                             </div>
                                                          
                             <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -473,6 +497,10 @@
                         
                         <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                         <div class="mb-1" id="showContent">
+                            <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                <!-- dinamico -->
+                            </div>
+                            <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                         </div>
                                                      
                         <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -515,6 +543,10 @@
 
                          <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                          <div class="mb-1" id="showContent">
+                            <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                <!-- dinamico -->
+                            </div>
+                            <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                          </div>
                                                       
                          <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -539,6 +571,10 @@
                             
                             <!-- Nota: aqui parseo la data y la guardo en un input hidden -->
                             <div class="mb-1" id="showContent">
+                                <div id="resumeContent" style="max-height: 40px;overflow: hidden; transition: max-height 0.3s ease;">
+                                    <!-- dinamico -->
+                                </div>
+                                <span id="toggleText" style="color: blue; cursor: pointer;">...ver más</span>
                             </div>
                                                          
                             <input type="hidden" value="<%= search.tecnicalDescription %>" id="hiddenTecDescript">
@@ -1931,10 +1967,22 @@
   });
 
 </script>
+<!-- 
+html
+<div class="mb-1 border border-danger" id="showContent">
+    Quiero que aparesca el texto tal cual lo hace pero que solo se vea en primera instancia un poco mas de 
+    tres lineas o un max. de 30 palabras y que se vea un label que diga ...ver mas. asi como lo tiene facebook
+    puede ser un button pero que no se vea que es un boton. y al darle se expanda y se vea todo el texto. y en este momento
+    aparece otro label que dice, ...ver menos. de esta manera el usuario puede decidir si ver mas o menos el texto. 
+    lo importante es que en la primera se vea menos con el texto ...ver mas.
+</div>
+html -->
 
 <script>
     //comentario explicativo
     const showContent = document.getElementById('showContent');
+    const resumeContent = document.getElementById('resumeContent');
+    const toggleText = document.getElementById('toggleText');
     const hiddenTecDescript = document.getElementById('hiddenTecDescript');
 
     const tecDescrip = hiddenTecDescript.value;
@@ -1942,7 +1990,7 @@
 
     console.log("tecDescrip :", tecDescrip)
 
-    let showConteQuill = new Quill('#showContent', {
+    let showConteQuill = new Quill('#resumeContent', {
         modules: {
             toolbar: false
         },
@@ -1952,7 +2000,18 @@
     showConteQuill.setContents(delta)
 
 
+    let isExpanded = false;
 
+    toggleText.addEventListener('click', () => {
+        if (isExpanded) {
+            resumeContent.style.maxHeight = '40px'; // Ajusta a la altura deseada
+            toggleText.textContent = '...ver más';
+        } else {
+            resumeContent.style.maxHeight = 'none'; // Expande para mostrar todo
+            toggleText.textContent = '...ver menos';
+        }
+        isExpanded = !isExpanded;
+});
 </script>
 
 <script>

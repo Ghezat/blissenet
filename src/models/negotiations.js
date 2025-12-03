@@ -5,6 +5,8 @@ const negotiationSchema = new Schema({
     usernameSell : { type : String }, //este campo esta tambien en la coleccion profile.
     indexedSell : { type : String }, //aqui se guardara el id del user (usernameSell); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
     indexedBuy : { type : String }, //aqui se guardara el id del user (usernameBuy); importante para luego detectar rapidamente si tiene facturas impagas y cuantas.
+    locationBuy : { type : Object }, // aqui estaran estos datos importantes para saber de donde es nuestro cliente o proveedor  country, countryCode, state, city, address, flag
+    locationSell : { type : Object }, // aqui estaran estos datos importantes para saber de donde es nuestro cliente o proveedor  country, countryCode, state, city, address, flag
     department : { type : String },
     title : { type : String },
     title_id : { type : String }, //este es el id del articulo o del arte o del auto o de lo que sea que se este vendiendo o alquilando

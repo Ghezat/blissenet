@@ -32,6 +32,7 @@ const Token =  process.env.Token_Bot;
 //console.log("este es el Token de telegram :", Token);
 
 routes.get('/account/:account', async (req,res)=>{
+    
     //console.log("Este es el parametroooo ---->",req.params);
     const account  = req.params.account;
     console.log("este es el account a visitar o tienda", account) //rogelio 

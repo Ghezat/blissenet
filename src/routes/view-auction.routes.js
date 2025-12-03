@@ -6,7 +6,6 @@ const modelMessages = require('../models/messages.js');
 const modelProfile = require('../models/profile.js');
             
 
-
 routes.get('/view-auction/', async (req, res)=>{
     const user = req.session.user;
     const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;

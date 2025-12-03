@@ -66,6 +66,21 @@
        color: white; /* Color del texto */
     } 
 
+    .efectLocation {
+        animation: moverVertical 2s ease-in-out infinite;
+    }
+
+    @keyframes moverVertical {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(6px); /* Cambia 10px por la distancia que desees */
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }    
 
 </style>
 <body class="mainTheme">
@@ -144,8 +159,8 @@
 
                                 </ul>
 
-                                <div class="contentInformation" style="width: 100%; background-color: #dbdfe4;">
-                                    <div class="row rounded-1 p-3 m-0 contentData">
+                                <div class="contentInformation p-3" style="width: 100%; background-color: #dbdfe4;">
+                                    <div class="row rounded-1 m-0 contentData">
 
                                         <div class="col-lg-6 col-md-6 col-sm-12 p-0">
 
@@ -171,8 +186,17 @@
 
                                     </div>
 
+                                    <div class="alert alert-light my-2 shadow-sm d-flex" style="font-size: 16px;">
+                                        <div class="imgLocation">
+                                            <img src= "/img/locationPNG.png" alt="" class="efectLocation" style="width: 50px;">
+                                        </div>
+                                        <div class="details ms-2">
+                                            <p class="mb-1 text-secondary"> <b>  <%= negotiation.usernameBuy %> esta en : </b> <%= negotiation.locationBuy.country %> (<%= negotiation.locationBuy.countryCode %>) <img src="<%= negotiation.locationBuy.flag %>" alt="" style="height: 16px;"> | <%= negotiation.locationBuy.state %>  </p>
+                                            <p class="mb-1 text-secondary"> <b>  Dirección :</b> <%= negotiation.locationBuy.city %> | <%= negotiation.locationBuy.address %> </p>
+                                        </div>    
+                                    </div>
 
-                                    <div class="row rounded-1 p-3 m-0 contentPayment border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
+                                    <div class="row rounded-1 m-0 contentPayment border-bottom border-light" style="width: 100%; background-color: #dbdfe4;">
                                         
                                         <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
 
@@ -431,6 +455,16 @@
                                         </table>
 
                                     </div>  
+
+                                    <div class="alert alert-light my-2 shadow-sm d-flex" style="font-size: 16px;">
+                                        <div class="imgLocation">
+                                            <img src= "/img/locationPNG.png" alt="" class="efectLocation" style="width: 50px;">
+                                        </div>
+                                        <div class="details ms-2">
+                                            <p class="mb-1 text-secondary"> <b>  <%= negotiation.usernameSell %> esta en : </b> <%= negotiation.locationSell.country %> (<%= negotiation.locationSell.countryCode %>) <img src="<%= negotiation.locationSell.flag %>" alt="" style="height: 16px;"> | <%= negotiation.locationSell.state %>  </p>
+                                            <p class="mb-1 text-secondary"> <b>  Dirección :</b> <%= negotiation.locationSell.city %> | <%= negotiation.locationSell.address %> </p>
+                                        </div>    
+                                    </div>
 
                                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 p-0">
                                         <div class="daysForAppointments">
@@ -1075,12 +1109,13 @@
                     console.log("selectedDate -->", selectedDate);
                     
                     console.log("dayOfWeek -->", dayOfWeek); 
-                    const today = new Date().getUTCDate(); //este es el dia de hoy
-                    const selectedDay =  selectedDate.getUTCDate(); //este es el dia seleccionado
+                    const today = new Date().getTime(); //este es una fecha UNIX suficiente para hacer comprobaciones
+                    const selectedDay =  selectedDate.getTime(); //este es una fecha UNIX suficiente para hacer comprobaciones
                     
                     console.log("today :", today);
 
                     console.log("today -- selectedDate", today, selectedDay); 
+                     
                     if ( today <= selectedDay ){
 
                         const resultInclude = daysArray.includes(dayOfWeek)
@@ -1104,7 +1139,7 @@
                             const message = "¡Fecha inválida! No puedes elegir un día que ya pasó. Asegúrate de seleccionar una fecha que sea hoy o en el futuro cercano."
                             mostrarToast( message, 'right', 'danger', '¡Upps!', false ); // Agrega título aquí
                     }
-
+ 
 
 
                 });
