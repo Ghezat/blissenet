@@ -65,6 +65,22 @@ io.on('connection', (socket)=>{
     });
 
  
+    //socket.emit('appointment:sendAppointment', { 'obje' : objectAppointment }); //paso 1
+    socket.on('appointment:sendAppointment', (data)=>{ //paso 2
+        console.log("::::: Aqui llega el appointment de la negociacion :::::");
+        console.log("appointment", data);
+        //{ "dateValue" : dateValue, "timeValue" : timeValue}
+        const dateAppointment = data.obje.dateValue;
+        const timeValue = data.obje.timeValue;
+        console.log("dateAppointment :", dateAppointment); //dateAppointment : 2025-12-16
+        const dateApp = dateAppointment.split("-");
+        console.log("dateApp ....:", dateApp);
+        const dateAppointmentFormated = `${dateApp[2]}-${dateApp[1]}-${dateApp[0]}`;
+        console.log("dateAppointmentFormated ....:", dateAppointmentFormated);
+        const dataFormated = { "dateAppointmentFormated" : dateAppointmentFormated, "timeValue" : timeValue};
+        io.emit('appointment:ReSendAppointment', dataFormated);
+        //socket.on('appointment:ReSendAppointment', dataFormated);
+    });
 
 });
 

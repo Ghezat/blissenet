@@ -245,8 +245,8 @@
                                                     <label for="" class="text-secondary my-1 me-2" style="font-size: 15px;"> Fecha seleccionada por el interesado. </label>
                                                     <%  if (appointment){ %>
                                                         <div class="input-group">
-                                                            <span class="input-group-text">Cita Acordada :</span>
-                                                            <span class="input-group-text"><%= appointment %></span>
+                                                            <span class="input-group-text">Cita Acordada vendedor:</span>
+                                                            <span class="input-group-text" id="appointmentSell"><%= appointment %></span>
                                                         </div>
                                                     <% } else { %>
                                                         <div class="alert alert-dark">
@@ -504,7 +504,7 @@
 
                                             <div class="input-group my-2">
                                                 <% const appointment = negotiation.appointment %>
-                                                <span class="input-group-text">Cita Acordada :</span>
+                                                <span class="input-group-text">Cita Acordada Cliente:</span>
                                                 <% if (appointment){ %>
                                                     <span class="input-group-text" id="appointmentSpan"> <%= appointment %> </span>
                                                 <% } else { %>  
@@ -918,6 +918,7 @@
 
   <!-- con este script conectamos este HTML al servidor socket -->         
   <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+    
 
     <script>
         const inpFullScreen = document.getElementById('fullScreen');
@@ -1198,6 +1199,11 @@
 
                         if (existAppointment === false){
 
+                            //console.log("+++++++++++++++++++++++++");
+                            //console.log("dateValue :", dateValue);
+                            //console.log("timeValue :", timeValue);
+                            const objectAppointment = { "dateValue" : dateValue, "timeValue" : timeValue};
+
                             const formData = new FormData()
                                 formData.append('id', id);
                                 formData.append('date', dateValue);
@@ -1225,6 +1231,8 @@
                                                 btnAppointment.classList.remove('close');
                                             }, 2000);
 
+                                            //paso 1: al obtener un ok del backend iniciamos el proceso de envio de la fecha de agneda de cita al vendedor.
+                                            socket.emit('appointment:sendAppointment', { 'obje' : objectAppointment }); //enviamos al socket para que envia el mensaje con esteroides.
 
                                         } else {
                                             setTimeout(() => {
@@ -1465,6 +1473,8 @@
     const socket = io();
 
     const username = document.getElementById('username');
+    const idUsername = document.getElementById('idUser');
+    const idBuy = document.querySelector('.indexedBuy'); 
     const btnSenMessage = document.getElementById('btnSenMessage');
 
     const btnFullscreen = document.getElementById('btnFullscreen');
@@ -1474,12 +1484,35 @@
     const user = document.getElementById('user');
     const idDocument = document.getElementById('idDocument');
 
+
+ 
+  
+        
+    //socket.on('appointment:ReSendAppointment', dataFormated);
+    socket.on('appointment:ReSendAppointment', (dataFormated)=>{
+        console.log("+++++++++++ ver +++++++++++");
+        console.log("appointment:ReSendAppointment ....:", dataFormated); //{dateAppointmentFormated: '16-12-2025', timeValue: '19:00'}
+        const dateAppointment = dataFormated.dateAppointmentFormated;
+        const timeValue = dataFormated.timeValue;
+    
+            console.log("idUsername.value ..............", idUsername.value);//68add4dca09409e3310898e0
+            console.log("idBuy.value .............", idBuy.value);
+            if (idUsername.value === idBuy.value){
+                const DataAppointment = `Fecha propuesta por el interesado ${dateAppointment}:${timeValue}`;
+                written.value = DataAppointment;
+                btnSenMessage.click();
+                written.value =""; //limpiamos el input written
+            }
+
+    });
+    
+
     if (written){
         written.value =""; //estado incial 
         written.focus(); //estado inicial 
 
         console.log("fullScreen ...........:", fullScreen);
-        // quiero que el textarea vaya expandiendose a medida existan mas lienas pero el maximo debe ser de 5 lineas.
+        // quiero que el textarea vaya expandiendose a medida existan mas lineas pero el maximo debe ser de 5 lineas.
         written.addEventListener('input', () => {
             
             const writtenValue = written.value;
