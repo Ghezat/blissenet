@@ -82,6 +82,41 @@ io.on('connection', (socket)=>{
         //socket.on('appointment:ReSendAppointment', dataFormated);
     });
 
+    
+    //socket.emit('rating:sendQualifyOwner', { 'obje' : objectQualify }); //Paso 1 --> enviamos al socket.
+    socket.on('rating:sendQualifyOwner', (data)=>{  //Paso 2 --> enviamos al frontEnd.
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: Aqui llega la calificacion de la negociacion :::::");
+        console.log("calificacion .... :", data);
+        //calificacion .... : {
+        //    obje: {
+        //        idOrder: '6932f1f8bc836eff1267c63f',
+        //        rating: '4',
+        //       comment: 'este es el comentario hay mas o menos'
+        //    }
+        // }
+        const dataFormated = { data };
+        io.emit('rating:ReSendQualifyOwner', dataFormated);
+        //socket.on('rating:ReSendQualifyOwner', dataFormated);
+    });
+
+    //socket.emit('rating:sendQualifyCustomer', { 'obje' : objetoSockect });
+    socket.on('rating:sendQualifyCustomer', (data)=>{  //Paso 2 --> enviamos al frontEnd.
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: Aqui llega la calificacion de la negociacion :::::");
+        console.log("calificacion .... :", data);
+        //calificacion .... : {
+        //    obje: {
+        //        idOrder: '6932f1f8bc836eff1267c63f',
+        //        rating: '4',
+        //       comment: 'este es el comentario hay mas o menos'
+        //    }
+        // }
+        const dataFormated = { data };
+        io.emit('rating:ReSendQualifyCustomer', dataFormated);
+        //socket.on('rating:ReSendQualifyCustomer', dataFormated);
+    });
+
 });
 
 

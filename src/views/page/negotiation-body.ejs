@@ -339,7 +339,7 @@
                                                     <p>Deje un comentario conciso de su experiencia a su comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
                                                 </div>  
 
-                                                <button class="btn btn-primary form-control my-3 py-2" id="btnSellTrue">Enviar calificación y comentario</button>
+                                                <button class="btn btn-primary form-control my-3 py-2" id="btnSellTrue">Enviar calificación y comentario Pro</button>
 
                                                 <button class="form-control btn btn-primary my-3 py-2 close" id="btnSellTrueSpinner" disabled>
                                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -581,7 +581,7 @@
                                                         <p>Deje un comentario conciso de su experiencia como comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
                                                     </div>
 
-                                                    <button class="btn btn-primary form-control my-3 py-2" id="btnBuyerTrue">Enviar calificación y comentario</button>
+                                                    <button class="btn btn-primary form-control my-3 py-2" id="btnBuyerTrue">Enviar calificación y comentario Cli</button>
 
                                                     <button class="form-control btn btn-primary my-3 py-2 close" id="btnBuyerTrueSpinner" disabled>
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -1472,9 +1472,12 @@
 
     const socket = io();
 
+    const idNegotiation = document.querySelector('.idNegotiation');
     const username = document.getElementById('username');
     const idUsername = document.getElementById('idUser');
     const idBuy = document.querySelector('.indexedBuy'); 
+    const idSell = document.querySelector('.indexedSell');
+
     const btnSenMessage = document.getElementById('btnSenMessage');
 
     const btnFullscreen = document.getElementById('btnFullscreen');
@@ -1498,14 +1501,100 @@
             console.log("idUsername.value ..............", idUsername.value);//68add4dca09409e3310898e0
             console.log("idBuy.value .............", idBuy.value);
             if (idUsername.value === idBuy.value){
-                const DataAppointment = `Fecha propuesta por el interesado ${dateAppointment}:${timeValue}`;
+                const DataAppointment = `Fecha propuesta por el interesado ${dateAppointment} a las ${timeValue} horas.`;
                 written.value = DataAppointment;
                 btnSenMessage.click();
                 written.value =""; //limpiamos el input written
             }
 
     });
+
+    //socket.on('rating:ReSendQualifyCustomer', dataFormated); -->Califica cliente
+    socket.on('rating:ReSendQualifyCustomer', (dataFormated)=>{
+        console.log("+++++++++++ ver +++++++++++");
+        console.log("rating:ReSendQualifyCustomer ....:", dataFormated); // data.obje.idOrder...
+        const obje = dataFormated.data.obje;
+        const orderId = obje.idOrder;
+        const rating = obje.rating;
+        const comment = obje.comment;
+        const iDBuy = obje.iDBuy;
+        const iDSell = obje.iDSell;
+        //datos que vienen del socket
+        console.log(`id : ${orderId} | rating : ${rating} | comment : ${comment} | iDBuy : ${iDBuy} | iDSell : ${iDSell}`);
     
+        //datos de la pagina servida
+        console.log("idNegotiation.value .............", idNegotiation.value);
+        console.log("idBuy.value .............", idBuy.value);
+        console.log("idSell.value .............", idSell.value); 
+
+        let star;
+        if (rating == 5){
+            start = "⭐⭐⭐⭐⭐";
+        } else if (rating == 4){
+            start = "⭐⭐⭐⭐";
+        } else if (rating == 3){
+            start = "⭐⭐⭐";
+        } else if (rating == 2){
+            start = "⭐⭐";
+        } else if (rating == 1){
+            start = "⭐";
+        }
+
+        if (idNegotiation.value === orderId){ //aqui validamos que se ejeute en el documento justo por idOrder.
+
+            if ( idUsername.value === iDBuy ){ //aqui solo envia el propietario de manera automatica.
+                const Qualify = `Calificacion realizada al anunciante: 💬${comment} ${start}`;
+                written.value = Qualify;
+                btnSenMessage.click();
+                written.value =""; 
+            }    
+        }  
+
+    });
+
+
+    //socket.on('rating:ReSendQualifyOwner', dataFormated); -->Califica Anunciante
+    socket.on('rating:ReSendQualifyOwner', (dataFormated)=>{
+        console.log("+++++++++++ ver +++++++++++");
+        console.log("rating:ReSendQualifyOwner ....:", dataFormated); // data.obje.idOrder...
+        const obje = dataFormated.data.obje;
+        const orderId = obje.idOrder;
+        const rating = obje.rating;
+        const comment = obje.comment;
+        const iDBuy = obje.iDBuy;
+        const iDSell = obje.iDSell;
+        //datos que vienen del socket
+        console.log(`id : ${orderId} | rating : ${rating} | comment : ${comment} | iDBuy : ${iDBuy} | iDSell : ${iDSell}`);
+    
+        //datos de la pagina servida
+        console.log("idNegotiation.value .............", idNegotiation.value);
+        console.log("idBuy.value .............", idBuy.value);
+        console.log("idSell.value .............", idSell.value); 
+
+        let star;
+        if (rating == 5){
+            start = "⭐⭐⭐⭐⭐";
+        } else if (rating == 4){
+            start = "⭐⭐⭐⭐";
+        } else if (rating == 3){
+            start = "⭐⭐⭐";
+        } else if (rating == 2){
+            start = "⭐⭐";
+        } else if (rating == 1){
+            start = "⭐";
+        }
+
+        if (idNegotiation.value === orderId){ //aqui validamos que se ejeute en el documento justo por idOrder.
+
+            if ( idUsername.value === iDSell ){ //aqui solo envia el propietario de manera automatica.
+                const Qualify = `Calificacion realizada al cliente: 💬${comment} ${start}`;
+                written.value = Qualify;
+                btnSenMessage.click();
+                written.value =""; 
+            }    
+        }  
+
+    });
 
     if (written){
         written.value =""; //estado incial 
@@ -2087,6 +2176,13 @@
             if ( objectBuyerTrue.rating !== "" && objectBuyerTrue.comment !=="" ) {
                 console.log("podemos enviar al backend la calificacion y el comentario ");
 
+                const objetoSockect = { idOrder : idOrderBuyerTrue.value,
+                                        rating : starHidden.value,  
+                                        comment : commentBuyerTrue.value,
+                                        iDBuy : idBuy.value,
+                                        iDSell : idSell.value   
+                                      }
+                console.log("objetoSockect .... :", objetoSockect); //Este objeto es para ser enviado al socket     
 
                 //este dato es enviado por el comprador.      
                 fetch('/negotiation-rating/buyerTrue', {
@@ -2111,6 +2207,10 @@
                                 location.reload();
 
                             }, 5000);
+
+                            //paso 1: al obtener un ok del backend iniciamos el proceso de envio de la fecha de agneda de cita al vendedor.
+                            socket.emit('rating:sendQualifyCustomer', { 'obje' : objetoSockect }); //enviamos al socket para que envia el mensaje con esteroides.
+
 
                         } else {
 
@@ -2156,7 +2256,8 @@
     const btnSellTrueSpinner = document.getElementById('btnSellTrueSpinner');
     //const idOrderBuyerTrue = document.getElementById('idOrderBuyerTrue');
     //const commentBuyerTrue = document.getElementById('commentBuyerTrue');
-    
+    console.log("idBuy.value .............", idBuy.value);
+    console.log("idSell.value .............", idSell.value);
         
     if (btnSellTrue){ 
 
@@ -2172,8 +2273,17 @@
                                       comment : commentBuyerTrue.value   
                                     };
 
+            
             if ( objectBuyerTrue.rating !== "" && objectBuyerTrue.comment !=="" ) {                        
             
+                const objetoSockect =  { idOrder : idOrderBuyerTrue.value,
+                                         rating : starHidden.value,  
+                                         comment : commentBuyerTrue.value,
+                                         iDBuy : idBuy.value,
+                                         iDSell : idSell.value   
+                                       }
+                console.log("objetoSockect .... :", objetoSockect); //Este objeto es para ser enviado al socket     
+
                 //este dato es enviado por el comprador como ultimo paso para cerrar la orden de compra efectiva.      
                 fetch('/negotiation-rating/sellTrue', {
 
@@ -2197,6 +2307,9 @@
                                 location.reload();
 
                             }, 5000);
+
+                            //paso 1: al obtener un ok del backend iniciamos el proceso de envio de la fecha de agneda de cita al vendedor.
+                            socket.emit('rating:sendQualifyOwner', { 'obje' : objetoSockect }); //enviamos al socket para que envia el mensaje con esteroides.
 
                         } else {
 
