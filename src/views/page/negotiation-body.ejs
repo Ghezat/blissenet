@@ -267,7 +267,7 @@
 
                                                 <div class="contentAgenda my-2">
                                                     <!-- lista de agenda dinamica -->
-                                                    <table class="table table-striped">
+                                                    <table class="table table-striped" style="font-size: 15px;">
                                                         <theader>
                                                             <tr>
                                                                 <th>Interesado</th> <th>Cita</th><th>Ver</th>
@@ -339,7 +339,7 @@
                                                     <p>Deje un comentario conciso de su experiencia a su comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
                                                 </div>  
 
-                                                <button class="btn btn-primary form-control my-3 py-2" id="btnSellTrue">Enviar calificación y comentario Pro</button>
+                                                <button class="btn btn-primary form-control my-3 py-2" id="btnSellTrue">Enviar calificación y comentario</button>
 
                                                 <button class="form-control btn btn-primary my-3 py-2 close" id="btnSellTrueSpinner" disabled>
                                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -581,7 +581,7 @@
                                                         <p>Deje un comentario conciso de su experiencia como comprador, indique de forma objetiva y en resumen su opinión sobre el intercambio. La comunidad valorará su comentario.</p>
                                                     </div>
 
-                                                    <button class="btn btn-primary form-control my-3 py-2" id="btnBuyerTrue">Enviar calificación y comentario Cli</button>
+                                                    <button class="btn btn-primary form-control my-3 py-2" id="btnBuyerTrue">Enviar calificación y comentario</button>
 
                                                     <button class="form-control btn btn-primary my-3 py-2 close" id="btnBuyerTrueSpinner" disabled>
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -1055,9 +1055,9 @@
 
                                 if (tbodyAgenda){
                                     if (iDNegoti == ele_id){
-                                        tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment} <i class="bi bi-eye-fill ms-2"></i> </td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
+                                        tbodyAgenda.innerHTML += ` <tr>  <td>${eleUsernameBuy}</td> <td>${appointment} </td> <td> <a class= "btn btn-sm btn-primary px-4" href="#"> <i class="bi bi-eye-fill"></i>  </td> </a>  </tr> `
                                     } else {
-                                        tbodyAgenda.innerHTML += `<tr><td>${eleUsernameBuy}</td> <td>${appointment}</td> <td> <a href="/negotiation-body/${id}"> <i class="bi bi-arrow-up-right-square-fill text-dark"></i> </a> </td> </tr>`
+                                        tbodyAgenda.innerHTML += ` <tr>  <td>${eleUsernameBuy}</td> <td>${appointment} </td> <td> <a class= "btn btn-sm btn-secondary px-4" href="/negotiation-body/${id}"> <i class="bi bi-eye-slash-fill"></i>  </td> </a> </tr>`
                                     }
                                 }    
                                 
@@ -1501,7 +1501,7 @@
             console.log("idUsername.value ..............", idUsername.value);//68add4dca09409e3310898e0
             console.log("idBuy.value .............", idBuy.value);
             if (idUsername.value === idBuy.value){
-                const DataAppointment = `Fecha propuesta por el interesado ${dateAppointment} a las ${timeValue} horas.`;
+                const DataAppointment = `<b> Cita establecida: </b> 📆${dateAppointment} a las ${timeValue} horas.`;
                 written.value = DataAppointment;
                 btnSenMessage.click();
                 written.value =""; //limpiamos el input written
@@ -1540,10 +1540,11 @@
             start = "⭐";
         }
 
+
         if (idNegotiation.value === orderId){ //aqui validamos que se ejeute en el documento justo por idOrder.
 
             if ( idUsername.value === iDBuy ){ //aqui solo envia el propietario de manera automatica.
-                const Qualify = `Calificacion realizada al anunciante: 💬${comment} ${start}`;
+                const Qualify = `<b> Calificación para el anunciante: </b> ${comment} ${start}`;
                 written.value = Qualify;
                 btnSenMessage.click();
                 written.value =""; 
@@ -1584,10 +1585,11 @@
             start = "⭐";
         }
 
+
         if (idNegotiation.value === orderId){ //aqui validamos que se ejeute en el documento justo por idOrder.
 
             if ( idUsername.value === iDSell ){ //aqui solo envia el propietario de manera automatica.
-                const Qualify = `Calificacion realizada al cliente: 💬${comment} ${start}`;
+                const Qualify = `<b> Calificación para el cliente: </b> ${comment} ${start}`;
                 written.value = Qualify;
                 btnSenMessage.click();
                 written.value =""; 
