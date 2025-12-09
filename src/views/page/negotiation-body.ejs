@@ -154,7 +154,7 @@
                                         <button class="nav-link active" id="information">Información</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="rateBuy">Calificar Comprador</button>
+                                        <button class="nav-link" id="rateBuy">Calificar Cliente</button>
                                     </li>
 
                                 </ul>
@@ -402,7 +402,7 @@
                                                     <div class="alert alert-dark mt-2">
                                                         <p>Usted ya ha dejado una calificación y un comentario sobre este intercambio. Puede Cerra la sala cuando desee. </p>
                                                     </div>
-                                                    <button class="btn form-control my-2 py-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala</button>
+                                                    <button class="btn form-control my-2 py-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala </button>
                                                 <% } else { %>
                                                     <div class="alert alert-dark mt-2">
                                                         <p>Usted ya ha cerrado esta sala, si requiere contactar con este comprador vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= negotiation.usernameBuy %>"><%= negotiation.usernameBuy %></a>  </p>
@@ -428,7 +428,7 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <button class="nav-link" id="rateSell"> Calificar Vendedor</button>
+                                        <button class="nav-link" id="rateSell"> Calificar Anunciante</button>
                                     </li>  
                                 </ul>
                                     
@@ -645,7 +645,7 @@
                                                     <div class="alert alert-dark my-2">
                                                         <p>Usted ya ha dejado una calificación y un comentario sobre este intercambio. Puede Cerra la sala cuando desee. </p>
                                                     </div>
-                                                    <button class="btn form-control my-3 py-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala</button>
+                                                    <button class="btn form-control my-3 py-2" id="btnCloseOperation" style="color: white; background-color: rgba(146,0,255,1);">Cerrar Sala </button>
                                                 <% } else { %>
                                                     <div class="alert alert-dark my-2">
                                                         <p>Usted ya ha cerrado esta sala, si requiere contactar con este vendedor vaya a su tienda y haga una pregunta en cualquiera de sus articulos. <a href="/account/<%= negotiation.usernameSell %>"><%= negotiation.usernameSell %></a>  </p>
@@ -1079,6 +1079,7 @@
         if (fullScreen === "false"){
 
             const idNegotiation = document.querySelector('#idNegotiation');
+            const indexedBuy = document.querySelector('.indexedBuy').value;
             const daysAvaible = document.querySelector('.daysInp').value;
             const rangeTimeAvailable = document.querySelector('.rangeTimeInp').value;//14:00,18:00  quiero que se transforme en [1400, 1800] un array con estos numeros quitar ":" para crear un nunemro y que sea de tipo number
 
@@ -1148,7 +1149,7 @@
 
             if (btnAppointment){
                 btnAppointment.addEventListener('click', ()=>{
-                    console.log("Hemos dsado a agendar");
+                    console.log("Hemos dado a agendar");
                     const time = timeInput.value;
                     const date = dateInput.value;
                     let existAppointment = false;
@@ -1202,7 +1203,7 @@
                             //console.log("+++++++++++++++++++++++++");
                             //console.log("dateValue :", dateValue);
                             //console.log("timeValue :", timeValue);
-                            const objectAppointment = { "dateValue" : dateValue, "timeValue" : timeValue};
+                            const objectAppointment = { "dateValue" : dateValue, "timeValue" : timeValue, negotiationID : id, indexedBuy : indexedBuy };
 
                             const formData = new FormData()
                                 formData.append('id', id);
@@ -1492,20 +1493,30 @@
   
         
     //socket.on('appointment:ReSendAppointment', dataFormated);
+    ////{ "dateValue" : dateValue, "timeValue" : timeValue, negotiationID : id, indexedBuy : indexedBuy };
     socket.on('appointment:ReSendAppointment', (dataFormated)=>{
         console.log("+++++++++++ ver +++++++++++");
         console.log("appointment:ReSendAppointment ....:", dataFormated); //{dateAppointmentFormated: '16-12-2025', timeValue: '19:00'}
+        const negotiationId = dataFormated.negotiationID;
         const dateAppointment = dataFormated.dateAppointmentFormated;
         const timeValue = dataFormated.timeValue;
     
-            console.log("idUsername.value ..............", idUsername.value);//68add4dca09409e3310898e0
+            console.log(" ver ");
+            console.log("negotiationId ..............", negotiationId); //undefined
+            console.log("idDocument.value ..............", idDocument.value); //6936fdbb5f93af5d3cb1b070
+
+            console.log("idUsername.value ..............", idUsername.value);
             console.log("idBuy.value .............", idBuy.value);
+        if ( negotiationId == idDocument.value ){
+
             if (idUsername.value === idBuy.value){
                 const DataAppointment = `<b> Cita establecida: </b> 📆${dateAppointment} a las ${timeValue} horas.`;
                 written.value = DataAppointment;
                 btnSenMessage.click();
                 written.value =""; //limpiamos el input written
             }
+
+        }    
 
     });
 
@@ -1596,6 +1607,41 @@
             }    
         }  
 
+    });
+
+
+    //socket.on('negotiation:ReCloseRoom', data); -->Sala Cerrada
+    socket.on('negotiation:ReCloseRoom', (data)=>{
+        //Este objeto es data { 'message': "Sala de negociación cerrada", "idNegotiation" : idOrder, indexedSell: '67e2fe3c34c69a33c17f7b0e', indexedBuy: '' }
+                
+        console.log("esto es data", data);
+        //{message: 'Sala de negociación cerrada', idNegotiation: '6936fdbb5f93af5d3cb1b070'}
+        const message = data.message;
+        const idNegotiation = data.idNegotiation;
+        const indexedSell = data.indexedSell;
+        const indexedBuy = data.indexedBuy;
+        //console.log("idDocument.value ..............", idDocument.value);
+        //console.log("idNegotiation ..............", idNegotiation);
+ 
+        if (idDocument.value  === idNegotiation){ //aqui validamos que se ejeute en el documento justo por idOrder.
+            //console.log("Estamos en la orden indicada");
+                      
+            if ( idUsername.value === indexedSell ) { //aqui solo envia el propietario de manera automatica.
+                //console.log("esto lo envia el anunciante");
+                console.log("esto es data", data);
+                written.value = `<b> ${message} por el anunciante. </b>`;
+                btnSenMessage.click();
+                written.value =""; 
+            } else if ( idUsername.value === indexedBuy ) {
+                console.log("esto lo envia el cliente");
+                console.log("esto es data", data);
+                written.value = `<b> ${message} por el cliente. </b>`;
+                btnSenMessage.click();
+                written.value =""; 
+            }  
+
+        }  
+ 
     });
 
     if (written){
@@ -2352,7 +2398,7 @@
 
 <script>
     //nuevo
-    //este boton cierra la sala de negociacion, el acto de cerrar es individual. si el comprador lo cierra solo su sala se cerrara igual pasara con el vendedor
+    //este boton cierra la sala de negociacion, el acto de cerrar es individual. Si el comprador lo cierra solo su sala se cerrara igual pasara con el vendedor
 
     const btnCloseOperation = document.getElementById('btnCloseOperation');
     const IndexedSell = document.querySelector('.indexedSell'); 
@@ -2388,8 +2434,7 @@
             formData.append('idOrder', iDOrder);
             formData.append('indexedBuy', indexedBuy);
             formData.append('indexedSell', indexedSell);
- 
-            
+             
             fetch('/negotiation-rating/closeOperation', {
                 method: "POST",
                 body: formData
@@ -2409,6 +2454,11 @@
                         setTimeout(() => {
                             window.location.href = `${domain}/buysell-list`;
                         }, 4000);
+
+                    
+                        socket.emit('appointment:closeRoom', {'message': "Sala de negociación cerrada", "idNegotiation" : iDOrder, indexedSell, indexedBuy })
+                        //paso 1 evir al socket.
+
 
                     } else {
 

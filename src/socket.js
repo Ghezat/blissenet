@@ -69,7 +69,8 @@ io.on('connection', (socket)=>{
     socket.on('appointment:sendAppointment', (data)=>{ //paso 2
         console.log("::::: Aqui llega el appointment de la negociacion :::::");
         console.log("appointment", data);
-        //{ "dateValue" : dateValue, "timeValue" : timeValue}
+        //{ "dateValue" : dateValue, "timeValue" : timeValue, negotiationID : id, indexedBuy : indexedBuy };
+        const negotiationID = data.obje.negotiationID;
         const dateAppointment = data.obje.dateValue;
         const timeValue = data.obje.timeValue;
         console.log("dateAppointment :", dateAppointment); //dateAppointment : 2025-12-16
@@ -77,7 +78,7 @@ io.on('connection', (socket)=>{
         console.log("dateApp ....:", dateApp);
         const dateAppointmentFormated = `${dateApp[2]}-${dateApp[1]}-${dateApp[0]}`;
         console.log("dateAppointmentFormated ....:", dateAppointmentFormated);
-        const dataFormated = { "dateAppointmentFormated" : dateAppointmentFormated, "timeValue" : timeValue};
+        const dataFormated = { "negotiationID" : negotiationID, "dateAppointmentFormated" : dateAppointmentFormated, "timeValue" : timeValue};
         io.emit('appointment:ReSendAppointment', dataFormated);
         //socket.on('appointment:ReSendAppointment', dataFormated);
     });
@@ -115,6 +116,25 @@ io.on('connection', (socket)=>{
         const dataFormated = { data };
         io.emit('rating:ReSendQualifyCustomer', dataFormated);
         //socket.on('rating:ReSendQualifyCustomer', dataFormated);
+    });
+
+    //socket.emit('appointment:closeRoom', paso 1 envir al socket.
+    //{ 'message': "Sala de negociación cerrada", "idNegotiation" : idOrder }
+    socket.on('appointment:closeRoom', (data)=>{
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: Envio de notificacion de cierre de sala :::::");
+        console.log("data .... :", data);
+        
+        //    ::::: Envio de notificacion de cierre de sala :::::
+        //    data .... : {
+        //      message: 'Sala de negociación cerrada',
+        //      idNegotiation: '6936fd7e5f93af5d3cb1afb5',
+        //      indexedSell: '67e2fe3c34c69a33c17f7b0e',
+        //      indexedBuy: ''
+        //    }
+        io.emit('negotiation:ReCloseRoom', data);
+        //socket.on('negotiation:ReCloseRoom', data);
+        
     });
 
 });
