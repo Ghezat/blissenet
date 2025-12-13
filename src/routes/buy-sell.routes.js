@@ -2083,6 +2083,7 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
       const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
       const mailhash = searchProfile.mailhash;
+      const country = searchProfile.country; const flag = searchProfile.flag; 
 
       async function NotificationRate(){
 
@@ -2112,10 +2113,11 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       async function storeRateComent() {
           //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
           
+          //commentatorData ={username, avatarPerfil, mailhash, country, flag}; por dataLogeado
           const newRateComment =  new modelStoreRate
             ({ 
               store: sellerId, logeado: customerId, markStar: rating, comment: comment, storeName: sellerName,
-              dataLogeado: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+              commentatorData: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash, country, flag }
             });
 
           const saveRateComment = await newRateComment.save();
@@ -2128,7 +2130,7 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
         .then(()=>{
           storeRateComent()
             .then(()=>{
-                //vamos a enviar la notificacion para que califiqye y comente el articulo en cuestion.
+                //vamos a enviar la notificacion para que califique y comente el articulo en cuestion.
                 NotificationRate()
                   .then(()=>{
                       const response = { code: "ok", message: "Calificación y comentario recibido." };
@@ -2191,6 +2193,7 @@ routes.post('/negotiation-rating/buyerTrue', async(req, res)=>{
       const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
       const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
       const mailhash = searchProfile.mailhash;
+      const country = searchProfile.country; const flag = searchProfile.flag;
       
       async function buyerRating(){
         await modelNegotiation.findByIdAndUpdate(idOrder, { ratingSeller : rating, CommentSeller : comment }, {new:true});            
@@ -2199,10 +2202,11 @@ routes.post('/negotiation-rating/buyerTrue', async(req, res)=>{
       async function storeRateComent() {
           //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
           
+          //commentatorData ={username, avatarPerfil, mailhash, country, flag}; por dataLogeado
           const newRateComment =  new modelStoreRate
             ({ 
               store: sellerId, logeado: customerId, markStar: rating, comment: comment, storeName: sellerName,
-              dataLogeado: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+              commentatorData: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash, country, flag }
             });
 
           const saveRateComment = await newRateComment.save();
@@ -2265,7 +2269,8 @@ routes.post('/buysell-body/sellTrue', async(req, res)=>{
 
       const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
       const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
-      const mailhash = searchProfile.mailhash;      
+      const mailhash = searchProfile.mailhash;
+      const country = searchProfile.country; const flag = searchProfile.flag;      
      
       async function buyerRating(){
         await modelBuysell.findByIdAndUpdate(idOrder, { ratingBuy : rating, CommentBuy : comment }, {new:true});            
@@ -2274,10 +2279,11 @@ routes.post('/buysell-body/sellTrue', async(req, res)=>{
       async function storeRateComent() {
           //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
           
+          //commentatorData ={username, avatarPerfil, mailhash, country, flag}; por dataLogeado
           const newRateComment =  new modelStoreRate
             ({ 
               store: customerId, logeado: sellerId, markStar: rating, comment: comment, storeName: customerName,
-              dataLogeado: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+              commentatorData: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash, country, flag }
             });
 
           const saveRateComment = await newRateComment.save();
@@ -2338,7 +2344,8 @@ routes.post('/negotiation-rating/sellTrue', async(req, res)=>{
 
       const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
       const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
-      const mailhash = searchProfile.mailhash;      
+      const mailhash = searchProfile.mailhash;   
+      const country = searchProfile.country; const flag = searchProfile.flag;   
      
       async function buyerRating(){
         await modelNegotiation.findByIdAndUpdate(idOrder, { ratingBuy : rating, CommentBuy : comment }, {new:true});            
@@ -2347,10 +2354,11 @@ routes.post('/negotiation-rating/sellTrue', async(req, res)=>{
       async function storeRateComent() {
           //aqui vamos a guardar los datos necesarios para tener los comentarios y estrellas en un solo lugar.
           
+          //commentatorData ={username, avatarPerfil, mailhash, country, flag}; por dataLogeado
           const newRateComment =  new modelStoreRate
             ({ 
               store: customerId, logeado: sellerId, markStar: rating, comment: comment, storeName: customerName,
-              dataLogeado: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+              commentatorData: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash, country, flag }
             });
 
           const saveRateComment = await newRateComment.save();

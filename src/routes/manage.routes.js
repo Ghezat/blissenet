@@ -86,7 +86,7 @@ routes.get('/myaccount/manage', async (req,res)=>{
                 boxPublisher.push(...resultRaffle)
             }
 
-            console.log("Este es el boxPublisher ------>", boxPublisher);
+            //console.log("Este es el boxPublisher ------>", boxPublisher);
             for (let i = 0; i < boxPublisher.length; i++) {
                 const ele = boxPublisher[i].paused;
                 console.log("este es el estado del atributo paused ----->", ele);
@@ -277,7 +277,7 @@ routes.get('/myaccount/manage/datafront', async(req, res)=>{
         boxPublisher.push(...resultRaffle)
     }
 
-    console.log("Este es el boxPublisher ------>", boxPublisher);
+    //console.log("Este es el boxPublisher ------>", boxPublisher);
     const data = boxPublisher;
     res.json({data, user});
  })

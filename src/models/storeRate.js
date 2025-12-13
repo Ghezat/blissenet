@@ -5,9 +5,10 @@ const storeRateSchema = new Schema({
     store : { type : String },  //_id de tienda que es el mismo id del users
     logeado : { type : String },  //_id del logeado que es el mismo id del users.
     markStar : { type : Number },  // puede ser 1 o 5
+    commentatorData : { type : Object }, //aqui va a estar un objeto asi commentatorData ={username, avatarPerfil, mailhash, country, flag};
     comment : { type : String },  // comentarios sobre la calificacion de la tienda. Es opcional. 
     storeName : { type : String }, //aqui guardamos el nombre de la tienda es para poder trabajar bien ya que toda la informacion son id
-    dataLogeado : { type : Object } //aqui va a estar un objeto asi {username, avatarPerfil, mailhash}
+    //dataLogeado : { type : Object } //aqui va a estar un objeto asi {username, avatarPerfil, mailhash} -->modelo viejo se ha actaulizado por el campo commentatorData
 
 },{
     timestamps : true
