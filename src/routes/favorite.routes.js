@@ -258,7 +258,8 @@ routes.post('/myfavorites', async (req, res)=>{
         if (searchFavorites.length !== 0){
             console.log('El producto ya esta guardado en favoritos');
 
-            const msg = "Anuncio ya guardado en favoritos.";
+            const msg = "Favorito eliminado.";
+            const deleteFavorites = await modelFavorites.findOneAndDelete({ indexed : User._id, id_product : IdProduct }); 
             res.json({ code: "ok", message: msg });
         } else {
             console.log('El producto no existe y se procederá a guardarse!')

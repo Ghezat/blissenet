@@ -178,6 +178,22 @@ main{
 
 /* ---------------------find loaderText -------------------------------- */
 
+.heartJump {
+    animation: jump 1s ease;
+}
+
+@keyframes jump {
+    0% {
+        transform: translateY(0); /* Posición inicial */
+    }
+    50% {
+        transform: translateY(-20px); /* Sube 20px */
+    }
+    100% {
+        transform: translateY(0); /* Vuelve a la posición inicial */
+    }
+}
+
 
 .spanTextArticle{
   font-family: "Cream Cake";

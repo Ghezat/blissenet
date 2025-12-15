@@ -11,7 +11,7 @@ const SchemaProfile = new Schema({
     company : { type : String }, //nombre de la compañia/empresa
     companyRif : { type : String }, //identificacion de la empresa
     geolocation : { type : Object}, //geolocation: { lon: '', lat: '' } objeto donde guardamos las coordenadas geograficas del este susuario.
-    locations: {
+/*     locations: {
            type: {
                type: String, // 'Point'
                enum: ['Point'],
@@ -21,7 +21,7 @@ const SchemaProfile = new Schema({
                type: [Number], // [lon, lat] array locations.coordinates
                required: true
            }
-    }, //este campo esta creado para optimizar las busquedas de aproximacion geografico
+    }, //este campo esta creado para optimizar las busquedas de aproximacion geografico */
     country : { type : String }, 
     countryCode : { type : String },  //codigo del pais
     flag : { type : String }, //bandera del pais del usuario 

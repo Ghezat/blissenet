@@ -171,6 +171,22 @@
     }
     /* fin de estilos del boton processing ------------------------- */
 
+    .heartJump {
+        animation: jump 1s ease;
+    }
+
+    @keyframes jump {
+        0% {
+            transform: translateY(0); /* Posición inicial */
+        }
+        50% {
+            transform: translateY(-20px); /* Sube 20px */
+        }
+        100% {
+            transform: translateY(0); /* Vuelve a la posición inicial */
+        }
+    }
+
 /* Css para el boton de compra */
 
   section.containerBuy_btn{
@@ -276,7 +292,7 @@
     <!-- <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> -->
     <audio src="/sound/Note-efect.mp3" id="efectSoundNewBid"></audio>
     <audio src="/sound/Icon-efect.mp3" id="efectSoundNewNote"></audio> 
-     
+    <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio> 
 
     <% const countFormat = Math.floor(search.count) %>
     <!-- esta variable desgloza la fecha de creacion del anuncio -->
@@ -582,82 +598,48 @@
                             
                        </div>
                 </div>
-            <% }; %>
+            <% }; %>    
+                        
 
-
-
-                <!-- tarjeta de precio -->
-                <div class="card my-2 p-2">
+            <!-- tarjeta reporte Contenido Inapropiado -->
+            <% if (user) {  %>
+                <% if (user.username !== search.username) { %>    
+                <div class="card my-2 p-2 alert-danger">
                     <div class="card-body">
 
-                        <!-- viejoo <span class="bg-warning px-1 py-1 rounded-2 pe-5" style="font-size: 18px; clip-path: polygon(0% 0%, 75% 0%, 82% 50%, 75% 100%, 0% 100%);">Precio: <i class="bi bi-currency-dollar"></i><%= search.price %></span>  -->
-                        <a class="ui yellow tag label" style="font-size: 16px;">  <span class="text-dark"> <i class="bi bi-currency-dollar"></i><%= priceFormat %></a>  </span>  <hr>
+                        <p class="d-flex justify-content-between fw-bold mb-1">
+                        
+                            <a href="/terms" class=" text-decoration-none" style="color: #842029;">Reporte el problema <i class="bi bi-info-circle ms-2"></i></a>
+                        
+                            <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <i class="bi bi-chevron-down" style="color: #842029;"></i> </a>
+                        
+                        </p>
+                    
+                        
+                        <div class="collapse" id="collapseExample">
+                            <p class="mb-2">¿Cree que este contenido no es apto para la comunidad? <span class="ps-1 btnReportar text-decoration-underline fst-italic fw-bold" style="cursor: pointer;">Reporte aquí</span></p>
 
-                    <% if (user) {  %>        
-                        <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                            <label class="form-check-label" for="flexCheckChecked" style="user-select: none;">
-                              Selecciona para Comparar
-                            </label>
-                        </div>
-                        <p class="me-1 my-1 favoriteProduct" style="user-select: none;"> <i class="bi bi-heart me-1 linkHeart cursor-pointer"></i> Articulo como Favorito  <input type="hidden" value="<%= search.department %>"><input type="hidden" value="<%= search._id %>"> </p>
-                        <p class="me-1 mt-1 mb-3 favoriteStore" style="user-select: none;"> <i class="bi bi-bookmark-check me-1 starData cursor-pointer"></i> Seguir esta Tienda  <!-- usuario que esta logeado --><input type="hidden" value="<%= user._id %>">   <!-- id del usuario del anuncio --><input type="hidden" value="<%= search.user_id %>">  </p>
-                      
-                    <% } else { %>
-                        <div class="p-0 form-group">
+                            <form action="/admin/report" method="post" id="formReportar" class="close">
 
-                            <span style="font-size: 18px;">
-                                <strong class="me-2">No estas Logeado</strong>
-                            </span>  
-
-                            <a class="btn btn-dark form-control my-3 py-2" style="font-size: 18px;" href="/myaccount/signin-change"> 
-                                <i class="bi bi-lightbulb-fill lightbulbAnimation me-1" ></i> Iniciar sesión aquí
-                            </a> 
-                            <!-- <p> <span class="bg-dark ps-2 py-2 rounded-2 text-light" style=" padding-right: 50px;  clip-path: polygon(0% 0%, 75% 0%, 84% 50%, 75% 100%, 0% 100%);"><i class="bi bi-shop-window me-2"></i><%= search.username %></p> -->
-                        </div>
-                    <% }; %>    
+                                <div class="form-group">
+                                    <input type="hidden" value="<%= user.username %>" name="visitante"> <!-- aqui el user visitante -->
+                                    <input type="hidden" value="<%= search.username %>" name="anunciante"> <!-- aqui el user anunciante -->
+                                    <input type="hidden" value="<%= search.user_id %>" name="id_anunciante"> <!-- aqui el id del anunciante -->
+                                    <input type="hidden" value="<%= search.department %>" name="depart"> <!-- aqui el department -->
+                                    <input type="hidden" value="<%= search.title %>" name="title"> <!-- aqui el title -->
+                                    <input type="hidden" value="<%= search._id %>" name="id_title"> <!-- aqui el id del articulo -->
+                                    <!-- <input type="text" class="form-control my-1" name="denuncia" placeholder="Resuma su denuncia" maxlength="100" required> -->
+                                    <textarea class="my-1 form-control" name="denuncia" placeholder="Resuma su denuncia" cols="30" rows="2" maxlength="120" required></textarea>
+                                    <button type="submit" class="form-control btn btn-danger my-2"> Reportar anuncio</button>
+                                </div>
+                                
+                            </form>
+                        </div>    
                         
                     </div>
                 </div>
-
-                <!-- tarjeta reporte Contenido Inapropiado -->
-                <% if (user) {  %>
-                    <% if (user.username !== search.username) { %>    
-                    <div class="card my-2 p-2 alert-danger">
-                        <div class="card-body">
-
-                            <p class="d-flex justify-content-between fw-bold mb-1">
-                            
-                                <a href="/terms" class=" text-decoration-none" style="color: #842029;">Reporte el problema <i class="bi bi-info-circle ms-2"></i></a>
-                            
-                                <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <i class="bi bi-chevron-down" style="color: #842029;"></i> </a>
-                            
-                            </p>
-                        
-                            
-                            <div class="collapse" id="collapseExample">
-                                <p class="mb-2">¿Cree que este contenido no es apto para la comunidad? <span class="ps-1 btnReportar text-decoration-underline fst-italic fw-bold" style="cursor: pointer;">Reporte aquí</span></p>
-
-                                <form action="/admin/report" method="post" id="formReportar" class="close">
-
-                                    <div class="form-group">
-                                        <input type="hidden" value="<%= user.username %>" name="visitante"> <!-- aqui el user visitante -->
-                                        <input type="hidden" value="<%= search.username %>" name="anunciante"> <!-- aqui el user anunciante -->
-                                        <input type="hidden" value="<%= search.user_id %>" name="id_anunciante"> <!-- aqui el id del anunciante -->
-                                        <input type="hidden" value="<%= search.department %>" name="depart"> <!-- aqui el department -->
-                                        <input type="hidden" value="<%= search.title %>" name="title"> <!-- aqui el title -->
-                                        <input type="hidden" value="<%= search._id %>" name="id_title"> <!-- aqui el id del articulo -->
-                                        <!-- <input type="text" class="form-control my-1" name="denuncia" placeholder="Resuma su denuncia" maxlength="100" required> -->
-                                        <textarea class="my-1 form-control" name="denuncia" placeholder="Resuma su denuncia" cols="30" rows="2" maxlength="120" required></textarea>
-                                        <button type="submit" class="form-control btn btn-danger my-2"> Reportar anuncio</button>
-                                    </div>
-                                    
-                                </form>
-                            </div>    
-                            
-                        </div>
-                    </div>
-                    <% }; %>
                 <% }; %>
+            <% }; %>
             </div>  
              
 
@@ -691,8 +673,40 @@
                         </div>
                        
                         
-                        <div class="containerViewImg border">
+                        <div class="containerViewImg border" style="position: relative;">
                             <img src="<%= search.images[0].url %>" id="mainImage" class="imgView rounded-1 zoomImage" style="object-fit: cover; width: 100%;" alt="<%= search.title %>">                               
+                            
+                            <% if (user) {  %>        
+                                <div class="containertHeart d-flex justify-content-center align-items-center shadow"  style="position: absolute; background-color: rgba(255, 255, 255, 0.7);  top: 28px; right: 28px; width: 46px; height: 46px; border-radius: 50%;">
+                    
+                                    <% if (favoritesOfUser.length !== 0) { %>
+                                        <% let heartDisplayed = false; %> <!-- Variable de control -->
+                                        <% favoritesOfUser.forEach((favorite) => { %>
+                                            <% const idProduct = favorite.id_product; %>
+                                            
+                                            <% if (productId == idProduct) { %>
+                                            
+                                                <i class="bi bi-heart-fill linkHeart text-danger mt-1" style="cursor: pointer; font-size: 26px;">
+                                                    <input type="hidden" value="<%= depart %>"><input type="hidden" value="<%= productId %>">
+                                                </i>
+                                                
+                                                <% heartDisplayed = true; %> <!-- Se ha mostrado un corazón lleno -->
+                                            <% } %>
+                                        <% }); %>
+                                        
+                                        <% if (!heartDisplayed) { %> <!-- Solo muestra el corazón vacío si no se mostró el lleno -->
+                                            
+                                            <i class="bi bi-heart linkHeart mt-1" style="cursor: pointer; font-size: 26px;">
+                                                <input type="hidden" value="<%= depart %>"> <input type="hidden" value="<%= productId %>">
+                                            </i>
+                                            
+
+                                        <% } %>
+                                    <% } %>
+                                    
+                                </div>    
+                            <% } %>      
+                            
                         </div>                         
 
 
@@ -1967,16 +1981,8 @@
   });
 
 </script>
-<!-- 
-html
-<div class="mb-1 border border-danger" id="showContent">
-    Quiero que aparesca el texto tal cual lo hace pero que solo se vea en primera instancia un poco mas de 
-    tres lineas o un max. de 30 palabras y que se vea un label que diga ...ver mas. asi como lo tiene facebook
-    puede ser un button pero que no se vea que es un boton. y al darle se expanda y se vea todo el texto. y en este momento
-    aparece otro label que dice, ...ver menos. de esta manera el usuario puede decidir si ver mas o menos el texto. 
-    lo importante es que en la primera se vea menos con el texto ...ver mas.
-</div>
-html -->
+
+
 
 <script>
     //comentario explicativo
@@ -4974,50 +4980,70 @@ html -->
 
 <% if ( user !== undefined ) { %>
 
+    <!-- script que controla el corazon de favorito -->
     <script>
-
-        const favoriteProduct = document.querySelector('.favoriteProduct');
+        //este script es para manejar la accion de los favoritos dentro de la tienda.
         const linkHeart = document.querySelector('.linkHeart')
-        favoriteProduct.addEventListener('click', ()=>{
-          
-          efecto()
-          setInterval( normalHeart, 2000)
-          console.log("favoriteProduct --->", favoriteProduct.childNodes)
-          //console.log("depart --->",favoriteProduct.childNodes[3].value)
-          //console.log("id --->",favoriteProduct.childNodes[4].value)
-          const depart = favoriteProduct.childNodes[3].value;
-          const id = favoriteProduct.childNodes[4].value;
+  
+        linkHeart.addEventListener('click', () => {
 
-          const datos = {
-            depart : depart,
-            id : id
-          }
-          console.log("Esto es datos ---->", datos);
+            efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+            efectSoundExpan.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
 
-          fetch('/myfavorites', {
+            efecto() //activamos la funcion
+
+            function efecto() {
+
+                const biHeart = linkHeart.classList.contains('bi-heart');
+                if (biHeart){
+                    //corazon vacio se debe colocar lleno
+                    linkHeart.classList.remove('bi-heart', 'text-dark', 'heartJump');
+                    linkHeart.classList.add('bi-heart-fill', 'text-danger', 'heartJump');
+
+                } else {
+                    //corazon lleno se debe colocar vacio
+                    linkHeart.classList.remove('bi-heart-fill', 'text-danger', 'heartJump');
+                    linkHeart.classList.add('bi-heart', 'text-dark');
+                }
+
+            }
+
+            console.log("children :", linkHeart.children )
+            console.log(linkHeart.children[0].value)
+            console.log(linkHeart.children[1].value)
+            const depart = linkHeart.children[0].value;
+            const id = linkHeart.children[1].value;
+            console.log("depart :",depart);
+            console.log("id :", id);
+
+            const datos = {
+            depart: depart,
+            id: id
+            } 
+
+            fetch('/myfavorites', {
 
             method: "post",
             body: JSON.stringify(datos),
-            headers: {"content-type" : "application/json"}
+            headers: { "content-type": "application/json" }
 
-          })
-            .then(response =>response.json() )
-            .then( jsonx => console.log(jsonx))
-            .catch( err => console.log(err));
+            })
+            .then(response => response.json())
+            .then(jsonx => {
+                console.log("Esto llega del backend cuando agregamos un anuncio a favorito", jsonx)
+                const code = jsonx.code;
+                const message = jsonx.message;
+                console.log("code :", code);
+                console.log("message :", message);
+
+                mostrarToast( message , 'right', 'info', '¡ Hecho !', false ); // Agrega título aquí
+
+            }) 
+            .catch(err => console.log(err));
 
         })
-      
-
-        function efecto(){
-            linkHeart.classList.remove('bi-heart');
-            linkHeart.classList.add('bi-heart-fill')
-        }
-
-        function normalHeart(){
-            linkHeart.classList.remove('bi-heart-fill');
-            linkHeart.classList.add('bi-heart')
-        }
-
 
 
     </script>

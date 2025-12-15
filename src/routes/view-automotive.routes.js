@@ -4,6 +4,7 @@ const modelUser = require('../models/user.js');
 const modelAutomotive = require('../models/automotive.js');
 const modelMessages = require('../models/messages.js');
 const modelProfile = require('../models/profile.js');
+const modelFavorites = require('../models/favorites.js');
 
 routes.get('/view-automotive', async (req, res)=>{
     const user = req.session.user;
@@ -37,6 +38,9 @@ routes.get('/view-automotive', async (req, res)=>{
         console.log("Aqui el profile de la cuenta", searchProfile);
         console.log("este es el user desde la view-atomotive: ",  user);
 
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
+
         if ( searcherCache ){
             console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
             const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode } ,{ paused : false }  ] }, options );       
@@ -46,7 +50,7 @@ routes.get('/view-automotive', async (req, res)=>{
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         } else {
             const searcherCache = null;
@@ -56,7 +60,7 @@ routes.get('/view-automotive', async (req, res)=>{
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         }
 
@@ -132,6 +136,8 @@ routes.post('/view-automotive', async (req, res)=>{
         searchProfile = await modelProfile.find({ indexed : user._id });
         console.log("Aqui el profile de la cuenta", searchProfile);
     
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
 
         if (category == "All" && searcher ==="" ){
 
@@ -147,7 +153,7 @@ routes.post('/view-automotive', async (req, res)=>{
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
                 
-            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });    
+            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });    
 
         } else if (category == "All" && searcher !== "") { 
     
@@ -164,7 +170,7 @@ routes.post('/view-automotive', async (req, res)=>{
             let subCategory = null;  
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
                 
-            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });    
+            res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });    
 
         } else if (category !== "All" && category !== undefined && searcher !=="") {
             
@@ -177,7 +183,7 @@ routes.post('/view-automotive', async (req, res)=>{
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
 
@@ -188,7 +194,7 @@ routes.post('/view-automotive', async (req, res)=>{
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }
         
@@ -204,7 +210,7 @@ routes.post('/view-automotive', async (req, res)=>{
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
                 console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
@@ -217,7 +223,7 @@ routes.post('/view-automotive', async (req, res)=>{
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }        
         }
@@ -350,6 +356,9 @@ routes.get('/view-automotive/type1/:searcher/:stateprovince', async (req, res)=>
         console.log("Aqui el profile de la cuenta", searchProfile);
         console.log("este es el user desde la view-artes: ",  user);
         console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
         
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
@@ -359,7 +368,7 @@ routes.get('/view-automotive/type1/:searcher/:stateprovince', async (req, res)=>
         const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -406,6 +415,9 @@ routes.get('/view-automotive/type1/:stateprovince', async (req, res)=>{
         console.log("este es el user desde la view-artes: ",  user);
         console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
         
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
+
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
         const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }).count();
@@ -414,7 +426,7 @@ routes.get('/view-automotive/type1/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -463,6 +475,9 @@ routes.get('/view-automotive/type2/:searcher/:category/:stateprovince', async (r
         console.log("este es el user desde la view-services: ",  user);
         console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
         console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
         
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
@@ -472,7 +487,7 @@ routes.get('/view-automotive/type2/:searcher/:category/:stateprovince', async (r
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -521,6 +536,9 @@ routes.get('/view-automotive/type2/:category/:stateprovince', async (req, res)=>
         console.log("Aqui debo mostrar un resultado de Category --->", category);
         console.log("Estamos en type 2 sin Search")
         
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
+
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
         const countSearch = await modelAutomotive.find({$and : [{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }).count();
@@ -529,7 +547,7 @@ routes.get('/view-automotive/type2/:category/:stateprovince', async (req, res)=>
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -577,6 +595,8 @@ routes.get('/view-automotive/type2/:category/', async (req, res)=>{
         console.log("Aqui debo mostrar un resultado de Category --->", category);
         console.log("Estamos en type 2 sin Search ni estados");
         
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
         
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ countryCode : countryMarketCode },{ paused : false },{ category } ] }, options  );
         console.log("cardArticleAutomotive :", cardArticleAutomotive);
@@ -587,7 +607,7 @@ routes.get('/view-automotive/type2/:category/', async (req, res)=>{
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [{ countryCode : countryMarketCode },{ paused : false },{ category }] }}, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -638,6 +658,9 @@ routes.get('/view-automotive/type3/:searcher/:category/:sub_category/:stateprovi
         console.log("este es el user desde la view-artes: ",  user);
         console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
         console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
         
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
@@ -647,7 +670,7 @@ routes.get('/view-automotive/type3/:searcher/:category/:sub_category/:stateprovi
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
     
     } else {
 
@@ -696,6 +719,9 @@ routes.get('/view-automotive/type3/:category/:sub_category/:stateprovince', asyn
         console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
         console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
+
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
         const countSearch = await modelAutomotive.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
@@ -704,7 +730,7 @@ routes.get('/view-automotive/type3/:category/:sub_category/:stateprovince', asyn
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -752,6 +778,8 @@ routes.get('/view-automotive/type3/:category/:sub_category/', async (req, res)=>
         console.log("Aqui debo mostrar un resultado de Category --->", category);
         console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
     
         const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }, options  );
         console.log(cardArticleAutomotive);
@@ -761,7 +789,7 @@ routes.get('/view-automotive/type3/:category/:sub_category/', async (req, res)=>
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 

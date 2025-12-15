@@ -17,7 +17,7 @@ const modelRaffleHistory = require('../models/raffleHistory.js');
 const modelTickets = require('../models/tickets.js');
 const modelInvoice = require('../models/invoice.js');
 const modelBankUser = require('../models/bankUser.js');
-
+const modelFavorites = require('../models/favorites.js');
 
 const modelMessages = require('../models/messages.js');
 const modelArtAndArticle = require('../models/rateArtAndArticle.js');
@@ -72,13 +72,16 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
     req.session.productId = productId; 
     const countMessages = req.session.countMessages; //contador de mensajes
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //contador de alertas de negociación.
-    let searchProfile;
+    let searchProfile, favoritesOfUser;
            
         
     if (user){
         //console.log("Esto es user._id ------>", user._id );
         searchProfile = await modelProfile.find({ indexed : user._id });
         //console.log("Aqui el profile de la cuenta del visitante -->", searchProfile);
+
+        favoritesOfUser = await modelFavorites.find({indexed: user._id}); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
     }
 
     //console.log('este es el departamento ----->', depart)
@@ -125,7 +128,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const RateThisArticle = await modelArtAndArticle.find({department : depart, productId})
             console.log("RateThisArticle :", RateThisArticle); 
   
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, RateThisArticle });
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, RateThisArticle, favoritesOfUser });
         
         } else {
         
@@ -167,7 +170,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
     
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, favoritesOfUser});
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
@@ -209,7 +212,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const RateThisArticle = await modelArtAndArticle.find({department : depart, productId})
             console.log("RateThisArticle :", RateThisArticle);
 
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, RateThisArticle});  
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, RateThisArticle, favoritesOfUser});  
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
@@ -251,7 +254,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             //console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
             console.log("reportDone :", reportDone);
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});       
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, favoritesOfUser});       
 
         } else {
             //esta pagina se mostrara si el producto no existe pero debemos precisar que no existe por haber sido eliminado.
@@ -291,7 +294,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
         
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});      
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, favoritesOfUser});      
 
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
@@ -328,7 +331,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
             
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});          
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, favoritesOfUser});          
             
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
@@ -365,7 +368,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
 
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, favoritesOfUser});
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
@@ -401,7 +404,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             const viewMessage = await modelMessages.find({productId : productId}).sort({createdAt : -1})
             console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
         
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, favoritesOfUser});
         } else {
             res.render('page/unknown-allDeparts', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }     
@@ -438,7 +441,7 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
             //console.log("aqui los mensajes de este articulo: ", viewMessage);//aqui un array con todos las preguntas que se han hecho a este articulo determinado.
 
             //console.log(":::::: Esto es search ::::::" , search);
-            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport});
+            res.render('page/view-general-products', {user, usernameSell, store, productId, search, depart, viewMessage, countMessages, countNegotiationsBuySell, searchProfile, reportDone, reportSuccess, errorReport, favoritesOfUser});
         } else {            
             res.render('page/unknown-auction', {user, searchProfile, countMessages, countNegotiationsBuySell});
         }
