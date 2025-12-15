@@ -706,6 +706,9 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
         const Account = await modelUser.find({ username : account }); //esto hay que acomodar hay que buscar por id
         //console.log("Este es la data del account que queremos visitar ...", Account);
 
+        const favoritesOfUser = await modelFavorites.find({indexed:userId}); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);
+
         if (Account.length !== 0){// si la cuenta (user) a la que se quiere acceder existe (tendra una longitud diferente a 0, entonces ejecuta el bloque siguiente)
 
             const accountId = Account[0]._id; //esto es un array y dentro esta el objeto al que queremos acceder
@@ -810,7 +813,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
 
                         } else if (receive == "first"){
 
@@ -824,7 +827,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             //console.log("totalPagina :  ", totalPagina);
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
 
                         } else if (receive == "next"){
                             console.log("Estamos en paginate next ******************")
@@ -845,7 +848,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
                                 console.log("newBox ver estamo sen next---->", newBox)
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
               
                             }
                 
@@ -870,7 +873,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
                             } 
                 
 
@@ -903,7 +906,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
 
                         }
                   
@@ -975,7 +978,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             newBox = boxPublisher.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
 
                         } else if (receive == "first"){
 
@@ -989,7 +992,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                             //console.log("totalPagina :  ", totalPagina);
                             const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                            res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
 
                         } else if (receive == "next"){
 
@@ -1009,7 +1012,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
                 
                             }
                 
@@ -1034,7 +1037,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                                 //console.log("totalPagina :  ", totalPagina);
                                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
                             } 
                 
 
@@ -1067,7 +1070,7 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
 
-                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                        res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
 
                         }
                   
@@ -1474,7 +1477,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
         const url = `${store}`;
         let searchProfile;
         let searchBanner;
-        let userId;
+        let userId, favoritesOfUser;
         const boxPublisher = [];
         let boxOffert = [];
         const account = store;
@@ -1493,6 +1496,9 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
             userId = user._id; //usaremos con el indexed en la coleccion profile.
             searchProfile = await modelProfile.find({ indexed : userId });
             //console.log("Aqui el profile de la cuenta", searchProfile);
+
+            favoritesOfUser = await modelFavorites.find({indexed:userId}); //todos los favoritos de este usuario,
+            console.log("favoritesOfUser ....... :", favoritesOfUser);
         } else {
             searchProfile = [];
         }    
@@ -1649,7 +1655,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
     
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
     
             } else if (receive == "first"){
     
@@ -1663,7 +1669,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                 //console.log("totalPagina :  ", totalPagina);
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
     
             } else if (receive == "next"){
     
@@ -1681,7 +1687,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
         
                 }
         
@@ -1704,7 +1710,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
                 } 
         
     
@@ -1721,7 +1727,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                 //console.log("totalPagina :  ", totalPagina);
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
     
             }
     
@@ -1792,7 +1798,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
     
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
     
             } else if (receive == "first"){
     
@@ -1806,7 +1812,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                 //console.log("totalPagina :  ", totalPagina);
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
     
             } else if (receive == "next"){
     
@@ -1824,7 +1830,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
         
                 }
         
@@ -1847,7 +1853,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                     //console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                    res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
                 } 
         
     
@@ -1864,7 +1870,7 @@ routes.get('/account/search/:store/:segment/:element', async (req, res)=>{
                 //console.log("totalPagina :  ", totalPagina);
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
     
-                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert });
+                res.render('page/account', { newBox, paginate, searchBanner, user, Account, storeProfile, searchProfile, boxPublisher, countMessages, countNegotiationsBuySell, segment, statusFollow, boxOffert, favoritesOfUser });
     
             }
     
