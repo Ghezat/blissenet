@@ -4,6 +4,7 @@ const modelUser = require('../models/user.js');
 const modelAuction = require('../models/auction.js');
 const modelMessages = require('../models/messages.js');
 const modelProfile = require('../models/profile.js');
+const modelFavorites = require('../models/favorites.js');
             
 
 routes.get('/view-auction/', async (req, res)=>{
@@ -35,7 +36,10 @@ routes.get('/view-auction/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);   
    
         console.log("este es el user desde la view-auction: ",  user);
         if ( searcherCache ){
@@ -47,7 +51,7 @@ routes.get('/view-auction/', async (req, res)=>{
             const categoryAndSub = await modelAuction.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         } else {
             const searcherCache = null;
@@ -57,7 +61,7 @@ routes.get('/view-auction/', async (req, res)=>{
             const categoryAndSub = await modelAuction.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         }
 
@@ -128,7 +132,10 @@ routes.post('/view-auction/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
 
         if (category == "All" && searcher ===""){
 
@@ -144,7 +151,7 @@ routes.post('/view-auction/', async (req, res)=>{
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
 
-            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
         } else if (category == "All" && searcher !== "") { 
     
@@ -161,7 +168,7 @@ routes.post('/view-auction/', async (req, res)=>{
             let subCategory = null;  
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
                 
-            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });    
+            res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });    
         
 
         } else if (category !== "All" && category !== undefined && searcher !=="") {
@@ -175,7 +182,7 @@ routes.post('/view-auction/', async (req, res)=>{
                 const categoryAndSub = await modelAuction.aggregate([ { $match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
 
@@ -186,7 +193,7 @@ routes.post('/view-auction/', async (req, res)=>{
                 const categoryAndSub = await modelAuction.aggregate([ { $match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }
 
@@ -202,7 +209,7 @@ routes.post('/view-auction/', async (req, res)=>{
                 const categoryAndSub = await modelAuction.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
                 console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
@@ -215,7 +222,7 @@ routes.post('/view-auction/', async (req, res)=>{
                 const categoryAndSub = await modelAuction.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }        
         }
@@ -344,9 +351,12 @@ routes.get('/view-auction/type1/:searcher/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
         const cardArticleAuction = await modelAuction.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleAuction);
@@ -356,7 +366,7 @@ routes.get('/view-auction/type1/:searcher/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelAuction.aggregate([ {$match: {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -399,9 +409,12 @@ routes.get('/view-auction/type1/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
         const cardArticleAuction = await modelAuction.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleAuction);
@@ -411,7 +424,7 @@ routes.get('/view-auction/type1/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelAuction.aggregate([ {$match: {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -456,10 +469,13 @@ routes.get('view-auction/type2/:searcher/:category/:stateprovince', async (req, 
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);           
         
         const cardArticleAuction = await modelAuction.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category },{state_province : State} ] }, options  );
         console.log(cardArticleAuction);
@@ -469,7 +485,7 @@ routes.get('view-auction/type2/:searcher/:category/:stateprovince', async (req, 
         const categoryAndSub = await modelAuction.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -513,10 +529,13 @@ routes.get('/view-auction/type2/:category/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search")
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search")
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
         
         const cardArticleAuction = await modelAuction.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{state_province : State} ] }, options  );
         console.log(cardArticleAuction);
@@ -526,7 +545,7 @@ routes.get('/view-auction/type2/:category/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelAuction.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -569,11 +588,13 @@ routes.get('/view-auction/type2/:category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search ni estados");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search ni estados");
         
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);           
         
         const cardArticleAuction = await modelAuction.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }, options  );
         console.log("cardArticleAuction :", cardArticleAuction);
@@ -584,7 +605,7 @@ routes.get('/view-auction/type2/:category/', async (req, res)=>{
         const categoryAndSub = await modelAuction.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -633,10 +654,13 @@ routes.get('/view-auction/type3/:searcher/:category/:sub_category/:stateprovince
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
         
         const cardArticleAuction = await modelAuction.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleAuction);
@@ -646,7 +670,7 @@ routes.get('/view-auction/type3/:searcher/:category/:sub_category/:stateprovince
         const categoryAndSub = await modelAuction.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -689,13 +713,15 @@ routes.get('/view-auction/type3/:category/:sub_category/:stateprovince', async (
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
-            
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);            
+
         const cardArticleAuction = await modelAuction.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State} ] }, options  );
         console.log(cardArticleAuction);
         const countSearch = await modelAuction.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State} ] }).count();
@@ -704,7 +730,7 @@ routes.get('/view-auction/type3/:category/:sub_category/:stateprovince', async (
         const categoryAndSub = await modelAuction.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -747,12 +773,14 @@ routes.get('/view-auction/type3/:category/:sub_category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-auction: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-auction: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
-    
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);      
+
         const cardArticleAuction = await modelAuction.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }] }, options  );
         console.log(cardArticleAuction);
         const countSearch = await modelAuction.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }).count();
@@ -761,7 +789,7 @@ routes.get('/view-auction/type3/:category/:sub_category/', async (req, res)=>{
         const categoryAndSub = await modelAuction.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-auction', { user, searchProfile, cardArticleAuction, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 

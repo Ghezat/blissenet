@@ -4,7 +4,7 @@ const modelUser = require('../models/user.js');
 const modelRaffle = require('../models/raffle.js');
 const modelMessages = require('../models/messages.js');
 const modelProfile = require('../models/profile.js');
-
+const modelFavorites = require('../models/favorites.js');
 
 routes.get('/view-raffles/', async (req, res)=>{
     const user = req.session.user;
@@ -38,6 +38,9 @@ routes.get('/view-raffles/', async (req, res)=>{
         console.log("Aqui el profile de la cuenta", searchProfile);   
         console.log("este es el user desde la view-raffles: ",  user);
 
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
+
         if ( searcherCache ){
             console.log("Estoy en el seccion que tiene valor el searcherCache", searcherCache);
             const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
@@ -47,7 +50,7 @@ routes.get('/view-raffles/', async (req, res)=>{
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         } else {
             const searcherCache = null;
@@ -57,7 +60,7 @@ routes.get('/view-raffles/', async (req, res)=>{
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         }
 
@@ -127,6 +130,9 @@ routes.post('/view-raffles/', async (req, res)=>{
 
         searchProfile = await modelProfile.find({ indexed : user._id });
         console.log("Aqui el profile de la cuenta", searchProfile);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);      
    
         if (category == "All" && searcher ===""){
 
@@ -142,7 +148,7 @@ routes.post('/view-raffles/', async (req, res)=>{
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
 
-            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
         } else if (category == "All" && searcher !== "") { 
     
@@ -159,7 +165,7 @@ routes.post('/view-raffles/', async (req, res)=>{
             let subCategory = null;  
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
                 
-            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });    
+            res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });    
         
 
         } else if (category !== "All" && category !== undefined && searcher !=="") {
@@ -173,7 +179,7 @@ routes.post('/view-raffles/', async (req, res)=>{
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
 
@@ -184,7 +190,7 @@ routes.post('/view-raffles/', async (req, res)=>{
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }
 
@@ -200,7 +206,7 @@ routes.post('/view-raffles/', async (req, res)=>{
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
                 console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
@@ -213,7 +219,7 @@ routes.post('/view-raffles/', async (req, res)=>{
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }        
         }
@@ -342,9 +348,12 @@ routes.get('/view-raffles/type1/:searcher/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
         const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
@@ -354,7 +363,7 @@ routes.get('/view-raffles/type1/:searcher/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -397,9 +406,12 @@ routes.get('/view-raffles/type1/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
 
         const cardArticleRaffle = await modelRaffle.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
@@ -409,7 +421,7 @@ routes.get('/view-raffles/type1/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -454,10 +466,13 @@ routes.get('view-raffles/type2/:searcher/:category/:stateprovince', async (req, 
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
         
         const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
@@ -467,7 +482,7 @@ routes.get('view-raffles/type2/:searcher/:category/:stateprovince', async (req, 
         const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -512,10 +527,13 @@ routes.get('/view-raffles/type2/:category/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search")
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search")
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);             
         
         const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
@@ -525,7 +543,7 @@ routes.get('/view-raffles/type2/:category/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -569,11 +587,13 @@ routes.get('/view-raffles/type2/:category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search ni estados");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search ni estados");
         
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);           
         
         const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }  ] }, options  );
         console.log("cardArticleRaffle :", cardArticleRaffle);
@@ -584,7 +604,7 @@ routes.get('/view-raffles/type2/:category/', async (req, res)=>{
         const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -632,10 +652,13 @@ routes.get('/view-raffles/type3/:searcher/:category/:sub_category/:stateprovince
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
         
         const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
@@ -645,7 +668,7 @@ routes.get('/view-raffles/type3/:searcher/:category/:sub_category/:stateprovince
         const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -688,13 +711,15 @@ routes.get('/view-raffles/type3/:category/:sub_category/:stateprovince', async (
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
-            
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);             
+
         const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
         const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
@@ -703,7 +728,7 @@ routes.get('/view-raffles/type3/:category/:sub_category/:stateprovince', async (
         const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -747,12 +772,14 @@ routes.get('/view-raffles/type3/:category/:sub_category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
-    
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);      
+
         const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }] }, options  );
         console.log(cardArticleRaffle);
         const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }).count();
@@ -761,7 +788,7 @@ routes.get('/view-raffles/type3/:category/:sub_category/', async (req, res)=>{
         const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
         

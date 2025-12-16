@@ -4,6 +4,7 @@ const modelUser = require('../models/user.js');
 const modelRealstate = require('../models/realstate.js');
 const modelMessages = require('../models/messages.js');
 const modelProfile = require('../models/profile.js');
+const modelFavorites = require('../models/favorites.js');
   
 
 
@@ -39,6 +40,9 @@ routes.get('/view-realstate/', async (req, res)=>{
         console.log("Aqui el profile de la cuenta", searchProfile);
         console.log("este es el user desde la view-items: ",  user);
 
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);              
+
         if ( searcherCache ){
             console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
             const cardArticleRealstate = await modelRealstate.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false }  ] }, options );       
@@ -48,7 +52,7 @@ routes.get('/view-realstate/', async (req, res)=>{
             const categoryAndSub = await modelRealstate.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         } else {
             const searcherCache = null;
@@ -58,7 +62,7 @@ routes.get('/view-realstate/', async (req, res)=>{
             const categoryAndSub = await modelRealstate.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         }
 
@@ -93,7 +97,7 @@ routes.get('/view-realstate/', async (req, res)=>{
 });
 
 
-routes.post('/view-realstate/', async (req, res)=>{                    //--------------------------- voy por aqui
+routes.post('/view-realstate/', async (req, res)=>{        
     const user = req.session.user;
     const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
@@ -128,8 +132,10 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
  
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);   
 
         if (category == "All" && searcher ===""){
 
@@ -145,7 +151,7 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
 
-            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
         } else if (category == "All" && searcher !== "") { 
     
@@ -162,7 +168,7 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
             let subCategory = null;  
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
                 
-            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });    
+            res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });    
         
 
         } else if (category !== "All" && category !== undefined && searcher !=="") {
@@ -176,7 +182,7 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
                 const categoryAndSub = await modelItems.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
 
@@ -187,7 +193,7 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
                 const categoryAndSub = await modelRealstate.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }
 
@@ -203,7 +209,7 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
                 const categoryAndSub = await modelRealstate.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
                 console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
@@ -216,7 +222,7 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
                 const categoryAndSub = await modelRealstate.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
-                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             }        
         }
@@ -317,7 +323,7 @@ routes.post('/view-realstate/', async (req, res)=>{                    //-------
      
 });    
 
-// view-items/type1/algo/Bolívar ----------------------------- voy por aqui.
+// view-items/type1/algo/Bolívar 
 // view-items/type1/algo/Bolívar?page=2
 // type : 1 con Searcher y estado   
 routes.get('/view-realstate/type1/:searcher/:stateprovince', async (req, res)=>{
@@ -345,9 +351,12 @@ routes.get('/view-realstate/type1/:searcher/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
         const cardArticleRealstate = await modelRealstate.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleRealstate);
@@ -357,7 +366,7 @@ routes.get('/view-realstate/type1/:searcher/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelRealstate.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -400,9 +409,12 @@ routes.get('/view-realstate/type1/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-realstate: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-realstate: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
         const cardArticleRealstate = await modelRealstate.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleRealstate);
@@ -412,7 +424,7 @@ routes.get('/view-realstate/type1/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelRealstate.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -458,10 +470,13 @@ routes.get('view-realstate/type2/:searcher/:category/:stateprovince', async (req
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-realstate: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-realstate: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
         
         const cardArticleRealstate = await modelRealstate.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleRealstate);
@@ -471,7 +486,7 @@ routes.get('view-realstate/type2/:searcher/:category/:stateprovince', async (req
         const categoryAndSub = await modelRealstate.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -516,10 +531,13 @@ routes.get('/view-realstate/type2/:category/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-realstate: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search")
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-realstate: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search")
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
         
         const cardArticleRealstate = await modelRealstate.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleRealstate);
@@ -529,7 +547,7 @@ routes.get('/view-realstate/type2/:category/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelRealstate.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -572,12 +590,14 @@ routes.get('/view-realstate/type2/:category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-realstate: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search ni estados");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-realstate: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search ni estados");
         
-        
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
+
         const cardArticleRealstate = await modelRealstate.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }, options  );
         console.log("cardArticleRealstate :", cardArticleRealstate);
         const countSearch = await modelRealstate.find( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }).count();
@@ -587,7 +607,7 @@ routes.get('/view-realstate/type2/:category/', async (req, res)=>{
         const categoryAndSub = await modelRealstate.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -635,10 +655,13 @@ routes.get('/view-realstate/type3/:searcher/:category/:sub_category/:stateprovin
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-realstate: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-realstate: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);           
         
         const cardArticleRealstate = await modelRealstate.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleRealstate);
@@ -648,7 +671,7 @@ routes.get('/view-realstate/type3/:searcher/:category/:sub_category/:stateprovin
         const categoryAndSub = await modelRealstate.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -691,13 +714,15 @@ routes.get('/view-realstate/type3/:category/:sub_category/:stateprovince', async
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-realstate: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-realstate: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
-            
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);            
+
         const cardArticleRealstate = await modelRealstate.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleRealstate);
         const countSearch = await modelRealstate.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }, {state_province : State} ] }).count();
@@ -706,7 +731,7 @@ routes.get('/view-realstate/type3/:category/:sub_category/:stateprovince', async
         const categoryAndSub = await modelRealstate.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -749,10 +774,13 @@ routes.get('/view-realstate/type3/:category/:sub_category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-realstate: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-realstate: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);  
 
         const cardArticleRealstate = await modelRealstate.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }] }, options  );
         console.log(cardArticleRealstate);
@@ -762,7 +790,7 @@ routes.get('/view-realstate/type3/:category/:sub_category/', async (req, res)=>{
         const categoryAndSub = await modelRealstate.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-realstate', { user, searchProfile, cardArticleRealstate, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 

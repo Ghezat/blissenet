@@ -102,6 +102,8 @@
         <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
     <% }; %>
 
+    <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio>
+    
   <!-- navegador con buscador homologo a navi-simple -->   
   <nav class="navbar navbar-expand-lg py-3" id="navHead">
       <div class="container-fluid mx-4 navSon" style="width: 100%;">
@@ -591,7 +593,27 @@
                                       <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.blissName %> </a>
 
                                       <% if (user) { %> <!-- control de corazones fascinometro -->
-                                        <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
+                                            <% if (favoritesOfUser.length !== 0) { %>
+                                                <% let heartDisplayed = false; %> <!-- Variable de control -->
+                                                <% favoritesOfUser.forEach((favorite) => { %>
+                                                    <% const idProduct = favorite.id_product; %>
+                                                    
+                                                    <% if (ele._id == idProduct) { %>
+                                                        <i class="bi bi-heart-fill me-2 linkHeart text-danger" style="cursor: pointer; font-size: 20px;">
+                                                          <input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>">
+                                                        </i>
+                                                        <% heartDisplayed = true; %> <!-- Se ha mostrado un corazón lleno -->
+                                                    <% } %>
+                                                <% }); %>
+                                                
+                                                <% if (!heartDisplayed) { %> <!-- Solo muestra el corazón vacío si no se mostró el lleno -->
+                                          
+                                                    <i class="bi bi-heart me-2 linkHeart" style="cursor: pointer; font-size: 20px;">
+                                                      <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>">
+                                                    </i>
+
+                                                <% } %>
+                                            <% } %>                                 
                                       <% } %>
                                         
 
@@ -641,9 +663,29 @@
                                       
                                         <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.blissName %> </a>
 
-                                      <% if (user) { %> <!-- control de corazones fascinometro -->
-                                        <i class="bi bi-heart ps-2 linkHeart" style="cursor: pointer; font-size: 17px;"><input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>"></i>                                         
-                                      <% } %>
+                                        <% if (user) { %> <!-- control de corazones fascinometro -->
+                                              <% if (favoritesOfUser.length !== 0) { %>
+                                                  <% let heartDisplayed = false; %> <!-- Variable de control -->
+                                                  <% favoritesOfUser.forEach((favorite) => { %>
+                                                      <% const idProduct = favorite.id_product; %>
+                                                      
+                                                      <% if (ele._id == idProduct) { %>
+                                                          <i class="bi bi-heart-fill me-2 linkHeart text-danger" style="cursor: pointer; font-size: 20px;">
+                                                            <input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>">
+                                                          </i>
+                                                          <% heartDisplayed = true; %> <!-- Se ha mostrado un corazón lleno -->
+                                                      <% } %>
+                                                  <% }); %>
+                                                  
+                                                  <% if (!heartDisplayed) { %> <!-- Solo muestra el corazón vacío si no se mostró el lleno -->
+                                            
+                                                      <i class="bi bi-heart me-2 linkHeart" style="cursor: pointer; font-size: 20px;">
+                                                        <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>">
+                                                      </i>
+
+                                                  <% } %>
+                                              <% } %>                                 
+                                        <% } %>
   
                                     </div>
 
@@ -762,56 +804,74 @@
     <%- include('../partials/scriptsThemes.ejs') %>
 
     <% if ( user !== undefined ) { %>
-    <script>
+<script>
+    //este script es para manejar la accion de los favoritos dentro de la tienda.
+    const linkHeart = document.querySelectorAll('.linkHeart')
+    for (let i = 0; i < linkHeart.length; i++) {
+      const element = linkHeart[i];
+      element.addEventListener('click', () => {
 
-        const linkHeart = document.querySelectorAll('.linkHeart')
-        for (let i = 0; i < linkHeart.length; i++) {
-          const element = linkHeart[i];
-          element.addEventListener('click', ()=>{
-          
-          efecto()
-          setInterval( normalHeart, 2000)
-          //console.log(element.childNodes)
-          //console.log(element.childNodes[0].value)
-          //console.log(element.childNodes[1].value)
-          const depart = element.childNodes[0].value;
-          const id = element.childNodes[1].value;
-          console.log(depart)
-          console.log(id)
+        efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+        efectSoundExpan.play().catch(error => {
+            console.error("Error al reproducir el sonido:", error);
+        });
 
-          const datos = {
-            depart : depart,
-            id : id
-          }
+        efecto() //activamos la funcion
 
-          fetch('/myfavorites', {
+        function efecto() {
 
-            method: "post",
-            body: JSON.stringify(datos),
-            headers: {"content-type" : "application/json"}
+            const biHeart = element.classList.contains('bi-heart');
+            if (biHeart){
+              //corazon vacio se debe colocar lleno
+              element.classList.remove('bi-heart', 'text-dark', 'heartJump');
+              element.classList.add('bi-heart-fill', 'text-danger', 'heartJump');
 
-          })
-            .then(response =>response.json() )
-            .then( jsonx => console.log(jsonx))
-            .catch( err => console.log(err));
+            } else {
+              //corazon lleno se debe colocar vacio
+              element.classList.remove('bi-heart-fill', 'text-danger', 'heartJump');
+              element.classList.add('bi-heart', 'text-dark');
+            }
+
+        }
+
+        console.log("children :", element.children )
+        console.log(element.children[0].value)
+        console.log(element.children[1].value)
+        const depart = element.children[0].value;
+        const id = element.children[1].value;
+        console.log("depart :",depart);
+        console.log("id :", id);
+
+        const datos = {
+          depart: depart,
+          id: id
+        } 
+
+        fetch('/myfavorites', {
+
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: { "content-type": "application/json" }
 
         })
-      
+          .then(response => response.json())
+          .then(jsonx => {
+            console.log("Esto llega del backend cuando agregamos un anuncio a favorito", jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+            console.log("code :", code);
+            console.log("message :", message);
 
-        function efecto(){
-          element.classList.remove('bi-heart');
-          element.classList.add('bi-bookmark-check')
-        }
+            //mostrarToast( message , 'right', 'info', '¡ Hecho !', false ); // Agrega título aquí
 
-        function normalHeart(){
-          element.classList.remove('bi-bookmark-check');
-          element.classList.add('bi-heart')
-        }
+          }) 
+          .catch(err => console.log(err));
 
-        
-      }
+      })
 
-    </script>
+    }
+
+</script>
     <% } %>
     
     <script>

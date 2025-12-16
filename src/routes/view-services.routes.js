@@ -4,6 +4,7 @@ const modelUser = require('../models/user.js');
 const modelService = require('../models/services.js');
 const modelMessages = require('../models/messages.js');
 const modelProfile = require('../models/profile.js');
+const modelFavorites = require('../models/favorites.js');
 
 
 routes.get('/view-services/', async (req, res)=>{
@@ -35,8 +36,11 @@ routes.get('/view-services/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);   
-        console.log("este es el user desde la view-items: ",  user);
+        //console.log("Aqui el profile de la cuenta", searchProfile);   
+        //console.log("este es el user desde la view-items: ",  user);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser); 
 
         if ( searcherCache ){
             console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
@@ -47,7 +51,7 @@ routes.get('/view-services/', async (req, res)=>{
             const categoryAndSub = await modelService.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         } else {
             const searcherCache = null;
@@ -57,7 +61,7 @@ routes.get('/view-services/', async (req, res)=>{
             const categoryAndSub = await modelService.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
         }
 
@@ -129,6 +133,9 @@ routes.post('/view-services/', async (req, res)=>{
         searchProfile = await modelProfile.find({ indexed : user._id });
         console.log("Aqui el profile de la cuenta", searchProfile);
 
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
+
         if (category == "All" && searcher ===""){
 
             console.log("************ searcherCache ************")
@@ -143,7 +150,7 @@ routes.post('/view-services/', async (req, res)=>{
             console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
     
-            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
       
         } else if (category == "All" && searcher !== "") { 
       
@@ -160,7 +167,7 @@ routes.post('/view-services/', async (req, res)=>{
             let subCategory = null;  
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
                 
-            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });    
+            res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });    
         
     
         } else if (category !== "All" && category !== undefined && searcher !=="") {
@@ -174,7 +181,7 @@ routes.post('/view-services/', async (req, res)=>{
                 const categoryAndSub = await modelService.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
             } else {
     
@@ -185,7 +192,7 @@ routes.post('/view-services/', async (req, res)=>{
                 const categoryAndSub = await modelService.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
     
-                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
             }
     
@@ -201,7 +208,7 @@ routes.post('/view-services/', async (req, res)=>{
                 const categoryAndSub = await modelService.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
-                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
             } else {
                 console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
@@ -214,7 +221,7 @@ routes.post('/view-services/', async (req, res)=>{
                 const categoryAndSub = await modelService.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
     
-                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
+                res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
             }    
 
@@ -348,9 +355,12 @@ routes.get('/view-services/type1/:searcher/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
         const cardArticleService = await modelService.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleService);
@@ -360,7 +370,7 @@ routes.get('/view-services/type1/:searcher/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelService.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
     } else {
 
@@ -404,9 +414,12 @@ routes.get('/view-services/type1/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
         const cardArticleService = await modelService.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
         console.log(cardArticleService);
@@ -416,7 +429,7 @@ routes.get('/view-services/type1/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelService.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -462,11 +475,14 @@ routes.get('view-services/type2/:searcher/:category/:stateprovince', async (req,
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
 
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);        
         
         const cardArticleService = await modelService.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category },{state_province : State} ] }, options  );
         console.log(cardArticleService);
@@ -476,7 +492,7 @@ routes.get('view-services/type2/:searcher/:category/:stateprovince', async (req,
         const categoryAndSub = await modelService.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -521,10 +537,13 @@ routes.get('/view-services/type2/:category/:stateprovince', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search")
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search")
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
         
         const cardArticleService = await modelService.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{state_province : State} ] }, options  );
         console.log(cardArticleService);
@@ -534,7 +553,7 @@ routes.get('/view-services/type2/:category/:stateprovince', async (req, res)=>{
         const categoryAndSub = await modelService.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -578,11 +597,13 @@ routes.get('/view-services/type2/:category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search ni estados");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search ni estados");
         
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);           
         
         const cardArticleService = await modelService.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }, options  );
         console.log("modelService :", modelService);
@@ -593,7 +614,7 @@ routes.get('/view-services/type2/:category/', async (req, res)=>{
         const categoryAndSub = await modelService.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -641,11 +662,14 @@ routes.get('/view-services/type3/:searcher/:category/:sub_category/:stateprovinc
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
         
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);  
+
         const cardArticleService = await modelService.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State} ] }, options  );
         console.log(cardArticleService);
         const countSearch = await modelService.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State} ] }).count();
@@ -654,7 +678,7 @@ routes.get('/view-services/type3/:searcher/:category/:sub_category/:stateprovinc
         const categoryAndSub = await modelService.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -697,13 +721,15 @@ routes.get('/view-services/type3/:category/:sub_category/:stateprovince', async 
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
-            
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);            
+
         const cardArticleService = await modelService.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleService);
         const countSearch = await modelService.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State} ] }).count();
@@ -712,7 +738,7 @@ routes.get('/view-services/type3/:category/:sub_category/:stateprovince', async 
         const categoryAndSub = await modelService.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
@@ -756,10 +782,13 @@ routes.get('/view-services/type3/:category/:sub_category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+
+        const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
+        console.log("favoritesOfUser ....... :", favoritesOfUser);         
     
         const cardArticleService = await modelService.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }] }, options  );
         console.log(cardArticleService);
@@ -769,7 +798,7 @@ routes.get('/view-services/type3/:category/:sub_category/', async (req, res)=>{
         const categoryAndSub = await modelService.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-        res.render('page/view-services', { user, searchProfile, cardArticleService, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
+        res.render('page/view-services', { user, searchProfile, cardArticleService, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
