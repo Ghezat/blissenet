@@ -602,11 +602,7 @@
                           </div>                           
                         <% }; %> 
                     </div> 
-
-                    
-                    <div class="contentAlert" style="z-index: 200; position: absolute; top: 0; right: -1000px;">
-                      <!-- dinamico para alerta cuando no tenga perfil aqui le invita a que lo haga-->
-                    </div>  
+ 
                     
                   </div>
 
@@ -967,6 +963,32 @@
                 </div>
               </div>
 
+              <!-- Modal noPerfil --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticNoProfile" -->
+              <div class="modal fade" id="staticNoProfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticTrending" aria-hidden="true">
+                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                    <div class="modal-content text-dark">
+                        <div class="modal-body">
+
+                            <p> 
+                              <h2 class="mb-2 lightbulbAnimation fw-bold"> ¡Crea tu perfil y hazte visible! </h2> 
+                              <h5 class="fw-bold"> Sin él, será difícil que te encuentren. Solo te tomará 1 minuto. </h5>
+                            </p>
+                            <strong> <h5> Beneficios : </h5></strong>
+                            <ul class="mt-3">
+                              <li class="mb-2"> <h5> <span class="text-warning fw-bold"> Sitio web,</span> donde puedes crear anuncios ilimitados. </h5> </li>
+                              <li class="mb-2"> <h5> Compra y contacta anuncios <span class="text-bliss fw-bold">fácilmente. </span> </h5> </li>
+                              <li class="mb-2"> <h5> Participa en rifas y subastas  <span class="text-bliss fw-bold">emocionantes.</span> </h5> </li>
+                            </ul>
+                            
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between" style=" background-image: url('/img/noProfileStatic.jpg'); background-size: cover; background-position: center;">
+                          <a class="btn btn-warning" href="/myaccount/profile">Crear Perfil</a>  
+                          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+
           </div>
           
         
@@ -1285,38 +1307,27 @@
 
   const contentAlert = document.querySelector('.contentAlert');
 
+  let modalNoProfile = new bootstrap.Modal(document.getElementById('staticNoProfile'));
+   
+
   fetch("/alertNotProfile", {
     method: "GET",
     headers: { "Content-Type" : "applications/json" }
   })
     .then(response =>response.json() )
     .then( jsonx => {
+      console.log("-------------ver------------");
       console.log("alertNotProfile -->", jsonx)
-        const account = jsonx.profile
+      const account = jsonx.profile
+
       if (account.length === 0){
+      
+          setTimeout(alertMessage, 1000)
+          function alertMessage(){
+            console.log("Esta cuenta no tiene perfil y debemos enviar la alerta")
+            modalNoProfile.show();
 
-        setTimeout(alertMessage, 2000)
-        function alertMessage(){
-          console.log("Esta cuenta no tiene perfil y debemos enviar la alerta")
-          contentAlert.innerHTML += `<div class="alert alert-light alert-dismissible fade show m-0 border" role="alert" style="border-radius: 0px" >
-                                        <strong> ¡Crea tu perfil para ser visible! Sin él, no podrán encontrarte. Solo te llevará 1 minuto. <a href="/myaccount/profile">¡Hazlo aquí!</a> </strong> 
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>`
-
-          setTimeout(animationAlert, 1000)
-
-          function animationAlert(){
-
-            console.log("Aquí la animación del alert");
-
-            contentAlert.style.transitionProperty = 'right';
-            contentAlert.style.transitionDuration = '6s';
-            contentAlert.style.right = "0px";
-
-            
           }
-
-        }
 
       } 
     })

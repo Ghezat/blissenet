@@ -60,6 +60,9 @@ main{
 }
 
 /* -------------------------------- */
+.text-bliss{
+  color: #6f42c1;
+}
 
 .no-salto {
     white-space: nowrap; /* Evita el salto de línea */

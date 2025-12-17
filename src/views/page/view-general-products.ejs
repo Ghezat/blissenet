@@ -3694,6 +3694,14 @@
     containerShare.classList.toggle('invisible')
   })
 
+   // Evento para ocultar el contenedor al hacer clic fuera de él
+  document.addEventListener('click', (event) => {
+      // Verifica si el clic fue fuera del contenedor de compartir y del botón de compartir
+      if (!containerShare.contains(event.target) && !shareToggle.contains(event.target)) {
+          containerShare.classList.add('invisible');
+      }
+  });
+  
   //copiar link de tienda en el portapapeles
   btnClicBoard.addEventListener('click', ()=>{
     const storeToShare = linkToShare.value;
