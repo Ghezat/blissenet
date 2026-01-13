@@ -80,7 +80,7 @@
                             <tr>
                                 
                                     <td><%= ele.dateOpen %></td><td><%= ele.codeReport %></td><td><%= ele.id_title %></td>
-                                    <td><%= ele.title %></td><td><%= ele.anunciante %></td><td> <a href="/product/<%= ele.depart %>/<%= ele.id_title %>" target="_blank"> View</a></td>
+                                    <td><%= ele.title %></td><td><%= ele.anunciante %></td><td> <a href="/product/<%= ele.depart %>/<%= ele.id_title %>/<%= ele.titleURL %>" target="_blank"> View</a></td>
                                         <input type="hidden" value="<%= ele._id %>" name="id" class="id">
                                         <input type="hidden" value="<%= ele.id_title %>" name="title_id" class="title_id"> 
                                     <td><button class="btn btn-success btn-sm btnTakeReport">Take</button></td>     

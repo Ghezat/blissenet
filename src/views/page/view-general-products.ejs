@@ -285,6 +285,7 @@
     <input type="hidden" value="<%= search.department %>" id="newBTNdepart"> <!-- aqui el department -->
     <input type="hidden" value="<%= search.title %>" id="newBTNtitle"> <!-- aqui el title -->
     <input type="hidden" value="<%= search._id %>" id="newBTNid_title"> <!-- aqui el id del articulo -->
+    <input type="hidden" value="<%= search.titleURL %>" id="titleURL">    
 
     
     
@@ -628,6 +629,7 @@
                                     <input type="hidden" value="<%= search.department %>" name="depart"> <!-- aqui el department -->
                                     <input type="hidden" value="<%= search.title %>" name="title"> <!-- aqui el title -->
                                     <input type="hidden" value="<%= search._id %>" name="id_title"> <!-- aqui el id del articulo -->
+                                    <input type="hidden" value="<%= search.titleURL %>" name="titleURL"> <!-- aqui el id del articulo -->
                                     <!-- <input type="text" class="form-control my-1" name="denuncia" placeholder="Resuma su denuncia" maxlength="100" required> -->
                                     <textarea class="my-1 form-control" name="denuncia" placeholder="Resuma su denuncia" cols="30" rows="2" maxlength="120" required></textarea>
                                     <button type="submit" class="form-control btn btn-danger my-2"> Reportar anuncio</button>
@@ -1801,7 +1803,7 @@
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="sha512-pUhApVQtLbnpLtJn6DuzDD5o2xtmLJnJ7oBoMsBnzOkVkpqofGLGPaBJ6ayD2zQe3lCgCibhJBi4cj5wAxwVKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- con este script cconectamos este HTML al servidor socket  -->         
+  <!-- con este script conectamos este HTML al servidor socket  -->         
   <script src="/socket.io/socket.io.js" charset="utf-8"></script>
 
 </body>

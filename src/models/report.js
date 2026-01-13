@@ -3,12 +3,14 @@ const mongoosePagination = require('mongoose-paginate-v2');
 
 const SchemaReport = new Schema({
 
+    // codeReport, dateOpen, visitante, id_anunciante, anunciante, depart, id_title, title, titleURL, denuncia
     codeReport : { type: String }, //codigo del reporte de denuncia.
     visitante : { type: String }, //username del visitante que hace la denuncia
     anunciante : { type: String }, //username del anunciante.
     id_anunciante : { type : String }, //aqui el id del anunciante. importante tenerlo para luego poder enviar el mensaje a su inbox. 
     id_title : { type: String }, //id del anuncio denunciado
     title : { type: String }, //titulo del anuncio denunciado
+    titleURL : { type: String }, //titleURL necesario para poder visualizarlo.
     depart : { type: String }, //departamento en cuestion
     denuncia : { type: String }, //resumen de la denuncia hech apor un usuario
     dateOpen: { type: String }, //fecha de creacion de denuncia aqui vamos a meter la fecha con el formato necesario. eje. 10-11-2023 esta fecha es el dia que el usuario se dispuso hacer su pago. es la fecha que paga a la plataforma.

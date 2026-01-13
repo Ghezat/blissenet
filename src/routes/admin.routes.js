@@ -5387,7 +5387,7 @@ routes.post('/admin/report', async (req, res)=>{
         
         console.log("Hemos llegado a /admin/report");
         console.log(req.body);
-        const {visitante, id_anunciante, anunciante, depart, id_title, title, denuncia} = req.body;
+        const {visitante, id_anunciante, anunciante, depart, id_title, title, titleURL, denuncia} = req.body;
         
         const date = new Date();
         let dia = date.getDate();
@@ -5407,7 +5407,7 @@ routes.post('/admin/report', async (req, res)=>{
         
         console.log("codeReport :", codeReport);
         console.log("dateOpen :", dateOpen);
-        console.log(visitante, id_anunciante,  anunciante, depart, id_title, title, denuncia);
+        console.log(visitante, id_anunciante,  anunciante, depart, id_title, title, titleURL, denuncia);
         
         const search = await modelReport.find({ $and : [{visitante}, {id_title}] });
         //malo debemos hacer una verificacion real 
@@ -5417,18 +5417,19 @@ routes.post('/admin/report', async (req, res)=>{
             //console.log('Un reporte de denuncia ya existe sobre este anuncio');
             req.session.reportDone = "Un reporte de denuncia ya existe sobre este anuncio";
         } else {
-            const report = new modelReport({ codeReport, dateOpen, visitante, id_anunciante, anunciante, depart, id_title, title, denuncia});
+            const report = new modelReport({ codeReport, dateOpen, visitante, id_anunciante, anunciante, depart, id_title, title, titleURL, denuncia});
             const reportSave = await report.save();
             //console.log('Gracias por su denuncia. En breve un administrador iniciará con la investigación.');
             req.session.reportSuccess = "Gracias por su denuncia. En breve un administrador iniciará con la investigación.";
         }
 
-        res.redirect(`/product/${depart}/${id_title}`);
+        // /product/items/68cd5b1a4c908b6558cf8da1/nuevo-humidificador-de-chimenea-con-llama-simulada-
+        res.redirect(`/product/${depart}/${id_title}/${titleURL}`);
 
     } catch (error) {
         
         req.session.errorReport = "Ha ocurrido un error, intente luego";
-        res.redirect(`/product/${depart}/${id_title}`);
+        res.redirect(`/product/${depart}/${id_title}/${titleURL}`);
         
     }    
 
