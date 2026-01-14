@@ -277,6 +277,7 @@
           <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
     
         <input type="hidden" value="<%= user._id %>" id="newBTNvisitante"> <!-- aqui el id del visitante -->
+        <input type="hidden" value="<%= user.username %>" id="visitante"> <!-- aqui el user visitante -->
 
     <% }; %>    
 
@@ -620,22 +621,23 @@
                         <div class="collapse" id="collapseExample">
                             <p class="mb-2">¿Cree que este contenido no es apto para la comunidad? <span class="ps-1 btnReportar text-decoration-underline fst-italic fw-bold" style="cursor: pointer;">Reporte aquí</span></p>
 
-                            <form action="/admin/report" method="post" id="formReportar" class="close">
+                            <!-- <form action="/admin/report" method="post" id="formReportar" class="close"> -->
 
-                                <div class="form-group">
-                                    <input type="hidden" value="<%= user.username %>" name="visitante"> <!-- aqui el user visitante -->
-                                    <input type="hidden" value="<%= search.username %>" name="anunciante"> <!-- aqui el user anunciante -->
-                                    <input type="hidden" value="<%= search.user_id %>" name="id_anunciante"> <!-- aqui el id del anunciante -->
-                                    <input type="hidden" value="<%= search.department %>" name="depart"> <!-- aqui el department -->
-                                    <input type="hidden" value="<%= search.title %>" name="title"> <!-- aqui el title -->
-                                    <input type="hidden" value="<%= search._id %>" name="id_title"> <!-- aqui el id del articulo -->
-                                    <input type="hidden" value="<%= search.titleURL %>" name="titleURL"> <!-- aqui el id del articulo -->
-                                    <!-- <input type="text" class="form-control my-1" name="denuncia" placeholder="Resuma su denuncia" maxlength="100" required> -->
-                                    <textarea class="my-1 form-control" name="denuncia" placeholder="Resuma su denuncia" cols="30" rows="2" maxlength="120" required></textarea>
-                                    <button type="submit" class="form-control btn btn-danger my-2"> Reportar anuncio</button>
+                                <div class="form-group close" id="formReportar">
+<!--                                <input type="hidden" value="<%= user.username %>" name="visitante"> 
+                                    <input type="hidden" value="<%= search.username %>" name="anunciante"> 
+                                    <input type="hidden" value="<%= search.user_id %>" name="id_anunciante"> 
+                                    <input type="hidden" value="<%= search.department %>" name="depart"> 
+                                    <input type="hidden" value="<%= search.title %>" name="title"> 
+                                    <input type="hidden" value="<%= search._id %>" name="id_title"> 
+                                    <input type="hidden" value="<%= search.titleURL %>" name="titleURL"> 
+                                    <input type="text" class="form-control my-1" name="denuncia" placeholder="Resuma su denuncia" maxlength="100" required>  -->
+
+                                    <textarea class="my-1 form-control" id="denuncia" placeholder="Resuma su denuncia" cols="30" rows="2" maxlength="120" required></textarea>
+                                    <button type="submit" class="form-control btn btn-danger my-2" id="btnDenuncia"> Reportar anuncio</button>
                                 </div>
                                 
-                            </form>
+                            <!-- </form> -->
                         </div>    
                         
                     </div>
@@ -3638,19 +3640,6 @@
 
 </script>
 
-<script>
-    const btnReportar = document.querySelector('.btnReportar');
-    const formReportar = document.getElementById('formReportar'); 
-    
-    if (btnReportar){
-    
-        btnReportar.addEventListener('click', ()=>{
-            formReportar.classList.toggle('close');
-        });
-    
-    }
-    
-</script>
 
 <script>//con este script logro proteger y dar el spinnier en el boton de carga.
 
@@ -4986,6 +4975,103 @@
  
 
 
+</script>
+
+<script>
+
+    const btnReportar = document.querySelector('.btnReportar');
+    const formReportar = document.getElementById('formReportar'); 
+    
+    const btnDenuncia = document.querySelector("#btnDenuncia"); // aqui boton para ejecutar al denuncia 
+    const textDenunciaObj = document.querySelector("#denuncia"); // aqui texto de la denuncia 
+    const visitanteObj = document.querySelector("#visitante"); // aqui el user anunciante 
+    const anuncianteObj = document.querySelector("#newBTNanunciante"); // aqui el user anunciante 
+    const id_anuncianteObj = document.querySelector("#newBTNid_anunciante"); // aqui el id del anunciante
+    const departObj = document.querySelector("#newBTNdepart"); // aqui el department 
+    const titleObj = document.querySelector("#newBTNtitle"); // aqui el title
+    const id_title = document.querySelector("#newBTNid_title"); // aqui el id del articulo
+    const titleURL = document.querySelector("#titleURL"); // aqui la URL del titulo
+
+    if (btnReportar){
+    
+        btnReportar.addEventListener('click', ()=>{
+            formReportar.classList.toggle('close');
+        });
+    
+    }
+
+    if (btnDenuncia){
+    
+        btnDenuncia.addEventListener('click', ()=>{
+
+            efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+            efectSoundExpan.play().catch(error => {
+                console.error("Error al reproducir el sonido:", error);
+            });
+
+            const denunciaValue = textDenunciaObj.value;
+            const Denuncia = denunciaValue.trim();
+            
+
+            if (Denuncia.length > 10 ){
+                console.log("cuantos caracteres hay aqui :", Denuncia.length);
+                btnDenuncia.setAttribute('disabled', ''); //desactivamos el boton
+
+
+                const datos = {
+                    denuncia : Denuncia, 
+                    visitante : visitanteObj.value, 
+                    anunciante : anuncianteObj.value, 
+                    id_anunciante : id_anuncianteObj.value, 
+                    depart : departObj.value, 
+                    title : titleObj.value, 
+                    id_title : id_title.value, 
+                    titleURL : titleURL.value 
+                };
+
+                console.log("Ver este objeto.... :", datos);
+
+                fetch('/admin/report', {
+
+                    method: "post",
+                    body: JSON.stringify(datos),
+                    headers: {"content-type" : "application/json"}
+
+                })
+                .then(response =>response.json() )
+                .then( jsonx => 
+                
+                    { 
+                        console.log(jsonx) 
+                        //{msj: 'Gracias por su denuncia. En breve un administrador iniciará con la investigación.', code: 'ok'}
+                        const code = jsonx.code;
+                        const message = jsonx.msj;
+
+                        if (code === "ok"){
+                            mostrarToast( message , 'right', 'info', '¡ Hecho !', false ); // Agrega título aquí
+                        } else {
+                            mostrarToast( message , 'right', 'danger', '¡ Error !', false ); // Agrega título aquí
+                        }
+
+                        setTimeout(() => {
+                            denuncia.value = "";
+                            formReportar.classList.toggle('close');
+                        }, 2000);
+                    })
+
+                .catch( err => console.log(err));
+
+            } else {
+
+                const message = "Debe escribir un resumen de su denuncia."
+                mostrarToast( message , 'right', 'danger', '¡ Error !', false ); // Agrega título aquí
+
+            }
+
+        })
+
+    }    
+    
 </script>
 
 <% if ( user !== undefined ) { %>

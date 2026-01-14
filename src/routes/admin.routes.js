@@ -5415,22 +5415,24 @@ routes.post('/admin/report', async (req, res)=>{
         
         if (search.length !==0){
             //console.log('Un reporte de denuncia ya existe sobre este anuncio');
-            req.session.reportDone = "Un reporte de denuncia ya existe sobre este anuncio";
+            //req.session.reportDone = "Un reporte de denuncia ya existe sobre este anuncio";
+            res.json({ msj : "Un reporte de denuncia ya existe sobre este anuncio", code : "ok" });
         } else {
             const report = new modelReport({ codeReport, dateOpen, visitante, id_anunciante, anunciante, depart, id_title, title, titleURL, denuncia});
             const reportSave = await report.save();
             //console.log('Gracias por su denuncia. En breve un administrador iniciará con la investigación.');
-            req.session.reportSuccess = "Gracias por su denuncia. En breve un administrador iniciará con la investigación.";
+            res.json({ msj : "Gracias por su denuncia. En breve un administrador iniciará con la investigación.", code : "ok" });
+            //req.session.reportSuccess = "Gracias por su denuncia. En breve un administrador iniciará con la investigación.";
         }
-
+ 
         // /product/items/68cd5b1a4c908b6558cf8da1/nuevo-humidificador-de-chimenea-con-llama-simulada-
-        res.redirect(`/product/${depart}/${id_title}/${titleURL}`);
+       // res.redirect(`/product/${depart}/${id_title}/${titleURL}`);
 
     } catch (error) {
         
-        req.session.errorReport = "Ha ocurrido un error, intente luego";
-        res.redirect(`/product/${depart}/${id_title}/${titleURL}`);
-        
+        //req.session.errorReport = "Ha ocurrido un error, intente luego";
+        // res.redirect(`/product/${depart}/${id_title}/${titleURL}`);
+        res.json({ msj : "Ha ocurrido un error, intente mas tarde.", code : "ok" });
     }    
 
 
