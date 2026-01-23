@@ -2742,8 +2742,8 @@ routes.post('/zonabliss/upload/media', async (req, res)=> {
             //solo se puede recibir 2 recursos de media para la seccion de media.
             
             if (element.mimetype.startsWith("image/")){
-                //caso de ser imagen validar que no supere los 3 mb.
-                if (element.size <= 3000000 ){
+                //caso de ser imagen validar que no supere los 6 mb.
+                if (element.size <= 6000000 ){
                                     
                     //console.log("una imagen aqui aceptada----->", element)
 
@@ -2815,15 +2815,15 @@ routes.post('/zonabliss/upload/media', async (req, res)=> {
                     }); 
 
                 } else {
-                    //supera los 3mb
-                    res.json({ code : 0,  response: "Su imagen supera el peso de 3mb" });
+                    //supera los 6mb
+                    res.json({ code : 0,  response: "Su imagen supera el peso de 6mb" });
                     await fs.unlink(element.path); 
                 }
 
             } else if (element.mimetype.startsWith("video/")) {
 
-                //casi de ser video validar que no supere los 50mb.
-                if (element.size <= 50000000 ){
+                //casi de ser video validar que no supere los 100mb.
+                if (element.size <= 100000000 ){
 
                     //console.log("una video aqui aceptado----->", element)
 
@@ -2895,7 +2895,7 @@ routes.post('/zonabliss/upload/media', async (req, res)=> {
                 } else {
                     //supera los 50mb
                     await fs.unlink(element.path) 
-                    res.json({ code : 0,  response: "Su video supera el peso de 50mb" });
+                    res.json({ code : 0,  response: "Su video supera el peso de 100mb" });
                     
                 }
 
