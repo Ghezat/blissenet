@@ -964,25 +964,32 @@
                               <% if (shoppingCart === true ) { %>  
                                   <div class="containerCartList cursor-pointer" style="position: relative;">
                                     <div class="lightCartShopping close" style="position: absolute; top: -3px; right: 7px; background-color: #d30404; width: 12px; height: 12px; border-radius: 50%;"></div>
-                                    <div class="contentCardBuy border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
-                                      <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                                    <div class="contentCardBuy border border-dark rounded-pill my-3" style="width: 50px; height: 50px;">
+                                      <img src="/img/iconCardBuy.png" alt="" class="rounded-pill" style="width: 50px; height: 50px;">
                                     </div>
                                   </div> 
                               <% }; %>    
                            
 
-                              <button class="popoverChatDeBliss" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="ChatdeBliss en desarrollo.">
-                                <div class="contentChatMessage border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
-                                  <img src="/img/iconChatMessage.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
-                                </div>
-                              </button>  
+                              <% if (user) { %>
+                                <% const whatsappNum = storeProfile.phone %>
+                                <% if (user.username !== Account[0].username) { %>
+                                  
+                                 
+                                 <!--  <button class="popoverChatDeBliss my-3" type="button" style="background-color: transparent; border: none ;" data-bs-toggle="popover"  data-bs-placement="left" data-bs-content="ChatdeBliss en desarrollo."> -->
+                                    <a href="https://api.whatsapp.com/send/?phone=<%= whatsappNum %>&type=phone_number&app_absent=0">
+                                      <img src="/img/iconWhatsapp.png" alt="" class="my-3" style="width: 50px; height: 50px;">
+                                    </a>
+                                 <!--  </button>  -->
+                                <% } %>
+                              <% } %>
 
                               <% if (user) { %>
                                     <!-- si existe un usuario -->
                                 <% if (user.username == Account[0].username) { %>
                                     <!-- y es el propietario de la tienda podra ver esta opcion -->
-                                  <div class="contentAdmin border border-dark rounded-pill my-2" style="width: 40px; height: 40px;">
-                                    <a href="/admin-store"><img src="/img/iconAdmin.png" alt="" class="rounded-pill" style="width: 40px; height: 40px;">
+                                  <div class="contentAdmin border border-dark rounded-pill my-3" style="width: 50px; height: 50px;">
+                                    <a href="/admin-store"><img src="/img/iconAdmin.png" alt="" class="rounded-pill" style="width: 50px; height: 50px;">
                                     </a> 
                                   </div>
 

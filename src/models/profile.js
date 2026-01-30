@@ -32,7 +32,7 @@ const SchemaProfile = new Schema({
     city : { type : String },
     suburb : { type : String },
     address : { type : String }, //direccion del usuario (dato importante para sus futuras facturas). Ultimo atributo creado. 
-    phone : { type : String },
+    phone : { type : String }, //es el numero de whatsapp
     phoneAlt : { type : String },
     profileMessage : { type : String }, //mensaje de la tienda
     bannerPerfil : { type : Object , default : {} }, //guarada el objeto donde esta la url del banner de la tienda. 

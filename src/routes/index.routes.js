@@ -1905,13 +1905,19 @@ routes.post('/myaccount/profile', async (req, res)=>{
         const user = req.session.user;
         const blissName = user.blissName;
         console.log(req.body);      
-        const {names, identification, dateborn, gender, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
+        const {names, identification, dateborn, gender, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, address, profileMessage, facebook, instagram, youtube, tiktok} = req.body
         console.log("company, companyRif, country, countryCode, state, quarter, cityBlock, postCode");
         console.log(company, companyRif, country, state, quarter, cityBlock, postCode, city, suburb,);
         let messageProfile;
+
+        //es posible que el usuario coloque un signo de + en el inicio de la cadena. es posible usar el metodo reppalce para quitar los espacios y tambien si es introducido el signo +
+        let phoneTrim = phone.trim(); // Aseguramos que no existan espacios en blanco adelante ni atrás
+        let phoneFormatted = phoneTrim.replace(/^\+\s*|\s+/g, ''); // Eliminamos el signo + al inicio y todos los espacios en la cadena
+
         const geolocation = { lon, lat };
-        const geoData = [parseFloat(geolocation.lon), parseFloat(geolocation.lat)]; //objeto para guardar en location.coordinates; importante para calculos geograficos
-        console.log("geoData : ", geoData); // geoData :  [ -62.736074, 8.2871893 ]
+
+        //const geoData = [parseFloat(geolocation.lon), parseFloat(geolocation.lat)]; //objeto para guardar en location.coordinates; importante para calculos geograficos
+        //console.log("geoData : ", geoData); // geoData :  [ -62.736074, 8.2871893 ]
         
         let flag; //variable para guardar la bandera de ese pais,
 
@@ -1942,7 +1948,7 @@ routes.post('/myaccount/profile', async (req, res)=>{
             }
 
 
-            const newProfile = new modelProfile({ username: user.username, blissName, names, identification, company, companyRif, dateborn, gender, geolocation, locations: { type: 'Point', coordinates: geoData }, country, countryCode, flag, state, quarter, cityBlock, postCode, city, suburb, phone,  phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
+            const newProfile = new modelProfile({ username: user.username, blissName, names, identification, company, companyRif, dateborn, gender, geolocation, country, countryCode, flag, state, quarter, cityBlock, postCode, city, suburb, phone : phoneFormatted, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok, indexed : user._id, bannerPerfil: boxObjetBanner, avatarPerfil: boxObjetAvatar, mailhash : user.mailhash });
             console.log("newProfile ........................................>:", newProfile); 
             const saveProfile =  await newProfile.save()
             
@@ -1978,9 +1984,13 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         console.log("aqui el parametro", ID);
         const {names, identification, company, companyRif, lon, lat, country, countryCode, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage, facebook, instagram, youtube, tiktok } = req.body;
         let messageProfile;
+
+        let phoneTrim = phone.trim(); // Aseguramos que no existan espacios en blanco adelante ni atrás
+        let phoneFormatted = phoneTrim.replace(/^\+\s*|\s+/g, ''); // Eliminamos el signo + al inicio y todos los espacios en la cadena
+
         const geolocation = { lon, lat };
-        const geoData = [parseFloat(geolocation.lon), parseFloat(geolocation.lat)]; //objeto para guardar en location.coordinates; importante para calculos geograficos
-        console.log("geoData : ", geoData); // geoData :  [ -62.736074, 8.2871893 ]
+        //const geoData = [parseFloat(geolocation.lon), parseFloat(geolocation.lat)]; //objeto para guardar en location.coordinates; importante para calculos geograficos
+        //console.log("geoData : ", geoData); // geoData :  [ -62.736074, 8.2871893 ]
         const result = await modelProfile.findById(ID);
 
         let flag; //variable para guardar la bandera de ese pais,
@@ -2001,7 +2011,7 @@ routes.post('/myaccount/edit/:id', async (req, res)=>{
         }
 
         if (result) { 
-            const updates = await modelProfile.findByIdAndUpdate(ID, { $set: { names, identification, company, companyRif, geolocation, "locations.coordinates": geoData, country, countryCode, flag, state, quarter, cityBlock, postCode, city, suburb, phone, phoneAlt, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok}}, {new:true});
+            const updates = await modelProfile.findByIdAndUpdate(ID, { $set: { names, identification, company, companyRif, geolocation, country, countryCode, flag, state, quarter, cityBlock, postCode, city, suburb, phone: phoneFormatted, address, profileMessage : messageProfile, facebook, instagram, youtube, tiktok}}, {new:true});
             console.log("updates .........................:", updates);
             req.session.updateSuccess = "Su perfil ha sido actualizado satisfactoriamente";
         } 

@@ -345,25 +345,24 @@
                                                 </div> 
 
                                                 <!-- creación de direccion completa -->
-                                                <div class="form-group my-2">
+                                                <div class="input-group my-2">
+                                                    <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-house-add"></i> </label>
                                                     <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección." maxlength="100" required></textarea>
                                                 </div>
 
-                                                <div class="container d-flex justify-content-between p-0 my-2">
-
-                                                    <div class="form-group" style="width: 50%;">
-                                                        <input type="tel" name="phone" placeholder="Un número telefonico" class="form-control" maxlength="14" required>
-                                                    </div>
-
-                                                    <div class="form-group" style="width: 49%;">
-                                                        <input type="tel" name="phoneAlt" placeholder="Un número telefonico alt." class="form-control" maxlength="14">
-                                                    </div>
-
+                                                
+                                                <!-- telefono whatsapp para comunicacion directa tanto adminsitrativa como para ventas. -->
+                                                <div class="input-group">
+                                                    <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-whatsapp"></i> </label>
+                                                    <input type="tel" name="phone" placeholder="Un número telefonico  | Ejemplo : 58 04120811945" class="form-control" maxlength="22" required>
+                                                    <label for="" class="input-group-text anchorRRSS cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticWhatsappNumber"> <i class="bi bi-info-circle"></i> </label>
                                                 </div>
+                                                
                                                             
                                                 <!-- creación de mensaje de perfil -->
-                                                <div class="form-group my-2">
-                                                <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 carcateres."
+                                                <div class="input-group my-2">
+                                                    <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-chat-left-text"></i> </label>
+                                                    <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 carcateres."
                                                     maxlength="180"></textarea>
                                                 </div>
                 
@@ -515,25 +514,25 @@
                                                     </div> 
                                                         
                                                     <!-- direccion completa -->
-                                                    <div class="form-group my-2">
+                                                    <div class="input-group my-2"> 
+                                                        <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-house-add"></i> </label>
                                                         <textarea name="address" rows="1" class="form-control" placeholder="Introduce tu dirección."
                                                         maxlength="100" required><%= ele.address %></textarea>
                                                     </div>
 
                                                     <!-- edit phone and phoneAlt -->
-                                                    <div class="container d-flex justify-content-between p-0 my-2">
+                                                   
+                                                    <!-- telefono whatsapp para comunicacion directa tanto adminsitrativa como para ventas. -->
+                                                    <div class="input-group my-2">
+                                                        <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-whatsapp"></i> </label>
+                                                        <input type="tel" name="phone" placeholder="Un número telefonico  | Ejemplo : 58 04120811945" class="form-control" value="<%= ele.phone %>" maxlength="22" required>
+                                                        <label for="" class="input-group-text anchorRRSS cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticWhatsappNumber"> <i class="bi bi-info-circle"></i> </label>
+                                                    </div>
 
-                                                        <div class="form-group" style="width: 50%;">
-                                                            <input type="tel" name="phone" placeholder="intro your phone" class="form-control" value="<%= ele.phone %>" maxlength="14" required>
-                                                        </div>
-                                                        <div class="form-group" style="width: 49%;">
-                                                            <input type="tel" name="phoneAlt" placeholder="intro your phone alter" class="form-control" value="<%= ele.phoneAlt %>" maxlength="14">
-                                                        </div>
-
-                                                    </div>    
     
                                                     <!-- mensaje de perfil --> 
-                                                    <div class="form-group my-2">
+                                                    <div class="input-group my-2"> 
+                                                            <label for="" class="input-group-text anchorRRSS"> <i class="bi bi-chat-left-text"></i> </label>
                                                             <textarea name="profileMessage" rows="1" class="form-control" placeholder="Introduce un mensaje alusivo a lo que haces o en que te desempeñas para atraer a tus potenciales clientes o usa una frase que te guste, este mensaje estará en tu perfíl a la vista de todos. -Tienes un máximo de 180 caracteres."
                                                             maxlength="180"><%= ele.profileMessage %></textarea>
                                                     </div>
@@ -1064,6 +1063,27 @@
                                 </div>
                             </div>                           
                             
+
+                            <!-- Modal Whatsapp number --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticWhatsappNumber" -->
+                            <div class="modal fade" id="staticWhatsappNumber" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBlissBotConnect" aria-hidden="true">
+                                <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"> Número de Whatsapp  </h5>
+                                            <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p> El número de whatsapp es indispensable para lograr una comunicación efectiva con su potencial cliente. El sistema proporsionará un bonito icono de whatsapp en su Tienda, es recomendable usar un telefono con Whatsapp solo para atención al público. </p>
+                                            <p> ¿Como Agregar su número de Whatsapp?</p>
+                                            <span> <b> Codigo de pais + Número | Ejemplo : 58 04120811945 </span> </b> 
+                                        </div>
+                                        <div class="modal-footer" style="background-image: url('/img/bannerWhatsapp.png'); background-size: cover; background-position: center;">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Modal BlissBot conexion --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticBlissBotConnect" -->
                             <div class="modal fade" id="staticBlissBotConnect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBlissBotConnect" aria-hidden="true">
