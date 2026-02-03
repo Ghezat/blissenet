@@ -4985,8 +4985,8 @@ routes.post('/account/spread', async (req, res)=>{
                 
                 const searchReceive = await modelProfile.find({indexed});
                 console.log("VER searchReceive :", searchReceive); //ver este console;
-
-                if (searchReceive){
+                //aveces puede ser .... VER searchReceive : []
+                if (searchReceive.length !==0 ){ //necesito asegurarme que este array es difernete a 0
                     console.log("usernameReceive", searchReceive[0].username); //aveces esta line causa problemas, emitiendo un error undefine "usernamer"
                 
                     const usernameReceive = searchReceive[0].username;
