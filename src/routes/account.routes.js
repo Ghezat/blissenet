@@ -4948,7 +4948,7 @@ routes.post('/account/spread', async (req, res)=>{
             .replace(/\s+/g, '-') // Reemplaza espacios por guiones
             .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
             .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-            .trim(); // Elimina guiones al inicio y al final
+            .trim(); // Elimina espacios al inicio y al final
     }
     
     const titleURL = transformarTitle(title);
@@ -5042,47 +5042,7 @@ routes.post('/account/spread', async (req, res)=>{
 
     }    
 
-        //primer version funcional
- /*    async function blissBotNoti(){  
-        console.log("imageFirst en blissBotNoti function ---->", imageFirst);
-        console.log("Note en blissBotNoti function ---->", Note);  
-        //imaginate luzia que FollowMe es un array con 2000 datos... esto puede ocurrir que perdamos la API de Telegram, Es necesario limitarlo a 100 nada mas.
-        //pero no todos los usuariuos que estan en FollowMe tienen chatId asi que lo que pienso es usar un contador si tiene chatId entonces chat ++ asumiendo que chat inicia en 0
-        //y cuando el contador llega a 99 se detiene la funcion blissBoNoti(). que te parece la idea
 
-        let messageCount = 0; // Inicializa el contador
-
-        const promises = FollowMe.map(async (indexed) => {
-            try {
-                const searchUserStore = await modelUser.findById(new mongoose.Types.ObjectId(indexed));
-                //index siempre existira y es un string que lo uso para ubicar el user en modelUser
-    
-                const chatId = searchUserStore.blissBot.chatId;
-                console.log("chatId ---->", chatId);
-
-                if (chatId){
-                   
-                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
-                        chat_id: chatId,
-                        photo: imageFirst,
-                        caption: `Notificación de Blissenet.com: Spread\n\n ${Note}`
-                    });
-                    console.log('--------------------------- BlissBot----------------------------');
-                    console.log('Mensaje enviado con éxito:', response.data);
-
-                }
-
-            } catch (error) {
-                console.log('--------------------------- BlissBot----------------------------');
-                console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
-            }
-        });
-    
-        await Promise.all(promises);
-    }
-     */
-
-    //segunda version funcional
     //esta es la nueva version con el contador para cuidar no exceder las politicas de Telegram
     async function blissBotNoti() {
         console.log("imageFirst en blissBotNoti function ---->", imageFirst);
@@ -5116,9 +5076,11 @@ routes.post('/account/spread', async (req, res)=>{
                 }
     
             } catch (error) {
-                console.log('--------------------------- BlissBot----------------------------');
-                console.error('Error al enviar el mensaje:', error );
+                console.log('------------------------ BlissBot Error ----------------------');
+                console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
             }
+
+      
         });
     
         await Promise.all(promises);
