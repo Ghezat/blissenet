@@ -4984,11 +4984,12 @@ routes.post('/account/spread', async (req, res)=>{
                 const indexed = FollowMe[i] //un id de usuario que deseo enviar el mensaje;
                 
                 const searchReceive = await modelProfile.find({indexed});
-                console.log("VER searchReceive :", searchReceive); //ver este console;
-                //aveces puede ser .... VER searchReceive : []
+                //console.log("VER searchReceive :", searchReceive); //ver este console para prueba.
+                //aveces puede ser .... VER searchReceive : [] y esto causa error. si no hay una condicion que evalue.
+
                 if (searchReceive.length !==0 ){ //necesito asegurarme que este array es difernete a 0
+
                     console.log("usernameReceive", searchReceive[0].username); //aveces esta line causa problemas, emitiendo un error undefine "usernamer"
-                
                     const usernameReceive = searchReceive[0].username;
 
                     //enviamo el mensaje a este usuario
@@ -5003,11 +5004,6 @@ routes.post('/account/spread', async (req, res)=>{
             console.log("Este es el error en sendingSpread() :", error);
         }    
 
-        // Este es el error en sendingSpread() : TypeError: Cannot read properties of undefined (reading 'username')
-        // at sendingSpread (/home/blissenet/repositories/blissenet/src/routes/account.routes.js:4987:65)
-        // at runMicrotasks (<anonymous>)
-        // at processTicksAndRejections (node:internal/process/task_queues:96:5)
-        // at async ejecutarFunciones (/home/blissenet/repositories/blissenet/src/routes/account.routes.js:5092:13)
     }
 
    
