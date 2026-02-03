@@ -4985,14 +4985,18 @@ routes.post('/account/spread', async (req, res)=>{
                 
                 const searchReceive = await modelProfile.find({indexed});
                 console.log("VER searchReceive :", searchReceive); //ver este console;
-                console.log("usernameReceive", searchReceive[0].username); //aveces esta line causa problemas, emitiendo un error undefine "usernamer"
-                
-                const usernameReceive = searchReceive[0].username;
 
-                //enviamo el mensaje a este usuario
-                const newMessage = new modelMessage( { typeNote: "spread", times: dateSend, username, question : Note, toCreatedArticleId: indexed,  ownerStore: usernameReceive, depart, titleArticle: title, titleURL, productId : titleId, objeAvatar : objAvatar } );
-                console.log("newMessage :", newMessage);
-                const saveMessage = await newMessage.save();
+                if (searchReceive){
+                    console.log("usernameReceive", searchReceive[0].username); //aveces esta line causa problemas, emitiendo un error undefine "usernamer"
+                
+                    const usernameReceive = searchReceive[0].username;
+
+                    //enviamo el mensaje a este usuario
+                    const newMessage = new modelMessage( { typeNote: "spread", times: dateSend, username, question : Note, toCreatedArticleId: indexed,  ownerStore: usernameReceive, depart, titleArticle: title, titleURL, productId : titleId, objeAvatar : objAvatar } );
+                    console.log("newMessage :", newMessage);
+                    const saveMessage = await newMessage.save();
+                }
+
             }
 
         } catch (error) {
