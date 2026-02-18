@@ -19,8 +19,8 @@ routes.get('/view-nautical/', async (req, res)=>{
     const Searcher = req.session.search;
 
     const searcherCache = req.session.searcherCache;
-    console.log("*****************searcherCache***************");
-    console.log("searcherCache ------------------------>", searcherCache);
+    //console.log("*****************searcherCache***************");
+    //console.log("searcherCache ------------------------>", searcherCache);
 
     //delete req.session.search;
     let searchProfile;
@@ -32,6 +32,8 @@ routes.get('/view-nautical/', async (req, res)=>{
         sort : { createdAt : -1 }
     }
 
+    console.log("    /view-nautical  -------------------------------------------------| ");
+
     if (user){
         console.log("Esto es user._id ------>", user._id );
         countryMarketCode = user.seeMarket.countryMarketCode;
@@ -41,11 +43,11 @@ routes.get('/view-nautical/', async (req, res)=>{
         //console.log("este es el user desde la view-items: ",  user);
 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);          
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);          
         
 
         if ( searcherCache ){
-            console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
+            //console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
             cardArticleNautical = await modelNautical.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
             //console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical)
             const countSearch = await modelNautical.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]}).count();
@@ -61,7 +63,7 @@ routes.get('/view-nautical/', async (req, res)=>{
             const countSearch = await modelNautical.find( {$and : [ { countryCode : countryMarketCode },{ paused : false } ] }).count();
             const stateGroup = null;
             const categoryAndSub = await modelNautical.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
             res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
         
@@ -70,7 +72,7 @@ routes.get('/view-nautical/', async (req, res)=>{
     } else {
 
         if ( searcherCache ){
-            console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
+            //console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
             cardArticleNautical = await modelNautical.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ paused : false } ] }, options );       
             //console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical)
             const countSearch = await modelNautical.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}},{ paused : false } ]}).count();
@@ -86,7 +88,7 @@ routes.get('/view-nautical/', async (req, res)=>{
             const countSearch = await modelNautical.find( {$and : [ { paused : false } ] }).count();
             const stateGroup = null;
             const categoryAndSub = await modelNautical.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
             res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
         
@@ -102,19 +104,19 @@ routes.post('/view-nautical/', async (req, res)=>{
     const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    console.log(":::: view-items ::::")
-    console.log(req.body);
+    //console.log(":::: view-items ::::")
+    //console.log(req.body);
     const { searcher, category, subCategory } = req.body;
-    console.log("searcher ----> ",searcher);
-    console.log("category ----> ",category);
-    console.log("subCategory ----> ",subCategory);
+    //console.log("searcher ----> ",searcher);
+    //console.log("category ----> ",category);
+    //console.log("subCategory ----> ",subCategory);
 
     req.session.search = searcher;
     const Searcher = req.session.search;
     //delete req.session.search;
-    console.log(":::: Esto es type searcher ::::", typeof searcher );
-    console.log(":::: Esto es type category ::::", typeof category );
-    console.log(":::: Esto es type subCategory ::::", typeof subCategory );
+    //console.log(":::: Esto es type searcher ::::", typeof searcher );
+    //console.log(":::: Esto es type category ::::", typeof category );
+    //console.log(":::: Esto es type subCategory ::::", typeof subCategory );
 
     req.session.searcherCache = Searcher;
     let searcherCache = req.session.searcherCache;
@@ -128,40 +130,40 @@ routes.post('/view-nautical/', async (req, res)=>{
     }
 
     if (user){
-        console.log("Esto es user._id ------>", user._id );
+        //console.log("Esto es user._id ------>", user._id );
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
   
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);         
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);         
 
         if (category == "All" && searcher ===""){
 
-            console.log("************ searcherCache ************")
-            console.log("searcherCache ---->", searcherCache);
+            //console.log("************ searcherCache ************")
+            //console.log("searcherCache ---->", searcherCache);
 
             const cardArticleNautical = await modelNautical.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
-            console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical);
+            //console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical);
             const countSearch = await modelNautical.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]}).count();
             const stateGroup = await modelNautical.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
-            console.log("aqui estados por grupo :", stateGroup);
+            //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
 
             res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
     
         } else if (category == "All" && searcher !== "") { 
     
-            console.log("************ searcherCache ************")
-            console.log("searcherCache ---->", searcherCache);
+            //console.log("************ searcherCache ************")
+            //console.log("searcherCache ---->", searcherCache);
             
             const cardArticleNautical = await modelNautical.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
             //console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical);
             const countSearch = await modelNautical.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]}).count();
-            console.log("|||||:::::::: Esto es countSearch", countSearch);
+            //console.log("|||||:::::::: Esto es countSearch", countSearch);
             const stateGroup = await modelNautical.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
@@ -178,9 +180,9 @@ routes.post('/view-nautical/', async (req, res)=>{
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
                 const countSearch = await modelNautical.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
                 const stateGroup = await modelNautical.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-                console.log("aqui estados por grupo :", stateGroup);
+                //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
@@ -189,9 +191,9 @@ routes.post('/view-nautical/', async (req, res)=>{
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
                 const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
                 const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-                console.log("::: Aqui estados por grupo :", stateGroup);
+                //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
@@ -200,27 +202,27 @@ routes.post('/view-nautical/', async (req, res)=>{
         } else if (category !== "All" && category !== undefined && searcher ==="") {
 
             if (subCategory == "All"){
-                console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
-                console.log("subCategory == All");
+                //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
+                //console.log("subCategory == All");
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{category} ]}  ,options);
                 const countSearch = await modelNautical.find( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
                 const stateGroup = await modelNautical.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-                console.log("aqui estados por grupo :", stateGroup);
+                //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
-                console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
-                console.log("subCategory !== All");
+                //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
+                //console.log("subCategory !== All");
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ { countryCode : countryMarketCode },{paused : false},{category} ]}  ,options);
-                console.log("Ver cardArticleNautical : ", cardArticleNautical)
+                //console.log("Ver cardArticleNautical : ", cardArticleNautical)
                 const countSearch = await modelNautical.find( {$and : [ { countryCode : countryMarketCode },{paused : false },{ category } ]}).count();
                 const stateGroup = await modelNautical.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-                console.log("::: Aqui estados por grupo :", stateGroup);
+                //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category }] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
@@ -231,29 +233,29 @@ routes.post('/view-nautical/', async (req, res)=>{
 
         if (category == "All" && searcher ===""){
 
-            console.log("************ searcherCache ************")
-            console.log("searcherCache ---->", searcherCache);
+            //console.log("************ searcherCache ************")
+            //console.log("searcherCache ---->", searcherCache);
 
             const cardArticleNautical = await modelNautical.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false } ] }, options );       
-            console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical);
+            //console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical);
             const countSearch = await modelNautical.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ]}).count();
             const stateGroup = await modelNautical.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
-            console.log("aqui estados por grupo :", stateGroup);
+            //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { paused : false },{category}] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
 
             res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
     
         } else if (category == "All" && searcher !== "") { 
     
-            console.log("************ searcherCache ************")
-            console.log("searcherCache ---->", searcherCache);
+            //console.log("************ searcherCache ************")
+            //console.log("searcherCache ---->", searcherCache);
             
             const cardArticleNautical = await modelNautical.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false } ] }, options );       
             //console.log(":::-- Aqui cardArticleNautical --:::", cardArticleNautical);
             const countSearch = await modelNautical.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ]}).count();
-            console.log("|||||:::::::: Esto es countSearch", countSearch);
+            //console.log("|||||:::::::: Esto es countSearch", countSearch);
             const stateGroup = await modelNautical.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { paused : false },{category}] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
@@ -270,9 +272,9 @@ routes.post('/view-nautical/', async (req, res)=>{
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}  , options);
                 const countSearch = await modelNautical.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}).count();
                 const stateGroup = await modelNautical.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-                console.log("aqui estados por grupo :", stateGroup);
+                //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { paused : false },{category}] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 
@@ -281,9 +283,9 @@ routes.post('/view-nautical/', async (req, res)=>{
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}  , options);
                 const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}).count();
                 const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-                console.log("::: Aqui estados por grupo :", stateGroup);
+                //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { paused : false },{category}] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 
@@ -292,27 +294,27 @@ routes.post('/view-nautical/', async (req, res)=>{
         } else if (category !== "All" && category !== undefined && searcher ==="") {
 
             if (subCategory == "All"){
-                console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
-                console.log("subCategory == All");
+                //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
+                //console.log("subCategory == All");
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ { paused : false },{category} ]}  ,options);
                 const countSearch = await modelNautical.find( {$and : [ { paused : false },{ category } ]}).count();
                 const stateGroup = await modelNautical.aggregate([ {$match: {$and: [ { paused : false },{category} ] } },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-                console.log("aqui estados por grupo :", stateGroup);
+                //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { paused : false },{category} ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 
             } else {
-                console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
-                console.log("subCategory !== All");
+                //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
+                //console.log("subCategory !== All");
                 const cardArticleNautical = await modelNautical.paginate( {$and : [ {paused : false},{category} ]}  ,options);
-                console.log("Ver cardArticleNautical : ", cardArticleNautical)
+                //console.log("Ver cardArticleNautical : ", cardArticleNautical)
                 const countSearch = await modelNautical.find( {$and : [ {paused : false },{ category } ]}).count();
                 const stateGroup = await modelNautical.aggregate([ {$match: {$and: [ { paused : false },{category } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-                console.log("::: Aqui estados por grupo :", stateGroup);
+                //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelNautical.aggregate([ {$match: {$and: [ { paused : false },{ category }] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-nautical', { user, searchProfile, cardArticleNautical, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 

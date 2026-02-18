@@ -158,13 +158,15 @@ routes.get('/myaccount/messenger', async (req,res)=>{
 
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
  
+    console.log("    /myaccount/messenger -------------------------------------------------| "); 
+    
     if (user){
         userId = user._id;
-        console.log("este es el id del usuarios logeado --->", userId);
+        //console.log("este es el id del usuarios logeado --->", userId);
 
         searchProfile = await modelProfile.find({ indexed : userId });
     
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
 
         //primer paso ubicar todos los mensajes que tenga el usuario logeado y que el campo answer diga waiting.
         const searchMessageInbox0 = await modelMessages.find( { $and: [{ toCreatedArticleId : userId },{answer: "waiting"}, { typeNote: { $ne: "availability-noti" } } ] } );
@@ -173,21 +175,21 @@ routes.get('/myaccount/messenger', async (req,res)=>{
         searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
         searchBoxMessageInbox.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); //aqui ordenamos de menor a mayor por fecha
         searchMessageInbox = searchBoxMessageInbox; 
-        console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchMessageInbox);
+        //console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchMessageInbox);
        
         countMessagesInbox = searchMessageInbox.length;
    
-        console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
+        //console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
 
         const searchMessageOutbox = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } ).sort({ createdAt: 1 }); // 1 para orden ascendente, -1 para descendente;
         const searchMessageOutboxAlert = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
         countMessagesOutbox = searchMessageOutboxAlert.length;
 
 
-        console.log('esta es la cantidad de mensajes que tiene este usario en Outbox--->', countMessagesOutbox)
+        //console.log('esta es la cantidad de mensajes que tiene este usario en Outbox--->', countMessagesOutbox)
 
         totalMessages = (countMessagesInbox + countMessagesOutbox);
-        console.log("este es la totalidad de los mensajes en inbox y en outbox ----->", totalMessages)
+        //console.log("este es la totalidad de los mensajes en inbox y en outbox ----->", totalMessages)
         //aqui tenemos la sumatoria de mensajes en Inbox y Outbox
 
         req.session.countMessages = totalMessages

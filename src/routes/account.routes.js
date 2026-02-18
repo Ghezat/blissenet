@@ -679,12 +679,12 @@ routes.get('/account/:storeUsername/:segment', async (req, res)=>{
 
     searchOffert()
         .then(()=>{
-            console.log("Aqui lo recaudado de las ofertas");
-            console.log("boxOffert --->",boxOffert);
+            //console.log("Aqui lo recaudado de las ofertas");
+            //console.log("boxOffert --->",boxOffert);
             
         })
         .catch((err)=>{
-            console.log("Ha ocurrido un error en la function searchOffert()")
+            //console.log("Ha ocurrido un error en la function searchOffert()")
         })
 
 
@@ -5363,9 +5363,10 @@ routes.post('/acount/blissBot/userTelegram', async(req, res)=>{
 // Endpoint para conectar usuarios de Blissenet con Telegram
 routes.post(`/webhook/${Token}`, async(req, res) => {
     const update = req.body;
-    console.log("....................Telegram ....................:");
-    console.log("update de Telegram ....................:", update );
+    console.log("....................Telegram ....................:"); //no se ve 
+    console.log("update de Telegram ....................:", update ); //no se ve
     
+
     // Verificar si es un mensaje y contiene el comando /start
     if (update.message && update.message.text === '/start') {
         const chatId = update.message.chat.id;
@@ -5378,6 +5379,10 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
         // Aquí el username de telegram de este usuario que esta interactuando con el BlissBot
         console.log(`Capturado usernameTelegram: ${usernameTelegram}`);
         //Capturado usernameTelegram: orbigpzo
+
+      //  Capturado chat_id: 8430576767
+      //  Capturado usernameTelegram: orbigpzo
+      //  updateUser -------> null
 
         const updateUser = await modelUser.findOneAndUpdate(
             { 'blissBot.userTelegram': usernameTelegram },
@@ -5432,7 +5437,13 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
     res.sendStatus(200);
 });
 
-/* 
+/* IMPORTANTE QUE ES UN webhook?
+El webhook es el mecanismo que permite que tu servidor reciba actualizaciones 
+en tiempo real desde la plataforma del bot (como Telegram, por ejemplo).
+Cuando se produce un evento, como que un usuario envíe el comando `/start`,
+el webhook envía una solicitud POST a la URL que hayas configurado en tu servidor. 
+Esa solicitud contiene información sobre el evento, como el mensaje y el usuario,
+lo que permite que tu servidor ejecute el script correspondiente y responda adecuadamente. 
 
 //ejemplo de mensaje mas imagen
 axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {

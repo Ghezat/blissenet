@@ -85,7 +85,8 @@ routes.get('/', async(req, res)=>{
     let searchProfile;
     const boxResult = [];
 
-        
+    console.log("    /  -------------------------------------------------| ");    
+
     if (user){
         //console.log("Esto es user._id ------>", user._id );
         const userId = user._id;
@@ -271,8 +272,8 @@ routes.get('/', async(req, res)=>{
                     .then(()=>{
                         searchBestView()
                             .then(()=>{
-                                console.log("Aqui lo recaudado de las ofertas");
-                                console.log("boxOffert ----------------con user---------------->",boxOffert);
+                                //console.log("Aqui lo recaudado de las ofertas");
+                                //console.log("boxOffert ----------------con user---------------->",boxOffert);
                                 res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, countNegotiationsBuySell, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                             })
                             .catch((err)=>{
@@ -401,7 +402,7 @@ routes.get('/', async(req, res)=>{
             .then(()=>{
                 searchBestView()
                     .then(()=>{
-                        console.log("Aqui lo recaudado de las ofertas");
+                        //console.log("Aqui lo recaudado de las ofertas");
                         //console.log("boxOffert ---------------sin user------------------->",boxOffert);
                         res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                     })
@@ -437,10 +438,9 @@ routes.get('/restcountries', async(req, res)=>{
 });
 
 routes.get('/requireDate', async(req, res)=>{
-    const rateUpdate = await modelRateCurrency.find();
-    const rateSort = rateUpdate.reverse()[0];
-    console.log("Esto es rateSort >>", rateSort);
-    console.log("******RATE UPDATE******");
+    //const rateUpdate = await modelRateCurrency.find();
+    //const rateSort = rateUpdate.reverse()[0];
+    //console.log("Esto es rateSort >>", rateSort);
 
     //vamos a sacar la fecha del servidor
     const date = new Date()
@@ -633,8 +633,8 @@ routes.get('/percent', async (req,res)=>{
         percentResult.push({ 'servicio' : percentSer});
     }
     const percentSub = await modelAuction.find().count();
-    console.log("************************percentSub***********************************")
-    console.log("Esto es percentSub ------------------------------------->", percentSub);
+    //console.log("************************percentSub****************************")
+    //console.log("Esto es percentSub ------------------------------------->", percentSub);
     if (percentSub >= 0) {
         percentResult.push({ 'subasta' : percentSub});
     }
@@ -2653,8 +2653,8 @@ routes.get('/zonabliss/:user_id', async(req, res)=>{
 
                 searchOffert()
                     .then(()=>{
-                        console.log("Aqui lo recaudado de las ofertas");
-                        console.log("boxOffert --->",boxOffert);
+                        //console.log("Aqui lo recaudado de las ofertas");
+                        //console.log("boxOffert --->",boxOffert);
                         res.render('page/zonabliss', { user, searchProfile, searchBanner,  countMessages, countNegotiationsBuySell, boxOffert });
                     })
                     .catch((err)=>{

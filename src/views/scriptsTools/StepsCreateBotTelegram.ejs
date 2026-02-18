@@ -17,13 +17,14 @@
    token: 7299388374:AAGKT18rdi8jR7kTBUib440rT4C6i0UZxuY --viejo
    token: 8461311405:AAGbA-vT3bwGhm9TgWRcincFD0APHhX50jQ --nuevo
    
+   
 4. **Configura el Webhook**:
     Abre tu navegador o usa una herramienta como Postman y envía una solicitud a la siguiente URL:
     ```
     https://api.telegram.org/bot<TOKEN>/setWebhook?url=<YOUR_WEBHOOK_URL>   
     ```
     Reemplaza `<TOKEN>` con el token de tu nuevo bot y `<YOUR_WEBHOOK_URL>` con la URL donde está tu endpoint (por ejemplo, `https://tu-dominio.com/webhook/<TOKEN>`).
-    https://api.telegram.org/bot7299388374:AAGKT18rdi8jR7kTBUib440rT4C6i0UZxuY/setWebhook?url=https://blissenet.com/webhook/7299388374:AAGKT18rdi8jR7kTBUib440rT4C6i0UZxuY 
+    https://api.telegram.org/bot8461311405:AAGbA-vT3bwGhm9TgWRcincFD0APHhX50jQ/setWebhook?url=https://blissenet.com/webhook/8461311405:AAGbA-vT3bwGhm9TgWRcincFD0APHhX50jQ
     
     **Verifica la Respuesta**:
     Después de realizar la solicitud, deberías recibir una respuesta de Telegram que confirme que el webhook se ha configurado correctamente. Si hay un error, revisa el mensaje de error.
