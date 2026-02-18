@@ -5385,75 +5385,82 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
       //  updateUser -------> null
 
     /*  Capturado chat_id: 8430576767
-        Capturado usernameTelegram: orbigpzo
+        Capturado usernameTelegram: orbigpzo  no existe y causa error
         updateUser -------> null
         TypeError: Cannot read properties of null (reading 'username') */
 
-        const updateUser = await modelUser.findOneAndUpdate(
-            { 'blissBot.userTelegram': usernameTelegram },
-            { $set: { 'blissBot.chatId': chatId } },
-            { new: true }
-        );
+        const searchUser = await modelUser.findOne( {'blissBot.userTelegram': usernameTelegram } );
+        console.log(" Esto es searchUser :", searchUser);
+        if (searchUser){
 
-        //console.log("updateUser ------->", updateUser);    
-        req.session.user = updateUser//actualizo el user
+            const updateUser = await modelUser.findOneAndUpdate(
+                { 'blissBot.userTelegram': usernameTelegram },
+                { $set: { 'blissBot.chatId': chatId } },
+                { new: true }
+            );
+
+            //console.log("updateUser ------->", updateUser);    
+            req.session.user = updateUser//actualizo el user
+            
+            const userBliss = updateUser.username;
         
-        const userBliss = updateUser.username;
-        
-/*       //condicion vieja. 
-        if (updateUser){
+    /*       //condicion vieja. 
+            if (updateUser){
 
-            // Enviar mensaje de bienvenida al usuario
-            const Message = `¡Hola! ${userBliss} has sincronizado satistactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram`;
+                // Enviar mensaje de bienvenida al usuario
+                const Message = `¡Hola! ${userBliss} has sincronizado satistactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram`;
 
-            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                chat_id: chatId,
-                text: Message,
-            })
-            .then(response => {
-                console.log('Mensaje enviado con éxito:', response.data);
-                location.reload(); //esto refresca la pantalla y mostrará elmensaje de Conectado a BlissBot.
-            })
-            .catch(error => {
-                console.error('Error al enviar el mensaje:', error);
-            });
+                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                    chat_id: chatId,
+                    text: Message,
+                })
+                .then(response => {
+                    console.log('Mensaje enviado con éxito:', response.data);
+                    location.reload(); //esto refresca la pantalla y mostrará elmensaje de Conectado a BlissBot.
+                })
+                .catch(error => {
+                    console.error('Error al enviar el mensaje:', error);
+                });
 
-        } else {
+            } else {
 
-            // Enviar mensaje de bienvenida al usuario
-            const Message = '¡Hola! Has iniciado una conversación con BlissBot.';
+                // Enviar mensaje de bienvenida al usuario
+                const Message = '¡Hola! Has iniciado una conversación con BlissBot.';
 
-            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                chat_id: chatId,
-                text: Message,
-            })
-            .then(response => {
-                console.log('Mensaje enviado con éxito:', response.data);
-            })
-            .catch(error => {
-                console.error('Error al enviar el mensaje:', error);
-            });
+                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                    chat_id: chatId,
+                    text: Message,
+                })
+                .then(response => {
+                    console.log('Mensaje enviado con éxito:', response.data);
+                })
+                .catch(error => {
+                    console.error('Error al enviar el mensaje:', error);
+                });
 
-        } */
+            } */
 
-        // Verificar si updateUser es válido
-        if (updateUser !== null && updateUser !== undefined) {
-            // Enviar mensaje de bienvenida al usuario
-            const Message = `¡Hola! ${userBliss} ha sincronizado satisfactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram`;
+            // Verificar si updateUser es válido
+            if (updateUser !== null && updateUser !== undefined) {
+                // Enviar mensaje de bienvenida al usuario
+                const Message = `¡Hola! ${userBliss} ha sincronizado satisfactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram`;
 
-            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                chat_id: chatId,
-                text: Message,
-            })
-            .then(response => {
-                console.log('Mensaje enviado con éxito:', response.data);
-                location.reload(); // Esto refresca la pantalla y mostrará el mensaje de Conectado a BlissBot.
-            })
-            .catch(error => {
-                console.error('Error al enviar el mensaje:', error);
-            });
+                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                    chat_id: chatId,
+                    text: Message,
+                })
+                .then(response => {
+                    console.log('Mensaje enviado con éxito:', response.data);
+                    location.reload(); // Esto refresca la pantalla y mostrará el mensaje de Conectado a BlissBot.
+                })
+                .catch(error => {
+                    console.error('Error al enviar el mensaje:', error);
+                });
 
-        } 
+            } 
+
+        }
+
 
     }
 
