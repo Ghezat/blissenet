@@ -5451,11 +5451,11 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
                 })
                 .then(response => {
                     console.log('Mensaje enviado con éxito:', response.data);
-                    location.reload(); // Esto refresca la pantalla y mostrará el mensaje de Conectado a BlissBot.
                 })
                 .catch(error => {
                     console.error('Error al enviar el mensaje:', error);
                 });
+               
 
             } 
 
