@@ -55,8 +55,7 @@ cloudinary.config({
 
 routes.get('/product/:depart/:id/:title', async(req, res)=>{
     const user = req.session.user;
-    
-    console.log(`    user:  ${user.username } -------------------------------------------------| `);                             
+                                
     const reportDone = req.session.reportDone;
     const reportSuccess = req.session.reportSuccess;
     const errorReport = req.session.errorReport;
@@ -82,12 +81,15 @@ routes.get('/product/:depart/:id/:title', async(req, res)=>{
     console.log(`    depart:  ${depart}  title: ${title} ------------------------------------------------| `); 
 
     if (user){
+        console.log(`    user:  ${user.username } -------------------------------------------------| `); 
         //console.log("Esto es user._id ------>", user._id );
         searchProfile = await modelProfile.find({ indexed : user._id });
         //console.log("Aqui el profile de la cuenta del visitante -->", searchProfile);
 
         favoritesOfUser = await modelFavorites.find({indexed: user._id}); //todos los favoritos de este usuario,
         //console.log("favoritesOfUser ....... :", favoritesOfUser);
+    } else {
+        console.log(`    user:  ${user} -------------------------------------------------| `); 
     }
 
     //console.log('este es el departamento ----->', depart)
