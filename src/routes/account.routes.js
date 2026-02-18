@@ -5362,15 +5362,15 @@ routes.post('/acount/blissBot/userTelegram', async(req, res)=>{
 
 // Endpoint para conectar usuarios de Blissenet con Telegram
 routes.post(`/webhook/${Token}`, async(req, res) => {
-    const update = req.body;
+    const information = req.body;
     console.log("....................Telegram ....................:"); //no se ve 
-    console.log("update de Telegram ....................:", update ); //no se ve
+    console.log("information de Telegram ....................:", information ); //no se ve
     
 
     // Verificar si es un mensaje y contiene el comando /start
-    if (update.message && update.message.text === '/start') {
-        const chatId = update.message.chat.id;
-        const usernameTelegram = update.message.chat.username;
+    if (information.message && information.message.text === '/start') {
+        const chatId = information.message.chat.id;
+        const usernameTelegram = information.message.chat.username;
 
         // Aquí el chatId del usuario que esta interactuando con el BlissBot
         console.log(`Capturado chat_id: ${chatId}`);
@@ -5384,17 +5384,23 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
       //  Capturado usernameTelegram: orbigpzo
       //  updateUser -------> null
 
+    /*  Capturado chat_id: 8430576767
+        Capturado usernameTelegram: orbigpzo
+        updateUser -------> null
+        TypeError: Cannot read properties of null (reading 'username') */
+
         const updateUser = await modelUser.findOneAndUpdate(
             { 'blissBot.userTelegram': usernameTelegram },
             { $set: { 'blissBot.chatId': chatId } },
             { new: true }
         );
 
-        console.log("updateUser ------->", updateUser);    
+        //console.log("updateUser ------->", updateUser);    
         req.session.user = updateUser//actualizo el user
         
         const userBliss = updateUser.username;
         
+/*       //condicion vieja. 
         if (updateUser){
 
             // Enviar mensaje de bienvenida al usuario
@@ -5428,8 +5434,26 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
                 console.error('Error al enviar el mensaje:', error);
             });
 
-        }
+        } */
 
+        // Verificar si updateUser es válido
+        if (updateUser !== null && updateUser !== undefined) {
+            // Enviar mensaje de bienvenida al usuario
+            const Message = `¡Hola! ${userBliss} ha sincronizado satisfactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram`;
+
+            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                chat_id: chatId,
+                text: Message,
+            })
+            .then(response => {
+                console.log('Mensaje enviado con éxito:', response.data);
+                location.reload(); // Esto refresca la pantalla y mostrará el mensaje de Conectado a BlissBot.
+            })
+            .catch(error => {
+                console.error('Error al enviar el mensaje:', error);
+            });
+
+        } 
 
     }
 
