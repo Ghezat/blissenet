@@ -5374,7 +5374,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
         console.log("usernameTelegram ....:", usernameTelegram);// segun esto esra produciendo un error, y no se porque
 
         if (usernameTelegram !== null){
-            Message= `Su usuario en Telegram es : <b>${usernameTelegram}</b>\n🛈 Nota : Si has cambiado tu usuario recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+            Message= `Su usuario en Telegram es : **${usernameTelegram}**\n🛈 Nota : Si has cambiado tu usuario recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
         } else {
             Message= `Actualmente no tienes un usuario.\n🛈 Nota : Para poder conectar con BlissBot tienes que crear un ususrio en Telegram.`;
         }
