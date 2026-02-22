@@ -5374,9 +5374,9 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
         console.log("usernameTelegram ....:", usernameTelegram);
 
         if (usernameTelegram !== null){
-            Message: `Su usuario en Telegram es : ${usernameTelegram}/n Nota : si has cambiado tu usuario recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+            Message= `Su usuario en Telegram es : ${usernameTelegram}/n Nota : si has cambiado tu usuario recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
         } else {
-            Message: `Actualmente no tienes un usuarios, para poder conectar con BlissBot tienes que crear un ususrio en Telegram.`;
+            Message= `Actualmente no tienes un usuarios, para poder conectar con BlissBot tienes que crear un ususrio en Telegram.`;
         }
 
         
@@ -5390,6 +5390,14 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
         .catch(error => {
             console.error('Error al enviar el mensaje:', error.response.data);
         });
+
+        usernameTelegram ....: orbigpzo3
+        POST /webhook/8461311405:AAGbA-vT3bwGhm9TgWRcincFD0APHhX50jQ 200 143.821 ms - 2
+        Error al enviar el mensaje: {
+        ok: false,
+        error_code: 400,
+        description: 'Bad Request: message text is empty'
+        }
 
     }    
 
