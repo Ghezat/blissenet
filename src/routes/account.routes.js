@@ -5371,12 +5371,17 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
         const user = req.session.user;
         const usernameBlissenet = user.username;
 
+        console.log("usernameBlissenet .......", usernameBlissenet);
+
         const chatId = information.message.chat.id;
         const usernameTelegram = information.message.chat.username;
         let Message;
 
         console.log("usernameTelegram ....:", usernameTelegram);
         const searchUser = await modelUser.findOne( {'blissBot.userTelegram': usernameTelegram } );
+        
+        console.log("searchUser .......", searchUser);
+        
 
         if (usernameTelegram !== null){
 
