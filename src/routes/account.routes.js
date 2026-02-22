@@ -5368,12 +5368,6 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
     
     if (information.message && information.message.text === '/info') {
 
-        const user = req.session.user;
-        console.log("user .......", user);
-        const usernameBlissenet = user.username;
-        
-        console.log("usernameBlissenet .......", usernameBlissenet);
-
         const chatId = information.message.chat.id;
         const usernameTelegram = information.message.chat.username;
         let Message;
@@ -5388,6 +5382,8 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
 
             if (searchUser){
 
+                const usernameBlissenet = searchUser.username;
+
                 Message= `  Usuario en Blissenet: ${usernameBlissenet}. \n
                             Usuario en Telegram: ${usernameTelegram}. \n
                             Conectado a BlissBot: ✅ \n\n
@@ -5396,10 +5392,10 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
             } else {
 
 
-                Message= `  Usuario en Blissenet: ${usernameBlissenet}. \n
-                            Usuario en Telegram: NO Vinculado. \n
+                Message= `  Usuario en Blissenet: NO Vinculado. \n
+                            Usuario en Telegram: ${usernameTelegram}. \n
                             Conectado a BlissBot: ❎ \n\n
-                            🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;                
+                            🛈 Nota : Tu cuenta de Blissenet no esta vinculado a BlissBot`;                
             }
            
         } else {
