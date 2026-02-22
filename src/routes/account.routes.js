@@ -5366,6 +5366,32 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
     console.log("....................Telegram ....................:"); //no se ve 
     console.log("information de Telegram ....................:", information ); //no se ve
     
+    if (information.message && information.message.text === '/info') {
+        const chatId = information.message.chat.id;
+        const usernameTelegram = information.message.chat.username;
+        let Message;
+
+        console.log("usernameTelegram ....:", usernameTelegram);
+
+        if (usernameTelegram !== null){
+            Message: `Su usuario en Telegram es : ${usernameTelegram}/n Nota : si has cambiado tu usuario recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+        } else {
+            Message: `Actualmente no tienes un usuarios, para poder conectar con BlissBot tienes que crear un ususrio en Telegram.`;
+        }
+
+        
+        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+            chat_id: chatId,
+            text: Message,
+        })
+        .then(response => {
+            console.log('Mensaje enviado con éxito:', response.data);
+        })
+        .catch(error => {
+            console.error('Error al enviar el mensaje:', error.response.data);
+        });
+
+    }    
 
     // Verificar si es un mensaje y contiene el comando /start
     if (information.message && information.message.text === '/start') {
@@ -5384,7 +5410,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
       //  Capturado usernameTelegram: orbigpzo
       //  updateUser -------> null
 
-    /*  Capturado chat_id: 8430576767
+      /*Capturado chat_id: 8430576767
         Capturado usernameTelegram: orbigpzo  no existe y causa error
         updateUser -------> null
         TypeError: Cannot read properties of null (reading 'username') */
@@ -5403,42 +5429,6 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
             req.session.user = updateUser//actualizo el user
             
             const userBliss = updateUser.username;
-        
-    /*       //condicion vieja. 
-            if (updateUser){
-
-                // Enviar mensaje de bienvenida al usuario
-                const Message = `¡Hola! ${userBliss} has sincronizado satistactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram`;
-
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                    chat_id: chatId,
-                    text: Message,
-                })
-                .then(response => {
-                    console.log('Mensaje enviado con éxito:', response.data);
-                    location.reload(); //esto refresca la pantalla y mostrará elmensaje de Conectado a BlissBot.
-                })
-                .catch(error => {
-                    console.error('Error al enviar el mensaje:', error);
-                });
-
-            } else {
-
-                // Enviar mensaje de bienvenida al usuario
-                const Message = '¡Hola! Has iniciado una conversación con BlissBot.';
-
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                    chat_id: chatId,
-                    text: Message,
-                })
-                .then(response => {
-                    console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
-                    console.error('Error al enviar el mensaje:', error);
-                });
-
-            } */
 
             // Verificar si updateUser es válido
             if (updateUser !== null && updateUser !== undefined) {
@@ -5453,7 +5443,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
                     console.log('Mensaje enviado con éxito:', response.data);
                 })
                 .catch(error => {
-                    console.error('Error al enviar el mensaje:', error);
+                    console.error('Error al enviar el mensaje:', error.response.data);
                 });
                
 
@@ -5492,7 +5482,7 @@ axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
     console.log('Mensaje enviado con éxito:', response.data);
 })
 .catch(error => {
-    console.error('Error al enviar el mensaje:', error);
+    console.error('Error al enviar el mensaje:', error.response.data);
 });
 
 */
