@@ -5369,8 +5369,9 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
     if (information.message && information.message.text === '/info') {
 
         const user = req.session.user;
+        console.log("user .......", user);
         const usernameBlissenet = user.username;
-
+        
         console.log("usernameBlissenet .......", usernameBlissenet);
 
         const chatId = information.message.chat.id;
