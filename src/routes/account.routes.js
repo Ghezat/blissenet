@@ -5367,14 +5367,35 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
     console.log("information de Telegram ....................:", information ); //no se ve
     
     if (information.message && information.message.text === '/info') {
+
+        const user = req.session.user;
+        const usernameBlissenet = user.username;
+
         const chatId = information.message.chat.id;
         const usernameTelegram = information.message.chat.username;
         let Message;
 
-        console.log("usernameTelegram ....:", usernameTelegram);// segun esto esra produciendo un error, y no se porque
+        console.log("usernameTelegram ....:", usernameTelegram);
+        const searchUser = await modelUser.findOne( {'blissBot.userTelegram': usernameTelegram } );
 
         if (usernameTelegram !== null){
-            Message= `Su usuario en Telegram es : **${usernameTelegram}**\n🛈 Nota : Si has cambiado tu usuario recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+
+            if (searchUser){
+
+                Message= `  Usuario en Blissenet: ${usernameBlissenet}. \n
+                            Usuario en Telegram: ${usernameTelegram}. \n
+                            Conectado a BlissBot: ✅ \n\n
+                            🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+
+            } else {
+
+
+                Message= `  Usuario en Blissenet: ${usernameBlissenet}. \n
+                            Usuario en Telegram: NO Vinculado. \n
+                            Conectado a BlissBot: ❎ \n\n
+                            🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;                
+            }
+           
         } else {
             Message= `Actualmente no tienes un usuario.\n🛈 Nota : Para poder conectar con BlissBot tienes que crear un ususrio en Telegram.`;
         }
