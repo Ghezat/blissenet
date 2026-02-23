@@ -5450,7 +5450,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
             // Verificar si updateUser es válido
             if (updateUser !== null && updateUser !== undefined) {
                 // Enviar mensaje de bienvenida al usuario
-                const Message = `¡Hola! ${userBliss} cuenta sincronizada satisfactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram.\n 📍Obtener información use el comando /info `;
+                const Message = `¡Hola! ${userBliss} cuenta sincronizada satisfactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram.\n\n/info - Obtener información de cuenta.`;
 
                 axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
