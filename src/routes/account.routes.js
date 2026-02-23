@@ -5378,25 +5378,21 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
         console.log("searchUser .......", searchUser);
         
 
-        if (usernameTelegram !== null){
+        if (usernameTelegram !== null){ //Tiene un usuario en telegram
 
-            if (searchUser){
+            if (searchUser){ //Tiene blissBot vinculado
 
                 const usernameBlissenet = searchUser.username;
 
-                Message= `Usuario en Blissenet: ${usernameBlissenet}.\nUsuario en Telegram: ${usernameTelegram}.\nConectado a BlissBot: ✅\n\n🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+                Message= `Usuario en Blissenet : ${usernameBlissenet}\nUsuario en Telegram : ${usernameTelegram}\nConectado a BlissBot : ✅\n\n🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
 
             } else {
 
-
-                Message= `  Usuario en Blissenet: NO Vinculado. \n
-                            Usuario en Telegram: ${usernameTelegram}. \n
-                            Conectado a BlissBot: ❎ \n\n
-                            🛈 Nota : Tu cuenta de Blissenet no esta vinculado a BlissBot`;                
+                Message= `Usuario en Blissenet : NO Vinculado\nUsuario en Telegram : ${usernameTelegram}\nConectado a BlissBot: ❎\n\n🛈 Nota : Tu cuenta de Blissenet no esta vinculado a BlissBot`;                
             }
            
         } else {
-            Message= `Actualmente no tienes un usuario.\n🛈 Nota : Para poder conectar con BlissBot tienes que crear un ususrio en Telegram.`;
+            Message= `Actualmente no tienes un usuario de Telegram.\n\n🛈 Nota : Para poder conectar con BlissBot tienes que crear un ususrio en Telegram.`;
         }
 
         
