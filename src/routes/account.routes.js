@@ -5384,10 +5384,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
 
                 const usernameBlissenet = searchUser.username;
 
-                Message= `  Usuario en Blissenet: ${usernameBlissenet}. \n
-                            Usuario en Telegram: ${usernameTelegram}. \n
-                            Conectado a BlissBot: ✅ \n\n
-                            🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+                Message= `Usuario en Blissenet: ${usernameBlissenet}.\nUsuario en Telegram: ${usernameTelegram}.\nConectado a BlissBot: ✅\n\n🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
 
             } else {
 
