@@ -2084,6 +2084,7 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
       const mailhash = searchProfile.mailhash;
       const country = searchProfile.country; const flag = searchProfile.flag; 
+      const chatId = searchProfile.blissBot.chatId; //aqui obtenemos el chatId de este usuairo, puede ser vacio o con valor string
 
       async function NotificationRate(){
 
@@ -2125,6 +2126,30 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
   
       }
 
+      async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+          console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+
+          const message = `Notificación de Blissenet.com: Rate\n\n ¡Hola, la comunidad de Blissenet necesita que califiques ${productTitle}!. Por favor ve a la plataforma deja tu calificación y comentario.`;
+          console.log("chatId --->", chatId);      
+          console.log("image --->", image);
+          
+
+          axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+              chat_id: chatId,
+              photo: image,
+              caption: message // El mensaje que quieres enviar junto a la imagen
+          })
+          .then(response => {
+              console.log('--------------------------- BlissBot----------------------------');
+              console.log('Mensaje enviado con éxito:', response.data);
+          })
+          .catch(error => {
+              console.log('--------------------------- BlissBot----------------------------');
+              console.error('Error al enviar el mensaje:', error.response.data); //esto es porque el error del api de telegram es muy extenso y para filtar la informacion se hace asi. si quieres verlo uso solo "error"
+          });
+  
+      }
+
       
       buyerRating()
         .then(()=>{
@@ -2135,6 +2160,16 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
                   .then(()=>{
                       const response = { code: "ok", message: "Calificación y comentario recibido." };
                       res.json(response);
+
+                      if (chatId){
+                        blissBotNoti()
+                          .then(()=>{
+                            console.log("Telegrama enviado con exito");
+                          })
+                          .catch((err)=>{
+                            console.log("Ha habido un error con le envio del Telegrama");
+                          })
+                      }
                   })
                   .catch((err)=>{
                       console.log("hay un error en NotificationRate()")
