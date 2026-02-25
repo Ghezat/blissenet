@@ -2076,16 +2076,19 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       const customerName = searchBuySell.usernameBuy; 
       const image = searchBuySell.image[0].url; 
       
-      const searchProfile = await modelProfile.findOne( {indexed : customerId} );
-      console.log("VER searchProfile ..........:", searchProfile);
+      const searchProfile = await modelProfile.findOne( {indexed : customerId} ); //este es el perfil del comprador.
+
+      const searchUser = await modelUser.findById(customerId); //este es el user del comprador.
+      //console.log("VER searchProfile ..........:", searchProfile);
       //avatarPerfil: [ { url: '', public_id: 'sin_data' } ]
 
       const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
       const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
       const mailhash = searchProfile.mailhash;
       const country = searchProfile.country; const flag = searchProfile.flag; 
-      const chatId = searchProfile.blissBot.chatId; //aqui obtenemos el chatId de este usuairo, puede ser vacio o con valor string
+      const chatId = searchUser.blissBot.chatId; //aqui obtenemos el chatId de este usuairo, puede ser vacio o con valor string
 
+      console.log("ver el chatId :", chatId);
       async function NotificationRate(){
 
           //enviar mensaje de calificacion de este articulo, comprado
@@ -2126,7 +2129,7 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
   
       }
 
-      async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+      async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al cliente. debe ser avisado de inmediato para que califique el articulo.
           console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
           const message = `Notificación de Blissenet.com: Rate\n\n ¡Hola, la comunidad de Blissenet necesita que califiques ${productTitle}!. Por favor ve a la plataforma deja tu calificación y comentario.`;
