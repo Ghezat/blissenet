@@ -193,10 +193,9 @@
                     
                                                         </div>
                                                         <div class="question d-flex justify-content-between">
-                                                            <p class="rounded-2 ps-1"><%= ele.question %> 
-                                                            <span> 
-                                                                <a href="/account/<%= ele.ownerStore %>"> <small>(<%= ele.ownerStore %>) </small> </a>
-                                                            </span></p> 
+                                                            <p style="font-size: 18px;"><%= ele.question %> 
+                                                                <span> <a href="/account/<%= ele.ownerStore %>"> <small>(<%= ele.ownerStore %>) </small> </a> </span>
+                                                            </p> 
                                                             <button type="submit" class="btn btn-primary btn-sm ms-2" style="height: 30px;">Visto</button>
                                                         </div>                                      
 
@@ -216,7 +215,7 @@
                 
                                                     </div>
                                                     <div class="question">
-                                                        <p class="rounded-2 ps-1"><%= ele.question %> <span>  <small>(<%= ele.username %>) </small>  </span></p> 
+                                                        <p style="font-size: 18px;"><%= ele.question %> <span>  <small>(<%= ele.username %>) </small>  </span></p> 
                                                     </div>
                                                     <div class="containerInputSubmit form-group d-flex justify-content-between mb-2">
                                                         <input type="hidden" name="idMesagge" value="<%= ele._id%>">
@@ -569,17 +568,17 @@
                                     
                                             </div>
                                             <div class="contentQuestion">
-                                                <p class="m-0"><%= ele.question %></p>
+                                                <p style="font-size: 18px;"><%= ele.question %></p>
                                             </div>
 
                                             <% if (ele.answer !== 'waiting'){ %>
                                             <div class="contentAnswer ms-2 rounded-1 p-1 d-flex">
                                                 <i class="bi bi-arrow-return-right me-2"></i> 
-                                                <p class="mb-0"><%= ele.answer %> <span> <a href="/account/<%= ele.ownerStore %>"> <small>(<%= ele.ownerStore %>)</small> </a> </span></p>
+                                                <p style="font-size: 18px;"><%= ele.answer %> <span> <a href="/account/<%= ele.ownerStore %>"> <small>(<%= ele.ownerStore %>)</small> </a> </span></p>
                                             </div>
                                             <% } else { %>
                                             <div class="contentAnswer ms-2 rounded-1 p-1 d-flex">
-                                                <i class="bi bi-arrow-return-right me-2"></i> <p class="mb-0"><i>¡...En espera de respuesta!</i></p>
+                                                <i class="bi bi-arrow-return-right me-2"></i> <p style="font-size: 18px;"><i>¡...En espera de respuesta!</i></p>
                                             </div>
                                             <% } %>    
                                             <hr class="m-1">
