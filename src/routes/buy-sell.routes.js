@@ -2132,7 +2132,7 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
       async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al cliente. debe ser avisado de inmediato para que califique el articulo.
           console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
-          const message = `Notificación de Blissenet.com: Rate\n\n ¡Hola, la comunidad de Blissenet necesita que califiques ${productTitle}!. Por favor ve a la plataforma deja tu calificación y comentario.`;
+          const message = `Notificación de Blissenet.com: Rate\n\n ¡Hola!, Recientemente compraste ${productTitle}, nos encantaría saber tu experiencia. Por favor, visita la plataforma y deja tu calificación y comentario.\n\n ¡Gracias por ayudarnos a mejorar!`;
           console.log("chatId --->", chatId);      
           console.log("image --->", image);
           
