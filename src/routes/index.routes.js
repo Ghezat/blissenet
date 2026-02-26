@@ -1339,7 +1339,7 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
                     
                     }
 
-                    async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+                    async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
                         console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
                         const Message = `Notificación de Blissenet.com: Safety\n\nCodigo de seguridad: ${newToken}`;
                         console.log("chatId --->", chatId);          

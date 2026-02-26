@@ -3294,25 +3294,29 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 console.log("se ha creado la notificacion de creación de un carrito");
             }            
 
-            async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+            async function blissBotNoti() {
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
-                const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} te ha realizado una compra.`;
-                console.log("chatId --->", chatId);          
+                // 1. Asegúrate de poner la URL completa y entre comillas
+                const imgBuyCart = "https://tuweb.com/img/iconCartBuyes.png"; 
+                const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                    chat_id: chatId,
-                    text: Message,
-                })
-                .then(response => {
+                try {
+                    // Al usar await, guardamos la respuesta directamente
+                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+                        chat_id: chatId,
+                        photo: imgBuyCart,
+                        caption: Message
+                    });
+
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+
+                } catch (error) {
+                    // Si algo falla (ej. el token es inválido o la imagen no carga), cae aquí
                     console.log('--------------------------- BlissBot----------------------------');
-                    console.error('Error al enviar el mensaje:', error);
-                });
-        
+                    console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
+                }
             }
 
         } else {
