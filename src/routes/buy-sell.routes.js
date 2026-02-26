@@ -1228,7 +1228,7 @@ routes.post('/buysell/direct', async(req, res)=>{
 
 
 
-  console.log("vamos muy bien .........................................................")  
+  //console.log("vamos muy bien .........................................................")  
   } catch (error) {
     console.log("Ha habido un error, intente luego");
     res.redirect('/');

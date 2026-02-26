@@ -70,26 +70,6 @@ const SchemaProfile = new Schema({
 SchemaProfile.plugin(mongoosePagination);
 
 // Asegúrate de crear un índice 2dsphere para el campo location
-SchemaProfile.index({ locations: '2dsphere' });
+//SchemaProfile.index({ locations: '2dsphere' });
 module.exports = model('profileModel', SchemaProfile, "profiles");
 
-
-//politica cambiada por una menos ruda.
-//paused : { type: Boolean, default: false }, //por default nace false quiere decir que se mostrará. Sí este estado cambia no se mostrará en la busqueda. esto es para que admisnitracion pueda pasuar o activar una tienda.
-
-//Si en algún momento necesitas realizar consultas geoespaciales, puedes usar algo como:
-/* 
-javascript
-const nearbyProfiles = await profileModel.find({
-    location: {
-        $near: {
-            $geometry: {
-                type: 'Point',
-                coordinates: [-61.898752, 8.0150528] // ejemplo de coordenadas
-            },
-            $maxDistance: 5000 // distancia máxima en metros
-        }
-    }
-});
-
- */

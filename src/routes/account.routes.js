@@ -2135,11 +2135,11 @@ routes.post('/account/followStore', async(req, res)=>{
 
                 async function blissBotNoti(){
                     console.log("banner dentro de blissBotNoti() >>", banner); 
-                    const Message = `Notificación de Blissenet.com: Follow me\n\n¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también.`;
+                    const Message = `Notificación de Blissenet.com: Follow Me\n\n¡Hola! ${usernameElqueSigue} te está siguiendo. Visítala y descubre si te interesa seguirla también.`;
 
                     const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                         chat_id: chatId,
-                        photo: banner, //¡Este artículo ya esta disponible! "Monopatin MK086 (Pro2)"'
+                        photo: banner, 
                         caption: Message
                     })
                     .then(response => {
@@ -3176,8 +3176,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         const store = searchStore;
         console.log("store:", store);
         const sellerName = store.username;
-        const SellerType = searchStore.sellerType;
-
+        
         const storeChatId = await modelUser.findById(StoreId);
         const chatId = storeChatId.blissBot.chatId
 
@@ -3205,194 +3204,39 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
             if (!existShoppingCart){
                 //No existe, entonces se crea, es null
-                console.log("no existe es null")
-                if (SellerType.internacional === "false"){
-                    console.log("esta tienda tiene la opcion internacional desabilitada")
-                    console.log("SellerType.nacional :", SellerType.nacional);
-                    console.log("typeof SellerType.nacional :", typeof SellerType.nacional);
-
-
-                    //La tienda tiene restricciones de vender.
-                    if (SellerType.nacional === "true" && SellerType.estadal === "true" && SellerType.local ==="true"){ //nacional es el pais, por eso evaluo el codigo del pais.
-                        //solo se evalua el pais nada mas porque al seleccionar esta opcion tiene estadal y city activas
-                        console.log("La opcion nacional esta activada en true");
-                        if (searchStore.countryCode === searchCustomer.countryCode){
-                            //se puede ejecutar la venta
-                            console.log("estamos la rama de internacionl:false, nacional:true");
-                            console.log("estamos en el mismo pais y podemos seguir adelante con la consolidacion");
-
-                            createShoppingCart()
-                                .then(()=>{
-                                    Notification()
-                                        .then(()=>{
-
-                                            if (chatId){
-                                                blissBotNoti()
-                                                    .then(()=>{
-                                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                                        res.json(response);  
-                                                    })
-                                                    .catch(error => {
-                                                        console.error('Error al ejecutar la funcion blissBotNoti', error);
-                                                    });  
-
-                                            } else {
-                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                                res.json(response);
-                                            }
-
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Error al ejecutar la funcion Notification', error);
-                                        });
-
-                                })
-                                .catch(error => {
-                                    console.error('Error al ejecutar la funcion createShoppingCart', error);
-                                });
-
-                        } else {
-                            //seguimos evaluando si podemos sacar esta venta adelante
-                            console.log("estamos la rama de internacionl:false");
-                            console.log("El pais es diferente no podemos ejecutar la consolidacion");
-                            const response = { code: "err", message: `Esta tienda solo vende en el interior del pais: ${searchStore.country}`};
-                            res.json(response);
-                        }
-                        
-                    }
-
-                    if (SellerType.nacional === "false" && SellerType.estadal === "true" && SellerType.local ==="true"){
-
-                        if (searchStore.state === searchCustomer.state){
-                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:true");
-                            console.log("estamos en el mismo estado y podemos seguir adelante con la consolidacion");
-                               
-
-                            createShoppingCart()
-                                .then(()=>{
-                                    Notification()
-                                        .then(()=>{
-                                            
-                                            if (chatId){
-                                                blissBotNoti()
-                                                    .then(()=>{
-                                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                                        res.json(response);  
-                                                    })
-                                                    .catch(error => {
-                                                        console.error('Error al ejecutar la funcion blissBotNoti', error);
-                                                    });
-
-                                            } else {
-                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                                res.json(response);
-                                            }
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Error al ejecutar la funcion Notification', error);
-                                        });
-
-                                })
-                                .catch(error => {
-                                    console.error('Error al ejecutar la funcion createShoppingCart', error);
-                                });
-
-                        } else {
-                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:true");
-                            console.log("El estado es diferente no podemos ejecutar la consolidacion");
-                            const response = { code: "err", message: `Esta tienda solo vende en el interior del Estado: ${searchStore.state}, Pais: ${searchStore.country}. `};
-                            res.json(response);
-                        }
-
-                    } 
-                        
-                    if (SellerType.nacional === "false" && SellerType.estadal === "false" && SellerType.local ==="true"){
-                        
-                        if (searchStore.city === searchCustomer.city){
-                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:false y city:true");
-                            console.log("estamos en la misma ciudad y podemos seguir adelante con la consolidacion");
-                                                                 
-
-                            createShoppingCart()
-                                .then(()=>{
-                                    Notification()
-                                        .then(()=>{
-                                            
-                                            if (chatId){
-                                                blissBotNoti()
-                                                    .then(()=>{
-                                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                                        res.json(response);  
-                                                    })
-                                                    .catch(error => {
-                                                        console.error('Error al ejecutar la funcion blissBotNoti', error);
-                                                    });    
-
-                                            } else {
-                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                                res.json(response);
-                                            }
-
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Error al ejecutar la funcion Notification', error);
-                                        });
-
-                                })
-                                .catch(error => {
-                                    console.error('Error al ejecutar la funcion createShoppingCart', error);
-                                });
-
-                     
-                        } else {
-                            console.log("estamos la rama de internacionl:false, nacional:false, estadal:false y city:true");
-                            console.log("La ciudad es diferente no podemos ejecutar la consolidacion");
-                            const response = { code: "err", message: `Esta tienda solo vende en la ciudad de ${searchStore.city} de ${searchStore.state}, Pais: ${searchStore.city}`};
-                        }
-                        
-                    }    
-
-                } else {
-
-                    //La tienda es libre de vender sin restricciones a todo el mundo.
-
-                    createShoppingCart()
-                        .then(()=>{
-                            Notification()
-                                .then(()=>{
-                                    
-                                    if (chatId){
-                                        blissBotNoti()
-                                            .then(()=>{
-                                                const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                                res.json(response);  
-                                            })
-                                            .catch(error => {
-                                                console.error('Error al ejecutar la funcion blissBotNoti', error);
-                                            });
-
-                                    } else {
-                                        const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
-                                        res.json(response);
-                                    }
-
-
-                                })
-                                .catch(error => {
-                                    console.error('Error al ejecutar la funcion Notification', error);
-                                });
-
-                        })
-                        .catch(error => {
-                            console.error('Error al ejecutar la funcion createShoppingCart', error);
-                        });
-
-                }
-
+                console.log("no existe es null y debemos crear esta compra/venta de carrito");
                     
+                createShoppingCart()
+                    .then(()=>{
+                        notification()
+                            .then(()=>{
+
+                                if (chatId){
+                                    blissBotNoti()
+                                        .then(()=>{
+                                            const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                            res.json(response);  
+                                        })
+                                        .catch(error => {
+                                            console.error('Error al ejecutar la funcion blissBotNoti', error);
+                                        });  
+
+                                } else {
+                                    const response = { code: "ok", message: "En proceso de consolidación, espere por favor."}
+                                    res.json(response);
+                                }
+
+
+                            })
+                            .catch(error => {
+                                console.error('Error al ejecutar la funcion notification', error);
+                            });
+
+                    })
+                    .catch(error => {
+                        console.error('Error al ejecutar la funcion createShoppingCart', error);
+                    });
+
             } else {
                 //existe, entonces se envia un mensaje de calma y que debe esperar la consolidación.
                 const consolidate = existShoppingCart.consolidate;
@@ -3432,7 +3276,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 const saveShoppingCart  = await newShoppingCart.save();
             }  
             
-            async function Notification(){
+            async function notification(){
                 //enviar mensaje al usuario que lo estan siguiendo.
                 const newNotification = new modelMessage( { typeNote: 'shoppingCart-Cre',
                                                             cartId,
@@ -3474,7 +3318,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
         } else {
             //el cliente no tiene perfil
             console.log("Este proceso requiere perfil.")
-            const response = { code: "info", message: "Este proceso requiere Perfil."}
+            const response = { code: "info", message: "Este acción requiere Perfil."}
             res.json(response); 
         }
 
