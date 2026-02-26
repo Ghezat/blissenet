@@ -3299,7 +3299,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
             async function blissBotNoti() {
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
-                const imgBuyCart = path.join(__dirname, '..', 'public', 'img', 'iconCartBuyes.png'); 
+                const imgBuyCart = path.join(__dirname, '..', 'public', 'img', 'bannerBuyCart.png');
                 
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
                 console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
