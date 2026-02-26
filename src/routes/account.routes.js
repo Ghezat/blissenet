@@ -3298,17 +3298,16 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
                 // 1. Asegúrate de poner la URL completa y entre comillas
-                const imgBuyCart = "https://tuweb.com/img/iconCartBuyes.png"; 
+                const imgBuyCart = "/img/iconCartBuyes.png"; 
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
 
                 try {
                     // Al usar await, guardamos la respuesta directamente
                     const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
                         chat_id: chatId,
-                        photo: imgBuyCart,
+                        photo: fs.createReadStream(imgBuyCart), // Usando fs para leer el archivo
                         caption: Message
                     });
-
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
 
