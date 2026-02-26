@@ -3300,10 +3300,15 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
                 // 1. Asegúrate de poner la URL completa y entre comillas
                 // Ajusta la ruta según donde esté la imagen en relación a tu archivo actual
-                const imgBuyCart = path.join(__dirname, 'img', 'iconCartBuyes.png'); 
+                //const imgBuyCart = path.join(__dirname, 'img', 'iconCartBuyes.png'); 
+                const imgBuyCart = path.join(__dirname, '..', '..', 'public', 'img', 'iconCartBuyes.png'); 
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
                 console.log("++++ Ver la ruta imgBuyCart ---> ", imgBuyCart);
-                
+                // ++++ Ver la ruta imgBuyCart ---> 
+                // esta ruta no es donde esta las imaganes. las imaganes estan en la ruta de abajo por eso queria usar una ruta relativa
+
+                // aqui si esta /home/blissenet/repositories/blissenet/src/public/img/iconCartBuyes.png
+
                 try {
                     // Al usar await, guardamos la respuesta directamente
                     const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
