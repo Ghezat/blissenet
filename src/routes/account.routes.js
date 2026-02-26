@@ -3,6 +3,7 @@ const hash = require('object-hash');
 const mongoose = require('mongoose');
 
 const routes = Router()
+const path = require('path'); 
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
 const modelMessage = require('../models/messages.js');
@@ -3298,9 +3299,11 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
                 // 1. Asegúrate de poner la URL completa y entre comillas
-                const imgBuyCart = "/img/iconCartBuyes.png"; 
+                // Ajusta la ruta según donde esté la imagen en relación a tu archivo actual
+                const imgBuyCart = path.join(__dirname, 'img', 'iconCartBuyes.png'); 
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
-
+                console.log("++++ Ver la ruta imgBuyCart ---> ", imgBuyCart);
+                
                 try {
                     // Al usar await, guardamos la respuesta directamente
                     const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
@@ -3315,6 +3318,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                     // Si algo falla (ej. el token es inválido o la imagen no carga), cae aquí
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
+
                 }
             }
 
