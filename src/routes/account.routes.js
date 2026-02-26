@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 
 const routes = Router()
 const path = require('path'); 
+const FormData = require('form-data');
+
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
 const modelMessage = require('../models/messages.js');
@@ -3297,24 +3299,21 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
             async function blissBotNoti() {
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
-
-                // 1. Asegúrate de poner la URL completa y entre comillas
-                // Ajusta la ruta según donde esté la imagen en relación a tu archivo actual
-                //const imgBuyCart = path.join(__dirname, 'img', 'iconCartBuyes.png'); 
-                const imgBuyCart = path.join(__dirname, '..', '..', 'src', 'public', 'img', 'iconCartBuyes.png'); 
+                const imgBuyCart = path.join(__dirname, '..', 'public', 'img', 'iconCartBuyes.png'); 
+                
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
                 console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
                 console.log("++++ Ver la ruta imgBuyCart ---> ", imgBuyCart);
-
-
-                // aqui si esta /home/blissenet/repositories/blissenet/src/public/img/iconCartBuyes.png
-
+                
+                const form = new FormData();
+                form.append('chat_id', chatId);
+                form.append('photo', fs.createReadStream(imgBuyCart)); // Aquí pasa la ruta local
+                form.append('caption', Message);
+       
                 try {
                     // Al usar await, guardamos la respuesta directamente
-                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
-                        chat_id: chatId,
-                        photo: fs.createReadStream(imgBuyCart), // Usando fs para leer el archivo
-                        caption: Message
+                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, form, {
+                        headers: form.getHeaders() // Asegúrate de incluir los encabezados
                     });
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
