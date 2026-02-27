@@ -3299,15 +3299,15 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
 
             async function blissBotNoti() { //Telegrama al vendedor compra realizado. Que debe ser avisado de inmediato.
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
-                const imgBuyCart = path.join(__dirname, '..', 'public', 'img', 'bannerBuyCart.png');
+                const img = path.join(__dirname, '..', 'public', 'img', 'bannerBuyCart.png');
                 
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} te ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
                 console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
-                console.log("++++ Ver la ruta imgBuyCart ---> ", imgBuyCart);
+                console.log("++++ Ver la ruta img ---> ", img);
                 
                 const form = new FormData();
                 form.append('chat_id', chatId);
-                form.append('photo', fs.createReadStream(imgBuyCart)); // Aquí pasa la ruta local
+                form.append('photo', fs.createReadStream(img)); // Aquí pasa la ruta local
                 form.append('caption', Message);
        
                 try {
@@ -3574,7 +3574,7 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
 
             async function blissBotNoti() { //Telegrama de eliminacion de compra. Que debe ser avisado de inmediato.
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
-                const img = path.join(__dirname, '..', 'public', 'img', 'bannerBuyDelete.png.png');
+                const img = path.join(__dirname, '..', 'public', 'img', 'bannerBuyDelete.png');
                 
                 const Message = `Notificación de Blissenet.com: Shopping Delete\n\n¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber el motivo.`;
                 console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
@@ -3723,7 +3723,7 @@ routes.post('/done_shoppingCart/registerPay', async(req, res)=>{
                 console.log("se ha creado la notificacion del registro de pago del carrito");
             }
 
-            async function blissBotNoti(){ //Telegrama al comprador consolidado. Que debe ser avisado de inmediato.
+            async function blissBotNoti(){ //Telegrama al vendedor pago registrado. Que debe ser avisado de inmediato.
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${customerName} notifica que su pedido a sido consolidado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para gestionar el pago.`;
