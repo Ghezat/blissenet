@@ -1339,23 +1339,35 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
                     
                     }
 
-                    async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+                    async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al usuario para cambio de password.
                         console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+                        console.log("chatId --->", chatId);  
+                        const img = path.join(__dirname, '..', 'public', 'img', 'bannerToken.png');
+                        
                         const Message = `Notificación de Blissenet.com: Safety\n\nCodigo de seguridad: ${newToken}`;
-                        console.log("chatId --->", chatId);          
+                        console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
+                        console.log("++++ Ver la ruta img ---> ", img);
+                        
+                        const form = new FormData();
+                        form.append('chat_id', chatId);
+                        form.append('photo', fs.createReadStream(img)); // Aquí pasa la ruta local
+                        form.append('caption', Message);
+                                                       
             
-                        axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                            chat_id: chatId,
-                            text: Message
-                        })
-                        .then(response => {
+                        try {
+                            // Al usar await, guardamos la respuesta directamente
+                            const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, form, {
+                                headers: form.getHeaders() // Asegúrate de incluir los encabezados
+                            });
                             console.log('--------------------------- BlissBot----------------------------');
                             console.log('Mensaje enviado con éxito:', response.data);
-                        })
-                        .catch(error => {
+
+                        } catch (error) {
+                            // Si algo falla (ej. el token es inválido o la imagen no carga), cae aquí
                             console.log('--------------------------- BlissBot----------------------------');
-                            console.error('Error al enviar el mensaje:', error);
-                        });
+                            console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
+
+                        }
                 
                     }
 
@@ -1368,6 +1380,7 @@ routes.post('/myaccount/signin-forgottenpassw', async(req, res)=> {
                                     .then(()=>{
                                         sendToken()
                                             .then(()=>{
+
                                                 blissBotNoti()
                                                     .then(()=>{
                                                         req.session.email = {email : email};
@@ -1659,23 +1672,34 @@ routes.post('/myaccount/new-password', async(req, res)=>{
         }
 
         //enviar telegram
-        async function blissBotNoti(){ //esta funcon es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+        async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al usuario para cambio de password.
             console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+            console.log("chatId --->", chatId);  
+            const img = path.join(__dirname, '..', 'public', 'img', 'bannerToken.png');
+            
             const Message = `Notificación de Blissenet.com: Safety\n\nCodigo de seguridad: ${newToken}`;
-            console.log("chatId --->", chatId);          
+            console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
+            console.log("++++ Ver la ruta img ---> ", img);
+            
+            const form = new FormData();
+            form.append('chat_id', chatId);
+            form.append('photo', fs.createReadStream(img)); // Aquí pasa la ruta local
+            form.append('caption', Message);
 
-            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                chat_id: chatId,
-                text: Message
-            })
-            .then(response => {
+            try {
+                // Al usar await, guardamos la respuesta directamente
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, form, {
+                    headers: form.getHeaders() // Asegúrate de incluir los encabezados
+                });
                 console.log('--------------------------- BlissBot----------------------------');
                 console.log('Mensaje enviado con éxito:', response.data);
-            })
-            .catch(error => {
+
+            } catch (error) {
+                // Si algo falla (ej. el token es inválido o la imagen no carga), cae aquí
                 console.log('--------------------------- BlissBot----------------------------');
-                console.error('Error al enviar el mensaje:', error);
-            });
+                console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
+
+            }
     
         }
 
@@ -4123,24 +4147,34 @@ routes.get('/myaccount/change-username/token', async(req, res)=>{
         }
 
         //enviar telegram
-        async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al vendedor. debe ser avisado de inmediato.
+        async function blissBotNoti(){ //esta funcion es para enviar un Telegrama al usuario para cambio de password.
             console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
+            console.log("chatId --->", chatId);  
+            const img = path.join(__dirname, '..', 'public', 'img', 'bannerToken.png');
+            
+            const Message = `Notificación de Blissenet.com: Safety\n\nCodigo de seguridad: ${newToken}`;
+            console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
+            console.log("++++ Ver la ruta img ---> ", img);
+            
+            const form = new FormData();
+            form.append('chat_id', chatId);
+            form.append('photo', fs.createReadStream(img)); // Aquí pasa la ruta local
+            form.append('caption', Message);
 
-            const Message = `Notificación de Blissenet.com: 🏪 Store Name Change\n\nCodigo de seguridad: *${newToken}*`;
-            console.log("chatId --->", chatId);          
-
-            axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                chat_id: chatId,
-                text: Message
-            })
-            .then(response => {
+            try {
+                // Al usar await, guardamos la respuesta directamente
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, form, {
+                    headers: form.getHeaders() // Asegúrate de incluir los encabezados
+                });
                 console.log('--------------------------- BlissBot----------------------------');
                 console.log('Mensaje enviado con éxito:', response.data);
-            })
-            .catch(error => {
+
+            } catch (error) {
+                // Si algo falla (ej. el token es inválido o la imagen no carga), cae aquí
                 console.log('--------------------------- BlissBot----------------------------');
-                console.error('Error al enviar el mensaje:', error);
-            });
+                console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
+
+            }
     
         }
 
