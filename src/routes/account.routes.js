@@ -3723,24 +3723,35 @@ routes.post('/done_shoppingCart/registerPay', async(req, res)=>{
                 console.log("se ha creado la notificacion del registro de pago del carrito");
             }
 
-            async function blissBotNoti(){ //Telegrama al vendedor pago registrado. Que debe ser avisado de inmediato.
+
+            async function blissBotNoti() { //Telegrama al vendedor pago registrado. Que debe ser avisado de inmediato.
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
-
-                const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${customerName} notifica que su pedido a sido consolidado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para gestionar el pago.`;
-                console.log("chatId --->", chatId);          
-
-                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
-                    chat_id: chatId,
-                    text: Message,
-                })
+                const img = path.join(__dirname, '..', 'public', 'img', 'bannerRegPaid.png');
+                
+                const Message = `Notificación de Blissenet.com: Shopping RegPay\n\n¡Hola! ${customerName} ha notificado que ha registrado un pago. Por favor, verifica y procesa dicho pago.`;
+                
+                console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
+                console.log("++++ Ver la ruta imgBuyCart ---> ", img);
+                
+                const form = new FormData();
+                form.append('chat_id', chatId);
+                form.append('photo', fs.createReadStream(img)); // Aquí pasa la ruta local
+                form.append('caption', Message);
+       
                 try {
+                    // Al usar await, guardamos la respuesta directamente
+                    const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, form, {
+                        headers: form.getHeaders() // Asegúrate de incluir los encabezados
+                    });
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                } catch(error) {
+
+                } catch (error) {
+                    // Si algo falla (ej. el token es inválido o la imagen no carga), cae aquí
                     console.log('--------------------------- BlissBot----------------------------');
-                    console.error('Error al enviar el mensaje:', error.response.data);
-                };
-        
+                    console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
+
+                }
             }
 
             async function regPayShoppingcart() {
@@ -4089,7 +4100,7 @@ routes.post('/done_shoppingCart/registerPay/unpaid', async(req, res)=>{
                 console.log("se ha creado la notificacion de consolidación del carrito");
             }
 
-            async function blissBotNoti(){ //Telegrama al comprador apgo denegado. Que debe ser avisado de inmediato..
+            async function blissBotNoti(){ //Telegrama al comprador pago denegado. Que debe ser avisado de inmediato..
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
 
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${sellerUsername} lamentamos notificar que su pago no ha podido ser validado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para ver el status de tu compra.`;
