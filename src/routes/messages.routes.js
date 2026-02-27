@@ -1,8 +1,12 @@
 const { Router } = require('express');
+
 const hash = require('object-hash');
 const mongoose = require('mongoose');
 
 const routes = Router()
+const path = require('path'); 
+const FormData = require('form-data');
+
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
 const modelMessages = require('../models/messages.js');
@@ -232,19 +236,18 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
     async function blissBotNoti(){
         const Message = `Notificación de Blissenet.com: Message\n\n¡Hola! Te han respondido la pregunta que has hecho sobre "${titleArticle}". No pierdas tu artículo mira la respuesta ahora en Blissenet.com`;
 
-        axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+        const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
             chat_id: chatId,
             photo: urlImageArticle,
             caption: Message
         })
-        .then(response => {
+        try {
             console.log('--------------------------- BlissBot----------------------------');
             console.log('Mensaje enviado con éxito:', response.data);
-        })
-        .catch(error => {
+        } catch(error) {
             console.log('--------------------------- BlissBot----------------------------');
-            console.error('Error al enviar el mensaje:', error);
-        });
+            console.error('Error al enviar el mensaje:', error.response );
+        };
 
     }
 

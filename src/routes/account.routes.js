@@ -3301,7 +3301,7 @@ routes.post('/send_shoppingCart/consolidate', async(req, res)=>{
                 console.log("Estamos dentro de la funcion blissBotNoti() ---------------------------->");
                 const imgBuyCart = path.join(__dirname, '..', 'public', 'img', 'bannerBuyCart.png');
                 
-                const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
+                const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${CustomerName} te ha realizado una compra. Accede a la plataforma web para gestionarlo.`;
                 console.log("++++ path.join(__dirname ---> ", path.join(__dirname));
                 console.log("++++ Ver la ruta imgBuyCart ---> ", imgBuyCart);
                 
@@ -3422,18 +3422,17 @@ routes.post('/done_shoppingCart/consolidate', async(req, res)=>{
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${sellerUsername} notifica que su pedido a sido consolidado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para gestionar el pago.`;
                 console.log("chatId --->", chatId);          
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
                     text: Message,
                 })
-                .then(response => {
+                try {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+                } catch(error){
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response.data);
-                });
+                };
         
             }
 
@@ -3567,18 +3566,17 @@ routes.post('/delete_shoppingCart/consolidate', async(req, res)=>{
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${sellerUsername} ha eliminado tu compra. Puedes comunicarte con ellos para saber el motivo.`;
                 console.log("chatId --->", chatId);          
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
                     text: Message,
                 })
-                .then(response => {
+                try {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+                } catch(error) {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response.data); //esto es porque el error del api de telegram es muy extenso y para filtar la informacion se hace asi. si quieres verlo uso solo "error"
-                });
+                };
         
             }
 
@@ -3710,18 +3708,17 @@ routes.post('/done_shoppingCart/registerPay', async(req, res)=>{
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${customerName} notifica que su pedido a sido consolidado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para gestionar el pago.`;
                 console.log("chatId --->", chatId);          
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
                     text: Message,
                 })
-                .then(response => {
+                try {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+                } catch(error) {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response.data);
-                });
+                };
         
             }
 
@@ -3902,18 +3899,17 @@ routes.post('/done_shoppingCart/registerPay/paid', async(req, res)=>{
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${sellerUsername} notifica que su pago ha sido validado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para ver el status de tu compra.`;
                 console.log("chatId --->", chatId);          
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
                     text: Message,
                 })
-                .then(response => {
+                try {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+                } catch (error) {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response.data);
-                });
+                };
         
             }
 
@@ -4078,18 +4074,17 @@ routes.post('/done_shoppingCart/registerPay/unpaid', async(req, res)=>{
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Hola! ${sellerUsername} lamentamos notificar que su pago no ha podido ser validado. Entre a Blissenet.com y en Notificaciones tendrás el enlace para ver el status de tu compra.`;
                 console.log("chatId --->", chatId);          
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
                     text: Message,
                 })
-                .then(response => {
+                try {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+                } catch(error) {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response.data);
-                });
+                };
         
             }
 
@@ -4257,18 +4252,17 @@ routes.post('/done_shoppingCart/registerSent', async(req, res)=>{
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Atención! ${sellerUsername} notifica que su pedido esta listo para su entrega. Entre a Blissenet.com y en Notificaciones tendrás el enlace para ver el status de tu compra.`;
                 console.log("chatId --->", chatId);          
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
                     text: Message,
                 })
-                .then(response => {
+                try {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+                } catch(error) {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response.data);
-                });
+                };
         
             }
 
@@ -4412,18 +4406,17 @@ routes.post('/done_shoppingCart/registerReceived', async(req, res)=>{
                 const Message = `Notificación de Blissenet.com: Shopping Cart\n\n¡Bien hecho! ${customerName} notifica que ha recibido su pedido.. Entre a Blissenet.com y califica a tu comprador.`;
                 console.log("chatId --->", chatId);          
 
-                axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
+                const response = await axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
                     text: Message,
                 })
-                .then(response => {
+                try {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.log('Mensaje enviado con éxito:', response.data);
-                })
-                .catch(error => {
+                } catch(error) {
                     console.log('--------------------------- BlissBot----------------------------');
                     console.error('Error al enviar el mensaje:', error.response.data);
-                });
+                };
         
             }
 

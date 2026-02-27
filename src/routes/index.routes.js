@@ -1,9 +1,13 @@
 const { Router } = require('express');
+
 const hash = require('object-hash');
 const passport = require('passport');
 
 const nodemailer = require('nodemailer');
 const routes = Router();
+const path = require('path'); 
+const FormData = require('form-data');
+
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
@@ -1700,6 +1704,16 @@ routes.post('/myaccount/new-password', async(req, res)=>{
                 console.error('Error al enviar el mensaje:', error.response ? error.response.data : error.message);
 
             }
+/* Existe chatId, asi que vamos a ejecutar todas las funciones.....................
+newToken 168442
+Estamos dentro de la funcion blissBotNoti() ---------------------------->
+chatId ---> 8430576767
+Ha habido un error blissBotNoti() ReferenceError: path is not defined
+    at blissBotNoti (/home/blissenet/repositories/blissenet/src/routes/index.routes.js:1678:25)
+    at /home/blissenet/repositories/blissenet/src/routes/index.routes.js:1716:37
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+Email enviado */
     
         }
 

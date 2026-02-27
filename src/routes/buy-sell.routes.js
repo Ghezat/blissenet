@@ -1,7 +1,11 @@
 const { Router } = require('express');
+
 const countries = require("../countries.js");
 
-const routes = Router()
+const routes = Router();
+const path = require('path'); 
+const FormData = require('form-data');
+
 const nodemailer = require('nodemailer');
 const modelUser = require('../models/user.js');
 const modelProfile = require('../models/profile.js');
@@ -1209,19 +1213,18 @@ routes.post('/buysell/direct', async(req, res)=>{
           console.log("image --->", image);
           console.log("chatId --->", chatId);          
 
-          axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+          const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
               chat_id: chatId,
               photo: image,
               caption: Message
           })
-          .then(response => {
+          try {
               console.log('--------------------------- BlissBot----------------------------');
               console.log('Mensaje enviado con éxito:', response.data);
-          })
-          .catch(error => {
+          } catch(error) {
               console.log('--------------------------- BlissBot----------------------------');
               console.error('Error al enviar el mensaje:', error);
-          });
+          };
   
       }
        
@@ -2137,19 +2140,18 @@ routes.post('/buysell-body/buyerTrue', async(req, res)=>{
           console.log("image --->", image);
           
 
-          axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
+          const response = await axios.post(`https://api.telegram.org/bot${Token}/sendPhoto`, {
               chat_id: chatId,
               photo: image,
               caption: message // El mensaje que quieres enviar junto a la imagen
           })
-          .then(response => {
+          try {
               console.log('--------------------------- BlissBot----------------------------');
               console.log('Mensaje enviado con éxito:', response.data);
-          })
-          .catch(error => {
+          } catch(error) {
               console.log('--------------------------- BlissBot----------------------------');
               console.error('Error al enviar el mensaje:', error.response.data); //esto es porque el error del api de telegram es muy extenso y para filtar la informacion se hace asi. si quieres verlo uso solo "error"
-          });
+          };
   
       }
 
