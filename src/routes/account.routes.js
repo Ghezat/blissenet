@@ -5303,7 +5303,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
 
                 const usernameBlissenet = searchUser.username;
 
-                Message= `Usuario en Blissenet : ${usernameBlissenet}\nUsuario en Telegram : ${usernameTelegram}\nConectado a BlissBot : ✅\n\n🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram`;
+                Message= `¡Información General de 🤖​BlissBot! \n\n​🔸​ Usuario en Blissenet : ${usernameBlissenet}\n​🔸​ Usuario en Telegram : ${usernameTelegram}\n​🔸​ Conectado a BlissBot : ✅\n\n🛈 Nota : Si has cambiado tu usuario de Telegram recientemente debes esperar a que se ejeute el cambio en los servidores de Telegram\n`;
 
             } else {
 
@@ -5346,7 +5346,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
 
                 const usernameBlissenet = searchUser.username;
 
-                Message = `¡Notificaciones enviadas por BlissBot!.\n🔹​ Available - Articulo Disponible.\n🔹​ Follow Me - Notificación de que te Siguen.\n🔹​ Message - Mensaje a uno de tus Auncios.\n🔹​ Rate - Calificar un Articulo Comprado.\n🔹​ Safety - Nuevo Token de Seguridad.\n🔹​ Spread - Difusión de Anuncio.\n🔹​ Sell - Notificaciones de Venta.\n🔹​ Spread - Difusión de Anuncio.\n🔹​ Shopping Cart - Nueva Venta por Carrito.\n🔹​ Shopping Delete - Compra por Carrito Eliminada.\n🔹​ Shopping Consolidate - Compra por Carrito Consolidada.\n🔹​ Shopping Cart - Nueva Venta por Carrito.\n🔹​ Shopping Reg Pay - Notificación de pago por carrito de Venta.\n🔹​ Shopping Verified Pay - Notificación de Pago Recibido por Carrito de Compra.\n🔹​ Shopping Denied Pay - Notificación de Pago No Recibido por Carrito de Compra.\n🔹​ Shopping Package Ready - Notificación de Compra Lista para ser enviada.\n🔹​ Shopping Package Received - Notificación de Compra Recibida. `;
+                Message = `¡Notificaciones enviadas por 🤖​BlissBot!.\n\n🔹​ Available - Articulo Disponible.\n🔹​ Follow Me - Notificación de que te Siguen.\n🔹​ Message - Mensaje a uno de tus Auncios.\n🔹​ Rate - Calificar un Articulo Comprado.\n🔹​ Safety - Nuevo Token de Seguridad.\n🔹​ Spread - Difusión de Anuncio.\n🔹​ Sell - Notificaciones de Venta.\n🔹​ Spread - Difusión de Anuncio.\n🔹​ Shopping Cart - Nueva Venta por Carrito.\n🔹​ Shopping Delete - Compra por Carrito Eliminada.\n🔹​ Shopping Consolidate - Compra por Carrito Consolidada.\n🔹​ Shopping Cart - Nueva Venta por Carrito.\n🔹​ Shopping Reg Pay - Notificación de pago por carrito de Venta.\n🔹​ Shopping Verified Pay - Notificación de Pago Recibido por Carrito de Compra.\n🔹​ Shopping Denied Pay - Notificación de Pago No Recibido por Carrito de Compra.\n🔹​ Shopping Package Ready - Notificación de Compra Lista para ser enviada.\n🔹​ Shopping Package Received - Notificación de Compra Recibida.\n `;
 
             } else {
 
@@ -5412,7 +5412,7 @@ routes.post(`/webhook/${Token}`, async(req, res) => {
             // Verificar si updateUser es válido
             if (updateUser !== null && updateUser !== undefined) {
                 // Enviar mensaje de bienvenida al usuario
-                const Message = `¡Hola! ${userBliss} cuenta sincronizada satisfactoriamente con BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram.\n\n/info - Obtener información de cuenta.\n\n/noti - Obtener todas las Notificaciones que envia.`;
+                const Message = `¡Hola! ${userBliss} cuenta sincronizada satisfactoriamente con 🤖​BlissBot, ahora podrás recibir todas las notificaciones en tu Telegram.\n\n/info - Información de cuenta.\n/noti - Notificaciones disponibles.`;
 
                 axios.post(`https://api.telegram.org/bot${Token}/sendMessage`, {
                     chat_id: chatId,
