@@ -4585,8 +4585,8 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
         console.log("Esto es searchShoppingCart :", searchShoppingCart);
         //IMPORTANTE evaluar que exista informacion de searchShoppingCart
 
-        //aqui buscamos el perfil del cliente que dejara el comentaio y calificacion de la tienda.
-        const searchProfile = await modelProfile.findById()
+        //aqui buscamos el perfil del cliente que dejara el comentario y calificacion de la tienda.
+        //const searchProfile = await modelProfile.findById()
          
         if (searchShoppingCart) {
 
@@ -4604,6 +4604,8 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
             const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
             const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
             const mailhash = searchProfile.mailhash;
+            const country = searchProfile.country; 
+            const flag = searchProfile.flag;
 
             if (customerId == idUser){
 
@@ -4653,7 +4655,7 @@ routes.post('/done_shoppingCart/registerCommentRatingToSell', async(req, res)=>{
                 const newRateComment =  new modelStoreRate
                  ({ 
                     store: sellerId, logeado: customerId, markStar: rating, comment: comment, storeName: sellerName,
-                    dataLogeado: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+                    commentatorData: { username: customerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash, country: country, flag: flag }
                  });
 
                 const saveRateComment = await newRateComment.save();
@@ -4722,7 +4724,8 @@ routes.post('/done_shoppingCart/registerCommentRatingToBuy', async(req, res)=>{
             const avatarPerfil = searchProfile.avatarPerfil; //esto es un array;
             const url = avatarPerfil[0].url; const public_id = avatarPerfil[0].public_id;
             const mailhash = searchProfile.mailhash;            
-
+            const country = searchProfile.country;
+            const flag = searchProfile.flag;
 
             if (sellerId == idUser){
 
@@ -4772,7 +4775,7 @@ routes.post('/done_shoppingCart/registerCommentRatingToBuy', async(req, res)=>{
                 const newRateComment =  new modelStoreRate
                  ({ 
                     store: customerId, logeado: sellerId, markStar: rating, comment: comment, storeName: customerName,
-                    dataLogeado: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash }
+                    commentatorData: { username: sellerName, avatarPerfil: [ { "url" : url, "public_id" : public_id } ], mailhash: mailhash, country: country, flag: flag }
                  });
 
                 const saveRateComment = await newRateComment.save();
