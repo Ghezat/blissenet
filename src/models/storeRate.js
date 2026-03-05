@@ -16,5 +16,5 @@ const storeRateSchema = new Schema({
 
 module.exports = model('storeRateModel', storeRateSchema, 'storeRate');
 
-//Note: las personas podrán calificar una tienda cuantas veces quieran si ya lo han hecho y lo vuelven hacer esta calificacion se sobreescribe.
-//el otro modelo que se encarga de guardar la calificacion y comentario de los articulos y artes estaran en el modelo art&Article.js
+//Note: las personas podrán calificar una tienda cada vez que ejecuten una operacion de compra.
+//el otro modelo que se encarga de guardar la calificacion y comentario de los articulos y artes se llama modelo rateArtAndArticle.js

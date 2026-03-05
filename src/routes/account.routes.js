@@ -2912,7 +2912,7 @@ routes.post('/account/soldOut', async (req, res)=>{
             
                     } catch (error) {
                         console.log('--------------------------- BlissBot----------------------------');
-                        console.error('Error al enviar el mensaje:', error );
+                        console.error('Error al enviar el mensaje:', error.response.data );
                     }
                 });
             
@@ -3033,7 +3033,7 @@ routes.post('/account/soldOut', async (req, res)=>{
             
                     } catch (error) {
                         console.log('--------------------------- BlissBot----------------------------');
-                        console.error('Error al enviar el mensaje:', error );
+                        console.error('Error al enviar el mensaje:', error.response.data );
                     }
                 });
             

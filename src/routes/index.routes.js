@@ -3957,7 +3957,7 @@ routes.post('/myaccount/deliveryOptions', async (req, res)=>{
 });
 
 // aqui es donde podemos editar el nombre del username mientras cumpla con los requerimentos.
-// No poseer anuncios ni haya hecho ninguna compra o negociacion .
+// No haber hecho ninguna compra o negociacion.
 routes.post('/myaccount/change-review', async(req, res)=>{
 
     try{
@@ -3975,14 +3975,20 @@ routes.post('/myaccount/change-review', async(req, res)=>{
         console.log("Primera consulta searchProfile");
         console.log("searchProfile", searchProfile);
 
+
         if ( searchProfile.length !==0 ){
 
-            //esta cuenta con perfil no tiene anuncios puede pasar a la siguiente verificacion negociacion y compra/venta.
-            const negotiationCount = await modelNegotiation.find({usernameBuy : username}).count();
-            const buySellCount = await modelBuySell.find({usernameBuy : username}).count();
-            console.log(`negotiationCount-> ${negotiationCount}    buySellCount-> ${buySellCount}`);
-            console.log(`typeof negotiationCount-> ${typeof negotiationCount}   typeof buySellCount-> ${typeof buySellCount}`);
-            if (negotiationCount === 0 && buySellCount === 0 ){
+            //indexedBuy
+            //Cuenta con perfil, siguiente verificacion negociacion y compra/venta.
+            console.log("Cuenta con perfil, siguiente verificacion negociacion y venta. Solo del lado del vendedor")
+            const negotiationCount = await modelNegotiation.find({indexedSell : indexed}).count();
+            const buySellCount = await modelBuySell.find({indexedSell : indexed}).count();
+            const cartBuy = await modelShoppingCart.find({sellerId : indexed}).count();
+            console.log(`negotiationCount-> ${negotiationCount}  buySellCount-> ${buySellCount}  cartBuy-> ${cartBuy}`);
+            console.log(`typeof negotiationCount-> ${typeof negotiationCount}  typeof buySellCount-> ${typeof buySellCount} typeof cartBuy-> ${typeof cartBuy}`);
+            
+            if (negotiationCount === 0 && buySellCount === 0 && cartBuy === 0 ){
+                console.log("Esta cuenta no ha realizado compras ni regociaciones");
                 //como no tiene negociacion o compras lo que se ejcuta es la verificacion de preguntas y calificaciones.
                 const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
                 if ( searchMessageCount !==0 ){
@@ -4025,46 +4031,38 @@ routes.post('/myaccount/change-review', async(req, res)=>{
                 }
     
             } else {
-                console.log("esta cuenta posee negociacion o compras realizadas, no puede editar el username");
-                const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado compras por lo tanto No es posible cambiar su username." };
+                console.log("esta cuenta posee ventas o negociaciones, no puede editar el username");
+                const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado ventas por lo tanto No es posible cambiar su username. L4034" };
                 res.json(status);
             } 
         
             
         } else {
-            //el user no tiene perfil, es de suponer que no puede crear anuncios asi que directamente se evalua si ha realizado alguna compra o negociacion?
-            // y si este ha realizado alguna compra o negocicion no puede editar pero si por el contrario no posee, en este caso se evala si ha realizado alguna pregunta y calificación.     
+            //una cuenta sin perfil no puede ejecutar compras
+            //sin perfil no puede crear un anuncio
+            //solo pudiera dejar un mensaje en la caja de comentario
+            
             console.log("Esta cuenta NO posee perfil");
-            const negotiationCount = await modelNegotiation.find({usernameBuy : username}).count();
-            const buySellCount = await modelBuySell.find({usernameBuy : username}).count();
-            console.log(`negotiationCount-> ${negotiationCount}    buySellCount-> ${buySellCount}`);
-            console.log(`typeof negotiationCount-> ${typeof negotiationCount}   typeof buySellCount-> ${typeof buySellCount}`);
-            if (negotiationCount === 0 && buySellCount === 0 ){
-                //como no tiene negociacion o compras lo que se ejcuta es la verificacion de preguntas y calificaciones.
-                const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
-                if ( searchMessageCount !==0 ){
-                    // este user ha hecho preguntas.
-                    // los usarios sin perfil No pueden calificar
-                    console.log("Hemos llegado a la ultima condicion y verificacion");
-                    console.log("Este usuario NO posee perfil, NO posee negocion NI compras. solo ha hecho preguntas");
-                    const status = { edit : true, msg : "Edite su Username", code : "user_messages", note : "Este usuario requiere editar la coleccion user y messages" };
-                    res.json(status);
-                    
-                } else {
-                    // este user NO ha hecho preguntas.
-                    // los usarios sin perfil No pueden calificar
-                    console.log("Hemos llegado a la ultima condicion y verificacion");
-                    console.log("Este usuario NO posee perfil, NO posee negocio NI compras, NO ha hecho preguntas");
-                    const status = { edit : true, msg : "Edite su Username", code : "user", note : "Este usuario requiere editar la coleccion user" };
-                    res.json(status);
 
-                }
-
-            } else {
-                console.log("esta cuenta posee negociacion o compras realizadas, no puede editar el username");
-                const status = { edit : false, msg : "NO es Posible Editar Username", code : "denegado", note : "Este usuario ha realizado compras por lo tanto No es posible cambiar su username." };
+            const searchMessageCount = await modelMessages.find({ userId : indexed }).count();
+            if ( searchMessageCount !==0 ){
+                // este user ha hecho preguntas.
+                // los usarios sin perfil No pueden calificar porque no pueden comprar.
+                console.log("Hemos llegado a la ultima condicion y verificacion");
+                console.log("Este usuario NO posee perfil, NO posee negocion NI compras. solo ha hecho preguntas");
+                const status = { edit : true, msg : "Edite su Username", code : "user_messages", note : "Este usuario requiere editar la coleccion user y messages" };
                 res.json(status);
-            } 
+                
+            } else {
+                // este user NO ha hecho preguntas.
+                // los usarios sin perfil No pueden calificar
+                console.log("Hemos llegado a la ultima condicion y verificacion");
+                console.log("Este usuario NO posee perfil, NO posee negocio NI compras, NO ha hecho preguntas");
+                const status = { edit : true, msg : "Edite su Username", code : "user", note : "Este usuario requiere editar la coleccion user" };
+                res.json(status);
+
+            }
+
 
         }
 

@@ -21,7 +21,6 @@ const modelNautical = require('../models/nautical.js');
 const modelService = require('../models/services.js');
 
 const modelShoppingCart = require('../models/shoppingCart.js');
-const modelTransportAgent = require('../models/transportAgent.js');
 const modelBankUser = require('../models/bankUser.js');
 const modelStoreRate = require('../models/storeRate.js');
 const modelMessages = require('../models/messages.js');

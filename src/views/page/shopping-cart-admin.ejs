@@ -246,7 +246,7 @@
                                                                 <div class="col-xl-4 col-lg-4 col-md-5 col-sm-12 p-0" style="background-color: rgb(108, 117, 125, 0.8);">
                                                                     <div class="contentToolStart d-flex py-2">
                                                                         <div class="containRateStar d-flex justify-content-center" style="width: 100%;">
-                                                                            <i class="starE bi bi-star-fill mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
+                                                                            <i class="starE bi bi-star mx-2" data-star="1" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                                             <i class="starE bi bi-star mx-2" data-star="2" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                                             <i class="starE bi bi-star mx-2" data-star="3" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
                                                                             <i class="starE bi bi-star mx-2" data-star="4" style="color: #ffde00; font-size: 1.4rem; cursor: pointer;"></i>
@@ -1050,7 +1050,7 @@
 const commentRating = document.querySelector('.commentRating'); //boton para enviar el comentario y la calificación.
 const comment = document.querySelector('.comment'); //textarea de comentario
 const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella 
-let star = 1;
+let star = 0;
 
 if (starE) {
     starE.forEach((ele, i) => {
@@ -1074,29 +1074,20 @@ if (starE) {
 commentRating.addEventListener('click', ()=>{
     const commentV = comment.value;
     console.log("commentV ......:", commentV);
+    console.log("commentV.length ......:", commentV.length);
     console.log("star ......:", star);
-
+    console.log("revisar ...... shopping-cart-admin");
     //cuando se envie esta informacion en el proceso se debe eliminar los mensajes "typeNote: "shoppingCart-Received"
     // este tambien queda sin ser eliminado: typeNote: "shoppingCart-Paid"
 
     commentRating.setAttribute("disabled", "");
 
-    if (commentV.length === 0 || star === 0){
-
-        const message = "Debe dejar un comentario y una calificación";
-        mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
-
-        setTimeout(() => {
-            commentRating.removeAttribute("disabled");
-        }, 3000);
-
-    } else {    
+    if (commentV.length !== 0 && star !== 0){
 
         const dato = {
             IDCart,
             comment : commentV,
             rating : star
-
         }
 
         console.log("dato.............. :", dato); 
@@ -1138,6 +1129,17 @@ commentRating.addEventListener('click', ()=>{
                 
             })
             .catch( err => console.log(err))
+
+
+    } else {    
+
+        const message = "Debe dejar un comentario y una calificación";
+        mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
+
+        setTimeout(() => {
+            commentRating.removeAttribute("disabled");
+        }, 3000);
+
 
     }
 

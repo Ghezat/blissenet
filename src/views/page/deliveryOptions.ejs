@@ -41,7 +41,7 @@
             <% const seeMarket = user.seeMarket %>
             <% const idUser = user._id %>
             <% const deliveryOptions = searchProfile.deliveryOptions %> <!-- esto es un objeto que tiene tres constantes local, Interurbano, internacional -->
-            <!-- pickupInStore: "true", pickupAtAgreedPlace: "false", shippingToCustomer: "false", shippingAgentsAffiliated: [] -->
+            <!-- pickupInStore: "true", pickupAtAgreedPlace: "false", shippingToCustomer: "false" -->
 
             <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
             <input type="hidden" value="<%= idUser %>" id= "idUser">

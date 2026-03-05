@@ -80,6 +80,22 @@ main{
   display: none;
 }
 
+/* --------------------------------------- */
+/* Toast Solido y sin transparencia. */
+
+#toast-container > div {
+    opacity: 1 !important;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: alpha(opacity=100);
+    box-shadow: 0 0 12px #999;
+}
+
+#toast-container > :hover {
+    box-shadow: 0 0 12px #000;
+    opacity: 1 !important;
+    cursor: pointer;
+}
+/* ---------------------------------------- */
 
 .glow-on-disabled {
     width: 220px;

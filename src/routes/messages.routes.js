@@ -246,7 +246,7 @@ routes.post('/myaccount/messenger/response', async(req, res)=>{
             console.log('Mensaje enviado con éxito:', response.data);
         } catch(error) {
             console.log('--------------------------- BlissBot----------------------------');
-            console.error('Error al enviar el mensaje:', error.response );
+            console.error('Error al enviar el mensaje:', error.response.data );
         };
 
     }
