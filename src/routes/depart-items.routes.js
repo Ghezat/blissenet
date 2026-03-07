@@ -63,9 +63,9 @@ routes.get('/department/create/items', async(req,res)=>{
         
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
         Contacts = await modelInvoice.find( {$and : [{indexed: user._id}, {payCommission : false}]} );
-        //console.log('Esto es Contacts ---->', Contacts);
+        console.log('Esto es Contacts ---->', Contacts);
         BuySell = await modelBuySell.find( {$and : [{ usernameSell : user.username }, { confirmPay: 'Yes' }, {CommentSeller : {$ne : 'no_comment' }},{ payCommission : false} ] } );
-        //console.log('Esto es BuySell ---->', BuySell);
+        console.log('Esto es BuySell ---->', BuySell);
     
         boxImpagos.push( ...Contacts, ...BuySell );
         console.log("Esto es boxImpagos ::::::>", boxImpagos);
