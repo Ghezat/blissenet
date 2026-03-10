@@ -483,7 +483,7 @@
                                                         <input type="hidden" id="idMesagge" value="<%= ele._id%>"> 
                                                         <input type="hidden" id="department"  value= "<%= ele.department %>"> 
                                                         <input type="hidden" id="productId"  value= "<%= ele.productId %>"> 
-                                                        <input type="hidden" name="starValue" id="starHidden">
+                                                        <input type="hidden" name="starValue" class="starHidden">
                                                         <i class="starE bi bi-star mx-2" data-star="1" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
                                                         <i class="starE bi bi-star mx-2" data-star="2" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
                                                         <i class="starE bi bi-star mx-2" data-star="3" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
@@ -492,8 +492,8 @@
                                                     </div>
 
                                                     <div class="containerInputSubmit form-group d-flex justify-content-between mb-2">
-                                                        <input type="text" class="form-control" style="width: 79%;" id="commentId" required> 
-                                                        <input type="submit" class="form-control btn btn-primary" style="width: 20%;" id="btnSend">
+                                                        <input type="text" class="form-control commentRate" style="width: 79%;" required> 
+                                                        <input type="button" class="form-control btn btn-primary btnSend" data-btn="<%= i %>"  style="width: 20%;" value="Enviar">
                                                     </div>
                                                     
                                                     <hr class="m-1">     
@@ -646,37 +646,47 @@
   </script>
 
   <script>
-/*     const containRateStar = document.querySelectorAll('.containRateStar'); //grupo de calificacion de estrellas.
-    const starHidden = document.getElementById('starHidden'); //aqui guardo el valor de lacalificacion de la contraparte
-    const starE = document.querySelectorAll('.starE'); // esto son iconos tipo estrella pero quiero que pueda diferenciarse en grupos
-    let star = 1; */
-let startHidden;
-const containRateStar = document.querySelectorAll('.containRateStar');
+
+ const containRateStar = document.querySelectorAll('.containRateStar');
 
 if (containRateStar) {
     containRateStar.forEach((ele, i) => {
-        // Buscamos las estrellas y el input oculto ESPECÍFICOS de este grupo
         const starsInGroup = ele.querySelectorAll('.starE');
-        const hiddenInput = ele.querySelector('#starHidden');
-
+        // Buscamos el input oculto ESPECÍFICAMENTE dentro de este grupo
+        const hiddenInput = ele.querySelector('.starHidden');
+       
         starsInGroup.forEach((star) => {
             star.addEventListener("click", (event) => {
-                // Evitamos que el click se propague si es necesario
                 event.stopPropagation();
 
                 const valorSeleccionado = star.getAttribute("data-star");
-                
-                // 1. Guardamos el valor en el input oculto de este grupo específico
-                hiddenInput.value = valorSeleccionado;
-                startHidden = valorSeleccionado;
-                console.log("startHidden :", startHidden);
 
-                // 2. Cambiamos el aspecto visual solo de las estrellas de este grupo
+                // 1. Limpiamos todos los demás grupos
+                containRateStar.forEach((otherGroup, index) => {
+                    if (index !== i) {
+                        // Limpiar estrellas visualmente
+                        const otherStars = otherGroup.querySelectorAll('.starE');
+                        otherStars.forEach(s => s.classList.replace('bi-star-fill', 'bi-star'));
+                        
+                        // Limpiar el valor del input oculto de los otros grupos
+                        const otherInput = otherGroup.querySelector('.starHidden');
+                        if (otherInput) otherInput.value = "";
+                    }
+                });
+
+                // 2. Actualizamos el grupo actual
+                // Guardamos el valor en el input oculto de ESTE grupo
+                if (hiddenInput) {
+                    hiddenInput.value = valorSeleccionado;
+                    console.log("Valor guardado en input actual:", hiddenInput.value);
+                }
+
+                // Cambiamos el aspecto visual de las estrellas de ESTE grupo
                 starsInGroup.forEach((s) => {
                     if (parseInt(s.getAttribute("data-star")) <= parseInt(valorSeleccionado)) {
-                        s.classList.replace('bi-star', 'bi-star-fill'); // Cambia a estrella llena
+                        s.classList.replace('bi-star', 'bi-star-fill');
                     } else {
-                        s.classList.replace('bi-star-fill', 'bi-star'); // Cambia a estrella vacía
+                        s.classList.replace('bi-star-fill', 'bi-star');
                     }
                 });
 
@@ -686,93 +696,118 @@ if (containRateStar) {
     });
 }
 
-
 </script>
 
 <script>
     
     //const starHidden = document.getElementById('starHidden'); ya esta declarada arriba
-    const commentId = document.getElementById('commentId');
-    const btnSend = document.getElementById('btnSend');
+    const btnSend = document.querySelectorAll('.btnSend');
+
+    const commentRates = document.querySelectorAll('.commentRate');  
     const idMesagge = document.getElementById('idMesagge');
     const department = document.getElementById('department');
     const productId = document.getElementById('productId');
-    let starValue; //startHidden : 5
+    const hiddenInput = document.querySelectorAll('.starHidden');
+    let StartHidden;
+    let starValue;
+    let comment;
     
+    
+        btnSend.forEach((btn, i) => {
 
-    if (btnSend){
-        btnSend.addEventListener('click', () => {
-            starValue = startHidden;
-            console.log("startHidden --------> :", startHidden);
-            console.log("starValue --------> :", starValue);
- 
-            // Proceso de validación
-            if (validarFormulario()) {
             
-                const Department = department.value; const ProductId = productId.value;
-                const StarValue = starValue;
-                const Answer = commentId.value;
-                const IdMesagge = idMesagge.value;
-                console.log(` Department :${Department} | ProductId :${ProductId} | StarValue :${StarValue} | Answer :${Answer} | IdMesagge : ${IdMesagge} `)
+            btn.addEventListener("click", (event) =>{
                 
-                // lo que debe recibir en la ruta:  department, productId, starValue, answer
-                const datos = {
-                    department : Department,
-                    productId : ProductId,
-                    starValue : StarValue,
-                    answer : Answer,
-                    idMesagge : IdMesagge
-                };
+                groupActive = btn.getAttribute("data-btn"); // esto debe ser un numero 
+                const activeGroup = parseInt(groupActive, 10); 
+                console.log("groupActive :", groupActive);
+                console.log("activeGroup :", activeGroup);
+                console.log("typeof activeGroup ", typeof activeGroup);
+                //btn es el boton para enviar la calificacion y el comentario al backend
+                
+                console.log("ver esto :", commentRates[activeGroup]);
 
-                console.log("datos :", datos);
+                const valueStartIs = containRateStar[activeGroup].querySelectorAll('.starE');
+                console.log("valueStartIs :", valueStartIs);
+                StarHidden = containRateStar[activeGroup].querySelector('.starHidden');
+                console.log("StarHidden :", StarHidden.value);
+                
+                starValue = StarHidden.value; //guardamos en la variable global;
+                console.log("starValue :", starValue);
+                
+                comment = commentRates[activeGroup].value;
+                console.log("comment :", comment);
+                
+                //validacion de datos y si esta el comentaio y la calificacion pueede enviar, ya esta hecho esta funcion
+             
+                if (validarFormulario()) {
+                    console.log("ha sido valido, estan todos los datos necesarios");
+                    const Department = department.value; 
+                    const ProductId = productId.value;
+                    const StarValue = starValue;
+                    const Answer = comment;
+                    const IdMesagge = idMesagge.value;
+                                        
+                    // lo que debe recibir en la ruta:  department, productId, starValue, answer
+                    const datos = {
+                        department : Department,
+                        productId : ProductId,
+                        starValue : StarValue,
+                        answer : Answer,
+                        idMesagge : IdMesagge
+                    };
 
-                fetch('/rateProduct', {
+                    console.log("datos :", datos);
 
-                method: "post",
-                body: JSON.stringify(datos),
-                headers: {"content-type" : "application/json"}
+                    fetch('/rateProduct', {
 
-                })
-                .then(response =>response.json() )
-                .then( jsonx => {
-                    console.log(jsonx)
-                    const code = jsonx.code;
-                    const message = jsonx.message;
+                    method: "post",
+                    body: JSON.stringify(datos),
+                    headers: {"content-type" : "application/json"}
 
-                    if (code === "ok"){
-                        mostrarToast( message , 'right', 'success', 'Hecho', true ); 
-                        mostrarToast( "3 Ssegundos para actualizar la pagina." , 'right', 'info', '', true ); // Agrega título aquí
-                        setTimeout(() => {
+                    })
+                    .then(response =>response.json() )
+                    .then( jsonx => {
+                        console.log(jsonx)
+                        const code = jsonx.code;
+                        const message = jsonx.message;
 
-                        location.reload();
+                        if (code === "ok"){
+                            mostrarToast( message , 'right', 'success', 'Hecho', true ); 
+                            mostrarToast( "3 Ssegundos para actualizar la pagina." , 'right', 'info', '', true ); // Agrega título aquí
+                            setTimeout(() => {
 
-                        }, 3000);
+                            location.reload();
 
-                    } else {
+                            }, 3000);
+
+                        } else {
+                            mostrarToast( message , 'right', 'danger', 'Upps', true ); // Agrega título aquí
+                        }
+
+                    })
+                    .catch( err => {
+                        console.log(err);
                         mostrarToast( message , 'right', 'danger', 'Upps', true ); // Agrega título aquí
-                    }
+                    });
+                    
+                    
+                } else {
+                    //alert("Por favor, completa todos los campos requeridos."); // Mensaje de error
+                    //console.log("comment", comment.trim());
+                    //console.log("startHidden", startHidden);
+                    const message = "Por favor, completa todos los campos requeridos.";
+                    mostrarToast( message , 'right', 'info', '', true ); // Agrega título aquí
+                }
 
-                })
-                .catch( err => {
-                    console.log(err);
-                    mostrarToast( message , 'right', 'danger', 'Upps', true ); // Agrega título aquí
-                });
-                
-                
-            } else {
-                //alert("Por favor, completa todos los campos requeridos."); // Mensaje de error
-                console.log("comment", commentId.value.trim());
-                console.log("startHidden", startHidden);
-                const message = "Por favor, completa todos los campos requeridos.";
-                mostrarToast( message , 'right', 'info', '', true ); // Agrega título aquí
-            }
+            })    
             
         });
-    }    
+      
 
     function validarFormulario() {
         // Aquí puedes agregar tus condiciones de validación
-        return (commentId.value.trim() !== "") && (startHidden.value !== ""); // Esto envio un false o un true ?
+        return (comment.trim() !== "") && (starValue !== ""); // Esto envio un false o un true ?
     }
 
 </script>
