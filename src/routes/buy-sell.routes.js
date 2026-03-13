@@ -1256,24 +1256,10 @@ routes.get('/buysell-body/:id', async(req, res)=>{
 
   const buySell =  await modelBuysell.findById(buySellId);
   const msg = buySell.written; 
+  const msgFormat = buySell.written;
   const indexedSell = buySell.indexedSell; // este es el id user
   const bankData = await modelBankUser.findOne( { indexed : indexedSell } );
   const fullScreen = buySell.fullScreen; //false or true // para determinar si el chat esta full screen.
-
-  // Función para escapar caracteres especiales
-  function escapeHtml(text) {
-      return text
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;")
-  }
-
-  // Formatear cada mensaje antes de enviarlo
-  const msgFormat = msg.map(ele => ({
-      ...ele,written: escapeHtml(ele.written) // Aplica ambas funciones aquí
-  }));
 
   console.log("buySell, Que hay aqui? --->", buySell);
   console.log("msgFormat, Que hay aqui? --->", msgFormat);
