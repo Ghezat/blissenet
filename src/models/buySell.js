@@ -12,7 +12,7 @@ const buySellSchema = new Schema({
     title_id : { type : String }, //este es el id del articulo o del arte o del auto o de lo que sea que se este vendiendo o alquilando
     fechaNegotiation : { type : String },
     tradeType : { type : String }, //aqui guardamos el tipo de entrega que puede ser una de estas tres (Local, Nacional, Internacional );
-    deliveryDetails : { type : String, default : "" }, //aqui guardamos el detalle de como se debe enviare el paquete. ejemplo. "Retirar Personalmente en la tienda", o "Reciba su pedido en la puerta de su casa. (Solicitar Delivery)" Nace como string vacio pero luego tendra un valor. lo importante es que ya exista para luego solo actualizar su valor.
+    deliveryDetails : { type : String, default : "" }, //aqui guardamos el detalle de como se debe enviare el paquete. ejemplo. "Retirar personalmente en la tienda", o "Reciba su pedido en la puerta de su casa" Nace como string vacio pero luego tendra un valor. lo importante es que ya exista para luego solo actualizar su valor.
     deliveryOptions : { type : Object }, // este objeto lo posee el perfil de vendedor. verlo en profile 
     count : { type : Number }, //cantidad de existencia que hay del articulo.
     tecnicalDescription : { type : String },

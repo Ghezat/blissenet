@@ -119,7 +119,7 @@ io.on('connection', (socket)=>{
     });
 
     //socket.emit('appointment:closeRoom', paso 1 envir al socket.
-    //{ 'message': "Sala de negociación cerrada", "idNegotiation" : idOrder }
+    //{ 'message': "Sala de negociación cerrada", "idNegotiation" : idOrder })
     socket.on('appointment:closeRoom', (data)=>{
         console.log("---------------------- Socket ------------------------");
         console.log("::::: Envio de notificacion de cierre de sala :::::");
@@ -136,6 +136,20 @@ io.on('connection', (socket)=>{
         //socket.on('negotiation:ReCloseRoom', data);
         
     });
+
+    //socket.emit('buySell:confirmation', paso 1 envir al socket.
+    //{ 'message': "Compra confirmada por el Clinte", "idBuySell" : idOrder }
+    socket.on('buySell:confirmation', (data)=>{
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: Envio de Confirmacion de Compra :::::");
+        console.log("data .... :", data);
+        
+        io.emit('buySell:Reconfirmation', data);
+        //socket.on('buySell:Reconfirmation', data);
+        
+    });
+
+
 
 });
 

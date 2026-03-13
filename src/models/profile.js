@@ -60,7 +60,7 @@ const SchemaProfile = new Schema({
     hashtags : { type : Object , default : [] }, //este campo crea por defecto un objeto vacio, en el se agregara un array con las diferentes palabras claves de la tienda. 
     /* tradePolicy : { type : Object, default : { "ComercioLocal" : true, "ComercioInterurbano" : false, "ComercioInternacional" : false }},  */
     buyCar : { type : Boolean , default : false}, //por defecto todos tienen este valor false a menos que desee activarlo y para ello debe tener al menos 11 articulos. SOlo funciona para articulos y artes
-    deliveryOptions : { type : Object, default : { pickupInStore: "true", pickupAtAgreedPlace: "false", shippingToCustomer: "false" } },//  Estas opciones pueden ser : (pickupInStore (D01), shippingToCustomer (D02), shippingToCustomer (D03) )
+    deliveryOptions : { type : Object, default : { pickupInStore: "true", pickupAtAgreedPlace: "false", shippingToCustomer: "false" } },//  Estas opciones pueden ser : (pickupInStore (D01), shippingToCustomer (D02), shippingToCustomer (D03) ) Esto es para el carrito de compra IMPORTANTE
     indexed :  { type : String }  //este es el id del user     
 },{
     timestamps : true

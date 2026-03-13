@@ -16,7 +16,7 @@ const shoppingCart = new Schema({
     regPay : { type : String, default : "false"}, //aqui se registra el pago por parte del cliente.
     dataRegPay : { type : Array, default : [] }, //aqui se registra el metodo, el detalle y es response del pago: dataRegPay = [ {methodPay : "", detailPay : "", response : "" } ]
     paid : { type : String, default : "false" }, //campo que determina si el pago ha sido aceptado
-    deliveryOptions : { type : String }, //guardamos el modo de entrega que ha elejido el cliente. Estas opciones pueden ser : (D01, D02, D03)
+    deliveryOptions : { type : String }, //deliveryDetails es realmente guardamos el modo de entrega que ha elejido el cliente. Estas opciones pueden ser : (D01, D02, D03)
     sent : { type : Object, default : { sentStatus : "false", sentDetails : ""} }, //enviado tiene dos valores "true" or "false".
     received : { type : String, default : "false" }, //recibido por el cliente tiene dos valores "true" or "false".
     ratingSeller :  { type : Number, default : 0 }, //aqui almacena la puntuacion en estrella el valor por defecto es 1

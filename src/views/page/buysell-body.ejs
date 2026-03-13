@@ -130,7 +130,7 @@
             <div class="row m-0 d-flex justify-content-between" style="width: 100%; height: auto;">
 
                 <div class="container-fluid d-flex justify-content-start py-2 m-0" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%);">
-                    <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Sala de Negocio </b>  </span> 
+                    <span class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Sala de Negocios</b>  </span> 
                 </div> 
         
                 <div class="col-12 px-3 mx-0 my-1">
@@ -155,6 +155,8 @@
                             <input type="hidden" class="countRequestData" value="<%= buySell.countRequest %>">
                             <input type="hidden" class="countMaxData" value="<%= buySell.count %>">
                             <input type="hidden" class="tradeType" value="<%= buySell.tradeType %>">
+
+                            <input type="hidden" class="step" value="<%= buySell.step %>">
                         
                         <% if ( buySell.usernameSell == user.username ) { %>
                             
@@ -241,11 +243,11 @@
                                                         <label class="form-check-label" for="flexRadioDefault1">
                                                             
                                                             <% if (deliveryDetails === "D01") { %>
-                                                            <span>Retirar Personalmente en la tienda</span> 
+                                                                <span>Retirar personalmente en la tienda</span> 
                                                             <% } else if (deliveryDetails === "D02") { %>
-                                                                <span>Retirar Personalmente en algun acordado</span>
+                                                                <span>Retirar personalmente en algun acordado</span>
                                                             <% } else if (deliveryDetails === "D03") { %>
-                                                                <span>Reciba su pedido en la puerta de su casa. (Solicitar Delivery)</span>
+                                                                <span>Reciba su pedido en la puerta de su casa.</span>
                                                             <% } %>    
 
                                                                                                             
@@ -484,7 +486,10 @@
                         <% }; %>    
 
 
+                        
+
                         <% if ( buySell.usernameBuy == user.username && buySell.step == 0 ) { %>
+                            <p class="mt-2" style="font-size: 18px;">  Paso 1 : Confirmación de Compra </p>
 
                             <ul class="nav nav nav-pills">
                                 <li class="nav-item">
@@ -546,10 +551,9 @@
                                     </div>    
                                 </div>
 
-
                                 <div class="form-group my-3 p-0">
                                     <% if (buySell.cancel == false){ %>
-                                        <button class="form-control btn btn-primary py-2" id="btn_confirmacion">Confirmar Compra</button>
+                                        <button class="form-control btn btn-primary py-2" id="btn_confirmacion"> Confirmar Compra </button>
                                     <% } else { %>
                                         <button class="form-control btn btn-primary py-2" disabled>Confirmar Compra</button>
                                     <% }; %>    
@@ -570,7 +574,7 @@
                                 </div>
                         
                             </div>
-
+                            
                             <div class="row rounded-1 p-3 m-0 contentDeliveries close" style="width: 100%; background-color: #dbdfe4;">
                                 <div class="col-lg-12 col-md-12 col-sm-12 p-0"> 
                             
@@ -596,44 +600,33 @@
                                                     <%= buySell.tradeType %>
                                                 </div>
                                             </div>    
-
-                                        <!--    buySell.deliveryOptions  aqui esta toda la informacion de envio -->
-                                        <!--    deliveryOptions: { pickupInStore: 'true', pickupAtAgreedPlace: 'true, shippingToCustomer: 'false } -->
-                                            <% const deliveryOptions = buySell.deliveryOptions; %>
-
-                                            <% const pickupInStore = deliveryOptions.pickupInStore;  %>
-                                            <% const pickupAtAgreedPlace = deliveryOptions.pickupAtAgreedPlace;  %>
-                                            <% const shippingToCustomer = deliveryOptions.shippingToCustomer;  %>
-
-                                            <%  if (pickupInStore === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
-                                                    <label class="form-check-label" for="flexRadioDefault1">
-                                                        Retirar Personalmente en la tienda
-                                                    </label>
-                                                </div>
-                                            <% }; %>    
-                                            <%  if (pickupAtAgreedPlace === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
-                                                    <label class="form-check-label" for="flexRadioDefault2">
-                                                        Retirar Personalmente en algun lugar acordado
-                                                    </label>
-                                                </div>                                                    
-                                            <% }; %> 
-                                            <%  if (shippingToCustomer === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
-                                                    <label class="form-check-label" for="flexRadioDefault3">
-                                                        Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
-                                                    </label>
-                                                </div>
-                                            <% }; %>   
+                                         
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1" checked disabled>
+                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                    Retirar personalmente en la tienda
+                                                </label>
+                                            </div>
+                                    
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2"  disabled>
+                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                    Retirar personalmente en algun lugar acordado
+                                                </label>
+                                            </div>                                                    
+                                        
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3"  disabled>
+                                                <label class="form-check-label" for="flexRadioDefault3">
+                                                    Reciba su pedido en la puerta de su casa.
+                                                </label>
+                                            </div>
+                                            
 
                                         </div> 
                                         
                                         <div class="form-group my-3">
-                                            <button class="form-control btn btn-primary" id="btn_deliveries">Confirme</button>
+                                            <button class="form-control btn btn-primary" disabled> Confirme</button>
                                         </div>
 
                                         <div class="alert alert-info my-2">
@@ -734,7 +727,7 @@
                                         </div>
 
                                         <div class="form-group my-3">
-                                            <button class="bntn btn-primary form-control" id="btnMethodPaySelected" disabled> Registrar Pago </button>
+                                            <button class="bntn btn-primary form-control" disabled> Registrar Pago </button>
                                         </div>
                                     </div>
                                 </div> 
@@ -743,6 +736,8 @@
 
                         <% } else if ( buySell.usernameBuy == user.username && buySell.step == 1 ) { %>
                             
+                            <p class="mt-2" style="font-size: 18px;">  Paso 2 : Elegir tipo de envío </p>
+
                             <ul class="nav nav nav-pills">
                                 <li class="nav-item">
                                     <button class="nav-link" id="buyDatos">1. Datos</button>
@@ -791,7 +786,7 @@
                                 </div>  
 
                                 <div class="form-group my-3">
-                                    <button class="form-control btn btn-primary" id="btn_confirmacion">Confirme</button>
+                                    <button class="form-control btn btn-primary" disabled> Compra Confirmada </button>
                                 </div>
                         
                             </div>
@@ -812,43 +807,31 @@
                                             </div>  
                                         </div>
 
-
                                         <div class="form-group my-2 mx-2">
             
                                             <label class="text-secondary my-2 me-2" style="font-size: 17px;"> <b> Elige como deseas retirar o recibir </b> </label>
-                                               
 
-                                            <% const deliveryOptions = buySell.deliveryOptions; %>
-
-                                            <% const pickupInStore = deliveryOptions.pickupInStore;  %>
-                                            <% const pickupAtAgreedPlace = deliveryOptions.pickupAtAgreedPlace;  %>
-                                            <% const shippingToCustomer = deliveryOptions.shippingToCustomer;  %>
-
-                                            <%  if (pickupInStore === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
-                                                    <label class="form-check-label" for="flexRadioDefault1">
-                                                        Retirar Personalmente en la tienda
-                                                    </label>
-                                                </div>
-                                            <% }; %>    
-                                            <%  if (pickupAtAgreedPlace === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
-                                                    <label class="form-check-label" for="flexRadioDefault2">
-                                                        Retirar Personalmente en algun lugar acordado
-                                                    </label>
-                                                </div>                                                    
-                                            <% }; %> 
-                                            <%  if (shippingToCustomer === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
-                                                    <label class="form-check-label" for="flexRadioDefault3">
-                                                        Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
-                                                    </label>
-                                                </div>
-                                            <% }; %>                                                 
-
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1" checked>
+                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                    Retirar personalmente en la tienda
+                                                </label>
+                                            </div>
+                                    
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2">
+                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                    Retirar personalmente en algun lugar acordado
+                                                </label>
+                                            </div>                                                    
+                        
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3">
+                                                <label class="form-check-label" for="flexRadioDefault3">
+                                                    Reciba su pedido en la puerta de su casa.
+                                                </label>
+                                            </div>
+                                                                                             
 
                                         </div> 
                                         
@@ -954,7 +937,7 @@
                                         </div>
 
                                         <div class="form-group my-3">
-                                            <button class="bntn btn-primary form-control" id="btnMethodPaySelected" disabled> Registrar Pago </button>
+                                            <button class="bntn btn-primary form-control" disabled> Registrar Pago </button>
                                         </div>
                                     </div>
                                 </div> 
@@ -963,6 +946,8 @@
 
                         <% } else if ( buySell.usernameBuy == user.username && buySell.step == 2 ) { %>
                         
+                            <p class="mt-2" style="font-size: 18px;">  Paso 3 : Elegir forma de Pago </p>
+
                             <ul class="nav nav nav-pills">
                                 <li class="nav-item">
                                     <button class="nav-link" id="buyDatos">1. Datos</button>
@@ -1018,7 +1003,7 @@
                                 </div>  
 
                                 <div class="form-group my-3">
-                                    <button class="form-control btn btn-primary" id="btn_confirmacion">Confirme</button>
+                                    <button class="form-control btn btn-primary" disabled> Compra Confirmada </button>
                                 </div>
                         
                             </div>
@@ -1045,49 +1030,46 @@
 
                                         <div class="form-group my-2 mx-2">
 
-                                            <label class="text-secondary my-2 me-2" style="font-size: 17px;"> <b> Elige como deseas retirar o recibir </b> </label>
+                                            <label class="text-secondary my-2 me-2" style="font-size: 17px;"> <b> Opcion Elegida para Retiro o Envío: </b> </label>
 
                                         <!--    buySell.deliveryOptions  aqui esta toda la informacion de envio -->
                                         <!--    deliveryOptions: { pickupInStore: 'true', pickupAtAgreedPlace: 'true, shippingToCustomer: 'false } -->
-                                            <% const deliveryOptions = buySell.deliveryOptions; %>
+                                            <% const deliveryDetails = buySell.deliveryDetails; %>
+     
+                                            <% if (deliveryDetails == "" ) { %>
 
-                                            <% const pickupInStore = deliveryOptions.pickupInStore;  %>
-                                            <% const pickupAtAgreedPlace = deliveryOptions.pickupAtAgreedPlace;  %>
-                                            <% const shippingToCustomer = deliveryOptions.shippingToCustomer;  %>
+                                                <div class="alert alert-dark">
+                                                    Sin opción de Retiro o EWnvío
+                                                </div>
 
-                                            <%  if (pickupInStore === "true"){ %>
+                                            <% } else { %>
+
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D01" id="flexRadioDefault1">
+                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" disabled checked>
                                                     <label class="form-check-label" for="flexRadioDefault1">
-                                                        Retirar Personalmente en la tienda
+                                                        
+                                                        <% if (deliveryDetails === "D01") { %>
+                                                            <span>Retirar personalmente en la tienda</span> 
+                                                        <% } else if (deliveryDetails === "D02") { %>
+                                                            <span>Retirar personalmente en algun acordado</span>
+                                                        <% } else if (deliveryDetails === "D03") { %>
+                                                            <span>Reciba su pedido en la puerta de su casa.</span>
+                                                        <% } %>    
+
+                                                                                                        
                                                     </label>
                                                 </div>
-                                            <% }; %>    
-                                            <%  if (pickupAtAgreedPlace === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D02" id="flexRadioDefault2" checked>
-                                                    <label class="form-check-label" for="flexRadioDefault2">
-                                                        Retirar Personalmente en algun lugar acordado
-                                                    </label>
-                                                </div>                                                    
-                                            <% }; %> 
-                                            <%  if (shippingToCustomer === "true"){ %>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="deliveryDetails" value="D03" id="flexRadioDefault3" checked>
-                                                    <label class="form-check-label" for="flexRadioDefault3">
-                                                        Reciba su pedido en la puerta de su casa. (Solicitar Delivery)
-                                                    </label>
-                                                </div>
-                                            <% }; %>  
+
+                                            <% } %>
 
                                         </div> 
                                         
                                         <div class="form-group my-3">
-                                            <button class="form-control btn btn-primary" id="btn_deliveries">Confirme</button>
+                                            <button class="form-control btn btn-primary" disabled> Confirmado </button>
                                         </div>
 
                                         <div class="alert alert-info my-2">
-                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>   Elige si deseas servicio de delivery o quieres ir por tu compra personalmente.
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Si necesitas añadir algo sobre tu envío, ¡escríbenos al chat!
                                         </div>
 
                                     </div>    
@@ -1191,6 +1173,8 @@
 
                         <% } else if ( buySell.usernameBuy == user.username && buySell.step == 3 ) { %>
 
+                            <p class="mt-2" style="font-size: 18px;">  Paso 4 : Dejar Calificación y Comentario </p>
+
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
                                     <button class="nav-link active" id="detailsBuySell">Detalles de compra</button>
@@ -1260,11 +1244,11 @@
                                                 <% let deliveryDetailsString; %>
 
                                                 <% if (deliveryDetails == "D01"){  %>   
-                                                    <% deliveryDetailsString = "Retirar Personalmente en la tienda"  %> 
+                                                    <% deliveryDetailsString = "Retirar personalmente en la tienda"  %> 
                                                 <% } else if (deliveryDetails == "D02"){  %> 
-                                                    <% deliveryDetailsString = "Retirar Personalmente en algun acordado" %>
+                                                    <% deliveryDetailsString = "Retirar personalmente en algun acordado" %>
                                                 <% } else if (deliveryDetails == "D03"){  %>      
-                                                    <% deliveryDetailsString = "Reciba su pedido en la puerta de su casa. (Solicitar Delivery)" %>
+                                                    <% deliveryDetailsString = "Reciba su pedido en la puerta de su casa." %>
                                                 <% }; %>    
 
                                                 <div class="form-check">
@@ -1773,12 +1757,17 @@
   <script>
     const fullScreen = document.getElementById('fullScreen');
     const idBuysell = document.querySelector('.idBuysell'); //aqui tenemos el id de la compra
+    const indexedSell = document.querySelector('.indexedSell'); //el indexed del anunciante
+    const indexedBuy = document.querySelector('.indexedBuy'); //el indexed del cliente
+    const idUser = document.querySelector('.idUser'); //el usuario que esta en esta pagina;
 
     const information = document.getElementById('information');
     const rateBuy = document.getElementById('rateBuy'); 
 
     const contentInformation = document.querySelector('.contentInformation');
     const contentRateBuy = document.querySelector('.contentRateBuy');
+
+
 
     if (information){
         information.addEventListener('click', ()=>{
@@ -1991,15 +1980,25 @@
 
                             console.log("ahora si pasamos al siguiente formulario");
                             
-                            buyDatos.classList.remove('active');
-                            buyDeliverie.classList.add('active');
-                            buyPayment.classList.remove('active');
-                                            
-                            contentData.classList.add('close');
-                            contentDeliveries.classList.remove('close');
-                            contentPayment.classList.add('close');
+                            //debemos enviar al socket la confirmacion para que reenvie al cliente y al anunciante y se vea en el chat de manera automatico
+                            //socket emit---------------------------------------------------------------
+                            const indexedBuyV = indexedBuy.value;
+                            const indexedSellV = indexedSell.value;
+
+                            socket.emit('buySell:confirmation', 
+                            { 
+                                "message" : "Compra confirmada por el Cliente",
+                                "iDBuySell" : iDBuysell,
+                                "indexedBuy" : indexedBuyV,
+                                "indexedSell" : indexedSellV
+                            });
+                            //-------------------------------------------------------------------------
 
                             mostrarToast( message , 'right', 'success', '¡Hecho!', true ); 
+
+                            setTimeout(() => {
+                                location.reload(); //reseteamos la pagina para actualizar
+                            }, 2000);
 
                         } else {
 
@@ -2134,16 +2133,12 @@
                             //{code: 'ok', message: 'Confirmación realizada con exito.'}
                             //se ha guardado y debemos seguir adelante.
                             //data deliveries payment
-                            
-                            buyDatos.classList.remove('active');
-                            buyDeliverie.classList.remove('active');
-                            buyPayment.classList.add('active');
-                                            
-                            contentData.classList.add('close');
-                            contentDeliveries.classList.add('close');
-                            contentPayment.classList.remove('close');
 
                             mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
+
+                            setTimeout(() => {
+                                location.reload(); //reseteamos la pagina.
+                            }, 2000);
 
                         } else {
 
@@ -2314,7 +2309,7 @@
 
                     setTimeout(() => {
                         location.reload();
-                    }, 4000);
+                    }, 3000);
                     
 
                 } else {
@@ -2898,7 +2893,7 @@
             })
         } 
            
-  </script>
+</script>
 
 <script>
     //vista vendedor confirma el pago, califica y envia comentario
@@ -3154,8 +3149,7 @@
     const btnCloseOperation = document.getElementById('btnCloseOperation');
     //const IndexedSell = document.querySelector('.indexedSell');
     //const IndexedBuy = document.querySelector('.indexedBuy');
-
-    const idUser = document.getElementById('idUser');
+    //const idUser = document.getElementById('idUser');
 
     if (btnCloseOperation){
 
@@ -3276,6 +3270,87 @@
         });
     
     };    
+
+</script>
+
+<script>
+    
+    const step = document.querySelector('.step').value;
+
+    if (buyDatos){
+
+        buyDatos.addEventListener('click', ()=>{
+            contentData.classList.remove('close');
+            contentDeliveries.classList.add('close');
+            contentPayment.classList.add('close');
+
+            buyDatos.classList.add('active');
+            buyDeliverie.classList.remove('active');
+            buyPayment.classList.remove('active');
+
+        });
+
+    }
+
+
+    buyDeliverie.addEventListener('click', ()=>{
+        contentData.classList.add('close');
+        contentDeliveries.classList.remove('close');
+        contentPayment.classList.add('close');
+
+        buyDatos.classList.remove('active');
+        buyDeliverie.classList.add('active');
+        buyPayment.classList.remove('active');
+
+    });
+
+    buyPayment.addEventListener('click', ()=>{
+        contentData.classList.add('close');
+        contentDeliveries.classList.add('close');
+        contentPayment.classList.remove('close');
+
+        buyDatos.classList.remove('active');
+        buyDeliverie.classList.remove('active');
+        buyPayment.classList.add('active');
+
+    });
+
+</script>
+
+<script>
+
+    //socket on para mensajes automaticos...
+    //recibimos todos los emit del socket para ejecutar tareas automaticas
+    socket.on('buySell:Reconfirmation', (data)=>{
+        console.log("::::: buySell:Reconfirmation :::::");
+        console.log("esto es data", data);
+        const iDBuySellSocket = data.iDBuySell;
+        const messageSocket = data.message;
+        const indexedBuySocket = data.indexedBuy;
+        const indexedSellSocket = data.indexedSell;
+
+        //console.log("iDBuySellSocket :", iDBuySellSocket);
+        //console.log("messageSocket :", messageSocket);
+        //console.log("indexedBuySocket :", indexedBuySocket); //indexed del cliente viene del socket
+        //console.log("indexedSellSocket :", indexedSellSocket); //indexed del anunciante viene del socket
+
+        const iDBuySell = idBuysell.value; // --> este es el id del DOM orden del buySell
+
+        if (iDBuySellSocket === iDBuySell){ //aqui validamos que se ejeute en el documento justo por id.
+
+            if (indexedBuySocket == idUser.value){
+                //console.log("+++ Mensaje para el Cliente........... :", messageSocket );
+                const Message = `<b>${messageSocket} 🛍️</b>`;
+             
+                written.value = Message; // Esto guarda la etiqueta como texto
+                //written.innerHTML = Message; // Esto interpreta el HTML ------------revisar aqui.
+
+                btnSenMessage.click();
+                written.value =""; 
+            } // Solo el Cliente es quien envia el message para que el anunciante este enterado.
+               
+        }  
+    })
 
 </script>
 
