@@ -1635,10 +1635,7 @@ routes.post('/buysell-body/deliveryType', async(req, res)=>{
 
       await modelBuysell.findByIdAndUpdate(iD, { deliveryDetails, step : 2 }, {new: true});
       
-      //ahora enviamos el arreglo searchDelivery al socket.
-      //socket.emit('result:delivery', { 'obje' : searchDelivery });
-
-      const response = { code : "ok", message : "opción tomada exitosamente.", data : searchDelivery };
+      const response = { code : "ok", message : "opción tomada exitosamente." };
       res.json(response)
 
     }
@@ -1651,7 +1648,8 @@ routes.post('/buysell-body/deliveryType', async(req, res)=>{
     // D03 Reciba su pedido en la puerta de su casa.
 
   } catch (error) {
-      const resolve = { code : "err", response : "Ha ocurrido un error. Intente mas tarde" }
+      console.log("este es el error :", error);
+      const resolve = { code : "err", message : "Ha ocurrido un error. Intente mas tarde" }
       res.json(resolve);
   }
 

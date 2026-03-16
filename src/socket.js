@@ -149,7 +149,14 @@ io.on('connection', (socket)=>{
         
     });
 
-
+    socket.on('buySell:deliverySelected', (data)=>{
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: delivery seleccionado :::::");
+        console.log("data .... :", data);
+        
+        io.emit('buySell:RedeliverySelected', data);
+        //socket.on('buySell:RedeliverySelected', data);
+    });
 
 });
 

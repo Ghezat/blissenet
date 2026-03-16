@@ -1952,6 +1952,10 @@
         
         if (btn_confirmacion){   
             btn_confirmacion.addEventListener('click', ()=>{
+
+                //primero bloqueamos el boton para que no puedan darle dos o mas veces.
+                btn_confirmacion.setAttribute("disabled", "");
+
                 const iDBuysell = idBuysell.value;
                 console.log("iDBuysell :", iDBuysell);
                 console.log("newrequest :", newrequest);
@@ -2003,6 +2007,7 @@
                         } else {
 
                             mostrarToast( message , 'right', 'danger', '¡Upss!', true ); 
+                            btn_confirmacion.removeAttribute("disabled");
                         
                         }
 
@@ -2078,6 +2083,9 @@
     if ( btn_deliveries){
 
         btn_deliveries.addEventListener('click', ()=>{
+
+            btn_deliveries.setAttribute("disabled",""); // desactivamos el boton. 
+
             const iDBuysell = idBuysell.value;
             const indexedBuy = IndexedBuy.value;
             const indexedSell = IndexedSell.value;
@@ -2101,7 +2109,6 @@
             console.log("tradeType : ", tradeType);
 
             //vampos a crear el forData para enviar al backend
-
             
             const formData = new FormData();
                 formData.append('iD', iDBuysell);
@@ -2132,7 +2139,20 @@
                             console.log("ahora si pasamos al siguiente formulario donde mostramos ahora el formulario del pago");
                             //{code: 'ok', message: 'Confirmación realizada con exito.'}
                             //se ha guardado y debemos seguir adelante.
-                            //data deliveries payment
+                            
+                            //debemos enviar al socket la confirmacion para que reenvie al cliente y al anunciante y se vea en el chat de manera automatico
+                            //socket emit---------------------------------------------------------------
+
+                            socket.emit('buySell:deliverySelected', 
+                            { 
+                                "message" : "Delivery seleccionado por el Cliente",
+                                "iDBuySell" : iDBuysell,
+                                "indexedBuy" : indexedBuy,
+                                "indexedSell" : indexedSell,
+                                "deliveryDetails" : selectedValue,
+                                "tradeType" : tradeType 
+                            });
+                            //-------------------------------------------------------------------------
 
                             mostrarToast( message , 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
 
@@ -2143,7 +2163,8 @@
                         } else {
 
                             mostrarToast( message , 'right', 'danger', '¡Upps!', true ); // Agrega título aquí
-                        
+                            btn_deliveries.removeAttribute("disabled"); //desactivamos el disabled del boton.
+
                         }
 
                     })
@@ -3351,6 +3372,44 @@
                
         }  
     })
+
+    socket.on('buySell:RedeliverySelected', (data)=>{
+        console.log("Esto es data :", data);
+        const iDBuySellSocket = data.iDBuySell;
+        const messageSocket = data.message;
+        const indexedBuySocket = data.indexedBuy;
+        const indexedSellSocket = data.indexedSell;
+        const deliveryDetailsSocket = data.deliveryDetails;
+        const tradeTypeSocket = data.tradeType;
+
+        const iDBuySell = idBuysell.value; // --> este es el id del DOM orden del buySell
+
+        let deliveryMsg;
+
+        if (deliveryDetailsSocket === "D01"){
+            deliveryMsg = "Retirar personalmente en la tienda";
+        } else if (deliveryDetailsSocket === "D02"){
+            deliveryMsg = "Retirar personalmente en algun lugar acordado";
+        } else if (deliveryDetailsSocket === "D03"){
+            deliveryMsg = "Reciba su pedido en la puerta de su casa";
+        }
+
+        if (iDBuySellSocket === iDBuySell){ //aqui validamos que se ejeute en el documento justo por id.
+
+            if (indexedBuySocket == idUser.value){
+                //console.log("+++ Mensaje para el Cliente........... :", messageSocket );
+                const Message = `<b>${messageSocket} : ${deliveryMsg} 📦​</b>`;
+             
+                written.value = Message; // Esto guarda la etiqueta como texto
+                //written.innerHTML = Message; // Esto interpreta el HTML ------------revisar aqui.
+
+                btnSenMessage.click();
+                written.value =""; 
+            } // Solo el Cliente es quien envia el message para que el anunciante este enterado.
+               
+        }  
+ 
+    });
 
 </script>
 
