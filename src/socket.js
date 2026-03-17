@@ -158,6 +158,35 @@ io.on('connection', (socket)=>{
         //socket.on('buySell:RedeliverySelected', data);
     });
 
+    socket.on('buySell:paySelected', (data)=>{
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: pago seleccionado :::::");
+        console.log("data .... :", data);
+        
+        io.emit('buySell:RepaySelected', data);
+        //socket.on('RepaySelected', data);
+    });
+
+    socket.on('buySell:buyerRate', (data)=>{
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: buyerRate :::::");
+        console.log("data .... :", data);
+        
+        io.emit('buySell:RebuyerRate', data);
+        //socket.on('buySell:RebuyerRate', data);
+    });
+    
+    socket.on('buySell:sellerRate', (data)=>{
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: sellerRate :::::");
+        console.log("data .... :", data);
+        
+        io.emit('buySell:ResellerRate', data);
+        //socket.on('buySell:ResellerRate', data);
+    });
+
+    
+
 });
 
 

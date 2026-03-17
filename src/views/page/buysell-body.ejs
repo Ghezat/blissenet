@@ -727,7 +727,7 @@
                                         </div>
 
                                         <div class="form-group my-3">
-                                            <button class="bntn btn-primary form-control" disabled> Registrar Pago </button>
+                                            <button class="btn btn-primary form-control" disabled> Registrar Pago </button>
                                         </div>
                                     </div>
                                 </div> 
@@ -937,7 +937,7 @@
                                         </div>
 
                                         <div class="form-group my-3">
-                                            <button class="bntn btn-primary form-control" disabled> Registrar Pago </button>
+                                            <button class="btn btn-primary form-control" disabled> Registrar Pago </button>
                                         </div>
                                     </div>
                                 </div> 
@@ -1164,7 +1164,7 @@
                                         </div>
 
                                         <div class="form-group my-3">
-                                            <button class="bntn btn-primary form-control" id="btnMethodPaySelected" disabled> Registrar Pago </button>
+                                            <button class="btn btn-primary form-control" id="btnMethodPaySelected" disabled> Registrar Pago</button>
                                         </div>
                                     </div>
                                 </div> 
@@ -2286,7 +2286,12 @@
     if (btnMethodPaySelected) {
         btnMethodPaySelected.addEventListener('click', ()=>{
 
-            const iDBuysell = idBuysell.value; //esto es el iD del documento buySell
+            console.log("btnMethodPaySelected :", btnMethodPaySelected);
+            btnMethodPaySelected.setAttribute("disabled",""); // desactivamos el boton. 
+
+            const iDBuysell = idBuysell.value;
+            const indexedBuy = IndexedBuy.value;
+            const indexedSell = IndexedSell.value;
 
             inpOptionMethod.forEach((ele)=>{
     
@@ -2294,7 +2299,7 @@
                     //console.log("checkedMethod :", ele.value);
                     methodSelected = ele.value;
                     //activamos el boton de registro de pago
-                    btnMethodPaySelected.removeAttribute("disabled");
+                    //btnMethodPaySelected.removeAttribute("disabled");
                 }
                 
             })
@@ -2326,6 +2331,20 @@
 
                     console.log("El usuario ha terminado de registar el pago y ha sido exitoso ");
 
+                    //debemos enviar al socket la confirmacion para que reenvie al cliente y al anunciante y se vea en el chat de manera automatico
+                    //socket emit---------------------------------------------------------------
+
+                    socket.emit('buySell:paySelected', 
+                    { 
+                        "message" : "Pago seleccionado por el Cliente",
+                        "iDBuySell" : iDBuysell,
+                        "indexedBuy" : indexedBuy,
+                        "indexedSell" : indexedSell,
+                        "methodSelected" : methodSelected,
+                        "referValue" : referValue
+                    });
+                    //-------------------------------------------------------------------------
+
                     mostrarToast( message, 'right', 'success', '¡Hecho!', true ); // Agrega título aquí
 
                     setTimeout(() => {
@@ -2335,6 +2354,7 @@
 
                 } else {
 
+                    btnMethodPaySelected.removeAttribute("disabled"); // desactivamos el boton. 
                     mostrarToast( message, 'right', 'danger', '¡Error!', true ); // Agrega título aquí
                     console.log("acciones para luego volver a intentarlo");
                    
@@ -3000,6 +3020,12 @@
         btnBuyerTrue.addEventListener('click', ()=>{
 
 
+            const iDBuysell = idBuysell.value;
+            const indexedBuy = IndexedBuy.value;
+            const indexedSell = IndexedSell.value;
+            const ratingBuyer = starHidden.value; 
+            const commentBuyer = commentBuyerTrue.value;
+
             //bloqueamos el boton y dejamos el boton spinner
             btnBuyerTrue.classList.add('close');
             btnBuyerTrueSpinner.classList.remove('close');
@@ -3010,7 +3036,8 @@
                                       comment : commentBuyerTrue.value   
                                     };                     
 
-            console.log("Esto es objectBuyerTrue.... :", objectBuyerTrue)                        
+            console.log("Esto es objectBuyerTrue.... :", objectBuyerTrue) 
+            
 
             if ( objectBuyerTrue.rating !== "" && objectBuyerTrue.comment !=="" ) {
                 console.log("podemos enviar al backend la calificacion y el comentario ");
@@ -3031,6 +3058,20 @@
                         const message = jsonx.message; 
                         
                         if (code === "ok"){
+
+                            //debemos enviar al socket la confirmacion para que reenvie al cliente y al anunciante y se vea en el chat de manera automatico
+                            //socket emit---------------------------------------------------------------
+
+                            socket.emit('buySell:buyerRate', 
+                            { 
+                                "message" : "Calificación para el anunciante",
+                                "iDBuySell" : iDBuysell,
+                                "indexedBuy" : indexedBuy,
+                                "indexedSell" : indexedSell,
+                                "rating" : ratingBuyer, 
+                                "comment" : commentBuyer
+                            });
+                            //-------------------------------------------------------------------------
 
                             mostrarToast( message, 'right', 'success', '¡Bien Hecho!', true ); // Agrega título aquí
 
@@ -3090,6 +3131,12 @@
 
         btnSellTrue.addEventListener('click', ()=>{
 
+            const iDBuysell = idBuysell.value;
+            const indexedBuy = IndexedBuy.value;
+            const indexedSell = IndexedSell.value;
+            const ratingBuyer = starHidden.value; 
+            const commentBuyer = commentBuyerTrue.value;
+
             //bloqueamos el boton y dejamos el boton spinner
             btnSellTrue.classList.add('close');
             btnSellTrueSpinner.classList.remove('close');
@@ -3117,6 +3164,18 @@
                         const message = jsonx.message; 
                         
                         if (code === "ok"){
+
+                            socket.emit('buySell:sellerRate', 
+                            { 
+                                "message" : "Calificación para el cliente",
+                                "iDBuySell" : iDBuysell,
+                                "indexedBuy" : indexedBuy,
+                                "indexedSell" : indexedSell,
+                                "rating" : ratingBuyer, 
+                                "comment" : commentBuyer
+                            });
+                            //-------------------------------------------------------------------------
+
 
                             mostrarToast( message, 'right', 'success', '¡Bien Hecho!', true ); // Agrega título aquí
 
@@ -3410,6 +3469,108 @@
         }  
  
     });
+
+    
+    socket.on('buySell:RepaySelected', (data)=>{
+        console.log("Esto es data :", data);
+        const iDBuySellSocket = data.iDBuySell;
+        const messageSocket = data.message;
+        const indexedBuySocket = data.indexedBuy;
+        const indexedSellSocket = data.indexedSell;
+        const methodSelectedSocket = data.methodSelected;
+        const referValueSocket = data.referValue;
+
+        const iDBuySell = idBuysell.value; // --> este es el id del DOM orden del buySell
+
+        if (iDBuySellSocket === iDBuySell){ //aqui validamos que se ejeute en el documento justo por id.
+
+            if (indexedBuySocket == idUser.value){
+                //console.log("+++ Mensaje para el Cliente........... :", messageSocket );
+                const Message = `<b>${messageSocket} : ${methodSelectedSocket} 💲​​​</b>`;
+             
+                written.value = Message; // Esto guarda la etiqueta como texto
+                //written.innerHTML = Message; // Esto interpreta el HTML ------------revisar aqui.
+
+                btnSenMessage.click();
+                written.value =""; 
+            } // Solo el Cliente es quien envia el message para que el anunciante este enterado.
+               
+        }  
+
+        
+    });
+
+    socket.on('buySell:RebuyerRate', (data)=>{
+        console.log("Esto es data :", data);
+        const iDBuySellSocket = data.iDBuySell;
+        const messageSocket = data.message;
+        const indexedBuySocket = data.indexedBuy;
+        const indexedSellSocket = data.indexedSell;
+        const commentSocket = data.comment;
+        const ratingSocket = data.rating;
+
+        let start;
+        if (ratingSocket == 5){
+            start = "⭐⭐⭐⭐⭐";
+        } else if (ratingSocket == 4){
+            start = "⭐⭐⭐⭐";
+        } else if (ratingSocket == 3){
+            start = "⭐⭐⭐";
+        } else if (ratingSocket == 2){
+            start = "⭐⭐";
+        } else if (ratingSocket == 1){
+            start = "⭐";
+        }
+        const iDBuySell = idBuysell.value; // --> este es el id del DOM orden del buySell
+
+        if (indexedBuySocket == idUser.value){
+            //console.log("+++ Mensaje para el Cliente........... :", messageSocket );
+            const Message = `<b>${messageSocket} : ${commentSocket} ${start} ​​​</b>`;
+            
+            written.value = Message; // Esto guarda la etiqueta como texto
+            //written.innerHTML = Message; // Esto interpreta el HTML ------------revisar aqui.
+
+            btnSenMessage.click();
+            written.value =""; 
+        } // Solo el Cliente es quien envia el message para que el anunciante este enterado.
+
+    });     
+
+    socket.on('buySell:ResellerRate', (data)=>{
+        console.log("Esto es data :", data);
+        const iDBuySellSocket = data.iDBuySell;
+        const messageSocket = data.message;
+        const indexedBuySocket = data.indexedBuy;
+        const indexedSellSocket = data.indexedSell;
+        const commentSocket = data.comment;
+        const ratingSocket = data.rating;
+
+        let start;
+        if (ratingSocket == 5){
+            start = "⭐⭐⭐⭐⭐";
+        } else if (ratingSocket == 4){
+            start = "⭐⭐⭐⭐";
+        } else if (ratingSocket == 3){
+            start = "⭐⭐⭐";
+        } else if (ratingSocket == 2){
+            start = "⭐⭐";
+        } else if (ratingSocket == 1){
+            start = "⭐";
+        }
+        const iDBuySell = idBuysell.value; // --> este es el id del DOM orden del buySell
+
+        if (indexedSellSocket == idUser.value){
+            //console.log("+++ Mensaje para el Cliente........... :", messageSocket );
+            const Message = `<b>${messageSocket} : ${commentSocket} ${start} ​​​</b>`;
+            
+            written.value = Message; // Esto guarda la etiqueta como texto
+            //written.innerHTML = Message; // Esto interpreta el HTML ------------revisar aqui.
+
+            btnSenMessage.click();
+            written.value =""; 
+        } // Solo el Cliente es quien envia el message para que el anunciante este enterado.
+
+    });     
 
 </script>
 
