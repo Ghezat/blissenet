@@ -480,9 +480,10 @@
 
 
                                                     <div class="containRateStar d-flex justify-content-center border border-dark py-3 my-2 rounded-2" data-group= "<%= i %>" style="width: 100%; background-color: rgba(56, 56, 56, 1);">
-                                                        <input type="hidden" id="idMesagge" value="<%= ele._id%>"> 
-                                                        <input type="hidden" id="department"  value= "<%= ele.department %>"> 
-                                                        <input type="hidden" id="productId"  value= "<%= ele.productId %>"> 
+                                                        
+                                                        <input type="hidden" class="department"  value= "<%= ele.department %>"> 
+                                                        <input type="hidden" class="idMesagge" value="<%= ele._id%>"> 
+                                                        <input type="hidden" class="productId"  value= "<%= ele.productId %>"> 
                                                         <input type="hidden" name="starValue" class="starHidden">
                                                         <i class="starE bi bi-star mx-2" data-star="1" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
                                                         <i class="starE bi bi-star mx-2" data-star="2" style="color: #0d6efd; font-size: 1.4rem; cursor: pointer;"></i>
@@ -704,9 +705,9 @@ if (containRateStar) {
     const btnSend = document.querySelectorAll('.btnSend');
 
     const commentRates = document.querySelectorAll('.commentRate');  
-    const idMesagge = document.getElementById('idMesagge');
-    const department = document.getElementById('department');
-    const productId = document.getElementById('productId');
+    const departmentAll = document.querySelectorAll('.department');
+    const idMesaggeAll = document.querySelectorAll('.idMesagge');
+    const productIdAll = document.querySelectorAll('.productId');
     const hiddenInput = document.querySelectorAll('.starHidden');
     let StartHidden;
     let starValue;
@@ -718,6 +719,12 @@ if (containRateStar) {
             
             btn.addEventListener("click", (event) =>{
                 
+                console.log("productIdAll :", productIdAll);
+                console.log("productIdAll[i] :", productIdAll[i] );
+                const productId = productIdAll[i].value; //este es el verdadero id del articulo a calificar.
+                const idMessage = idMesaggeAll[i].value; //este es el valor real de idMessage.
+                const department = departmentAll[i].value; //este es el valor del departamento.
+
                 groupActive = btn.getAttribute("data-btn"); // esto debe ser un numero 
                 const activeGroup = parseInt(groupActive, 10); 
                 console.log("groupActive :", groupActive);
@@ -742,11 +749,11 @@ if (containRateStar) {
              
                 if (validarFormulario()) {
                     console.log("ha sido valido, estan todos los datos necesarios");
-                    const Department = department.value; 
-                    const ProductId = productId.value;
+                    const Department = department; 
+                    const ProductId = productId;
                     const StarValue = starValue;
                     const Answer = comment;
-                    const IdMesagge = idMesagge.value;
+                    const IdMesagge = idMessage;
                                         
                     // lo que debe recibir en la ruta:  department, productId, starValue, answer
                     const datos = {
@@ -754,7 +761,7 @@ if (containRateStar) {
                         productId : ProductId,
                         starValue : StarValue,
                         answer : Answer,
-                        idMesagge : IdMesagge
+                        idMesagge : idMessage
                     };
 
                     console.log("datos :", datos);

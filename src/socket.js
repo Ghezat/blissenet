@@ -185,7 +185,15 @@ io.on('connection', (socket)=>{
         //socket.on('buySell:ResellerRate', data);
     });
 
-    
+        
+    socket.on('buySell:closeBuySell', (data)=>{
+        console.log("---------------------- Socket ------------------------");
+        console.log("::::: closeBuySell :::::");
+        console.log("data .... :", data);
+        
+        io.emit('buySell:RecloseBuySell', data);
+        //socket.on('buySell:RecloseBuySell', data);
+    });
 
 });
 

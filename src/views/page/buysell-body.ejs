@@ -2002,7 +2002,7 @@
 
                             setTimeout(() => {
                                 location.reload(); //reseteamos la pagina para actualizar
-                            }, 2000);
+                            }, 4000);
 
                         } else {
 
@@ -2158,7 +2158,7 @@
 
                             setTimeout(() => {
                                 location.reload(); //reseteamos la pagina.
-                            }, 2000);
+                            }, 4000);
 
                         } else {
 
@@ -2349,7 +2349,7 @@
 
                     setTimeout(() => {
                         location.reload();
-                    }, 3000);
+                    }, 4000);
                     
 
                 } else {
@@ -3237,6 +3237,9 @@
 
             btnCloseOperation.setAttribute('disabled', ''); //desactivamos el boton.
 
+            const iDBuysell = idBuysell.value;
+      
+
             const iDOrder = idBuysell.value;
             const iDUser = idUser.value;
             let indexedSell = IndexedSell.value; 
@@ -3255,7 +3258,6 @@
             console.log("idOrder :", iDOrder);
             console.log("indexedSell :", indexedSell);
             console.log("indexedBuy :", indexedBuy);
-
 
             const formData = new FormData()
             formData.append('idOrder', iDOrder);
@@ -3276,13 +3278,21 @@
 
                     if (code == "ok"){
 
+                        socket.emit('buySell:closeBuySell', 
+                        { 
+                            "iDBuySell" : iDOrder,
+                            "indexedBuy" : indexedBuy,
+                            "indexedSell" : indexedSell
+                        });
+                        //-------------------------------------------------------------------------
+
                         mostrarToast( message, 'right', 'sucess', '¡Hecho!', true ); 
 
                         const domain = window.location.origin;//esta variable me indica la primera parte https://blissenet.com o localhost://1263 
                         console.log("Esto es dommain............................. ", domain);
                         setTimeout(() => {
                             window.location.href = `${domain}/buysell-list`;
-                        }, 4000);
+                        }, 5000);
 
                     } else {
 
@@ -3571,6 +3581,39 @@
         } // Solo el Cliente es quien envia el message para que el anunciante este enterado.
 
     });     
+
+    
+    socket.on('buySell:RecloseBuySell', (data)=>{
+        console.log("Esto es data :", data);
+        const iDBuySellSocket = data.iDBuySell;
+        const indexedBuySocket = data.indexedBuy;
+        const indexedSellSocket = data.indexedSell;
+
+        const iDBuySell = idBuysell.value; // --> este es el id del DOM orden del buySell
+
+        if (indexedSellSocket == idUser.value){
+            //console.log("+++ Mensaje para el Cliente........... :", messageSocket );
+            const Message = `<b> Anunciante ha cerrado su sala. Puede ver esta operación en su historial </b>`;
+            
+            written.value = Message; // Esto guarda la etiqueta como texto
+            //written.innerHTML = Message; // Esto interpreta el HTML ------------revisar aqui.
+
+            btnSenMessage.click();
+            written.value =""; 
+
+        } else if (indexedBuySocket == idUser.value){
+            //console.log("+++ Mensaje para el Anunciante........... :", messageSocket );
+            const Message = `<b> Cliente ha cerrado su sala. Puede ver esta operación en su historial</b>`;
+            
+            written.value = Message; // Esto guarda la etiqueta como texto
+            //written.innerHTML = Message; // Esto interpreta el HTML ------------revisar aqui.
+
+            btnSenMessage.click();
+            written.value =""; 
+        }
+
+    });
+
 
 </script>
 
