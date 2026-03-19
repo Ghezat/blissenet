@@ -29,6 +29,8 @@
 </head>
 <style>
 
+
+
   .hideOverflow{
     overflow: hidden;
   }
@@ -520,13 +522,13 @@
             <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
         <% }; %>
         
-          <div class="carril m-0"  id="afterNavHead">
-      
-            <marquee class="themaTextLight" behavior="scroll" direction="left">
-                <span id="dateRateUpdate"></span>
-            </marquee>
 
+          <div class="d-flex justify-content-start" id="afterNavHead">
+              <div class="themaTextLight" style="font-size: 16px;">
+                  <span class="ms-3" id="dateRateUpdate"></span>
+              </div>
           </div>
+          
     
 
           <div class="row mx-0 sectionTheme">
@@ -1129,7 +1131,7 @@
             const localTime = serverDate.toLocaleString(); // Sin especificar idioma, tomará la configuración regional del usuario
             console.log("localTime -->", localTime);
 
-            dateRateUpdate.innerHTML = `<span class= "fst-italic"> <span class="me-1">Server Time:</span> ${localTime} </span>`
+            dateRateUpdate.innerHTML = `<span> Server-Time: 💻​${localTime} </span>`
           })
           .catch( err => console.log(err));
 
@@ -1165,7 +1167,7 @@
           const localTime = serverDate.toLocaleString(); // Sin especificar idioma, tomará la configuración regional del usuario
           //console.log("localTime -->", localTime);
 
-          dateRateUpdate.innerHTML = `<span class= "fst-italic"> <span class="me-1">Server Time:</span> ${localTime} </span>`
+          dateRateUpdate.innerHTML = `<span>Server-Time: 💻​ ${localTime} </span>`
         })
       .catch( err => console.log(err));
       

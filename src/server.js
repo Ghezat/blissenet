@@ -129,6 +129,7 @@ app.use(require('./routes/admin-store.routes.js'));
 app.use(require('./routes/my-ads.routes.js'));
 app.use(require('./routes/buy-sell.routes.js'));
 app.use(require('./routes/history.routes.js'));
+app.use(require('./routes/ads-Manager.routes.js'));
 app.use(require('./routes/my-invoices.routes.js'));
 app.use(require('./routes/record.routes.js'));
 app.use(require('./routes/datesUsers.routes.js'));

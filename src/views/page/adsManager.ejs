@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/toastr/toastr.min.css"> <!-- tiene que estar despues del CDN de bootstrap -->
+    <script src="/toastr/toastr.min.js"></script>
+    <title>Blissenet ADS Manager</title>
+</head>
+<style>
+    .blockRed{
+        background-color: red;
+        border-radius: 2px;
+        width: 26px;
+        height: 16px;
+        padding: 0px, 5px;
+        margin-top: 6px;
+    }
+
+    .blockGreen{
+        background-color: green;
+        border-radius: 2px;
+        width: 26px;
+        height: 16px;
+        padding: 0px, 5px;
+        margin-top: 6px;
+    }
+
+    .open{
+    display: block;
+    }
+
+    .closed{
+        display: none;
+   
+    }
+
+    .blackBody{
+        /* esta es la clase que utiliza bodyTheme */
+        background-color: #272b2f;
+    }
+
+    .textLight{
+        /* trabaja en conjunto con themaTextLight */
+        color: white;
+    }
+
+    .toast-success {
+        /* Esta clase es unicamente para dar color al alert toastr de tipo success que debe ser violeta */
+        background-color: #6f42c1; /* Azul tirando a morado */
+        color: white; /* Color del texto */
+    }
+
+</style>
+<body class="mainTheme">
+
+     
+  <main style="height: auto;">
+    <%- include('../partials/navi-simple.ejs') %>
+    <% if (user) { %>
+      <% const seeMarket = user.seeMarket %>
+      <% const idUser = user._id %>
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <input type="hidden" value="<%= idUser %>" id= "idUser">
+      <!-- este bloque me permite validad si el usuario que se logea tiene un mercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+
+   
+        <div class="container-fluid d-flex justify-content-between py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%)";>
+            <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> ADS Manager</b>  </div>
+        </div> 
+
+        <!-- searchMessageInbox -->
+        <div class="contentInbox">
+            <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+
+                <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-11 my-4 p-0">
+
+                      <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(56, 61, 66, 0.2);">
+                         <div class="containerMessage d-flex flex-column p-2 themaTextLight">
+                            <h2> Estamos trabajando 🛠️​</h2> 
+                         </div>
+                      </div>
+
+                </div> 
+  
+            </div>
+        </div>
+
+
+    <% } else { %>
+        <div class="container-fluid d-flex justify-content-center p-3" style="height: 90%; width: 100%; background-color:  rgb(243, 238, 238); box-shadow: 1px 1px 5px 1px rgb(99, 98, 98);  border-top: 2px ridge  rgb(243, 238, 238);">
+    
+            <%- include('../partials/noLogin.ejs') %>
+        
+        </div>    
+    <% }; %>     
+
+  </main>
+  <%- include('../partials/scripts.ejs') %>
+  <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
+
+
+</body>
+</html>
+
