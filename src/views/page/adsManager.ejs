@@ -7,27 +7,12 @@
     <title>Blissenet ADS Manager</title>
 </head>
 <style>
-    .blockRed{
-        background-color: red;
-        border-radius: 2px;
-        width: 26px;
-        height: 16px;
-        padding: 0px, 5px;
-        margin-top: 6px;
+
+    input[type="checkbox"] {
+        width: 25px;
+        height: 25px;
     }
 
-    .blockGreen{
-        background-color: green;
-        border-radius: 2px;
-        width: 26px;
-        height: 16px;
-        padding: 0px, 5px;
-        margin-top: 6px;
-    }
-
-    .open{
-    display: block;
-    }
 
     .closed{
         display: none;
@@ -65,24 +50,156 @@
 
    
         <div class="container-fluid d-flex justify-content-between py-2" style="background: linear-gradient(90deg, rgba(146,0,255,1) 0%, rgba(174,65,255,1) 50%, rgba(13,110,253,1) 100%)";>
-            <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> ADS Manager</b>  </div>
+            <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Gestor ADS </b>  </div>
         </div> 
+
+        <div class="container-fluid d-flex justify-content-center py-2">
+
+            
+            <div class="container d-flex">
+                <input class="form-control me-2" type="search" name="search" placeholder="Buscar por Titulo" aria-label="Search">
+                
+                <select name="selectSearcher"  class="form-control border border-primary" style="width: 150px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                    <option value="admin"> 📌 Titulo </option>
+                    <option value="workerNumber">📌​ Departamento</option>
+                </select>
+                <button class="btn btn-outline-primary" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;"> <span class="no-salto">  🔎 Buscar </span>  </button>
+            </div>
+        
+        </div>
 
         <!-- searchMessageInbox -->
         <div class="contentInbox">
-            <div class="row m-0 d-flex justify-content-center" style="width: 100%; overflow-y: auto;">
+            
 
-                <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-11 my-4 p-0">
 
-                      <div class="ContainerMessage rounded-1 p-2" style="background-color: rgba(56, 61, 66, 0.2);">
-                         <div class="containerMessage d-flex flex-column p-2 themaTextLight">
-                            <h2> Estamos trabajando 🛠️​</h2> 
-                         </div>
-                      </div>
+            <div class="row m-0 d-flex justify-content-center" style="width: 100%;">
+     
+                <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-11 my-4 p-0"></div>
+
+                  <% if (newBox.length !== 0) {%> 
+                    <div class="mainTable themaTextLight" style="overflow-x: auto; width: 100%; font-size: 16px;">  
+                        <table class="table m-0 tableStyle">
+                        
+                        <tr>
+                            <th>Imagen</th><th>Titulo</th><th>Precio</th> <th>Cant.</th> <th>Activo</th> <th>Visible</th> <th>Oferta</th>
+                        </tr>
+
+                        <% if (newBox) { %>
+                            <% newBox.forEach( (ele, i)=>{ %>
+
+
+                                <tr>
+
+                                    <td><a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" class="rounded-1" style="width: 50px; height: 50px; object-fit: cover; background-position: center;"> </a></td>    
+                                                                                        
+                                    <td style="height: auto;"> 
+                                        <input class="no-salto" type="text" value="<%= ele.title %>" style="width: 100% !important; background-color: transparent; color: inherit; border: none;">  
+                                        <span class="no-salto">  ( <%= ele.department %> )</span> 
+                                    </td>
+                                    
+                                    <td> <input class="no-salto" type="text" value="💲​ <%= ele.price%>" style="width: 100px; background-color: transparent; color: inherit; border: none;"> </td>
+
+                                    <% if  (ele.department == "items" || ele.department == "arts"  ) { %>
+                                        <td> <input type="text" value ="<%= ele.count %>" style="width: 60px; background-color: transparent; color: inherit; border: none;"> </td>
+                                    <% } else { %>
+                                        <td> - </td>
+                                    <% }; %>    
+                                    
+                               
+                                    <% if (ele.paused == true ) { %>
+                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                    <% } else { %>
+                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                    <% } %>
+
+                                    <% if (ele.visibleStore == true ) { %>
+                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                    <% } else { %>
+                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                    <% } %>
+
+                                    <% if (ele.offer == true ) { %>
+                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                    <% } else { %>
+                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                    <% } %>
+                                    
+                                    
+                    
+                                </tr>
+                            <% }); %>
+                        <% }; %>    
+
+
+                        </table>
+                    </div>
+                    <div class="paginate elementPaginate my-3">
+                        <nav aria-label="...">
+                          <ul class="pagination  m-0" >
+                            <% if (paginate) { %>
+
+                              <% if ( paginate.pagina == 1 ) { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                              </li>
+                              <% } else { %>
+                                <li class="page-item">
+                                  <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                </li>  
+                              <% }; %>  
+
+                              <% if ( paginate.pagina == 1 ) { %>
+                              <li class="page-item prev disabled">
+                                <a class="page-link" href="?paginate=prev"> Prev</a>
+                              </li>
+                              <% } else { %>
+                              <li class="page-item prev">
+                                <a class="page-link" href="?paginate=prev"> Prev </a>
+                              </li>  
+                              <% }; %>
+                              <li class="page-item active">
+                                <span class="page-link pagina"><%= paginate.pagina %></span>
+                              </li>
+                              <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                              <li class="page-item next disabled">
+                                <a class="page-link" href="?paginate=next"> Next</i></a>
+                              </li>
+                              <% } else { %>
+                              <li class="page-item next">
+                                <a class="page-link" href="?paginate=next"> Next</i> </a>
+                              </li>  
+                              <% }; %>
+
+                              <% if ( paginate.pagina == paginate.totalPagina ) { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                              </li>
+                              <% } else { %>
+                              <li class="page-item">
+                                <a class="page-link" href="?paginate=last"> <%= paginate.totalPagina %> <i class="bi bi-arrow-bar-right"></i></a>
+                              </li>  
+                              <% }; %>  
+
+                            <% }; %>
+                          </ul>
+                        </nav>
+                    </div>    
+
+                  <% } else { %>
+                    <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
+                        <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
+                            <div class="containerMessage m-2">
+                                <span style="font-size: 18px;">¡No tienes anuncios aún!<i class="bi bi-emoji-frown ms-3"></i></span>
+                            </div>
+                        </div>
+                    </div>        
+                  <% } %>  
 
                 </div> 
-  
+
             </div>
+
         </div>
 
 
@@ -97,7 +214,6 @@
   </main>
   <%- include('../partials/scripts.ejs') %>
   <%- include('../partials/scriptsOnlyNavi-simpleNoIcons.ejs') %>
-
 
 </body>
 </html>
