@@ -35,6 +35,23 @@
         color: white; /* Color del texto */
     }
 
+    .containerBtnChange{
+        display: flex;
+        justify-content: end;
+    }
+
+    @media screen and (min-width: 290px) and (max-width: 576px){
+
+        .containerBtnChange{
+            display: flex;
+            justify-content: center;
+        }
+
+        .btnChange{
+            width: 90%;
+        }
+    }
+
 </style>
 <body class="mainTheme">
 
@@ -53,26 +70,27 @@
             <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Gestor ADS </b>  </div>
         </div> 
 
-        <div class="container-fluid d-flex justify-content-center py-2">
-
+        <form action="/adsManager/search" method="post" class="mx-2">
             
-            <div class="container d-flex">
-                <input class="form-control me-2" type="search" name="search" placeholder="Buscar por Titulo" aria-label="Search">
-                
-                <select name="selectSearcher"  class="form-control border border-primary" style="width: 140px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-                    <option value="admin"> 📌 Titulo </option>
-                    <option value="workerNumber">📌​ Departamento</option>
-                </select>
-                <button class="btn btn-outline-primary" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;"> <span class="no-salto">  🔎 Buscar </span>  </button>
-            </div>
-        
-        </div>
+
+                <div class="container-fluid">
+                    <div class="row d-flex justify-content-center py-2 px-3">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12"> 
+                            <input class="form-control-lg border border-primary" type="search" name="titleSearch" placeholder="Buscar por Titulo" aria-label="Search" style="width: 100%; border: none;">
+                        </div>
+                        <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-12 col-12">
+                            <button class="btn btn-outline-primary btn-lg" type="submit"  style="border-top-left-radius: 0; border-bottom-left-radius: 0; width: 100%;" > <span class="no-salto mx-1">  🔎  Buscar </span>  </button>
+                        </div>
+                    </div>    
+                </div>
+                        
+            
+        </form>    
 
         <!-- searchMessageInbox -->
         <div class="contentInbox">
             
-
-
+            
             <div class="row m-0 d-flex justify-content-center" style="width: 100%;">
      
                 <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-10 col-11 my-4 p-0"></div>
@@ -88,51 +106,60 @@
                         <% if (newBox) { %>
                             <% newBox.forEach( (ele, i)=>{ %>
 
-
+                                <!-- Id de cada elemento a iterar -->
+                                <input type="hidden" value="<%= ele._id %>" class="Id">
+                                
                                 <tr>
 
                                     <td><a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" class="rounded-1" style="width: 50px; height: 50px; object-fit: cover; background-position: center;"> </a></td>    
                                                                                         
                                     <td style="height: auto;"> 
-                                        <input class="no-salto" type="text" value="<%= ele.title %>" style="width: 100% !important; background-color: transparent; color: inherit; border: none;">  
-                                        <span class="no-salto">  ( <%= ele.department %> )</span> 
+                                        <input class="Title no-salto" type="text" value="<%= ele.title %>" style="width: 100% !important; background-color: transparent; color: inherit; border: none;">  
+                                        <span class="Depart no-salto">  ( <%= ele.department %> )</span> 
                                     </td>
                                     
-                                    <td> <input class="no-salto" type="text" value="💲​ <%= ele.price%>" style="width: 100px; background-color: transparent; color: inherit; border: none;"> </td>
+                                    <td> <input class="Price no-salto" type="text" value="💲​ <%= ele.price %>" style="width: 100px; background-color: transparent; color: inherit; border: none;"> </td>
 
                                     <% if  (ele.department == "items" || ele.department == "arts"  ) { %>
-                                        <td> <input type="text" value ="<%= ele.count %>" style="width: 60px; background-color: transparent; color: inherit; border: none;"> </td>
+                                        <td> <input class="Count" type="text" value ="<%= ele.count %>" style="width: 60px; background-color: transparent; color: inherit; border: none;"> </td>
                                     <% } else { %>
                                         <td> - </td>
                                     <% }; %>    
                                     
-                               
                                     <% if (ele.paused == true ) { %>
-                                        <td> <input type="checkbox" name="" id=""> </td>
+                                        <td> <input class="Paused" type="checkbox" name="" id=""> </td>
                                     <% } else { %>
-                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                        <td> <input class="Paused" type="checkbox" name="" id="" checked> </td>
                                     <% } %>
 
                                     <% if (ele.visibleStore == true ) { %>
-                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                        <td> <input class="VisibleStore" type="checkbox" name="" id="" checked> </td>
                                     <% } else { %>
-                                        <td> <input type="checkbox" name="" id=""> </td>
+                                        <td> <input class="VisibleStore" type="checkbox" name="" id=""> </td>
                                     <% } %>
 
                                     <% if (ele.offer == true ) { %>
-                                        <td> <input type="checkbox" name="" id="" checked> </td>
+                                        <td> <input class="Offer" type="checkbox" name="" id="" checked> </td>
                                     <% } else { %>
-                                        <td> <input type="checkbox" name="" id=""> </td>
+                                        <td> <input class="Offer" type="checkbox" name="" id=""> </td>
                                     <% } %>
                                     
                                     
                     
                                 </tr>
+
                             <% }); %>
                         <% }; %>    
 
 
                         </table>
+                    </div>
+                    <div class="container-fluid">
+
+                        <div class="py-2 px-0 containerBtnChange">
+                            <button class="btn btn-primary btn-lg shadow-sm btnChange"> <span class="px-5"> Hacer cambios </span> </button>
+                        </div>
+                        
                     </div>
                     <div class="paginate elementPaginate my-3">
                         <nav aria-label="...">
@@ -187,12 +214,14 @@
                     </div>    
 
                   <% } else { %>
-                    <div class="ContainerMessage rounded-1 p-2 border" style="background-color: #dbdfe4;">
-                        <div class="containerMessage d-flex flex-column p-2" style="background-color: white;">
-                            <div class="containerMessage m-2">
-                                <span style="font-size: 18px;">¡No tienes anuncios aún!<i class="bi bi-emoji-frown ms-3"></i></span>
-                            </div>
+                    <div class="ContainerMessage themaTextLight d-flex justify-content-center">
+
+                        
+                        <div class="containerImageSinResultados d-flex flex-column align-items-center">
+                            <p style="font-size: 17px;"> <span> ¡Sin resultados! </span>  </p>
+                            <img src="/img/sinResultados.png" style="width: 200px;">
                         </div>
+
                     </div>        
                   <% } %>  
 
@@ -218,3 +247,42 @@
 </body>
 </html>
 
+<script>
+
+    const Id = document.querySelectorAll('.Id');
+    const Depart = document.querySelectorAll('.Depart');
+    const Title = document.querySelectorAll('.Title');
+    const Price = document.querySelectorAll('.Price');
+    const Count = document.querySelectorAll('.Count');
+    const Paused = document.querySelectorAll('.Paused');
+    const Offer = document.querySelectorAll('.Offer');
+
+    const btnChange = document.querySelector('.btnChange');
+    const editedBox = [];  
+    btnChange.addEventListener("click", ()=>{
+        const countItem = Id.length;
+        console.log("countItem :", countItem);
+    
+        for (let i = 0; i < countItem; i++) {
+
+            const id = Id[i].value;
+            const depart = Depart[i].value;
+            const title = Title[i].value;
+            const price = Price[i].value;
+            const count = Count[i].value;
+            const paused = Paused[i].value;
+            const offer = Offer[i].value;
+
+
+            const objeto = { id: id, department: depart, title : title, price : price, count : count, paused : paused, offer : offer };
+            console.log("objeto :", objeto);
+            editedBox.push(objeto);
+
+        }
+
+        console.log("editedBox :", editedBox);
+
+    })
+
+
+</script>
