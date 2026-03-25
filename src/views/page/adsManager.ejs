@@ -70,13 +70,19 @@
             <div class="ms-2 p-0" style="font-weight: 400; color: #ffde00;"> <b> Gestor ADS </b>  </div>
         </div> 
 
-        <form action="/adsManager/search" method="post" class="mx-2">
+        <form action="/adsManagerSearch" method="post" class="mx-2">
             
 
                 <div class="container-fluid">
                     <div class="row d-flex justify-content-center py-2 px-3">
                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12"> 
-                            <input class="form-control-lg border border-primary" type="search" name="titleSearch" placeholder="Buscar por Titulo" aria-label="Search" style="width: 100%; border: none;">
+
+                            <% if  (Title == "") { %>
+                                <input class="form-control-lg border border-primary" type="search" name="titleSearch" placeholder="Buscar por Titulo" aria-label="Search" style="width: 100%; border: none;" value="">
+                            <% } else { %>
+                                <input class="form-control-lg border border-primary" type="search" name="titleSearch" placeholder="Buscar por Titulo" aria-label="Search" style="width: 100%; border: none;" value="<%= Title %>">
+                            <% }; %>  
+
                         </div>
                         <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-12 col-12">
                             <button class="btn btn-outline-primary btn-lg" type="submit"  style="border-top-left-radius: 0; border-bottom-left-radius: 0; width: 100%;" > <span class="no-salto mx-1">  🔎  Buscar </span>  </button>
@@ -100,7 +106,7 @@
                         <table class="table m-0 tableStyle">
                         
                         <tr>
-                            <th>Imagen</th><th>Titulo</th><th>Precio</th> <th>Cant.</th> <th>Activo</th> <th>Visible</th> <th>Oferta</th>
+                            <th>Imagen</th><th>Titulo</th><th>💲Precio</th> <th>Cant.</th> <th>Activo</th> <th>Visible</th> <th>Oferta</th>
                         </tr>
 
                         <% if (newBox) { %>
@@ -108,40 +114,41 @@
 
                                 <!-- Id de cada elemento a iterar -->
                                 <input type="hidden" value="<%= ele._id %>" class="Id">
-                                
+                                <input type="hidden" value="<%= ele.department %>" class="Depart">
+
                                 <tr>
 
                                     <td><a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"><img src="<%= ele.images[0].url %>" class="rounded-1" style="width: 50px; height: 50px; object-fit: cover; background-position: center;"> </a></td>    
                                                                                         
                                     <td style="height: auto;"> 
-                                        <input class="Title no-salto" type="text" value="<%= ele.title %>" style="width: 100% !important; background-color: transparent; color: inherit; border: none;">  
-                                        <span class="Depart no-salto">  ( <%= ele.department %> )</span> 
+                                        <input class="Title no-salto" type="text" value="<%= ele.title %>" maxlength="60" style="width: 100% !important; background-color: transparent; color: inherit; border: none;">  
+                                        <span class="no-salto">  ( <%= ele.department %> )  </span> 
                                     </td>
                                     
-                                    <td> <input class="Price no-salto" type="text" value="💲​ <%= ele.price %>" style="width: 100px; background-color: transparent; color: inherit; border: none;"> </td>
+                                    <td> <input class="Price no-salto" type="number" value="<%= ele.price %>" style="width: 100px; background-color: transparent; color: inherit; border: none;"> </td>
 
                                     <% if  (ele.department == "items" || ele.department == "arts"  ) { %>
-                                        <td> <input class="Count" type="text" value ="<%= ele.count %>" style="width: 60px; background-color: transparent; color: inherit; border: none;"> </td>
+                                        <td> <input class="Count" type="number" value ="<%= ele.count %>" style="width: 60px; background-color: transparent; color: inherit; border: none;"> </td>
                                     <% } else { %>
                                         <td> - </td>
                                     <% }; %>    
                                     
                                     <% if (ele.paused == true ) { %>
-                                        <td> <input class="Paused" type="checkbox" name="" id=""> </td>
+                                        <td> <input class="Paused" type="checkbox" value= true > </td>
                                     <% } else { %>
-                                        <td> <input class="Paused" type="checkbox" name="" id="" checked> </td>
+                                        <td> <input class="Paused" type="checkbox" value= false checked> </td>
                                     <% } %>
 
                                     <% if (ele.visibleStore == true ) { %>
-                                        <td> <input class="VisibleStore" type="checkbox" name="" id="" checked> </td>
+                                        <td> <input class="VisibleStore" type="checkbox" value= true checked> </td>
                                     <% } else { %>
-                                        <td> <input class="VisibleStore" type="checkbox" name="" id=""> </td>
+                                        <td> <input class="VisibleStore" type="checkbox" value= false > </td>
                                     <% } %>
 
                                     <% if (ele.offer == true ) { %>
-                                        <td> <input class="Offer" type="checkbox" name="" id="" checked> </td>
+                                        <td> <input class="Offer" type="checkbox" value= true checked> </td>
                                     <% } else { %>
-                                        <td> <input class="Offer" type="checkbox" name="" id=""> </td>
+                                        <td> <input class="Offer" type="checkbox" value= false > </td>
                                     <% } %>
                                     
                                     
@@ -161,15 +168,16 @@
                         </div>
                         
                     </div>
+
                     <div class="paginate elementPaginate my-3">
                         <nav aria-label="...">
                           <ul class="pagination  m-0" >
                             <% if (paginate) { %>
 
                               <% if ( paginate.pagina == 1 ) { %>
-                              <li class="page-item disabled">
-                                <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
-                              </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
+                                </li>
                               <% } else { %>
                                 <li class="page-item">
                                   <a class="page-link" href="?paginate=first"> <i class="bi bi-arrow-bar-left"></i> 1</a>
@@ -248,6 +256,7 @@
 </html>
 
 <script>
+    const idUser = document.getElementById('idUser').value; // id del user
 
     const Id = document.querySelectorAll('.Id');
     const Depart = document.querySelectorAll('.Depart');
@@ -255,11 +264,14 @@
     const Price = document.querySelectorAll('.Price');
     const Count = document.querySelectorAll('.Count');
     const Paused = document.querySelectorAll('.Paused');
+    const VisibleStore = document.querySelectorAll('.VisibleStore');
     const Offer = document.querySelectorAll('.Offer');
 
     const btnChange = document.querySelector('.btnChange');
-    const editedBox = [];  
+    let editedBox = [];  
     btnChange.addEventListener("click", ()=>{
+
+        editedBox = []; //limpiamos el array;
         const countItem = Id.length;
         console.log("countItem :", countItem);
     
@@ -268,19 +280,56 @@
             const id = Id[i].value;
             const depart = Depart[i].value;
             const title = Title[i].value;
-            const price = Price[i].value;
-            const count = Count[i].value;
-            const paused = Paused[i].value;
-            const offer = Offer[i].value;
+            const price = parseFloat(Price[i].value);
+            const pausedStr = Paused[i].value; // "true" or "false"
+            const visibleStoreStr = VisibleStore[i].value; //"true" or "false"
+            const offerStr = Offer[i].value; //"true" or "false"
 
+            let paused, visibleStore, offer;
 
-            const objeto = { id: id, department: depart, title : title, price : price, count : count, paused : paused, offer : offer };
-            console.log("objeto :", objeto);
-            editedBox.push(objeto);
+            //convertir string en boolean
+            if (pausedStr === "true"){ paused = true; } else {paused = false;}
+            if (visibleStoreStr === "true"){ visibleStore = true; } else {visibleStore = false;}
+            if (offerStr === "true"){ offer = true; } else {offer = false;}
+
+            console.log("depart ---->:", depart);
+
+            if ( depart =="items" || depart == "arts" ){
+                const count = parseInt(Count[i].value);
+
+                const objeto = { id: id, department: depart, title : title, price : price, count : count, paused : paused, visibleStore: visibleStore, offer : offer };
+                console.log("objeto :", objeto);
+                editedBox.push(objeto);
+
+            } else { //estos no tienen el campo count 
+                
+                const objeto = { id: id, department: depart, title : title, price : price, paused : paused, visibleStore : visibleStore, offer : offer };
+                console.log("objeto :", objeto);
+                editedBox.push(objeto);
+
+            }    
 
         }
 
         console.log("editedBox :", editedBox);
+        //ahora vamos a enviar editedBox al backend para su actualizacion en la DB;
+
+        const datos = {
+            idUser : idUser,
+            editedBox : editedBox
+        }
+
+        fetch('/adsManagerEditing', {
+
+            method: "post",
+            body: JSON.stringify(datos),
+            headers: {"content-type" : "application/json"}
+
+            })
+            .then(response =>response.json() )
+            .then( jsonx => console.log(jsonx))
+            .catch( err => console.log(err));
+            
 
     })
 

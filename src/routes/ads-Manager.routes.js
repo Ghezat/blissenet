@@ -16,19 +16,19 @@ const modelRaffle = require('../models/raffle.js');
 const modelRaffleHistory = require('../models/raffleHistory.js');
 
 //---------------------------adsmanager--------------------------------
-
+//get inicial 
 routes.get('/adsManager/:user_id', async(req, res)=>{
    
     try {
        
-        console.log("*********ADS Manager******** -->");
+        console.log("*********ADS Manager******** -->GET");
         const user = req.session.user;
         const userID = user._id;
         console.log("este es el usuario propietario que esta logeado -->", userID);
 
         const boxProducts = [];
         const receive  = req.query.paginate;
-        let searchProfile;
+        let searchProfile, Title;
 
         //ahora vamos a obtener el user_id del parametro para hacer una comparacion y de esta forma asegurar que solo el propietario esta accediendo a esta parte.
         const userIDParam = req.params.user_id;
@@ -45,12 +45,12 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
             //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
             //aqui obtengo la cantidad de negotiationsBuySell
             const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
-            console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+            //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
        
             if (user){
                 //console.log("Esto es user._id ------>", user._id );
                 searchProfile = await modelProfile.findOne({ indexed : user._id });
-                console.log("searchProfile -->", searchProfile);
+                //console.log("searchProfile -->", searchProfile);
 
                 //buscaremos todos los anuncios publicados
 
@@ -98,7 +98,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                 }
                 
                 
-                console.log("aqui todos los anuncios de este usuario", boxProducts );
+                //console.log("aqui todos los anuncios de este usuario", boxProducts );
 
                 // paginate
                 let long = boxProducts.length; //conocer la longitud del array
@@ -126,7 +126,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                     console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
         
-                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});
+                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
 
                 } else if (receive == "first"){
         
@@ -140,7 +140,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                     console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
         
-                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});
+                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
         
                 } else if (receive == "next"){
         
@@ -158,7 +158,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                         console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
         
-                        res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});;
+                        res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});;
                     
                     }
                 
@@ -180,7 +180,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                         console.log("totalPagina :  ", totalPagina);
                         const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
         
-                        res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});
+                        res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
                     } 
                 
         
@@ -212,7 +212,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                     console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
         
-                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});  
+                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});  
         
                 }
 
@@ -229,12 +229,12 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                      
 });
 
-
-routes.post('/adsManager/search', async(req, res)=>{
+//post inicial
+routes.post('/adsManagerSearch', async(req, res)=>{
 
     try{
 
-        console.log("********* adsManager/search ******** -->");
+        console.log("********* adsManagerSearch ******** -->POST");
         const user = req.session.user;
         const userID = user._id;
 
@@ -244,17 +244,234 @@ routes.post('/adsManager/search', async(req, res)=>{
         //console.log("req.body :", req.body);
 
         const countMessages = req.session.countMessages
+        //console.log("esto es countMessages -->", countMessages);
+        console.log("esto es receive -->", receive);
+
+        //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
+        //aqui obtengo la cantidad de negotiationsBuySell
+        const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
+        //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
+
+        const {titleSearch} = req.body;
+        const Title = titleSearch.trim();
+        req.session.titleSaved = Title; //aqui guardamos el valor de lo que se esta buscando;
+        //const Title = req.session.titleSaved;
+
+        console.log("este es el usuario propietario que esta logeado -->", userID);
+        console.log("Title :", Title);
+
+        // este es el usuario propietario que esta logeado --> 66ab9dc1b8c25e5528f4ea9d
+        // este es el usuario propietario que esta logeado --> search
+
+        //buscamos en todos los documentos que tengan el user y luego buscamos si hay alguna 
+        //coincidencia en su titulo. para despues devolver al fronten.
+
+        if (user){
+            //console.log("Esto es user._id ------>", user._id );
+            searchProfile = await modelProfile.findOne({ indexed : user._id });
+            //console.log("searchProfile -->", searchProfile);
+            
+
+            const requestArt = await modelArtes.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+            const requestIte = await modelItems.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+            const requestAir = await modelAirplane.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+            const requestAut = await modelAutomotive.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+            const requestRea = await modelRealstate.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+            const requestNau = await modelNautical.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+            const requestSer = await modelService.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+            const requestAuc = await modelAuction.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });
+
+            if (requestArt.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestArt);
+            } 
+
+            if (requestIte.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestIte);
+            }
+
+            if (requestAir.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestAir);
+            } 
+
+            if (requestAut.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestAut);
+            }
+
+            if (requestRea.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestRea);
+            }
+
+            if (requestNau.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestNau);
+            }
+                
+            if (requestSer.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestSer);
+            }
+
+            if (requestAuc.length !== 0){   //este if es para evitar se agregue al array boxProduct un objeto vacio porque no exista a causa de que alla sido eliminado por su creadoe.
+                boxProducts.push(...requestAuc);
+            }
+
+            console.log("------------- ver ---------------");
+            //console.log("boxProducts :", boxProducts);
+
+            // paginate
+            let long = boxProducts.length; //conocer la longitud del array
+            const limit = 10; //establecer la cantidad  de elementos que se mostrarán
+            let pagina = 1; //declaracion de la pagina por default en 1
+            let X;
+            let totalPagina = Math.ceil(long / limit);    
+
+            console.log("long : ", long);
+            console.log("limit : ", limit);
+            console.log("totalPagina : ", totalPagina);
+    
+
+            if (receive == undefined){
+
+                req.session.x = 0;
+                X = req.session.x;
+
+                console.log("Estamos aqui en el inicio");
+                console.log("Esto es el valor de x : ", X );
+                //aqui el nuevo arreglo por default 
+                let newBox = boxProducts.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+            
+                console.log("pagina :  ", pagina);
+                console.log("totalPagina :  ", totalPagina);
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
+
+            }
+            
+/*             else if (receive == "first"){
+
+                X = 0;//0
+                req.session.x = X;
+                        
+                newBox = boxProducts.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                
+                pagina = (limit + X) / limit;
+                console.log("pagina :  ", pagina);
+                console.log("totalPagina :  ", totalPagina);
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
+
+            } else if (receive == "next"){
+
+                X = req.session.x;
+
+                if (X + limit < long ){
+        
+                X = X + limit;//6
+                req.session.x = X;
+
+                    newBox = boxProducts.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                
+                    pagina = (limit + X) / limit;
+                    console.log("pagina :  ", pagina);
+                    console.log("totalPagina :  ", totalPagina);
+                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});;
+                
+                }
+            
+            } else if (receive == "prev"){
+
+                X = req.session.x;
+                console.log("Estamos en Prev");
+                console.log("Esto es el valor de x :", X); //6
+
+                if (X  > 0){
+        
+                    X = X - limit
+                    req.session.x = X;
+
+                    newBox = boxProducts.slice(X , limit + X); 
+
+                    pagina = (limit + X) / limit;
+                    console.log("pagina :  ", pagina);
+                    console.log("totalPagina :  ", totalPagina);
+                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
+                } 
+            
+
+            } else if (receive == "last"){
+
+                console.log("Esto es long :", long);//30
+                console.log("Esto es limit :", limit);//10
+
+                let n = (long % limit);//0
+
+                if (n !==0 ){
+                    X = long - limit; //30- 10 = 20
+                    V = long - n;     //30- 3  = 27
+                    req.session.x = V; //27
+                    console.log("Esto es n :", n);//3
+                    console.log("Esto es X :", X);//20
+                } else {
+                    X = long - limit; //30- 10 = 20
+                    V = long - limit; //30- 10 = 20
+                    req.session.x = V; //30
+                    console.log("Esto es n :", n);//0
+                    console.log("Esto es X :", X);//20
+                }
+                                
+                newBox = boxProducts.slice(V , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
+                //       10   + 23  / 10 = 3.3 pero el Mat.ceil lo lleva a 4 perfecto
+                pagina = Math.ceil((limit + X) / limit);
+                console.log("pagina :  ", pagina);
+                console.log("totalPagina :  ", totalPagina);
+                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
+
+                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});  
+
+            }  */
+
+        } 
+
+    } catch (error) {
+        console.log("ha habido un error en el post: /adsManagerSearch", error);
+    }
+
+});
+
+//get de busqueda
+routes.get('/adsManagerSearch', async(req, res)=>{
+
+    try{
+
+        console.log("********* adsManagerSearch ******** --> GET");
+        const user = req.session.user;
+        const userID = user._id;
+
+        const boxProducts = [];
+        const receive  = req.query.paginate;
+        let searchProfile, Title;
+        //console.log("req.body :", req.body);
+
+        const countMessages = req.session.countMessages
         console.log("esto es countMessages -->", countMessages);
+        console.log("esto es receive -->", receive);
+
         //const receive  = req.query.paginate; //aqui capturo la solicitud de paginacion deseada.
         //aqui obtengo la cantidad de negotiationsBuySell
         const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
         console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
 
-        const {titleSearch} = req.body;
-        const Title = titleSearch.trim();
+        Title = req.session.titleSaved;
 
         console.log("este es el usuario propietario que esta logeado -->", userID);
         console.log("Title :", Title);
+
+        // este es el usuario propietario que esta logeado --> 66ab9dc1b8c25e5528f4ea9d
+        // este es el usuario propietario que esta logeado --> search
 
         //buscamos en todos los documentos que tengan el user y luego buscamos si hay alguna 
         //coincidencia en su titulo. para despues devolver al fronten.
@@ -307,7 +524,7 @@ routes.post('/adsManager/search', async(req, res)=>{
             }
 
             console.log("------------- ver ---------------");
-            console.log("boxProducts :", boxProducts);
+            //console.log("boxProducts :", boxProducts);
 
             // paginate
             let long = boxProducts.length; //conocer la longitud del array
@@ -335,9 +552,11 @@ routes.post('/adsManager/search', async(req, res)=>{
                 console.log("totalPagina :  ", totalPagina);
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});
+                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
 
-            } else if (receive == "first"){
+            }
+            
+            else if (receive == "first"){
 
                 X = 0;//0
                 req.session.x = X;
@@ -349,7 +568,7 @@ routes.post('/adsManager/search', async(req, res)=>{
                 console.log("totalPagina :  ", totalPagina);
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});
+                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
 
             } else if (receive == "next"){
 
@@ -367,7 +586,7 @@ routes.post('/adsManager/search', async(req, res)=>{
                     console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});;
+                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});;
                 
                 }
             
@@ -389,7 +608,7 @@ routes.post('/adsManager/search', async(req, res)=>{
                     console.log("totalPagina :  ", totalPagina);
                     const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});
+                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
                 } 
             
 
@@ -421,14 +640,38 @@ routes.post('/adsManager/search', async(req, res)=>{
                 console.log("totalPagina :  ", totalPagina);
                 const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
 
-                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile});  
+                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});  
 
-            }
+            } 
 
         } 
 
     } catch (error) {
-        console.log("ha habido un error en el post: /adsManager/search", error);
+        console.log("ha habido un error en el get: /adsManagerSearch", error);
+    }
+
+});
+
+//post de editedBox que es un array que tiene todos los nuevos cambios para ser editado en la DB
+routes.post('/adsManagerEditing', async(req, res)=>{
+
+    try {
+
+        console.log("********* /adsManagerEditing ******** --> POST");
+        const user = req.session.user;
+        const userID = user._id;
+        let editedBoxParese = [];
+
+        //console.log("req.body :", req.body);
+        const { idUser, editedBox } = req.body;
+
+        console.log("editedBox :", editedBox);
+        //Ahora se debe editar en la DB
+
+          
+
+    } catch (error) {
+        console.log("ha habido un error en el post: /adsManagerEditing", error);
     }
 
 });
