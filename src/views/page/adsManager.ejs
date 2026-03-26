@@ -110,7 +110,7 @@
                         <table class="table m-0 tableStyle">
                         
                         <tr>
-                            <th>Imagen</th><th>Titulo</th><th>Precio 💲</th> <th>Cant.</th> <th>Activo</th> <th>Visible</th> <th>Oferta</th>
+                            <th>Imagen</th><th>Titulo</th><th>Precio 💲</th> <th>Cant.</th> <th>Pausado</th> <th>Visible</th> <th>Oferta</th>
                         </tr>
 
                         <% if (newBox) { %>
@@ -399,35 +399,26 @@
 
             })
             .then(response =>response.json() )
-            .then( jsonx => {
-                
-                console.log("Respuesta de actualizacion :",jsonx)
+           .then(jsonx => {
+                console.log("Respuesta de actualizacion :", jsonx);
                 const code = jsonx.code;
                 const message = jsonx.message;
 
-                setTimeout(() => {
-                    //damos un tiempo de ejecucion para ayudar a no sobrecargar el servidsor si alguien agarra esto para saboetar el servidor
-                
-                    if (code === "ok"){
+                if (code === "ok") {
+                    mostrarToast(message, 'right', 'success', 'Hecho', true);
+                    
+                    setTimeout(() => {
+                        //esta url no tiene parametros query y debe ser asi porque sino entra en un bucle infinito
+                        const url = window.location.origin + window.location.pathname;
+                        console.log("Recargando tras éxito...");
+                        window.location.href = url;
+                    }, 2500); // 1.5 segundos para que vean el mensaje de "Hecho"
 
-                        mostrarToast( message , 'right', 'success', 'Hecho', true ); // Agrega título aquí
-                        setTimeout(() => {
-                            location.reload()
-                            console.log("esto debe refrescar");
-                        }, 2000);
-
-                    } else {
-
-                        mostrarToast( message , 'right', 'danger', 'Hecho', true ); // Agrega título aquí
-                        setTimeout(() => {
-                            location.reload()
-                            console.log("esto debe refrescar");
-                        }, 2000);
-
-                    }
-
-                }, 2000);
-
+                } else {
+                    mostrarToast(message, 'right', 'danger', 'Error', true);
+                    // Si hay error, quizás NO quieras recargar para que el usuario 
+    
+                }
             })
             .catch( err => console.log(err));
             
