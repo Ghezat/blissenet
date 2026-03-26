@@ -666,8 +666,76 @@ routes.post('/adsManagerEditing', async(req, res)=>{
         const { idUser, editedBox } = req.body;
 
         console.log("editedBox :", editedBox);
-        //Ahora se debe editar en la DB
+        //Ahora se debe editar en la DB 
+        //todos los datos estan correctos y esta listo a ser procesado para su actualización.
 
+    /*      id: '68ae29d6241d37a8a7d761bb',
+            department: 'items',
+            title: 'Replica Hoagi Day Of The Tentacle',
+            price: 9,
+            count: 1,
+            paused: false,
+            visibleStore: true,
+            offer: true */
+
+          
+
+        // Creamos un array de promesas usando .map()
+        const promesasDeActualizacion = editedBox.map((ele) => {
+            
+            const { id, department, title, price, count, paused, visibleStore, offer } = ele;
+
+            // Aquí evaluamos cada caso de forma explícita
+            if (department === "items") {
+                // Items incluye el campo 'count'
+                return modelItems.findByIdAndUpdate(id, { title, price, count, paused, visibleStore, offer });
+            } 
+            
+            else if (department === "arts") {
+                // Arts también incluye el campo 'count'
+                return modelArtes.findByIdAndUpdate(id, { title, price, count, paused, visibleStore, offer });
+            } 
+            
+            else if (department === "automotive") {
+                // Automotive NO incluye 'count'
+                return modelAutomotive.findByIdAndUpdate(id, { title, price, paused, visibleStore, offer });
+            } 
+            
+            else if (department === "airplanes") {
+                // Airplanes NO incluye 'count'
+                return modelAirplane.findByIdAndUpdate(id, { title, price, paused, visibleStore, offer });
+            }
+
+            else if (department === "realstate") {
+                // Airplanes NO incluye 'count'
+                return modelRealstate.findByIdAndUpdate(id, { title, price, paused, visibleStore, offer });
+            }            
+            
+            else if (department === "nautical") {
+                // Airplanes NO incluye 'count'
+                return modelNautical.findByIdAndUpdate(id, { title, price, paused, visibleStore, offer });
+            }        
+
+            else if (department === "service") {
+                // Airplanes NO incluye 'count'
+                return modelService.findByIdAndUpdate(id, { title, price, paused, visibleStore, offer });
+            }
+                    
+            
+
+        });
+
+        // Ejecutamos todas las promesas en paralelo (simultáneamente)
+        Promise.all(promesasDeActualizacion)
+            .then((resultados) => {
+                console.log("¡Todos los anuncios se actualizaron correctamente!");
+                res.json( { code : "ok", message : "Actualización exitosa" } );
+            })
+            .catch((error) => {
+                console.error("Hubo un error en alguna de las actualizaciones:", error);
+                res.json( { code : "err", message : "¡Ha ocurrido un error intente luego!" } );
+            });
+            
           
 
     } catch (error) {

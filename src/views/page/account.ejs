@@ -2820,12 +2820,12 @@
         const boxRates = []; //aqui meto todas las calificaciones parseadas a numeros
         jsonx.forEach((ele)=>{
           const markStar = ele.markStar;
-          console.log("markStar ......:", markStar);
+          //console.log("markStar ......:", markStar);
           const markstar = parseInt(markStar);
           boxRates.push(markstar)
         });
 
-        console.log("boxRates", boxRates); //[4,5,5,4,3,5,3,5,4,2,5,5] es un array con puntos.
+        //console.log("boxRates", boxRates); //[4,5,5,4,3,5,3,5,4,2,5,5] es un array con puntos.
         ratesLength = boxRates.length;
   
         //console.log("ratesLength ......:", ratesLength); // indica la cantidad de elementos o puntuaciones realizadas a esta tienda.
@@ -2841,7 +2841,7 @@
         console.log("ratesLength", ratesLength);
         const pount = (sumRate / ratesLength);
         const pountRate = pount.toFixed(1); 
-        console.log("pountRate ......:", pountRate)
+        //console.log("pountRate ......:", pountRate)
 
         //ratesLength = 2458965; para probar
         if ( isNaN(pountRate)){
@@ -3038,7 +3038,7 @@
 
         jsonx.forEach((ele)=>{
 
-          console.log("ver este jsonx ----->", jsonx );
+          //console.log("ver este jsonx ----->", jsonx );
           //comment: "Respondio muy tarde. Deberia de estar pendiente de esto. "
           //commentatorData: {username: 'IvanSimonivic', avatarPerfil: Array(1), mailhash: 'ead9d9472f91f7f7d40d6d8b08257359', country: 'Venezuela', flag: 'https://flagcdn.com/ve.svg'}
           //createdAt: "2025-12-11T16:05:09.382Z"

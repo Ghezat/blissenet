@@ -40,6 +40,10 @@
         justify-content: end;
     }
 
+    .withBtn{
+        width: 227px;
+    }
+
     @media screen and (min-width: 290px) and (max-width: 576px){
 
         .containerBtnChange{
@@ -47,7 +51,7 @@
             justify-content: center;
         }
 
-        .btnChange{
+        .withBtn{
             width: 90%;
         }
     }
@@ -134,9 +138,9 @@
                                     <% }; %>    
                                     
                                     <% if (ele.paused == true ) { %>
-                                        <td> <input class="Paused" type="checkbox" value= true > </td>
+                                        <td> <input class="Paused" type="checkbox" value= true checked> </td>
                                     <% } else { %>
-                                        <td> <input class="Paused" type="checkbox" value= false checked> </td>
+                                        <td> <input class="Paused" type="checkbox" value= false > </td>
                                     <% } %>
 
                                     <% if (ele.visibleStore == true ) { %>
@@ -146,9 +150,9 @@
                                     <% } %>
 
                                     <% if (ele.offer == true ) { %>
-                                        <td> <input class="Offer" type="checkbox" value= true checked> </td>
+                                        <td> <input class="Offer" type="checkbox" value= "true" checked> </td>
                                     <% } else { %>
-                                        <td> <input class="Offer" type="checkbox" value= false > </td>
+                                        <td> <input class="Offer" type="checkbox" value= "false" > </td>
                                     <% } %>
                                     
                                     
@@ -161,10 +165,16 @@
 
                         </table>
                     </div>
-                    <div class="container-fluid">
+                    <div class="container-fluid mt-3">
 
+                    
                         <div class="py-2 px-0 containerBtnChange">
-                            <button class="btn btn-primary btn-lg shadow-sm btnChange"> <span class="px-5"> Hacer cambios </span> </button>
+                            <button class="btn btn-primary btn-lg shadow-sm btnProcess withBtn close" disabled> 
+                                <span class="mx-4">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"> </span> <span class="ms-2 "> Procesando  ... </span> 
+                                </span>       
+                            </button>
+                            <button class="btn btn-primary btn-lg shadow-sm btnChange withBtn" > <span class="px-4"> Hacer cambios </span> </button>
                         </div>
                         
                     </div>
@@ -268,31 +278,91 @@
     const Offer = document.querySelectorAll('.Offer');
 
     const btnChange = document.querySelector('.btnChange');
+    const btnProcess = document.querySelector('.btnProcess');
+
     let editedBox = [];  
+    let datos;
+
+    //actualizamos el valor del check en paused
+    Paused.forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const PausedStr = checkbox.checked ? "true" : "false"; // Captura el estado checked
+            let valueBoolean;
+
+            if (PausedStr === "true") {
+                valueBoolean = true;
+                checkbox.value = valueBoolean; //insertamos el valor actualizado al input
+            } else {
+                valueBoolean = false;
+                checkbox.value = valueBoolean; //insertamos el valor actualizado al input
+            }
+
+            console.log("Paused :", valueBoolean); // Aquí puedes ver el resultado
+        });
+    });
+
+    //actualizamos el valor del check en VisibleStore
+    VisibleStore.forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const VisibleStoreStr = checkbox.checked ? "true" : "false"; // Captura el estado checked
+            let valueBoolean;
+
+            if (VisibleStoreStr === "true") {
+                valueBoolean = true;
+                checkbox.value = valueBoolean; //insertamos el valor actualizado al input
+            } else {
+                valueBoolean = false;
+                checkbox.value = valueBoolean; //insertamos el valor actualizado al input
+            }
+
+            console.log("VisibleStore :", valueBoolean); // Aquí puedes ver el resultado
+        });
+    });
+
+    //actualizamos el valor del check en Offer
+    Offer.forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const offerStr = checkbox.checked ? "true" : "false"; // Captura el estado checked
+            let valueBoolean;
+
+            if (offerStr === "true") {
+                valueBoolean = true;
+                checkbox.value = valueBoolean; //insertamos el valor actualizado al input
+            } else {
+                valueBoolean = false;
+                checkbox.value = valueBoolean; //insertamos el valor actualizado al input
+            }
+
+            console.log("Offer :", valueBoolean); // Aquí puedes ver el resultado
+        });
+
+    });
+
     btnChange.addEventListener("click", ()=>{
+
+
+        btnProcess.classList.toggle('close');
+        btnChange.classList.toggle('close');
 
         editedBox = []; //limpiamos el array;
         const countItem = Id.length;
         console.log("countItem :", countItem);
-    
+
+
         for (let i = 0; i < countItem; i++) {
 
             const id = Id[i].value;
             const depart = Depart[i].value;
             const title = Title[i].value;
             const price = parseFloat(Price[i].value);
-            const pausedStr = Paused[i].value; // "true" or "false"
-            const visibleStoreStr = VisibleStore[i].value; //"true" or "false"
-            const offerStr = Offer[i].value; //"true" or "false"
-
-            let paused, visibleStore, offer;
-
-            //convertir string en boolean
-            if (pausedStr === "true"){ paused = true; } else {paused = false;}
-            if (visibleStoreStr === "true"){ visibleStore = true; } else {visibleStore = false;}
-            if (offerStr === "true"){ offer = true; } else {offer = false;}
-
+            const paused = Paused[i].value; // true or false
+            const visibleStore = VisibleStore[i].value; //true or false
+            const offer = Offer[i].value; //true or false
+            
+            console.log("title ---->:", title);
             console.log("depart ---->:", depart);
+            console.log("offer ---->:", offer);
+            console.log("<---------------->:");
 
             if ( depart =="items" || depart == "arts" ){
                 const count = parseInt(Count[i].value);
@@ -314,11 +384,13 @@
         console.log("editedBox :", editedBox);
         //ahora vamos a enviar editedBox al backend para su actualizacion en la DB;
 
-        const datos = {
+        datos = {
             idUser : idUser,
             editedBox : editedBox
         }
 
+        
+        //al terminar el pimer paso entonces envia
         fetch('/adsManagerEditing', {
 
             method: "post",
@@ -327,7 +399,36 @@
 
             })
             .then(response =>response.json() )
-            .then( jsonx => console.log(jsonx))
+            .then( jsonx => {
+                
+                console.log("Respuesta de actualizacion :",jsonx)
+                const code = jsonx.code;
+                const message = jsonx.message;
+
+                setTimeout(() => {
+                    //damos un tiempo de ejecucion para ayudar a no sobrecargar el servidsor si alguien agarra esto para saboetar el servidor
+                
+                    if (code === "ok"){
+
+                        mostrarToast( message , 'right', 'success', 'Hecho', true ); // Agrega título aquí
+                        setTimeout(() => {
+                            location.reload()
+                            console.log("esto debe refrescar");
+                        }, 2000);
+
+                    } else {
+
+                        mostrarToast( message , 'right', 'danger', 'Hecho', true ); // Agrega título aquí
+                        setTimeout(() => {
+                            location.reload()
+                            console.log("esto debe refrescar");
+                        }, 2000);
+
+                    }
+
+                }, 2000);
+
+            })
             .catch( err => console.log(err));
             
 
