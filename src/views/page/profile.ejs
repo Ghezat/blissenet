@@ -125,6 +125,24 @@
 
 }
 
+ /* Clases para controlar el modal de cropper muy importante */
+    /* Limitamos el contenedor del modal */
+    #cropperTransport .modal-body {
+        max-height: 70vh; /* Que no pase del 70% de la altura de la pantalla */
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0; /* Quita paddings para ganar espacio en móvil */
+    }
+
+    /* La imagen debe ser fluida pero contenida */
+    #imageToCut {
+        display: block;
+        max-width: 100%; /* No se sale del ancho */
+        max-height: 100%; /* No se sale del alto del modal-body */
+    }
+ /*  ---------------------------------------------------------------  */ 
 
 @media screen and (min-width: 290px) and (max-width: 499px ){
 
@@ -1314,9 +1332,9 @@
                                             <h5 class="modal-title" id="staticBlissBotConnect"> Recortar</h5>
                                             <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
                                         </div>
-                                        <div class="modal-body d-flex border border-danger" style="height: 100%;">
+                                        <div class="modal-body d-flex">
 
-                                            <img id="imageToCut" src="" alt="Imagen a recortar" style="height: 80%;"/>                                            
+                                            <img id="imageToCut" src="" alt="Imagen a recortar"/>                                            
                                             
                                         </div>
                                         <div class="modal-footer">
@@ -2030,10 +2048,23 @@
                         }
 
                         cropper = new Cropper(imgCropper, {
-                            aspectRatio: 1 / 1,
+                           /*  aspectRatio: 1 / 1,
                             viewMode: 1,
                             cropBoxResizable: true,
+                            cropBoxMovable: true, */
+
+                            aspectRatio: 1, // O el que necesites
+                            viewMode: 1,    // IMPORTANTE: Esto impide que el recorte se salga de la imagen
+                            responsive: true,
+                            restore: false,
+                            checkCrossOrigin: false,
+                            checkOrientation: false,
+                            guides: true,
+                            center: true,
+                            highlight: false,
                             cropBoxMovable: true,
+                            cropBoxResizable: true,
+                            toggleDragModeOnDblclick: false,
                         });
 
                         
@@ -2043,7 +2074,7 @@
 
 
                 cropButton.addEventListener('click', () => {
-                    // 1. Definimos la función aquí mismo para que no de error
+                    // 1. Definimos la función de decodificacion y armado de la img
                     const dataURLtoBlob = (dataurl) => {
                         const arr = dataurl.split(',');
                         const mime = arr[0].match(/:(.*?);/)[1];
