@@ -83,13 +83,12 @@ routes.get('/', async(req, res)=>{
     delete req.session.stopped;
     delete req.session.dataLocked;
     delete req.session.methodLoging;
-    console.log("Esto es user ->", user);
+    //console.log("Esto es user ->", user);
 
 
     let searchProfile;
     const boxResult = [];
-
-    console.log("    /  -------------------------------------------------| ");    
+    
 
     if (user){
         //console.log("Esto es user._id ------>", user._id );
@@ -100,7 +99,9 @@ routes.get('/', async(req, res)=>{
         let countNegotiationsBuySell;
 
         searchProfile = await modelProfile.find({ indexed : userId });
-        console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        console.log(`username : ${searchProfile[0].username} & blissName : ${searchProfile[0].blissName}` );
+        
         username = user.username;
 
         //:::::::: Alert of message :::::::::::
@@ -110,18 +111,18 @@ routes.get('/', async(req, res)=>{
         const searchMessageInbox1 = await modelMessages.find( { $and: [{ userId : userId }, { typeNote : "availability-noti" }, {answer: "waiting"} ] } );
         
         searchBoxMessageInbox.push(...searchMessageInbox0, ...searchMessageInbox1);
-        console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchBoxMessageInbox);
+        //console.log("Estos son todos los mensajes que tiene este usuario en Inbox --->", searchBoxMessageInbox);
        
         countMessagesInbox = searchBoxMessageInbox.length;
    
-        console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
+        //console.log('esta es la cantidad de mensajes que tiene este usario en inbox--->', countMessagesInbox)
 
         const searchMessageOutbox = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" } } ] } );
         const searchMessageOutboxAlert = await modelMessages.find( { $and: [{userId : userId },{view: false},{ typeNote: { $ne: "availability-noti" }}, { answer: { $ne: "waiting" } } ] } );
         let countMessagesOutbox = searchMessageOutboxAlert.length;
 
         totalMessages = (countMessagesInbox + countMessagesOutbox);
-        console.log("La totalidad de los mensajes en inbox y en outbox Una sumatoria de contadores resultado un numero --->", totalMessages)
+        //console.log("La totalidad de los mensajes en inbox y en outbox Una sumatoria de contadores resultado un numero --->", totalMessages)
         //aqui tenemos la sumatoria de mensajes en Inbox y Outbox
 
 
@@ -401,24 +402,50 @@ routes.get('/', async(req, res)=>{
 
         }
 
+        async function searchIp(){
+
+            let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+            //console.log("ip :", ip);
+            // Si hay varias IPs, tomamos la primera
+            if (ip && ip.includes(',')) {
+                ip = ip.split(',')[0];
+            }
+
+            // Formateamos un mensaje claro para tus logs de HostGator
+            const fecha = new Date().toISOString();
+            const mensajeAlerta = `[SEGURIDAD] ${fecha} - IP: ${ip} accedediendo a: ${req.originalUrl}`;
+
+            console.log(mensajeAlerta);
+
+        }
+
       
         searchOffert()
             .then(()=>{
                 searchBestView()
                     .then(()=>{
-                        //console.log("Aqui lo recaudado de las ofertas");
-                        //console.log("boxOffert ---------------sin user------------------->",boxOffert);
-                        res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
+                        searchIp()
+                            .then(()=>{
+                                //console.log("Aqui lo recaudado de las ofertas");
+                                //console.log("boxOffert ---------------sin user------------------->",boxOffert);
+                                res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
+                            })
+                            .catch((err)=>{
+                                //console.log("Ha ocurrido un error en la function searchIp()")
+                                res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
+                            })
+                      
                     })
                     .catch((err)=>{
-                        //console.log("Ha ocurrido un error en la function searchOffert()")
+                        //console.log("Ha ocurrido un error en la function searchBestView()")
                         res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
                     })
                 
                 
             })
             .catch((err)=>{
-                
+                 //console.log("Ha ocurrido un error en la function searchOffert()")
+                 res.render('page/home', {user, success, stopped, dataLocked, methodLoging, countMessages, searchProfile, currentBanner, currentNewsDay, boxOffert, boxBestView, profileLast })
             })
 
 
@@ -728,7 +755,7 @@ routes.post('/myaccount/signin', async(req,res)=>{
                 console.log("Es un humano");
 
                 if (search){
-                    console.log("esto es search es: ", search)
+                    //console.log("esto es search es: ", search)
                     let id = search._id;
                     let hashPassword = search.password;
                     let Stopped = search.stopped;
@@ -1887,7 +1914,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
  
         if (user !== undefined){  
             searchProfile = await modelProfile.find({ indexed : indexed });  
-            console.log("existe perfil de este usuario ---->", searchProfile);
+            //console.log("existe perfil de este usuario ---->", searchProfile);
             //console.log("Este es el usuario ---->", user);
             username = user.username;
 
@@ -1913,7 +1940,7 @@ routes.get('/myaccount/profile', async (req,res)=>{
                 sumCount = sumCount + countRaf;
                 
              
-                console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+                //console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
 
                 const dateborn = searchProfile[0].dateborn;
                 const date = new Date(dateborn);
@@ -1939,9 +1966,18 @@ routes.get('/myaccount/profile', async (req,res)=>{
         
     } catch (error) {
         
+        // cmd para conocer mi ip Pública: curl ifconfig.me
+        // 1.  **Tu IP Pública:** `38.50.163.239` es como tu "dirección postal" ante todo el internet.
+        // 2.  **Tu IP Local:** `192.168.100.104` es como el "número de habitación" dentro de tu casa.
+        // 3.  **Para conocer el pais y otros datos es requimento instalar un paquete npm install geoip-lite
+        // 4.  **En mi caso no lo instalare solo me basta con saber la ip publica ya que puedo usar servicios de internet gratuitos para saber la ubicacion. 
+
+
+        // Como tu servidor está en un **VPS de HostGator** (fuera de tu casa), él no puede ver tu IP local (la 192...), él solo ve la IP pública que le entrega tu proveedor de internet. Por eso en el log aparece la `38.50.163.239`.
+
         // En HostGator, x-forwarded-for es clave para saltar el proxy del servidor
         let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        console.log("ip :", ip);
+        //console.log("ip :", ip);
         // Si hay varias IPs, tomamos la primera
         if (ip && ip.includes(',')) {
             ip = ip.split(',')[0];
@@ -2590,7 +2626,7 @@ routes.get('/tools', async(req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             //hacemos la busqueda de posibles rifa.
             //aqui busco el id del sorteo. 
@@ -2619,7 +2655,7 @@ routes.get('/tools', async(req, res)=>{
             sumCount = sumCount + countRaf;
                             
                          
-            console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+            //console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
             res.render('page/tools-store', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
         }   
 
@@ -2665,7 +2701,7 @@ routes.get('/zonabliss/:user_id', async(req, res)=>{
             if (user){
                 //console.log("Esto es user._id ------>", user._id );
                 searchProfile = await modelProfile.findOne({ indexed : user._id });
-                console.log("searchProfile -->", searchProfile);
+                //console.log("searchProfile -->", searchProfile);
                 const searchBanner = searchProfile.bannerPerfil;
                 console.log("searchBanner --->", searchBanner);
 
@@ -3577,7 +3613,7 @@ routes.get('/myaccount/search', async(req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             //hacemos la busqueda de posibles rifa.
             //aqui busco el id del sorteo. 
@@ -3606,7 +3642,7 @@ routes.get('/myaccount/search', async(req, res)=>{
             sumCount = sumCount + countRaf;
                             
                          
-            console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+            //console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
             res.render('page/search', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
         }   
 
@@ -3663,7 +3699,7 @@ routes.get('/myaccount/shopping-cart', async(req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             //hacemos la busqueda de posibles rifa.
             //aqui busco el id del sorteo. 
@@ -3679,7 +3715,7 @@ routes.get('/myaccount/shopping-cart', async(req, res)=>{
             sumCount = sumCount + countIte; 
                                         
                          
-            console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+            //console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
             res.render('page/shopping-cart', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
         }   
 
@@ -3739,7 +3775,7 @@ routes.get('/myaccount/shopping-cart-admin', async(req, res)=>{
             //console.log("Esto es user._id ------>", user._id );
             const userID = user._id;
             searchProfile = await modelProfile.findOne({ indexed : userID });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             searchMessages(userID, req) //---> nueva funcion;
                .then( Messages => 
@@ -3804,7 +3840,7 @@ routes.get('/myaccount/tracking', async(req, res)=>{
             //console.log("Esto es user._id ------>", user._id );
             const userID = user._id;
             searchProfile = await modelProfile.findOne({ indexed : userID });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             searchMessages(userID, req) //---> nueva funcion;
                .then( Messages => 
@@ -3892,7 +3928,7 @@ routes.get('/myaccount/deliveryOptions', async (req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             //aqui vamos a buscar en todas las colecciones para encontrar sus publicaciones y contarlas 
         

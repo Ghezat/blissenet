@@ -24,8 +24,8 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
         console.log("*********ADS Manager******** -->GET");
         const user = req.session.user;
         const userID = user._id;
-        console.log("este es el usuario -->", user);
-        console.log("este es el usuario propietario que esta logeado -->", userID);
+        //console.log("este es el usuario -->", user);
+        //console.log("este es el usuario propietario que esta logeado -->", userID);
 
         const boxProducts = [];
         const receive  = req.query.paginate;
@@ -33,7 +33,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
 
         //ahora vamos a obtener el user_id del parametro para hacer una comparacion y de esta forma asegurar que solo el propietario esta accediendo a esta parte.
         const userIDParam = req.params.user_id;
-        console.log("este es el usuario propietario que esta logeado -->", userIDParam);
+        console.log("Id propietario que esta logeado -->", userIDParam);
 
         //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
         //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
@@ -53,7 +53,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                 //console.log("Esto es user._id ------>", user._id );
                 searchProfile = await modelProfile.findOne({ indexed : user._id });
                 //console.log("searchProfile -->", searchProfile);
-
+                console.log(`username : ${searchProfile.username} & blissName : ${searchProfile.blissName} `)
                 //buscaremos todos los anuncios publicados
 
                 
@@ -231,8 +231,24 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
     } catch (error) {
         console.log("Ha habido un error en la carga de /adsManager/:user_id", error);
         //finalizar enviando al home 
-        //esto puede pasar si un usuario sin user intenta tomar un un enlace con un id robado para intentar acceder a los datos de un tercero.
-        //entonces lo que ocurre es que lo envia o refresca el home si esta alli ya.
+        //pero antes vemos su ip publica para poder explorar desde donde esta intentando acceder este sagaleton
+        //ya que es un usuario sin user e intenta tomar un un enlace con un id robado para intentar acceder a los datos de un tercero.
+        //entonces lo que ocurre es que despues de conocer su ip publica lo envia o refresca el home..
+
+        let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        //console.log("ip :", ip);
+        // Si hay varias IPs, tomamos la primera
+        if (ip && ip.includes(',')) {
+            ip = ip.split(',')[0];
+        }
+
+        // Formateamos un mensaje claro para tus logs de HostGator
+        const fecha = new Date().toISOString();
+        const mensajeAlerta = `[SEGURIDAD] ${fecha} - IP: ${ip} intentó acceder a: ${req.originalUrl}`;
+
+        console.error(mensajeAlerta);
+        console.log("🤡 Intento de acceso no autorizado detectado. Redirigiendo...");
+
         res.redirect('/');
 
     }
@@ -489,7 +505,7 @@ routes.get('/adsManagerSearch', async(req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
             
 
             const requestArt = await modelArtes.find({ user_id : userID, title: { $regex: Title, $options: 'i' } });

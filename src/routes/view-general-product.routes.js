@@ -2274,8 +2274,8 @@ routes.post('/raffleModule/takeTikets/pay', async(req, res)=>{
             //console.log("Aqui el profile de la cuenta del visitante -->", searchProfile);
         }
 
-        console.log("*********** L e e r **********");
-        console.log("searchProfile -->", searchProfile);
+        //console.log("*********** L e e r **********");
+        //console.log("searchProfile -->", searchProfile);
         
         if (searchProfile.length !==0){
 

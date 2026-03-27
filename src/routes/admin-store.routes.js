@@ -59,7 +59,7 @@ routes.get('/admin-store', async(req, res)=>{
             const userID = user._id;
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
             
             //hacemos la busqueda de posibles rifa.
             //aqui busco el id del sorteo. 
@@ -92,7 +92,7 @@ routes.get('/admin-store', async(req, res)=>{
                .then( Messages => 
                 {
                     countMessages = Messages;
-                    console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
+                    //console.log('Esto es sumCount contamos los anuncios de este user-->', sumCount);
                     res.render('page/admin-store', { user, searchProfile, countMessages, countNegotiationsBuySell, Raffle, sumCount });
                 }  
             ) 
@@ -128,7 +128,7 @@ routes.get('/myaccount/segment', async (req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             res.render('page/segment', { user, searchProfile, countMessages, countNegotiationsBuySell });
         }   
@@ -574,7 +574,7 @@ routes.get('/myaccount/bankData', async (req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             
             const bankData = await modelBankUser.findOne( { indexed : user._id } );
@@ -784,7 +784,7 @@ routes.get('/infobliss/:user_id', async(req, res)=>{
             if (user){
                 //console.log("Esto es user._id ------>", user._id );
                 searchProfile = await modelProfile.findOne({ indexed : user._id });
-                console.log("searchProfile -->", searchProfile);
+                //console.log("searchProfile -->", searchProfile);
 
 
                 res.render('page/infobliss', { user, searchProfile, countMessages, countNegotiationsBuySell });
@@ -1067,7 +1067,7 @@ routes.get('/payShoppingCart', async(req, res)=>{
         if (user){
             //console.log("Esto es user._id ------>", user._id );
             searchProfile = await modelProfile.findOne({ indexed : user._id });
-            console.log("searchProfile -->", searchProfile);
+            //console.log("searchProfile -->", searchProfile);
 
             
             //aqui vamos a buscar todos los carritos pendinte por pagar que tiene este usuario
