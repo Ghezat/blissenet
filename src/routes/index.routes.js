@@ -1837,6 +1837,9 @@ routes.post('/myaccount/change-password', async(req, res)=>{
 });
                         
 routes.get('/myaccount/profile', async (req,res)=>{
+
+    try {
+        
         const user = req.session.user;
         const indexed = user._id;
         const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
@@ -1932,7 +1935,29 @@ routes.get('/myaccount/profile', async (req,res)=>{
         } else {
             console.log("no existe usuario");
             res.render('page/profile', {user, searchProfile, profSuccess, updateSuccess, token, changePasswSuccess,errorChange, errorToken, noProfile, msgHashtagExito, msgHashtagDenegado, msgHashtagDelete, msgHashtagError, countMessages, countNegotiationsBuySell, avatarErrorSizeMimetype, avatarErrorCharge, bannerErrorSizeMimetype, bannerErrorCharge, withoutDefinedBanner, catchError });
-        }      
+        } 
+        
+    } catch (error) {
+        
+        // En HostGator, x-forwarded-for es clave para saltar el proxy del servidor
+        let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        console.log("ip :", ip);
+        // Si hay varias IPs, tomamos la primera
+        if (ip && ip.includes(',')) {
+            ip = ip.split(',')[0];
+        }
+
+        // Formateamos un mensaje claro para tus logs de HostGator
+        const fecha = new Date().toISOString();
+        const mensajeAlerta = `[SEGURIDAD] ${fecha} - IP: ${ip} intentó acceder a: ${req.originalUrl}`;
+
+        console.error(mensajeAlerta);
+        console.log("🤡 Intento de acceso no autorizado detectado. Redirigiendo...");
+
+        // Redirección limpia al home
+        return res.redirect('/');
+
+    }    
 
 });
 

@@ -24,6 +24,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
         console.log("*********ADS Manager******** -->GET");
         const user = req.session.user;
         const userID = user._id;
+        console.log("este es el usuario -->", user);
         console.log("este es el usuario propietario que esta logeado -->", userID);
 
         const boxProducts = [];
@@ -37,6 +38,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
         //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
         //este es el usuario propietario que esta logeado --> 66ac0281a3afb22ac770d5f2
 
+       
         if (userID === userIDParam){
             //comprobamos que el usuario logeado es el mismo dueño de la tienda -POR SEGURIDAD-
 
@@ -46,7 +48,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
             //aqui obtengo la cantidad de negotiationsBuySell
             const countNegotiationsBuySell = req.session.countNegotiationsBuySell;
             //console.log(":::: Esto es la cantidad de negotiationsBuySell ::::", countNegotiationsBuySell);
-       
+    
             if (user){
                 //console.log("Esto es user._id ------>", user._id );
                 searchProfile = await modelProfile.findOne({ indexed : user._id });
@@ -217,14 +219,22 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                 }
 
                 //res.render('page/adsManager', { user, searchProfile, countMessages, countNegotiationsBuySell, boxProducts });
-               
-            }  
+            
+            }  else {
+                res.render('page/home');
+            }
 
         }
-       
+      
+        
 
     } catch (error) {
         console.log("Ha habido un error en la carga de /adsManager/:user_id", error);
+        //finalizar enviando al home 
+        //esto puede pasar si un usuario sin user intenta tomar un un enlace con un id robado para intentar acceder a los datos de un tercero.
+        //entonces lo que ocurre es que lo envia o refresca el home si esta alli ya.
+        res.redirect('/');
+
     }
                      
 });
