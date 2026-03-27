@@ -235,6 +235,7 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
         //ya que es un usuario sin user e intenta tomar un un enlace con un id robado para intentar acceder a los datos de un tercero.
         //entonces lo que ocurre es que despues de conocer su ip publica lo envia o refresca el home..
 
+        // puedes ver la ip aqui : https://www.cual-es-mi-ip.net/geolocalizar-ip-mapa
         let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
         //console.log("ip :", ip);
         // Si hay varias IPs, tomamos la primera

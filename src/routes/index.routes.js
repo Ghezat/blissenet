@@ -404,6 +404,7 @@ routes.get('/', async(req, res)=>{
 
         async function searchIp(){
 
+            // puedes ver la ip aqui : https://www.cual-es-mi-ip.net/geolocalizar-ip-mapa
             let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
             //console.log("ip :", ip);
             // Si hay varias IPs, tomamos la primera
@@ -1974,8 +1975,9 @@ routes.get('/myaccount/profile', async (req,res)=>{
 
 
         // Como tu servidor está en un **VPS de HostGator** (fuera de tu casa), él no puede ver tu IP local (la 192...), él solo ve la IP pública que le entrega tu proveedor de internet. Por eso en el log aparece la `38.50.163.239`.
-
         // En HostGator, x-forwarded-for es clave para saltar el proxy del servidor
+
+        // puedes ver la ip aqui : https://www.cual-es-mi-ip.net/geolocalizar-ip-mapa
         let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
         //console.log("ip :", ip);
         // Si hay varias IPs, tomamos la primera

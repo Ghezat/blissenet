@@ -27,17 +27,16 @@
        justify-content: center;
        align-items: center;
     }
+    
     .cropper-canvas{
-        
        outline: 3px solid rgb(12, 28, 177);
-
 
     }
 
 </style>    
 <body>
 
-<input type="file" id="inputImage" accept="image/*">
+<input type="file" id="inputImage" accept="image/*" >
 
 <button id="cropButton">Recortar</button>
 
@@ -103,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         cropper = new Cropper(imgCropper, {
-            aspectRatio: 16 / 9,
+            aspectRatio: 1 / 1,
             viewMode: 1,
             cropBoxResizable: true,
             cropBoxMovable: true,
@@ -117,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Puedes hacer algo con el canvas aquí, como subirlo o mostrarlo
         console.log(canvas.toDataURL());
     });
+
 });
 
 </script>
@@ -124,3 +124,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<!-- 
+aspectRatio: 1 / 1
+aspectRatio: 16 / 9 
+-->
