@@ -1387,8 +1387,8 @@
                                                             <div class="containerCart rounded-pill shadow-sm" style="background-color: #fcda57; z-index: 100; width: auto; position: absolute; top: 10px; right: 10px;"> 
 
                                                               <div class="tagShippingCart contentButton d-flex" style="height: 35px;">
-
-                                                                  <input type="hidden" value="<%= ele._id %>"> <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele.title %>"> <input type="hidden" value="<%= ele.price %>"> <input type="hidden" value="<%= ele.count %>"> <input type="hidden" value="<%= ele.presentation %>">
+                                                                  
+                                                                  <input type="hidden" value="<%= ele._id %>"> <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele.title %>"> <input type="hidden" value="<%= ele.price %>"> <input type="hidden" value="<%= ele.count %>"> <input type="hidden" value="<%= ele.presentation %>"> <input type="hidden" value="<%= ele.paused %>">
                                                                   <button class="btn CartMenos d-flex justify-content-center align-items-center" style="background-color: #fcda57; width: 30px; height: 30px; height: 100%; border-radius: 50%; font-size: 18px;"> 
                                                                     <span > <b>-</b> </span> 
                                                                   </button> 
@@ -2837,8 +2837,8 @@
           sumRate = sumRate + stars; 
         });
 
-        console.log("sumRate", sumRate);
-        console.log("ratesLength", ratesLength);
+        //console.log("sumRate", sumRate);
+        //console.log("ratesLength", ratesLength);
         const pount = (sumRate / ratesLength);
         const pountRate = pount.toFixed(1); 
         //console.log("pountRate ......:", pountRate)
@@ -3997,7 +3997,7 @@
   viewRateStore.addEventListener('click', ()=>{
 
     //ratesLength = 0; para probar cuando ete en cero.
-    console.log("ratesLength ....:", ratesLength);
+    //console.log("ratesLength ....:", ratesLength);
     
 
     if (ratesLength !== 0){
@@ -4703,7 +4703,7 @@ if (shoppingCart == "true"){
 
     //console.log("Este es ele", ele);
     const son = ele.children;
-    //console.log("son : ", son);
+    //console.log("mirar aqui con atencion : ", son);
 
     const id = son[0].value;
     const depart = son[1].value;
@@ -4711,6 +4711,7 @@ if (shoppingCart == "true"){
     const price = son[3].value;
     const count = parseInt(son[4].value);
     const presentation = son[5].value;
+    const paused = son[6].value;
 
     boxShopping.forEach((elemento)=>{
       const idElemento = elemento.id;
@@ -4768,60 +4769,91 @@ if (shoppingCart == "true"){
 
     cartMas[i].addEventListener('click', ()=>{
       
+        console.log("title----->", title);
+        console.log("paused----->", paused);
+        console.log("count----->", count);
+        console.log("typeof paused----->", typeof paused);
+        console.log("price----->", price);
+        
         let requestExist;
         boxShopping = JSON.parse(localStorage.getItem(`cart_${UserId}+${StoreId}`)) || [];
 
-        console.log("boxShopping........... :", boxShopping);
+        //console.log("boxShopping---------> :", boxShopping);
 
         if ( boxShopping.length !== 0 ){
-          const index = boxShopping.findIndex(elem => elem.id === id);
+          const index = boxShopping.findIndex(elem => elem.id === id); //index consigue el indice
 
-          if (index !== -1){ //consigue el indice
+          if (index !== -1){ 
             requestExist = boxShopping[index].countRequest;
+          
 
-              if (requestExist < count){
-                console.log("requestExist :", requestExist);
-                console.log("typeof requestExist :", typeof requestExist);
-                const request = requestExist + 1;
-                countTag[i].innerText = request; //actualizamos en tiempo real
-                // Existe, actualizar datos
-                let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": request, "presentation": presentation };
-                boxShopping[index] = data;
-                console.log("Artículo actualizado en el carrito:", data);
-              } else {
-                const message = "Articulo sin existencia.";
-                mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
-              }  
+            if (paused === "false"){
+
+                if (requestExist < count){
+                  console.log("requestExist :", requestExist);
+                  console.log("typeof requestExist :", typeof requestExist);
+                  const request = requestExist + 1;
+                  countTag[i].innerText = request; //actualizamos en tiempo real
+                  // Existe, actualizar datos
+                  let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": request, "presentation": presentation };
+                  boxShopping[index] = data;
+                  console.log("Artículo actualizado en el carrito:", data);
+                } else {
+                  const message = "Articulo sin existencia.";
+                  mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+                }  
+
+            } else {
+                const message = "Articulo Pausado.";
+                mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+            }    
 
           } else { //no existe el indice
             // No existe, agregar nuevo
+            console.log("::: Es el caso que hemos metido elemtos al carrito pero no esta el nuevo que queremos incluir :::");
             console.log("Esto es count", count);
-            if ( 1  <= count){
-              countTag[i].innerText = 1;
-              let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1, "presentation": presentation };
-              boxShopping.push(data);
-              console.log("Artículo agregado al carrito:", data);
-              const message = "Agregado al carrito.";
-              mostrarToast( message , 'right', 'success', '', false ); // Agrega título aquí
+
+            if (paused === "false"){
+
+              if ( 1  <= count){
+                countTag[i].innerText = 1;
+                let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1, "presentation": presentation };
+                boxShopping.push(data);
+                console.log("Artículo agregado al carrito:", data);
+                const message = "Agregado al carrito.";
+                mostrarToast( message , 'right', 'success', '', false ); // Agrega título aquí
+              } else {
+                const message = "Articulo sin existencia.";
+                mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+              }
+              
             } else {
-              const message = "Articulo sin existencia.";
-              mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
-            }  
+                const message = "Articulo Pausado.";
+                mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+            }   
             
           } 
 
         } else {
 
-          if (count >= 1){
-            countTag[i].innerText = 1;
-            let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1, "presentation": presentation };
-            boxShopping.push(data);
-            const message = "Agregado al carrito.";
-            mostrarToast( message , 'right', 'success', '', false ); // Agrega título aquí
+          console.log("El array esta vacio y paused es ", paused);
+          if (paused === "false"){
+
+            if (count >= 1){
+              countTag[i].innerText = 1;
+              let data = { "depart": depart, "id": id, "title": title, "price": price, "countRequest": 1, "presentation": presentation };
+              boxShopping.push(data);
+              const message = "Agregado al carrito.";
+              mostrarToast( message , 'right', 'success', '', false ); // Agrega título aquí
+            } else {
+              const message = "Articulo sin existencia.";
+              mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
+            }
+
           } else {
-            const message = "Articulo sin existencia.";
-            mostrarToast( message , 'right', 'info', '', false ); // Agrega título aquí
-          }
+            const message = "Articulo Pausado.";
+            mostrarToast( message , 'right', 'danger', '', false ); // Agrega título aquí
+          }  
           
         }
 

@@ -97,9 +97,72 @@
             
         </form>    
 
+        <!-- Modal de Pausar Anuncio --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticPaused" -->
+        <div class="modal fade" id="staticPaused" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelZ" aria-hidden="true">
+            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticPausedTitle">Pausar Anuncio </h5>
+                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                    </div>
+                    <div class="modal-body">
+                        <p> <span class="fw-bold"> Pausa tu anuncio desactivándolo temporalmente. </span> Así tus clientes podrán seguir viéndolo pero no podrán realizar compras, ideal para cuando te quedas sin stock sin necesidad de borrar la publicación. </p>
+                    </div>
+                    <div class="modal-footer" style="background-image: url('/img/bannerGestorADS.jpg'); background-size: cover; background-position: center;">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Visible --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticVisible" -->
+        <div class="modal fade" id="staticVisible" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelZ" aria-hidden="true">
+            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticVisibleTitle"> Control de Visibilidad </h5>
+                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                    </div>
+                    <div class="modal-body">
+       
+                        <p> <span class="fw-bold"> Decide qué anuncios mostrar en tu tienda. </span>  Al ocultar un anuncio, este dejará de ser visible en tu Tienda, aunque seguirá disponible para la venta a través de los mercados externos. ¡Gestiona tu stock con total flexibilidad! </p>
+                    
+                    
+                    </div>
+                    <div class="modal-footer" style="background-image: url('/img/bannerGestorADS.jpg'); background-size: cover; background-position: center;">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+        <!-- Modal oferta --> <!--lo activa > data-bs-toggle="modal" data-bs-target="#staticOffer" -->
+        <div class="modal fade" id="staticOffer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelZ" aria-hidden="true">
+            <div class="modal-dialog border border-secondary p-2 rounded-3" style="background-color: rgb(0, 0, 0, 0.3);">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticOfferTitle"> Control de Oferta </h5>
+                        <i class="bi bi-x-lg cursor-pointer" data-bs-dismiss="modal"></i>
+                    </div>
+                    <div class="modal-body">
+       
+                        <p> <span class="fw-bold"> Potencia tus Oferta. </span> Dale a tus anuncios la exposición que merecen. Activa campañas destacadas para atraer a más clientes y resaltar tus productos estrella frente a la competencia. </p>
+                    
+                    </div>
+                    <div class="modal-footer" style="background-image: url('/img/bannerGestorADS.jpg'); background-size: cover; background-position: center;">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
         <!-- searchMessageInbox -->
         <div class="contentInbox">
             
+
             
             <div class="row m-0 d-flex justify-content-center" style="width: 100%;">
      
@@ -110,7 +173,7 @@
                         <table class="table m-0 tableStyle">
                         
                         <tr>
-                            <th>Imagen</th><th>Titulo</th><th>Precio 💲</th> <th>Cant.</th> <th>Pausado</th> <th>Visible</th> <th>Oferta</th>
+                            <th>Imagen</th><th>Titulo</th><th>Precio 💲</th> <th>Cant.</th> <th> <span class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticPaused"> Pausado  </span> </th> <th> <span class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticVisible"> Visible </span>  </th> <th> <span class="cursor-pointer" data-bs-toggle="modal" data-bs-target="#staticOffer"> Oferta </span> </th>
                         </tr>
 
                         <% if (newBox) { %>
