@@ -60,18 +60,23 @@ routes.get('/department/create/items', async(req,res)=>{
     if (user){
         searchProfile = await modelProfile.findOne({indexed : user._id});
         Items = await modelItems.find({ user_id : user._id });
+        console.log("Items :", Items);
+        //ordeno el array por oden alfabetico en el campo title;
+        //el metodo sort() modifca el array colocando todo bajo un orden establecido (metodo mutativo)
+        Items.sort( (a,b) => a.title.localeCompare(b.title) );
         
+
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
         Contacts = await modelInvoice.find( {$and : [{indexed: user._id}, {payCommission : false}]} );
-        console.log('Esto es Contacts ---->', Contacts);
+        //console.log('Esto es Contacts ---->', Contacts);
         BuySell = await modelBuySell.find( {$and : [{ usernameSell : user.username }, { confirmPay: 'Yes' }, {CommentSeller : {$ne : 'no_comment' }},{ payCommission : false} ] } );
-        console.log('Esto es BuySell ---->', BuySell);
+        //console.log('Esto es BuySell ---->', BuySell);
     
         boxImpagos.push( ...Contacts, ...BuySell );
-        console.log("Esto es boxImpagos ::::::>", boxImpagos);
+        //console.log("Esto es boxImpagos ::::::>", boxImpagos);
         countImpagos = boxImpagos.length;
     
-        console.log("Esto es la cantidad de impagos que posee el usuario --->", countImpagos);
+        //console.log("Esto es la cantidad de impagos que posee el usuario --->", countImpagos);
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
         
         //console.log("Este es el id del ususario : ",user._id);

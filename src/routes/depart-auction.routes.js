@@ -75,6 +75,9 @@ routes.get('/department/create/auctions', async(req,res)=>{
         //searchProfile = await modelProfile.find({indexed : user._id}); viejo
         searchProfile = await modelProfile.findOne({indexed : user._id});
         Auctions = await modelAuction.find({ user_id : user._id });
+        //ordeno el array por oden alfabetico en el campo title;
+        //el metodo sort() modifca el array colocando todo bajo un orden establecido (metodo mutativo)
+        Auctions.sort( (a,b) => a.title.localeCompare(b.title) );        
 
         console.log("Esto es Auctions : ", Auctions);
 

@@ -45,9 +45,9 @@ routes.get('/view-automotive', async (req, res)=>{
 
         if ( searcherCache ){
             //console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode } ,{ paused : false }  ] }, options );       
+            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode }  ] }, options );       
             //console.log(":::-- Aqui cardArticleAutomotive --:::", cardArticleAutomotive)
-            const countSearch = await modelAutomotive.find( {$and : [{ title: {$regex: searcherCache, $options: "i"}},{ countryCode : countryMarketCode } ,{ paused : false }  ]}).count();
+            const countSearch = await modelAutomotive.find( {$and : [{ title: {$regex: searcherCache, $options: "i"}},{ countryCode : countryMarketCode } ]}).count();
             const stateGroup = null;
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -56,8 +56,8 @@ routes.get('/view-automotive', async (req, res)=>{
         
         } else {
             const searcherCache = null;
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { countryCode : countryMarketCode } ,{ paused : false }  ] }, options);
-            const countSearch = await modelAutomotive.find( {$and : [ { countryCode : countryMarketCode } ,{ paused : false }  ] }).count();
+            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { countryCode : countryMarketCode } ] }, options);
+            const countSearch = await modelAutomotive.find( {$and : [ { countryCode : countryMarketCode } ] }).count();
             const stateGroup = null;
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -71,9 +71,9 @@ routes.get('/view-automotive', async (req, res)=>{
 
         if ( searcherCache ){
             //console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ paused : false }  ] }, options );       
+            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }}  ] }, options );       
             //console.log(":::-- Aqui cardArticleAutomotive --:::", cardArticleAutomotive)
-            const countSearch = await modelAutomotive.find( {$and : [{ title: {$regex: searcherCache, $options: "i"}},{ paused : false }  ]}).count();
+            const countSearch = await modelAutomotive.find( {$and : [{ title: {$regex: searcherCache, $options: "i"}} ]}).count();
             const stateGroup = null;
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -82,8 +82,8 @@ routes.get('/view-automotive', async (req, res)=>{
         
         } else {
             const searcherCache = null;
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { paused : false }  ] }, options);
-            const countSearch = await modelAutomotive.find( {$and : [ { paused : false }  ] }).count();
+            const cardArticleAutomotive = await modelAutomotive.paginate( {}, options);
+            const countSearch = await modelAutomotive.find().count();
             const stateGroup = null;
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -146,11 +146,11 @@ routes.post('/view-automotive', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false }  ] }, options );       
+            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode } ] }, options );       
             //console.log(":::-- Aqui cardArticleAutomotive --:::", cardArticleAutomotive);
-            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ] } ).count();
+            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ] } ).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false }  ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
@@ -162,11 +162,11 @@ routes.post('/view-automotive', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode } ,{ paused : false }  ] }, options );       
+            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode }  ] }, options );       
             //console.log(":::-- Aqui cardArticleAutomotive --:::", cardArticleAutomotive);
-            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false }  ]}).count();
+            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode }  ]}).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ,{ paused : false } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
@@ -178,9 +178,9 @@ routes.post('/view-automotive', async (req, res)=>{
             
             if (subCategory == "All"){
 
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ,{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -189,9 +189,9 @@ routes.post('/view-automotive', async (req, res)=>{
 
             } else {
 
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ,{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ,{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
@@ -205,11 +205,11 @@ routes.post('/view-automotive', async (req, res)=>{
             if (subCategory == "All"){
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory == All");
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelAutomotive.find( {$and : [ { countryCode : countryMarketCode } ,{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelAutomotive.find( {$and : [ { countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
@@ -217,12 +217,12 @@ routes.post('/view-automotive', async (req, res)=>{
             } else {
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory !== All");
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { countryCode : countryMarketCode },{ category } ]}  , options);
                 //console.log("Ver cardArticleAutomotive : ", cardArticleAutomotive)
-                const countSearch = await modelAutomotive.find( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const countSearch = await modelAutomotive.find( {$and : [ { countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
@@ -238,11 +238,11 @@ routes.post('/view-automotive', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false }  ] }, options );       
+            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }}  ] }, options );       
             //console.log(":::-- Aqui cardArticleAutomotive --:::", cardArticleAutomotive);
-            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ] } ).count();
+            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}} ] } ).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false }  ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
@@ -254,11 +254,11 @@ routes.post('/view-automotive', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false }  ] }, options );       
+            const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }}  ] }, options );       
             //console.log(":::-- Aqui cardArticleAutomotive --:::", cardArticleAutomotive);
-            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false }  ]}).count();
+            const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}} ]}).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
@@ -270,9 +270,9 @@ routes.post('/view-automotive', async (req, res)=>{
             
             if (subCategory == "All"){
 
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}  , options);
+                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -281,9 +281,9 @@ routes.post('/view-automotive', async (req, res)=>{
 
             } else {
 
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}  , options);
+                const countSearch = await modelAutomotive.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
@@ -297,11 +297,11 @@ routes.post('/view-automotive', async (req, res)=>{
             if (subCategory == "All"){
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory == All");
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { paused : false },{ category } ]}  , options);
-                const countSearch = await modelAutomotive.find( {$and : [ { paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { category } ]}  , options);
+                const countSearch = await modelAutomotive.find( {$and : [ { category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ {category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { paused : false },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
@@ -309,12 +309,12 @@ routes.post('/view-automotive', async (req, res)=>{
             } else {
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory !== All");
-                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { paused : false },{ category } ]}  , options);
+                const cardArticleAutomotive = await modelAutomotive.paginate( {$and : [ { category } ]}  , options);
                 //console.log("Ver cardArticleAutomotive : ", cardArticleAutomotive)
-                const countSearch = await modelAutomotive.find( {$and : [ { paused : false },{ category } ]}).count();
-                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { paused : false },{category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const countSearch = await modelAutomotive.find( {$and : [ { category } ]}).count();
+                const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ {category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { paused : false },{ category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { category } ] }  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
@@ -362,10 +362,10 @@ routes.get('/view-automotive/type1/:searcher/:stateprovince', async (req, res)=>
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
         
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ] }  } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ] }  } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -374,10 +374,10 @@ routes.get('/view-automotive/type1/:searcher/:stateprovince', async (req, res)=>
 
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ] }  } ,{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}} ] }  } ,{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -420,10 +420,10 @@ routes.get('/view-automotive/type1/:stateprovince', async (req, res)=>{
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }  } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{state_province : State} ] }  } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -432,10 +432,10 @@ routes.get('/view-automotive/type1/:stateprovince', async (req, res)=>{
 
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{country : State} ] }  } ,{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{country : State} ] }  } ,{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelAutomotive.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -481,24 +481,24 @@ routes.get('/view-automotive/type2/:searcher/:category/:stateprovince', async (r
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
         
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }).count(); 
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, {state_province : State} ] }).count(); 
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, {country : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, {country : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, {country : State} ] }).count(); 
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, {country : State} ] }).count(); 
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -541,10 +541,10 @@ routes.get('/view-automotive/type2/:category/:stateprovince', async (req, res)=>
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ countryCode : countryMarketCode },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{ paused : false },{category} ]  }},{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ countryCode : countryMarketCode },{ category }, {state_province : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [ { countryCode : countryMarketCode },{category} ]  }},{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -553,10 +553,10 @@ routes.get('/view-automotive/type2/:category/:stateprovince', async (req, res)=>
 
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { paused : false },{ category }, {country : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { category }, {country : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [ { paused : false },{ category }, {country : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [ { paused : false },{category} ]  }},{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [ { category }, {country : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [ {category} ]  }},{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelAutomotive.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -600,26 +600,26 @@ routes.get('/view-automotive/type2/:category/', async (req, res)=>{
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
         
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ countryCode : countryMarketCode },{ paused : false },{ category } ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ countryCode : countryMarketCode },{ category } ] }, options  );
         console.log("cardArticleAutomotive :", cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ countryCode : countryMarketCode },{ paused : false },{ category } ] }).count();
+        const countSearch = await modelAutomotive.find({$and : [{ countryCode : countryMarketCode },{ category } ] }).count();
         console.log("countSearch --->", countSearch);
-        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [{ countryCode : countryMarketCode },{ paused : false },{ category }] }},{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [{ countryCode : countryMarketCode },{ category }] }},{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [{ countryCode : countryMarketCode },{ paused : false },{ category }] }}, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [{ countryCode : countryMarketCode },{ category }] }}, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { paused : false },{ category } ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { category } ] }, options  );
         console.log("cardArticleAutomotive :", cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [ { paused : false },{ category } ] }).count();
+        const countSearch = await modelAutomotive.find({$and : [ { category } ] }).count();
         console.log("countSearch --->", countSearch);
-        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [ { paused : false },{ category }] }},{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const stateGroup = await modelAutomotive.aggregate([ { $match: { $and: [ { category }] }},{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { paused : false },{ category }] }}, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and: [ { category }] }}, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -664,24 +664,24 @@ routes.get('/view-automotive/type3/:searcher/:category/:sub_category/:stateprovi
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
         
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
     
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, { sub_category: subCategory }, {country : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, { sub_category: subCategory }, {country : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -724,24 +724,24 @@ routes.get('/view-automotive/type3/:category/:sub_category/:stateprovince', asyn
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { category }, { sub_category: subCategory }, {country : State} ] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { paused : false },{category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [ { category }, { sub_category: subCategory }, {country : State} ] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ {category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -783,24 +783,24 @@ routes.get('/view-automotive/type3/:category/:sub_category/', async (req, res)=>
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);
     
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}, { sub_category: subCategory } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category}, { sub_category: subCategory } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { paused : false },{ category }, { sub_category: subCategory }] }, options  );
+        const cardArticleAutomotive = await modelAutomotive.paginate({$and : [ { category }, { sub_category: subCategory }] }, options  );
         console.log(cardArticleAutomotive);
-        const countSearch = await modelAutomotive.find({$and : [ { paused : false },{ category }, { sub_category: subCategory }] }).count();
-        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ { paused : false },{category}, { sub_category: subCategory } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelAutomotive.find({$and : [ { category }, { sub_category: subCategory }] }).count();
+        const stateGroup = await modelAutomotive.aggregate([ {$match: {$and: [ {category}, { sub_category: subCategory } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelAutomotive.aggregate([ { $match: { $and : [ { category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-automotive', { user, searchProfile, cardArticleAutomotive, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });

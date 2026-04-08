@@ -45,9 +45,9 @@ routes.get('/view-items/', async (req, res)=>{
         
         if ( searcherCache ){
             //console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
-            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
+            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode } ] }, options );       
             //console.log(":::-- Aqui cardArticleItems --:::", cardArticleItems)
-            const countSearch = await modelItems.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}},{ countryCode : countryMarketCode } ,{ paused : false }  ]}).count();
+            const countSearch = await modelItems.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}},{ countryCode : countryMarketCode } ]}).count();
             const stateGroup = null;
             const categoryAndSub = await modelItems.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -56,8 +56,8 @@ routes.get('/view-items/', async (req, res)=>{
         
         } else {
             const searcherCache = null;
-            const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false } ] }, options );
-            const countSearch = await modelItems.find( {$and : [ { countryCode : countryMarketCode },{ paused : false } ] }).count();
+            const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode } ] }, options );
+            const countSearch = await modelItems.find( {$and : [ { countryCode : countryMarketCode } ] }).count();
             const stateGroup = null;
             const categoryAndSub = await modelItems.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -70,9 +70,9 @@ routes.get('/view-items/', async (req, res)=>{
 
         if ( searcherCache ){
             //console.log("Estoy en el seccion que tiene valor el seracherCache", searcherCache);
-            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ paused : false } ] }, options );       
+            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }} ] }, options );       
             //console.log(":::-- Aqui cardArticleItems --:::", cardArticleItems)
-            const countSearch = await modelItems.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}} ,{ paused : false }  ]}).count();
+            const countSearch = await modelItems.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}} ]}).count();
             const stateGroup = null;
             const categoryAndSub = await modelItems.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -82,8 +82,8 @@ routes.get('/view-items/', async (req, res)=>{
         } else {
 
             const searcherCache = null;
-            const cardArticleItems = await modelItems.paginate( {$and : [ { paused : false } ] }, options );
-            const countSearch = await modelItems.find( {$and : [ { paused : false } ] }).count();
+            const cardArticleItems = await modelItems.paginate( {}, options );
+            const countSearch = await modelItems.find().count();
             const stateGroup = null;
             const categoryAndSub = await modelItems.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -141,12 +141,12 @@ routes.post('/view-items/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleItems = await modelItems.paginate( {$and : [{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
+            const cardArticleItems = await modelItems.paginate( {$and : [{ countryCode : countryMarketCode } ] }, options );       
             //console.log(":::-- Aqui cardArticleItems --:::", cardArticleItems);
-            const countSearch = await modelItems.find( {$and : [ { countryCode : countryMarketCode },{ paused : false } ]}).count();
-            const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const countSearch = await modelItems.find( {$and : [ { countryCode : countryMarketCode } ]}).count();
+            const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false } ]} },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+            const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode } ]} },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
 
@@ -157,13 +157,13 @@ routes.post('/view-items/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
+            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode } ] }, options );       
             //console.log(":::-- Aqui cardArticleItems --:::", cardArticleItems);
-            const countSearch = await modelItems.find( {$and : [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]}).count();
+            const countSearch = await modelItems.find( {$and : [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]}).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+            const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
                 
@@ -174,22 +174,22 @@ routes.post('/view-items/', async (req, res)=>{
             
             if (subCategory == "All"){
                                                                 
-                const cardArticleItems = await modelItems.paginate( {$and : [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{paused : false },{ category } ]}  , options);
-                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{paused : false },{ category } ]}).count();
+                const cardArticleItems = await modelItems.paginate( {$and : [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}).count();
                 const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode }, {category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
 
             } else {
 
-                const cardArticleItems = await modelItems.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{paused : false }, { category } ]}  , options);
-                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{paused : false },{ category } ]}).count();
-                const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const cardArticleItems = await modelItems.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode }, { category } ]}  , options);
+                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
@@ -201,11 +201,11 @@ routes.post('/view-items/', async (req, res)=>{
             if (subCategory == "All"){
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory == All");
-                const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode },{paused : false },{ category } ]}  , options);
-                const countSearch = await modelItems.find( {$and : [{ countryCode : countryMarketCode },{paused : false }, { category } ]}).count();
-                const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{paused : false },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelItems.find( {$and : [{ countryCode : countryMarketCode }, { category } ]}).count();
+                const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
@@ -213,12 +213,12 @@ routes.post('/view-items/', async (req, res)=>{
             } else {
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory !== All");
-                const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
+                const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode },{ category } ]}  , options);
                 //console.log("Ver cardArticleItems : ", cardArticleItems)
-                const countSearch = await modelItems.find( {$and : [{ countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelItems.aggregate([ {$match: {$and: [{ countryCode : countryMarketCode },{ paused : false },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const countSearch = await modelItems.find( {$and : [{ countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelItems.aggregate([ {$match: {$and: [{ countryCode : countryMarketCode },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
@@ -234,12 +234,13 @@ routes.post('/view-items/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleItems = await modelItems.paginate( {$and : [{ paused : false } ] }, options );       
+            const cardArticleItems = await modelItems.paginate({}, options );       
             //console.log(":::-- Aqui cardArticleItems --:::", cardArticleItems);
-            const countSearch = await modelItems.find( {$and : [ { paused : false } ]}).count();
-            const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { paused : false } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const countSearch = await modelItems.find().count();
+           // const stateGroup = await modelItems.aggregate([ {$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]); viejo
+            const stateGroup = await modelItems.aggregate([ {$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { paused : false } ]} },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+            const categoryAndSub = await modelItems.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
             let subCategory = null  
 
@@ -250,13 +251,13 @@ routes.post('/view-items/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false } ] }, options );       
+            const cardArticleItems = await modelItems.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }} ] }, options );       
             //console.log(":::-- Aqui cardArticleItems --:::", cardArticleItems);
-            const countSearch = await modelItems.find( {$and : [{title: {$regex: Searcher, $options: "i"}},{ paused : false } ]}).count();
+            const countSearch = await modelItems.find( {$and : [{title: {$regex: Searcher, $options: "i"}} ]}).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {title: {$regex: Searcher, $options: "i"}} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ paused : false } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+            const categoryAndSub = await modelItems.aggregate([ {$match: {$and: [ { title: {$regex: Searcher , $options: "i" }}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
                 
@@ -267,22 +268,22 @@ routes.post('/view-items/', async (req, res)=>{
             
             if (subCategory == "All"){
                                                                 
-                const cardArticleItems = await modelItems.paginate( {$and : [{title: {$regex: Searcher, $options: "i"}},{paused : false },{ category } ]}  , options);
-                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{paused : false },{ category } ]}).count();
+                const cardArticleItems = await modelItems.paginate( {$and : [{title: {$regex: Searcher, $options: "i"}},{ category } ]}  , options);
+                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}).count();
                 const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 
             } else {
 
-                const cardArticleItems = await modelItems.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{paused : false }, { category } ]}  , options);
-                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{paused : false },{ category } ]}).count();
-                const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const cardArticleItems = await modelItems.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}}, { category } ]}  , options);
+                const countSearch = await modelItems.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}).count();
+                const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { title: {$regex: Searcher , $options: "i" }},{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
@@ -294,11 +295,11 @@ routes.post('/view-items/', async (req, res)=>{
             if (subCategory == "All"){
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory == All");
-                const cardArticleItems = await modelItems.paginate( {$and : [ {paused : false },{ category } ]}  , options);
-                const countSearch = await modelItems.find( {$and : [ {paused : false }, { category } ]}).count();
-                const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {paused : false },{category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleItems = await modelItems.paginate( {$and : [ { category } ]}  , options);
+                const countSearch = await modelItems.find( {$and : [ { category } ]}).count();
+                const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
@@ -306,12 +307,12 @@ routes.post('/view-items/', async (req, res)=>{
             } else {
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory !== All");
-                const cardArticleItems = await modelItems.paginate( {$and : [ { paused : false },{ category } ]}  , options);
+                const cardArticleItems = await modelItems.paginate( {$and : [{ category } ]}  , options);
                 //console.log("Ver cardArticleItems : ", cardArticleItems)
-                const countSearch = await modelItems.find( {$and : [ { paused : false },{ category } ]}).count();
-                const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { paused : false },{category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const countSearch = await modelItems.find( {$and : [{ category } ]}).count();
+                const stateGroup = await modelItems.aggregate([ {$match: {$and: [{category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [ { paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelItems.aggregate([ { $match: {$and: [{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
@@ -359,24 +360,24 @@ routes.get('/view-items/type1/:searcher/:stateprovince', async (req, res)=>{
         console.log("este es el user desde la view-artes: ",  user);
         console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
 
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }, options  );
         console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode },{ paused : false } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }, options  );
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }, options  );
         console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} },{ paused : false } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -405,37 +406,37 @@ routes.get('/view-items/type1/:stateprovince', async (req, res)=>{
     }
         
     if (user){
-        console.log("Esto es user._id ------>", user._id );
+        //console.log("Esto es user._id ------>", user._id );
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);
 
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false }, {state_province : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode },{ paused : false } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode }, {state_province : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} }, { countryCode : countryMarketCode } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
 
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false }, {country : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} },{ paused : false } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }}, {country : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"} } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
 
@@ -466,37 +467,37 @@ routes.get('view-items/type2/:searcher/:category/:stateprovince', async (req, re
     }
 
     if (user){
-        console.log("Esto es user._id ------>", user._id );
+        //console.log("Esto es user._id ------>", user._id );
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);
         
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false }, { category }, {state_province : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }).count(); 
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode }, { category }, {state_province : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, {state_province : State} ] }).count(); 
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false }, { category }, {country : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, {country : State} ] }).count(); 
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }}, { category }, {country : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, {country : State} ] }).count(); 
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
  
@@ -526,37 +527,37 @@ routes.get('/view-items/type2/:category/:stateprovince', async (req, res)=>{
     }
 
     if (user){
-        console.log("Esto es user._id ------>", user._id );
+        //console.log("Esto es user._id ------>", user._id );
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search")
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search")
 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);
         
-        const cardArticleItems = await modelItems.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } },{ $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [ { countryCode : countryMarketCode },{ category }, {state_province : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ category }, {state_province : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ category } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ category } ] } },{ $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleItems = await modelItems.paginate({$and : [ { paused : false },{ category }, {country : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { paused : false },{ category }, {country : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ { $match: {$and : [ { paused : false },{ category } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ { paused : false },{ category } ] } },{ $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [ { category }, {country : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { category }, {country : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ { $match: {$and : [ { category } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: {$and : [ { category } ] } },{ $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
 
@@ -566,7 +567,7 @@ routes.get('/view-items/type2/:category/:stateprovince', async (req, res)=>{
 
 // type2 sin search y sin distincion de estado         
 routes.get('/view-items/type2/:category/', async (req, res)=>{
-    console.log("type2 sin distincion de estado");
+    //console.log("type2 sin distincion de estado");
     const user = req.session.user;
     const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
@@ -589,35 +590,35 @@ routes.get('/view-items/type2/:category/', async (req, res)=>{
         searchProfile = await modelProfile.find({ indexed : user._id });
         countryMarketCode = user.seeMarket.countryMarketCode;
 
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-services: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Estamos en type 2 sin Search ni estados");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-services: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Estamos en type 2 sin Search ni estados");
         
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);
 
-        const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }, options );
-        console.log("cardArticleItems :", cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] }).count();
-        console.log("countSearch --->", countSearch);
-        const stateGroup = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate( {$and : [ { countryCode : countryMarketCode },{ category } ] }, options );
+        //console.log("cardArticleItems :", cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ category } ] }).count();
+        //console.log("countSearch --->", countSearch);
+        const stateGroup = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleItems = await modelItems.paginate( {$and : [ { paused : false },{ category } ] }, options );
-        console.log("cardArticleItems :", cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { paused : false },{ category } ] }).count();
-        console.log("countSearch --->", countSearch);
-        const stateGroup = await modelItems.aggregate([ { $match: { $and : [ { paused : false },{ category } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate( {$and : [ { category } ] }, options );
+        //console.log("cardArticleItems :", cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { category } ] }).count();
+        //console.log("countSearch --->", countSearch);
+        const stateGroup = await modelItems.aggregate([ { $match: { $and : [ { category } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
 
@@ -654,33 +655,33 @@ routes.get('/view-items/type3/:searcher/:category/:sub_category/:stateprovince',
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);
         
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false }, { category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false }, { category }, { sub_category: subCategory }, {state_province : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false }, {category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false }, { category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode }, { category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode }, { category }, { sub_category: subCategory }, {state_province : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode }, {category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode }, { category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false }, { category }, { sub_category: subCategory }, {country : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false }, { category }, { sub_category: subCategory }, {country : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false }, {category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ paused : false }, { category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }}, { category }, { sub_category: subCategory }, {country : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }}, { category }, { sub_category: subCategory }, {country : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}}, {category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }}, { category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
 
@@ -713,34 +714,34 @@ routes.get('/view-items/type3/:category/:sub_category/:stateprovince', async (re
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log("Aqui debo mostrar un resultado de Searcher --->", Searcher);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);        
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);        
             
-        const cardArticleItems = await modelItems.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleItems = await modelItems.paginate({$and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { paused : false },{category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [ { category }, { sub_category: subCategory }, {country : State} ] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { category }, { sub_category: subCategory }, {country : State} ] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
 
@@ -774,33 +775,33 @@ routes.get('/view-items/type3/:category/:sub_category/', async (req, res)=>{
         countryMarketCode = user.seeMarket.countryMarketCode;
 
         searchProfile = await modelProfile.find({ indexed : user._id });
-        console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log("este es el user desde la view-artes: ",  user);
-        console.log("Aqui debo mostrar un resultado de Category --->", category);
-        console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
+        //console.log("Aqui el profile de la cuenta", searchProfile);
+        //console.log("este es el user desde la view-artes: ",  user);
+        //console.log("Aqui debo mostrar un resultado de Category --->", category);
+        //console.log(" :::::::Mirar los resultados sobre todo el objeto stateGroup :::::::::::");
 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
-        console.log("favoritesOfUser ....... :", favoritesOfUser);         
+        //console.log("favoritesOfUser ....... :", favoritesOfUser);         
     
-        const cardArticleItems = await modelItems.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}, { sub_category: subCategory } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category}, { sub_category: subCategory } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleItems = await modelItems.paginate({$and : [ { paused : false },{ category }, { sub_category: subCategory }] }, options  );
-        console.log(cardArticleItems);
-        const countSearch = await modelItems.find({$and : [ { paused : false },{ category }, { sub_category: subCategory }] }).count();
-        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ { paused : false },{category}, { sub_category: subCategory } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
-        console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-        console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+        const cardArticleItems = await modelItems.paginate({$and : [ { category }, { sub_category: subCategory }] }, options  );
+        //console.log(cardArticleItems);
+        const countSearch = await modelItems.find({$and : [ { category }, { sub_category: subCategory }] }).count();
+        const stateGroup = await modelItems.aggregate([ {$match: {$and: [ {category}, { sub_category: subCategory } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        //console.log("aqui estados por grupo :", stateGroup);
+        const categoryAndSub = await modelItems.aggregate([ { $match: { $and : [ { category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-items', { user, searchProfile, cardArticleItems, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
 

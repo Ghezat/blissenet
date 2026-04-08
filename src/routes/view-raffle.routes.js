@@ -45,9 +45,9 @@ routes.get('/view-raffles/', async (req, res)=>{
 
         if ( searcherCache ){
             //console.log("Estoy en el seccion que tiene valor el searcherCache", searcherCache);
-            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
+            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ countryCode : countryMarketCode } ] }, options );       
             //console.log(":::-- Aqui cardArticleRaffle --:::", cardArticleRaffle)
-            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]}).count();
+            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}},{ countryCode : countryMarketCode } ]}).count();
             const stateGroup = null;
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -56,8 +56,8 @@ routes.get('/view-raffles/', async (req, res)=>{
         
         } else {
             const searcherCache = null;
-            const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false } ] }, options ); 
-            const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ paused : false } ] }).count();
+            const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode } ] }, options ); 
+            const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode } ] }).count();
             const stateGroup = null;
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -70,9 +70,9 @@ routes.get('/view-raffles/', async (req, res)=>{
 
         if ( searcherCache ){
             //console.log("Estoy en el seccion que tiene valor el searcherCache", searcherCache);
-            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }},{ paused : false } ] }, options );       
+            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: searcherCache , $options: "i" }} ] }, options );       
             //console.log(":::-- Aqui cardArticleRaffle --:::", cardArticleRaffle)
-            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}},{ paused : false } ]}).count();
+            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: searcherCache, $options: "i"}} ]}).count();
             const stateGroup = null;
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -81,8 +81,8 @@ routes.get('/view-raffles/', async (req, res)=>{
         
         } else {
             const searcherCache = null;
-            const cardArticleRaffle = await modelRaffle.paginate({$and : [ { paused : false } ] }, options ); 
-            const countSearch = await modelRaffle.find({$and : [ { paused : false } ] }).count();
+            const cardArticleRaffle = await modelRaffle.paginate({}, options ); 
+            const countSearch = await modelRaffle.find().count();
             const stateGroup = null;
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -141,10 +141,10 @@ routes.post('/view-raffles/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
+            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode } ] }, options );       
             //console.log(":::-- Aqui cardArticleRaffle --:::", cardArticleRaffle);
-            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]}).count();
-            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]}).count();
+            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -157,11 +157,11 @@ routes.post('/view-raffles/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false } ] }, options );       
+            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode } ] }, options );       
             //console.log(":::-- Aqui cardArticleRaffle --:::", cardArticleRaffle);
-            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]}).count();
+            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]}).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
@@ -174,9 +174,9 @@ routes.post('/view-raffles/', async (req, res)=>{
             
             if (subCategory == "All"){
                                                                 
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -185,9 +185,9 @@ routes.post('/view-raffles/', async (req, res)=>{
 
             } else {
 
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
@@ -201,11 +201,11 @@ routes.post('/view-raffles/', async (req, res)=>{
             if (subCategory == "All"){
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory == All");
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelRaffle.find( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { countryCode : countryMarketCode },{ category } ]}  , options);
+                const countSearch = await modelRaffle.find( {$and : [ { countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ category } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
@@ -213,12 +213,12 @@ routes.post('/view-raffles/', async (req, res)=>{
             } else {
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory !== All");
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}  , options);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { countryCode : countryMarketCode },{ category } ]}  , options);
                 //console.log("Ver cardArticleRaffle : ", cardArticleRaffle)
-                const countSearch = await modelRaffle.find( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const countSearch = await modelRaffle.find( {$and : [ { countryCode : countryMarketCode },{ category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{ category } ]}  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ category } ]}  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser })
@@ -233,10 +233,10 @@ routes.post('/view-raffles/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false } ] }, options );       
+            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }} ] }, options );       
             //console.log(":::-- Aqui cardArticleRaffle --:::", cardArticleRaffle);
-            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ]}).count();
-            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}} ]}).count();
+            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -249,11 +249,11 @@ routes.post('/view-raffles/', async (req, res)=>{
             //console.log("************ searcherCache ************")
             //console.log("searcherCache ---->", searcherCache);
 
-            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false } ] }, options );       
+            const cardArticleRaffle = await modelRaffle.paginate( {$and : [{ title: {$regex: Searcher , $options: "i" }} ] }, options );       
             //console.log(":::-- Aqui cardArticleRaffle --:::", cardArticleRaffle);
-            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ]}).count();
+            const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}} ]}).count();
             //console.log("|||||:::::::: Esto es countSearch", countSearch);
-            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
+            const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
             //console.log("aqui estados por grupo :", stateGroup);
             const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
             let subCategory = null;  
@@ -266,9 +266,9 @@ routes.post('/view-raffles/', async (req, res)=>{
             
             if (subCategory == "All"){
                                                                 
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}  , options);
+                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -277,9 +277,9 @@ routes.post('/view-raffles/', async (req, res)=>{
 
             } else {
 
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}  , options);
-                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}  , options);
+                const countSearch = await modelRaffle.find( {$and : [ {title: {$regex: Searcher, $options: "i"}},{ category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelRaffle.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
@@ -293,11 +293,11 @@ routes.post('/view-raffles/', async (req, res)=>{
             if (subCategory == "All"){
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory == All");
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { paused : false },{ category } ]}  , options);
-                const countSearch = await modelRaffle.find( {$and : [ { paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { paused : false },{ category } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { category } ]}  , options);
+                const countSearch = await modelRaffle.find( {$and : [ { category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { category } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
                 //console.log("aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { paused : false },{ category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { category } ]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
         
                 res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
@@ -305,12 +305,12 @@ routes.post('/view-raffles/', async (req, res)=>{
             } else {
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory !== All");
-                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { paused : false },{ category } ]}  , options);
+                const cardArticleRaffle = await modelRaffle.paginate( {$and : [ { category } ]}  , options);
                 //console.log("Ver cardArticleRaffle : ", cardArticleRaffle)
-                const countSearch = await modelRaffle.find( {$and : [ { paused : false },{ category } ]}).count();
-                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { paused : false },{category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+                const countSearch = await modelRaffle.find( {$and : [ { category } ]}).count();
+                const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ {category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 //console.log("::: Aqui estados por grupo :", stateGroup);
-                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { paused : false },{ category } ]}  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+                const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { category } ]}  }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
@@ -357,31 +357,31 @@ routes.get('/view-raffles/type1/:searcher/:stateprovince', async (req, res)=>{
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);          
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+        const categoryAndSub = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ country : State } ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}} ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+        const categoryAndSub = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}} ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
 
     } 
 
-    });
+});
 
 // view-items/type1/Bolívar?page=2
 // type : 1 sin Searcher    cuando es sin searcher searcherCache = null;     
@@ -415,10 +415,10 @@ routes.get('/view-raffles/type1/:stateprovince', async (req, res)=>{
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);         
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{state_province : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelRaffle.find({$and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{state_province : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -427,10 +427,10 @@ routes.get('/view-raffles/type1/:stateprovince', async (req, res)=>{
 
     } else {
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{country : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{country: State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}},{ paused : false } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{country: State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: { $and: [ {title: {$regex: Searcher, $options: "i"}} ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
         console.log("aqui estados por grupo :", stateGroup);
         const categoryAndSub = await modelRaffle.aggregate([ { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
@@ -476,24 +476,24 @@ routes.get('view-raffles/type2/:searcher/:category/:stateprovince', async (req, 
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);          
         
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }).count(); 
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, {state_province : State} ] }).count(); 
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, {country : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, {country : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, {country : State} ] }).count(); 
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, {country : State} ] }).count(); 
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ {title: {$regex: Searcher , $options: "i" }},{ category }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -537,24 +537,24 @@ routes.get('/view-raffles/type2/:category/:stateprovince', async (req, res)=>{
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);             
         
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ category }, {state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, {state_province : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ category }, {state_province : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{category} ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category} ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { countryCode : countryMarketCode },{category} ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { paused : false },{ category }, {country : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { category }, {country : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [ { paused : false },{ category }, {country : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ { $match: {$and: [ { paused : false },{category} ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [ { category }, {country : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ { $match: {$and: [ {category} ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ { paused : false },{category} ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and: [ {category} ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -597,26 +597,26 @@ routes.get('/view-raffles/type2/:category/', async (req, res)=>{
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);           
         
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }  ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ category }  ] }, options  );
         console.log("cardArticleRaffle :", cardArticleRaffle);
-        const countSearch = await modelRaffle.find( {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }  ] }, options  ).count();
+        const countSearch = await modelRaffle.find( {$and : [ { countryCode : countryMarketCode },{ category }  ] }, options  ).count();
         console.log("countSearch --->", countSearch);
-        const stateGroup = await modelRaffle.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const stateGroup = await modelRaffle.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ category } ] } } ,{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ { countryCode : countryMarketCode },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { paused : false },{ category }  ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { category }  ] }, options  );
         console.log("cardArticleRaffle :", cardArticleRaffle);
-        const countSearch = await modelRaffle.find( {$and : [ { paused : false },{ category }  ] }, options  ).count();
+        const countSearch = await modelRaffle.find( {$and : [ { category }  ] }, options  ).count();
         console.log("countSearch --->", countSearch);
-        const stateGroup = await modelRaffle.aggregate([ { $match: {$and : [ { paused : false },{ category } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
+        const stateGroup = await modelRaffle.aggregate([ { $match: {$and : [ { category } ] } } ,{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, type: { $first: "2" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ { paused : false },{ category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: {$and : [ { category } ] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -662,24 +662,24 @@ routes.get('/view-raffles/type3/:searcher/:category/:sub_category/:stateprovince
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);         
         
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{ paused : false },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ countryCode : countryMarketCode },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ paused : false },{ sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ countryCode : countryMarketCode },{ sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, { sub_category: subCategory }, {country : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{ paused : false },{category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category }, { sub_category: subCategory }, {country : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}},{category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ paused : false },{ sub_category: subCategory }, {country : State}] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { title: {$regex: Searcher , $options: "i" }},{ sub_category: subCategory }, {country : State}] } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -722,24 +722,24 @@ routes.get('/view-raffles/type3/:category/:sub_category/:stateprovince', async (
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);             
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory },{state_province : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ category },{ sub_category: subCategory },{state_province : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category}, { sub_category: subCategory }, {state_province : State} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }, {state_province : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { paused : false },{ category },{ sub_category: subCategory },{country : State} ] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { category },{ sub_category: subCategory },{country : State} ] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State} ] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { paused : false },{category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [ { category }, { sub_category: subCategory }, {country : State} ] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ {category}, { sub_category: subCategory }, {country : State} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { paused : false },{ category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { category }, { sub_category: subCategory }, {country : State}]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
@@ -782,24 +782,24 @@ routes.get('/view-raffles/type3/:category/:sub_category/', async (req, res)=>{
         const favoritesOfUser = await modelFavorites.find({indexed:user._id }); //todos los favoritos de este usuario,
         console.log("favoritesOfUser ....... :", favoritesOfUser);      
 
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category },{ sub_category: subCategory }] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { countryCode : countryMarketCode },{ category },{ sub_category: subCategory }] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{ paused : false },{category},{ sub_category: subCategory } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { countryCode : countryMarketCode },{category},{ sub_category: subCategory } ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { countryCode : countryMarketCode },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
 
     } else {
         
-        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { paused : false },{ category },{ sub_category: subCategory }] }, options  );
+        const cardArticleRaffle = await modelRaffle.paginate({$and : [ { category },{ sub_category: subCategory }] }, options  );
         console.log(cardArticleRaffle);
-        const countSearch = await modelRaffle.find({$and : [ { paused : false },{ category }, { sub_category: subCategory }] }).count();
-        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ { paused : false },{category},{ sub_category: subCategory } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
+        const countSearch = await modelRaffle.find({$and : [ { category }, { sub_category: subCategory }] }).count();
+        const stateGroup = await modelRaffle.aggregate([ {$match: {$and: [ {category},{ sub_category: subCategory } ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
         console.log("aqui estados por grupo :", stateGroup);
-        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { paused : false },{ category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
+        const categoryAndSub = await modelRaffle.aggregate([ { $match: { $and : [ { category }, { sub_category: subCategory }]} }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
         console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
         res.render('page/view-raffles', { user, searchProfile, cardArticleRaffle, Searcher, stateGroup, categoryAndSub, subCategory, countMessages, countNegotiationsBuySell, countSearch, searcherCache });

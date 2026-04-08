@@ -64,6 +64,9 @@ routes.get('/department/create/automotive', async(req,res)=>{
         //searchProfile = await modelProfile.find({indexed : user._id}); viejo
         searchProfile = await modelProfile.findOne({indexed : user._id});
         Automotive = await modelAutomotive.find({ user_id : user._id });
+        //ordeno el array por oden alfabetico en el campo title;
+        //el metodo sort() modifca el array colocando todo bajo un orden establecido (metodo mutativo)
+        Automotive.sort( (a,b) => a.title.localeCompare(b.title) );
     
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
         Contacts = await modelInvoice.find( {$and : [{indexed: user._id}, {payCommission : false}]} );
@@ -75,7 +78,7 @@ routes.get('/department/create/automotive', async(req,res)=>{
         //console.log("Esto es boxImpagos ::::::>", boxImpagos);
         countImpagos = boxImpagos.length;
 
-        console.log("Esto es la cantidad de impagos que posee el usuario --->", countImpagos);
+        //console.log("Esto es la cantidad de impagos que posee el usuario --->", countImpagos);
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
         //console.log("Este es el id del ususario : ",user._id);

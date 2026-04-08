@@ -62,6 +62,10 @@ routes.get('/department/create/realstate', async(req,res)=>{
         //searchProfile = await modelProfile.find({indexed : user._id});viejo
         searchProfile = await modelProfile.findOne({indexed : user._id});
         Realstate = await modelRealstate.find({ user_id : user._id });
+        //ordeno el array por oden alfabetico en el campo title;
+        //el metodo sort() modifca el array colocando todo bajo un orden establecido (metodo mutativo)
+        Realstate.sort( (a,b) => a.title.localeCompare(b.title) );  
+
 
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
         Contacts = await modelInvoice.find( {$and : [{indexed: user._id}, {payCommission : false}]} );
