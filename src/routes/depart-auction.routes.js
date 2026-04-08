@@ -180,18 +180,21 @@ routes.post('/department/create/auctions', async(req,res)=>{
         let anio; 
 
 
-        function transformarTitle(title) {
-            return title
-                .normalize("NFD") // Elimina acentos
-                .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-                .toLowerCase() // Convierte a minúsculas
-                .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-                .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-                .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-                .trim(); // Elimina guiones al inicio y al final
+        let titleTrim = title.trim(); //quitamos los espacios delante y atras;
+
+        function transformarTitle(titleTrim) {
+            return titleTrim
+                            
+                .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+                .replace(/[\u0300-\u036f]/g, '') 
+                .toLowerCase() // Todo a minúsculas
+                .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+                .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+                .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+                .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
         }
-        
-        const titleURL = transformarTitle(title);
+                
+        const titleURL = transformarTitle(titleTrim);
         //console.log(titleURL); // "hoverboard-blue-tooth-250w"        
 
         const BiddingTime = parseInt(biddingTime);
@@ -361,7 +364,7 @@ routes.post('/department/create/auctions', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Auctions =  new modelAuction({ title, titleURL, category, sub_category, state_use, tecnicalDescription, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, images : boxImg, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
+                                                        const Auctions =  new modelAuction({ title: titleTrim, titleURL, category, sub_category, state_use, tecnicalDescription, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, images : boxImg, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
                                                         const AuctionsSave = await Auctions.save()
                                                         //console.log(AuctionsSave);
                                                 
@@ -1108,24 +1111,29 @@ routes.get('/department/create/auctions/searh-edit', async(req, res)=>{
     res.json({data});
 });
  
+//ruta para editar un documento
  routes.post('/department/create/auctions/edit', async(req, res)=>{
      let AuctionDate, AuctionDateClose;       
      const {titleToEdit, title, category, sub_category, state_use, tecnicalDescription, generalMessage, auctionDate, biddingTime, price} = req.body
      
-     function transformarTitle(title) {
-        return title
-            .normalize("NFD") // Elimina acentos
-            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-            .toLowerCase() // Convierte a minúsculas
-            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-            .trim(); // Elimina guiones al inicio y al final
-    }
+     let titleTrim = title.trim(); //quitamos los espacios delante y atras;
     
-    const titleURL = transformarTitle(title);
+     function transformarTitle(titleTrim) {
+         return titleTrim
+                        
+            .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+            .replace(/[\u0300-\u036f]/g, '') 
+            .toLowerCase() // Todo a minúsculas
+            .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+            .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+            .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+            .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
+     }
+        
+     const titleURL = transformarTitle(titleTrim);
      
      const result = await modelAuction.findById(titleToEdit)
+
      const BiddingTime = parseInt(biddingTime);
      const currentYear = new Date().getFullYear();
      let anio;
@@ -1206,7 +1214,7 @@ routes.get('/department/create/auctions/searh-edit', async(req, res)=>{
                 AuctionDateClose = `${newDay}-${mes}-${anio} ${newHour}:${minu}`//perfecto
              }
             
-         }
+        }
          //tengo que saber si estamos en el ultimo dia del mes.
          
     } else {
@@ -1221,7 +1229,7 @@ routes.get('/department/create/auctions/searh-edit', async(req, res)=>{
  
 
      if (result) {
-         const updates = await modelAuction.findByIdAndUpdate(titleToEdit, { title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, price });
+         const updates = await modelAuction.findByIdAndUpdate(titleToEdit, { title: titleTrim, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, auctionDate : AuctionDate, biddingTime, auctionDateClose : AuctionDateClose, price });
          req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
      } else {
          console.log("no existe nada")

@@ -158,18 +158,21 @@ routes.post('/department/create/artes', async(req,res)=>{
 
         const { title, category, author, construcDate, tecnicalDescription, price, segment, count } = req.body
 
-        function transformarTitle(title) {
-            return title
-                .normalize("NFD") // Elimina acentos
-                .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-                .toLowerCase() // Convierte a minúsculas
-                .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-                .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-                .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-                .trim(); // Elimina guiones al inicio y al final
+        let titleTrim = title.trim(); //quitamos los espacios delante y atras;
+
+        function transformarTitle(titleTrim) {
+            return titleTrim
+                            
+                .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+                .replace(/[\u0300-\u036f]/g, '') 
+                .toLowerCase() // Todo a minúsculas
+                .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+                .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+                .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+                .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
         }
         
-        const titleURL = transformarTitle(title);
+        const titleURL = transformarTitle(titleTrim);
         //console.log(titleURL); // "hoverboard-blue-tooth-250w"
         
 
@@ -248,7 +251,7 @@ routes.post('/department/create/artes', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Artes =  new modelArtes({ title, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, count, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
+                                                        const Artes =  new modelArtes({ title: titleTrim, titleURL, category, author, construcDate, tecnicalDescription,  images : boxImg, count, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
                                                         const ArtesSave = await Artes.save()
                                                      
                                                     }  else {
@@ -869,28 +872,32 @@ routes.get('/department/create/artes/searh-edit', async(req, res)=>{
    res.json({data});
 });
 
+//ruta para editar un documento
 routes.post('/department/create/artes/edit', async(req, res)=>{
    
    
     const {titleToEdit, title, category, author, construcDate, tecnicalDescription, price, count} = req.body
 
-    function transformarTitle(title) {
-        return title
-            .normalize("NFD") // Elimina acentos
-            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-            .toLowerCase() // Convierte a minúsculas
-            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-            .trim(); // Elimina guiones al inicio y al final
-    }
+    let titleTrim = title.trim(); //quitamos los espacios delante y atras;
     
-    const titleURL = transformarTitle(title);    
+    function transformarTitle(titleTrim) {
+        return titleTrim
+                        
+            .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+            .replace(/[\u0300-\u036f]/g, '') 
+            .toLowerCase() // Todo a minúsculas
+            .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+            .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+            .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+            .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
+    }
+        
+    const titleURL = transformarTitle(titleTrim);  
 
     const result = await modelArtes.findById(titleToEdit)
         
     if (result) {
-        const updates = await modelArtes.findByIdAndUpdate(titleToEdit, { title, titleURL, category ,author, construcDate, tecnicalDescription, price, count })
+        const updates = await modelArtes.findByIdAndUpdate(titleToEdit, { title: titleTrim, titleURL, category ,author, construcDate, tecnicalDescription, price, count })
         req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
     } else {
         console.log("no existe nada")

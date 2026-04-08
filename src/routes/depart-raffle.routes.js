@@ -184,19 +184,21 @@ routes.post('/department/create/raffle', async(req,res)=>{
             const { title, category, tecnicalDescription, price, numTickets, fundRaising, raffleClosingPolicy, numberOfPrizes, Prizes1, Prizes2, Prizes3, Prizes4, Prizes5, dateEnd, segment } = req.body;
             const Prizes = [Prizes1, Prizes2, Prizes3, Prizes4, Prizes5];
 
+            let titleTrim = title.trim(); //quitamos los espacios delante y atras;
 
-            function transformarTitle(title) {
-                return title
-                    .normalize("NFD") // Elimina acentos
-                    .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-                    .toLowerCase() // Convierte a minúsculas
-                    .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-                    .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-                    .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-                    .trim(); // Elimina guiones al inicio y al final
+            function transformarTitle(titleTrim) {
+                return titleTrim
+                                
+                    .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+                    .replace(/[\u0300-\u036f]/g, '') 
+                    .toLowerCase() // Todo a minúsculas
+                    .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+                    .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+                    .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+                    .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
             }
             
-            const titleURL = transformarTitle(title);
+            const titleURL = transformarTitle(titleTrim);
             //console.log(titleURL); // "hoverboard-blue-tooth-250w"            
 
             
@@ -316,7 +318,7 @@ routes.post('/department/create/raffle', async(req,res)=>{
 
                                                                 countImgAcept = 0 // detenemos la condicion
 
-                                                                const Raffle =  new modelRaffle({ title, titleURL, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, blissName, chatId, country, countryCode, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
+                                                                const Raffle =  new modelRaffle({ title: titleTrim, titleURL, category, tecnicalDescription, price, numTickets : parseNumTickets, fundRaising, raffleClosingPolicy, numberOfPrizes : parsePrizes, PrizesObject : boxPrizesObject, images : boxImg, user_id : user._id, username, blissName, chatId, country, countryCode, state_province : state, boxTickets : BOXTickets , dateStart, dateEnd, CloseDate : dateEnd, segment }); 
                                                                 const RaffleSave = await Raffle.save();
                                                                 //console.log(RaffleSave);   
                                                         
@@ -1056,29 +1058,32 @@ routes.get('/department/create/raffle/searh-edit', async(req, res)=>{
    const data = await modelRaffle.find({user_id : user._id});
    res.json({data});
 });
-         
-routes.post('/department/create/raffle/edit', async(req, res)=>{
    
+//ruta para editar un documento
+routes.post('/department/create/raffle/edit', async(req, res)=>{
    
     const {titleToEdit, title, tecnicalDescription} = req.body
 
-    function transformarTitle(title) {
-        return title
-            .normalize("NFD") // Elimina acentos
-            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-            .toLowerCase() // Convierte a minúsculas
-            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-            .trim(); // Elimina guiones al inicio y al final
-    }
+    let titleTrim = title.trim(); //quitamos los espacios delante y atras;
     
-    const titleURL = transformarTitle(title);
+    function transformarTitle(titleTrim) {
+        return titleTrim
+                        
+            .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+            .replace(/[\u0300-\u036f]/g, '') 
+            .toLowerCase() // Todo a minúsculas
+            .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+            .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+            .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+            .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
+    }
+        
+    const titleURL = transformarTitle(titleTrim);
 
     const result = await modelRaffle.findById(titleToEdit)
         
     if (result) {
-        const updates = await modelRaffle.findByIdAndUpdate(titleToEdit, {title, titleURL, tecnicalDescription})
+        const updates = await modelRaffle.findByIdAndUpdate(titleToEdit, {title: titleTrim, titleURL, tecnicalDescription})
         req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
     } else {
         console.log("no existe nada")

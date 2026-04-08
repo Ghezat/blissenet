@@ -64,7 +64,7 @@ routes.get('/department/create/items', async(req,res)=>{
         //ordeno el array por oden alfabetico en el campo title;
         //el metodo sort() modifca el array colocando todo bajo un orden establecido (metodo mutativo)
         Items.sort( (a,b) => a.title.localeCompare(b.title) );
-        
+
 
         //:::: Este bloque es para conocer el estado de impagos del usuario ::::
         Contacts = await modelInvoice.find( {$and : [{indexed: user._id}, {payCommission : false}]} );
@@ -160,20 +160,21 @@ routes.post('/department/create/items', async(req,res)=>{
         const countryCode = searchProfile[0].countryCode;
 
         const { title, category, sub_category, state_use, tecnicalDescription, generalMessage, count, presentation, price, segment } = req.body
+        let titleTrim = title.trim(); //quitamos los espacios delante y atras;
 
-
-        function transformarTitle(title) {
-            return title
-                .normalize("NFD") // Elimina acentos
-                .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-                .toLowerCase() // Convierte a minúsculas
-                .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-                .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-                .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-                .trim(); // Elimina guiones al inicio y al final
+        function transformarTitle(titleTrim) {
+            return titleTrim
+                            
+                .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+                .replace(/[\u0300-\u036f]/g, '') 
+                .toLowerCase() // Todo a minúsculas
+                .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+                .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+                .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+                .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
         }
         
-        const titleURL = transformarTitle(title);
+        const titleURL = transformarTitle(titleTrim);
         //console.log(titleURL); // "hoverboard-blue-tooth-250w"        
         
         let countFall = 0;
@@ -251,7 +252,7 @@ routes.post('/department/create/items', async(req,res)=>{
 
                                                         countImgAcept = 0 // detenemos la condicion
 
-                                                        const Items =  new modelItems({ title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, count, presentation, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
+                                                        const Items =  new modelItems({ title: titleTrim, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, images : boxImg, count, presentation, price, user_id : user._id, username, blissName, country, countryCode, state_province : state, segment }) 
                                                         const ItemsSave = await Items.save()
                                                         //console.log(ItemsSave);
                                                     }  else {
@@ -882,28 +883,32 @@ routes.get('/department/create/items/searh-edit', async(req, res)=>{
     res.json({data});
 });
  
+//ruta para editar un documento
 routes.post('/department/create/items/edit', async(req, res)=>{
     
     
-     const {titleToEdit, title, category, sub_category, state_use, tecnicalDescription, generalMessage, count, presentation, price} = req.body
-
-     function transformarTitle(title) {
-        return title
-            .normalize("NFD") // Elimina acentos
-            .replace(/[\u0300-\u036f]/g, "") // Elimina caracteres de acento
-            .toLowerCase() // Convierte a minúsculas
-            .replace(/\s+/g, '-') // Reemplaza espacios por guiones
-            .replace(/[^\w\-]+/g, '') // Elimina caracteres no alfanuméricos excepto guiones
-            .replace(/\-\-+/g, '-') // Reemplaza múltiples guiones por uno solo
-            .trim(); // Elimina guiones al inicio y al final
-    }
+    const {titleToEdit, title, category, sub_category, state_use, tecnicalDescription, generalMessage, count, presentation, price} = req.body; 
     
-    const titleURL = transformarTitle(title);     
+    let titleTrim = title.trim(); //quitamos los espacios delante y atras;
+    
+    function transformarTitle(titleTrim) {
+        return titleTrim
+                        
+            .normalize('NFD') //  Elimina acentos (normaliza y quita los diacríticos)
+            .replace(/[\u0300-\u036f]/g, '') 
+            .toLowerCase() // Todo a minúsculas
+            .replace(/\s+/g, '-') //  Reemplaza *espacios internos* por guiones
+            .replace(/[^\w-]+/g, '') //  Elimina caracteres que no sean letras, números o guion
+            .replace(/--+/g, '-') //  Reduce secuencias de guiones repetidos a uno solo
+            .replace(/^-+|-+$/g, ''); //  Elimina cualquier guion que quede al inicio o al final
+    }
+        
+    const titleURL = transformarTitle(titleTrim);
      
-     const result = await modelItems.findById(titleToEdit)
+    const result = await modelItems.findById(titleToEdit)
          
      if (result) {
-         const updates = await modelItems.findByIdAndUpdate(titleToEdit, { title, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, count, presentation, price })
+         const updates = await modelItems.findByIdAndUpdate(titleToEdit, { title: titleTrim, titleURL, category, sub_category, state_use, tecnicalDescription, generalMessage, count, presentation, price })
          req.session.updatePublication = "Su publicacion ha sido actualizado satisfactoriamente"
      } else {
          console.log("no existe nada")
