@@ -100,7 +100,8 @@ routes.get('/adsManager/:user_id', async(req, res)=>{
                 }
                 
                 
-                //console.log("aqui todos los anuncios de este usuario", boxProducts );
+                console.log("aqui todos los anuncios de este usuario", boxProducts );
+                boxProducts.sort( (a,b) => a.title.localeCompare(b.title) ); // reordenando alfabeticamente
 
                 // paginate
                 let long = boxProducts.length; //conocer la longitud del array
@@ -340,8 +341,9 @@ routes.post('/adsManagerSearch', async(req, res)=>{
                 boxProducts.push(...requestAuc);
             }
 
-            console.log("------------- ver ---------------");
+            //console.log("------------- ver ---------------");
             //console.log("boxProducts :", boxProducts);
+            boxProducts.sort( (a,b) => a.title.localeCompare(b.title) ); // reordenando alfabeticamente
 
             // paginate
             let long = boxProducts.length; //conocer la longitud del array
@@ -372,94 +374,6 @@ routes.post('/adsManagerSearch', async(req, res)=>{
                 res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
 
             }
-            
-/*             else if (receive == "first"){
-
-                X = 0;//0
-                req.session.x = X;
-                        
-                newBox = boxProducts.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-                
-                pagina = (limit + X) / limit;
-                console.log("pagina :  ", pagina);
-                console.log("totalPagina :  ", totalPagina);
-                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
-
-                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
-
-            } else if (receive == "next"){
-
-                X = req.session.x;
-
-                if (X + limit < long ){
-        
-                X = X + limit;//6
-                req.session.x = X;
-
-                    newBox = boxProducts.slice(X , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-                
-                    pagina = (limit + X) / limit;
-                    console.log("pagina :  ", pagina);
-                    console.log("totalPagina :  ", totalPagina);
-                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
-
-                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});;
-                
-                }
-            
-            } else if (receive == "prev"){
-
-                X = req.session.x;
-                console.log("Estamos en Prev");
-                console.log("Esto es el valor de x :", X); //6
-
-                if (X  > 0){
-        
-                    X = X - limit
-                    req.session.x = X;
-
-                    newBox = boxProducts.slice(X , limit + X); 
-
-                    pagina = (limit + X) / limit;
-                    console.log("pagina :  ", pagina);
-                    console.log("totalPagina :  ", totalPagina);
-                    const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
-
-                    res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});
-                } 
-            
-
-            } else if (receive == "last"){
-
-                console.log("Esto es long :", long);//30
-                console.log("Esto es limit :", limit);//10
-
-                let n = (long % limit);//0
-
-                if (n !==0 ){
-                    X = long - limit; //30- 10 = 20
-                    V = long - n;     //30- 3  = 27
-                    req.session.x = V; //27
-                    console.log("Esto es n :", n);//3
-                    console.log("Esto es X :", X);//20
-                } else {
-                    X = long - limit; //30- 10 = 20
-                    V = long - limit; //30- 10 = 20
-                    req.session.x = V; //30
-                    console.log("Esto es n :", n);//0
-                    console.log("Esto es X :", X);//20
-                }
-                                
-                newBox = boxProducts.slice(V , limit + X); //el primer parametro indica la posicion y el segundo indica la cantidad de elementos.
-                //       10   + 23  / 10 = 3.3 pero el Mat.ceil lo lleva a 4 perfecto
-                pagina = Math.ceil((limit + X) / limit);
-                console.log("pagina :  ", pagina);
-                console.log("totalPagina :  ", totalPagina);
-                const paginate = { "pagina" : pagina, "totalPagina" : totalPagina };
-
-                res.render('page/adsManager', {user, newBox, paginate, boxProducts, countMessages, countNegotiationsBuySell, searchProfile, Title});  
-
-            }  */
 
         } 
 
@@ -550,8 +464,9 @@ routes.get('/adsManagerSearch', async(req, res)=>{
                 boxProducts.push(...requestAuc);
             }
 
-            console.log("------------- ver ---------------");
+            //console.log("------------- ver ---------------");
             //console.log("boxProducts :", boxProducts);
+            boxProducts.sort( (a,b) => a.title.localeCompare(b.title) ); // reordenando alfabeticamente
 
             // paginate
             let long = boxProducts.length; //conocer la longitud del array

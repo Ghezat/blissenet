@@ -107,12 +107,13 @@ routes.post('/view-airplanes/', async (req, res)=>{   //------------------------
     const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    //console.log(":::: view-airplanes ::::")
-    //console.log(req.body);
+    console.log(":::: ver ::::")
+    console.log(":::: view-airplanes ::::")
+    console.log(req.body);
     const { searcher, category, subCategory } = req.body;
-    //console.log("searcher ----> ",searcher);
-    //console.log("category ----> ",category);
-    //console.log("subCategory ----> ",subCategory);
+    console.log("searcher ----> ",searcher);
+    console.log("category ----> ",category);
+    console.log("subCategory ----> ",subCategory);
 
     req.session.search = searcher;
     const Searcher = req.session.search;
@@ -236,6 +237,7 @@ routes.post('/view-airplanes/', async (req, res)=>{   //------------------------
 
     } else {
 
+        /* no hay usuario y no es por estado es por paises */
         if (category == "All" && searcher ===""){
 
             //console.log("estanos aqui wayyy ------------------------>")
@@ -295,7 +297,7 @@ routes.post('/view-airplanes/', async (req, res)=>{   //------------------------
             }
 
         } else if (category !== "All" && category !== undefined && searcher ==="") {
-            //console.log("Estmos aqui -------------------------------------------------------------------------------------")
+            console.log("Estmos aqui -------------------------------------------------------------------------------------")
             if (subCategory == "All"){
                 //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 //console.log("subCategory == All");
@@ -309,8 +311,8 @@ routes.post('/view-airplanes/', async (req, res)=>{   //------------------------
                 res.render('page/view-airplanes', { user, searchProfile, cardArticleAirplanes, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 
             } else {
-                //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
-                //console.log("subCategory !== All");
+                console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
+                console.log("subCategory !== All");
                 const cardArticleAirplanes = await modelAirplane.paginate( {$and : [ { category } ]}  , options);
                 //console.log("Ver cardArticleAirplanes : ", cardArticleAirplanes)
                 const countSearch = await modelAirplane.find( {$and : [{ category } ]}).count();

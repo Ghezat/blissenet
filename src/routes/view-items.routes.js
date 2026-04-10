@@ -305,8 +305,8 @@ routes.post('/view-items/', async (req, res)=>{
                 res.render('page/view-items', { user, searchProfile, cardArticleItems, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 
             } else {
-                //console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
-                //console.log("subCategory !== All");
+                console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
+                console.log("subCategory !== All");
                 const cardArticleItems = await modelItems.paginate( {$and : [{ category } ]}  , options);
                 //console.log("Ver cardArticleItems : ", cardArticleItems)
                 const countSearch = await modelItems.find( {$and : [{ category } ]}).count();

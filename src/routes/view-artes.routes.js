@@ -107,12 +107,13 @@ routes.post('/view-artes', async (req, res)=>{
     const countMessages = req.session.countMessages //aqui obtengo la cantidad de mensajes;
     const countNegotiationsBuySell = req.session.countNegotiationsBuySell; //aqui obtengo la cantidad de negotiationsBuySell
 
-    //console.log(":::: view-artes ::::")
-    //console.log(req.body);
+    console.log(":::: ver ::::")
+    console.log(":::: view-artes ::::")
+    console.log(req.body);
     const { searcher, category, subCategory } = req.body;
-    //console.log("searcher ----> ",searcher);
-    //console.log("category ----> ",category);
-    //console.log("subCategory ----> ",subCategory);
+    console.log("searcher ----> ",searcher);
+    console.log("category ----> ",category);
+    console.log("subCategory ----> ",subCategory);
 
 
     req.session.search = searcher;
@@ -237,14 +238,15 @@ routes.post('/view-artes', async (req, res)=>{
         }
 
     } else {
-
+        
+        /* no hay usuario y no es por estado es por paises */
         if (category == "All" && searcher ==="" ){
 
             console.log("************ searcherCache ************")
             console.log("searcherCache ---->", searcherCache);
         
             const cardArticleArts = await modelArtes.paginate( {$and : [{ title: {$regex: Searcher, $options: "i" }} ]}, options );       
-            console.log(":::-- Aqui cardArticleArts --:::", cardArticleArts);
+            //console.log(":::-- Aqui cardArticleArts --:::", cardArticleArts);
             const countSearch = await modelArtes.find( {$and : [{ title: {$regex: Searcher, $options: "i" }} ]}).count();
             console.log("|||||:::::::: Esto es countSearch", countSearch);
             //const stateGroup = await modelArtes.aggregate([ {$match: {$and: [{title: {$regex: Searcher, $options: "i"}} ]} },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" } }} ]);
@@ -318,12 +320,12 @@ routes.post('/view-artes', async (req, res)=>{
                 console.log("****Estamos en esta condicion cuando esta el buscador vacio ****");
                 console.log("subCategory !== All");
                 const cardArticleArts = await modelArtes.paginate( {$and : [ { category } ]}  , options);
-                console.log("Ver cardArticleArts : ", cardArticleArts)
+                //console.log("Ver cardArticleArts : ", cardArticleArts)
                 const countSearch = await modelArtes.find( {$and : [ { category } ]}).count();
                 const stateGroup = await modelArtes.aggregate([ {$match: {$and: [ {category} ]} },{$group: {_id : "$country", repetido: {$sum: 1}, category: { $first: "$category" }, sub_category: { $first: "$sub_category" }, type: { $first: "3" } }} ]);
                 console.log("::: Aqui estados por grupo :", stateGroup);
                 const categoryAndSub = await modelArtes.aggregate([ { $match: { category } }, { $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}]);
-                console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);           
 
                 res.render('page/view-artes', { user, searchProfile, cardArticleArts, stateGroup, categoryAndSub, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache })
 

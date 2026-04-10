@@ -162,7 +162,7 @@
           <!-- searcher -->      
           <div class="contentSearchMain d-flex justify-content-center" style="width: 100%;">
 
-            <form action="/view-artes" method="post" style="width: 100%;"> <!-- :::: El cierre de esta etiquera form esta abajo  -->
+            <form action="/view-artes" method="post" style="width: 100%;"> <!-- :::: El cierre de esta etiqueta form esta abajo  -->
 
               <div class="contentSearch d-flex p-0" style="width: 100%; height: 100%;">
                 <% if (searcherCache) { %> 
@@ -315,7 +315,7 @@
                 <% if (stateGroup) { %>
                   <div class="contentStatesGroup overflow-auto ps-1" style="max-height: 160px; border-radius: 3px;">
                     <% stateGroup.forEach((ele)=>{ %>
-
+                      
                         <% if (ele.type == "1") { %>
 
                             <% if (Searcher) { %>
@@ -359,7 +359,7 @@
                             <% } else { %>
                               <a href="/view-artes/type3/<%= ele.category %>/<%= ele.sub_category %>/<%= ele._id %>">
                                 <p class="mb-1">
-                                    <%= ele._id %> (<%= ele.repetido %>)
+                                   <%= ele._id %> (<%= ele.repetido %>)
                                 </p>
                               </a>
                             <% }; %>
@@ -388,12 +388,12 @@
 
                   <div class="mb-2 form-check">
                     <input class="form-check-input radioCategory" type="radio" name="category" value="All" id="All" checked>
-                    <label class="form-check-label" for="All">Todo</label>
+                    <label class="form-check-label" for="All">Todos</label>
                   </div>
                   <% if (categoryAndSub) {%>
 
-                    <% if (categoryAndSub.length !== 1) { %>
-
+                    <% if (categoryAndSub.length !== 1) { %> 
+                      
                       <% categoryAndSub.forEach( (ele, i)=>{ %> 
                         
                         <div class="mb-2 form-check">
@@ -419,8 +419,8 @@
                   
                       <% }); %>
 
-                    <% } else { %> 
-                      
+                    <% } else if (categoryAndSub.length == 1) { %> 
+                    
                      
                       <% let category = categoryAndSub[0]._id %>
 
