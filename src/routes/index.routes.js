@@ -1,5 +1,6 @@
 const { Router } = require('express');
 
+
 const hash = require('object-hash');
 const passport = require('passport');
 
@@ -83,7 +84,7 @@ routes.get('/', async(req, res)=>{
     delete req.session.stopped;
     delete req.session.dataLocked;
     delete req.session.methodLoging;
-    //console.log("Esto es user ->", user);
+    console.log("Esto es user ->", user);
 
 
     let searchProfile;
@@ -91,17 +92,25 @@ routes.get('/', async(req, res)=>{
     
 
     if (user){
-        //console.log("Esto es user._id ------>", user._id );
-        const userId = user._id;
-        const searchCountry = await modelUser.findById(userId);
+    
+        const userId = user._id; 
+        console.log("userId .....:", userId);
+        console.log("typeof userId .....:", typeof userId);
+        const searchCountry = await modelUser.findById(userId); // resulta que este dato no es un id de un objeto de mongo y por esta razon esta dando problemas, es un dato tipo texto
         const countryCode = searchCountry.seeMarket.countryMarketCode;
         console.log("Este es el code de pais -->", countryCode);
         let countNegotiationsBuySell;
 
         searchProfile = await modelProfile.find({ indexed : userId });
-        //console.log("Aqui el profile de la cuenta", searchProfile);
-        console.log(`username : ${searchProfile[0].username} & blissName : ${searchProfile[0].blissName}` );
-        
+        console.log("Aqui el profile de la cuenta", searchProfile);
+        //Aqui el profile de la cuenta []
+
+        if (searchProfile.length !==0){
+             console.log(`username : ${searchProfile[0].username} & blissName : ${searchProfile[0].blissName}` );
+             //si existe profile mostrara estos datos del perfil
+        }
+       
+
         username = user.username;
 
         //:::::::: Alert of message :::::::::::
@@ -175,9 +184,7 @@ routes.get('/', async(req, res)=>{
             req.session.countNegotiationsBuySell = countNegotiationsBuySell; // ---> Esto es lo que se propagara por toda la aplicacion.
             //Nota: La linea de arriba es la session que guarda la cantidad de negociacione sy buySell que tiene el usuario.
             //console.log("Esto es countNegotiationsBuySell ---->", countNegotiationsBuySell);
-        }
-
-                
+        }    
 
 
         //Esta funcion ejecuta una consulta en todos los anuncios que tengan ofertas y las atrapa para 
@@ -451,9 +458,6 @@ routes.get('/', async(req, res)=>{
 
 
     }
-
-
-
 
 
     

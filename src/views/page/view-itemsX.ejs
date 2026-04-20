@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Blissenet  View-Items</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Que es Blissenet?">
+    <meta property="og:description" content="Blissenet es un Marketplace que te permite crear tu propio e-commerce gratuito en solo un minuto. Estilízalo con tu banner y logo para publicar lo que desees.">
+    <meta property="og:image" content="/img/logoBlissenetJonathan.png">
+    <meta property="og:url" content="https://blissenet.com">    
+    <meta property="og:site_name" content="Blissenet">
+    <meta name= "twitter:card" content="summary_large_image">
+    <meta name= "twitter:title" content="Que es Blissenet?">
+    <meta name= "twitter:description" content="Blissenet es un Marketplace que te permite crear tu propio e-commerce gratuito en solo un minuto. Estilízalo con tu banner y logo para publicar lo que desees.">
+    <meta name= "twitter:image" content="/img/logoBlissenetJonathan.png">
+    <meta name= "twitter:url" content="https://blissenet.com">
+    
+</head>
+<style>
+
+  .textLight{
+    /* trabaja en conjunto con themaTextLight */
+    color: white;
+  }
+
+  .SectionPublish{
+    width: 100%;
+  }
+
+  .searchMain{
+    border: none;
+
+  }
+  .searchMain:focus {
+    outline:none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    
+  }
+
+  .contentSearchMain{
+    margin: 0px 60px;
+  }
+
+    .departList{
+      background-color: #fff4f4;
+      padding: 0px 8px;
+      color: rgb(54, 52, 49);
+      border-radius: 12px;
+    }
+
+
+    .carousel .carousel-control-prev {
+      position: absolute;
+      left: 20px;
+      left: 1%;
+      z-index: 1;
+      width: 20px;
+    }
+
+    .carousel .carousel-control-next {
+      position: absolute;
+      width: 20px;
+      right: 1%;
+      z-index: 1;
+      width: 20px;
+      
+    }
+
+    .cardPublished{
+      width: 240px;
+      transition: 0.3s ease border;
+    }
+
+    .imgFront{
+      width: 240px; height: auto;
+      transition: .5s ease width;
+    }
+
+    .cardPublished:hover{
+      outline: 2px solid lightskyblue;
+
+      .imgFront{
+        width: 250px;
+      }
+      
+    }
+
+
+
+    .closed{
+      display: none;
+    }
+      
+</style>
+<body class="mainTheme">
+      
+
+  <main>
+
+    <% if (user) { %>
+      <% const seeMarket = user.seeMarket %>
+      <!-- <% const idUser = user._id %> -->
+      <input type="hidden" value="<%= seeMarket.countryMarketCode %>" id="seeMarket">
+      <!-- <input type="hidden" value="<%= idUser %>" id= "idUser"> -->
+        <!-- este bloque me permite validad si el usuario que se logea tiene un meercado definido. sino lo tiene debe obligatoriamente hacerlo. --> 
+    <% }; %>
+
+    <audio src="/sound/Icon-efect.mp3" id="efectSoundExpan"></audio>
+    
+  <!-- navegador con buscador homologo a navi-simple --> 
+  <nav class="navbar navbar-expand-lg py-3" id="navHead">
+      <div class="container-fluid mx-4 navSon" style="width: 100%;">
+
+        <a class="navbar-brand " href="/" id="logoBlissenet"> </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+        aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        
+
+        <div class="collapse navbar-collapse" id="navbarScroll" style="width: 100%;">
+
+          <div class="contentThemesSesion me-4 d-flex">
+            <!-- themes -->
+            <span class="controlHead cursor-pointer"> <!-- icon sun and moon dinamics  --> </span>
+
+            <!-- session -->
+            <div class="dropdown ms-4 me-2 login">
+          
+              <a class="text-decoration-none text-secondary" href="#" id="navbarScrollingDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Session
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+                <% if (user) { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login </a></li>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"> </i> Register</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                <% } else { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signin"> <i class="bi bi-door-open mx-1"></i> Login</a></li>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/signup"> <i class="bi bi-journal-check mx-1"></i> Register</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                <% }; %>
+
+                <% if (user) { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item" href="/myaccount/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                <% } else { %>
+                  <li class="d-flex justify-content-between align-items-center" style="cursor: pointer;"><a class="dropdown-item disabled" href="/logout"> <i class="bi bi-door-closed mx-1"></i> Logout</a></li>
+                <% }; %>
+
+              </ul>
+        
+            </div>
+          </div>
+
+          <!-- searcher -->
+                        
+          <div class="contentSearchMain d-flex justify-content-center" style="width: 100%;">
+            
+            <form action="/view-itemsX" method="post" style="width: 100%;">
+
+              <div class="contentSearch d-flex p-0" style="width: 100%; height: 100%;">
+                <% if (searcherCache) { %> 
+                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" value="<%= searcherCache %>" aria-label="Search" style="border: 1px solid #f0c51e; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+                <% } else { %>
+                  <input class="form-control me-0 searchMain" type="search" name="searcher" id="searcherId" placeholder="Busqueda por Titulo..." aria-label="Search" style="border: 1px solid #f0c51e; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+                <% }; %> 
+                <button class="btnEFECT" type="submit" id="btnSearcher" style="background: #f0c51e; border: none; height: 100%; width: 70px; width: 70px; height: 100%;border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                  <i class="bi bi-search" id="iconLupa" style="color: rgb(58, 58, 58);"></i>
+                </button>
+              </div>
+
+            </form> 
+
+          </div>
+
+          <!-- actions -->
+          
+          <!-- username -->
+          <div class="contentUsername me-1">
+            <ul class="navbar-nav m-0 usernameMain">
+              <li class="nav-item dropdown">
+
+                <% if (user) { %>
+                  <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <p class="m-0 p-0" style="max-width: 100px; white-space: noWrap; text-overflow: ellipsis; overflow: hidden;" > 
+                      <i class="bi bi-person"></i> <%= user.username %>
+                    </p>
+                  </a>
+                  <% } else { %>
+                    <a class="nav-link disabled d-flex" href="#">
+                      <i class="bi bi-person me-1"></i> username
+                    </a>
+                  <% }; %>
+                  <% if (user) { %>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                      <li><a class="dropdown-item" href="/myaccount/messenger">Notificaciones</a></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                      <li><a class="dropdown-item" href="/account/<%= user.username %>">Mi Tienda</a></li>
+                      <% }; %>
+                      <li><a class="dropdown-item" href="/buysell-list/">Sala de Negocios</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/myfavorites">Favoritos</a></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                        <li><a class="dropdown-item" href="/mytickets">Mis Tickets</a></li>
+                        <li><a class="dropdown-item" href="/follow">Siguiendo </a></li>
+                        <li><a class="dropdown-item" href="/followme">Siguiendome </a></li>
+                      <% }; %>
+                      <li><hr class="dropdown-divider"></li>
+                      <% if (searchProfile.length !==0 ) { %>
+                        <li><a class="dropdown-item" href="/admin-store">Administración</a></li> 
+                      <% }; %>
+                      <li><a class="dropdown-item" href="/myaccount/profile">Perfil</a></li>
+                    </ul>
+                  <% }; %> 
+              </li>
+            </ul>
+          </div>  
+
+          <!-- publications -->
+          <ul class="navbar-nav my-lg-0">
+            <li class="nav-item dropdown">
+              <% if (user) { %>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Publicaciones
+                </a>
+              <% } else { %>
+                <a class="nav-link dropdown-toggle invisible" href="#" id="navbarScrollingDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Publicaciones
+                </a>
+              <% }; %>
+                  
+              <% if (user) { %>
+                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                  <li><a class="dropdown-item" href="/department/create">Publicar</a></li>
+                <% if (searchProfile.length !==0 ) { %>
+                  <li><a class="dropdown-item" href="/department/raffle">Const. Sorteos</a></li>  
+                  <li><a class="dropdown-item" href="/my-ads">Mis Anuncios</a></li>
+                  <li><a class="dropdown-item" href="/my-invoices">Facturas</a></li>
+                <% }; %>
+                  <li><a class="dropdown-item" href="/history">Historial</a></li>
+                <% if (searchProfile.length !==0 ) { %>
+                  <li><a class="dropdown-item" href="/record">Record</a></li>  
+                <% }; %>  
+              </ul>
+              <% }; %>
+
+            </li>
+          </ul>
+
+          <!-- bell messages -->
+          <div class="contentAlerts d-flex">
+
+            <% if (user) { %>
+    
+              <% if (countMessages) { %>
+                <a class="nav-link text-secondary" title="Alert of inbox"  href="/myaccount/messenger">
+              
+                <i class="bi bi-bell position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= countMessages %>
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+                </i>  
+    
+                </a>
+              <% }; %> 
+            
+    
+              <% if (countNegotiationsBuySell) { %>    
+                <a class="nav-link text-secondary" title="Alert of negotiation"  href="/buysell-list">
+                <i class="bi bi-briefcase position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                <%= countNegotiationsBuySell %>
+                <!-- <span class="visually-hidden">unread messages</span> -->
+                </span>
+                </i>
+                  
+                </a>  
+              <% }; %>
+    
+            <% }; %>  
+          </div>
+          
+        </div>
+      </div>
+  </nav>
+
+  <div class="row rowWidth SectionPublish">
+    <div class="col-lg-3 col-md-3 col-sm-12 bg-light p-0 p-1 OptionsBar bg-dark" style="border: 2px solid #f0c51e;">
+      
+      <div class="card mx-0 border border-info cardResultSearch font-size-16"  style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; ">
+        <div class="card-header d-flex justify-content-between align-items-center py-2"><span>Almacen de Artículos</span> <img src="/img/ico-articuloG.png" alt="" class=" mx-2 rounded-pill" style="width: 35px;"></div>
+        <div class="card-body">
+
+            <% if (searcherCache) { %>
+              <p class="border-bottom border-secondary"><i class="bi bi-search me-1"></i> Buscando : <span id="searcherSpan"> <%= searcherCache %> </span> </p>
+            <% } else { %>
+              <p><i class="bi bi-search me-1"></i> Buscando :  ¡Iniciando búsqueda!</p>
+            <% } %>
+
+      
+            <% if (cardArticleItems.length !== 0 ) { %>
+                <% if (cardArticleItems.length) { %> <p> <i class="bi bi-funnel me-1"></i> Anuncios encontrados : <span class="ms-2"><%= countSearch %></span> </p>  <% }; %>
+            <% }; %>
+                                     
+                    
+            <% if (cardArticleItems.length == 0) { %>  
+                <span>¡No se ha encontrado nada!</span>
+                <div class="containerImageSinResultados d-flex justify-content-center">
+                    <img src="/img/sinResultados.png" style="width: 150px;">
+                </div>
+            <% }; %>
+
+            <div class="contentCategory ps-1" style="height: 50%; border-radius: 3px;">
+                <p class="border-bottom border-secondary mt-3"><i class="bi bi-folder2 me-1"></i> Categorias/Sub-Categorias </p>
+            
+
+                <% if (Categories) {%>
+
+                    <% if (Categories.length >= 1) { %>
+
+                        <span class="closed"> Categories.length =  <%= Categories.length  %> </span>
+
+                        <div class="container-category d-flex flex-wrap border border-danger">
+                            <% Categories.forEach( (ele, i)=>{ %> 
+                                <a href="/view-itemsX/<%= ele.category %>" class="bg-secondary rounded-2 text-light no-salto px-2 mx-1 my-1 ">  <%= ele.category %>  </a>
+                            <% }); %>    
+                        </div>
+                            
+                    <% } else { %> 
+
+                        <span>No hay categorias que mostrar</span>
+
+                    <% }; %>
+                      
+                <% }; %>  
+                
+              
+            </div>
+
+            <div class="contentCategoryAndSub border border-success">
+
+                <% if(categoryAndSub){ %>
+
+                    <% if (categoryAndSub.length >= 1) { %>
+
+                        <% const category = categoryAndSub[0].category %>
+                        <div class="container-category d-flex flex-wrap">
+
+                            <a href="/view-itemsX/<%= category %>" class="bg-secondary rounded-2 text-light no-salto px-2 mx-1 my-1 ">  <%= category %>  </a>
+                            
+                        </div>
+
+                        <div class="container-subCategory d-flex flex-wrap ms-3">
+                            <% const sub_categories = categoryAndSub[0].sub_categories %>
+                            <% sub_categories.forEach( (ele, i)=>{ %> 
+                                <a href="/view-itemsX/<%= category %>/<%= ele %>" class="bg-info rounded-2 text-light no-salto px-2 mx-1 my-1 ">  <%= ele %>  </a>
+                            <% }); %>    
+                        </div>
+
+                        <div class="contentCategoria d-flex justify-content-end mt-4">
+                          <a href="/view-itemsX" class="bg-primary rounded-2 text-light px-3 py-1 mx-1 text-decoration-none"> <i class="bi bi-folder2 me-1"></i> Todas las Categorias </a>
+                        </div>
+                        
+                            
+                    <% }; %> 
+                <% }; %>
+
+
+            </div>
+
+            <div class="contentState">
+              <% if (stateGroup) { %>
+                <p class="border-bottom border-secondary mt-3"><i class="bi bi-geo-alt me-1"></i> Ubicación </p>
+                <div class="contentStatesGroup overflow-auto ps-1" style="max-height: 160px; border-radius: 3px;">
+                  
+                  <% if (stateGroup.length !==0) { %>
+
+                    <ul class="px-0 mx-1" style="list-style-type: none;">
+                      <% stateGroup.forEach( ele=> { %>
+
+                          <li> 
+                            <a href="#" onclick="parametros( null, '<%= ele._id %>')" > <%= ele._id %> (<%= ele.repetido %>) </a>
+                          </li>                          
+
+                      <%  }); %>
+                      </ul>
+
+                  <% }; %>
+
+                    <!-- [ { _id: 'Estado Bolívar', repetido: 6, type: '1' },{ _id: 'Bolívar', repetido: 3, type: '1' } ] -->
+                  
+                </div>  
+              <% } %>
+            </div>
+
+            <div class="contentRangePrice">
+                <% if (boxRange) { %>
+
+                <p class="border-bottom border-secondary mt-3"><i class="bi bi-currency-dollar me-1"></i> Rango de precios </p>
+                <div class="contentStatesGroup overflow-auto ps-1" style="max-height: 160px; border-radius: 3px;">
+                  
+                  <% if (boxRange.length !==0) { %>
+
+                    <ul class="px-0 mx-1" style="list-style-type: none;">
+                      <% boxRange.forEach( ele=> { %>
+        
+                        <li class="my-2"> 
+                          <a href="#" onclick="parametros('<%= ele.uno %>~<%= ele.dos %>', null)" class="bg-primary rounded-2 text-light text-decoration-none no-salto px-2 mx-1 my-1"> <%= ele.uno %> ~ <%= ele.dos %> </a> 
+                        </li>                          
+
+                      <%  }); %>
+                    </ul>
+
+                  <% }; %>
+                  
+                </div> 
+
+                <% }; %> 
+
+                <% if (Range){ %>
+                
+                <div class="contentRange overflow-auto ps-1 font-size-16" style="max-height: 160px; border-radius: 3px;">
+                  
+                  <p  class="border-bottom border-secondary mt-3"><i class="bi bi-currency-dollar me-1"></i> Rango de precio </p>
+                  <ul class="px-0 mx-1" style="list-style-type: none;">                        
+                        <li class="my-2"> <a href="#" class="bg-primary rounded-2 text-light text-decoration-none no-salto px-2 mx-1 my-1"> <%= Range %> </a> </li>                          
+                  </ul>
+
+                  
+                </div> 
+                <% }; %> 
+            </div>
+
+        </div> <!-- cierra el card-body -->
+      </div>
+
+    </div>
+
+    <div class="col-lg-9 col-md-9 col-sm-12 p-0 m-0">
+      <audio src="/sound/Icon-efect.mp3" id="efectIcon"></audio>
+      <div class="barrHorizontIcon px-0 py-1 m-0 d-flex flex-wrap border-bottom border-secondary shadow-sm" style="width: 100%; background: #f0c51e;">
+        <ul class="d-flex my-1 py-1 justify-content-between" style="overflow-x: auto;">
+          <a href="/view-raffles" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-raffleW.png" alt="" title="Sorteos" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-artes" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-arteGalleryW.png" alt="" title="Artes" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-airplanes" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-aeronauticaW.png" alt="" title="Aeronáuticos" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="#" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-articuloG.png" alt="" title="Articulos" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-automotive" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-automotrizW.png" alt="" title="Automotriz" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-realstate" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-bienesRaicesW.png" alt="" title="Bienes Raices" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-nautical" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-nauticoW.png" alt="" title="Náuticos" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-services" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-servicioW.png" alt="" title="Servicios" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+          <a href="/view-auction" class="text-decoration-none mx-4 p-0 rounded-pill iconEfect" style="background-color : #f0c51e;"><img src="/img/ico-subastaW.png" alt="" title="Subastas" class="shadow" style="width: 42px; height: 42px; border-radius: 50%;"></a> 
+        </ul>
+      </div>
+      <div class="viewCollection" style="height: auto; background: #ffffff;">
+            
+          
+          <% if (cardArticleItems.docs.length !==0 ) {%>
+              <div class="contentAll d-flex flex-wrap justify-content-star p-3">
+                <% cardArticleItems.docs.forEach( (ele, i)=>{ %>
+
+                  <% let priceFormat = ele.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
+                  <!-- console.log(priceFormat); // Salida: "34.600,45" -->
+
+                  <div class="card m-3 shadow cardPublished">
+
+                          <div class="card-body d-flex flex-column p-0">
+                              
+                            <div class="containerBackground m-0" style="position: relative; background-image : url('<%= ele.images[0].url%>'); background-size: cover;">
+                              <div class="containerFilter" style="width: 100%; height: 100%;  backdrop-filter: blur(10px) ; position: absolute; top: 0;"></div>
+                              <div id="carouselExampleControls<%= i %>" class="carousel slide data-bs-ride="carousel" data-bs-interval="false" data-bs-touch="true" >
+                                <div class="carousel-inner" style="width: 100%; height: 230px;">
+                                  
+                                    <% if (ele.offer === true) { %> <!-- etiqueta de oferta arriba a la derecha    -->
+                                      <span class="border border-warning" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span> 
+                                    <% } else { %>
+                                      <span class="border border-warning invisible" style="z-index: 100; background-color: #fcda57; width: 70px; height: 20px; position: absolute; top: 0; right: -2px; border-bottom-left-radius: 10px;"> <span style="position: absolute; top: -4px; right: 11px;"> <small> <b>Oferta</b> </small> </span> </span>
+                                    <% }; %> 
+                                  
+                                  <div class="carousel-item active" style="filter: none !important;">
+                                    <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> <img src="<%= ele.images[0].url%>" class="imgFront" alt="..."> </a> 
+                                  </div>
+                                <%  for (let x = 1; x < ele.images.length; x++) { %>
+                                  <% const element = ele.images[x] %>
+                                    <div class="carousel-item">
+                                      <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>"> <img src="<%= element.url %>" class="d-block w-100" style="  width: 100%; height: 100%; object-fit: cover;"> </a> 
+                                    </div>
+                                    
+                                <% }; %>
+                                </div>
+                                
+                                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                  </button>
+                                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls<%= i %>" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                  </button>
+                              </div>
+                            </div>
+                            
+                            <hr class="m-0">
+
+                            <!-- esta parte va a cambiar cuando sea oferta -->
+                            <% if (ele.offer === false) { %>
+                            <div class="boxDetail" style="height: 150px; position: relative; background-color: #ffffff;">
+                                  <div class="containerDetails mx-2" style="margin-bottom: 10px; margin-top: 10px;">
+
+                                    <div class="title d-flex justify-content-start">
+                                                              
+                                      <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                        style="text-decoration: none; font-size: 15px;">
+                                        <%= ele.title %>
+                                      </a>                                            
+                                
+                                    </div>
+
+                                    <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+
+                                      
+                                        <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.blissName %> </a>
+
+                                        <% if (user) { %> <!-- control de corazones fascinometro -->
+                                              <% if (favoritesOfUser.length !== 0) { %>
+                                                  <% let heartDisplayed = false; %> <!-- Variable de control -->
+                                                  <% favoritesOfUser.forEach((favorite) => { %>
+                                                      <% const idProduct = favorite.id_product; %>
+                                                      
+                                                      <% if (ele._id == idProduct) { %>
+                                                          <i class="bi bi-heart-fill me-2 linkHeart text-danger" style="cursor: pointer; font-size: 20px;">
+                                                            <input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>">
+                                                          </i>
+                                                          <% heartDisplayed = true; %> <!-- Se ha mostrado un corazón lleno -->
+                                                      <% } %>
+                                                  <% }); %>
+                                                  
+                                                  <% if (!heartDisplayed) { %> <!-- Solo muestra el corazón vacío si no se mostró el lleno -->
+                                            
+                                                      <i class="bi bi-heart me-2 linkHeart" style="cursor: pointer; font-size: 20px;">
+                                                        <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>">
+                                                      </i>
+
+                                                  <% } %>
+                                              <% } %>                                 
+                                        <% } %>
+
+                                    </div>
+
+                                    <div class="containerPriceIcon " style="width: 100%; position: absolute; bottom: 15px; left: 0px;">
+
+                                      <div class="containerPrice d-flex justify-content-between px-2">
+                                    
+                                        <a class="ui yellow circular label px-1 text-decoration-none"> <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %></a> </span> 
+
+                                        <div class="containerDosIconos d-flex">
+                                          <div class="containerOnlyOneAvailable">
+                                            <% if (ele.onlyOneAvailable === true) {%>
+                                              <i class="bi bi-1-square-fill me-1"></i>
+                                            <% }; %>  
+                                          </div>
+                                          <div class="containBestProduct">
+                                            <% if (ele.bestProduct === true) {%>
+                                              <i class="bi bi-award"></i>
+                                            <% }; %>  
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                    
+
+                                  </div>
+                            </div>
+                            <% } else { %>
+                            <div class="boxDetail" style="height: 150px; position: relative; background-color: #fcda57;">
+                                    <div class="containerDetails mx-2 " style="margin-bottom: 10px; margin-top: 10px;">
+
+                                      <div class="title d-flex justify-content-start">
+                                                              
+                                        <a href="/product/<%= ele.department %>/<%= ele._id %>/<%= ele.titleURL %>" class="text-dark lh-sm"
+                                          style="text-decoration: none; font-size: 15px;">
+                                          <%= ele.title %>
+                                        </a>                                            
+                                  
+                                      </div>
+    
+                                      <div class="storeFavorite d-flex justify-content-between" style="width: 100%; position: absolute; bottom: 52px; left: 0px; padding-left: 8px; padding-right: 8px;">
+    
+                                          <!-- <p class="m-0 badge bg-secondary text-light"><a href="/account/<%= ele.username %>" class="text-light text-decoration-none"><%= ele.username %></a> </p> -->
+                                        
+                                          <a href="/account/<%= ele.username %>" class="ui grey ribbon label text-decoration-none" style="left: -22px;"> <%= ele.blissName %> </a>
+
+                                        <% if (user) { %> <!-- control de corazones fascinometro -->
+                                              <% if (favoritesOfUser.length !== 0) { %>
+                                                  <% let heartDisplayed = false; %> <!-- Variable de control -->
+                                                  <% favoritesOfUser.forEach((favorite) => { %>
+                                                      <% const idProduct = favorite.id_product; %>
+                                                      
+                                                      <% if (ele._id == idProduct) { %>
+                                                          <i class="bi bi-heart-fill me-2 linkHeart text-danger" style="cursor: pointer; font-size: 20px;">
+                                                            <input type="hidden" value="<%= ele.department %>"><input type="hidden" value="<%= ele._id %>">
+                                                          </i>
+                                                          <% heartDisplayed = true; %> <!-- Se ha mostrado un corazón lleno -->
+                                                      <% } %>
+                                                  <% }); %>
+                                                  
+                                                  <% if (!heartDisplayed) { %> <!-- Solo muestra el corazón vacío si no se mostró el lleno -->
+                                            
+                                                      <i class="bi bi-heart me-2 linkHeart" style="cursor: pointer; font-size: 20px;">
+                                                        <input type="hidden" value="<%= ele.department %>"> <input type="hidden" value="<%= ele._id %>">
+                                                      </i>
+
+                                                  <% } %>
+                                              <% } %>                                 
+                                        <% } %>
+    
+                                      </div>
+
+                                      <div class="containerPriceIcon" style="width: 100%; position: absolute; bottom: 15px; left: 0px;">
+
+                                        <div class="containerPrice d-flex justify-content-between px-2">
+
+                                          <a class="ui yellow circular label px-1 text-decoration-none"> 
+                                            <span style="font-size: 16px; color: black;"> <i class="bi bi-currency-dollar"></i> <%= priceFormat %> </span> 
+                                          </a>
+                                          
+                                          <div class="containerDosIconos d-flex">
+                                            <div class="containerOnlyOneAvailable">
+                                              <% if (ele.onlyOneAvailable === true) {%>
+                                                <i class="bi bi-1-square-fill me-1"></i>
+                                              <% }; %>  
+                                            </div>
+                                            <div class="containBestProduct">
+                                              <% if (ele.bestProduct === true) {%>
+                                                <i class="bi bi-award"></i>
+                                              <% }; %>  
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                          
+                                    </div>
+                            </div>  
+                            <% }; %>  
+
+
+                          </div>   
+                      
+                  </div>
+
+                <% }); %>  
+              </div>    
+          <% } else { %>
+            <div class="containerImageSinResultados d-flex justify-content-center p-5">
+              <img src="/img/sinResultados.png" class="py-3" style="width: 212px;">
+            </div>
+          <% }; %>  
+          
+
+          <div class="contentPagination border-bottom" style="height: 100%;">
+
+            <% if (cardArticleItems) { %>
+              
+                <% if ( cardArticleItems.page == 1 && cardArticleItems.totalPages !== 1 ) {  %>
+                                        
+                <nav aria-label="Page navigation">
+                  <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                
+                      <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                      <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleItems.prevPage %>">Prev</a></li>
+                      <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleItems.page %>"><%= cardArticleItems.page %></a></li>
+                      <li class="page-item "><a class="page-link" href="?page=<%= cardArticleItems.nextPage %>">Next</a></li>
+                      <li class="page-item "><a class="page-link" href="?page=<%= cardArticleItems.totalPages %>"> <%= cardArticleItems.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+              
+                  </ul>
+                </nav>
+
+                <% } else if ( cardArticleItems.page == 1 && cardArticleItems.totalPages == 1 ) {  %>
+
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                    
+                        <li class="page-item disabled"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i> 1 </a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleItems.prevPage %>">Prev</a></li>
+                        <li class="page-item active"><a class="page-link disabled href="?page=<%= cardArticleItems.page %>"><%= cardArticleItems.page %></a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleItems.nextPage %>">Next</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleItems.totalPages %>"> <%= cardArticleItems.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                  
+                      </ul>
+                    </nav>
+
+                <% } else if ( cardArticleItems.page !== cardArticleItems.totalPages && cardArticleItems.page !== 1 ) {  %>
+
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                        <li class="page-item"><a class="page-link" href="?page=1"><i class="bi bi-arrow-bar-left"></i>1</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleItems.prevPage %>">Prev</a></li>
+                        <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleItems.page %>"><%= cardArticleItems.page %></a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleItems.nextPage %>">Next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleItems.totalPages %>"> <%= cardArticleItems.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                    </ul>
+                  </nav>  
+
+
+                <% } else if ( cardArticleItems.page == cardArticleItems.totalPages ) {  %> 
+
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end align-items-center my-3 pe-5">
+                        <li class="page-item"><a class="page-link" href="?page=1"> <i class="bi bi-arrow-bar-left"></i>1</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<%= cardArticleItems.prevPage %>">Prev</a></li>
+                        <li class="page-item active"><a class="page-link" href="?page=<%= cardArticleItems.page %>"><%= cardArticleItems.page %></a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleItems.nextPage %>">Next</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="?page=<%= cardArticleItems.totalPages %>"> <%= cardArticleItems.totalPages %> <i class="bi bi-arrow-bar-right"></i> </a></li>
+                      </ul>
+                  </nav>
+
+                <% }; %>   
+
+            <% }; %>
+
+          </div>
+          
+      </div>
+        
+    </div>
+  </div>
+  
+  <%- include('../partials/footer.ejs') %> 
+
+  </main>
+    <%- include('../partials/scripts.ejs') %>
+    <%- include('../partials/scriptsFooter.ejs') %>
+
+    <!--  este script controla el estado de los themas. -->
+    <%- include('../partials/scriptsThemes.ejs') %>
+
+    <% if ( user !== undefined ) { %>
+
+<script>
+    //este script es para manejar la accion de los favoritos dentro de la tienda.
+    const linkHeart = document.querySelectorAll('.linkHeart')
+    for (let i = 0; i < linkHeart.length; i++) {
+      const element = linkHeart[i];
+      element.addEventListener('click', () => {
+
+        efectSoundExpan.currentTime = 0; //Reiniciamos el sonido
+        efectSoundExpan.play().catch(error => {
+            console.error("Error al reproducir el sonido:", error);
+        });
+
+        efecto() //activamos la funcion
+
+        function efecto() {
+
+            const biHeart = element.classList.contains('bi-heart');
+            if (biHeart){
+              //corazon vacio se debe colocar lleno
+              element.classList.remove('bi-heart', 'text-dark', 'heartJump');
+              element.classList.add('bi-heart-fill', 'text-danger', 'heartJump');
+
+            } else {
+              //corazon lleno se debe colocar vacio
+              element.classList.remove('bi-heart-fill', 'text-danger', 'heartJump');
+              element.classList.add('bi-heart', 'text-dark');
+            }
+
+        }
+
+        console.log("children :", element.children )
+        console.log(element.children[0].value)
+        console.log(element.children[1].value)
+        const depart = element.children[0].value;
+        const id = element.children[1].value;
+        console.log("depart :",depart);
+        console.log("id :", id);
+
+        const datos = {
+          depart: depart,
+          id: id
+        } 
+
+        fetch('/myfavorites', {
+
+          method: "post",
+          body: JSON.stringify(datos),
+          headers: { "content-type": "application/json" }
+
+        })
+          .then(response => response.json())
+          .then(jsonx => {
+            console.log("Esto llega del backend cuando agregamos un anuncio a favorito", jsonx)
+            const code = jsonx.code;
+            const message = jsonx.message;
+            console.log("code :", code);
+            console.log("message :", message);
+
+            //mostrarToast( message , 'right', 'info', '¡ Hecho !', false ); // Agrega título aquí
+
+          }) 
+          .catch(err => console.log(err));
+
+      })
+
+    }
+
+</script>
+
+    <% } %>
+
+    <script>
+    let radioCategory = document.querySelectorAll('.radioCategory');
+    let contentSub = document.querySelectorAll('.contentSub');          
+
+    for (let i = 0; i < radioCategory.length; i++) {
+      const category = radioCategory[i];       
+      const valor = category.value;
+      //let contentSub = document.getElementById(`sub-${valor}`);
+      let content = contentSub[i - 1];
+                    
+
+      category.addEventListener('click', ()=>{  
+
+        //console.log("Esto es element --->", category);
+        console.log("Esto es valor --->",valor);
+        console.log("Esto es i ", i);
+        let inputAll = document.querySelectorAll('.subAll');
+        let inpAll = inputAll[i - 1];
+        console.log("este es el input All --->", inpAll)
+
+          if (valor !== "All"){
+
+                function contraerAllContent(indice){
+                    console.log("Esto es indice elegido", indice);
+                      contentSub.forEach((ele, i)=>{
+                        //console.log("Esto es ele -->",ele );
+                        console.log("Esto es i del contenSub -->", i + 1 );
+                        let I = i+1
+                        if (I !== indice){
+                          ele.classList.add('closed');
+                        } 
+                      
+                      })
+                }
+
+                const estado = content.classList.contains('closed');
+                        
+                console.log("estado : ", estado)
+
+                if (estado == false){
+                    content.classList.add('closed');
+                    console.log(inpAll);
+                    inpAll.removeAttribute("checked");
+                    
+                } else {
+                    content.classList.remove('closed');
+                    console.log(inpAll);
+                    inpAll.setAttribute("checked", "");
+                              
+                }
+
+                contraerAllContent(i)
+
+          }      
+    
+
+      })
+
+    }
+
+    </script>
+
+
+<script>
+
+/* Métodos Principales de URLSearchParams
+    .get(name): Obtiene el primer valor asociado al nombre.
+    .set(name, value): Establece el valor. Si existen varios, elimina los demás.
+    .append(name, value): Añade un nuevo par clave-valor.
+    .delete(name): Elimina el parámetro.
+    .has(name): Devuelve true si el parámetro existe. */
+
+  function parametros(range, geo) {
+    console.log("estoy aqui ver esto")
+    // Obtener la URL completa
+    const currentUrl = window.location.href; // Obtiene la URL completa
+    const url = new URL(currentUrl); // Crea un objeto URL para facilitar la manipulación
+
+    // Agregar o actualizar el parámetro de rango si hay valores
+    if (range) {
+       url.searchParams.set('range', range); // Usa set para añadir o actualizar el valor
+    }
+
+    // Agregar o actualizar el parámetro geo si hay un valor
+    if (geo) {
+       url.searchParams.set('geo', geo); // Usa set para añadir o actualizar el valor
+    }
+
+    // Generar la nueva URL
+    const newUrl = url.toString(); // Convierte el objeto URL de nuevo a cadena
+
+    console.log("newUrl :", newUrl);
+
+    // Redirigir a la nueva URL
+    window.location.href = newUrl; // Descomenta esto para redirigir
+
+    }
+
+</script>
+    
+</body>
+</html>

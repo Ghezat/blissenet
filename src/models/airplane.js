@@ -6,8 +6,8 @@ const SchemaAirplane = new Schema({
     titleURL : { type : String },// aqui guardamos el titulo que se usara en el url (SEO) Search Engine Optimization (Optimización para Motores de Búsqueda)
     department : { type: String, default: 'airplanes' },
     category : { type: String},
-    segment : { type: String }, // normalmente esto seria "All"
     produce: { type: String }, //reeplazar sub_category por produce en las rutas view-airplane.
+    segment : { type: String }, // normalmente esto seria "All"
     model: { type: String },
     construcDate: { type: Number },
     serial: { type: String },

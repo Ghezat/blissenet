@@ -103,6 +103,8 @@ app.use(require('./routes/depart-services.routes.js'));
 app.use(require('./routes/depart-auction.routes.js'));
 app.use(require('./routes/depart-raffle.routes.js'));
 
+app.use(require('./routes/view-itemsX.routes.js')); //nueva version de controlar de mercado de articulos v2.
+
 app.use(require('./routes/view-store.routes.js'));
 app.use(require('./routes/view-artes.routes.js'));
 app.use(require('./routes/view-airplanes.routes.js'));

@@ -20,7 +20,7 @@ const SchemaItems = new Schema({
     visibleStore : { type: Boolean, default: true }, //este campo guarda el estado de vision en la tienda, por defecto es true que se vea en tienda el articulo.
     offer : { type: Boolean, default: false },
     onlyOneAvailable : { type: Boolean, default: false },
-    bestProduct : { type: Boolean, default: false },
+    bestProduct : { type: Boolean, default: false }, 
     delivery : { type: Boolean, default: false },
     soldOut : { type : Boolean, default: false }, //agotado solo para articulos y artes.
     purchaseTime : { type : Object, default : [] }, //este campo solo existe en items y en artes. aqui solo se guardan indexed con la finalidad de que cuando este articulo deje de estar agotado le envie mensajes a todos los que le dieron a "Avisarme cuando este disponible" solo enviará notificaciones al inbox.   
