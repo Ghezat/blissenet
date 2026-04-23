@@ -281,7 +281,6 @@ routes.get('/view-itemsX/:categories', async (req, res)=>{
     }
 
     Searcher = req.session.search;
-
     req.session.searcherCache = Searcher;
     let searcherCache = req.session.searcherCache;
 
@@ -913,6 +912,8 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
     console.log("req.query", req.query );
     const { geo, range } = req.query; //query de alguna ubicacion
     console.log(`geo : ${geo}  range : ${range}`);
+        
+
 
     let Searcher = null;
     let Categories = null;
@@ -929,9 +930,12 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
         sort : { createdAt : -1 }
     }
 
+    Searcher = req.session.search;
     req.session.searcherCache = Searcher;
     let searcherCache = req.session.searcherCache;
         
+    console.log("searcherCache :", searcherCache);
+
     if (user){
         console.log("Esto es user._id ------>", user._id );
         countryMarketCode = user.seeMarket.countryMarketCode;
@@ -943,250 +947,583 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
         //console.log("favoritesOfUser ....... :", favoritesOfUser);
         //console.log("Aqui debo mostrar un resultado de consulta --->", Searcher);
 
-        
+        if (searcherCache){
 
-        if (geo) {
-            //state_province, country
-            console.log("valor de geo", geo);
+            if (geo && !range){
 
-            const searchRangePrices = await modelItems.find({$and : [{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo } ] }, { price:1, title:1} );
-            //console.log("rangePrices :", rangePrices);
-            const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
-            Prices.sort( (a,b)=> a-b );
-            console.log("Prices :", Prices); 
-            const min = Prices.shift(); 
-            const max = Prices.pop(); //puede ser undefined;
-            console.log("min :", min); console.log("max :", max);
+                console.log("aqui filtramos por geo");
+                const searchRangePrices = await modelItems.find({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo } ] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
+            
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
 
-            //esta es la condicion para activar el rango de precios;
-            const condicion = max && max != undefined && max >= min + 30; 
+                if ( condicion ){ //condicion para crear el array de boxRange;
 
-            if ( condicion ){ //condicion para crear el array de boxRange;
+                    console.log("condicion activada", condicion) ;
 
-                console.log("condicion activada", condicion) ;
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
 
-                console.log("Activacion de rangePrices()");
-                const tercio = (min + max) / 3;
-                console.log("tercio");
-                console.log(`precio menor: ${min}~${tercio}`);
-                console.log(`precio medio: ${tercio}~${max - tercio}`);
-                console.log(`precio mayor: ${max - tercio}~${max}`);
-                const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
-                const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
-                const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
-                boxRange = [ rangeMin,rangeMed,rangeHig ];
-                console.log("boxRange :", boxRange);
+                } else {
+                    boxRange = null;
+                }   
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+            } else if (range && !geo) {
+
+                console.log("aqui filtramos por rango");
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+                
+            } else if (range && geo) {
+
+                console.log("aqui filtramos por geo y por rango");
+                console.log("geo :   ", geo);
+                console.log("range : ", range);
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                        
+
 
             } else {
-                boxRange = null;
-            } 
-            
-            const cardArticleItems = await modelItems.paginate({$and : [{ category:categories },{ sub_category:subCategories },{ countryCode:countryMarketCode },{ state_province:geo }  ] }, options  );
-            //console.log(cardArticleItems);
-            const countSearch = await modelItems.find({$and : [{ category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode }, { state_province:geo } ] }).count();
-            const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode },{ state_province:geo } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-            //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode },{ state_province:geo } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-            res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
+                console.log("estoy dandole a una categoria especifica y una subcategoria pero sin geo ni range", categories );
+                const searchRangePrices = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category : categories }, { sub_category : subCategories }, { countryCode : countryMarketCode }] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
+            
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
+
+                if ( condicion ){ //condicion para crear el array de boxRange;
+
+                    console.log("condicion activada", condicion) ;
+
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
+
+                } else {
+                    boxRange = null;
+                } 
+
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category : subCategories } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category : subCategories } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+            } 
 
         } else {
-            console.log("no existe geo");
 
-            const searchRangePrices = await modelItems.find({$and : [{ category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode } ] }, { price:1, title:1} );
-            //console.log("rangePrices :", rangePrices);
-            const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
-            Prices.sort( (a,b)=> a-b );
-            console.log("Prices :", Prices); 
-            const min = Prices.shift(); 
-            const max = Prices.pop(); //puede ser undefined;
-            console.log("min :", min); console.log("max :", max);
+            if (geo && !range){
 
-            //esta es la condicion para activar el rango de precios;
-            const condicion = max && max != undefined && max >= min + 30; 
+                console.log("aqui filtramos por geo");
+                const searchRangePrices = await modelItems.find({$and : [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo } ] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
+            
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
 
-            if ( condicion ){ //condicion para crear el array de boxRange;
+                if ( condicion ){ //condicion para crear el array de boxRange;
 
-                console.log("condicion activada", condicion) ;
+                    console.log("condicion activada", condicion) ;
 
-                console.log("Activacion de rangePrices()");
-                const tercio = (min + max) / 3;
-                console.log("tercio");
-                console.log(`precio menor: ${min}~${tercio}`);
-                console.log(`precio medio: ${tercio}~${max - tercio}`);
-                console.log(`precio mayor: ${max - tercio}~${max}`);
-                const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
-                const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
-                const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
-                boxRange = [ rangeMin,rangeMed,rangeHig ];
-                console.log("boxRange :", boxRange);
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
+
+                } else {
+                    boxRange = null;
+                }   
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+            } else if (range && !geo) {
+
+                console.log("aqui filtramos por rango");
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+                
+            } else if (range && geo) {
+
+                console.log("aqui filtramos por geo y por rango");
+                console.log("geo :   ", geo);
+                console.log("range : ", range);
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ countryCode : countryMarketCode },{ state_province:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                        
+
 
             } else {
-                boxRange = null;
-            }
 
-            const cardArticleItems = await modelItems.paginate({$and : [{ category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] }, options  );
-            //console.log("cardArticleItems :", cardArticleItems);
-            const countSearch = await modelItems.find({$and : [{ category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] }).count();
-            const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-            console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+                console.log("estoy dandole a una categoria especifica y una subcategoria pero sin geo ni range", categories );
+                const searchRangePrices = await modelItems.find({$and : [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode }] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
+            
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
 
-            res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache, favoritesOfUser });
+                if ( condicion ){ //condicion para crear el array de boxRange;
 
-        }
+                    console.log("condicion activada", condicion) ;
+
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
+
+                } else {
+                    boxRange = null;
+                } 
+
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] } },{$group: {_id : "$state_province", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories },{ countryCode : countryMarketCode } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+            } 
+
+        }    
+
 
         
     } else {
 
- 
-        console.log(" ---------------- estamos sin user y con categoria y subcategoria --------------- ");
-        
-        if (geo && !range){
+        //console.log(" ---------------- estamos sin user y con categoria y subcategoria --------------- ");
+        if (searcherCache){
 
-            console.log("aqui filtramos por geo");
-            const searchRangePrices = await modelItems.find({$and : [{ category : categories },{ country : geo } ] }, { price:1, title:1} );
-            //console.log("rangePrices :", rangePrices);
-            const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
-            Prices.sort( (a,b)=> a-b );
-            console.log("Prices :", Prices); 
-            const min = Prices.shift(); 
-            const max = Prices.pop(); //puede ser undefined;
-            console.log("min :", min); console.log("max :", max);
-        
-            //esta es la condicion para activar el rango de precios;
-            const condicion = max && max != undefined && max >= min + 30; 
+            if (geo && !range){
 
-            if ( condicion ){ //condicion para crear el array de boxRange;
+                console.log("aqui filtramos por geo");
+                const searchRangePrices = await modelItems.find({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo } ] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
+            
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
 
-                console.log("condicion activada", condicion) ;
+                if ( condicion ){ //condicion para crear el array de boxRange;
 
-                const tercio = (min + max) / 3;
-                console.log("tercio");
-                console.log(`precio menor: ${min}~${tercio}`);
-                console.log(`precio medio: ${tercio}~${max - tercio}`);
-                console.log(`precio mayor: ${max - tercio}~${max}`);
-                const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
-                const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
-                const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
-                boxRange = [ rangeMin,rangeMed,rangeHig ];
-                console.log("boxRange :", boxRange);
+                    console.log("condicion activada", condicion) ;
+
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
+
+                } else {
+                    boxRange = null;
+                }   
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories }, { country:geo } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+            } else if (range && !geo) {
+
+                console.log("aqui filtramos por rango");
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+                
+            } else if (range && geo) {
+
+                console.log("aqui filtramos por geo y por rango");
+                console.log("geo :   ", geo);
+                console.log("range : ", range);
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                        
+
 
             } else {
-                boxRange = null;
-            }   
 
-            const cardArticleItems = await modelItems.paginate({$and : [{ category : categories },{ country : geo } ] }, options  );
-            //console.log(cardArticleItems);
-            const countSearch = await modelItems.find({$and : [{ category : categories },{ country : geo } ] }).count();
-            const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories }, { country : geo } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-            //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories }, { country : geo } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
-
-            res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
-        
-        } else if (range && !geo) {
-
-            console.log("aqui filtramos por rango");
-
-            let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
-            console.log("RangeSplit :", RangeSplit);
-
-            let valor1 = parseFloat(RangeSplit[0]); // "2"
-            let valor2 = parseFloat(RangeSplit[1]); // "13"
-            console.log("valor1 :", valor1);
-            console.log("valor2 :", valor2);
-            Range = `${valor1} ~ ${valor2}`;
+                console.log("estoy dandole a una categoria especifica y una subcategoria pero sin geo ni range", categories );
+                const searchRangePrices = await modelItems.find({$and : [{ title: {$regex: Searcher , $options: "i" }},{ category : categories }, { sub_category : subCategories }] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
             
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
 
-            const cardArticleItems = await modelItems.paginate({$and : [{ category : categories },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
-            //console.log(cardArticleItems);
-            const countSearch = await modelItems.find({$and : [{ category : categories },{ price: { $gte: valor1, $lte: valor2 } } ] }).count();
-            const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-            //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+                if ( condicion ){ //condicion para crear el array de boxRange;
 
-            res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
-        
+                    console.log("condicion activada", condicion) ;
+
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
+
+                } else {
+                    boxRange = null;
+                } 
+
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category : subCategories } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category : subCategories } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category : subCategories } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
             
-        } else if (range && geo) {
-
-            console.log("aqui filtramos por geo y por rango");
-            console.log("geo :   ", geo);
-            console.log("range : ", range);
-
-            let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
-            console.log("RangeSplit :", RangeSplit);
-
-            let valor1 = parseFloat(RangeSplit[0]); // "2"
-            let valor2 = parseFloat(RangeSplit[1]); // "13"
-            console.log("valor1 :", valor1);
-            console.log("valor2 :", valor2);
-            Range = `${valor1} ~ ${valor2}`;
-            
-
-            const cardArticleItems = await modelItems.paginate({$and : [{ category : categories },{ price: { $gte: valor1, $lte: valor2 } },{ country : geo } ] }, options  );
-            //console.log(cardArticleItems);
-            const countSearch = await modelItems.find({$and : [{ category : categories },{ price: { $gte: valor1, $lte: valor2 } },{ country : geo } ] }).count();
-            const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ price: { $gte: valor1, $lte: valor2 } },{ country : geo } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-            //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ price: { $gte: valor1, $lte: valor2 } },{ country : geo } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
-
-            res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
-                    
-
+            } 
 
         } else {
 
-            console.log("estoy dandole a una categoria especifica y una subcategoria pero sin geo ni range", categories );
-            const searchRangePrices = await modelItems.find({$and : [{ category : categories },{ sub_category : subCategories }] }, { price:1, title:1} );
-            //console.log("rangePrices :", rangePrices);
-            const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
-            Prices.sort( (a,b)=> a-b );
-            console.log("Prices :", Prices); 
-            const min = Prices.shift(); 
-            const max = Prices.pop(); //puede ser undefined;
-            console.log("min :", min); console.log("max :", max);
-        
-            //esta es la condicion para activar el rango de precios;
-            const condicion = max && max != undefined && max >= min + 30; 
+            if (geo && !range){
 
-            if ( condicion ){ //condicion para crear el array de boxRange;
+                console.log("aqui filtramos por geo");
+                const searchRangePrices = await modelItems.find({$and : [ { category : categories },{ sub_category:subCategories },{ country:geo } ] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
+            
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
 
-                console.log("condicion activada", condicion) ;
+                if ( condicion ){ //condicion para crear el array de boxRange;
 
-                const tercio = (min + max) / 3;
-                console.log("tercio");
-                console.log(`precio menor: ${min}~${tercio}`);
-                console.log(`precio medio: ${tercio}~${max - tercio}`);
-                console.log(`precio mayor: ${max - tercio}~${max}`);
-                const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
-                const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
-                const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
-                boxRange = [ rangeMin,rangeMed,rangeHig ];
-                console.log("boxRange :", boxRange);
+                    console.log("condicion activada", condicion) ;
+
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
+
+                } else {
+                    boxRange = null;
+                }   
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category:subCategories },{ country:geo } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ country:geo } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ country:geo } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+            } else if (range && !geo) {
+
+                console.log("aqui filtramos por rango");
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
+                
+            } else if (range && geo) {
+
+                console.log("aqui filtramos por geo y por rango");
+                console.log("geo :   ", geo);
+                console.log("range : ", range);
+
+                let RangeSplit = range.split("~"); // Esto te dará un array: ["2", "13"]
+                console.log("RangeSplit :", RangeSplit);
+
+                let valor1 = parseFloat(RangeSplit[0]); // "2"
+                let valor2 = parseFloat(RangeSplit[1]); // "13"
+                console.log("valor1 :", valor1);
+                console.log("valor2 :", valor2);
+                Range = `${valor1} ~ ${valor2}`;
+                
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                        
+
 
             } else {
-                boxRange = null;
+
+                console.log("estoy dandole a una categoria especifica y una subcategoria pero sin geo ni range", categories );
+                const searchRangePrices = await modelItems.find({$and : [ { category : categories },{ sub_category : subCategories } ] }, { price:1, title:1} );
+                //console.log("rangePrices :", rangePrices);
+                const Prices = searchRangePrices.map( ele => ele.price ); //Estan todos los precios en este Array;
+                Prices.sort( (a,b)=> a-b );
+                console.log("Prices :", Prices); 
+                const min = Prices.shift(); 
+                const max = Prices.pop(); //puede ser undefined;
+                console.log("min :", min); console.log("max :", max);
+            
+                //esta es la condicion para activar el rango de precios;
+                const condicion = max && max != undefined && max >= min + 30; 
+
+                if ( condicion ){ //condicion para crear el array de boxRange;
+
+                    console.log("condicion activada", condicion) ;
+
+                    const tercio = (min + max) / 3;
+                    console.log("tercio");
+                    console.log(`precio menor: ${min}~${tercio}`);
+                    console.log(`precio medio: ${tercio}~${max - tercio}`);
+                    console.log(`precio mayor: ${max - tercio}~${max}`);
+                    const rangeMin = { uno: Math.floor(min), dos: Math.ceil(tercio) };
+                    const rangeMed = { uno: Math.ceil(tercio), dos: Math.ceil(max - tercio) };
+                    const rangeHig = { uno: Math.ceil(max - tercio), dos: Math.ceil(max) };
+                    boxRange = [ rangeMin,rangeMed,rangeHig ];
+                    console.log("boxRange :", boxRange);
+
+                } else {
+                    boxRange = null;
+                } 
+
+
+                const cardArticleItems = await modelItems.paginate({$and : [ { category : categories },{ sub_category : subCategories } ] }, options  );
+                //console.log(cardArticleItems);
+                const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
+                //console.log("aqui estados por grupo :", stateGroup);
+                const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
+                //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
+
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+            
             } 
 
-
-            const cardArticleItems = await modelItems.paginate({$and : [{ category : categories },{ sub_category : subCategories } ] }, options  );
-            //console.log(cardArticleItems);
-            const countSearch = await modelItems.find({$and : [{ category : categories },{ sub_category : subCategories } ] }).count();
-            const stateGroup = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories } ] } },{$group: {_id : "$country", repetido: {$sum: 1}, type: { $first: "1" }}} ]);
-            //console.log("aqui estados por grupo :", stateGroup);
-            const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
-            //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
-
-            res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, countSearch, searcherCache });
-        
         } 
+  
 
     } 
 

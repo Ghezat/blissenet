@@ -332,7 +332,7 @@
 
                         <span class="closed"> Categories.length =  <%= Categories.length  %> </span>
 
-                        <div class="container-category d-flex flex-wrap border border-danger">
+                        <div class="container-category d-flex flex-wrap">
                             <% Categories.forEach( (ele, i)=>{ %> 
                                 <a href="/view-itemsX/<%= ele.category %>" class="bg-secondary rounded-2 text-light no-salto px-2 mx-1 my-1 ">  <%= ele.category %>  </a>
                             <% }); %>    
@@ -349,7 +349,7 @@
               
             </div>
 
-            <div class="contentCategoryAndSub border border-success">
+            <div class="contentCategoryAndSub">
 
                 <% if(categoryAndSub){ %>
 
