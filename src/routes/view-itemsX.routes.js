@@ -1281,7 +1281,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
             
             } else if (range && !geo) {
 
@@ -1304,7 +1304,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
             
                 
             } else if (range && geo) {
@@ -1330,7 +1330,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
                         
 
 
@@ -1376,7 +1376,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { title: {$regex: Searcher , $options: "i" }},{ category : categories },{ sub_category : subCategories } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
             
             } 
 
@@ -1423,7 +1423,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ country:geo } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
             
             } else if (range && !geo) {
 
@@ -1446,7 +1446,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
             
                 
             } else if (range && geo) {
@@ -1472,7 +1472,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category:subCategories },{ country:geo },{ price: { $gte: valor1, $lte: valor2 } } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
                         
 
 
@@ -1518,7 +1518,7 @@ routes.get('/view-itemsX/:categories/:subCategories', async (req, res)=>{
                 const categoryAndSub = await modelItems.aggregate([ {$match: { $and: [ { category : categories },{ sub_category : subCategories } ] } },{ $group: { _id: "$category", sub_categories: { $addToSet: "$sub_category" }}}, { $project: { _id: 0, category: "$_id", sub_categories: 1 }}]);
                 //console.log("aqui estados por categoryAndSub ----> :", categoryAndSub);
 
-                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache, favoritesOfUser });
+                res.render('page/view-itemsX', { user, searchProfile, cardArticleItems, stateGroup, Categories, categoryAndSub, boxRange, Range, subCategory, Searcher, countMessages, countNegotiationsBuySell, searcherCache });
             
             } 
 
