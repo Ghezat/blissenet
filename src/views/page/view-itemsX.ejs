@@ -334,7 +334,7 @@
 
                         <div class="container-category d-flex flex-wrap">
                             <% Categories.forEach( (ele, i)=>{ %> 
-                                <a href="/view-itemsX/<%= ele.category %>" class="bg-secondary rounded-2 text-light no-salto px-2 mx-1 my-1 ">  <%= ele.category %>  </a>
+                                <a href="/view-itemsX/<%= ele.category %>" class="bg-secondary rounded-2 text-light px-2 mx-1 my-1 ">  <%= ele.category %>  </a>
                             <% }); %>    
                         </div>
                             
@@ -358,14 +358,14 @@
                         <% const category = categoryAndSub[0].category %>
                         <div class="container-category d-flex flex-wrap">
 
-                            <a href="/view-itemsX/<%= category %>" class="bg-secondary rounded-2 text-light no-salto px-2 mx-1 my-1 ">  <%= category %>  </a>
+                            <a href="/view-itemsX/<%= category %>" class="bg-secondary rounded-2 text-light px-2 mx-1 my-1 ">  <%= category %>  </a>
                             
                         </div>
 
                         <div class="container-subCategory d-flex flex-wrap ms-3">
                             <% const sub_categories = categoryAndSub[0].sub_categories %>
                             <% sub_categories.forEach( (ele, i)=>{ %> 
-                                <a href="/view-itemsX/<%= category %>/<%= ele %>" class="bg-info rounded-2 text-light no-salto px-2 mx-1 my-1 ">  <%= ele %>  </a>
+                                <a href="/view-itemsX/<%= category %>/<%= ele %>" class="bg-info rounded-2 text-light px-2 mx-1 my-1 ">  <%= ele %>  </a>
                             <% }); %>    
                         </div>
 
